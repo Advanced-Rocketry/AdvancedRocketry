@@ -10,13 +10,13 @@ import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 
-public class RenderPlanetAnalyser extends TileEntitySpecialRenderer {
+public class RenderAstrobodyDataProcessor extends TileEntitySpecialRenderer {
 
 	WavefrontObject model;
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/astrobodydataprocessor.png");
 
-	public RenderPlanetAnalyser(){
+	public RenderAstrobodyDataProcessor(){
 		try {
 			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/astrobodydataprocessor.obj"));
 		} catch (ModelFormatException e) {

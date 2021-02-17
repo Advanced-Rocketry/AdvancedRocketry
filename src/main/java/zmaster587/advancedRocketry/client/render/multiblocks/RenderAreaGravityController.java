@@ -8,16 +8,16 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
-import zmaster587.advancedRocketry.tile.multiblock.TileGravityController;
+import zmaster587.advancedRocketry.tile.multiblock.TileAreaGravityController;
 import zmaster587.libVulpes.block.RotatableBlock;
 
-public class RenderGravityMachine extends TileEntitySpecialRenderer {
+public class RenderAreaGravityController extends TileEntitySpecialRenderer {
 	
 	WavefrontObject model;
 
 	ResourceLocation texture =  new ResourceLocation("advancedRocketry:textures/models/areagravitycontroller.png");
 	
-	public RenderGravityMachine() {
+	public RenderAreaGravityController() {
 		try {
 			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/areagravitycontroller.obj"));
 		} catch (ModelFormatException e) {
@@ -28,7 +28,7 @@ public class RenderGravityMachine extends TileEntitySpecialRenderer {
 	@Override
 	public void render(TileEntity tile, double x,
 			double y, double z, float f, int damage, float a) {
-		TileGravityController multiBlockTile = (TileGravityController)tile;
+		TileAreaGravityController multiBlockTile = (TileAreaGravityController)tile;
 
 		if(!multiBlockTile.canRender())
 			return;

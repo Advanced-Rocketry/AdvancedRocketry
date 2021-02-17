@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.integration.jei.blastFurnace;
+package zmaster587.advancedRocketry.integration.jei.arcFurnace;
 
 import mezz.jei.api.IGuiHelper;
 import zmaster587.advancedRocketry.integration.jei.ARPlugin;
@@ -6,9 +6,9 @@ import zmaster587.advancedRocketry.integration.jei.MachineCategoryTemplate;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.LibVulpes;
 
-public class BlastFurnaceCategory extends MachineCategoryTemplate<BlastFurnaceWrapper> {
+public class ArcFurnaceCategory extends MachineCategoryTemplate<ArcFurnaceWrapper> {
 
-	public BlastFurnaceCategory(IGuiHelper helper) {
+	public ArcFurnaceCategory(IGuiHelper helper) {
 		super(helper, TextureResources.arcFurnaceProgressBar);
 	}
 	

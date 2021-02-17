@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.client;
 
-import java.util.LinkedList;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -13,7 +11,6 @@ import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -46,7 +43,6 @@ import zmaster587.advancedRocketry.client.render.RenderLaser;
 import zmaster587.advancedRocketry.client.render.entity.*;
 import zmaster587.advancedRocketry.client.render.multiblocks.*;
 import zmaster587.advancedRocketry.common.CommonProxy;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.*;
 import zmaster587.advancedRocketry.entity.fx.*;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
@@ -79,7 +75,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCuttingMachine.class, new RendererCuttingMachine());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrystallizer.class, new RendererCrystallizer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileObservatory.class, new RendererObservatory());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileAstrobodyDataProcessor.class, new RenderPlanetAnalyser());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileAstrobodyDataProcessor.class, new RenderAstrobodyDataProcessor());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileLathe.class, new RendererLathe());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileRollingMachine.class, new RendererRollingMachine());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileElectrolyser.class, new RendererElectrolyser());
@@ -91,14 +87,14 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileDataPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeData.png")));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEnergyPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeEnergy.png")));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileMicrowaveReciever.class, new RendererMicrowaveReciever());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileSpaceLaser.class, new RenderLaserTile());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileOrbitalLaserDrill.class, new RenderOrbitalLaserDrillTile());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBiomeScanner.class, new RenderBiomeScanner());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHoleGenerator.class, new RenderBlackHoleEnergy());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHoleGenerator.class, new RenderBlackHoleGenerator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileAtmosphereTerraformer.class, new RenderTerraformerAtm());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileFluidTank.class, new RenderTank());
-		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser.class, new zmaster587.advancedRocketry.client.render.multiblocks.RenderLaser());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileOrbitalLaserDrill.class, new RenderOrbitalLaserDrill());
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileRailgun.class, new zmaster587.advancedRocketry.client.render.multiblocks.RendererRailgun());
-		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileGravityController.class, new zmaster587.advancedRocketry.client.render.multiblocks.RenderGravityMachine());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileAreaGravityController.class, new RenderAreaGravityController());
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileSpaceElevator.class, new zmaster587.advancedRocketry.client.render.multiblocks.RendererSpaceElevator());
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.TileBeacon.class, new zmaster587.advancedRocketry.client.render.multiblocks.RenderBeacon());
 		ClientRegistry.bindTileEntitySpecialRenderer(zmaster587.advancedRocketry.tile.multiblock.machine.TileCentrifuge.class, new zmaster587.advancedRocketry.client.render.multiblocks.RenderCentrifuge());

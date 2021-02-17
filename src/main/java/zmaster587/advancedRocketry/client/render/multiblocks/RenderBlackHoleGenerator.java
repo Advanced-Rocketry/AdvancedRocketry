@@ -17,13 +17,13 @@ import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerProducer;
 
-public class RenderBlackHoleEnergy extends TileEntitySpecialRenderer {
+public class RenderBlackHoleGenerator extends TileEntitySpecialRenderer {
 
 	WavefrontObject model;
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/blackholegenerator.png");
 
-	public RenderBlackHoleEnergy(){
+	public RenderBlackHoleGenerator(){
 		try {
 			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/blackholegenerator.obj"));
 		} catch (ModelFormatException e) {

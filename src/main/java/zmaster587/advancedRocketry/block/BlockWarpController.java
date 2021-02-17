@@ -11,9 +11,9 @@ import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.block.BlockTile;
 
-public class BlockWarpShipMonitor extends BlockTile {
+public class BlockWarpController extends BlockTile {
 
-	public BlockWarpShipMonitor(Class<? extends TileEntity> tileClass, int guiId) {
+	public BlockWarpController(Class<? extends TileEntity> tileClass, int guiId) {
 		super(tileClass, guiId);
 	}
 

@@ -11,18 +11,18 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
-import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
+import zmaster587.advancedRocketry.tile.multiblock.TileOrbitalLaserDrill;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 
-public class RenderLaser extends TileEntitySpecialRenderer {
+public class RenderOrbitalLaserDrill extends TileEntitySpecialRenderer {
 	
 	WavefrontObject model;
 
 	ResourceLocation texture =  new ResourceLocation("advancedRocketry:textures/models/orbitallaserdrill.png");
 	
 	
-	public RenderLaser() {
+	public RenderOrbitalLaserDrill() {
 		try {
 			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/orbitallaserdrill.obj"));
 		} catch (ModelFormatException e) {
@@ -53,7 +53,7 @@ public class RenderLaser extends TileEntitySpecialRenderer {
 		
 		
 		//Laser
-		if(((TileSpaceLaser)multiBlockTile).isRunning())
+		if(((TileOrbitalLaserDrill)multiBlockTile).isRunning())
 		{
 			GL11.glTranslated(-1.0f, 0, -5f);
 			BufferBuilder buffer = Tessellator.getInstance().getBuffer();

@@ -1,16 +1,11 @@
 package zmaster587.advancedRocketry;
 
-import com.google.common.collect.Lists;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -26,16 +21,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.RegistryEvent.MissingMappings.Action;
-import net.minecraftforge.event.RegistryEvent.MissingMappings.Mapping;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
@@ -53,10 +44,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
-import net.minecraftforge.registries.GameData;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -65,19 +52,10 @@ import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
-import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
-import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
-import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
-import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.armor.ItemSpaceChest;
-import zmaster587.advancedRocketry.atmosphere.AtmosphereVacuum;
-import zmaster587.advancedRocketry.backwardCompat.VersionCompat;
 import zmaster587.advancedRocketry.block.*;
-import zmaster587.advancedRocketry.block.cable.BlockDataCable;
-import zmaster587.advancedRocketry.block.cable.BlockEnergyCable;
-import zmaster587.advancedRocketry.block.cable.BlockLiquidPipe;
 import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
 import zmaster587.advancedRocketry.block.plant.BlockAlienLeaves;
 import zmaster587.advancedRocketry.block.plant.BlockAlienPlank;
@@ -128,7 +106,6 @@ import zmaster587.advancedRocketry.tile.oxygen.TileOxygenCharger;
 import zmaster587.advancedRocketry.tile.oxygen.TileOxygenVent;
 import zmaster587.advancedRocketry.tile.station.*;
 import zmaster587.advancedRocketry.util.*;
-import zmaster587.advancedRocketry.util.XMLPlanetLoader.DimensionPropertyCoupling;
 import zmaster587.advancedRocketry.world.biome.*;
 import zmaster587.advancedRocketry.world.decoration.MapGenLander;
 import zmaster587.advancedRocketry.world.ore.OreGenerator;
@@ -375,7 +352,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TileEntityFuelingStation.class, "ARfuelingStation");
 		GameRegistry.registerTileEntity(TileEntityMoniteringStation.class, "ARmonitoringStation");
 		//GameRegistry.registerTileEntity(TileMissionController.class, "ARmissionControlComp");
-		GameRegistry.registerTileEntity(TileSpaceLaser.class, "ARspaceLaser");
+		GameRegistry.registerTileEntity(TileOrbitalLaserDrill.class, "ARspaceLaser");
 		GameRegistry.registerTileEntity(TilePrecisionAssembler.class, "ARprecisionAssembler");
 		GameRegistry.registerTileEntity(TileObservatory.class, "ARobservatory");
 		GameRegistry.registerTileEntity(TileCrystallizer.class, "ARcrystallizer");
@@ -434,7 +411,7 @@ public class AdvancedRocketry {
 		GameRegistry.registerTileEntity(TilePrecisionLaserEngraver.class, new ResourceLocation(Constants.modId, "ARPrecisionLaserEngraver"));
 		
 		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableGravityController)
-			GameRegistry.registerTileEntity(TileGravityController.class, "ARGravityMachine");
+			GameRegistry.registerTileEntity(TileAreaGravityController.class, "ARGravityMachine");
 
 
 		//Register machine recipes
@@ -667,7 +644,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockMonitoringStation = new BlockTileNeighborUpdate(TileEntityMoniteringStation.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockMonitoringStation.setUnlocalizedName("monitoringstation");
 
-		AdvancedRocketryBlocks.blockWarpShipMonitor = new BlockWarpShipMonitor(TileWarpShipMonitor.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f);
+		AdvancedRocketryBlocks.blockWarpShipMonitor = new BlockWarpController(TileWarpShipMonitor.class, GuiHandler.guiId.MODULARNOINV.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockWarpShipMonitor.setUnlocalizedName("stationmonitor");
 
 		AdvancedRocketryBlocks.blockSatelliteBuilder = new BlockMultiblockMachine(TileSatelliteBuilder.class, GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setHardness(3f);
@@ -739,11 +716,11 @@ public class AdvancedRocketry {
 		
 		//Configurable stuff
 		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableGravityController)
-			AdvancedRocketryBlocks.blockGravityMachine = new BlockMultiblockMachine(TileGravityController.class,GuiHandler.guiId.MODULARNOINV.ordinal()).setUnlocalizedName("gravityMachine").setCreativeTab(tabAdvRocketry).setHardness(3f);
+			AdvancedRocketryBlocks.blockGravityMachine = new BlockMultiblockMachine(TileAreaGravityController.class,GuiHandler.guiId.MODULARNOINV.ordinal()).setUnlocalizedName("gravityMachine").setCreativeTab(tabAdvRocketry).setHardness(3f);
 
 
 		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableLaserDrill) {
-			AdvancedRocketryBlocks.blockSpaceLaser = new BlockLaser().setHardness(2f);
+			AdvancedRocketryBlocks.blockSpaceLaser = new BlockOrbitalLaserDrill().setHardness(2f);
 			AdvancedRocketryBlocks.blockSpaceLaser.setCreativeTab(tabAdvRocketry);
 		}
 
@@ -1061,10 +1038,10 @@ public class AdvancedRocketry {
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileCentrifuge(), (BlockTile)AdvancedRocketryBlocks.blockCentrifuge);
 
 		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableGravityController)
-			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileGravityController(), (BlockTile)AdvancedRocketryBlocks.blockGravityMachine);
+			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileAreaGravityController(), (BlockTile)AdvancedRocketryBlocks.blockGravityMachine);
 
 		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableLaserDrill)
-			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileSpaceLaser(), (BlockTile)AdvancedRocketryBlocks.blockSpaceLaser);
+			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileOrbitalLaserDrill(), (BlockTile)AdvancedRocketryBlocks.blockSpaceLaser);
 
 		proxy.registerEventHandlers();
 		proxy.registerKeyBindings();

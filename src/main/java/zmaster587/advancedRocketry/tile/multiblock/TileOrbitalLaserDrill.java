@@ -46,7 +46,7 @@ import zmaster587.libVulpes.util.MultiInventory;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInventory, IGuiCallback, IButtonInventory {
+public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISidedInventory, IGuiCallback, IButtonInventory {
 
 	private static final int INVSIZE = 9;
 	ItemStack glassPanel;
@@ -109,7 +109,7 @@ public class TileSpaceLaser extends TileMultiPowerConsumer implements ISidedInve
 
 	Ticket ticket;
 
-	public TileSpaceLaser() { 
+	public TileOrbitalLaserDrill() {
 		super();
 		glassPanel = ItemStack.EMPTY;
 		//invBuffer = new ItemStack[INVSIZE];

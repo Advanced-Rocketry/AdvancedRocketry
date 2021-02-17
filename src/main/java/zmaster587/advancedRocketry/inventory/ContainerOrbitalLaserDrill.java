@@ -7,17 +7,17 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
+import zmaster587.advancedRocketry.tile.multiblock.TileOrbitalLaserDrill;
 import zmaster587.libVulpes.gui.SlotSingleItem;
 
-public class ContainerSpaceLaser extends Container {
+public class ContainerOrbitalLaserDrill extends Container {
 
-	TileSpaceLaser laserTile;
+	TileOrbitalLaserDrill laserTile;
 	boolean finished, jammed;
 	int prevEnergy = 0, prevLaserX = 0, prevLaserZ = 0, buildingX, buildingZ;
-	TileSpaceLaser.MODE currMode;
+	TileOrbitalLaserDrill.MODE currMode;
 
-	ContainerSpaceLaser(InventoryPlayer inventoryPlayer, TileSpaceLaser tile) {
+	ContainerOrbitalLaserDrill(InventoryPlayer inventoryPlayer, TileOrbitalLaserDrill tile) {
 		super();
 		laserTile = tile;
 

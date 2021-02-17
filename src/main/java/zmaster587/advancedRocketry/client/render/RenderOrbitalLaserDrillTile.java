@@ -7,15 +7,15 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
-import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
+import zmaster587.advancedRocketry.tile.multiblock.TileOrbitalLaserDrill;
 
-public class RenderLaserTile extends TileEntitySpecialRenderer {
+public class RenderOrbitalLaserDrillTile extends TileEntitySpecialRenderer {
 
 	@Override
 	public void render(TileEntity tileentity, double x, double y,
 			double z, float f, int damage, float a) {
 
-		if(!((TileSpaceLaser)tileentity).isRunning())
+		if(!((TileOrbitalLaserDrill)tileentity).isRunning())
 			return;
 		
 		GL11.glPushMatrix();

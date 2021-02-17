@@ -6,9 +6,9 @@ import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.block.BlockPress;
-import zmaster587.advancedRocketry.integration.jei.blastFurnace.BlastFurnaceCategory;
-import zmaster587.advancedRocketry.integration.jei.blastFurnace.BlastFurnaceRecipeHandler;
-import zmaster587.advancedRocketry.integration.jei.blastFurnace.BlastFurnaceRecipeMaker;
+import zmaster587.advancedRocketry.integration.jei.arcFurnace.ArcFurnaceCategory;
+import zmaster587.advancedRocketry.integration.jei.arcFurnace.ArcFurnaceRecipeHandler;
+import zmaster587.advancedRocketry.integration.jei.arcFurnace.ArcFurnaceRecipeMaker;
 import zmaster587.advancedRocketry.integration.jei.centrifuge.CentrifugeCategory;
 import zmaster587.advancedRocketry.integration.jei.centrifuge.CentrifugeRecipeHandler;
 import zmaster587.advancedRocketry.integration.jei.centrifuge.CentrifugeRecipeMaker;
@@ -24,7 +24,6 @@ import zmaster587.advancedRocketry.integration.jei.electrolyser.ElectrolyzerReci
 import zmaster587.advancedRocketry.integration.jei.lathe.LatheCategory;
 import zmaster587.advancedRocketry.integration.jei.lathe.LatheRecipeHandler;
 import zmaster587.advancedRocketry.integration.jei.lathe.LatheRecipeMaker;
-import zmaster587.advancedRocketry.integration.jei.lathe.LatheWrapper;
 import zmaster587.advancedRocketry.integration.jei.platePresser.PlatePressCategory;
 import zmaster587.advancedRocketry.integration.jei.platePresser.PlatePressRecipeHandler;
 import zmaster587.advancedRocketry.integration.jei.platePresser.PlatePressRecipeMaker;
@@ -40,7 +39,6 @@ import zmaster587.advancedRocketry.integration.jei.rollingMachine.RollingMachine
 import zmaster587.advancedRocketry.integration.jei.sawmill.SawMillCategory;
 import zmaster587.advancedRocketry.integration.jei.sawmill.SawMillRecipeHandler;
 import zmaster587.advancedRocketry.integration.jei.sawmill.SawMillRecipeMaker;
-import zmaster587.advancedRocketry.recipe.RecipeLathe;
 import zmaster587.advancedRocketry.tile.multiblock.machine.*;
 import zmaster587.libVulpes.inventory.GuiModular;
 
@@ -80,7 +78,7 @@ public class ARPlugin implements IModPlugin {
 				new ChemicalReactorCategory(guiHelper),
 				new CrystallizerCategory(guiHelper),
 				new ElectrolyzerCategory(guiHelper),
-				new BlastFurnaceCategory(guiHelper),
+				new ArcFurnaceCategory(guiHelper),
 				new PlatePressCategory(guiHelper),
 				new CentrifugeCategory(guiHelper),
 				new PrecisionLaserEngraverCategory(guiHelper));
@@ -114,17 +112,17 @@ public class ARPlugin implements IModPlugin {
 		new ChemicalReactorRecipeHandler(),
 		new CrystallizerRecipeHandler(),
 		new ElectrolyzerRecipeHandler(),
-		new BlastFurnaceRecipeHandler(),
+		new ArcFurnaceRecipeHandler(),
 		new PlatePressRecipeHandler(),
 		new CentrifugeRecipeHandler(),
 		new PrecisionLaserEngraverRecipeHandler());
-		
+
 		registry.addRecipes(RollingMachineRecipeMaker.getMachineRecipes(jeiHelpers, TileRollingMachine.class), rollingMachineUUID);
 		registry.addRecipes(LatheRecipeMaker.getMachineRecipes(jeiHelpers, TileLathe.class), latheUUID);
 		registry.addRecipes(PrecisionAssemblerRecipeMaker.getMachineRecipes(jeiHelpers, TilePrecisionAssembler.class), precisionAssemblerUUID);
 		registry.addRecipes(SawMillRecipeMaker.getMachineRecipes(jeiHelpers, TileCuttingMachine.class), sawMillUUID);
 		registry.addRecipes(CrystallizerRecipeMaker.getMachineRecipes(jeiHelpers, TileCrystallizer.class), crystallizerUUID);
-		registry.addRecipes(BlastFurnaceRecipeMaker.getMachineRecipes(jeiHelpers, TileElectricArcFurnace.class), arcFurnaceUUID);
+		registry.addRecipes(ArcFurnaceRecipeMaker.getMachineRecipes(jeiHelpers, TileElectricArcFurnace.class), arcFurnaceUUID);
 		registry.addRecipes(PlatePressRecipeMaker.getMachineRecipes(jeiHelpers, BlockPress.class), platePresser);
 		registry.addRecipes(ElectrolyzerRecipeMaker.getMachineRecipes(jeiHelpers, TileElectrolyser.class), electrolyzerUUID);
 		registry.addRecipes(ChemicalReactorRecipeMaker.getMachineRecipes(jeiHelpers, TileChemicalReactor.class), chemicalReactorUUID);

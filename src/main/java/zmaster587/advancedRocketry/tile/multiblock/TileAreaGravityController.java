@@ -32,7 +32,7 @@ import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileGravityController extends TileMultiPowerConsumer implements ISliderBar, IGuiCallback {
+public class TileAreaGravityController extends TileMultiPowerConsumer implements ISliderBar, IGuiCallback {
 
 	int gravity;
 	int progress;
@@ -54,7 +54,7 @@ public class TileGravityController extends TileMultiPowerConsumer implements ISl
 				{null, LibVulpesBlocks.blockAdvStructureBlock, null}}
 	};
 
-	public TileGravityController() {
+	public TileAreaGravityController() {
 		//numGravPylons = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
 		textRadius = new ModuleText(6, 82, LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.radius") + "5", 0x202020);
 		targetGrav = new ModuleText(6, 110, LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.targetgrav"), 0x202020);

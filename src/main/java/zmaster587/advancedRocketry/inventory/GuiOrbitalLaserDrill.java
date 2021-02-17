@@ -11,7 +11,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
-import zmaster587.advancedRocketry.tile.multiblock.TileSpaceLaser;
+import zmaster587.advancedRocketry.tile.multiblock.TileOrbitalLaserDrill;
 import zmaster587.libVulpes.gui.GuiImageButton;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
@@ -19,17 +19,17 @@ import zmaster587.libVulpes.network.PacketMachine;
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class GuiSpaceLaser extends GuiContainer {
+public class GuiOrbitalLaserDrill extends GuiContainer {
 
 	private ResourceLocation backdrop = new ResourceLocation("advancedrocketry", "textures/gui/LaserTile.png");
-	private TileSpaceLaser laserTile;
+	private TileOrbitalLaserDrill laserTile;
 	private int prevX, prevZ;
 
 	GuiTextField xbox,ybox;
 	GuiImageButton modeUp, modeDown;
 
-	public GuiSpaceLaser(InventoryPlayer inventoryPlayer, TileSpaceLaser tile) {
-		super(new ContainerSpaceLaser(inventoryPlayer, tile));
+	public GuiOrbitalLaserDrill(InventoryPlayer inventoryPlayer, TileOrbitalLaserDrill tile) {
+		super(new ContainerOrbitalLaserDrill(inventoryPlayer, tile));
 		laserTile = tile;
 	}
 
