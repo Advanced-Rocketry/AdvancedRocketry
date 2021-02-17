@@ -19,7 +19,7 @@ public class PrecisionLaserEtcherCategory extends MachineCategoryTemplate<Precis
 
 	@Override
 	public String getTitle() {
-		return LibVulpes.proxy.getLocalizedString("tile.precisionlaserengraver.name");
+		return LibVulpes.proxy.getLocalizedString("tile.precisionlaseretcher.name");
 	}
 
     @Override

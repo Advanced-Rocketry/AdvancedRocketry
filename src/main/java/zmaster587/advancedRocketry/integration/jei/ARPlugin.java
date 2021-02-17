@@ -58,7 +58,7 @@ public class ARPlugin implements IModPlugin {
 	public static final String arcFurnaceUUID = "zmaster587.AR.arcFurnace";
 	public static final String platePresser = "zmaster587.AR.platePresser";
 	public static final String centrifugeUUID = "zmaster587.AR.centrifuge";
-	public static final String precisionLaserEngraverUUID = "zmaster587.AR.precisionlaserengraver";
+	public static final String precisionLaserEngraverUUID = "zmaster587.AR.precisionlaseretcher";
 
 	//AR machines can reload recipes. We still need this for JEI to be up-to-date
 	@SuppressWarnings("deprecation")
