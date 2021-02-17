@@ -5,11 +5,11 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 
-public class BlockPlanetSoil extends Block {
+public class BlockRegolith extends Block {
 
 	MapColor extraMapColor;
 	
-	public BlockPlanetSoil() {
+	public BlockRegolith() {
 		super(Material.GROUND);
 		setHarvestLevel("shovel", 0);
 		setSoundType(SoundType.SAND);

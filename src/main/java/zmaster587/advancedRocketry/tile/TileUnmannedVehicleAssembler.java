@@ -24,7 +24,7 @@ import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.ZUtils;
 
-public class TileStationDeployedAssembler extends TileRocketBuilder {
+public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 
 	private final static int MAX_SIZE = 17, MAX_SIZE_Y = 17, MIN_SIZE = 3, MIN_SIZE_Y = 3;
 

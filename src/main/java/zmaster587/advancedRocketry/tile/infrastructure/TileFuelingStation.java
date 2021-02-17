@@ -22,7 +22,7 @@ import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.block.BlockTileRedstoneEmitter;
-import zmaster587.advancedRocketry.tile.TileRocketBuilder;
+import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
@@ -40,13 +40,13 @@ import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank implements IModularInventory, IMultiblock, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory {
+public class TileFuelingStation extends TileInventoriedRFConsumerTank implements IModularInventory, IMultiblock, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory {
 	EntityRocketBase linkedRocket;
 	HashedBlockPosition masterBlock;
 	ModuleRedstoneOutputButton redstoneControl;
 	RedstoneState state;
 
-	public TileEntityFuelingStation() {
+	public TileFuelingStation() {
 		super(1000,3, 5000);
 		masterBlock = new HashedBlockPosition(0, -1, 0);
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 0, "", this);
@@ -226,8 +226,8 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		if(getMasterBlock() instanceof TileRocketBuilder)
-			((TileRocketBuilder)getMasterBlock()).removeConnectedInfrastructure(this);
+		if(getMasterBlock() instanceof TileRocketAssemblingMachine)
+			((TileRocketAssemblingMachine)getMasterBlock()).removeConnectedInfrastructure(this);
 
 		//Mostly for client rendering stuff
 		if(linkedRocket != null)

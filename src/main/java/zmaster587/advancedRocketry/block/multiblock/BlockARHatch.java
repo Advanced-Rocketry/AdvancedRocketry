@@ -93,7 +93,7 @@ public class BlockARHatch extends BlockHatch {
 		else if((metadata & 7) == 5)
 			return new TileRocketFluidLoader();
 		else if((metadata & 7) == 6)
-			return new TileGuidanceComputerHatch();
+			return new TileGuidanceComputerAccessHatch();
 		
 		return null;
 	}

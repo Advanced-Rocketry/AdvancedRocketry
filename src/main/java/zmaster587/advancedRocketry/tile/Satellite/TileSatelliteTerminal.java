@@ -28,7 +28,7 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer implements INetworkMachine, IModularInventory, IButtonInventory, IDataInventory {
+public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements INetworkMachine, IModularInventory, IButtonInventory, IDataInventory {
 
 
 	//ModuleText satelliteText;
@@ -36,7 +36,7 @@ public class TileEntitySatelliteControlCenter extends TileInventoriedRFConsumer 
 	ModuleText moduleText;
 	DataStorage data;
 
-	public TileEntitySatelliteControlCenter() {
+	public TileSatelliteTerminal() {
 		super(10000, 2);
 
 		data = new DataStorage();

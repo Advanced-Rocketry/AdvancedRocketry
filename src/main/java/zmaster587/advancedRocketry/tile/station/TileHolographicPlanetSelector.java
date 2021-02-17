@@ -29,7 +29,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TilePlanetaryHologram extends TileEntity implements ITickable,IButtonInventory, IModularInventory, ISliderBar, INetworkMachine {
+public class TileHolographicPlanetSelector extends TileEntity implements ITickable,IButtonInventory, IModularInventory, ISliderBar, INetworkMachine {
 
 	private List<EntityUIPlanet> entities;
 	private List<EntityUIStar> starEntities;
@@ -50,7 +50,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickable,IButt
 	private boolean allowUpdate = true;  //Hack to get around the delay in entity position
 	private boolean stellarMode;
 
-	public TilePlanetaryHologram() {
+	public TileHolographicPlanetSelector() {
 		entities = new LinkedList<EntityUIPlanet>();
 		starEntities = new LinkedList<EntityUIStar>();
 		targetGrav = new ModuleText(6, 45, LibVulpes.proxy.getLocalizedString("msg.planetholo.size"), 0x202020);

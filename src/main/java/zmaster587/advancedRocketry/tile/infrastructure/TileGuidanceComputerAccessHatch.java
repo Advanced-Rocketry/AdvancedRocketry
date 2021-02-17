@@ -11,7 +11,6 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -26,7 +25,7 @@ import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
-import zmaster587.advancedRocketry.tile.TileRocketBuilder;
+import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
@@ -40,7 +39,7 @@ import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileGuidanceComputerHatch extends TilePointer implements IInfrastructure, IInventory, IModularInventory, IToggleButton, INetworkMachine, ITickable {
+public class TileGuidanceComputerAccessHatch extends TilePointer implements IInfrastructure, IInventory, IModularInventory, IToggleButton, INetworkMachine, ITickable {
 
 	private static final int buttonAutoEject = 0, buttonSatellite = 1, buttonPlanet = 2, buttonStation = 3, redstoneState = 4;
 	private ModuleToggleSwitch module_autoEject, module_satellite, module_planet, module_station;
@@ -50,7 +49,7 @@ public class TileGuidanceComputerHatch extends TilePointer implements IInfrastru
 	ModuleRedstoneOutputButton redstoneControl;
 	RedstoneState state;
 
-	public TileGuidanceComputerHatch() {
+	public TileGuidanceComputerAccessHatch() {
 		buttonState = new boolean[4];
 		chipEjected = false;
 
@@ -81,8 +80,8 @@ public class TileGuidanceComputerHatch extends TilePointer implements IInfrastru
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		if(getMasterBlock() instanceof TileRocketBuilder)
-			((TileRocketBuilder)getMasterBlock()).removeConnectedInfrastructure(this);
+		if(getMasterBlock() instanceof TileRocketAssemblingMachine)
+			((TileRocketAssemblingMachine)getMasterBlock()).removeConnectedInfrastructure(this);
 	}
 
 	@Override

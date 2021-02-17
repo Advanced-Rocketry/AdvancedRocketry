@@ -58,7 +58,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonInventory, INetworkMachine, IDataSync, IModularInventory, IProgressBar, ILinkableTile {
+public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements IButtonInventory, INetworkMachine, IDataSync, IModularInventory, IProgressBar, ILinkableTile {
 
 	private final int MAX_SIZE = 16;
 	private final int MIN_SIZE = 3;
@@ -113,7 +113,7 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		public String getErrorCode() { return code; } 
 	}
 
-	public TileRocketBuilder() {
+	public TileRocketAssemblingMachine() {
 		super(100000);
 
 		blockPos = new LinkedList<HashedBlockPosition>();

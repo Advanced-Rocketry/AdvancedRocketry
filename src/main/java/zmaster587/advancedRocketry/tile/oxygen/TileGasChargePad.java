@@ -23,8 +23,8 @@ import zmaster587.libVulpes.util.IconResource;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileOxygenCharger extends TileInventoriedRFConsumerTank implements IModularInventory {
-	public TileOxygenCharger() {
+public class TileGasChargePad extends TileInventoriedRFConsumerTank implements IModularInventory {
+	public TileGasChargePad() {
 		super(0, 2, 16000);
 	}
 

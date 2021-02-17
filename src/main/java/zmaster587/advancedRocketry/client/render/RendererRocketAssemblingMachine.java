@@ -12,10 +12,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 import org.lwjgl.opengl.GL11;
 
-import zmaster587.advancedRocketry.tile.TileRocketBuilder;
+import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
 import zmaster587.libVulpes.render.RenderHelper;
 
-public class RendererRocketBuilder extends TileEntitySpecialRenderer {
+public class RendererRocketAssemblingMachine extends TileEntitySpecialRenderer {
 
 	
 	private ResourceLocation grid = new ResourceLocation("advancedrocketry:textures/models/grid.png");
@@ -28,7 +28,7 @@ public class RendererRocketBuilder extends TileEntitySpecialRenderer {
 
 
 
-		TileRocketBuilder renderTile = (TileRocketBuilder)tile;
+		TileRocketAssemblingMachine renderTile = (TileRocketAssemblingMachine)tile;
 		AxisAlignedBB bb;
 		
 		//If the rocketbuilder is scanning and a valid bounding box for the rocket exists

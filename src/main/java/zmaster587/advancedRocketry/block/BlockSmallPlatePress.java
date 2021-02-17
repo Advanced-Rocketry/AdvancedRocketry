@@ -20,9 +20,9 @@ import zmaster587.libVulpes.recipe.RecipesMachine;
 
 import java.util.List;
 
-public class BlockPress extends BlockPistonBase {
+public class BlockSmallPlatePress extends BlockPistonBase {
 
-	public BlockPress() {
+	public BlockSmallPlatePress() {
 		super(false);
 	}
 

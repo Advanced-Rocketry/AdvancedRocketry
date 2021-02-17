@@ -21,14 +21,14 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileStationOrientationControl extends TileEntity implements ITickable, IModularInventory, INetworkMachine, ISliderBar {
+public class TileStationOrientationController extends TileEntity implements ITickable, IModularInventory, INetworkMachine, ISliderBar {
 
 	int numRotationsPerHour[];
 	int progress[];
 
 	private ModuleText moduleAngularVelocity, numThrusters, maxAngularAcceleration, targetRotations;
 
-	public TileStationOrientationControl() {
+	public TileStationOrientationController() {
 		moduleAngularVelocity = new ModuleText(6, 15, LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.alt"), 0xaa2020);
 		//numThrusters = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
 		targetRotations = new ModuleText(6, 25, LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.tgtalt"), 0x202020);

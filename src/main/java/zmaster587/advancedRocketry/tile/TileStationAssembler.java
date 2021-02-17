@@ -24,11 +24,11 @@ import zmaster587.libVulpes.util.EmbeddedInventory;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileStationBuilder extends TileRocketBuilder implements IInventory {
+public class TileStationAssembler extends TileRocketAssemblingMachine implements IInventory {
 
 	EmbeddedInventory inventory;
 	Long storedId;
-	public TileStationBuilder() {
+	public TileStationAssembler() {
 		super();
 		inventory = new EmbeddedInventory(4);
 		status = ErrorCodes.EMPTY;

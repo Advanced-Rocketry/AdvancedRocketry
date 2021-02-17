@@ -33,7 +33,7 @@ import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileEntityMoniteringStation extends TileEntity  implements IModularInventory, IAdjBlockUpdate, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory, IProgressBar  {
+public class TileRocketMonitoringStation extends TileEntity  implements IModularInventory, IAdjBlockUpdate, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory, IProgressBar  {
 
 	EntityRocketBase linkedRocket;
 	IMission mission;
@@ -45,7 +45,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	int velocity;
 	int fuelLevel, maxFuelLevel;
 
-	public TileEntityMoniteringStation() {
+	public TileRocketMonitoringStation() {
 		mission = null;
 		missionText = new ModuleText(20, 90, LibVulpes.proxy.getLocalizedString("msg.monitoringStation.missionProgressNA"), 0x2b2b2b);
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, -1, "", this);
