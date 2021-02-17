@@ -45,7 +45,7 @@ public class RendererPrecisionLaserEngraver extends TileEntitySpecialRenderer {
 
 		if(multiBlockTile.isRunning()) {
 
-			float progress = multiBlockTile.getProgress(0)/(float)multiBlockTile.getTotalProgress(0);
+			float progress = multiBlockTile.getProgress(0)/(float)multiBlockTile.getTotalProgress(0) + f/(float)multiBlockTile.getTotalProgress(0);
 
 			bindTexture(texture);
 			model.renderPart("Hull");
@@ -56,7 +56,7 @@ public class RendererPrecisionLaserEngraver extends TileEntitySpecialRenderer {
 
 			if (progress < 0.875){
 				if (progress2 > 0.875) {
-					GL11.glTranslatef(0f, 0f, ((progress / 16.0f) * (1.0f / progress2)));
+					GL11.glTranslatef(0f, 0f, (progress2 - 0.875f)/2f);
 				}
 				GL11.glTranslatef(0f, 0f, (progress - (progress2/16f)));
 			} else
