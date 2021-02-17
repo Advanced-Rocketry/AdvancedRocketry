@@ -10,7 +10,8 @@
             "ore": "plateGold"
         },
         {
-	        "item": "minecraft:redstone_block"
+           "type": "forge:ore_dict",
+           "ore": "dustRedstone"
         },
     	{
 	        "item": "advancedrocketry:wafer",
@@ -19,10 +20,10 @@
         }
     ],
     "time": 1200,
-    "energy": 600,
+    "energy": 400,
     "itemresults": {
 	    "item": "advancedrocketry:itemcircuitplate",
-	    "data": 1,
+	    "data": 0,
         "count": 2
     }
 }
