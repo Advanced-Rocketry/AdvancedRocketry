@@ -12,14 +12,14 @@ import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
-public class RendererPrecisionLaserEngraver extends TileEntitySpecialRenderer {
+public class RendererPrecisionLaserEtcher extends TileEntitySpecialRenderer {
 	WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/precisionlaserengraver.png");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/precisionlaseretcher.png");
 
-	public RendererPrecisionLaserEngraver() {
+	public RendererPrecisionLaserEtcher() {
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/precisionlaserengraver.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/precisionlaseretcher.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}

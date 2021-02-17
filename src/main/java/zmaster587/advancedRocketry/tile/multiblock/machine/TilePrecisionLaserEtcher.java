@@ -28,7 +28,7 @@ import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import java.util.Iterator;
 import java.util.List;
 
-public class TilePrecisionLaserEngraver extends TileMultiblockMachine implements IModularInventory {
+public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements IModularInventory {
 
 	public static final Object[][][] structure = { 
 		{{"slab", "slab", "slab"},
@@ -99,7 +99,7 @@ public class TilePrecisionLaserEngraver extends TileMultiblockMachine implements
 	private boolean isLensItem (ItemStack stack) {
 		int[] oreIds = OreDictionary.getOreIDs(stack);
 		for (int oreId : oreIds) {
-			if (OreDictionary.getOreName(oreId).contains("lensPrecisionLaserEngraver")) {
+			if (OreDictionary.getOreName(oreId).contains("lensPrecisionLaserEtcher")) {
 				return true;
 			}
 		}
@@ -125,6 +125,6 @@ public class TilePrecisionLaserEngraver extends TileMultiblockMachine implements
 
 	@Override
 	public String getMachineName() {
-		return "tile.precisionlaserengraver.name";
+		return "tile.precisionlaseretcher.name";
 	}
 }

@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.integration.jei.precisionLaserEngraver;
+package zmaster587.advancedRocketry.integration.jei.precisionLaserEtcher;
 
 import mezz.jei.api.IGuiHelper;
 import zmaster587.advancedRocketry.integration.jei.ARPlugin;
@@ -6,9 +6,9 @@ import zmaster587.advancedRocketry.integration.jei.MachineCategoryTemplate;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.LibVulpes;
 
-public class PrecisionLaserEngraverCategory extends MachineCategoryTemplate<PrecisionLaserEngraverWrapper> {
+public class PrecisionLaserEtcherCategory extends MachineCategoryTemplate<PrecisionLaserEtcherWrapper> {
 
-	public PrecisionLaserEngraverCategory(IGuiHelper helper) {
+	public PrecisionLaserEtcherCategory(IGuiHelper helper) {
 		super(helper, TextureResources.latheProgressBar);
 	}
 	

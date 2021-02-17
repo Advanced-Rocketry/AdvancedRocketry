@@ -2,7 +2,7 @@
     "parent": "block/orientable",
     "textures": {
         "top": "libvulpes:blocks/machineGeneric",
-        "front": "advancedrocketry:blocks/machinePrecisionLaserEngraver",
+        "front": "advancedrocketry:blocks/machineprecisionlaseretcher",
         "side": "libvulpes:blocks/machineGeneric"
     }
 }
