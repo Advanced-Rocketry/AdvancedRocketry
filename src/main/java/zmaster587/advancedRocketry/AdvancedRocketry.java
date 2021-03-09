@@ -890,6 +890,7 @@ public class AdvancedRocketry {
         OreDictionary.registerOre("treeLeaves", new ItemStack(AdvancedRocketryBlocks.blockAlienLeaves));
         OreDictionary.registerOre("treeSapling", new ItemStack(AdvancedRocketryBlocks.blockAlienSapling));
         OreDictionary.registerOre("concrete", new ItemStack(AdvancedRocketryBlocks.blockConcrete));
+		OreDictionary.registerOre("casingCentrifuge", new ItemStack(LibVulpesBlocks.blockAdvStructureBlock));
 	}
 
 	@SideOnly(Side.CLIENT)

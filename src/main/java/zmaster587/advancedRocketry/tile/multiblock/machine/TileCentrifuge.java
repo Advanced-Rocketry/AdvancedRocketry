@@ -32,16 +32,16 @@ public class TileCentrifuge extends TileMultiblockMachine {
 	public static final Object[][][] structure = {
 
 			{{Blocks.AIR, new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'},
-					{"blockSteel", "blockSteel", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
-					{"blockSteel", "blockSteel", null}},
+					{"casingCentrifuge", "casingCentrifuge", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+					{"casingCentrifuge", "casingCentrifuge", null}},
 
 			{{Blocks.AIR, new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'},
-					{"blockSteel", "blockSteel", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
-					{"blockSteel", "blockSteel", 'l'}},
+					{"casingCentrifuge", "casingCentrifuge", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+					{"casingCentrifuge", "casingCentrifuge", 'l'}},
 
 			{{'c', new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'},
-					{"blockSteel", "blockSteel", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
-					{"blockSteel", "blockSteel", 'l'}},
+					{"casingCentrifuge", "casingCentrifuge", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+					{"casingCentrifuge", "casingCentrifuge", 'l'}},
 
 			{   {'P','L', 'l'},
 				{LibVulpesBlocks.motors,'O', new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
