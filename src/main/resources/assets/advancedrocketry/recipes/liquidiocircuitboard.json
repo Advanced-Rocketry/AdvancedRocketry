@@ -31,7 +31,7 @@
         "v":
         {
             "type": "forge:ore_dict",
-            "ore": "gemDiamond"
+            "ore": "gemQuartz"
         }
     },
     "result":

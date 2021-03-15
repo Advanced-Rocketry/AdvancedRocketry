@@ -173,6 +173,7 @@ public class ClientProxy extends CommonProxy {
 		
 		LinkedList<Item> blockItems = new LinkedList<Item>();
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockAdvEngine));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockAdvBipropellantEngine));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockAlienLeaves));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockAlienPlanks));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockAlienSapling));
@@ -197,11 +198,14 @@ public class ClientProxy extends CommonProxy {
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockElectrolyser));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockEnergyPipe));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockEngine));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockBipropellantEngine));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockFluidPipe));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockForceField));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockForceFieldProjector));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockFuelingStation));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockFuelTank));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockBipropellantFuelTank));
+		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockOxidizerFuelTank));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockGravityController));
 		blockItems.add(Item.getItemFromBlock(AdvancedRocketryBlocks.blockGravityMachine));

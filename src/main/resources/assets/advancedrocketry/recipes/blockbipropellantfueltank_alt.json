@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"s s",
+	"pSp",
+	"s s"
+    ],
+    "key":
+    {
+        "s":
+        {
+            "type": "forge:ore_dict",
+            "ore": "rodSteel"
+        },
+        "S":
+        {
+            "type": "forge:ore_dict",
+            "ore": "sheetSteel"
+        },
+	"p":
+        {
+            "type": "forge:ore_dict",
+            "ore": "plateSteel"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:bipropellantfueltank",
+        "count": 1
+    }
+}

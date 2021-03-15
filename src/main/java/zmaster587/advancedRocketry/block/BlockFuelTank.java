@@ -37,30 +37,6 @@ public class BlockFuelTank extends Block implements IFuelTank{
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, new IProperty[]{TANKSTATES});
 	}
-	
-	/*@Override
-	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
-
-
-		int i = world.getBlockState(pos.add(0,1,0)).getBlock() == this ? 1 : 0;
-		i += world.getBlockState(pos.add(0,-1,0)).getBlock() == this ? 2 : 0;
-
-		//If there is no tank below this one
-		if( i == 1 ) {
-			world.setBlockState(pos, this.getDefaultState().withProperty(TANKSTATES, TankStates.BOTTOM),2);
-			((TileModelRender)world.getTileEntity(pos)).setType(TileModelRender.models.TANKEND);
-		}
-		//If there is no tank above this one
-		else if( i == 2 ) {
-			world.setBlockState(pos, this.getDefaultState().withProperty(TANKSTATES, TankStates.TOP),2);
-			((TileModelRender)world.getTileEntity(pos)).setType(TileModelRender.models.TANKTOP);
-		}
-		//If there is a tank above and below this one
-		else {
-			world.setBlockState(pos, this.getDefaultState().withProperty(TANKSTATES, TankStates.MIDDLE),2);
-			((TileModelRender)world.getTileEntity(pos)).setType(TileModelRender.models.TANKMIDDLE);
-		}
-	}*/
 
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess world,

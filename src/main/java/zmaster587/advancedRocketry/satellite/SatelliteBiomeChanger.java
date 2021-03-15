@@ -209,7 +209,7 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 		if(getDimensionId() != Constants.INVALID_PLANET) {
 			World world = net.minecraftforge.common.DimensionManager.getWorld(getDimensionId());
 			if(world != null) {
-				battery.acceptEnergy(energyCreated(world, false), false);
+				battery.acceptEnergy(energyCreated(false), false);
 			}
 		}
 		return battery.extractEnergy(amt, simulate);
@@ -221,7 +221,7 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 		if(getDimensionId() != Constants.INVALID_PLANET) {
 			World world = net.minecraftforge.common.DimensionManager.getWorld(getDimensionId());
 			if(world != null) {
-				battery.acceptEnergy(energyCreated(world, false), false);
+				battery.acceptEnergy(energyCreated(false), false);
 			}
 		}
 

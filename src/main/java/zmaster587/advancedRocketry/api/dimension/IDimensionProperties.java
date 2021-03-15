@@ -73,6 +73,16 @@ public interface IDimensionProperties {
 	public boolean hasAtmosphere();
 	
 	/**
+	 * @return the multiplier compared to Earth(1040W) for peak insolation of the body
+	 */
+	public double getPeakInsolationMultiplier();
+
+	/**
+	 * @return the multiplier compared to Earth(1040W) for peak insolation of the body, disregarding atmosphere
+	 */
+	public double getPeakInsolationMultiplierWithoutAtmosphere();
+	
+	/**
 	 * @return true if the planet has rings
 	 */
 	public boolean hasRings();
@@ -171,6 +181,10 @@ public interface IDimensionProperties {
 	 */
 	public int getOrbitalDist();
 
+	/**
+	 * @return temperature of the planet in Kelvin
+	 */
+	public int getAverageTemp();
 	
 	/**
 	 * @return depth in the tree planet is.  If the planet orbits the star directly, the result is 0, the moon 1, the moon of a moon 2, etc

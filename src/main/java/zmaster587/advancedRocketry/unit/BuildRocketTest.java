@@ -11,7 +11,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.entity.EntityRocket;
@@ -209,7 +208,7 @@ public class BuildRocketTest extends BaseTest {
 	
 	public void FuelRocket(EntityRocket rocket)
 	{
-		rocket.setFuelAmount(rocket.getFuelCapacity());
+		rocket.setFuelAmountMonoproellant(rocket.getFuelCapacityMonopropellant());
 	}
 	
 	public EntityRocket findRocketOnPad(World world)

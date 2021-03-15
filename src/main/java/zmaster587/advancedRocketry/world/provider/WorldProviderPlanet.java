@@ -35,6 +35,7 @@ import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.compat.Compat;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderAsteroids;
 import zmaster587.advancedRocketry.world.ChunkProviderCavePlanet;
@@ -213,7 +214,10 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	public float getSunBrightness(float partialTicks) {
+		DimensionProperties properties = getDimensionProperties(Minecraft.getMinecraft().player.getPosition());
+		StellarBody star = properties.getStar();
 		
+		//This is inaccurate at times, moreso for atmosphere, but I am NOT doing the required math for the realistic counterpart
 		float atmosphere = getAtmosphereDensity(new BlockPos(0,0,0));
 		Math.abs(1-atmosphere);
 		//calculateCelestialAngle(p_76563_1_, p_76563_3_)
@@ -232,9 +236,12 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 		f2 = 1.0F - f2;
 
+		//Vary brightness depending upon sun luminosity and planet distance
+		//This takes into account how eyes work, that they're not linear in sensing light
+		f2 *= (float)AstronomicalBodyHelper.getPlanetaryLightLevelMultiplier(AstronomicalBodyHelper.getStellarBrightness(star, properties.getSolarOrbitalDistance()));
+		
 		//Eclipse handling
 		if(this.world.isRemote) {
-			DimensionProperties properties = getDimensionProperties(Minecraft.getMinecraft().player.getPosition());
 			if(properties.isMoon()) {
 				f2 = eclipseValue(properties, f2, partialTicks);
 			}
@@ -245,19 +252,6 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 				}
 			}
 		}
-		
-		StellarBody star = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getStar();
-		boolean blackHole = star != null && star.isBlackHole();
-		for(StellarBody star2 : star.getSubStars())
-			if(!star2.isBlackHole())
-			{
-				blackHole = false;
-				break;
-			}
-			
-		
-		if(blackHole)
-			f2 *=0.25;
 		
 		return f2*super.getSunBrightness(partialTicks);
 	}
