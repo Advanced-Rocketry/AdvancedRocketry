@@ -42,23 +42,7 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 	public Object[][][] getStructure() {
 		return structure;
 	}
-	
-	@Override
-	public float getTimeMultiplierForBlock(IBlockState state, TileEntity tile) {
 
-		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(state.getBlock(),1, state.getBlock().getMetaFromState(state)));
-		if(material == MaterialRegistry.getMaterialFromName("Gold"))
-			return 0.9f;
-		else if(material == MaterialRegistry.getMaterialFromName("Aluminum"))
-			return 0.8f;
-		else if(material == MaterialRegistry.getMaterialFromName("Titanium"))
-			return 0.75f;
-		else if(material == MaterialRegistry.getMaterialFromName("Iridium"))
-			return 0.5f;
-
-		return super.getTimeMultiplierForBlock(state, tile);
-	}
-	
 	@Override
 	public List<BlockMeta> getAllowableWildCardBlocks() {
 		List<BlockMeta> list = super.getAllowableWildCardBlocks();

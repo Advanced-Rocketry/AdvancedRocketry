@@ -44,22 +44,6 @@ public class TileElectrolyser extends TileMultiblockMachine {
 	public void registerRecipes() {
 		//RecipesMachine.getInstance().addRecipe(TileElectrolyser.class, new Object[] {new FluidStack(AdvancedRocketryFluids.fluidOxygen, 100), new FluidStack(AdvancedRocketryFluids.fluidHydrogen, 100)}, 100, 20, new FluidStack(FluidRegistry.WATER, 10));
 	}
-	
-	@Override
-	public float getTimeMultiplierForBlock(IBlockState state, TileEntity tile) {
-
-		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(state.getBlock(),1, state.getBlock().getMetaFromState(state)));
-		if(material == MaterialRegistry.getMaterialFromName("Gold"))
-			return 0.9f;
-		else if(material == MaterialRegistry.getMaterialFromName("Aluminum"))
-			return 0.8f;
-		else if(material == MaterialRegistry.getMaterialFromName("Titanium"))
-			return 0.75f;
-		else if(material == MaterialRegistry.getMaterialFromName("Iridium"))
-			return 0.5f;
-
-		return super.getTimeMultiplierForBlock(state, tile);
-	}
 
 	@Override
 	public boolean shouldHideBlock(World world, BlockPos pos2, IBlockState tile) { return true; }
