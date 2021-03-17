@@ -972,6 +972,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		return satallites.get(id);
 	}
 
+	/**
+	 * Returns all of a dimension's satellites
+	 * @return a Collection containing all of a dimension's satellites
+	 */
+	public Collection<SatelliteBase> getAllSatellites() {
+		return this.satallites.values();
+	}
+
 	//TODO: multithreading
 	/**
 	 * Tick satellites as needed
