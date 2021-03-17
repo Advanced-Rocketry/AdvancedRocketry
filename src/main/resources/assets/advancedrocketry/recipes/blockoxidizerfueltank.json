@@ -2,31 +2,31 @@
     "type": "minecraft:crafting_shaped",
     "pattern":
     [
-	"s s",
-	"pbp",
-	"p p"
+	"sSs",
+	"p p",
+	"s s"
     ],
     "key":
     {
         "s":
         {
             "type": "forge:ore_dict",
-            "ore": "rodIron"
+            "ore": "stickSteel"
+        },
+        "S":
+        {
+            "type": "forge:ore_dict",
+            "ore": "sheetSteel"
         },
 	"p":
         {
             "type": "forge:ore_dict",
-            "ore": "plateIron"
-        },
-	"b":
-        {
-            "item": "advancedrocketry:sawbladeiron",
-            "data": 0
+            "ore": "plateSteel"
         }
     },
     "result":
     {
-        "item": "advancedrocketry:sawblade",
+        "item": "advancedrocketry:oxidizerfueltank",
         "count": 1
     }
 }

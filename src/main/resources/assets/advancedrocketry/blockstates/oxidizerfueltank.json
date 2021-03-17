@@ -1,0 +1,18 @@
+{
+    "defaults": {
+        "textures": {},
+        "model": "advancedrocketry:models/middleTank.obj"
+    },
+    "variants": {
+        "tankstates=top": { "model": "advancedrocketry:models/topTank.obj" },
+        "tankstates=middle": { "model": "advancedrocketry:models/middleTank.obj" },
+        "tankstates=bottom": { "model": "advancedrocketry:models/bottomTank.obj" },
+        "inventory": {
+            "model": "advancedrocketry:models/middleTank.obj",
+            "transform": "forge:default-block",
+            "textures": {
+                "layer0": "advancedrocketry:textures/models/tank.png"
+            }
+        }
+    }
+}

@@ -228,6 +228,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private int originalAtmosphereDensity;
 	//Used in solar panels
 	public double peakInsolationMultiplier;
+	public double peakInsolationMultiplierWithoutAtmosphere;
 	private int atmosphereDensity;
 	//Stored in Kelvin
 	public int averageTemperature;
@@ -811,10 +812,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	/**
 	 * @return the multiplier compared to Earth(1040W) for peak insolation of the body
 	 */
-	public double getPeakInsolationMultiplier() {
-	    return peakInsolationMultiplier;
-	}
+	public double getPeakInsolationMultiplier() { return peakInsolationMultiplier; }
 
+	/**
+	 * @return the multiplier compared to Earth(1040W) for peak insolation of the body, ignoring the atmosphere
+	 */
+	public double getPeakInsolationMultiplierWithoutAtmosphere() {
+		return peakInsolationMultiplierWithoutAtmosphere;
+	}
 
 
 	public boolean isAsteroid() {
@@ -1425,6 +1430,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			originalAtmosphereDensity = atmosphereDensity;
         
 		peakInsolationMultiplier = nbt.getDouble("peakInsolationMultiplier");
+		peakInsolationMultiplierWithoutAtmosphere = nbt.getDouble("peakInsolationMultiplierWithoutAtmosphere");
 		averageTemperature = nbt.getInteger("avgTemperature");
 		rotationalPeriod = nbt.getInteger("rotationalPeriod");
 		name = nbt.getString("name");
@@ -1588,6 +1594,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setInteger("atmosphereDensity", atmosphereDensity);
 		nbt.setInteger("originalAtmosphereDensity", originalAtmosphereDensity);
  		nbt.setDouble("peakInsolationMultiplier", peakInsolationMultiplier);
+		nbt.setDouble("peakInsolationMultiplierWithoutAtmosphere", peakInsolationMultiplierWithoutAtmosphere);
 		nbt.setInteger("avgTemperature", averageTemperature);
 		nbt.setInteger("rotationalPeriod", rotationalPeriod);
 		nbt.setString("name", name);

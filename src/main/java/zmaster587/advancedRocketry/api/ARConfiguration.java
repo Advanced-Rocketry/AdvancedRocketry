@@ -12,6 +12,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import org.lwjgl.Sys;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
@@ -31,7 +32,6 @@ import java.util.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 
 /**
  * Stores config variables
@@ -53,7 +53,7 @@ public class ARConfiguration {
 	final static String CLIENT = "Client";
 	public static Logger logger = LogManager.getLogger(Constants.modId);
 
-	static String[] sealableBlockWhiteList, sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, entityList, asteriodOres, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidRocketFuel;
+	static String[] sealableBlockWhiteList, sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, entityList, asteriodOres, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidMonopropellant, liquidBipropellantFuel, liquidBipropellantOxidizer;
 
 
 	//Only to be set in preinit
@@ -459,7 +459,9 @@ public class ARConfiguration {
 		arConfig.crystalliserMaximumGravity = (float)config.get(Configuration.CATEGORY_GENERAL, "crystalliserMaximumGravity", 0f, "Maximum gravity the crystalliser will function at. Use 0.0 to disable!").getDouble();
 
 
-		liquidRocketFuel = config.get(ROCKET, "rocketFuels", new String[] {"rocketfuel"}, "List of fluid names for fluids that can be used as rocket fuel").getStringList();
+		liquidMonopropellant = config.get(ROCKET, "rocketFuels", new String[] {"rocketfuel;2"}, "List of fluid names for fluids that can be used as rocket monopropellants").getStringList();
+		liquidBipropellantFuel = config.get(ROCKET, "rocketBipropellants", new String[] {"hydrogen"}, "List of fluid names for fluids that can be used as rocket bipropellant fuels").getStringList();
+		liquidBipropellantOxidizer = config.get(ROCKET, "rocketOxidizers", new String[] {"oxygen"}, "List of fluid names for fluids that can be used as rocket bipropellant oxidizers").getStringList();
 
 		arConfig.stationSize = config.get(Configuration.CATEGORY_GENERAL, "SpaceStationBuildRadius", 1024, "The largest size a space station can be.  Should also be a power of 2 (512, 1024, 2048, 4096, ...).  CAUTION: CHANGING THIS OPTION WILL DAMAGE EXISTING STATIONS!!!").getInt();
 		arConfig.canPlayerRespawnInSpace = config.get(Configuration.CATEGORY_GENERAL, "allowPlanetRespawn", false, "If true players will respawn near beds on planets IF the spawn location is in a breathable atmosphere").getBoolean();
@@ -518,6 +520,7 @@ public class ARConfiguration {
 
 		//Client
 		arConfig.rocketRequireFuel = config.get(ROCKET, "rocketsRequireFuel", true, "Set to false if rockets should not require fuel to fly").getBoolean();
+		arConfig.canBeFueledByHand = config.get(ROCKET, "canBeFueledByHand", true, "Set to false if rockets should not be able to be fueled by and and will require a fueling station").getBoolean();
 		arConfig.rocketThrustMultiplier = config.get(ROCKET, "thrustMultiplier", 1f, "Multiplier for per-engine thrust").getDouble();
 		arConfig.fuelCapacityMultiplier = config.get(ROCKET, "fuelCapacityMultiplier", 1f, "Multiplier for per-tank capacity").getDouble();
 
@@ -588,18 +591,56 @@ public class ARConfiguration {
 
 		//Register fuels
 		logger.info("Start registering liquid rocket fuels");
-		for(String str : liquidRocketFuel) {
-			Fluid fluid = FluidRegistry.getFluid(str);
+		for(String str : liquidMonopropellant) {
+			String splitStr[] = str.split(";");
+			Fluid fluid = FluidRegistry.getFluid(splitStr[0]);
+			float multiplier = 1.0f;
+			if (splitStr.length > 1) {
+				multiplier = Float.parseFloat(splitStr[1]);
+			}
 
 			if(fluid != null) {
-				logger.info("Registering fluid "+ str + " as rocket fuel");
-				FuelRegistry.instance.registerFuel(FuelType.LIQUID, fluid, 1f);
+				logger.info("Registering fluid "+ str + " as rocket monopropellant");
+				FuelRegistry.instance.registerFuel(FuelType.LIQUID_MONOPROPELLANT, fluid, multiplier);
 			}
 			else
 				logger.warn("Fluid name" + str  + " is not a registered fluid!");
 		}
+		liquidMonopropellant = null; //clean up
+		for(String str : liquidBipropellantFuel) {
+			String splitStr[] = str.split(";");
+			Fluid fluid = FluidRegistry.getFluid(splitStr[0]);
+			float multiplier = 1.0f;
+			if (splitStr.length > 1) {
+				multiplier = Float.parseFloat(splitStr[1]);
+			}
+
+			if(fluid != null) {
+				logger.info("Registering fluid "+ str + " as rocket bipropellant");
+				FuelRegistry.instance.registerFuel(FuelType.LIQUID_BIPROPELLANT, fluid, multiplier);
+			}
+			else
+				logger.warn("Fluid name" + str  + " is not a registered fluid!");
+		}
+		liquidBipropellantFuel = null; //clean up
+		for(String str : liquidBipropellantOxidizer) {
+			String splitStr[] = str.split(";");
+			Fluid fluid = FluidRegistry.getFluid(splitStr[0]);
+			float multiplier = 1.0f;
+			if (splitStr.length > 1) {
+				multiplier = Float.parseFloat(splitStr[1]);
+			}
+
+			if(fluid != null) {
+				logger.info("Registering fluid "+ str + " as rocket oxidizer");
+				FuelRegistry.instance.registerFuel(FuelType.LIQUID_OXIDIZER, fluid, multiplier);
+			}
+			else
+				logger.warn("Fluid name" + str  + " is not a registered fluid!");
+		}
+		liquidBipropellantOxidizer = null; //clean up
 		logger.info("Finished registering liquid rocket fuels");
-		liquidRocketFuel = null; //clean up
+
 
 		//Register Whitelisted Sealable Blocks
 
@@ -806,6 +847,9 @@ public class ARConfiguration {
 
 	@ConfigProperty
 	public boolean rocketRequireFuel = true;
+
+	@ConfigProperty
+	public boolean canBeFueledByHand = true;
 
 	@ConfigProperty
 	public boolean enableNausea = true;

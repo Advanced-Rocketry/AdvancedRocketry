@@ -14,11 +14,11 @@ import zmaster587.advancedRocketry.api.IFuelTank;
 
 import java.util.Locale;
 
-public class BlockFuelTank extends Block implements IFuelTank{
+public class BlockBipropellantFuelTank extends Block implements IFuelTank{
 
 	public final static PropertyEnum<TankStates> TANKSTATES = PropertyEnum.create("tankstates", TankStates.class);
 
-	public BlockFuelTank(Material mat) {
+	public BlockBipropellantFuelTank(Material mat) {
 		super(mat);
 		this.setDefaultState(this.getDefaultState().withProperty(TANKSTATES, TankStates.MIDDLE));
 	}

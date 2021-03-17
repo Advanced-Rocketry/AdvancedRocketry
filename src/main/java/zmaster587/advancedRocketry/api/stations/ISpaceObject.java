@@ -92,7 +92,9 @@ public interface ISpaceObject {
 	public double getMaxRotationalAcceleration();
 	
 	public void setDeltaRotation(double rotation, EnumFacing dir);
-	
+
+	public double getInsolationMultiplier();
+
 	/**
 	 * @return true if there is an empty pad to land on
 	 */

@@ -76,6 +76,11 @@ public interface IDimensionProperties {
 	 * @return the multiplier compared to Earth(1040W) for peak insolation of the body
 	 */
 	public double getPeakInsolationMultiplier();
+
+	/**
+	 * @return the multiplier compared to Earth(1040W) for peak insolation of the body, disregarding atmosphere
+	 */
+	public double getPeakInsolationMultiplierWithoutAtmosphere();
 	
 	/**
 	 * @return true if the planet has rings
