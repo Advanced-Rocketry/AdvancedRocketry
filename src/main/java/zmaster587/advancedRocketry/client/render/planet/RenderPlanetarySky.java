@@ -607,7 +607,6 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 		for(DimensionProperties moons : children) {
 			matrix.push();
-			
 			double rot = ((partialTicks*moons.orbitTheta + ((1-partialTicks)*moons.prevOrbitalTheta)) * 180F/Math.PI);
 
 			matrix.rotate(new Quaternion(0, 0, (float)moons.orbitalPhi,true));
@@ -619,7 +618,6 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			double x = -MathHelper.sin(phiAngle)*MathHelper.cos((float)moons.orbitTheta);
 			double y = MathHelper.sin((float)moons.orbitTheta);
 			double rotation = -Math.PI/2f + Math.atan2(x, y) - (moons.orbitTheta - Math.PI)*MathHelper.sin(phiAngle);
-
 			renderPlanet(buffer, matrix, moons, moons.getParentOrbitalDistance(), multiplier, rotation, moons.hasAtmosphere(), moons.hasRings, (float)Math.pow(moons.gravitationalMultiplier, 0.4));
 			matrix.pop();
 		}

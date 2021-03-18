@@ -29,7 +29,6 @@ import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -46,6 +45,7 @@ import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
@@ -322,8 +322,7 @@ public class RocketEventHandler extends Screen {
 			brightness = Minecraft.getInstance().getRenderViewEntity().world.getBrightness(new BlockPos( Minecraft.getInstance().getRenderViewEntity().getPositionVec()));
 
 		double deltaY = (Minecraft.getInstance().getRenderViewEntity().getPosY() - Minecraft.getInstance().getRenderViewEntity().lastTickPosY)*partialTicks;
-
-		double size = (getImgSize*5/(72-Minecraft.getInstance().getRenderViewEntity().getPosY() - deltaY));
+		double size = (getImgSize*5/(72-(Minecraft.getInstance().getRenderViewEntity().getPosY() * 1000 / ARConfiguration.getCurrentConfig().orbit.get())));
 		
 		
 		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(Minecraft.getInstance().getRenderViewEntity().world);
@@ -347,8 +346,13 @@ public class RocketEventHandler extends Screen {
 		float opacityFromHeight = MathHelper.clamp(((float)Minecraft.getInstance().getRenderViewEntity().getPosY() -200f)/100f, 0f, 1f);
 
 		//Detailed Land
+<<<<<<< HEAD
 		RenderSystem.color4f(brightness2, brightness2, brightness2, MathHelper.clamp(((float)Minecraft.getInstance().getRenderViewEntity().getPosY() -200f)/50f, 0f, 1f));
 		RenderHelper.renderTopFaceWithUV(matrix, buffer, -10 , size, size, -size,  -size, 0f, 1f, 0f, 1f);
+=======
+		GlStateManager.color(brightness2, brightness2, brightness2, MathHelper.clamp(((float)Minecraft.getMinecraft().getRenderViewEntity().posY -200f)/50f, 0f, 1f));
+		RenderHelper.renderTopFaceWithUV(buffer, -10 , -size, -size, size,  size, 0f, 1f, 0f, 1f);
+>>>>>>> origin/1.12
 
 		Tessellator.getInstance().draw();*/
 
@@ -404,7 +408,12 @@ public class RocketEventHandler extends Screen {
 				this.blit(event.getMatrixStack(), 3, 94 + (int)(69*(0.5 - (MathHelper.clamp((float) (rocket.getMotion().y), -1f, 1f)/2f))), 17, 0, 6, 6); //94 to 161
 
 				//Draw fuel indicator
-				int size = (int)(68*(rocket.getFuelAmount() /(float)rocket.getFuelCapacity()));
+				int size = 0;
+				if (rocket.getFuelCapacityMonopropellant() > 0) {
+					size = (int) (68 * (rocket.getFuelAmountMonopropellant() / (float) rocket.getFuelCapacityMonopropellant()));
+				} else {
+					size = (int) (68 * ((rocket.getFuelAmountBipropellant() + rocket.getFuelAmountOxidizer()) / (float) (rocket.getFuelCapacityBipropellant() + rocket.getFuelCapacityOxidizer())));
+				}
 				this.blit(event.getMatrixStack(), 3, 242 - size, 17, 75 - size, 3, size); //94 to 161
 
 				RenderSystem.disableBlend();

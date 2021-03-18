@@ -22,6 +22,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.IMission;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -329,7 +330,11 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		else if(id == 1)
 			return (int)(linkedRocket.getMotion().y*100);
 		else if (id == 2)
-			return (int)(linkedRocket.getFuelAmount());
+			if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid()))) {
+				return (linkedRocket.getFuelAmountMonopropellant());
+			} else {
+				return (linkedRocket.getFuelAmountBipropellant() + linkedRocket.getFuelAmountOxidizer());
+			}
 
 		return 0;
 	}
@@ -346,8 +351,11 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 			else
 				if(linkedRocket == null)
 					return 0;
-				else
-					return linkedRocket.getFuelCapacity();
+		    else if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid()))) {
+			    return (linkedRocket.getFuelCapacityMonopropellant());
+		    } else {
+			    return (linkedRocket.getFuelCapacityBipropellant() + linkedRocket.getFuelCapacityOxidizer());
+		}
 
 		return 1;
 	}

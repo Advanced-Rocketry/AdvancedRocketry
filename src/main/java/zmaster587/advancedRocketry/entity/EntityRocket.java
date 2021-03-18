@@ -50,9 +50,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ITeleporter;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.api.*;
@@ -65,7 +67,6 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
-import zmaster587.advancedRocketry.client.ClientRenderHelper;
 import zmaster587.advancedRocketry.client.SoundRocketEngine;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -103,12 +104,10 @@ import zmaster587.libVulpes.network.PacketSpawnEntity;
 import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.IconResource;
-import zmaster587.libVulpes.util.InputSyncHandler;
 import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nullable;
-import java.lang.ref.WeakReference;
 import java.util.*;
 
 public class EntityRocket extends EntityRocketBase implements INetworkEntity, IModularInventory, IProgressBar, IButtonInventory, ISelectionNotify, IPlanetDefiner, INamedContainerProvider, IEntitySpawnNBT {
@@ -174,7 +173,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		SENDSPACEPOS
 	}
 
-	private static final DataParameter<Integer> fuelLevel =  EntityDataManager.<Integer>createKey(EntityRocket.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> fuelLevelMonopropellant =  EntityDataManager.<Integer>createKey(EntityRocket.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> fuelLevelBipropellant =  EntityDataManager.<Integer>createKey(EntityRocket.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> fuelLevelOxidizer =  EntityDataManager.<Integer>createKey(EntityRocket.class, DataSerializers.VARINT);
 	private static final DataParameter<Boolean> INFLIGHT =  EntityDataManager.<Boolean>createKey(EntityRocket.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> INORBIT =  EntityDataManager.<Boolean>createKey(EntityRocket.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> INSPACEFLIGHT =  EntityDataManager.<Boolean>createKey(EntityRocket.class, DataSerializers.BOOLEAN);
@@ -271,23 +272,67 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	}
 
 	/**
-	 * @return the amount of fuel stored in the rocket
+	 * @return the amount of monopropellant fuel stored in the rocket
 	 */
-	public int getFuelAmount() {
-		int amount = dataManager.get(fuelLevel);
-		stats.setFuelAmount(FuelType.LIQUID,amount);
+	public int getFuelAmountMonopropellant() {
+		int amount = dataManager.get(fuelLevelMonopropellant);
+		stats.setFuelAmount(FuelType.LIQUID_MONOPROPELLANT,amount);
 		return amount;
 	}
 
 	/**
-	 * Adds fuel and updates the datawatcher
+	 * @return the amount of bipropellant fuel stored in the rocket
+	 */
+	public int getFuelAmountBipropellant() {
+		int amount = dataManager.get(fuelLevelBipropellant);
+		stats.setFuelAmount(FuelType.LIQUID_BIPROPELLANT,amount);
+		return amount;
+	}
+
+	/**
+	 * @return the amount of oxidizer fuel stored in the rocket
+	 */
+	public int getFuelAmountOxidizer() {
+		int amount = dataManager.get(fuelLevelOxidizer);
+		stats.setFuelAmount(FuelType.LIQUID_OXIDIZER,amount);
+		return amount;
+	}
+
+	/**
+	 * Adds monopropellant fuel and updates the datawatcher
 	 * @param amount amount of fuel to add
 	 * @return the amount of fuel added
 	 */
-	public int addFuelAmount(int amount) {
-		int ret = stats.addFuelAmount(FuelType.LIQUID, amount);
+	public int addFuelAmountMonopropellant(int amount) {
+		int ret = stats.addFuelAmount(FuelType.LIQUID_MONOPROPELLANT, amount);
 
-		setFuelAmount(stats.getFuelAmount(FuelType.LIQUID));
+		setFuelAmountMonoproellant(stats.getFuelAmount(FuelType.LIQUID_MONOPROPELLANT));
+
+		return ret;
+	}
+
+	/**
+	 * Adds bipropellant fuel and updates the datawatcher
+	 * @param amount amount of fuel to add
+	 * @return the amount of fuel added
+	 */
+	public int addFuelAmountBipropellant(int amount) {
+		int ret = stats.addFuelAmount(FuelType.LIQUID_BIPROPELLANT, amount);
+
+		setFuelAmountBipropellant(stats.getFuelAmount(FuelType.LIQUID_BIPROPELLANT));
+
+		return ret;
+	}
+
+	/**
+	 * Adds oxidizer fuel and updates the datawatcher
+	 * @param amount amount of fuel to add
+	 * @return the amount of fuel added
+	 */
+	public int addFuelAmountOxidizer(int amount) {
+		int ret = stats.addFuelAmount(FuelType.LIQUID_OXIDIZER, amount);
+
+		setFuelAmountOxidizer(stats.getFuelAmount(FuelType.LIQUID_OXIDIZER));
 
 		return ret;
 	}
@@ -432,17 +477,87 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	/**
 	 * Updates the data option
-	 * @param amt sets the amount of fuel in the rocket
+	 * @param amt sets the amount of monopropellant fuel in the rocket
 	 */
-	public void setFuelAmount(int amt) {
-		dataManager.set(fuelLevel, amt);
+	public void setFuelAmountMonoproellant(int amt) {
+		dataManager.set(fuelLevelMonopropellant, amt);
 	}
 
 	/**
-	 * @return gets the fuel capacity of the rocket
+	 * Updates the data option
+	 * @param amt sets the amount of bipropellant fuel in the rocket
 	 */
-	public int getFuelCapacity() {
-		return stats.getFuelCapacity(FuelType.LIQUID);
+	public void setFuelAmountBipropellant(int amt) {
+		dataManager.set(fuelLevelBipropellant, amt);
+	}
+
+	/**
+	 * Updates the data option
+	 * @param amt sets the amount of oxidizer fuel in the rocket
+	 */
+	public void setFuelAmountOxidizer(int amt) {
+		dataManager.set(fuelLevelOxidizer, amt);
+	}
+
+	/**
+	 * @param rate sets the amount of monopropellant fuel in the rocket
+	 */
+	public void setFuelRateMonopropellant(int rate) { stats.setFuelRate(FuelType.LIQUID_MONOPROPELLANT, rate); }
+
+	/**
+	 * @param rate sets the amount of bipropellant fuel in the rocket
+	 */
+	public void setFuelRateBipropellant(int rate) {
+		stats.setFuelRate(FuelType.LIQUID_BIPROPELLANT, rate);
+	}
+
+	/**
+	 * @param rate sets the amount of oxidizer fuel in the rocket
+	 */
+	public void setFuelRateOxidizer(int rate) {
+		stats.setFuelRate(FuelType.LIQUID_OXIDIZER, rate);
+	}
+
+	/**
+	 * @return gets the monopropellant fuel capacity of the rocket
+	 */
+	public int getFuelCapacityMonopropellant() {
+		return stats.getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT);
+	}
+
+	/**
+	 * @return gets the bipropellant fuel capacity of the rocket
+	 */
+	public int getFuelCapacityBipropellant() {
+		return stats.getFuelCapacity(FuelType.LIQUID_BIPROPELLANT);
+	}
+
+	/**
+	 * @return gets the monopropellant fuel capacity of the rocket
+	 */
+	public int getFuelCapacityOxidizer() {
+		return stats.getFuelCapacity(FuelType.LIQUID_OXIDIZER);
+	}
+
+	/**
+	 * @return the rate of monoproellant consumption for the rocket
+	 */
+	public int getFuelRateMonopropellant() {
+		return stats.getFuelRate(FuelType.LIQUID_MONOPROPELLANT);
+	}
+
+	/**
+	 * @return the rate of bipropellant consumption for the rocket
+	 */
+	public int getFuelRateBipropellant() {
+		return stats.getFuelRate(FuelType.LIQUID_BIPROPELLANT);
+	}
+
+	/**
+	 * @return the rate of oxidizer consumption for the rocket
+	 */
+	public int getFuelRateOxidizer() {
+		return stats.getFuelRate(FuelType.LIQUID_OXIDIZER);
 	}
 
 	@Override
@@ -503,7 +618,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	@Override
 	protected void registerData() {
 		this.dataManager.register(INFLIGHT, false);
-		this.dataManager.register(fuelLevel, 0);
+		this.dataManager.register(fuelLevelMonopropellant, 0);
+		this.dataManager.register(fuelLevelBipropellant, 0);
+		this.dataManager.register(fuelLevelOxidizer, 0);
 		this.dataManager.register(INORBIT, false);
 		this.dataManager.register(RCS_MODE, false);
 		this.dataManager.register(LAUNCH_COUNTER, -1);
@@ -560,34 +677,24 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					player.sendMessage(new StringTextComponent("Nothing to be linked"), Util.DUMMY_UUID);
 				return ActionResultType.PASS;
 			}
+			else if((FluidUtils.containsFluid(heldItem) && FluidUtils.getFluidForItem(heldItem) != null) && ARConfiguration.getCurrentConfig().canBeFueledByHand.get()) {
+				fluidStack = FluidUtils.getFluidForItem(heldItem);
+				if ((canRocketFitFluid(fluidStack))) {
 
-			else if((FluidUtils.containsFluid(heldItem) 
-					&& (fluidStack = FluidUtils.getFluidForItem(heldItem)) != null 
-					&& (fuelMult = FuelRegistry.instance.getMultiplier(FuelType.LIQUID, fluidStack.getFluid())) > 0 )
-					&& getFuelCapacity() - getFuelAmount() != 0) {
-				int amountToAdd = (int) (fuelMult*fluidStack.getAmount());
-				boolean isDrainSuccessful = false;
-				//if the player is not in creative then try to use the fluid container
-				if(!player.isCreative()) {
-					heldItem = heldItem.copy();
-					heldItem.setCount(1);
-					IFluidHandlerItem handler = FluidUtils.getFluidHandler(heldItem);
-					handler.drain(fluidStack.getAmount(), FluidAction.EXECUTE);
-					ItemStack emptyStack = handler.getContainer();
-
-					if(player.inventory.addItemStackToInventory(emptyStack)) {
-						player.getHeldItem(Hand.MAIN_HAND).split(1);
-						isDrainSuccessful = true;
-						if(player.getHeldItem(Hand.MAIN_HAND).isEmpty())
-							player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY); 
+					if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())) {
+						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityMonopropellant() - getFuelAmountMonopropellant());
+						FluidUtil.interactWithFluidHandler(player, Hand.MAIN_HAND, rocketFakeTank);
+						this.addFuelAmountMonopropellant(rocketFakeTank.getFluidAmount());
+					} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid())) {
+						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityBipropellant() - getFuelAmountBipropellant());
+						FluidUtil.interactWithFluidHandler(player, Hand.MAIN_HAND, rocketFakeTank);
+						this.addFuelAmountBipropellant(rocketFakeTank.getFluidAmount());
+					} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())) {
+						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityBipropellant() - getFuelAmountBipropellant());
+						FluidUtil.interactWithFluidHandler(player, Hand.MAIN_HAND, rocketFakeTank);
+						this.addFuelAmountOxidizer(rocketFakeTank.getFluidAmount());
 					}
-
 				}
-				else
-					isDrainSuccessful = true;
-
-				if(isDrainSuccessful)
-					this.addFuelAmount(amountToAdd);
 				return ActionResultType.SUCCESS;
 			}
 		}
@@ -611,6 +718,26 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		return this.getPassengers().size() < stats.getNumPassengerSeats();
 	}
 
+	public boolean canRocketFitFluid(FluidStack fluidStack) {
+		if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())) {
+			boolean isCorrectFluid = (stats.getFuelFluid() == null) ? true : fluidStack.getFluid() == FluidRegistry.getFluid(stats.getFuelFluid());
+			if (stats.getFuelFluid() == null && isCorrectFluid)
+				stats.setFuelFluid(fluidStack.getFluid().getRegistryName());
+			return isCorrectFluid;
+		} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid())) {
+			boolean isCorrectFluid = (stats.getFuelFluid() == null) ? true : fluidStack.getFluid() == FluidRegistry.getFluid(stats.getFuelFluid());
+			if (stats.getFuelFluid() == null && isCorrectFluid)
+				stats.setFuelFluid(fluidStack.getFluid().getRegistryName());
+			return isCorrectFluid;
+		} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())) {
+			boolean isCorrectFluid = (stats.getOxidizerFluid() == null) ? true : fluidStack.getFluid() == FluidRegistry.getFluid(stats.getOxidizerFluid());
+			if (stats.getOxidizerFluid() == null && isCorrectFluid)
+				stats.setOxidizerFluid(fluidStack.getFluid().getRegistryName());
+			return isCorrectFluid;
+		}
+		return false;
+	}
+
 	public void openGui(PlayerEntity player) {
 		NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)this, packetBuffer -> {packetBuffer.writeInt(getModularInvType().ordinal()); packetBuffer.writeInt(this.getEntityId());});
 
@@ -632,7 +759,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 
 	public boolean isBurningFuel() {
-		return (getFuelAmount() > 0 || !ARConfiguration.getCurrentConfig().rocketRequireFuel.get()) && ((!this.getPassengers().isEmpty() && getPassengerMovingForward() > 0) || !isInOrbit());
+		return ((getFuelAmountMonopropellant() > 0 || (getFuelAmountBipropellant() > 0 && getFuelAmountOxidizer() > 0)) || !ARConfiguration.getCurrentConfig().rocketRequireFuel.get()) && ((!this.getPassengers().isEmpty() && getPassengerMovingForward() > 0) || !isInOrbit());
 	}
 
 	public float getPassengerMovingForward() {
@@ -1043,8 +1170,17 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			if(burningFuel || descentPhase) {
 				//Burn the rocket fuel
-				if(!world.isRemote && !descentPhase)
-					setFuelAmount((int) (getFuelAmount() - stats.getFuelRate(FuelType.LIQUID)*(ARConfiguration.getCurrentConfig().gravityAffectsFuel.get() ? DimensionManager.getInstance().getDimensionProperties(world).getGravitationalMultiplier() : 1f)));
+				if(!world.isRemote && !descentPhase) {
+					setFuelAmountBipropellant((int) (getFuelAmountBipropellant() - stats.getFuelRate(FuelType.LIQUID_BIPROPELLANT)*(ARConfiguration.getCurrentConfig().gravityAffectsFuel.get() ? DimensionManager.getInstance().getDimensionProperties(world).getGravitationalMultiplier() : 1f)));
+					setFuelAmountOxidizer((int) (getFuelAmountOxidizer() - stats.getFuelRate(FuelType.LIQUID_OXIDIZER)*(ARConfiguration.getCurrentConfig().gravityAffectsFuel.get() ? DimensionManager.getInstance().getDimensionProperties(world).getGravitationalMultiplier() : 1f)));
+					setFuelAmountMonoproellant((int) (getFuelAmountMonopropellant() - stats.getFuelRate(FuelType.LIQUID_MONOPROPELLANT)*(ARConfiguration.getCurrentConfig().gravityAffectsFuel.get() ? DimensionManager.getInstance().getDimensionProperties(world).getGravitationalMultiplier() : 1f)));
+				    if (getFuelAmountBipropellant() == 0 && getFuelAmountMonopropellant() == 0) {
+				    	stats.setFuelFluid(null);
+					}
+					if (getFuelAmountOxidizer() == 0) {
+						stats.setOxidizerFluid(null);
+					}
+				}
 
 				runEngines();
 			}
@@ -1095,7 +1231,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					this.setInFlight(false);
 					this.setInOrbit(false);
 				}
-				if(!isInOrbit() && (this.getPosY() > ARConfiguration.getCurrentConfig().orbit.get())) {
+
+				//Checks heights to see how high the rocket should go
+				//I cannot believe I am doing this but it's not like orbital mechanics exists anyway.... here, have an approximation for it being harder to get to farther moons
+				if(!isInOrbit() && (this.getPosY() > stats.orbitHeight)) {
 					onOrbitReached();
 				}
 
@@ -1116,7 +1255,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 							if(pos != null) {
 								setInOrbit(true);
 								setInFlight(false);
-								this.changeDimension(ZUtils.getWorld(targetDimID), pos.x, ARConfiguration.getCurrentConfig().orbit.get(), pos.z);
+								this.changeDimension(ZUtils.getWorld(targetDimID), pos.x, getEntryHeight(targetDimID), pos.z);
 							}
 							else 
 								this.remove();
@@ -1224,6 +1363,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 	}
 
+	private int getEntryHeight(ResourceLocation entryLocationDimID){
+		if (entryLocationDimID.getPath() == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
+			return ARConfiguration.getCurrentConfig().stationClearanceHeight;
+		} else {
+			return ARConfiguration.getCurrentConfig().orbit.get();
+		}
+	}
+
 	private void reachSpaceUnmanned()
 	{
 		TileGuidanceComputer computer = storage.getGuidanceComputer();
@@ -1277,8 +1424,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					connectedTiles.next().unlinkRocket();
 					connectedTiles.remove();
 				}
-
-				this.setPositionAndUpdate(pos.x, ARConfiguration.getCurrentConfig().orbit.get(), pos.z);
+				this.setPositionAndUpdate(pos.x, getEntryHeight(destinationDimId), pos.z);
 				return;
 			}
 			else {
@@ -1286,8 +1432,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				//Make player confirm deorbit if a player is riding the rocket
 				if(hasHumanPassenger()) {
 					setInFlight(false);
-					pos.y = (float) ARConfiguration.getCurrentConfig().orbit.get();
-
+					pos.y = (float) getEntryHeight(destinationDimId);
 				}
 				this.setInOrbit(true);
 				this.setMotion(this.getMotion().x, -this.getMotion().y, this.getMotion().z);
@@ -1299,7 +1444,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					connectedTiles.remove();
 				}
 
-				this.setPositionAndUpdate(this.getPosX(), ARConfiguration.getCurrentConfig().orbit.get(), this.getPosZ());
+				this.setPositionAndUpdate(this.getPosX(), getEntryHeight(destinationDimId), this.getPosZ());
 				return;
 			}
 
@@ -1310,7 +1455,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			if(pos != null) {
 				this.setInOrbit(true);
 				this.setMotion(this.getMotion().x, -this.getMotion().y, this.getMotion().z);
-				this.changeDimension(ZUtils.getWorld(destinationDimId), pos.x, ARConfiguration.getCurrentConfig().orbit.get(), pos.z);
+				this.changeDimension(ZUtils.getWorld(destinationDimId), pos.x, getEntryHeight(destinationDimId), pos.z);
 				return;
 			}
 			else {
@@ -1318,13 +1463,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				//Make player confirm deorbit if a player is riding the rocket
 				if(hasHumanPassenger()) {
 					setInFlight(false);
-					pos.y = (float) ARConfiguration.getCurrentConfig().orbit.get();
+					pos.y = (float) getEntryHeight(destinationDimId);
 
 				}
 				this.setInOrbit(true);
 				this.setMotion(this.getMotion().x, -this.getMotion().y, this.getMotion().z);
-
-				this.changeDimension(ZUtils.getWorld(destinationDimId), this.getPosX(), ARConfiguration.getCurrentConfig().orbit.get(), this.getPosZ());
+				this.changeDimension(ZUtils.getWorld(destinationDimId), this.getPosX(), getEntryHeight(destinationDimId), this.getPosZ());
 				return;
 			}
 		}
@@ -1378,7 +1522,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			destinationDimId = ARConfiguration.GetSpaceDimId();
 			destPos.x = 0f;
-			destPos.y = (float) ARConfiguration.getCurrentConfig().orbit.get();
+			destPos.y = (float) getEntryHeight(destinationDimId);
 			destPos.z = 0f;
 
 			for(Entity e : getPassengers())
@@ -1405,7 +1549,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					//Make player confirm deorbit if a player is riding the rocket
 					if(hasHumanPassenger()) {
 						setInFlight(false);
-						pos.y = (float) ARConfiguration.getCurrentConfig().orbit.get();
+						pos.y = (float) getEntryHeight(destinationDimId);
 
 					}
 
@@ -1418,7 +1562,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			//if coordinates are overridden, make sure we grab them
 			destPos = storage.getDestinationCoordinates(destinationDimId, true);
 			if(destPos == null)
-				destPos = new Vector3F<Float>((float)getPosX(), (float)ARConfiguration.getCurrentConfig().orbit.get(), (float)getPosZ());
+				destPos = new Vector3F<Float>((float)getPosX(), (float)getEntryHeight(destinationDimId), (float)getPosZ());
 
 			if(hasHumanPassenger()) {
 				//Make player confirm deorbit if a player is riding the rocket
@@ -1435,14 +1579,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					DimensionManager.hasReachedMoon = true;
 				}
 			}
-			destPos.y = (float) ARConfiguration.getCurrentConfig().orbit.get();
+			destPos.y = (float) getEntryHeight(destinationDimId);
 		}
 
 		//Reset override coords
 		setOverriddenCoords(Constants.INVALID_PLANET, 0, 0, 0);
 
 		if(destinationDimId != ZUtils.getDimensionIdentifier(this.world))
-			this.changeDimension(!DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(this.world)) ? ZUtils.getWorld(DimensionManager.defaultSpaceDimensionProperties.getId()) : ZUtils.getWorld(destinationDimId), destPos.x, ARConfiguration.getCurrentConfig().orbit.get(), destPos.z);
+			this.changeDimension(!DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(this.world)) ? ZUtils.getWorld(DimensionManager.defaultSpaceDimensionProperties.getId()) : ZUtils.getWorld(destinationDimId), destPos.x, getEntryHeight(destinationDimId), destPos.z);
 		else
 		{
 			List<Entity> eList = this.getPassengers();
@@ -1566,6 +1710,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				}
 			}
 
+
 			//If we're on a space station get the id of the planet, not the station
 			ResourceLocation thisDimId = ZUtils.getDimensionIdentifier(this.world);
 			if(ARConfiguration.GetSpaceDimId().equals(thisDimId)) {
@@ -1582,6 +1727,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 		else
 			allowLaunch = true;
+
+
+		//Check to see what place we should be going to
+		//This is bad but it works and is mostly intelligible so it's here for now
+		stats.orbitHeight = (storage.getGuidanceComputer() == null) ? getEntryHeight(ZUtils.getDimensionIdentifier(this.world)) : storage.getGuidanceComputer().getLaunchSequence(ZUtils.getDimensionIdentifier(this.world), this.getPosition());
+
 
 		//TODO: Clean this logic a bit?
 		if(allowLaunch || !stats.hasSeat() || ((DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || ARConfiguration.GetSpaceDimId().equals(destinationDimId) || Constants.INVALID_PLANET.equals(destinationDimId)) ) { //Abort if destination is invalid
@@ -1647,7 +1798,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 
 	public Entity changeDimension(ServerWorld newDimId) {
-		return changeDimension(newDimId, this.getPosX(), (double)ARConfiguration.getCurrentConfig().orbit.get(), this.getPosZ());
+		return changeDimension(newDimId, this.getPosX(), (double)getEntryHeight(ZUtils.getDimensionIdentifier(newDimId)), this.getPosZ());
 	}
 
 	@Nullable
@@ -1716,7 +1867,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		setRCS(rcs_mode);
 		stats.readFromNBT(nbt);
 
-		setFuelAmount(stats.getFuelAmount(FuelType.LIQUID));
+		setFuelAmountMonoproellant(stats.getFuelAmount(FuelType.LIQUID_MONOPROPELLANT));
+		setFuelAmountBipropellant(stats.getFuelAmount(FuelType.LIQUID_BIPROPELLANT));
+		setFuelAmountOxidizer(stats.getFuelAmount(FuelType.LIQUID_OXIDIZER));
 
 		setInFlight(isInFlight = nbt.getBoolean("flight"));
 
@@ -2169,7 +2322,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	@Override
 	public float getNormallizedProgress(int id) {
 		if(id == 0)
-			return getFuelAmount()/(float)getFuelCapacity();
+			if (getFuelCapacityMonopropellant() > 0) {
+				return (getFuelAmountMonopropellant()/(float) getFuelCapacityMonopropellant());
+			} else {
+				return (getFuelAmountBipropellant() + getFuelAmountOxidizer())/((float) (getFuelCapacityBipropellant() + getFuelCapacityOxidizer()));
+			}
+
 		return 0;
 	}
 

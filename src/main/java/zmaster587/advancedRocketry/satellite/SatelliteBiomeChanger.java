@@ -218,7 +218,7 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 		if(!Constants.INVALID_PLANET.equals(getDimensionId().get())) {
 			World world = ZUtils.getWorld(getDimensionId().get());
 			if(world != null) {
-				battery.acceptEnergy(energyCreated(world, false), false);
+				battery.acceptEnergy(energyCreated(false), false);
 			}
 		}
 		return battery.extractEnergy(amt, simulate);
@@ -230,7 +230,7 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 		if(!Constants.INVALID_PLANET.equals(getDimensionId().get())) {
 			World world = ZUtils.getWorld(getDimensionId().get());
 			if(world != null) {
-				battery.acceptEnergy(energyCreated(world, false), false);
+				battery.acceptEnergy(energyCreated(false), false);
 			}
 		}
 

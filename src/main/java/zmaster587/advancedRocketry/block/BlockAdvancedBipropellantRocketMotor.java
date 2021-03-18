@@ -4,9 +4,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockAdvancedRocketMotor extends BlockRocketMotor {
+public class BlockAdvancedBipropellantRocketMotor extends BlockRocketMotor {
 
-	public BlockAdvancedRocketMotor(Properties mat) {
+	public BlockAdvancedBipropellantRocketMotor(Properties mat) {
 		super(mat);
 	}
 
