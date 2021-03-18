@@ -61,14 +61,17 @@ import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.biome.MoodSoundAmbience;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
@@ -161,6 +164,24 @@ public class AdvancedRocketryBiomes {
 		Structure.NAME_STRUCTURE_BIMAP.put("advancedrocketry:volcano", VOLCANO);
 	    Structure.NAME_STRUCTURE_BIMAP.put("advancedrocketry:crater", CRATER);
 	    Structure.NAME_STRUCTURE_BIMAP.put("advancedrocketry:geode", GEODE);
+	    
+	    Field decorationStageField = ObfuscationReflectionHelper.findField(Structure.class, "STRUCTURE_DECORATION_STAGE_MAP");
+	    decorationStageField.setAccessible(true);
+	    
+	    Map<Structure<?>, GenerationStage.Decoration> decoractionStage;
+		try {
+			decoractionStage = (Map<Structure<?>, GenerationStage.Decoration>)decorationStageField.get(null);
+			
+		    decoractionStage.put(VOLCANO, GenerationStage.Decoration.LOCAL_MODIFICATIONS);
+		    decoractionStage.put(CRATER, GenerationStage.Decoration.LOCAL_MODIFICATIONS);
+		    decoractionStage.put(GEODE, GenerationStage.Decoration.LOCAL_MODIFICATIONS);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	    
+
 
 	    WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE, "advancedrocketry:volcano", CONFIGURED_VOLCANO);
 		WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE, "advancedrocketry:crater", CONFIGURED_CRATER);
