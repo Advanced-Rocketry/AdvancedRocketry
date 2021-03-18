@@ -37,28 +37,31 @@ public class GuiOreMappingSatellite extends GuiContainer {
 	private int mouseValue;
 	private int scanSize = 2;
 	private int radius = 1;
+	private int zoomScale;
 	private int xSelected, zSelected, xCenter, zCenter, playerPosX, playerPosZ;
 	private static final ResourceLocation backdrop = new ResourceLocation("advancedrocketry", "textures/gui/VideoSatallite.png");
 	int[][] oreMap;
 	World world;
-	SatelliteOreMapping tile;
+	SatelliteOreMapping satellite;
 
-	public GuiOreMappingSatellite(SatelliteOreMapping tile,EntityPlayer inventoryPlayer) {
-		super( new ContainerOreMappingSatallite(tile,inventoryPlayer.inventory));
+	public GuiOreMappingSatellite(SatelliteOreMapping satellite,EntityPlayer inventoryPlayer) {
+		super( new ContainerOreMappingSatallite(satellite,inventoryPlayer.inventory));
 		world = inventoryPlayer.world;
 
 		prevSlot = -1;
-		this.tile = tile;
-		//masterConsole = tile;
+		this.satellite = satellite;
+		//masterConsole = satellite;
 		playerPosX = xCenter = (int) inventoryPlayer.posX;
 		playerPosZ = zCenter = (int) inventoryPlayer.posZ;
 
 		//Max zoom is 128
-		if(tile != null)
-			maxZoom = (int) Math.pow(2, tile.getZoomRadius());
+		if(satellite != null) {
+			maxZoom = (int) Math.pow(2, satellite.getZoomRadius());
+			zoomScale = satellite.getZoomRadius();
+		}
 
 		if(maxZoom == 1)
-			this.tile = null;
+			this.satellite = null;
 		scanSize = maxZoom;
 
 		prevWorldTickTime = world.getTotalWorldTime();
@@ -70,7 +73,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 	Runnable mapper = new Runnable() {
 		@Override
 		public void run() {
-			oreMap = SatelliteOreMapping.scanChunk(world, xCenter, zCenter, scanSize/2, radius);
+			oreMap = satellite.scanChunk(world, xCenter, zCenter, scanSize/2, radius, zoomScale);
 			if(oreMap != null && !Thread.interrupted())
 				merged = true;
 			else merged = false;
@@ -88,7 +91,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 
 		@Override
 		public void run() {
-			oreMap = SatelliteOreMapping.scanChunk(world, xCenter, zCenter, scanSize/2, radius, myBlock);
+			oreMap = satellite.scanChunk(world, xCenter, zCenter, scanSize/2, radius, myBlock, zoomScale);
 			if(oreMap != null && !Thread.interrupted())
 				merged = true;
 			else merged = false;
@@ -99,7 +102,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 	public boolean doesGuiPauseGame(){ return false; }
 
 	private void runMapperWithSelection() {
-		if(tile == null)
+		if(satellite == null)
 			return;
 
 		currentMapping.interrupt();
@@ -125,8 +128,8 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		int xOffset = 47 + (width - 240) / 2, yOffset = 20 + (height - 192) / 2;
 
 		//Get selected slot and begin scan!
-		if(button == 0 && tile.getSelectedSlot() != prevSlot) {
-			prevSlot = tile.getSelectedSlot();
+		if(button == 0 && satellite.getSelectedSlot() != prevSlot) {
+			prevSlot = satellite.getSelectedSlot();
 			runMapperWithSelection();
 		}
 
@@ -209,7 +212,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 
 		ItemStack stack = inventorySlots.getSlot(0).getStack();
 
-		if(tile != null) {
+		if(satellite != null) {
 			currentMapping = new Thread(mapper);
 			currentMapping.setName("Ore Scan");
 			currentMapping.start();
@@ -279,7 +282,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 
 		//If a slot is selected draw an indicator
 		int slot;
-		if(tile != null && (slot = tile.getSelectedSlot()) != -1) {
+		if(satellite != null && (slot = satellite.getSelectedSlot()) != -1) {
 
 			GlStateManager.disableTexture2D();
 			GlStateManager.color(0f, 0.8f, 0f, 1f);
