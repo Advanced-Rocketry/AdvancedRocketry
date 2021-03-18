@@ -96,11 +96,8 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	 * If unsure check canAssembleSatellite() first
 	 */
 	public void assembleSatellite() {
+		//Basic properties of the satellite
 		int powerStorage = 0, powerGeneration = 0, maxData = 0;
-		//Get the satellite properties from the item
-		ItemStack stack = getStackInSlot(chassisSlot);
-		ItemSatellite item = (ItemSatellite) stack.getItem();
-		SatelliteProperties properties = item.getSatelliteProperties(stack);
 
 		//Get the primary function from slot 0
 		String satType = SatelliteRegistry.getSatelliteProperty(getStackInSlot(primaryFunctionSlot)).getSatelliteType();
@@ -115,10 +112,9 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 			}
 
 			//Set final satellite properties
-			if(properties == null || properties.getSatelliteType().isEmpty()) {
-				properties = new SatelliteProperties(powerGeneration, powerStorage, satType,maxData);
-				properties.setId(DimensionManager.getInstance().getNextSatelliteId());
-			}
+			//720 here is the base power buffer, so the satellite has SOMETHING to run on
+			SatelliteProperties properties = new SatelliteProperties(powerGeneration, powerStorage + 720, satType,maxData);
+			properties.setId(DimensionManager.getInstance().getNextSatelliteId());
 
 			//Create the output item
 			ItemSatellite satItem = (ItemSatellite)AdvancedRocketryItems.itemSatellite;
