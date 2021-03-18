@@ -15,18 +15,25 @@ import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
-import zmaster587.advancedRocketry.client.ClientProxy;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.util.ZUtils;
 
 public abstract class SatelliteData extends SatelliteBase {
 	DataStorage data;
 	long lastActionTime, prevLastActionTime;
+	int collectionTime;
+	int powerConsumption;
+
+	public SatelliteData() {
+        super();
+		powerConsumption = Math.min(160, getPowerPerTick());
+		collectionTime =  (int) (200 / Math.sqrt(0.1 * (powerConsumption - 5)));
+	}
 
 	@Override
 	public String getInfo(World world) {
 		//tiles dont update unless ppl reopen
-		return "Power: " + satelliteProperties.getPowerStorage() + "\nData Storage: " + ZUtils.formatNumber(data.getMaxData()) +
+		return "Power: " + battery.getUniversalEnergyStored() + "/" + battery.getMaxEnergyStored() + "\nData Storage: " + ZUtils.formatNumber(data.getMaxData()) +
 				"\nData: " + ZUtils.formatNumber(data.getData());
 	}
 
@@ -59,19 +66,31 @@ public abstract class SatelliteData extends SatelliteBase {
 	}
 
 	private int getDataCreated() {
-		//Provided the satellite has enough power, produce some data every 200t (10 seconds)
-		if (AdvancedRocketry.proxy.getWorldTimeUniversal(0) % 200 == 0 && battery.extractEnergy(10, true) == 10) {
-			return 1;
+		//If collection time is somehow 0, fix it before it causes problems
+		if (collectionTime == 0)
+			collectionTime = 200;
+
+		if (data.getMaxData() > data.getData()) {
+			//Provided the satellite has enough power, produce some data every 200t (10 seconds), modified by the amount of power available to the satellite, but the power much be over or equal to 10
+			//Think of it like scanning takes < 5 FE/t, and base consumption is 5. So you need more than 10 FE/t, and with more power you can scan better
+			//Power consumption maxes out at 160 FE/t, or four large solar panels. This corresponds to a 4x reduction in data collection time
+			battery.extractEnergy(powerConsumption - 5, false);
+			//Actually collect the unit of data
+			if (AdvancedRocketry.proxy.getWorldTimeUniversal(0) % collectionTime == 0 && satelliteProperties.getPowerGeneration() >= 10) {
+				return 1;
+			}
 		}
 		return 0;
 	}
 
 	@Override
 	public void tickEntity() {
-		//Add data to the buffer, if the satellite has enough power
-		data.addData(getDataCreated(), data.getDataType(), true);
 		//Standard power stuff
 		super.tickEntity();
+		//We have a special broadband high-capacity data link, so it needs an extra 4 FE/t to keep open - subtract these 4 here
+		battery.extractEnergy(4, false);
+		//Add data to the buffer, if the satellite has enough power
+		data.addData(getDataCreated(), data.getDataType(), true);
 	}
 
 	@Override
@@ -88,6 +107,7 @@ public abstract class SatelliteData extends SatelliteBase {
 
 		this.data.readFromNBT(nbt.getCompoundTag("data"));
 		lastActionTime = nbt.getLong("lastActionTime");
+		collectionTime = nbt.getInteger("collectionMultiplier");
 	}
 
 	@Override
@@ -99,6 +119,7 @@ public abstract class SatelliteData extends SatelliteBase {
 		nbt.setTag("data", data);
 
 		nbt.setLong("lastActionTime",lastActionTime);
+		nbt.setInteger("collectionMultiplier", collectionTime);
 	}
 
 	@Override

@@ -86,7 +86,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 			return false;
 
 		String satType = SatelliteRegistry.getSatelliteProperty(getStackInSlot(primaryFunctionSlot)).getSatelliteType();
-		SatelliteBase sat = SatelliteRegistry.getSatallite(satType);
+		SatelliteBase sat = SatelliteRegistry.getSatellite(satType);
 
 		return sat.isAcceptableControllerItemStack(getStackInSlot(chipSlot));
 	}
@@ -101,7 +101,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 
 		//Get the primary function from slot 0
 		String satType = SatelliteRegistry.getSatelliteProperty(getStackInSlot(primaryFunctionSlot)).getSatelliteType();
-		SatelliteBase sat = SatelliteRegistry.getSatallite(satType);
+		SatelliteBase sat = SatelliteRegistry.getSatellite(satType);
 		
 		if(!world.isRemote) {
 			//Grab properties from the items in slots 1-6
@@ -120,6 +120,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 			ItemSatellite satItem = (ItemSatellite)AdvancedRocketryItems.itemSatellite;
 			ItemStack output = getStackInSlot(chassisSlot);
 			satItem.setSatellite(output, properties);
+
 			setInventorySlotContents(chassisSlot, ItemStack.EMPTY);
 
 			//Set the ID chip

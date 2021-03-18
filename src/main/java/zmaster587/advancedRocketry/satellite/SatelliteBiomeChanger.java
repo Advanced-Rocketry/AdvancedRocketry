@@ -30,6 +30,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 	private static int MAX_SIZE = 1024;
 
 	public SatelliteBiomeChanger() {
+		super();
 		radius = 4;
 		toChangeList = new LinkedList<HashedBlockPosition>();
 		discoveredBiomes = new HashSet<Byte>();
@@ -99,6 +100,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 				}
 			}
 		}
+		super.tickEntity();
 	}
 
 	public void addBlockToList(HashedBlockPosition pos) {

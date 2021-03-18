@@ -45,7 +45,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 	SatelliteOreMapping satellite;
 
 	public GuiOreMappingSatellite(SatelliteOreMapping satellite,EntityPlayer inventoryPlayer) {
-		super( new ContainerOreMappingSatallite(satellite,inventoryPlayer.inventory));
+		super( new ContainerOreMappingSatellite(satellite,inventoryPlayer.inventory));
 		world = inventoryPlayer.world;
 
 		prevSlot = -1;

@@ -9,15 +9,15 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.libVulpes.api.IUniversalEnergyTransmitter;
-import zmaster587.libVulpes.util.UniversalBattery;
 
 public class SatelliteMicrowaveEnergy extends SatelliteBase implements IUniversalEnergyTransmitter {
 
 	byte teir;
 
 	public SatelliteMicrowaveEnergy() {
+		super();
 	}
-	
+
 	@Override
 	public void setProperties(ItemStack satelliteProperties) {
 		super.setProperties(satelliteProperties);
@@ -62,23 +62,12 @@ public class SatelliteMicrowaveEnergy extends SatelliteBase implements IUniversa
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-
-		battery.writeToNBT(nbt);
 		nbt.setByte("teir", teir);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-
-		if(battery == null)
-			battery = new UniversalBattery();
-		battery.readFromNBT(nbt);
-		
-		//Fix breakages with earlier version of the mod
-		if(battery.getMaxEnergyStored() != this.satelliteProperties.getPowerStorage() || battery.getMaxEnergyStored() == 0)
-			battery.setMaxEnergyStored(Math.max(this.satelliteProperties.getPowerStorage(),1));
-
 		teir = nbt.getByte("teir");
 	}
 }

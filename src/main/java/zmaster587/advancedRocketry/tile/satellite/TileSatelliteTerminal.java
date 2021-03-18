@@ -95,7 +95,7 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 		else if( id == 100 ) {
 
 			SatelliteBase satellite = moduleSatellite.getSatellite();
-			if(satellite != null && PlanetaryTravelHelper.isTravelWithinPlanetarySystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
+			if(satellite != null && PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
 				satellite.performAction(player, world, pos);
 			}
 		}
@@ -119,7 +119,7 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 				if(getUniversalEnergyStored() < getPowerPerOperation()) 
 					moduleText.setText(LibVulpes.proxy.getLocalizedString("msg.notenoughpower"));
 
-				else if(!PlanetaryTravelHelper.isTravelWithinPlanetarySystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
+				else if(!PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
 					moduleText.setText(satellite.getName() + "\n\n" + LibVulpes.proxy.getLocalizedString("msg.satctrlcenter.toofar") );
 				}
 
@@ -234,7 +234,7 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 		//TODO
 		
 		SatelliteBase satellite = getSatelliteFromSlot(0);
-		if(satellite != null && satellite instanceof SatelliteData && PlanetaryTravelHelper.isTravelWithinPlanetarySystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
+		if(satellite != null && satellite instanceof SatelliteData && PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
 				satellite.performAction(null, world, pos);
 		}
 		

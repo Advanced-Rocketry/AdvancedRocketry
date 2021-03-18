@@ -105,7 +105,8 @@ public abstract class SatelliteBase {
 	 * called every tick if satellite can tick
 	 */
 	public void tickEntity() {
-		battery.acceptEnergy(getPowerPerTick(), true);
+		//Base power consumption is 1 energy per tick. Think of it like a communications & positioning upkeep amount. Some satellites may end up overriding this
+		battery.acceptEnergy(getPowerPerTick() - 1, false);
 	}
 	
 	/**
@@ -148,6 +149,7 @@ public abstract class SatelliteBase {
 	 */
 	public void setProperties(ItemStack stack) {
 		this.satelliteProperties = ((ItemSatellite)stack.getItem()).getSatellite(stack);
+		this.battery.setMaxEnergyStored(satelliteProperties.getPowerStorage());
 		this.satellite = stack;
 	}
 	
@@ -172,6 +174,7 @@ public abstract class SatelliteBase {
 		satelliteProperties.writeToNBT(properties);
 		nbt.setTag("properties", properties);
 		nbt.setInteger("dimId", dimId);
+		battery.writeToNBT(nbt);
 		
 		NBTTagCompound itemNBT = new NBTTagCompound();
 		//Transition
@@ -185,6 +188,7 @@ public abstract class SatelliteBase {
 		satelliteProperties.readFromNBT(nbt.getCompoundTag("properties"));
 		dimId = nbt.getInteger("dimId");
 		satellite = new ItemStack(nbt.getCompoundTag("item"));
+		battery.readFromNBT(nbt);
 	}
 	
 	public void writeDataToNetwork(ByteBuf out, byte packetId) {

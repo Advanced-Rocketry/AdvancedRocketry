@@ -21,14 +21,12 @@ import java.util.List;
 
 public class SatelliteOreMapping extends SatelliteBase  {
 
-	int blockCenterX, blockCenterZ;
 	public static ArrayList<Integer> oreList = new ArrayList<Integer>();
-
-	ItemStack inv;
 
 	int selectedSlot = -1;
 
 	public SatelliteOreMapping() {
+		super();
 	}
 
 	public void setSelectedSlot(int i) { if(canFilterOre()) selectedSlot = i; }
@@ -68,15 +66,19 @@ public class SatelliteOreMapping extends SatelliteBase  {
 	}
 
 	public boolean canBeginScan() {
-		return battery.getUniversalEnergyStored() >= 1000;
+		return battery.extractEnergy(1000, true) == 1000;
 	}
 
 	public int[][] scanChunk(World world, int offsetX, int offsetZ, int radius, int blocksPerPixel, ItemStack block, int zoomLevel) {
 		blocksPerPixel = Math.max(blocksPerPixel, 1);
 		int[][] ret = new int[(radius*2)/blocksPerPixel][(radius*2)/blocksPerPixel];
 
-        if (battery.extractEnergy(250 * zoomLevel, false) == 250 * zoomLevel) {
-        	battery.extractEnergy(250 * zoomLevel, true);
+        if (canBeginScan() && battery.extractEnergy(375 * zoomLevel, false) == 375 * zoomLevel) {
+        	//Base cost is 1000 per scan
+        	battery.extractEnergy(1000, false);
+        	//Modified by 375 * zoom level for a filtered scan
+        	battery.extractEnergy(375 * zoomLevel, true);
+        	//Now for the actual scanning
 			for (int z = -radius; z < radius; z += blocksPerPixel) {
 				for (int x = -radius; x < radius; x += blocksPerPixel) {
 					int oreCount = 0, otherCount = 0;
@@ -133,6 +135,7 @@ public class SatelliteOreMapping extends SatelliteBase  {
 		blocksPerPixel = Math.max(blocksPerPixel, 1);
 		int[][] ret = new int[(radius*2)/blocksPerPixel][(radius*2)/blocksPerPixel];
 
+		//Get all the ores we want to look for
 		if(oreList.isEmpty()) {
 			String[] strings = OreDictionary.getOreNames();
 			for(String str : strings) {
@@ -140,8 +143,12 @@ public class SatelliteOreMapping extends SatelliteBase  {
 					oreList.add(OreDictionary.getOreID(str));
 			}
 		}
-		if (battery.extractEnergy(500 * zoomLevel, false) == 500 * zoomLevel) {
-			battery.extractEnergy(500 * zoomLevel, true);
+		if (canBeginScan() && battery.extractEnergy(250 * zoomLevel, false) == 250 * zoomLevel) {
+			//Base cost is 1000 per scan
+			battery.extractEnergy(1000, false);
+			//Modified by 250 * zoom level for a basic, unfiltered scan
+			battery.extractEnergy(250 * zoomLevel, true);
+			//Now for the actual scan
 			for (int z = -radius; z < radius; z += blocksPerPixel) {
 				for (int x = -radius; x < radius; x += blocksPerPixel) {
 					int oreCount = 0, otherCount = 0;

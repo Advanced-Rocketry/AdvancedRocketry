@@ -5,6 +5,7 @@ import zmaster587.advancedRocketry.api.DataStorage;
 public class SatelliteComposition extends SatelliteData{
 	
 	public SatelliteComposition() {
+		super();
 		data = new DataStorage(DataStorage.DataType.COMPOSITION);
 		data.lockDataType(DataStorage.DataType.COMPOSITION);
 	}
