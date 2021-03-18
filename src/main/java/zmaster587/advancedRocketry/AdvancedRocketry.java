@@ -322,7 +322,6 @@ public class AdvancedRocketry {
 
 		//Satellites ---------------------------------------------------------------------------------------------
 		SatelliteRegistry.registerSatellite("optical", SatelliteOptical.class);
-		SatelliteRegistry.registerSatellite("solar", SatelliteMicrowaveEnergy.class);
 		SatelliteRegistry.registerSatellite("density", SatelliteDensity.class);
 		SatelliteRegistry.registerSatellite("composition", SatelliteComposition.class);
 		SatelliteRegistry.registerSatellite("mass", SatelliteMassScanner.class);
