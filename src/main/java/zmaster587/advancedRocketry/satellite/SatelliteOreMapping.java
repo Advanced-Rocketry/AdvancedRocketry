@@ -42,7 +42,7 @@ public class SatelliteOreMapping extends SatelliteBase  {
 
 	public boolean acceptsItemInConstruction(ItemStack item) {
 		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
-		return SatelliteProperties.Property.MAIN.isOfType(flag) || SatelliteProperties.Property.POWER_GEN.isOfType(flag) || SatelliteProperties.Property.DATA.isOfType(flag);
+		return super.acceptsItemInConstruction(item) || SatelliteProperties.Property.DATA.isOfType(flag);
 	}
 
 	@Override
@@ -65,6 +65,11 @@ public class SatelliteOreMapping extends SatelliteBase  {
 	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
 		player.openGui(AdvancedRocketry.instance, 100, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
+	}
+
+	//TODO: Make satellite require energy, and a lot of it, to scan
+	public boolean canBeginScan() {
+		return battery.getUniversalEnergyStored() >= 10000;
 	}
 
 
@@ -201,9 +206,6 @@ public class SatelliteOreMapping extends SatelliteBase  {
 		return false;
 	}
 
-	@Override
-	public void tickEntity() {		
-	}
 
 	public int getZoomRadius() {
 		return Math.min(satelliteProperties.getPowerGeneration(),7);

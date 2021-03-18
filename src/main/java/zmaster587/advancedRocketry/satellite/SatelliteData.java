@@ -9,11 +9,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.IDataHandler;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
+import zmaster587.advancedRocketry.client.ClientProxy;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.util.ZUtils;
 
@@ -25,18 +27,14 @@ public abstract class SatelliteData extends SatelliteBase {
 	public String getInfo(World world) {
 		//tiles dont update unless ppl reopen
 		return "Power: " + satelliteProperties.getPowerStorage() + "\nData Storage: " + ZUtils.formatNumber(data.getMaxData()) +
-				"\nData: " + ZUtils.formatNumber((data.getData() + dataCreated(world)));
-	}
-
-	private int dataCreated(World world) {
-		return Math.min(data.getMaxData() - data.getData() , (int)Math.max(0,  (world.getTotalWorldTime() - lastActionTime)/200)); //TODO: change from 10 seconds
+				"\nData: " + ZUtils.formatNumber(data.getData());
 	}
 
 	@Override
 	public boolean acceptsItemInConstruction(ItemStack item) {
 		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
 
-		return super.acceptsItemInConstruction(item) || SatelliteProperties.Property.DATA.isOfType(flag) || SatelliteProperties.Property.POWER_GEN.isOfType(flag);
+		return super.acceptsItemInConstruction(item) || SatelliteProperties.Property.DATA.isOfType(flag);
 	}
 
 	@Override
@@ -48,17 +46,9 @@ public abstract class SatelliteData extends SatelliteBase {
 
 	@Override
 	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
-
-		//Calculate Data Recieved
-		//TODO: pay attn to power
-		int dataCreated = dataCreated(world);
-		if(dataCreated > 0) {
-			data.addData(dataCreated(world), data.getDataType(), true);
-			lastActionTime = world.getTotalWorldTime();
-		}
-
+		//Grab the tile to sync with
 		TileEntity tile = world.getTileEntity(pos);
-
+        //Remove data from the satellite and add it to the buffer of said tile, provided the tile can accept it
 		if(tile instanceof IDataHandler) {
 			IDataInventory dataInv = (IDataInventory)tile;
 
@@ -66,6 +56,22 @@ public abstract class SatelliteData extends SatelliteBase {
 		}
 
 		return false;
+	}
+
+	private int getDataCreated() {
+		//Provided the satellite has enough power, produce some data every 200t (10 seconds)
+		if (AdvancedRocketry.proxy.getWorldTimeUniversal(0) % 200 == 0 && battery.extractEnergy(10, true) == 10) {
+			return 1;
+		}
+		return 0;
+	}
+
+	@Override
+	public void tickEntity() {
+		//Add data to the buffer, if the satellite has enough power
+		data.addData(getDataCreated(), data.getDataType(), true);
+		//Standard power stuff
+		super.tickEntity();
 	}
 
 	@Override

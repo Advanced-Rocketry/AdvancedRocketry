@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.Constants;
+import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.item.ItemBiomeChanger;
 import zmaster587.advancedRocketry.util.BiomeHandler;
@@ -17,7 +18,7 @@ import zmaster587.libVulpes.util.HashedBlockPosition;
 
 import java.util.*;
 
-public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversalEnergy {
+public class SatelliteBiomeChanger extends SatelliteBase  {
 
 	private int biomeId;
 	private int radius;
@@ -77,10 +78,6 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 		return !stack.isEmpty() && stack.getItem() instanceof ItemBiomeChanger;
 	}
 
-	@Override
-	public boolean canTick() {
-		return true;
-	}
 
 	@Override
 	public void tickEntity() {
@@ -91,8 +88,7 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 
 			for(int i = 0; i < 10; i++) {
 				if(world.getTotalWorldTime() % 1 == 0 && !toChangeList.isEmpty()) {
-					if(extractEnergy(10, true) ==10 ) {
-						extractEnergy(10, false);
+					if(battery.extractEnergy(120, true) == 120 ) {
 						HashedBlockPosition pos = toChangeList.remove(world.rand.nextInt(toChangeList.size()));
 
 						BiomeHandler.changeBiome(world, biomeId, pos.getBlockPos());
@@ -197,58 +193,5 @@ public class SatelliteBiomeChanger extends SatelliteEnergy implements IUniversal
 		for(int i = 0; i < array.length; i ++) {
 			discoveredBiomes.add((byte) array[i]);
 		}
-	}
-
-	@Override
-	public void setEnergyStored(int amt) {
-		battery.setEnergyStored(amt);
-	}
-
-	@Override
-	public int extractEnergy(int amt, boolean simulate) {
-		if(getDimensionId() != Constants.INVALID_PLANET) {
-			World world = net.minecraftforge.common.DimensionManager.getWorld(getDimensionId());
-			if(world != null) {
-				battery.acceptEnergy(energyCreated(false), false);
-			}
-		}
-		return battery.extractEnergy(amt, simulate);
-	}
-
-	@Override
-	public int getUniversalEnergyStored() {
-
-		if(getDimensionId() != Constants.INVALID_PLANET) {
-			World world = net.minecraftforge.common.DimensionManager.getWorld(getDimensionId());
-			if(world != null) {
-				battery.acceptEnergy(energyCreated(false), false);
-			}
-		}
-
-		return battery.getUniversalEnergyStored();
-	}
-
-	@Override
-	public int getMaxEnergyStored() {
-		return battery.getMaxEnergyStored();
-	}
-	
-	public void setMaxEnergyStored(int max) {
-		battery.setMaxEnergyStored(max);
-	}
-
-	@Override
-	public int acceptEnergy(int amt, boolean simulate) {
-		return battery.acceptEnergy(amt, simulate);
-	}
-
-	@Override
-	public boolean canReceive() {
-		return true;
-	}
-
-	@Override
-	public boolean canExtract() {
-		return true;
 	}
 }

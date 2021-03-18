@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 
-public class SpySatellite extends SatelliteBase {
+public class SatelliteSpyTelescope extends SatelliteBase {
 
 	//TODO: write position to player file and teleport player then subscribe to onlogin
 	@Override

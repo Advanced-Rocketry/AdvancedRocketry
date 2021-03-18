@@ -9,11 +9,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.ISatelliteIdItem;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.item.ItemSatellite;
+import zmaster587.libVulpes.util.UniversalBattery;
 
 public abstract class SatelliteBase {
 	
@@ -23,17 +25,24 @@ public abstract class SatelliteBase {
 	protected ItemStack satellite;
 
 	private boolean isDead;
+
+	//Satellite energy storage
+	protected UniversalBattery battery;
 	
 	public SatelliteBase() {
 		satelliteProperties = new SatelliteProperties();
 		satelliteProperties.setSatelliteType(SatelliteRegistry.getKey(this.getClass()));
 		isDead = false;
 		satellite = ItemStack.EMPTY;
+
+		//Satellite energy storage
+		battery = new UniversalBattery(this.satelliteProperties.getPowerStorage() + 720);
+
 	}
 	
 	public boolean acceptsItemInConstruction(ItemStack item) {
 		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
-		return SatelliteProperties.Property.MAIN.isOfType(flag);
+		return SatelliteProperties.Property.MAIN.isOfType(flag) || SatelliteProperties.Property.POWER_GEN.isOfType(flag) || SatelliteProperties.Property.BATTERY.isOfType(flag);
 	}
 	
 	/**
@@ -60,7 +69,14 @@ public abstract class SatelliteBase {
 	 * @return chance from 0 to 1 of failing this tick
 	 */
 	public abstract double failureChance();
-	
+
+	/**
+	 * @return the power per tick the satellite produces
+	 */
+	public int getPowerPerTick() {
+		return satelliteProperties.getPowerGeneration();
+	}
+
 	/**
 	 * @return an item that can be used to control the satellite, normally a satellite ID chip but can be something else
 	 */
@@ -82,13 +98,15 @@ public abstract class SatelliteBase {
 	 * @return true if the satellite can tick
 	 */
 	public boolean canTick() {
-		return false;
+		return true;
 	}
 	
 	/**
 	 * called every tick if satellite can tick
 	 */
-	public void tickEntity() {}
+	public void tickEntity() {
+		battery.acceptEnergy(getPowerPerTick(), true);
+	}
 	
 	/**
 	 * @return the long id of the satellite, used to get a satellite from the main list

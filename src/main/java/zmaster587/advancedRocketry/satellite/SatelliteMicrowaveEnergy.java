@@ -6,35 +6,21 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.Constants;
-import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
-import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.libVulpes.api.IUniversalEnergyTransmitter;
 import zmaster587.libVulpes.util.UniversalBattery;
 
-public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTransmitter {
+public class SatelliteMicrowaveEnergy extends SatelliteBase implements IUniversalEnergyTransmitter {
 
-	UniversalBattery battery;
-	long lastActionTime;
 	byte teir;
 
-	public SatelliteEnergy() {
-	}
-
-	@Override
-	public boolean acceptsItemInConstruction(ItemStack item) {
-		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
-		
-		return super.acceptsItemInConstruction(item) || SatelliteProperties.Property.BATTERY.isOfType(flag) || (SatelliteProperties.Property.POWER_GEN.isOfType(flag));
+	public SatelliteMicrowaveEnergy() {
 	}
 	
 	@Override
 	public void setProperties(ItemStack satelliteProperties) {
 		super.setProperties(satelliteProperties);
-		battery = new UniversalBattery(Math.max(this.satelliteProperties.getPowerStorage(),1));
 	}
 	
 	@Override
@@ -42,16 +28,6 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 		return "Collecting Energy";
 	}
 
-	protected int energyCreated(boolean simulate) {
-		int amt =(int) ((AdvancedRocketry.proxy.getWorldTimeUniversal(0) - lastActionTime)*getPowerPerTick());
-		if(!simulate)
-			lastActionTime = AdvancedRocketry.proxy.getWorldTimeUniversal(0);
-		return amt;
-	}
-
-	public int getPowerPerTick() {
-		return satelliteProperties.getPowerGeneration();
-	}
 
 	@Override
 	public String getName() {
@@ -70,21 +46,17 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 
 	@Override
 	public int getEnergyMTU(EnumFacing side) {
-		return (int) (100* ARConfiguration.getCurrentConfig().microwaveRecieverMulitplier);
+		return (int) (ARConfiguration.getCurrentConfig().microwaveRecieverMulitplier) * battery.extractEnergy(battery.getMaxEnergyStored(), true);
 	}
 
 	@Override
 	public void setDimensionId(World world) {
 		super.setDimensionId(world);
-		lastActionTime = world.getTotalWorldTime();
 	}
 	
 	@Override
 	public int transmitEnergy(EnumFacing dir, boolean simulate) {
-				int energyCreated = energyCreated(simulate);
-				battery.acceptEnergy(Math.max((energyCreated - getEnergyMTU(EnumFacing.DOWN)), 0), simulate);
-				int energy = battery.extractEnergy(Math.max(getEnergyMTU(EnumFacing.DOWN) - energyCreated,0), simulate);
-				return energy + energyCreated;
+		return getEnergyMTU(EnumFacing.DOWN);
 	}
 
 	@Override
@@ -92,7 +64,6 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 		super.writeToNBT(nbt);
 
 		battery.writeToNBT(nbt);
-		nbt.setLong("lastActionTime", lastActionTime);
 		nbt.setByte("teir", teir);
 	}
 
@@ -107,8 +78,7 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 		//Fix breakages with earlier version of the mod
 		if(battery.getMaxEnergyStored() != this.satelliteProperties.getPowerStorage() || battery.getMaxEnergyStored() == 0)
 			battery.setMaxEnergyStored(Math.max(this.satelliteProperties.getPowerStorage(),1));
-		
-		lastActionTime = nbt.getLong("lastActionTime");
+
 		teir = nbt.getByte("teir");
 	}
 }

@@ -19,7 +19,7 @@ public class ModuleSatellite extends ModuleSlotArray {
 
 	public ModuleSatellite(int offsetX, int offsetY, IInventory container,
 			int slot) {
-		super(offsetX, offsetY, container, slot, slot + 1);
+		super(offsetX, offsetY, container, slot, slot);
 
 	}
 
