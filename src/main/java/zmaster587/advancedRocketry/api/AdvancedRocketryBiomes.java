@@ -165,7 +165,7 @@ public class AdvancedRocketryBiomes {
 	    Structure.NAME_STRUCTURE_BIMAP.put("advancedrocketry:crater", CRATER);
 	    Structure.NAME_STRUCTURE_BIMAP.put("advancedrocketry:geode", GEODE);
 	    
-	    Field decorationStageField = ObfuscationReflectionHelper.findField(Structure.class, "STRUCTURE_DECORATION_STAGE_MAP");
+	    Field decorationStageField = ObfuscationReflectionHelper.findField(Structure.class, "field_236385_u_");
 	    decorationStageField.setAccessible(true);
 	    
 	    Map<Structure<?>, GenerationStage.Decoration> decoractionStage;
