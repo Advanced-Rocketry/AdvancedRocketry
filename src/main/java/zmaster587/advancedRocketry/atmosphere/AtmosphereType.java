@@ -22,8 +22,14 @@ public class AtmosphereType implements IAtmosphere {
 	public static final AtmosphereType SUPERHIGHPRESSURENOO2 = new AtmosphereSuperHighPressureNoOxygen(true, false, false, "SuperHighPressureNoO2");
 	public static final AtmosphereType VERYHOTNOO2 = new AtmosphereVeryHotNoOxygen(true, false, false, "VeryHotNoO2");
 	public static final AtmosphereType SUPERHEATEDNOO2 = new AtmosphereSuperheatedNoOxygen(true, false, false, "SuperheatedNoOxygen");
-
-	static {
+	
+	private boolean allowsCombustion;
+	private boolean isBreathable;
+	private boolean canTick;
+	private String name;
+	
+	public static void registerAtmosphere()
+	{
 		AtmosphereRegister.getInstance().registerAtmosphere(AIR);
 		AtmosphereRegister.getInstance().registerAtmosphere(PRESSURIZEDAIR);
 		AtmosphereRegister.getInstance().registerAtmosphere(VACUUM);
@@ -38,11 +44,6 @@ public class AtmosphereType implements IAtmosphere {
 		AtmosphereRegister.getInstance().registerAtmosphere(VERYHOTNOO2);
 		AtmosphereRegister.getInstance().registerAtmosphere(SUPERHEATEDNOO2);
 	}
-	
-	private boolean allowsCombustion;
-	private boolean isBreathable;
-	private boolean canTick;
-	private String name;
 
 	public AtmosphereType(boolean canTick, boolean isBreathable, String name) {
 		this.allowsCombustion = isBreathable;

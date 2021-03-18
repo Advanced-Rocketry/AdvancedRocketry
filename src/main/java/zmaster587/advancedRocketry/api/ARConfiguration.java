@@ -414,6 +414,10 @@ public class ARConfiguration {
 
 		if(Integer.class.isAssignableFrom(type) || type == int.class)
 			out.writeInt((Integer)value);
+		else if(ConfigValue.class.isAssignableFrom(type))
+		{
+			writeDatum(out, ((ConfigValue)value).get().getClass(), ((ConfigValue)value).get(), property);
+		}
 		else if(Float.class.isAssignableFrom(type) || type == float.class)
 			out.writeFloat((Float)value);
 		else if(Double.class.isAssignableFrom(type) || type == double.class)
@@ -439,6 +443,10 @@ public class ARConfiguration {
 				out.writeItemStack(asteroid.itemStacks.get(i));
 				out.writeFloat(asteroid.stackProbabilites.get(i));
 			}
+		}
+		else if(ResourceLocation.class.isAssignableFrom(type))
+		{
+			out.writeResourceLocation((ResourceLocation) value);
 		}
 		else if(String.class.isAssignableFrom(type))
 		{
@@ -487,12 +495,20 @@ public class ARConfiguration {
 
 		if(Integer.class.isAssignableFrom(type) || type == int.class)
 			return in.readInt();
+		else if(ConfigValue.class.isAssignableFrom(type))
+		{
+			return readDatum(in, property.internalType(), property);
+		}
 		else if(Float.class.isAssignableFrom(type) || type == float.class)
 			return in.readFloat();
 		else if(Double.class.isAssignableFrom(type) || type == double.class)
 			return in.readDouble();
 		else if(boolean.class.isAssignableFrom(type) || type == boolean.class)
 			return in.readBoolean();
+		else if(ResourceLocation.class.isAssignableFrom(type))
+		{
+			return in.readResourceLocation();
+		}
 		else if(String.class.isAssignableFrom(type))
 		{
 			return in.readString(256);
@@ -854,7 +870,7 @@ public class ARConfiguration {
 	@ConfigProperty
 	public  ConfigValue<Integer> vacuumDamageValue;
 	
-	@ConfigProperty(needsSync=true)
+	@ConfigProperty(needsSync=true, internalType=Integer.class)
 	public  ConfigValue<Integer> orbit;
 	
 	@ConfigProperty
@@ -863,13 +879,13 @@ public class ARConfiguration {
 	@ConfigProperty
 	public ResourceLocation MoonId = Constants.INVALID_PLANET;
 
-	@ConfigProperty(needsSync=true)
+	@ConfigProperty(needsSync=true, internalType=String.class)
 	public  ConfigValue<String> spaceDimId;
 
 	@ConfigProperty
 	public  ConfigValue<Integer> fuelPointsPer10Mb;
 
-	@ConfigProperty(needsSync=true)
+	@ConfigProperty(needsSync=true, internalType=Integer.class)
 	public  ConfigValue<Integer> stationSize;
 
 	@ConfigProperty
@@ -1052,7 +1068,7 @@ public class ARConfiguration {
 	@ConfigProperty
 	public LinkedList<ResourceLocation> standardGeodeOres = new LinkedList<ResourceLocation>();
 
-	@ConfigProperty(needsSync=true, internalType=Integer.class)
+	@ConfigProperty(needsSync=true, internalType=ResourceLocation.class)
 	public HashSet<ResourceLocation> initiallyKnownPlanets = new HashSet<ResourceLocation>();
 
 	@ConfigProperty
@@ -1088,7 +1104,7 @@ public class ARConfiguration {
 	@ConfigProperty
 	public  ConfigValue<Boolean> enableGravityController;
 
-	@ConfigProperty(needsSync=true)
+	@ConfigProperty(needsSync=true, internalType=Boolean.class)
 	public  ConfigValue<Boolean> planetsMustBeDiscovered;
 
 	@ConfigProperty
@@ -1154,7 +1170,7 @@ public class ARConfiguration {
 	@ConfigProperty
 	public  ConfigValue<Boolean> generateVolcanos;
 	
-	@ConfigProperty(needsSync=true)
+	@ConfigProperty(needsSync=true, internalType=Boolean.class)
 	public  ConfigValue<Boolean> experimentalSpaceFlight;
 
 

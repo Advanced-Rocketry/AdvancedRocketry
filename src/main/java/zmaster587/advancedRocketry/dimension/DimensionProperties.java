@@ -1012,11 +1012,18 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 
 	public void updateOrbit() {
+		try
+		{
 		this.prevOrbitalTheta = this.orbitTheta;
 		if (this.isMoon()) {
 			this.orbitTheta = AstronomicalBodyHelper.getMoonOrbitalTheta(orbitalDist, getParentProperties().gravitationalMultiplier) + baseOrbitTheta;
 		} else if (!this.isMoon()) {
 			this.orbitTheta = AstronomicalBodyHelper.getOrbitalTheta(orbitalDist, getStar().getSize()) + baseOrbitTheta;
+		}
+		}
+		catch(NullPointerException e)
+		{
+			
 		}
 	}
 

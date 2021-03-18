@@ -34,6 +34,7 @@ import net.minecraftforge.event.TickEvent.ServerTickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -42,6 +43,7 @@ import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent.ClientCustomPayloadLoginEvent;
+import net.minecraftforge.fml.network.NetworkEvent.ServerCustomPayloadEvent;
 import net.minecraftforge.fml.network.NetworkEvent.ServerCustomPayloadLoginEvent;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -269,26 +271,26 @@ public class PlanetEventHandler {
 
 	//Make sure the player receives data about the dimensions
 	@SubscribeEvent
-	public void playerLoggedInEvent(ServerCustomPayloadLoginEvent event) {
-		NetworkManager mgr = event.getSource().get().getNetworkManager();
+	public void playerLoggedInEvent(PlayerLoggedInEvent event) {
+		PlayerEntity mgr = event.getPlayer();
 
 		//Send config first
-		DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () -> { PacketHandler.sendToDispatcher(new PacketConfigSync(), mgr); } );
+		//DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () -> { PacketHandler.sendToPlayer(new PacketConfigSync(), mgr); } );
 
 		//Make sure stars are sent next
 		for(ResourceLocation i : DimensionManager.getInstance().getStarIds()) {
-			PacketHandler.sendToDispatcher(new PacketStellarInfo(i, DimensionManager.getInstance().getStar(i)), mgr);
+			PacketHandler.sendToPlayer(new PacketStellarInfo(i, DimensionManager.getInstance().getStar(i)), mgr);
 		}
 
 		for(ResourceLocation i : DimensionManager.getInstance().getRegisteredDimensions()) {
-			PacketHandler.sendToDispatcher(new PacketDimInfo(i, DimensionManager.getInstance().getDimensionProperties(i)), mgr);
+			PacketHandler.sendToPlayer(new PacketDimInfo(i, DimensionManager.getInstance().getDimensionProperties(i)), mgr);
 		}
 
 		for(ISpaceObject obj : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
-			PacketHandler.sendToDispatcher(new PacketSpaceStationInfo(obj.getId(), obj), mgr);
+			PacketHandler.sendToPlayer(new PacketSpaceStationInfo(obj.getId(), obj), mgr);
 		}
 
-		PacketHandler.sendToDispatcher(new PacketDimInfo(DimensionManager.getInstance().overworldProperties.getId(), DimensionManager.overworldProperties), mgr);
+		PacketHandler.sendToPlayer(new PacketDimInfo(DimensionManager.getInstance().overworldProperties.getId(), DimensionManager.overworldProperties), mgr);
 	}
 
 	@OnlyIn(value=Dist.CLIENT)

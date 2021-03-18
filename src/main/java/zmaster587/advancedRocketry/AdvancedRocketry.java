@@ -55,6 +55,7 @@ import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.block.*;
 import zmaster587.advancedRocketry.capability.CapabilityProtectiveArmor;
 import zmaster587.advancedRocketry.common.CommonProxy;
@@ -438,6 +439,7 @@ public class AdvancedRocketry {
 	{
 		//Biomes --------------------------------------------------------------------------------------
 		registerRecipes();
+		AtmosphereType.registerAtmosphere();
 		OreGen.injectOreGen();
 		List<? extends CharSequence> biomeBlackList = ARConfiguration.getCurrentConfig().biomeBlackList.get();
 		List<? extends CharSequence> biomeHighPressure = ARConfiguration.getCurrentConfig().biomeHighPressure.get();

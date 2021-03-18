@@ -71,7 +71,6 @@ public class DimensionManager implements IGalaxy {
 	
 	//TODO: fix satellites not unloading on disconnect
 	private Random random;
-	private static DimensionManager instance = (DimensionManager) (AdvancedRocketryAPI.dimensionManager = new DimensionManager());
 	public static final String workingPath = "advRocketry";
 	public static final String tempFile = "/ARdata.dat";
 	public static final String worldXML = "/planetDefs.xml";
@@ -116,7 +115,7 @@ public class DimensionManager implements IGalaxy {
 		starList = new HashMap<ResourceLocation, StellarBody>();
 		sol = new StellarBody();
 		sol.setTemperature(100);
-		sol.setId(new ResourceLocation(Constants.STAR_NAMESPACE, "sol"));
+		sol.setId(new ResourceLocation(Constants.STAR_NAMESPACE, "0"));
 		sol.setName("Sol");
 
 		overworldProperties = new DimensionProperties(new ResourceLocation("minecraft", DimensionType.OVERWORLD.getLocation().getPath()));
@@ -506,7 +505,7 @@ public class DimensionManager implements IGalaxy {
 			return false;
 
 		//Avoid registering gas giants as dimensions
-		if(registerWithForge && properties.hasSurface() && !ZUtils.isWorldRegistered(dimId)) {
+		//if(registerWithForge && properties.hasSurface() && !ZUtils.isWorldRegistered(dimId)) {
 			/*if(properties.isAsteroid())
 			{
 				DimensionType dimType = new ModdedDimensionType(OptionalLong.empty(), true, false, false, true, 1.0D, false, false, true, false, true, 256, ColumnFuzzedBiomeMagnifier.INSTANCE, BlockTags.INFINIBURN_OVERWORLD.getName(), dimId, 0.0F);
@@ -536,7 +535,7 @@ public class DimensionManager implements IGalaxy {
 				
 				ZUtils.registerDimension(dimId, dimType, dimension);
 			}*/
-		}
+		//}
 		dimensionListResource.put(dimId, properties);
 
 		return true;
@@ -1067,7 +1066,7 @@ public class DimensionManager implements IGalaxy {
 				//Make Sol				
 				StellarBody sol = new StellarBody();
 				sol.setTemperature(100);
-				sol.setId(new ResourceLocation(Constants.STAR_NAMESPACE, "sol"));
+				sol.setId(new ResourceLocation(Constants.STAR_NAMESPACE, "0"));
 				sol.setName("Sol");
 
 				DimensionManager.getInstance().addStar(sol);

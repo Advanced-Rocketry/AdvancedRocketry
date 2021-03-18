@@ -1,0 +1,22 @@
+{
+  "surface_builder": "advancedrocketry:spacegeneration",
+  "depth": -2,
+  "scale": 0,
+  "temperature": 0,
+  "downfall": 0,
+  "precipitation": "none",
+  "temperature_modifier": "frozen",
+  "category": "none",
+  "creature_spawn_probability": 0,
+  "effects": {
+    "sky_color": 7907327,
+    "fog_color": 12638463,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "starts": [],
+  "spawners": {},
+  "spawn_costs": {},
+  "carvers": {},
+  "features": []
+}

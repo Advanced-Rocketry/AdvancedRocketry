@@ -631,6 +631,11 @@ public class XMLPlanetLoader {
 			if(nameNode != null && nameNode.getNodeValue().equalsIgnoreCase("true")) {
 				star.setBlackHole(true);
 			}
+			
+			nameNode = planetNode.getAttributes().getNamedItem(ATTR_NAME);
+			if(nameNode != null) {
+				star.setName(nameNode.getNodeValue());
+			}
 		}
 
 		star.setId(new ResourceLocation( Constants.STAR_NAMESPACE, String.valueOf(starId++)));
