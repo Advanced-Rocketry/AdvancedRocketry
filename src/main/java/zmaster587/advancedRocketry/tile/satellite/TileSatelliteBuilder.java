@@ -32,18 +32,20 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	};
 
 	EmbeddedInventory inventory;
-	//Slot 0: functional Piece
-	//Slot 1 -> 3: power
-	//Slot 4 -> 7: data Storage
+	//Slot 0: Main satellite device
+	//Slot 1 -> 6: Other functional pieces
 	//Slot 7: output
 	//Slot 8: chip printing slot
 	//Slot 9: chip duping slot
 	//Slot 10: temp holding space (Inaccessible)
 
-	private static final byte holdingSlot = 10;
+	private static final byte primaryFunctionSlot = 0;
+	private static final byte modularFunctionSlotStart = 1;
+	private static final byte modularFunctionSlotEnd = 6;
 	private static final byte outputSlot = 7;
 	private static final byte chipSlot = 8;
 	private static final byte chipCopySlot = 9;
+	private static final byte holdingSlot = 10;
 	private static final byte chassisSlot = 11;
 
 	public TileSatelliteBuilder() {
@@ -67,21 +69,25 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		if(getStackInSlot(chassisSlot).isEmpty())
 			return false;
 
-		//First make sure everything is a satellite part
-		for(int i = 0; i < 7; i++) {
+		boolean hasPowerGeneration = false;
+		//First make sure everything is a satellite part, and check to see if satellite has any power generation
+		for(int i = primaryFunctionSlot; i <= modularFunctionSlotEnd; i++) {
 			ItemStack stack = getStackInSlot(i);
+			if (SatelliteRegistry.getSatelliteProperty(stack).getPowerGeneration() > 0 )
+				hasPowerGeneration = true;
 			if(!stack.isEmpty() && SatelliteRegistry.getSatelliteProperty(stack) == null)
 				return false;
 		}
 
 		//Make sure critical parts exist and output is empty
-		if(getStackInSlot(0).isEmpty() || !getStackInSlot(holdingSlot).isEmpty() || !getStackInSlot(outputSlot).isEmpty() || SatelliteRegistry.getSatelliteProperty(getStackInSlot(0)).getSatelliteType() == null)
+		if(getStackInSlot(primaryFunctionSlot).isEmpty() || SatelliteRegistry.getSatelliteProperty(getStackInSlot(primaryFunctionSlot)).getSatelliteType() == null || !hasPowerGeneration)
+			return false;
+		if(!getStackInSlot(holdingSlot).isEmpty() || !getStackInSlot(outputSlot).isEmpty() )
 			return false;
 
-		String satType = SatelliteRegistry.getSatelliteProperty(getStackInSlot(0)).getSatelliteType();
+		String satType = SatelliteRegistry.getSatelliteProperty(getStackInSlot(primaryFunctionSlot)).getSatelliteType();
 		SatelliteBase sat = SatelliteRegistry.getSatallite(satType);
 
-		//TODO: UNDEBUG if 0 power gen also return false
 		return sat.isAcceptableControllerItemStack(getStackInSlot(chipSlot));
 	}
 
@@ -91,15 +97,23 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	 */
 	public void assembleSatellite() {
 		int powerStorage = 0, powerGeneration = 0, maxData = 0;
+		//Get the satellite properties from the item
 		ItemStack stack = getStackInSlot(chassisSlot);
 		ItemSatellite item = (ItemSatellite) stack.getItem();
+		SatelliteProperties properties = item.getSatelliteProperties(stack);
 
-		SatelliteProperties properties = item.getSatellite(stack);
-
-		String satType = SatelliteRegistry.getSatelliteProperty(getStackInSlot(0)).getSatelliteType();
+		//Get the primary function from slot 0
+		String satType = SatelliteRegistry.getSatelliteProperty(getStackInSlot(primaryFunctionSlot)).getSatelliteType();
 		SatelliteBase sat = SatelliteRegistry.getSatallite(satType);
 		
 		if(!world.isRemote) {
+			//Grab properties from the items in slots 1-6
+			for (int currentSlotIndex = modularFunctionSlotStart; currentSlotIndex <= modularFunctionSlotEnd; currentSlotIndex++) {
+				powerStorage += SatelliteRegistry.getSatelliteProperty(getStackInSlot(currentSlotIndex)).getPowerStorage();
+				powerGeneration += SatelliteRegistry.getSatelliteProperty(getStackInSlot(currentSlotIndex)).getPowerGeneration();
+				maxData += SatelliteRegistry.getSatelliteProperty(getStackInSlot(currentSlotIndex)).getMaxDataStorage();
+			}
+
 			//Set final satellite properties
 			if(properties == null || properties.getSatelliteType().isEmpty()) {
 				properties = new SatelliteProperties(powerGeneration, powerStorage, satType,maxData);
@@ -114,7 +128,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 
 			//Set the ID chip
 			setInventorySlotContents(chipSlot, sat.getContollerItemStack(getStackInSlot(chipSlot), properties));
-
+			//Move item to temporary holding slot
 			setInventorySlotContents(holdingSlot, output);
 		}
 
