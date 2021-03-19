@@ -32,37 +32,6 @@ public class ItemSatellite extends ItemIdWithName {
 		return null;
 	}
 
-	public SatelliteProperties getSatelliteProperties(ItemStack stackIn) {
-		if(stackIn.hasTagCompound()) {
-			int powerStorage = 0, powerGeneration = 0, maxData = 0;
-			EmbeddedInventory inv = readInvFromNBT(stackIn);
-
-			if(inv.getStackInSlot(0).isEmpty())
-				return null;
-			
-			String satType = SatelliteRegistry.getSatelliteProperty(inv.getStackInSlot(0)).getSatelliteType();
-			SatelliteBase sat = SatelliteRegistry.getSatallite(satType);
-
-			for(int i = 0; i < inv.getSizeInventory(); i++) {
-				ItemStack stack = inv.getStackInSlot(i);
-				if(!stack.isEmpty()) {
-					SatelliteProperties properties = SatelliteRegistry.getSatelliteProperty(stack);
-
-					if(!sat.acceptsItemInConstruction(stack))
-						continue;
-
-					powerStorage += properties.getPowerStorage();
-					powerGeneration += properties.getPowerGeneration();
-					maxData += properties.getMaxDataStorage();
-				}
-			}
-
-			return new SatelliteProperties(powerGeneration, powerStorage, satType, maxData);
-		}
-		
-		return null;
-	}
-
 	public EmbeddedInventory readInvFromNBT(ItemStack stackIn) {
 		EmbeddedInventory inv = new EmbeddedInventory(7);
 		if(!stackIn.hasTagCompound() || !stackIn.getTagCompound().hasKey("inv"))
@@ -84,28 +53,22 @@ public class ItemSatellite extends ItemIdWithName {
 		nbt.setTag("inv", tag);
 	}
 
-	public void setSatellite(ItemStack stack, SatelliteProperties satellite) {
+	public void setSatellite(ItemStack stack, SatelliteProperties properties) {
 
-		SatelliteBase satellite2 = SatelliteRegistry.getSatallite(satellite.getSatelliteType());
-		if(satellite2 != null) {
-				
+		SatelliteBase testSatellite = SatelliteRegistry.getSatellite(properties.getSatelliteType());
+		if(testSatellite != null) {
+			//Check to see if we have some NBT already, if so, add to it
 			NBTTagCompound nbt;
 			if(stack.hasTagCompound())
 				nbt = stack.getTagCompound();
 			else
 				nbt = new NBTTagCompound();
 
-			SatelliteProperties internalProps = getSatelliteProperties(stack);
-			if(internalProps != null) {
-				satellite.setMaxData(internalProps.getMaxDataStorage());
-				satellite.setPowerGeneration(internalProps.getPowerGeneration());
-				satellite.setPowerStorage(internalProps.getPowerStorage());
-			}
-			
-			satellite.writeToNBT(nbt);
+			//Stick the properties into the NBT of the stack
+			properties.writeToNBT(nbt);
 			stack.setTagCompound(nbt);
 
-			setName(stack, satellite2.getName());
+			setName(stack, testSatellite.getName());
 		}
 		else
 			stack.setTagCompound(null);

@@ -2,13 +2,11 @@ package zmaster587.advancedRocketry.util;
 
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
-import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.advancedRocketry.stations.SpaceObjectBase;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
 
 public class PlanetaryTravelHelper {
-	public static boolean isTravelWithinPlanetarySystem(int currentDimensionID, int destinationDimensionID) {
+	public static boolean isTravelBetweenBodiesWithinPlanetarySystem(int currentDimensionID, int destinationDimensionID) {
 		boolean isPlanetMoonSystem = false;
 		IDimensionProperties launchworldProperties = DimensionManager.getInstance().getDimensionProperties(currentDimensionID);
 
@@ -38,7 +36,7 @@ public class PlanetaryTravelHelper {
 		//Not like the mod has an semblance of a concept of orbital mechanics anyway :P
 		//This is vaugely a multiplier based on TLI burns, burning for 2x as long can get you 4x as far
 		//This grabs the body distance multipier, then takes the square root of it, or if warp multiplies by the config option for that
-		return (isTravelWithinPlanetarySystem(currentDimensionID, destinationDimensionID)) ? (int) (baseInjectionHeight * Math.pow(getBodyDistanceMultiplier(currentDimensionID, destinationDimensionID, toAsteroids), 0.5d)) : (int) ARConfiguration.getCurrentConfig().warpTBIBurnMult * baseInjectionHeight;
+		return (isTravelBetweenBodiesWithinPlanetarySystem(currentDimensionID, destinationDimensionID)) ? (int) (baseInjectionHeight * Math.pow(getBodyDistanceMultiplier(currentDimensionID, destinationDimensionID, toAsteroids), 0.5d)) : (int) ARConfiguration.getCurrentConfig().warpTBIBurnMult * baseInjectionHeight;
 	}
 	public static double getBodyDistanceMultiplier(int currentDimensionID, int destinationDimensionID, boolean toAsteroids) {
 		//Check the orbital distance of the moon or planet we're going to
@@ -59,6 +57,9 @@ public class PlanetaryTravelHelper {
 			bodyDistanceMultiplier = ARConfiguration.getCurrentConfig().asteroidTBIBurnMult;
 		}
 		return bodyDistanceMultiplier;
+	}
+	public static boolean isTravelAnywhereInPlanetarySystem(int currentDimensionID, int destinationDimensionID) {
+		return isTravelWithinOrbit(currentDimensionID, destinationDimensionID) || isTravelBetweenBodiesWithinPlanetarySystem(currentDimensionID, destinationDimensionID);
 	}
 	public static boolean isTravelWithinOrbit(int currentDimensionID, int destinationDimensionID) {
 		return (currentDimensionID == destinationDimensionID);

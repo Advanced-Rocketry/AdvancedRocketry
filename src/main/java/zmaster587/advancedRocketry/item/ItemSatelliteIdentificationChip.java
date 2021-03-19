@@ -75,7 +75,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	 */
 	public void setSatellite(ItemStack stack, SatelliteProperties satellite) {
 		erase(stack);
-		SatelliteBase satellite2 = SatelliteRegistry.getSatallite(satellite.getSatelliteType());
+		SatelliteBase satellite2 = SatelliteRegistry.getSatellite(satellite.getSatelliteType());
 		if(satellite2 != null) {
 			NBTTagCompound nbt;
 			if(stack.hasTagCompound())
