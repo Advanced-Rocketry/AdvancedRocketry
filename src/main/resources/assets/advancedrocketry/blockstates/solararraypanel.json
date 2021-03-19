@@ -1,5 +1,6 @@
 {
     "variants": {
-        "normal": { "model": "advancedrocketry:basalt" }
+        "normal": { "model": "advancedrocketry:solararraypanel" },
+        "inventory": { "model": "advancedrocketry:solararraypanel" }
     }
 }
