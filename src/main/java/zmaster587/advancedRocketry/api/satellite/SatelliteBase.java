@@ -189,6 +189,10 @@ public abstract class SatelliteBase {
 		dimId = nbt.getInteger("dimId");
 		satellite = new ItemStack(nbt.getCompoundTag("item"));
 		battery.readFromNBT(nbt);
+		if (satelliteProperties.getPowerStorage() == 0) {
+			satelliteProperties.setPowerStorage(720);
+			battery = new UniversalBattery(720);
+		}
 	}
 	
 	public void writeDataToNetwork(ByteBuf out, byte packetId) {
