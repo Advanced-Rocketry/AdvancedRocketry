@@ -1,4 +1,4 @@
-version = "1.16.3-${version_major}.${version_minor}.${version_revis}" + project.getBuildNumber()
+version = "1.16.5-${version_major}.${version_minor}.${version_revis}" + project.getBuildNumber()
 
 //prints the version to the console
 println "version = "+ version
