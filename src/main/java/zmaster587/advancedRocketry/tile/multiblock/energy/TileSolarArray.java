@@ -100,8 +100,8 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 	public List<BlockMeta> getAllowableWildCardBlocks() {
 		List<BlockMeta> blocks = super.getAllowableWildCardBlocks();
 
+		blocks.add(new BlockMeta(AdvancedRocketryBlocks.blockSolarArrayPanel, -1));
 		blocks.add(new BlockMeta(Blocks.AIR));
-		blocks.add(new BlockMeta(AdvancedRocketryBlocks.blockSolarArrayPanel));
 
 		return blocks;
 	}

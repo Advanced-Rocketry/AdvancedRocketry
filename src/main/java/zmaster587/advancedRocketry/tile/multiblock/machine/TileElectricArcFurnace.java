@@ -96,7 +96,6 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		// TODO Auto-generated method stub
 		List<ModuleBase> modules = super.getModules(ID, player);
 
 		modules.add(new ModuleProgress(80, 20, 0, TextureResources.arcFurnaceProgressBar, this));
