@@ -26,6 +26,7 @@ import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.api.IUniversalEnergyTransmitter;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
@@ -37,6 +38,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerProducer;
 import zmaster587.libVulpes.util.Vector3F;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,7 +48,6 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 		{
 			{'p', 'c', 'p'},
 		    {'*', '*', '*'},
-			{'*', '*', '*'},
 			{'*', '*', '*'},
 			{'*', '*', '*'},
 			{'*', '*', '*'},
@@ -107,18 +108,27 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 	}
 
 	@Override
-	protected void replaceStandardBlock(BlockPos newPos, IBlockState state, TileEntity tile) {
-		//Number of panels check, block getter
-		Block block = state.getBlock();
-        //Actually check panels
-		if (block == AdvancedRocketryBlocks.blockSolarArrayPanel && world.canBlockSeeSky(newPos.up())) {
-			numPanels ++;
+	protected boolean completeStructure(IBlockState state) {
+		//Needed definitions
+		EnumFacing front = this.getFrontDirection(state);
+		Vector3F<Integer> offset = this.getControllerOffset(structure);
+
+		//Panel-checker iterator
+		numPanels = 0;
+		for(int y = 0; y < structure.length; ++y) {
+			for(int z = 0; z < structure[0].length; ++z) {
+				for(int x = 0; x < structure[0][0].length; ++x) {
+					int globalX = this.pos.getX() + (x - offset.x) * front.getFrontOffsetZ() - (z - offset.z) * front.getFrontOffsetX();
+					int globalY = this.pos.getY() - y + offset.y;
+					int globalZ = this.pos.getZ() - (x - offset.x) * front.getFrontOffsetX() - (z - offset.z) * front.getFrontOffsetZ();
+					if (world.getBlockState(new BlockPos(globalX, globalY, globalZ)).getBlock() == AdvancedRocketryBlocks.blockSolarArrayPanel) {
+						numPanels++;
+					}
+				}
+			}
 		}
-		//And of course actually check the super
-		super.replaceStandardBlock(newPos, state, tile);
-
+		return super.completeStructure(state);
 	}
-
 
 	@Override
 	public String getMachineName() {
@@ -137,7 +147,8 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 			return;
 
 		if(!world.isRemote) {
-			double insolationPowerMultiplier = (world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) ? DimensionManager.getEffectiveDimId(world, pos).getPeakInsolationMultiplierWithoutAtmosphere() : DimensionManager.getEffectiveDimId(world, pos).getPeakInsolationMultiplier();
+			DimensionProperties properties =DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
+			double insolationPowerMultiplier = (world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) ? SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getInsolationMultiplier() : properties.getPeakInsolationMultiplier();
 			int energyRecieved = 0;
 			if(enabled && ((world.isDaytime()  && world.canBlockSeeSky(this.pos.up())) || (world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId && world.canBlockSeeSky(this.pos.down())))) {
 				//Multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency, and by insolation mult for solar stuff
