@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.tile.multiblock.energy;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -25,6 +27,7 @@ import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IUniversalEnergyTransmitter;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
@@ -104,6 +107,20 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 	}
 
 	@Override
+	protected void replaceStandardBlock(BlockPos newPos, IBlockState state, TileEntity tile) {
+		//Number of panels check, block getter
+		Block block = state.getBlock();
+        //Actually check panels
+		if (block == AdvancedRocketryBlocks.blockSolarArrayPanel && world.canBlockSeeSky(newPos.up())) {
+			numPanels ++;
+		}
+		//And of course actually check the super
+		super.replaceStandardBlock(newPos, state, tile);
+
+	}
+
+
+	@Override
 	public String getMachineName() {
 		return "tile.solararray.name";
 	}
@@ -122,9 +139,10 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 		if(!world.isRemote) {
 			double insolationPowerMultiplier = (world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) ? DimensionManager.getEffectiveDimId(world, pos).getPeakInsolationMultiplierWithoutAtmosphere() : DimensionManager.getEffectiveDimId(world, pos).getPeakInsolationMultiplier();
 			int energyRecieved = 0;
-			if(enabled && (world.isDaytime() || world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId)) {
+			if(enabled && (world.isDaytime() || world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) && world.canBlockSeeSky(this.pos.up())) {
 				//Multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency, and by insolation mult for solar stuff
-				energyRecieved = (int) (numPanels * 2 * insolationPowerMultiplier);
+				//Slight adjustment to make Earth 0.9995 into a 1.0
+				energyRecieved = (int) (numPanels * 1.0005d * 2 * insolationPowerMultiplier);
 			}
 			powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().solarGeneratorMult);
 
@@ -136,7 +154,7 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 			producePower(powerMadeLastTick);
 		}
 		if(world.isRemote)
-			textModule.setText(LibVulpes.proxy.getLocalizedString("msg.microwaverec.generating") + powerMadeLastTick + " " + LibVulpes.proxy.getLocalizedString("msg.powerunit.rfpertick"));
+			textModule.setText(LibVulpes.proxy.getLocalizedString("msg.microwaverec.generating") + " " + powerMadeLastTick + " " + LibVulpes.proxy.getLocalizedString("msg.powerunit.rfpertick"));
 	}
 
 	@Override
@@ -158,14 +176,16 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 	@Override
 	public NBTTagCompound getUpdateTag() {
 		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setInteger("amtPwr", powerMadeLastTick);
+		nbt.setInteger("powerMadeLastTick", powerMadeLastTick);
+		nbt.setInteger("numPanels", numPanels);
 		writeToNBT(nbt);
 		return nbt;
 	}
 
 	@Override
 	public void handleUpdateTag(NBTTagCompound nbt) {
-		powerMadeLastTick = nbt.getInteger("amtPwr");
+		powerMadeLastTick = nbt.getInteger("powerMadeLastTick");
+		numPanels = nbt.getInteger("numPanels");
 		canRender = nbt.getBoolean("canRender");
 		readNetworkData(nbt);
 	}
@@ -199,5 +219,17 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 		if(id == 1) {
 			powerMadeLastTick = nbt.getInteger("amtPwr");
 		}
+	}
+
+	@Override
+	protected void writeNetworkData(NBTTagCompound nbt) {
+		super.writeNetworkData(nbt);
+		nbt.setInteger("numPanels", this.numPanels);
+	}
+
+	@Override
+	protected void readNetworkData(NBTTagCompound nbt) {
+		super.readNetworkData(nbt);
+		this.numPanels = nbt.getInteger("numPanels");
 	}
 }

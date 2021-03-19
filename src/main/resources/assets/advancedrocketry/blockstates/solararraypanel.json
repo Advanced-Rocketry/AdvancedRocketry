@@ -1,6 +1,14 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block"
+    },
     "variants": {
-        "normal": { "model": "advancedrocketry:solararraypanel" },
-        "inventory": { "model": "advancedrocketry:solararraypanel" }
+        "inventory": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "normal": [{
+            "model": "advancedrocketry:solararraypanel"
+        }]
     }
 }
