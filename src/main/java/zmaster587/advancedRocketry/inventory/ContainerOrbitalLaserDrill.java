@@ -7,7 +7,7 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.tile.multiblock.TileOrbitalLaserDrill;
+import zmaster587.advancedRocketry.tile.multiblock.drill.TileOrbitalLaserDrill;
 import zmaster587.libVulpes.gui.SlotSingleItem;
 
 public class ContainerOrbitalLaserDrill extends Container {
