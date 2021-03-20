@@ -227,7 +227,7 @@ publishing {
 
 
 
-/*
+
 curseforge{
   if (project.hasProperty("thecursedkey")) {
         apiKey = project.thecursedkey
@@ -250,7 +250,7 @@ curseforge{
     }
    }
 }
-*/
+
 task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     file = new File ("changelog.html")
     untaggedName = "Current release ${project.version}"
