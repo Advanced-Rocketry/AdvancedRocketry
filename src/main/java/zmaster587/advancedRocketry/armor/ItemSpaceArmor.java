@@ -173,13 +173,13 @@ public class ItemSpaceArmor extends ArmorItem implements ICapabilityProvider, IP
 
 		if(type != null) {
 			if(stack.getItem() == AdvancedRocketryItems.itemSpaceSuit_Leggings)
-				return "advancedRocketry:textures/armor/spaceSuit_layer1_overlay.png";//super.getArmorTexture(stack, entity, slot, type);
-			return "advancedRocketry:textures/armor/spaceSuit_layer2_overlay.png";
+				return "advancedRocketry:textures/armor/spacesuit_layer1_overlay.png";//super.getArmorTexture(stack, entity, slot, type);
+			return "advancedRocketry:textures/armor/spacesuit_layer2_overlay.png";
 		}
 
 		if(stack.getItem() == AdvancedRocketryItems.itemSpaceSuit_Leggings)
-			return "advancedRocketry:textures/armor/spaceSuit_layer1.png";//super.getArmorTexture(stack, entity, slot, type);
-		return "advancedRocketry:textures/armor/spaceSuit_layer2.png";
+			return "advancedRocketry:textures/armor/spacesuit_layer1.png";//super.getArmorTexture(stack, entity, slot, type);
+		return "advancedRocketry:textures/armor/spacesuit_layer2.png";
 	}
 
 	@Override
