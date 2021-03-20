@@ -77,7 +77,7 @@ public class RendererSpaceElevator extends TileEntitySpecialRenderer {
 			laser.doRender((Entity) null, renderX, y + 4f, renderZ, 0, f);
 
 			GL11.glPushMatrix();
-			GL11.glTranslated( renderX, y + 4, renderZ);
+			GL11.glTranslated( renderX + 0.5f, y + 4, renderZ + 0.5f);
 			BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 			GlStateManager.disableLighting();
 			GlStateManager.disableFog();
