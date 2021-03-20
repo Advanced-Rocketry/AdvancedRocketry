@@ -364,7 +364,8 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemBeaconFinder,
 				AdvancedRocketryItems.itemThermite,
 				AdvancedRocketryItems.itemHovercraft,
-				AdvancedRocketryItems.itemBiomeChanger);
+				AdvancedRocketryItems.itemBiomeChanger,
+				AdvancedRocketryItems.itemSensorBiomeChanger);
 		
 		// register blocks
 		Item.Properties typicalBlockProperties = new Item.Properties().group(AdvancedRocketry.tabAdvRocketry);
@@ -544,7 +545,7 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemRocketUnloader.setRegistryName("runloader"),
 				AdvancedRocketryItems.itemguidanceHatch.setRegistryName("compaccesshatch"),
 				AdvancedRocketryItems.itemBiomeScanner.setRegistryName("biomescanner"),
-				//AdvancedRocketryItems.itemAtmosphereTerraformer.setRegistryName("terraformer"),
+				AdvancedRocketryItems.itemAtmosphereTerraformer.setRegistryName("terraformer"),
 				AdvancedRocketryItems.itemDeployableRocketBuilder.setRegistryName("deployablerocketbuilder"),
 				AdvancedRocketryItems.itemPressureTank.setRegistryName("liquidtank"), 
 				AdvancedRocketryItems.itemIntake.setRegistryName("intake"),
@@ -570,11 +571,5 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemBasalt.setRegistryName("basalt"),
 				AdvancedRocketryItems.itemLandingFloat.setRegistryName("landingfloat"),
 				AdvancedRocketryItems.itemSpaceLaser.setRegistryName("spacelaser"));
-
-
-		ItemTags.getCollection().getTagByID(new ResourceLocation("forge", "wafersilicon")).contains(AdvancedRocketryItems.itemSiliconWafer);
-		ItemTags.getCollection().getTagByID(new ResourceLocation("forge", "ingotcarbon")).contains(AdvancedRocketryItems.itemCarbonBrick);
-		ItemTags.getCollection().getTagByID(new ResourceLocation("forge", "itemlens")).contains(AdvancedRocketryItems.itemLens);
-		ItemTags.getCollection().getTagByID(new ResourceLocation("forge", "dustthermite")).contains(AdvancedRocketryItems.itemThermite);
 	}
 }

@@ -36,16 +36,16 @@ import zmaster587.advancedRocketry.tile.multiblock.machine.*;
 @JeiPlugin
 public class ARPlugin implements IModPlugin {
 	public static IJeiHelpers jeiHelpers;
-	public static final ResourceLocation rollingMachineUUID = new ResourceLocation(Constants.modId, "zmaster587.AR.rollingMachine");
-	public static final ResourceLocation latheUUID =  new ResourceLocation(Constants.modId, "zmaster587.AR.lathe");
-	public static final ResourceLocation precisionAssemblerUUID =  new ResourceLocation(Constants.modId, "zmaster587.AR.precisionAssembler");
-	public static final ResourceLocation sawMillUUID =  new ResourceLocation(Constants.modId, "zmaster587.AR.sawMill");
-	public static final ResourceLocation chemicalReactorUUID =  new ResourceLocation(Constants.modId, "zmaster587.AR.chemicalReactor");
-	public static final ResourceLocation crystallizerUUID =  new ResourceLocation(Constants.modId, "zmaster587.AR.crystallizer");
-	public static final ResourceLocation electrolyzerUUID =  new ResourceLocation(Constants.modId, "zmaster587.AR.electrolyzer");
-	public static final ResourceLocation arcFurnaceUUID =  new ResourceLocation(Constants.modId, "zmaster587.AR.arcFurnace");
-	public static final ResourceLocation platePresser =  new ResourceLocation(Constants.modId, "zmaster587.AR.platePresser");
-	public static final ResourceLocation centrifugeUUID =  new ResourceLocation(Constants.modId, "zmaster587.AR.centrifuge");
+	public static final ResourceLocation rollingMachineUUID = new ResourceLocation(Constants.modId, "zmaster587.ar.rollingmachine");
+	public static final ResourceLocation latheUUID =  new ResourceLocation(Constants.modId, "zmaster587.ar.lathe");
+	public static final ResourceLocation precisionAssemblerUUID =  new ResourceLocation(Constants.modId, "zmaster587.ar.precisionassembler");
+	public static final ResourceLocation sawMillUUID =  new ResourceLocation(Constants.modId, "zmaster587.ar.sawmill");
+	public static final ResourceLocation chemicalReactorUUID =  new ResourceLocation(Constants.modId, "zmaster587.ar.chemicalreactor");
+	public static final ResourceLocation crystallizerUUID =  new ResourceLocation(Constants.modId, "zmaster587.ar.crystallizer");
+	public static final ResourceLocation electrolyzerUUID =  new ResourceLocation(Constants.modId, "zmaster587.ar.electrolyzer");
+	public static final ResourceLocation arcFurnaceUUID =  new ResourceLocation(Constants.modId, "zmaster587.ar.arcfurnace");
+	public static final ResourceLocation platePresser =  new ResourceLocation(Constants.modId, "zmaster587.ar.platepresser");
+	public static final ResourceLocation centrifugeUUID =  new ResourceLocation(Constants.modId, "zmaster587.ar.centrifuge");
 	
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry) {
@@ -84,6 +84,6 @@ public class ARPlugin implements IModPlugin {
 
 	@Override
 	public ResourceLocation getPluginUid() {
-		return new ResourceLocation(Constants.modId, "JEIPlugin");
+		return new ResourceLocation(Constants.modId, "jeiplugin");
 	}
 }
