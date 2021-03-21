@@ -37,6 +37,7 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
+import zmaster587.advancedRocketry.util.FluidGasGiantGas;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader.DimensionPropertyCoupling;
@@ -373,8 +374,12 @@ public class DimensionManager implements IGalaxy {
 
 		// Add all gasses for the default world
 		// TODO: add variation
-		for( Fluid gas : AdvancedRocketryFluids.getGasGiantGasses() )
-			properties.getHarvestableGasses().add(gas);
+		for( FluidGasGiantGas gas : AdvancedRocketryFluids.getGasGiantGasses() ) {
+			if (((properties.gravitationalMultiplier * 100)  >= gas.getMinGravity()) && (gas.getMaxGravity() >= (properties.gravitationalMultiplier * 100)) && 0 > (Math.random() - gas.getChance())) {
+				properties.getHarvestableGasses().add(gas.getFluid());
+			}
+		}
+
 		registerDim(properties, true);
 		return properties;
 	}

@@ -772,10 +772,6 @@ public class AdvancedRocketry {
 			AdvancedRocketryFluids.fluidEnrichedLava = FluidRegistry.getFluid("enrichedLava");
 		}
 
-		AtmosphereRegister.getInstance().registerHarvestableFluid(AdvancedRocketryFluids.fluidNitrogen);
-		AtmosphereRegister.getInstance().registerHarvestableFluid(AdvancedRocketryFluids.fluidHydrogen);
-		AtmosphereRegister.getInstance().registerHarvestableFluid(AdvancedRocketryFluids.fluidOxygen);
-
 		AdvancedRocketryBlocks.blockOxygenFluid = new BlockFluid(AdvancedRocketryFluids.fluidOxygen, Material.WATER).setUnlocalizedName("oxygenFluidBlock").setCreativeTab(CreativeTabs.MISC);
 		AdvancedRocketryBlocks.blockHydrogenFluid = new BlockFluid(AdvancedRocketryFluids.fluidHydrogen, Material.WATER).setUnlocalizedName("hydrogenFluidBlock").setCreativeTab(CreativeTabs.MISC);
 		AdvancedRocketryBlocks.blockFuelFluid = new BlockFluid(AdvancedRocketryFluids.fluidRocketFuel, new MaterialLiquid(MapColor.YELLOW)).setUnlocalizedName("rocketFuelBlock").setCreativeTab(CreativeTabs.MISC);
@@ -1093,11 +1089,6 @@ public class AdvancedRocketry {
 
 		ForgeChunkManager.setForcedChunkLoadingCallback(instance, new WorldEvents());
 
-		
-		//register gasses
-		AdvancedRocketryFluids.registerGasGiantGas(AdvancedRocketryFluids.fluidHydrogen);
-		AdvancedRocketryFluids.registerGasGiantGas(AdvancedRocketryFluids.fluidNitrogen);
-		AdvancedRocketryFluids.registerGasGiantGas(AdvancedRocketryFluids.fluidOxygen);
 		
 		//Register mixed material's recipes
 		for(MixedMaterial material : MaterialRegistry.getMixedMaterialList()) {
