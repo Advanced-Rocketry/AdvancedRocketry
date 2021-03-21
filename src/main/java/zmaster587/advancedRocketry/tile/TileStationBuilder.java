@@ -141,6 +141,8 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 
 			this.status = ErrorCodes.FINISHED;
 			storedId = null;
+			inventory.decrStackSize(0, 1);
+			inventory.decrStackSize(1, 1);
 			this.markDirty();
 			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);	
 		}
@@ -193,12 +195,9 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 		
 		super.useNetworkData(player, side, id, nbt);
 		if(id == 1 && isScanningFlag) {
-			inventory.decrStackSize(0, 1);
 
 			storedId = (long)ItemStationChip.getUUID(inventory.getStackInSlot(1));
 			if(storedId == 0) storedId = null;
-			if(storedId == null)
-				inventory.decrStackSize(1, 1);
 		}
 	}
 
