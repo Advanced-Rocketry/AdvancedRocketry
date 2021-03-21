@@ -1,16 +1,17 @@
 {
     "variants": {
-        "extended=false,facing=down": { "model": "piston_normal", "x": 90 },
-        "extended=false,facing=up": { "model": "piston_normal", "x": 270 },
-        "extended=false,facing=north": { "model": "piston_normal" },
-        "extended=false,facing=south": { "model": "piston_normal", "y": 180 },
-        "extended=false,facing=west": { "model": "piston_normal", "y": 270 },
-        "extended=false,facing=east": { "model": "piston_normal", "y": 90 },
-        "extended=true,facing=down": { "model": "piston_extended_normal", "x": 90 },
-        "extended=true,facing=up": { "model": "piston_extended_normal", "x": 270 },
-        "extended=true,facing=north": { "model": "piston_extended_normal" },
-        "extended=true,facing=south": { "model": "piston_extended_normal", "y": 180 },
-        "extended=true,facing=west": { "model": "piston_extended_normal", "y": 270 },
-        "extended=true,facing=east": { "model": "piston_extended_normal", "y": 90 }
+        "extended=false,facing=down": { "model": "advancedrocketry:platepresser_normal", "x": 90 },
+        "extended=false,facing=up": { "model": "advancedrocketry:platepresser_normal", "x": 270 },
+        "extended=false,facing=north": { "model": "advancedrocketry:platepresser_normal" },
+        "extended=false,facing=south": { "model": "advancedrocketry:platepresser_normal", "y": 180 },
+        "extended=false,facing=west": { "model": "advancedrocketry:platepresser_normal", "y": 270 },
+        "extended=false,facing=east": { "model": "advancedrocketry:platepresser_normal", "y": 90 },
+        "extended=true,facing=down": { "model": "advancedrocketry:platepresser_extended_normal", "x": 90 },
+        "extended=true,facing=up": { "model": "advancedrocketry:platepresser_extended_normal", "x": 270 },
+        "extended=true,facing=north": { "model": "advancedrocketry:platepresser_extended_normal" },
+        "extended=true,facing=south": { "model": "advancedrocketry:platepresser_extended_normal", "y": 180 },
+        "extended=true,facing=west": { "model": "advancedrocketry:platepresser_extended_normal", "y": 270 },
+        "extended=true,facing=east": { "model": "advancedrocketry:platepresser_extended_normal", "y": 90 },
+        "inventory": { "model": "advancedrocketry:platepresser_inventory_normal", "x": 180 }
     }
 }
