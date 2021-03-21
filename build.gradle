@@ -118,7 +118,7 @@ repositories {
 //        }*/
     ivy {
             name "LibVulpes"
-            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/1.16/" + project.libVulpesBuildNum +"/artifact/output/[module]-[revision].[ext]"
+            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/1.16.5/" + project.libVulpesBuildNum +"/artifact/output/[module]-[revision].[ext]"
         }
 	flatDir {
 	    dirs 'libs'
@@ -130,9 +130,9 @@ dependencies {
     //compile name: 'industrialcraft-2', version: '2.7.39-ex111-api', ext: 'jar'
     //compile name: 'Tesla', version: '1.11-1.3.0.51-deobf', ext: 'jar'
     //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
-    //compile name: 'LibVulpes', version: '1.16.3-' + project.libVulpesVersion  + '-' + project.libVulpesBuildNum + '-deobf', ext: 'jar'
+    compile name: 'LibVulpes', version: '1.16.5-' + project.libVulpesVersion  + '-' + project.libVulpesBuildNum + '-deobf', ext: 'jar'
     //compile name: 'GalacticraftCore', version: '1.12.2-4.0.1.174', ext: 'jar'
-    compile name: 'LibVulpes', version: '1.16.5-1.0.1-deobf', ext: 'jar'
+    //compile name: 'LibVulpes', version: '1.16.5-1.0.1-2-deobf', ext: 'jar'
 
     // compile against the JEI API
     //decompile "mezz.jei:jei-1.16.1:7.0.0.6"
@@ -236,8 +236,8 @@ curseforge{
     apiKey = ""
     }
   project {
-  //libVulpes
-    id = "236541"
+  //Advanced Rocketry
+    id = "236542"
     changelog = file('changelog.html')
     changelogType = 'html'
     releaseType = "alpha"
