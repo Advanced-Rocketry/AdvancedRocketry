@@ -1720,7 +1720,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		//Check to see what place we should be going to
 		//This is bad but it works and is mostly intelligible so it's here for now
-		stats.orbitHeight = storage.getGuidanceComputer().getLaunchSequence(this.world.provider.getDimension(), this.getPosition());
+		stats.orbitHeight = (storage.getGuidanceComputer() == null) ? getEntryHeight(this.world.provider.getDimension()) : storage.getGuidanceComputer().getLaunchSequence(this.world.provider.getDimension(), this.getPosition());
 
 
 		//TODO: Clean this logic a bit?

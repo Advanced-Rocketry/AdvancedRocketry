@@ -289,7 +289,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		Iterator<ModuleBase> itr = modules.iterator();
 		while(itr.hasNext()) {
 			ModuleBase module = itr.next();
-			if(module instanceof ModuleButton && ((ModuleButton)module).getText().equalsIgnoreCase("Select Dst")) {
+			if(module instanceof ModuleButton && ((ModuleButton)module).buttonId == 1) {
 				itr.remove();
 				break;
 			}
