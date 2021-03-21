@@ -246,10 +246,10 @@ curseforge{
     releaseType = "alpha"
     addGameVersion mcversion
     mainArtifact(jar) {
-      displayName = "LibVulpes ${project.version} build " + project.getBuildNumber() +  " for " + mcversion
+      displayName = "Advanced Rocketry ${project.version} build " + project.getBuildNumber() +  " for " + mcversion
     }
     addArtifact (deobfJar){
-         displayName = "LibVulpes ${project.version}-deobf build " + project.getBuildNumber() + " for " + mcversion
+         displayName = "Advanced Rocketry ${project.version}-deobf build " + project.getBuildNumber() + " for " + mcversion
     }
    }
 }
