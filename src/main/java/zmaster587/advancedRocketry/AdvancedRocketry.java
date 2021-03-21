@@ -546,8 +546,7 @@ public class AdvancedRocketry {
 		PlanetEventHandler handle = new PlanetEventHandler();
 		MinecraftForge.EVENT_BUS.register(handle);
 
-		CableTickHandler cable = new CableTickHandler();
-		MinecraftForge.EVENT_BUS.register(cable);
+		// One day cables may be a thing again
 
 		InputSyncHandler inputSync = new InputSyncHandler();
 		MinecraftForge.EVENT_BUS.register(inputSync);
