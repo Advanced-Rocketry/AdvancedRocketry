@@ -262,6 +262,7 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     gitHubIssuePattern = "nonada123";
     templateContent = """
 {{#tags}}
+<h1> Highly untested and may break world</h1>
   <h3>{{name}}</h3>
   <ul>
     {{#commits}}
