@@ -130,6 +130,7 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_UISTAR, (IRenderFactory<EntityUIStar>)new RenderStarUIEntity(null));
 		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_ELEVATOR_CAPSULE, (IRenderFactory<EntityElevatorCapsule>)new RenderElevatorCapsule(null));
 		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_HOVER_CRAFT, (IRenderFactory<EntityHoverCraft>)new RenderHoverCraft(null));
+		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_DUMMY, (IRenderFactory<EntityDummy>)new RenderSeat(null));
 	}
 
 	@Override
