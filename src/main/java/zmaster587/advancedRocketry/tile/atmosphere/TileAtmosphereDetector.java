@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile;
+package zmaster587.advancedRocketry.tile.atmosphere;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;

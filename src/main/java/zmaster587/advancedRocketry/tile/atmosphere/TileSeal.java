@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile;
+package zmaster587.advancedRocketry.tile.atmosphere;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
