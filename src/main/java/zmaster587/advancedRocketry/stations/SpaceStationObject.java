@@ -57,8 +57,16 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	private DimensionProperties properties;
 	public boolean hasWarpCores = false;
 
+	public int targetOrbitalDistance;
+	public int targetGravity;
+	public int targetRotationsPerHour[];
+
 	public SpaceStationObject() {
 		properties = (DimensionProperties) zmaster587.advancedRocketry.dimension.DimensionManager.defaultSpaceDimensionProperties.clone();
+		orbitalDistance = 4.0f;
+		targetOrbitalDistance = 4;
+		targetRotationsPerHour = new int[]{0, 0, 0};
+		targetGravity = 10;
 		spawnLocations = new LinkedList<StationLandingLocation>();
 		warpCoreLocation = new LinkedList<HashedBlockPosition>(); 
 		dockingPoints = new HashMap<HashedBlockPosition, String>();
@@ -88,6 +96,10 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 
 	public long getTransitionTime() {
 		return transitionEta;
+	}
+
+	public void setTargetRotationsPerHour(int index, int rotations) {
+		targetRotationsPerHour[index] = rotations;
 	}
 
 	public void discoverPlanet(int pid) {
@@ -640,6 +652,12 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		nbt.setInteger("spawnZ", spawnLocation.z);
 		nbt.setInteger("destinationDimId", destinationDimId);
 		nbt.setInteger("fuel", fuelAmount);
+		nbt.setFloat("orbitalDistance", orbitalDistance);
+		nbt.setInteger("targetOrbitalDistance", targetOrbitalDistance);
+		nbt.setInteger("targetGravity", targetGravity);
+		nbt.setInteger("targetRotationX", targetRotationsPerHour[0]);
+		nbt.setInteger("targetRotationY", targetRotationsPerHour[1]);
+		nbt.setInteger("targetRotationZ", targetRotationsPerHour[2]);
 		nbt.setDouble("rotationX", rotation[0]);
 		nbt.setDouble("rotationY", rotation[1]);
 		nbt.setDouble("rotationZ", rotation[2]);
@@ -697,9 +715,6 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	public void readFromNbt(NBTTagCompound nbt) {
 		properties.readFromNBT(nbt);
 
-		if((int)orbitalDistance != properties.getParentOrbitalDistance())
-			orbitalDistance = properties.getParentOrbitalDistance();
-
 		destinationDimId = nbt.getInteger("destinationDimId");
 		launchPosX = nbt.getInteger("launchposX");
 		launchPosZ = nbt.getInteger("launchposY");
@@ -708,6 +723,12 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		created = nbt.getBoolean("created");
 		altitude = nbt.getInteger("altitude");
 		fuelAmount = nbt.getInteger("fuel");
+		orbitalDistance = nbt.getFloat("orbitalDistance");
+		targetOrbitalDistance = nbt.getInteger("targetOrbitalDistance");
+		targetRotationsPerHour[0] = nbt.getInteger("targetRotationX");
+		targetRotationsPerHour[1] = nbt.getInteger("targetRotationY");
+		targetRotationsPerHour[2] = nbt.getInteger("targetRotationZ");
+		targetGravity = nbt.getInteger("targetGravity");
 		spawnLocation = new HashedBlockPosition(nbt.getInteger("spawnX"), nbt.getInteger("spawnY"), nbt.getInteger("spawnZ"));
 		properties.setId(nbt.getInteger("id"));
 		rotation[0] = nbt.getDouble("rotationX");
@@ -780,9 +801,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 
 	@Override
 	public void setOrbitalDistance(float finalVel) {
-		if((int)orbitalDistance != properties.getParentOrbitalDistance())
-			properties.setParentOrbitalDistance((int)orbitalDistance);
-		orbitalDistance = finalVel;
+		orbitalDistance = Math.max(4.0f, finalVel);
 	}
 
 	@Override
