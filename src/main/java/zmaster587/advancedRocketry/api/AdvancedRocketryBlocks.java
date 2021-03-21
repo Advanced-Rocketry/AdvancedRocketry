@@ -106,4 +106,6 @@ public class AdvancedRocketryBlocks {
 	public static Block blockCentrifuge;
 	public static Block blockBasalt;
 	public static Block blockLandingFloat;
+	public static Block blockSolarArray;
+	public static Block blockSolarArrayPanel;
 }

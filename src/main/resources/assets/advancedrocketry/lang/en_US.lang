@@ -129,6 +129,8 @@ tile.precisionlaseretcher.name=Precision Laser Etcher
 tile.enrichedLavaBlock.name=Enriched Lava Block
 tile.basalt.name=Basalt
 tile.landingfloat.name=Landing Float
+tile.solararray.name=Solar Array
+tile.solararraypanel.name=Solar Array Panel
 
 tile.Dilithium.name=Dilithium Ore
 

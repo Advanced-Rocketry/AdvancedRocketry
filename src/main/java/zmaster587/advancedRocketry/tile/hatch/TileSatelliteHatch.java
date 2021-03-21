@@ -31,7 +31,7 @@ public class TileSatelliteHatch extends TileInventoryHatch {
 			if(properties == null)
 				return null;
 
-			SatelliteBase satellite = SatelliteRegistry.getSatallite(properties.getSatelliteType());
+			SatelliteBase satellite = SatelliteRegistry.getSatellite(properties.getSatelliteType());
 
 			if(satellite == null)
 				return null;

@@ -6,6 +6,7 @@ import zmaster587.advancedRocketry.api.DataStorage.DataType;
 public class SatelliteOptical extends SatelliteData {
 
 	public SatelliteOptical() {
+		super();
 		data = new DataStorage(DataStorage.DataType.DISTANCE);
 		data.lockDataType(DataType.DISTANCE);
 	}

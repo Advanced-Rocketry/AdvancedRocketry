@@ -9,12 +9,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 
-public class ContainerOreMappingSatallite extends Container {
+public class ContainerOreMappingSatellite extends Container {
 
 
 	private SatelliteOreMapping inv;
 
-	ContainerOreMappingSatallite(SatelliteOreMapping inv, InventoryPlayer inventoryPlayer) {
+	ContainerOreMappingSatellite(SatelliteOreMapping inv, InventoryPlayer inventoryPlayer) {
 		super();
 		this.inv = inv;
 		inv.setSelectedSlot(-1);

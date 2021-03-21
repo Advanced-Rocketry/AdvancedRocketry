@@ -48,7 +48,7 @@ public class GuiHandler implements IGuiHandler {
 			if(satellite == null || !(satellite instanceof SatelliteOreMapping) || satellite.getDimensionId() != world.provider.getDimension())
 				satellite = null;
 			
-			return new ContainerOreMappingSatallite((SatelliteOreMapping) satellite, player.inventory);
+			return new ContainerOreMappingSatellite((SatelliteOreMapping) satellite, player.inventory);
 		}
 		return null;
 	}

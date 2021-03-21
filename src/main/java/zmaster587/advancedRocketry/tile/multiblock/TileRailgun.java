@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -14,7 +15,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -52,63 +52,130 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	RedstoneState state;
 	ModuleRedstoneOutputButton redstoneControl;
 
-	public static final Object[][][] structure = {
-		{	{null, null, null, null, null}, 
-			{null, null, "coilCopper" , null, null},
-			{null, "coilCopper", "coilCopper" , "coilCopper", null},
-			{null, null, "coilCopper" , null, null},
-			{null, null, null, null, null}},
-
-			{	{null, null, null, null, null}, 
-				{null, null, "coilCopper" , null, null},
-				{null, "coilCopper", Blocks.AIR , "coilCopper", null},
-				{null, null, "coilCopper" , null, null},
-				{null, null, null, null, null}},
-
-				{	{null, null, null, null, null}, 
-					{null, null, "coilCopper" , null, null},
-					{null, "coilCopper", Blocks.AIR , "coilCopper", null},
-					{null, null, "coilCopper" , null, null},
-					{null, null, null, null, null}},
-
-					{	{null, null, null, null, null}, 
-						{null, null, "coilCopper" , null, null},
-						{null, "coilCopper", Blocks.AIR , "coilCopper", null},
-						{null, null, "coilCopper" , null, null},
-						{null, null, null, null, null}},
-
-						{	{null, null, null, null, null}, 
-							{null, null, "coilCopper" , null, null},
-							{null, "coilCopper", Blocks.AIR , "coilCopper", null},
-							{null, null, "coilCopper" , null, null},
-							{null, null, null, null, null}},
-
-
-							{	{null, null, null, null, null}, 
-								{null, null, "coilCopper" , null, null},
-								{null, "coilCopper", Blocks.AIR , "coilCopper", null},
-								{null, null, "coilCopper" , null, null},
-								{null, null, null, null, null}},
-
-								{	{null, null, null, null, null}, 
-									{null, null, "coilCopper" , null, null},
-									{null, "coilCopper", Blocks.AIR , "coilCopper", null},
-									{null, null, "coilCopper" , null, null},
-									{null, null, null, null, null}},
-
-									{	{'*', '*', '*', '*', '*'}, 
-										{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
-										{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
-										{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
-										{'*', '*', '*', '*', '*'}},
-
-										{{'*', '*', 'c', '*', '*'}, 
-											{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
-											{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
-											{'*', "blockTitanium", "blockTitanium" , "blockTitanium", '*'},
-											{'*', '*', '*', '*', '*'}}
-
-	};
+	static final Object[][][] structure = new Object[][][]
+			{
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,"coilCopper",LibVulpesBlocks.blockStructureBlock,"coilCopper",null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,"coilCopper",LibVulpesBlocks.blockStructureBlock,"coilCopper",null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,"coilCopper",LibVulpesBlocks.blockStructureBlock,"coilCopper",null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,"coilCopper",LibVulpesBlocks.blockStructureBlock,"coilCopper",null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,"coilCopper",LibVulpesBlocks.blockStructureBlock,"coilCopper",null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,"coilCopper",LibVulpesBlocks.blockStructureBlock,"coilCopper",null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,"coilCopper",LibVulpesBlocks.blockStructureBlock,"coilCopper",null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,"coilCopper",LibVulpesBlocks.blockStructureBlock,"coilCopper",null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,"coilCopper",LibVulpesBlocks.blockStructureBlock,"coilCopper",null,null,null},
+							{null,null,null,null,"coilCopper",null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,"blockSteel",null,null,null,null},
+							{null,null,null,LibVulpesBlocks.blockAdvStructureBlock,"blockTitanium",LibVulpesBlocks.blockAdvStructureBlock,null,null,null},
+							{null,null,"blockSteel","blockTitanium","blockTitanium","blockTitanium","blockSteel",null,null},
+							{null,null,null,LibVulpesBlocks.blockAdvStructureBlock,"blockTitanium",LibVulpesBlocks.blockAdvStructureBlock,null,null,null},
+							{null,null,null,null,"blockSteel",null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{"blockSteel",null,null,"slab","slab","slab",null,null,"blockSteel"},
+							{null,LibVulpesBlocks.blockAdvStructureBlock,"slab",'I','c','O',"slab",LibVulpesBlocks.blockAdvStructureBlock,null},
+							{null,"slab",LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,"slab",null},
+							{"slab","slab",LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab"},
+							{"slab","slab",LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.motors,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab"},
+							{"slab","slab",LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab"},
+							{null,"slab",LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,"slab",null},
+							{null,LibVulpesBlocks.blockAdvStructureBlock,"slab",'P','P','P',"slab",LibVulpesBlocks.blockAdvStructureBlock,null},
+							{"blockSteel",null,null,"slab","slab","slab",null,null,"blockSteel"}
+					}
+			};
 
 	public TileRailgun() {
 		inv = new EmbeddedInventory(1);
@@ -128,6 +195,11 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 			return Math.min(distance, super.requiredPowerPerTick());
 		}
 		return super.requiredPowerPerTick();
+	}
+
+	@Override
+	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
+		return true;
 	}
 	
 	/**
@@ -150,18 +222,6 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 			return ItemLinker.getMasterCoords(stack);
 		}
 		return null;
-	}
-
-	@Override
-	public List<BlockMeta> getAllowableWildCardBlocks() {
-		List<BlockMeta> blocks = super.getAllowableWildCardBlocks();
-
-		blocks.addAll(getAllowableBlocks('P'));
-		blocks.addAll(getAllowableBlocks('I'));
-		blocks.addAll(getAllowableBlocks('O'));
-		blocks.add(new BlockMeta(LibVulpesBlocks.blockAdvStructureBlock));
-
-		return blocks;
 	}
 
 	@Override
@@ -282,7 +342,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 					TileEntity tile;
 
 					if(world != null && (tile = world.getTileEntity(pos)) instanceof TileRailgun && ((TileRailgun)tile).canRecieveCargo(tfrStack) &&
-							(PlanetaryTravelHelper.isTravelWithinPlanetarySystem(this.world.provider.getDimension(),
+							(PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(this.world.provider.getDimension(),
 									zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(world, pos).getId()) ||
 									zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(world, pos).getId() == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(this.world, this.pos).getId()) ) {
 

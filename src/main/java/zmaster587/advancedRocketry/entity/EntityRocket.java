@@ -9,7 +9,6 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,7 +32,6 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.*;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
@@ -107,7 +105,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	protected long lastWorldTickTicked;
 
-	private SatelliteBase satallite;
+	private SatelliteBase satellite;
 	protected int destinationDimId;
 	//Offset for buttons linking to the tileEntityGrid
 	private int tilebuttonOffset = 3;
@@ -1380,7 +1378,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			DimensionProperties properties = DimensionManager.getEffectiveDimId(world, getPosition());
 
 			miningMission.setDimensionId(world);
-			properties.addSatallite(miningMission, world);
+			properties.addSatellite(miningMission, world);
 
 			if(!world.isRemote)
 				PacketHandler.sendToAll(new PacketSatellite(miningMission));
@@ -1629,7 +1627,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				else
 					world2 = destinationId;
 
-				properties.addSatallite(satellite, world2, world.isRemote);
+				properties.addSatellite(satellite, world2, world.isRemote);
 				tile.setInventorySlotContents(0, ItemStack.EMPTY);
 			}
 		}
@@ -1711,7 +1709,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 
 			//Check to see if it's possible to reach
-			if(finalDest != Constants.INVALID_PLANET && (!storage.hasWarpCore() || DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId() != DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId()) && !PlanetaryTravelHelper.isTravelWithinPlanetarySystem(finalDest, thisDimId)) {
+			if(finalDest != Constants.INVALID_PLANET && (!storage.hasWarpCore() || DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId() != DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId()) && !PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(finalDest, thisDimId)) {
 				setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
 				return;
 			}
@@ -1889,8 +1887,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		// TODO: Fix spelling
 		//Satellite
 		if(nbt.hasKey("satallite")) {
-			NBTTagCompound satalliteNbt = nbt.getCompoundTag("satallite");
-			satallite = SatelliteRegistry.createFromNBT(satalliteNbt);
+			NBTTagCompound satelliteNBT = nbt.getCompoundTag("satallite");
+			satellite = SatelliteRegistry.createFromNBT(satelliteNBT);
 		}
 
 		spacePosition.readFromNBT(nbt);
@@ -1920,13 +1918,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		nbt.setInteger("destinationDimId", destinationDimId);
 
-		//Satallite
-		if(satallite != null) {
-			NBTTagCompound satalliteNbt = new NBTTagCompound();
-			satallite.writeToNBT(satalliteNbt);
-			satalliteNbt.setString("DataType",SatelliteRegistry.getKey(satallite.getClass()));
+		//Satellite
+		if(satellite != null) {
+			NBTTagCompound satelliteNBT = new NBTTagCompound();
+			satellite.writeToNBT(satelliteNBT);
+			satelliteNBT.setString("DataType",SatelliteRegistry.getKey(satellite.getClass()));
 
-			nbt.setTag("satallite", satalliteNbt);
+			nbt.setTag("satallite", satelliteNBT);
 		}
 		spacePosition.writeToNBT(nbt);
 	}
