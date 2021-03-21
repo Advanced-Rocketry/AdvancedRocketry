@@ -237,6 +237,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public double orbitalPhi;
 	public double rotationalPhi;
 	public OreGenProperties oreProperties = null;
+	public List<ItemStack> laserDrillOres;
+	// The parsing of laserOreDrills is destructive of the actual oredict entries, so we keep a copy of the raw data around for XML writing
+	public String laserDrillOresRaw;
 	public String customIcon;
 	IAtmosphere atmosphereType;
 
@@ -291,6 +294,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		ringColor = new float[] {.4f, .4f, .7f};
 		oceanBlock = null;
 		fillerBlock = null;
+
+		laserDrillOres = new ArrayList<>();
+		laserDrillOresRaw = new String();
 
 		allowedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
 		terraformedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
@@ -381,6 +387,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		oceanBlock = null;
 		fillerBlock = null;
 		generatorType = 0;
+		laserDrillOres = new ArrayList<>();
 	}
 
 	public List<Fluid> getHarvestableGasses() {
@@ -675,7 +682,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		if(update) {
 			if(parentPlanet != Constants.INVALID_PLANET)
-				getParentProperties().childPlanets.remove(new Integer(getId()));
+				getParentProperties().childPlanets.remove(getId());
 
 			if(parent == null) {
 				parentPlanet = Constants.INVALID_PLANET;
