@@ -23,6 +23,6 @@ public class TankCapabilityItemStack implements ICapabilityProvider {
 		if (capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY) {
 			return LazyOptional.of(() -> fluidHandler).cast();
 		}
-		return null;
+		return LazyOptional.empty();
 	}
 }

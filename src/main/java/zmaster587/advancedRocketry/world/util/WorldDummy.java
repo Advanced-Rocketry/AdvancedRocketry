@@ -68,7 +68,7 @@ public class WorldDummy extends World  {
 	@Override
 	@Nullable
 	public <T> LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
-		return capabilities == null ? null : capabilities.getCapability(capability, facing);
+		return capabilities == null ? LazyOptional.empty() : capabilities.getCapability(capability, facing);
 	}
 
 	@Override
