@@ -12,8 +12,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
-import zmaster587.advancedRocketry.block.BlockRocketMotor;
-import zmaster587.advancedRocketry.block.BlockSeat;
+import zmaster587.advancedRocketry.block.*;
 import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
@@ -156,9 +155,13 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 	@Override
 	public void scanRocket(World world, BlockPos pos2, AxisAlignedBB bb) {
 
-		int thrust = 0;
-		int fuelUse = 0;
-		int fuel = 0;
+		int thrustMonopropellant = 0;
+		int thrustBipropellant = 0;
+		int monopropellantfuelUse = 0;
+		int bipropellantfuelUse = 0;
+		int fuelCapacityMonopropellant = 0;
+		int fuelCapacityBipropellant = 0;
+		int fuelCapacityOxidizer = 0;
 		int numBlocks = 0;
 		float drillPower = 0f;
 		stats.reset();
@@ -209,15 +212,27 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 							IBlockState state = world.getBlockState(currPos);
 							Block block = state.getBlock();
 							numBlocks++;
+
 							//If rocketEngine increaseThrust
 							if(block instanceof IRocketEngine) {
-								thrust += ((IRocketEngine)block).getThrust(world, currPos);
-								fuelUse += ((IRocketEngine)block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
+								if (block instanceof BlockBipropellantRocketMotor || block instanceof BlockAdvancedBipropellantRocketMotor) {
+									bipropellantfuelUse += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
+									thrustBipropellant += ((IRocketEngine)block).getThrust(world, currPos);
+								} else if (block instanceof BlockRocketMotor || block instanceof BlockAdvancedRocketMotor) {
+									monopropellantfuelUse += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
+									thrustMonopropellant += ((IRocketEngine)block).getThrust(world, currPos);
+								}
 								stats.addEngineLocation(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f), yCurr - actualMinY, zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f));
 							}
 
 							if(block instanceof IFuelTank) {
-								fuel+= ((IFuelTank)block).getMaxFill(world, currPos, state);
+								if (block instanceof BlockFuelTank) {
+									fuelCapacityMonopropellant += (((IFuelTank) block).getMaxFill(world, currPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);
+								} else if (block instanceof BlockBipropellantFuelTank) {
+									fuelCapacityBipropellant += (((IFuelTank) block).getMaxFill(world, currPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);
+								} else if(block instanceof BlockOxidizerFuelTank) {
+									fuelCapacityOxidizer += (((IFuelTank) block).getMaxFill(world, currPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);
+								}
 							}
 
 							if(block instanceof BlockSeat) {
@@ -250,10 +265,28 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 					}
 				}
 			}
-			stats.setFuelRate(FuelType.LIQUID,fuelUse);
+			if (thrustBipropellant >= thrustMonopropellant) {
+				//Thrust depending on rocket type
+				stats.setBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT, 0);
+				stats.setBaseFuelRate(FuelType.LIQUID_BIPROPELLANT, bipropellantfuelUse);
+				stats.setBaseFuelRate(FuelType.LIQUID_OXIDIZER, bipropellantfuelUse);
+				//Fuel storage depending on rocket type
+				stats.setFuelCapacity(FuelType.LIQUID_MONOPROPELLANT, 0);
+				stats.setFuelCapacity(FuelType.LIQUID_BIPROPELLANT, fuelCapacityBipropellant);
+				stats.setFuelCapacity(FuelType.LIQUID_OXIDIZER, fuelCapacityOxidizer);
+			} else {
+				//Thrust depending on rocket type
+				stats.setBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT, monopropellantfuelUse);
+				stats.setBaseFuelRate(FuelType.LIQUID_BIPROPELLANT, 0);
+				stats.setBaseFuelRate(FuelType.LIQUID_OXIDIZER, 0);
+				//Fuel storage depending on rocket type
+				stats.setFuelCapacity(FuelType.LIQUID_MONOPROPELLANT, fuelCapacityMonopropellant);
+				stats.setFuelCapacity(FuelType.LIQUID_BIPROPELLANT, 0);
+				stats.setFuelCapacity(FuelType.LIQUID_OXIDIZER, 0);
+			}
+			//Non-fuel stats
+			stats.setThrust(Math.max(thrustMonopropellant, thrustBipropellant));
 			stats.setWeight(numBlocks);
-			stats.setThrust(thrust);
-			stats.setFuelCapacity(FuelType.LIQUID,fuel);
 			stats.setDrillingPower(drillPower);
 			stats.setStatTag("liquidCapacity", fluidCapacity);
 
@@ -262,7 +295,7 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 			//if(!stats.hasSeat() && !hasSatellite) 
 			//status = ErrorCodes.NOSEAT;
 			/*else*/
-			if(getFuel() < getNeededFuel()*(1 + fluidCapacity/1000)) 
+			if(((thrustBipropellant >= thrustMonopropellant) && getFuel(FuelType.LIQUID_BIPROPELLANT) < getNeededFuel(FuelType.LIQUID_BIPROPELLANT)*(1 + fluidCapacity/1000)) || ((thrustMonopropellant >= thrustBipropellant) && getFuel(FuelType.LIQUID_MONOPROPELLANT) < getNeededFuel(FuelType.LIQUID_MONOPROPELLANT)*(1 + fluidCapacity/1000)))
 				status = ErrorCodes.NOFUEL;
 			else if(getThrust() < getNeededThrust()) 
 				status = ErrorCodes.NOENGINES;
@@ -272,8 +305,8 @@ public class TileStationDeployedAssembler extends TileRocketBuilder {
 	}
 
 	@Override
-	public float getNeededFuel() {
-		return getAcceleration() > 0 ? stats.getFuelRate(FuelType.LIQUID) : 0;
+	public float getNeededFuel(FuelType fuelType) {
+		return getAcceleration() > 0 ? stats.getFuelRate(fuelType) : 0;
 	}
 
 	//No additional scanning is needed

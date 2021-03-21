@@ -63,23 +63,20 @@ public class TileWarpCore extends TileMultiBlock {
 			attemptCompleteStructure(world.getBlockState(pos));
 		}
 		
-		if(getSpaceObject() == null || getSpaceObject().getFuelAmount() == getSpaceObject().getMaxFuelAmount())
+		if(getSpaceObject() == null || (getSpaceObject().getMaxFuelAmount() - getSpaceObject().getFuelAmount() < ARConfiguration.getCurrentConfig().fuelPointsPerDilithium))
 			return;
 		for(IInventory inv : itemInPorts) {
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				ItemStack stack = inv.getStackInSlot(i);
 				int amt = 0;
 				if(stack != null && OreDictionary.itemMatches(MaterialRegistry.getItemStackFromMaterialAndType("Dilithium", AllowedProducts.getProductByName("GEM")), stack, false)) {
-					int stackSize = stack.getCount();
 					if(!world.isRemote)
-						amt = getSpaceObject().addFuel(ARConfiguration.getCurrentConfig().fuelPointsPerDilithium*stack.getCount());
-					else
-						amt = Math.min(getSpaceObject().getFuelAmount() + 10*stack.getCount(), getSpaceObject().getMaxFuelAmount()) - getSpaceObject().getFuelAmount();//
-					inv.decrStackSize(i, amt/10);
+						amt = getSpaceObject().addFuel(ARConfiguration.getCurrentConfig().fuelPointsPerDilithium);
+					inv.decrStackSize(i, amt/ARConfiguration.getCurrentConfig().fuelPointsPerDilithium);
 					inv.markDirty();
 					
 					//If full
-					if(stackSize/10 != amt)
+					if(getSpaceObject().getMaxFuelAmount() - getSpaceObject().getFuelAmount() < ARConfiguration.getCurrentConfig().fuelPointsPerDilithium)
 						return;
 				}
 			}

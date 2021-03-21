@@ -124,7 +124,6 @@ public class DimensionManager implements IGalaxy {
 		defaultSpaceDimensionProperties.setName("Space");
 		defaultSpaceDimensionProperties.fogColor = new float[] {0f,0f,0f};
 		//defaultSpaceDimensionProperties.setParentPlanet(overworldProperties,false);
-		defaultSpaceDimensionProperties.orbitalDist = 1;
 
 		random = new Random(System.currentTimeMillis());
 		knownPlanets = new HashSet<Integer>();

@@ -2,9 +2,9 @@
     "type": "minecraft:crafting_shaped",
     "pattern":
     [
-	"s s",
+	"sSs",
 	"p p",
-	"sSs"
+	"s s"
     ],
     "key":
     {
@@ -26,7 +26,7 @@
     },
     "result":
     {
-        "item": "advancedrocketry:fueltank",
+        "item": "advancedrocketry:oxidizerfueltank",
         "count": 1
     }
 }

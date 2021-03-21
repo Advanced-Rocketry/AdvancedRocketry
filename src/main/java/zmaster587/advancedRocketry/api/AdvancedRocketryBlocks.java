@@ -23,7 +23,10 @@ public class AdvancedRocketryBlocks {
 	public static Block blockRocketBuilder;
 	public static Block blockGenericSeat;
 	public static Block blockEngine;
+	public static Block blockBipropellantEngine;
 	public static Block blockFuelTank;
+	public static Block blockBipropellantFuelTank;
+	public static Block blockOxidizerFuelTank;
 	public static Block blockFuelingStation;
 	public static Block blockMonitoringStation, blockSatelliteBuilder, blockSatelliteControlCenter;
 	public static Block blockChipStorage;
@@ -82,6 +85,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockRailgun;
 	public static Block blockAstroBed;
 	public static Block blockAdvEngine;
+	public static Block blockAdvBipropellantEngine;
 	public static Block blockPlanetHoloSelector;
 	public static Block blockLens;
 	public static Block blockForceField;
