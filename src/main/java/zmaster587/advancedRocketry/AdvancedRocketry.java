@@ -87,7 +87,6 @@ import zmaster587.advancedRocketry.network.*;
 import zmaster587.advancedRocketry.satellite.*;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.tile.multiblock.drill.TileOrbitalLaserDrill;
 import zmaster587.advancedRocketry.tile.multiblock.energy.TileSolarArray;
 import zmaster587.advancedRocketry.tile.satellite.TileSatelliteTerminal;
 import zmaster587.advancedRocketry.tile.satellite.TileSatelliteBuilder;
