@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -107,12 +108,6 @@ public class ClientProxy extends CommonProxy {
 
 		//RendererModelBlock blockRenderer = new RendererModelBlock();
 
-		//RendererBucket bucket =  new RendererBucket();
-		//MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketRocketFuel, bucket);
-		//MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketNitrogen, bucket);
-		//MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketHydrogen, bucket);
-		//MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketOxygen, bucket);
-
 		RenderingRegistry.registerEntityRenderingHandler(EntityRocket.class, (IRenderFactory<EntityRocket>)new RendererRocket(null));
 		RenderingRegistry.registerEntityRenderingHandler(EntityLaserNode.class, (IRenderFactory<EntityLaserNode>)new RenderLaser(2.0, new float[] {1F, 0.25F, 0.25F, 0.2F}, new float[] {0.9F, 0.2F, 0.3F, 0.5F}));
 		RenderingRegistry.registerEntityRenderingHandler(EntityItemAbducted.class, (IRenderFactory<EntityItemAbducted>)new RendererItem(Minecraft.getMinecraft().getRenderManager(), Minecraft.getMinecraft().getRenderItem()));
@@ -149,10 +144,10 @@ public class ClientProxy extends CommonProxy {
 		Item blockItem = Item.getItemFromBlock(AdvancedRocketryBlocks.blockLoader);
 		ModelLoader.setCustomModelResourceLocation(blockItem, 0, new ModelResourceLocation("advancedrocketry:databus", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(blockItem, 1, new ModelResourceLocation("advancedrocketry:satelliteHatch", "inventory"));
-		ModelLoader.setCustomModelResourceLocation(blockItem, 2, new ModelResourceLocation("libvulpes:inputHatch", "inventory"));
-		ModelLoader.setCustomModelResourceLocation(blockItem, 3, new ModelResourceLocation("libvulpes:outputHatch", "inventory"));
-		ModelLoader.setCustomModelResourceLocation(blockItem, 4, new ModelResourceLocation("libvulpes:fluidInputHatch", "inventory"));
-		ModelLoader.setCustomModelResourceLocation(blockItem, 5, new ModelResourceLocation("libvulpes:fluidOutputHatch", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(blockItem, 2, new ModelResourceLocation("libvulpes:outputHatch", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(blockItem, 3, new ModelResourceLocation("libvulpes:inputHatch", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(blockItem, 4, new ModelResourceLocation("libvulpes:fluidOutputHatch", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(blockItem, 5, new ModelResourceLocation("libvulpes:fluidInputHatch", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(blockItem, 6, new ModelResourceLocation("advancedrocketry:guidancecomputeraccesshatch", "inventory"));
 
 		blockItem = Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystal);
@@ -256,7 +251,7 @@ public class ClientProxy extends CommonProxy {
 		for(Item blockItem2 : blockItems)
 			ModelLoader.setCustomModelResourceLocation(blockItem2, 0, new ModelResourceLocation(blockItem2.getRegistryName(), "inventory"));
 		
-		
+
 		//TODO fluids
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockOxygenFluid);
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockNitrogenFluid);
@@ -301,12 +296,6 @@ public class ClientProxy extends CommonProxy {
 				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemWafer, 0, new ModelResourceLocation("advancedrocketry:siliconWafer", "inventory"));
 
 				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceStation, 0, new ModelResourceLocation("advancedrocketry:spaceStation", "inventory"));
-
-				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketHydrogen, 0, new ModelResourceLocation("advancedrocketry:bucketHydrogen", "inventory"));
-				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketOxygen, 0, new ModelResourceLocation("advancedrocketry:bucketOxygen", "inventory"));
-				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketNitrogen, 0, new ModelResourceLocation("advancedrocketry:bucketNitrogen", "inventory"));
-				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketRocketFuel, 0, new ModelResourceLocation("advancedrocketry:bucketRocketFuel", "inventory"));
-				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemBucketEnrichedLava, 0, new ModelResourceLocation("advancedrocketry:bucketEnrichedLava", "inventory"));
 
 
 				ModelLoader.setCustomModelResourceLocation(AdvancedRocketryItems.itemSpaceSuit_Chest, 0, new ModelResourceLocation("advancedrocketry:spaceChestplate", "inventory"));
@@ -354,46 +343,46 @@ public class ClientProxy extends CommonProxy {
 
 		
 	}
-	
+
 	private void registerFluidModel(IFluidBlock fluidBlock) {
 		Item item = Item.getItemFromBlock((Block) fluidBlock);
 
-		ModelBakery.registerItemVariants(item);
-
 		final ModelResourceLocation modelResourceLocation = new ModelResourceLocation("advancedrocketry:fluid", fluidBlock.getFluid().getName());
-		
-		//ModelLoader.setCustomMeshDefinition(item, MeshDefinitionFix.create(stack -> modelResourceLocation));
+		System.out.println(fluidBlock.getFluid().getName());
 
-		
-		StateMapperBase ignoreState = new FluidStateMapper(modelResourceLocation);
+		if (item != Items.AIR) {
+			ModelLoader.registerItemVariants(item);
+			ModelLoader.setCustomMeshDefinition(item, new FluidItemMeshDefinition(modelResourceLocation));
+		}
+		FluidStateMapper ignoreState = new FluidStateMapper(modelResourceLocation);
 		ModelLoader.setCustomStateMapper((Block) fluidBlock, ignoreState);
-		ModelLoader.setCustomMeshDefinition(item, new FluidItemMeshDefinition(modelResourceLocation));
 		ModelBakery.registerItemVariants(item, modelResourceLocation);
+
 	}
-	
+
 	private static class FluidStateMapper extends StateMapperBase {
-		private final ModelResourceLocation fluidLocation;
+		private final ModelResourceLocation location;
 
 		public FluidStateMapper(ModelResourceLocation fluidLocation) {
-			this.fluidLocation = fluidLocation;
+			this.location = fluidLocation;
 		}
 
 		@Override
 		protected ModelResourceLocation getModelResourceLocation(IBlockState iBlockState) {
-			return fluidLocation;
+			return location;
 		}
 	}
 
 	private static class FluidItemMeshDefinition implements ItemMeshDefinition {
-		private final ModelResourceLocation fluidLocation;
+		private final ModelResourceLocation location;
 
 		public FluidItemMeshDefinition(ModelResourceLocation fluidLocation) {
-			this.fluidLocation = fluidLocation;
+			this.location = fluidLocation;
 		}
 
 		@Override
 		public ModelResourceLocation getModelLocation(ItemStack stack) {
-			return fluidLocation;
+			return location;
 		}
 }
 
