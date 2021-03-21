@@ -246,10 +246,10 @@ curseforge{
     releaseType = "alpha"
     addGameVersion mcversion
     mainArtifact(jar) {
-      displayName = "LibVulpes ${project.version} build " + project.getBuildNumber() +  " for " + mcversion
+      displayName = "Advanced Rocketry ${project.version} build " + project.getBuildNumber() +  " for " + mcversion
     }
     addArtifact (deobfJar){
-         displayName = "LibVulpes ${project.version}-deobf build " + project.getBuildNumber() + " for " + mcversion
+         displayName = "Advanced Rocketry ${project.version}-deobf build " + project.getBuildNumber() + " for " + mcversion
     }
    }
 }
@@ -262,6 +262,7 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     gitHubIssuePattern = "nonada123";
     templateContent = """
 {{#tags}}
+<h1> Highly untested and may break world</h1>
   <h3>{{name}}</h3>
   <ul>
     {{#commits}}
