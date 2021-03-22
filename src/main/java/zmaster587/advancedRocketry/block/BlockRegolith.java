@@ -4,6 +4,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 
 public class BlockRegolith extends Block {
 
@@ -19,9 +22,11 @@ public class BlockRegolith extends Block {
 		extraMapColor = color;
 		return this;
 	}
-	
-//	@Override//TODO colour for soil?
-//	public MapColor getMapColor(IBlockState state) {
-//		return extraMapColor == null ? super.getMapColor(state) : extraMapColor;
-//	}
+
+	@Deprecated
+	public MapColor getMapColor(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+	{
+		return this.extraMapColor;
+	}
+
 }
