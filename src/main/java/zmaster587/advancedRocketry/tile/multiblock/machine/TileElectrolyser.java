@@ -47,7 +47,6 @@ public class TileElectrolyser extends TileMultiblockMachine {
 	
 	@Override
 	public SoundEvent getSound() {
-		// TODO Auto-generated method stub
 		return AudioRegistry.electrolyser;
 	}
 

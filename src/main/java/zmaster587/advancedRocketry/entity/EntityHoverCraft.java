@@ -203,7 +203,6 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 
 
 	public double getMaxAcceleration() {
-		// TODO Auto-generated method stub
 		return 0.05D;
 	}
 

@@ -463,7 +463,6 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 	@Override
 	public void writeMissionPersistantNBT(NBTTagCompound nbt) {
-		// TODO Auto-generated method stub
 		super.writeMissionPersistantNBT(nbt);
 		nbt.setInteger("fwd", forwardDirection.ordinal());
 

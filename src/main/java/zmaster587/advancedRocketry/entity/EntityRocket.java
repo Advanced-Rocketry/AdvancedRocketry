@@ -242,7 +242,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox() {
-		// TODO Auto-generated method stub
 		return getEntityBoundingBox();
 	}
 
@@ -2333,13 +2332,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	@Override
 	public boolean startRiding(Entity entityIn, boolean force) {
-		// TODO Auto-generated method stub
 		return super.startRiding(entityIn, force);
 	}
 
 	@Override
 	public boolean startRiding(Entity entityIn) {
-		// TODO Auto-generated method stub
 		return super.startRiding(entityIn);
 	}
 

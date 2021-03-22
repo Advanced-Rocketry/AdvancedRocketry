@@ -54,7 +54,6 @@ public class TileBeacon extends TileMultiPowerConsumer {
 
 	@Override
 	public String getMachineName() {
-		// TODO Auto-generated method stub
 		return getModularInventoryName();
 	}
 	

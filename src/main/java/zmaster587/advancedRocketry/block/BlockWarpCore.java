@@ -23,7 +23,6 @@ public class BlockWarpCore extends BlockMultiblockMachine {
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
 			EntityLivingBase placer, ItemStack stack) {
-		// TODO Auto-generated method stub
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
 		
 		if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
@@ -37,7 +36,6 @@ public class BlockWarpCore extends BlockMultiblockMachine {
 	@Override
 	public void onBlockDestroyedByPlayer(World world, BlockPos pos,
 			IBlockState state) {
-		// TODO Auto-generated method stub
 		super.onBlockDestroyedByPlayer(world, pos, state);
 		
 		if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {

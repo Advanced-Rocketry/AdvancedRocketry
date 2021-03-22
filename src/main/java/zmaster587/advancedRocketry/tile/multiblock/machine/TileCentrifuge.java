@@ -111,7 +111,6 @@ public class TileCentrifuge extends TileMultiblockMachine {
 		
 		@Override
 		public SoundEvent getSound() {
-			// TODO Auto-generated method stub
 			return AudioRegistry.electrolyser;
 		}
 

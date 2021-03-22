@@ -122,7 +122,6 @@ public class GuiOreMappingSatellite extends GuiContainer {
 	@Override
 	protected void mouseClicked(int x, int y,
 			int button) throws IOException {
-		// TODO Auto-generated method stub
 		super.mouseClicked(x, y, button);
 
 		int xOffset = 47 + (width - 240) / 2, yOffset = 20 + (height - 192) / 2;
