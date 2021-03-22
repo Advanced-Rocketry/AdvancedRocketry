@@ -798,9 +798,9 @@ public class XMLPlanetLoader {
 				Element nodeSubStar = doc.createElement(ELEMENT_STAR);
 				
 				nodeSubStar.setAttribute(ATTR_BLACKHOLE, Boolean.toString(star2.isBlackHole()));
-				nodeSubStar.setAttribute(ATTR_TEMP, Integer.toString(star.getTemperature()));
-				nodeSubStar.setAttribute(ATTR_SIZE, Float.toString(star.getSize()));
-				nodeSubStar.setAttribute(ATTR_SEPERATION, Float.toString(star.getStarSeparation()));
+				nodeSubStar.setAttribute(ATTR_TEMP, Integer.toString(star2.getTemperature()));
+				nodeSubStar.setAttribute(ATTR_SIZE, Float.toString(star2.getSize()));
+				nodeSubStar.setAttribute(ATTR_SEPERATION, Float.toString(star2.getStarSeparation()));
 				nodeStar.appendChild(nodeSubStar);
 			}
 
