@@ -8,8 +8,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,8 +115,8 @@ class VoidDrill extends AbstractDrill {
 	boolean activate(World world, int x, int z) {
 		// Ideally, this should be done in the constructor, but the world provider is null there for reasons unknown, so this gets delayed until first activation
 		if(!this.planetOresInitialized) {
-			DimensionProperties dimProperties = (DimensionProperties) AdvancedRocketryAPI.dimensionManager.getDimensionProperties(world.provider.getDimension());
-			ores.addAll(dimProperties.laserDrillOres.stream().filter(s->!ores.contains(s)).peek(ore-> System.out.println("Found ore: " + ore.getDisplayName())).collect(Collectors.toSet()));
+			DimensionProperties dimProperties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
+			ores.addAll(dimProperties.laserDrillOres.stream().filter(s->!ores.contains(s)).collect(Collectors.toSet()));
 			this.planetOresInitialized = true;
 		}
 		return true;

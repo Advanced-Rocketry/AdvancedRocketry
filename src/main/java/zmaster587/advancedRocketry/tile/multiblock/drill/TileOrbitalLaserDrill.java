@@ -458,8 +458,6 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 		return true;
 	}
 
-	//TODO: buildcraft support
-
 	private boolean canMachineSeeEarth() {
 		return true;
 	}
@@ -481,7 +479,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 		} else if(!this.finished && !this.isJammed && world.isBlockIndirectlyGettingPowered(getPos()) > 0) {
 
 			//Laser will be on at this point
-			int orbitDimId = ((WorldProviderSpace)this.world.provider).getDimensionProperties(getPos()).getParentPlanet();
+			int orbitDimId = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getOrbitingPlanetId();
 			if(orbitDimId == SpaceObjectManager.WARPDIMID)
 				return;
 			WorldServer orbitWorld = DimensionManager.getWorld(orbitDimId);
@@ -492,6 +490,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 				if(orbitWorld == null)
 					return;
 			}
+
 
 
 			if(ticket == null) {

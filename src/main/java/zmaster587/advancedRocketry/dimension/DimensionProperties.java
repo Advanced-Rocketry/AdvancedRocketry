@@ -296,7 +296,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		fillerBlock = null;
 
 		laserDrillOres = new ArrayList<>();
-		laserDrillOresRaw = new String();
 
 		allowedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
 		terraformedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
@@ -1418,6 +1417,18 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			allowedBiomes.addAll(getBiomesEntries(biomesList));
 		}
 
+		if(nbt.hasKey("laserDrillOres")) {
+			laserDrillOres.clear();
+			list = nbt.getTagList("laserDrillOres", NBT.TAG_COMPOUND);
+			for(NBTBase entry : list) {
+				assert entry instanceof NBTTagCompound;
+				laserDrillOres.add(new ItemStack((NBTTagCompound) entry));
+			}
+		}
+
+		if(nbt.hasKey("laserDrillOresRaw")) {
+			laserDrillOresRaw = nbt.getString("laserDrillOresRaw");
+		}
 
 		gravitationalMultiplier = nbt.getFloat("gravitationalMultiplier");
 		orbitalDist = nbt.getInteger("orbitalDist");
@@ -1585,7 +1596,19 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			nbt.setIntArray("biomes", biomeId);
 		}
 
+		if(!laserDrillOres.isEmpty()) {
+			list = new NBTTagList();
+			for(ItemStack ore : laserDrillOres) {
+				NBTTagCompound entry = new NBTTagCompound();
+				ore.writeToNBT(entry);
+				list.appendTag(entry);
+			}
+			nbt.setTag("laserDrillOres",list);
+		}
 
+		if(laserDrillOresRaw != null) {
+			nbt.setTag("laserDrillOresRaw",new NBTTagString(laserDrillOresRaw));
+		}
 
 		nbt.setInteger("starId", starId);
 		nbt.setFloat("gravitationalMultiplier", gravitationalMultiplier);

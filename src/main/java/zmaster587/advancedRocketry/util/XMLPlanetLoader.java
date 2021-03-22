@@ -487,12 +487,12 @@ public class XMLPlanetLoader {
 
 				properties.laserDrillOresRaw = planetPropertyNode.getTextContent();
 
-				String[] entries = planetPropertyNode.getTextContent().split(",");
+				String[] entries = properties.laserDrillOresRaw.split(",");
 				for (String entry : entries) {
 
 					String[] parts = entry.split(";");
 
-					if (OreDictionary.doesOreNameExist(parts[0])) {
+					if (OreDictionary.doesOreNameExist(parts[0].trim())) {
 						ItemStack item = OreDictionary.getOres(parts[0]).get(0);
 						if(parts.length > 1) {
 							try {
@@ -501,7 +501,7 @@ public class XMLPlanetLoader {
 						}
 						properties.laserDrillOres.add(item);
 					}
-					else if (Item.getByNameOrId(parts[0]) != null) {
+					else if (Item.getByNameOrId(parts[0].trim()) != null) {
 						int quantity = 1;
 						int damage = 0;
 						if(parts.length > 1) {
@@ -514,14 +514,12 @@ public class XMLPlanetLoader {
 								} catch (NumberFormatException ignored) {}
 							}
 						}
-						properties.laserDrillOres.add(new ItemStack(Objects.requireNonNull(Item.getByNameOrId(parts[0])),quantity,damage));
+						properties.laserDrillOres.add(new ItemStack(Objects.requireNonNull(Item.getByNameOrId(parts[0].trim())),quantity,damage));
 					}
 					else {
 						AdvancedRocketry.logger.warn(parts[0] + " is not a valid OreDictionary name or item ID");
 					}
 				}
-
-				System.out.println("Planet Ores: " + properties.laserDrillOres);
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GENTYPE)) {
 				try {
@@ -947,7 +945,7 @@ public class XMLPlanetLoader {
 		if(properties.oreProperties != null) {
 			nodePlanet.appendChild(XMLOreLoader.writeOreEntryXML(doc, properties.oreProperties));
 		}
-		if(!properties.laserDrillOres.isEmpty()) {
+		if(properties.laserDrillOresRaw != null) {
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_LASER_DRILL_ORES, properties.laserDrillOresRaw));
 		}
 
