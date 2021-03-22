@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * MetaData corresponds to the id
  */
-public class ItemStationChip extends ItemIdWithName implements IModularInventory, IButtonInventory, INetworkItem, IGuiCallback {
+public class ItemStationChip extends ItemIdWithName implements IModularInventory, IButtonInventory, INetworkItem {
 
 	private static final String uuidIdentifier = "UUID";
 	private static final String SELECTION_ID = "selectionId";
@@ -48,8 +48,6 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	private static final int BUTTON_ID_CLEAR = 0;
 	private static final int BUTTON_ID_DELETE = 1;
 	private static final int BUTTON_ID_ADD = 2;
-	private static final int BUTTON_ID_RENAME = 3;
-	private static final int TEXTBOX_CHANGE = 4;
 	private static final int BUTTON_ID_OFFSET = 5;
 
 	public ItemStationChip() {
@@ -77,13 +75,9 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 			modules.clear();
 			modules.add(new ModuleStellarBackground(0, 0, zmaster587.libVulpes.inventory.TextureResources.starryBG));
-			ModuleTextBox box = new ModuleTextBox(this, 172-offset_all, 0+28, 128, 18, 64);
-			box.setText("Name...");
-			modules.add(box);
 
 
 			List<ModuleBase> list2 = new LinkedList<ModuleBase>();
-			ModuleButton btnRename = new ModuleButton(172-offset_all, 18+28, BUTTON_ID_RENAME, LibVulpes.proxy.getLocalizedString("msg.label.rename"), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
 			ModuleButton btnAdd = new ModuleButton(172-offset_all, 18*2+28, BUTTON_ID_ADD, LibVulpes.proxy.getLocalizedString("msg.label.add"), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
 			ModuleButton btnClear = new ModuleButton(172-offset_all, 18*4+28, BUTTON_ID_CLEAR, LibVulpes.proxy.getLocalizedString("msg.label.clear"), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
 			ModuleButton btnDelete = new ModuleButton(172-offset_all, 18*3+28, BUTTON_ID_DELETE, LibVulpes.proxy.getLocalizedString("msg.label.delete"), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
@@ -91,7 +85,6 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			modules.add(btnClear);
 			modules.add(btnDelete);
 			modules.add(btnAdd);
-			modules.add(btnRename);
 
 			// Get effective dimension
 			int dimId = DimensionManager.getEffectiveDimId(player.world, new BlockPos(player)).getId();
@@ -149,19 +142,8 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void onModuleUpdated(ModuleBase module) {
-		//It's a textbox.
-		// Bit of a hack to store data client side until its read to send
-		ItemStack stack = Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND);
-		if(stack != null && stack.getItem() == this) {
-			setTempName(stack, ((ModuleTextBox)module).getText());
-		}
-	}
-
-	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id, ItemStack stack) {
-		if(id == BUTTON_ID_RENAME || id == BUTTON_ID_ADD)
+		if(id == BUTTON_ID_ADD)
 		{
 			String str = getTempName(stack);
 			byte[] byteArray = str.getBytes();
@@ -174,7 +156,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 	@Override
 	public void readDataFromNetwork(ByteBuf in, byte id, NBTTagCompound nbt, ItemStack stack) {
-		if(id == BUTTON_ID_RENAME || id == BUTTON_ID_ADD)
+		if(id == BUTTON_ID_ADD)
 		{
 			short len = in.readShort();
 			byte[] byteArray = new byte[len];
@@ -220,19 +202,6 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 					List<LandingLocation> locs = getLandingLocations(stack, dimId);
 					BlockPos pos = player.getPosition();
 					locs.add(new LandingLocation(nbt.getString(TMPNAME), pos.getX(), pos.getY(), pos.getZ()));
-					setLandingLocations(stack, dimId, locs);
-				}
-			}
-			else if(id == BUTTON_ID_RENAME)
-			{
-				int selection = getSelectionId(stack, dimId);
-
-				//Can't rename "Last"
-				if(selection > 0)
-				{
-					List<LandingLocation> locs = getLandingLocations(stack, dimId);
-					if(selection < locs.size())
-						locs.get(selection).name = nbt.getString(TMPNAME);
 					setLandingLocations(stack, dimId, locs);
 				}
 			}
