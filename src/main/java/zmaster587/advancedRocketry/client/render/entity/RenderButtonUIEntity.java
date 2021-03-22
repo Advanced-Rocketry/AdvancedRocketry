@@ -36,10 +36,10 @@ public class RenderButtonUIEntity extends EntityRenderer<EntityUIButton> impleme
 			IRenderTypeBuffer bufferIn, int packedLightIn) {
 
 		matrix.push();
-		matrix.translate(0, -0.25, 0);
+		matrix.translate(0, 0.25, 0);
 		
 
-		RenderHelper.renderTag(matrix, bufferIn, Minecraft.getInstance().player.getDistanceSq(entity), "Up a level", packedLightIn, 8);
+		RenderHelper.renderTag(matrix, bufferIn, Minecraft.getInstance().player.getDistanceSq(entity), "Up a level", packedLightIn, 1);
 		matrix.pop();
 
 		//Clean up and make player not transparent

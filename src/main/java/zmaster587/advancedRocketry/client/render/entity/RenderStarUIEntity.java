@@ -48,20 +48,17 @@ public class RenderStarUIEntity extends EntityRenderer<EntityUIStar> implements 
 		if(body == null)
 			return;
 		float sizeScale = entity.getScale();
-		matrix.push();
 		matrix.scale(sizeScale,sizeScale,sizeScale);
+		matrix.push();
+		matrix.scale(.1f, .1f, .1f);
+		matrix.translate(0, 2.5f, 0);
 		
-		//RenderHelper.setupPlayerFacingMatrix(Minecraft.getInstance().player.getDistanceSq(entity), 0,-.45,0);
+		matrix.rotate(Minecraft.getInstance().getRenderManager().getCameraOrientation());
+		
 		
 		IVertexBuilder translucentBuffer = bufferIn.getBuffer(RenderHelper.getTranslucentTexturedManualRenderType(TextureResources.locationSunNew));
-		
-		
-		GL11.glColor3d(body.getColor()[0], body.getColor()[1], body.getColor()[2]);
-		//GL11.glColor3ub((byte)(body.getColorRGB8() & 0xff), (byte)((body.getColorRGB8() >>> 8) & 0xff), (byte)((body.getColorRGB8() >>> 16) & 0xff));
-		//GlStateManager.color4f();
-		
 		RenderHelper.renderNorthFaceWithUV(matrix, translucentBuffer, 0, -5, -5, 5, 5, 0, 1, 0, 1, body.getColor()[0], body.getColor()[1], body.getColor()[2], 1f);
-		//RenderHelper.cleanupPlayerFacingMatrix();
+		matrix.pop();
 		
 		
 		//Render hololines
@@ -96,7 +93,6 @@ public class RenderStarUIEntity extends EntityRenderer<EntityUIStar> implements 
 			GlStateManager.enableTexture();
 		}*/
 		
-		matrix.pop();
 		matrix.pop();
 		
 		/*RayTraceResult hitObj = Minecraft.getInstance().objectMouseOver;

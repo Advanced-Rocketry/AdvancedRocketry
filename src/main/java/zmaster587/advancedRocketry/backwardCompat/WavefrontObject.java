@@ -211,6 +211,15 @@ public class WavefrontObject
     }
     
     @OnlyIn(value=Dist.CLIENT)
+    public void renderAll(MatrixStack matrix, IVertexBuilder tessellator, float r, float g, float b, float a)
+    {
+        for (GroupObject groupObject : groupObjects)
+        {
+            groupObject.render(matrix, tessellator,r,g,b,a);
+        }
+    }
+    
+    @OnlyIn(value=Dist.CLIENT)
     public void tessellateAll(MatrixStack matrix, int lighting, int lightingOverlay, IVertexBuilder tessellator)
     {
         for (GroupObject groupObject : groupObjects)

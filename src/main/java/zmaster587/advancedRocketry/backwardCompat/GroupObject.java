@@ -62,4 +62,16 @@ public class GroupObject
             }
         }
     }
+    
+    @OnlyIn(value=Dist.CLIENT)
+    public void render(MatrixStack matrix, IVertexBuilder tessellator, float r, float g, float b, float a)
+    {
+        if (faces.size() > 0)
+        {
+            for (Face face : faces)
+            {
+                face.addFaceForRender(matrix, tessellator, r, g, b, a);
+            }
+        }
+    }
 }
