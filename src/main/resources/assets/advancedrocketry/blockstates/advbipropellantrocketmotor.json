@@ -3,7 +3,8 @@
         "textures": {
             "#None": "advancedrocketry:/models/bipropellantcombustion"
         },
-        "model": "advancedrocketry:models/rocketmotor.obj"
+        "model": "advancedrocketry:models/rocketmotor.obj",
+        "transform": "forge:default-block"
     },
     "variants": {
         "facing=north": { "model": "advancedrocketry:models/advbipropellantrocketmotor.obj", "texture": "advancedrocketry:textures/models/bipropellantcombustion.png", "x": 90 },
@@ -14,7 +15,6 @@
         "facing=down":  { "model": "advancedrocketry:models/advbipropellantrocketmotor.obj", "texture": "advancedrocketry:textures/models/bipropellantcombustion.png" },
         "inventory": {
             "model": "advancedrocketry:models/advbipropellantrocketmotor.obj",
-            "transform": "forge:default-item",
             "textures": {
                 "layer0": "advancedrocketry:textures/models/bipropellantcombustion.png"
             }
