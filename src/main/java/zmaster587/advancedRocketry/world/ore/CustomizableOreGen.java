@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.world.ore;
 
+import com.google.common.base.Predicate;
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -13,10 +14,7 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.util.OreGenProperties;
 
-import java.awt.Dimension;
 import java.util.Random;
-
-import com.google.common.base.Predicate;
 
 public class CustomizableOreGen implements IWorldGenerator {
 

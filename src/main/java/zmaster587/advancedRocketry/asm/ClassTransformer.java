@@ -2,12 +2,10 @@ package zmaster587.advancedRocketry.asm;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.launchwrapper.Launch;
-
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
-
 import zmaster587.advancedRocketry.AdvancedRocketry;
 
 import java.util.AbstractMap.SimpleEntry;

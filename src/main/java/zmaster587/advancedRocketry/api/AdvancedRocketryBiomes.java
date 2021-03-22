@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import zmaster587.advancedRocketry.world.biome.BiomeGenBarrenVolcanic;
-import zmaster587.advancedRocketry.world.biome.BiomeGenMoon;
-
 
 /**
  * Stores information relating to the biomes and biome registry of AdvancedRocketry
