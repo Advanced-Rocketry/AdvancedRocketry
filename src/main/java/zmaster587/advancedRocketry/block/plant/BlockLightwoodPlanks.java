@@ -16,15 +16,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class BlockAlienPlank extends Block  {
+public class BlockLightwoodPlanks extends Block  {
 	
-	public static final PropertyEnum<BlockAlienPlank.EnumType> VARIANT = PropertyEnum.<BlockAlienPlank.EnumType>create("variant", BlockAlienPlank.EnumType.class);
+	public static final PropertyEnum<BlockLightwoodPlanks.EnumType> VARIANT = PropertyEnum.<BlockLightwoodPlanks.EnumType>create("variant", BlockLightwoodPlanks.EnumType.class);
 	
-    public BlockAlienPlank()
+    public BlockLightwoodPlanks()
     {
         super(Material.WOOD);
         this.setLightLevel(4);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockAlienPlank.EnumType.ALIEN));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockLightwoodPlanks.EnumType.ALIEN));
     }
 
     /**
@@ -33,7 +33,7 @@ public class BlockAlienPlank extends Block  {
      */
     public int damageDropped(IBlockState state)
     {
-        return ((BlockAlienPlank.EnumType)state.getValue(VARIANT)).getMetadata();
+        return ((BlockLightwoodPlanks.EnumType)state.getValue(VARIANT)).getMetadata();
     }
 
     /**
@@ -42,7 +42,7 @@ public class BlockAlienPlank extends Block  {
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
-        for (BlockAlienPlank.EnumType BlockAlienPlank$enumtype : BlockAlienPlank.EnumType.values())
+        for (BlockLightwoodPlanks.EnumType BlockAlienPlank$enumtype : BlockLightwoodPlanks.EnumType.values())
         {
             list.add(new ItemStack(itemIn, 1, BlockAlienPlank$enumtype.getMetadata()));
         }
@@ -53,7 +53,7 @@ public class BlockAlienPlank extends Block  {
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(VARIANT, BlockAlienPlank.EnumType.byMetadata(meta));
+        return this.getDefaultState().withProperty(VARIANT, BlockLightwoodPlanks.EnumType.byMetadata(meta));
     }
 
     /**
@@ -61,7 +61,7 @@ public class BlockAlienPlank extends Block  {
      */
     public MapColor getMapColor(IBlockState state)
     {
-        return ((BlockAlienPlank.EnumType)state.getValue(VARIANT)).getMapColor();
+        return ((BlockLightwoodPlanks.EnumType)state.getValue(VARIANT)).getMapColor();
     }
 
     /**
@@ -69,7 +69,7 @@ public class BlockAlienPlank extends Block  {
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((BlockAlienPlank.EnumType)state.getValue(VARIANT)).getMetadata();
+        return ((BlockLightwoodPlanks.EnumType)state.getValue(VARIANT)).getMetadata();
     }
 
     protected BlockStateContainer createBlockState()
@@ -81,7 +81,7 @@ public class BlockAlienPlank extends Block  {
     {
         ALIEN(0, "alien", MapColor.LAPIS);
 
-        private static final BlockAlienPlank.EnumType[] META_LOOKUP = new BlockAlienPlank.EnumType[values().length];
+        private static final BlockLightwoodPlanks.EnumType[] META_LOOKUP = new BlockLightwoodPlanks.EnumType[values().length];
         private final int meta;
         private final String name;
         private final String unlocalizedName;
@@ -119,7 +119,7 @@ public class BlockAlienPlank extends Block  {
             return this.name;
         }
 
-        public static BlockAlienPlank.EnumType byMetadata(int meta)
+        public static BlockLightwoodPlanks.EnumType byMetadata(int meta)
         {
             if (meta < 0 || meta >= META_LOOKUP.length)
             {
@@ -141,7 +141,7 @@ public class BlockAlienPlank extends Block  {
 
         static
         {
-            for (BlockAlienPlank.EnumType blockalienplank$enumtype : values())
+            for (BlockLightwoodPlanks.EnumType blockalienplank$enumtype : values())
             {
                 META_LOOKUP[blockalienplank$enumtype.getMetadata()] = blockalienplank$enumtype;
             }

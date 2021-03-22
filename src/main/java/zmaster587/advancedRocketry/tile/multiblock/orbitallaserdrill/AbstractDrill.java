@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile.multiblock.drill;
+package zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;

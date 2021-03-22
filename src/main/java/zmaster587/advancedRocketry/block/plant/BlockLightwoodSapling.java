@@ -19,12 +19,12 @@ import zmaster587.advancedRocketry.world.gen.WorldGenAlienTree;
 import java.util.List;
 import java.util.Random;
 
-public class BlockAlienSapling extends  BlockBush implements IGrowable {
+public class BlockLightwoodSapling extends  BlockBush implements IGrowable {
 
 	public String[] names = new String[] { "blueTree" };
 	public static final PropertyInteger STAGE = PropertyInteger.create("stage", 0, 1);
 	
-	public BlockAlienSapling() {
+	public BlockLightwoodSapling() {
         this.setDefaultState(this.blockState.getBaseState().withProperty(STAGE, Integer.valueOf(0)));
 	}
 	

@@ -5,7 +5,6 @@ import net.minecraft.block.BlockPlanks.EnumType;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -23,9 +22,9 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import java.util.List;
 import java.util.Random;
 
-public class BlockAlienLeaves extends BlockLeaves {
+public class BlockLightwoodLeaves extends BlockLeaves {
 
-	public BlockAlienLeaves() {
+	public BlockLightwoodLeaves() {
 		super();
 		this.lightValue = 8;
 		this.setDefaultState(this.getDefaultState().withProperty(DECAYABLE, true).withProperty(CHECK_DECAY, false));
@@ -87,7 +86,7 @@ public class BlockAlienLeaves extends BlockLeaves {
 	
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
-        return Item.getItemFromBlock(AdvancedRocketryBlocks.blockAlienSapling);
+        return Item.getItemFromBlock(AdvancedRocketryBlocks.blockLightwoodSapling);
     }
 
 

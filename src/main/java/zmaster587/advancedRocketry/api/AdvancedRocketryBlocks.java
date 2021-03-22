@@ -33,7 +33,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockMoonTurf, blockHotTurf;
 	public static Block blockMultiMineOre;
 	public static Block blockLightSource;
-	public static Block blockAlienWood, blockAlienLeaves, blockAlienSapling;
+	public static Block blockLightwoodWood, sblockLightwoodLeaves, blockLightwoodSapling;
 	public static Block blockGuidanceComputer;
 	public static Block blockLunarAnalyser;
 	public static Block blockPlanetSelector;
@@ -96,7 +96,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockPipeSealer;
 	public static Block blockSpaceElevatorController;
 	public static Block blockBeacon;
-	public static Block blockAlienPlanks;
+	public static Block blockLightwoodPlanks;
 	public static Block blockThermiteTorch;
 	public static Block blockTransciever;
 	public static Block blockMoonTurfDark;

@@ -6,7 +6,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.lang.reflect.Method;
 
-public class ARAchivements  {
+public class ARAdvancements {
 
 	private static Method CriterionRegister;
 
@@ -77,8 +77,8 @@ public class ARAchivements  {
 		try {
 			method = ReflectionHelper.findMethod(CriteriaTriggers.class, "register", "func_192118_a", ICriterionTrigger.class);
 			method.setAccessible(true);
-			for (int i=0; i < ARAchivements.TRIGGER_ARRAY.length; i++) {
-				method.invoke(null, ARAchivements.TRIGGER_ARRAY[i]);
+			for (int i = 0; i < ARAdvancements.TRIGGER_ARRAY.length; i++) {
+				method.invoke(null, ARAdvancements.TRIGGER_ARRAY[i]);
 			} 
 		} catch (Exception e) {
 			

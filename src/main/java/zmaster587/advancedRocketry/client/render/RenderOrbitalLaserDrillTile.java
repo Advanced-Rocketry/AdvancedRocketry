@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
-import zmaster587.advancedRocketry.tile.multiblock.drill.TileOrbitalLaserDrill;
+import zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill.TileOrbitalLaserDrill;
 
 public class RenderOrbitalLaserDrillTile extends TileEntitySpecialRenderer {
 

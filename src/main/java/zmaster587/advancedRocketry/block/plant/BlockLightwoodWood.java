@@ -8,11 +8,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
-public class BlockAlienWood extends BlockLog  {
+public class BlockLightwoodWood extends BlockLog  {
 	
     public static final String[] names = new String[] {"blue"};
 
-    public BlockAlienWood() {
+    public BlockLightwoodWood() {
 		super();
 		this.setDefaultState(this.blockState.getBaseState().withProperty(LOG_AXIS, BlockLog.EnumAxis.Y));
 	}

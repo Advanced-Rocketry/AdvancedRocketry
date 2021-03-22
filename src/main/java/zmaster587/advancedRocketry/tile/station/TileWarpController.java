@@ -12,7 +12,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
-import zmaster587.advancedRocketry.achievements.ARAchivements;
+import zmaster587.advancedRocketry.achievements.ARAdvancements;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
@@ -465,9 +465,9 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 						return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(input.getPosition()) == station;
 					};
 				})) {
-					ARAchivements.ALL_SHE_GOT.trigger((EntityPlayerMP) player2);
+					ARAdvancements.ALL_SHE_GOT.trigger((EntityPlayerMP) player2);
 					if(!DimensionManager.hasReachedWarp)
-						ARAchivements.FLIGHT_OF_PHEONIX.trigger((EntityPlayerMP) player2);
+						ARAdvancements.FLIGHT_OF_PHEONIX.trigger((EntityPlayerMP) player2);
 				}
 
 				DimensionManager.hasReachedWarp = true;

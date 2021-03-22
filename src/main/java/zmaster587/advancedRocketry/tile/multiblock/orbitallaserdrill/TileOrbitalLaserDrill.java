@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.tile.multiblock.drill;
+package zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;

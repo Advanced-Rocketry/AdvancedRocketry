@@ -35,7 +35,7 @@ import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.achievements.ARAchivements;
+import zmaster587.advancedRocketry.achievements.ARAdvancements;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
@@ -1562,9 +1562,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if(DimensionManager.getInstance().getDimensionProperties(destinationDimId).getName().equals("Luna")) {
 					for(Entity player : this.getPassengers()) {
 						if(player instanceof EntityPlayer) {
-							ARAchivements.MOON_LANDING.trigger((EntityPlayerMP) player);
+							ARAdvancements.MOON_LANDING.trigger((EntityPlayerMP) player);
 							if(!DimensionManager.hasReachedMoon)
-								ARAchivements.ONE_SMALL_STEP.trigger((EntityPlayerMP) player);
+								ARAdvancements.ONE_SMALL_STEP.trigger((EntityPlayerMP) player);
 						}
 					}
 					DimensionManager.hasReachedMoon = true;
