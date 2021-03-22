@@ -7,6 +7,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
@@ -63,17 +64,7 @@ public class BlockAlienLeaves extends BlockLeaves {
     		EnumFacing face) {
     	return 50;
     }
-    
-    @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
-        return super.leavesFancy ? BlockRenderLayer.CUTOUT_MIPPED : BlockRenderLayer.SOLID;
-    }
-    
-    @Override
-    public boolean isOpaqueCube(IBlockState state) {
-    	return false;
-    }
+
     
     protected void func_150124_c(World world, int x, int y, int z, int p_150124_5_, int p_150124_6_)
     {
@@ -98,13 +89,7 @@ public class BlockAlienLeaves extends BlockLeaves {
     {
         return Item.getItemFromBlock(AdvancedRocketryBlocks.blockAlienSapling);
     }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public boolean shouldSideBeRendered(IBlockState blockState,
-    		IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
-    	return Minecraft.isFancyGraphicsEnabled() ? true : super.shouldSideBeRendered(blockState, blockAccess, pos, side);
-    }
+
 
 	@Override
 	public NonNullList<ItemStack> onSheared(ItemStack item, IBlockAccess world,
@@ -117,4 +102,24 @@ public class BlockAlienLeaves extends BlockLeaves {
 		return EnumType.OAK;
 	}
 
+	//These three methods need to be overridden
+    @Override
+    public boolean isOpaqueCube(IBlockState state)
+    {
+        return Blocks.LEAVES.isOpaqueCube(state);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public BlockRenderLayer getBlockLayer()
+    {
+        return Blocks.LEAVES.getBlockLayer();
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+    {
+        return Blocks.LEAVES.shouldSideBeRendered(blockState, blockAccess, pos, side);
+    }
 }
