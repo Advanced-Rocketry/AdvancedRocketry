@@ -151,11 +151,9 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 
 			timeAlive = 0x1;
 		}
-		//if(this.worldObj.provider instanceof WorldProviderSpace) {
 
 		if(isRunning()) {
 			if(!world.isRemote) {
-				//ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(gravity == 0)
 					gravity = 15;

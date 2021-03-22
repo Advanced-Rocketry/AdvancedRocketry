@@ -112,14 +112,6 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 		return tileEntity instanceof TilePrecisionAssembler;
 	}
 
-	/*
-	@Override
-	public boolean shouldHideBlock(World world, BlockPos pos2, IBlockState tile) {
-		TileEntity tileEntity = world.getTileEntity(pos2);
-		return !TileMultiBlock.getMapping('P').contains(new BlockMeta(tile.getBlock(), BlockMeta.WILDCARD)) && tileEntity != null && !(tileEntity instanceof TileElectrolyser);
-	}
-	 */
-
 	@Override
 	public void setTotalProgress(int id, int progress) {
 		if(id == 0)
