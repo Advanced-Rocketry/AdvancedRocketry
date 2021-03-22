@@ -1047,8 +1047,9 @@ public class AdvancedRocketry {
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileBiomeScanner(), (BlockTile)AdvancedRocketryBlocks.blockBiomeScanner);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileRailgun(), (BlockTile)AdvancedRocketryBlocks.blockRailgun);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileSpaceElevator(), (BlockTile)AdvancedRocketryBlocks.blockSpaceElevatorController);
-		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileAtmosphereTerraformer(), (BlockTile)AdvancedRocketryBlocks.blockAtmosphereTerraformer);
 		//Config-controlled machines
+		if(ARConfiguration.getCurrentConfig().enableTerraforming)
+		    ((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileAtmosphereTerraformer(), (BlockTile)AdvancedRocketryBlocks.blockAtmosphereTerraformer);
 		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableGravityController)
 			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileAreaGravityController(), (BlockTile)AdvancedRocketryBlocks.blockGravityMachine);
 		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableLaserDrill)
