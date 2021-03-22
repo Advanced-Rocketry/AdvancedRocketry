@@ -669,14 +669,17 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if ((canRocketFitFluid(fluidStack))) {
 
 					if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())) {
+						stats.setFuelRate(FuelType.LIQUID_MONOPROPELLANT, (int)(stats.getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT) * FuelRegistry.instance.getMultiplier(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())));
 						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityMonopropellant() - getFuelAmountMonopropellant());
 						FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
 						this.addFuelAmountMonopropellant(rocketFakeTank.getFluidAmount());
 					} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid())) {
+						stats.setFuelRate(FuelType.LIQUID_BIPROPELLANT, (int)(stats.getBaseFuelRate(FuelType.LIQUID_BIPROPELLANT) * FuelRegistry.instance.getMultiplier(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid())));
 						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityBipropellant() - getFuelAmountBipropellant());
 						FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
 						this.addFuelAmountBipropellant(rocketFakeTank.getFluidAmount());
 					} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())) {
+						stats.setFuelRate(FuelType.LIQUID_OXIDIZER, (int)(stats.getBaseFuelRate(FuelType.LIQUID_OXIDIZER) * FuelRegistry.instance.getMultiplier(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())));
 						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityBipropellant() - getFuelAmountBipropellant());
 						FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
 						this.addFuelAmountOxidizer(rocketFakeTank.getFluidAmount());
@@ -1157,9 +1160,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			if(burningFuel || descentPhase) {
 				//Burn the rocket fuel
 				if(!world.isRemote && !descentPhase) {
-					setFuelAmountBipropellant((int) (getFuelAmountBipropellant() - stats.getFuelRate(FuelType.LIQUID_BIPROPELLANT)*(ARConfiguration.getCurrentConfig().gravityAffectsFuel ? DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier() : 1f)));
-					setFuelAmountOxidizer((int) (getFuelAmountOxidizer() - stats.getFuelRate(FuelType.LIQUID_OXIDIZER)*(ARConfiguration.getCurrentConfig().gravityAffectsFuel ? DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier() : 1f)));
-					setFuelAmountMonoproellant((int) (getFuelAmountMonopropellant() - stats.getFuelRate(FuelType.LIQUID_MONOPROPELLANT)*(ARConfiguration.getCurrentConfig().gravityAffectsFuel ? DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier() : 1f)));
+					setFuelAmountBipropellant((int) (getFuelAmountBipropellant() - stats.getFuelRate(FuelType.LIQUID_BIPROPELLANT)));
+					setFuelAmountOxidizer((int) (getFuelAmountOxidizer() - stats.getFuelRate(FuelType.LIQUID_OXIDIZER)));
+					setFuelAmountMonoproellant((int) (getFuelAmountMonopropellant() - stats.getFuelRate(FuelType.LIQUID_MONOPROPELLANT)));
 				    if (getFuelAmountBipropellant() == 0 && getFuelAmountMonopropellant() == 0) {
 				    	stats.setFuelFluid("null");
 					}
@@ -1198,7 +1201,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					this.motionY = this.motionY - 0.001;
 				} else
 					//this.motionY = Math.min(this.motionY + 0.001, 1);
-					this.motionY += stats.getAcceleration() * deltaTime;
+					this.motionY += stats.getAcceleration(DimensionManager.getInstance().getDimensionProperties(this.world.provider.getDimension()).getGravitationalMultiplier()) * deltaTime;
 
 
 				double lastPosY = this.posY;

@@ -30,6 +30,7 @@ import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.block.*;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.network.PacketInvalidLocationNotify;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
@@ -157,8 +158,8 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 		return progress/(double)(totalProgress*MAXSCANDELAY);
 	}
 
-	public float getAcceleration() {
-		return stats.getAcceleration();
+	public float getAcceleration( float gravitationalMultiplier) {
+		return stats.getAcceleration(gravitationalMultiplier);
 	}
 
 	public int getWeight()  { return stats.getWeight(); }
@@ -167,7 +168,9 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 
 	public float getNeededThrust() {return getWeight();}
 
-	public float getNeededFuel(FuelType fuelType) { return getAcceleration() > 0 ? 2*stats.getBaseFuelRate(fuelType)*MathHelper.sqrt((2*(ARConfiguration.getCurrentConfig().orbit-this.getPos().getY()))/getAcceleration()) : 0; }
+	public float getNeededFuel(FuelType fuelType) { return getAcceleration( getGravityMultiplier() ) > 0 ? 2*stats.getBaseFuelRate(fuelType)*MathHelper.sqrt((2*(ARConfiguration.getCurrentConfig().orbit-this.getPos().getY()))/getAcceleration(getGravityMultiplier())) : 0; }
+
+	public float getGravityMultiplier () { return DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier(); }
 
 	public int getFuel(FuelType fuelType) {return (int) (stats.getFuelCapacity(fuelType)*ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);}
 
@@ -734,10 +737,10 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	}
 
 	protected void updateText() {
-		thrustText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.thrust") + ": ???") :  String.format("%s: %dN",LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.thrust"), getThrust()));
-		weightText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.weight") + ": ???")  : String.format("%s: %dN", LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.weight"),getWeight()));
+		thrustText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.thrust") + ": ???") :  String.format("%s: %dkN",LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.thrust"), getThrust() * 10));
+		weightText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.weight") + ": ???")  : String.format("%s: %.2fkN", LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.weight"), (getWeight() * 10 * getGravityMultiplier()) ));
 		fuelText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.fuel") + ": ???") :  String.format("%s: %dmb/s", LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.fuel"), (int)getRocketStats().getBaseFuelRate((stats.getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT) > 0) ? FuelType.LIQUID_MONOPROPELLANT : FuelType.LIQUID_BIPROPELLANT)));
-		accelerationText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.acc") + ": ???") : String.format("%s: %.2fm/s\u00b2", LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.acc"), getAcceleration()*20f));
+		accelerationText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.acc") + ": ???") : String.format("%s: %.2fm/s\u00b2", LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.acc"), getAcceleration(getGravityMultiplier())*20f));
 		if(!world.isRemote) { 
 			if(getRocketPadBounds(world, pos) == null)
 				setStatus(ErrorCodes.INCOMPLETESTRCUTURE.ordinal());
@@ -800,9 +803,9 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 		switch(id) {
 		case 0:
 			FuelType fuelType = (stats.getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT) > 0) ? FuelType.LIQUID_MONOPROPELLANT : FuelType.LIQUID_BIPROPELLANT;
-			return (this.getAcceleration() > 0) ? MathHelper.clamp(0.5f + 0.5f*((this.getFuel(fuelType) - this.getNeededFuel(fuelType))/this.getNeededFuel(fuelType)), 0f, 1f) : 0;
+			return (this.getAcceleration(getGravityMultiplier()) > 0) ? MathHelper.clamp(0.5f + 0.5f*((this.getFuel(fuelType) - this.getNeededFuel(fuelType))/this.getNeededFuel(fuelType)), 0f, 1f) : 0;
 		case 1:
-			return MathHelper.clamp(0.5f + this.getAcceleration()*10, 0f, 1f);
+			return MathHelper.clamp(0.5f + this.getAcceleration(getGravityMultiplier())*10, 0f, 1f);
 		case 2:
 			return (float)this.getNormallizedProgress();
 		case 3:

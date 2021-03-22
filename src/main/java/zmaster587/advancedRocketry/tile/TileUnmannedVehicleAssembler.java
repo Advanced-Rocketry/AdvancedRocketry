@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.block.*;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
@@ -306,7 +307,7 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 
 	@Override
 	public float getNeededFuel(FuelType fuelType) {
-		return getAcceleration() > 0 ? stats.getFuelRate(fuelType) : 0;
+		return getAcceleration(DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier()) > 0 ? stats.getFuelRate(fuelType) : 0;
 	}
 
 	//No additional scanning is needed
