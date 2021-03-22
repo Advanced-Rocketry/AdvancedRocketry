@@ -237,6 +237,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public double orbitalPhi;
 	public double rotationalPhi;
 	public OreGenProperties oreProperties = null;
+	public List<ItemStack> laserDrillOres;
+	// The parsing of laserOreDrills is destructive of the actual oredict entries, so we keep a copy of the raw data around for XML writing
+	public String laserDrillOresRaw;
 	public String customIcon;
 	IAtmosphere atmosphereType;
 
@@ -291,6 +294,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		ringColor = new float[] {.4f, .4f, .7f};
 		oceanBlock = null;
 		fillerBlock = null;
+
+		laserDrillOres = new ArrayList<>();
 
 		allowedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
 		terraformedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
@@ -381,6 +386,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		oceanBlock = null;
 		fillerBlock = null;
 		generatorType = 0;
+		laserDrillOres = new ArrayList<>();
 	}
 
 	public List<Fluid> getHarvestableGasses() {
@@ -675,7 +681,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		if(update) {
 			if(parentPlanet != Constants.INVALID_PLANET)
-				getParentProperties().childPlanets.remove(new Integer(getId()));
+				getParentProperties().childPlanets.remove(getId());
 
 			if(parent == null) {
 				parentPlanet = Constants.INVALID_PLANET;
@@ -1419,6 +1425,18 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			allowedBiomes.addAll(getBiomesEntries(biomesList));
 		}
 
+		if(nbt.hasKey("laserDrillOres")) {
+			laserDrillOres.clear();
+			list = nbt.getTagList("laserDrillOres", NBT.TAG_COMPOUND);
+			for(NBTBase entry : list) {
+				assert entry instanceof NBTTagCompound;
+				laserDrillOres.add(new ItemStack((NBTTagCompound) entry));
+			}
+		}
+
+		if(nbt.hasKey("laserDrillOresRaw")) {
+			laserDrillOresRaw = nbt.getString("laserDrillOresRaw");
+		}
 
 		gravitationalMultiplier = nbt.getFloat("gravitationalMultiplier");
 		orbitalDist = nbt.getInteger("orbitalDist");
@@ -1586,7 +1604,19 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			nbt.setIntArray("biomes", biomeId);
 		}
 
+		if(!laserDrillOres.isEmpty()) {
+			list = new NBTTagList();
+			for(ItemStack ore : laserDrillOres) {
+				NBTTagCompound entry = new NBTTagCompound();
+				ore.writeToNBT(entry);
+				list.appendTag(entry);
+			}
+			nbt.setTag("laserDrillOres",list);
+		}
 
+		if(laserDrillOresRaw != null) {
+			nbt.setTag("laserDrillOresRaw",new NBTTagString(laserDrillOresRaw));
+		}
 
 		nbt.setInteger("starId", starId);
 		nbt.setFloat("gravitationalMultiplier", gravitationalMultiplier);
