@@ -29,6 +29,11 @@ apply from: "gradle/scripts/getbuildnumber.gradle"
 apply from: "gradle/scripts/jars.gradle"
 apply from: "gradle/scripts/version.gradle"
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+
+clean{
+    delete 'output'
+}
+
 minecraft {
     // The mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   Snapshot are built nightly.
