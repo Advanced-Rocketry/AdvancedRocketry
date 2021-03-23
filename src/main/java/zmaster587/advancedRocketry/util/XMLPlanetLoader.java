@@ -92,6 +92,7 @@ public class XMLPlanetLoader {
 	private static final String ELEMENT_GENTYPE = "genType";
 	private static final String ELEMENT_OREGEN = "oreGen";
 	private static final String ELEMENT_LASER_DRILL_ORES = "laserDrillOres";
+	private static final String ELEMENT_GEODE_ORES = "geodeOres";
 	private static final String ELEMENT_BIOMEIDS = "biomeIds";
 	private static final String ELEMENT_ARTIFACT = "artifact";
 	private static final String ELEMENT_OCEANBLOCK = "oceanBlock";
@@ -521,6 +522,14 @@ public class XMLPlanetLoader {
 					}
 				}
 			}
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GEODE_ORES)) {
+				String[] entries = planetPropertyNode.getTextContent().split(",");
+				for (String entry : entries) {
+					if(OreDictionary.doesOreNameExist(entry.trim())) {
+						properties.geodeOres.add(entry);
+					}
+				}
+			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GENTYPE)) {
 				try {
 					properties.setGenType(Integer.parseInt(planetPropertyNode.getTextContent()));
@@ -947,6 +956,13 @@ public class XMLPlanetLoader {
 		}
 		if(properties.laserDrillOresRaw != null) {
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_LASER_DRILL_ORES, properties.laserDrillOresRaw));
+		}
+		if(!properties.geodeOres.isEmpty()) {
+			StringJoiner joiner = new StringJoiner(",");
+			for(String ore: properties.geodeOres) {
+				joiner.add(ore);
+			}
+			nodePlanet.appendChild(createTextNode(doc, ELEMENT_GEODE_ORES, joiner.toString()));
 		}
 
 		if(properties.isDecorationOverridden())

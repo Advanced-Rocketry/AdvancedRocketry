@@ -10,30 +10,30 @@ import net.minecraft.world.gen.MapGenBase;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.block.BlockMeta;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MapGenGeode extends MapGenBase {
 	int chancePerChunk;
 
-	private static  List<BlockMeta> ores; // = {new BlockMeta(Blocks.IRON_ORE), new BlockMeta(Blocks.GOLD_ORE), new BlockMeta(Blocks.REDSTONE_ORE), new BlockMeta(Blocks.LAPIS_ORE)};
+	private List<BlockMeta> ores; // = {new BlockMeta(Blocks.IRON_ORE), new BlockMeta(Blocks.GOLD_ORE), new BlockMeta(Blocks.REDSTONE_ORE), new BlockMeta(Blocks.LAPIS_ORE)};
 
 	public MapGenGeode(int chancePerChunk) {
 		this.chancePerChunk = chancePerChunk;
 
-		if(ores == null) {
-			ores = new LinkedList<BlockMeta>();
-			for(int i = 0; i < ARConfiguration.getCurrentConfig().standardGeodeOres.size(); i++) {
-				String oreDictName = ARConfiguration.getCurrentConfig().standardGeodeOres.get(i);
-				List<ItemStack> ores2 = OreDictionary.getOres(oreDictName);
+		ores = new ArrayList<>();
+		for(int i = 0; i < ARConfiguration.getCurrentConfig().standardGeodeOres.size(); i++) {
+			String oreDictName = ARConfiguration.getCurrentConfig().standardGeodeOres.get(i);
+			List<ItemStack> ores2 = OreDictionary.getOres(oreDictName);
 
-				if(ores2 != null && !ores2.isEmpty()) {
-					Block block = Block.getBlockFromItem(ores2.get(0).getItem());
-					if(block != null)
-						ores.add(new BlockMeta(block, ores2.get(0).getItemDamage()));
-				}
+			if(ores2 != null && !ores2.isEmpty()) {
+				Block block = Block.getBlockFromItem(ores2.get(0).getItem());
+				ores.add(new BlockMeta(block, ores2.get(0).getItemDamage()));
 			}
 		}
 	}
@@ -42,6 +42,17 @@ public class MapGenGeode extends MapGenBase {
 	protected void recursiveGenerate(World world, int chunkX,
 			int chunkZ, int p_180701_4_, int p_180701_5_,
 			ChunkPrimer chunkPrimerIn) {
+
+		int dimid = world.provider.getDimension();
+		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(dimid);
+		ores.addAll(
+				props.geodeOres.stream()
+						.filter(OreDictionary::doesOreNameExist)
+						.flatMap(s->OreDictionary.getOres(s).stream())
+						.map(itemStack-> new BlockMeta(Block.getBlockFromItem(itemStack.getItem()),itemStack.getItemDamage()))
+						.filter(block -> !ores.contains(block))
+						.collect(Collectors.toSet())
+		);
 
 		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk || rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk) {
 
