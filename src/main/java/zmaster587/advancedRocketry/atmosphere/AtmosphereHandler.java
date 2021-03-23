@@ -175,6 +175,32 @@ public class AtmosphereHandler {
 			if(handler == null)
 				return; //WTF
 
+			//Block handling for what should and shoudln't exist or what should be on fire
+			//Things should be on fire
+			if (handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATED || handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATEDNOO2) {
+				if(world.getBlockState(bpos).getBlock().isLeaves(world.getBlockState(bpos), world, bpos)) {
+					world.setBlockToAir(bpos);
+				} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.CACTUS) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.PLANTS) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.VINE) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				} else if (world.getBlockState(bpos).getBlock().isLeaves(world.getBlockState(bpos), world, bpos)) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				}else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.WOOD) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.WEB) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.CARPET) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.CLOTH) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.GOURD) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				}
+			}
+			//Plants should die
 			if(!handler.getAtmosphereType(bpos).allowsCombustion()) {
 					if(world.getBlockState(bpos).getBlock().isLeaves(world.getBlockState(bpos), world, bpos)) {
 						world.setBlockToAir(bpos);
@@ -186,14 +212,23 @@ public class AtmosphereHandler {
 						world.setBlockState(bpos, Blocks.DEADBUSH.getDefaultState());
 					} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.VINE) {
 						world.setBlockToAir(bpos);
+					} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.GRASS) {
+						world.setBlockState(bpos, Blocks.DIRT.getDefaultState());
 					}
 			}
+			//Gasses should automatically vaporize and dissipate
 			if (handler.getAtmosphereType(bpos) == AtmosphereType.VACUUM) {
 				 if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.WATER && !(world.getBlockState(bpos).getBlock() instanceof BlockLiquid)) {
 					 IFluidBlock fluidblock = (IFluidBlock)world.getBlockState(bpos).getBlock();
 					 if (fluidblock.getFluid().isGaseous())
 					      world.setBlockToAir(bpos);
 				 }
+			}
+			//Water blocks should also vaporize and disappear
+			if (handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATED || handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATEDNOO2 || handler.getAtmosphereType(bpos) == AtmosphereType.VERYHOT || handler.getAtmosphereType(bpos) == AtmosphereType.VERYHOTNOO2) {
+				if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.WATER) {
+					world.setBlockToAir(bpos);
+				}
 			}
 
 
