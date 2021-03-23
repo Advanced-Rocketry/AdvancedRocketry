@@ -240,6 +240,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 		boolean isGasGiant = false;
 		boolean hasRings = false;
 		boolean parentHasRings = false;
+		boolean isBlackHole = false;
 		EnumFacing travelDirection = null;
 		ResourceLocation parentPlanetIcon = null;
 		List<DimensionProperties> children;
@@ -290,6 +291,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 			sunColor = planetaryProvider.getSunColor(mc.player.getPosition());
 			sunSize = properties.getStar().getSize();
 			subStars = properties.getStar().getSubStars();
+			isBlackHole = properties.getStar().isBlackHole();
 			starSeperation = properties.getStar().getStarSeparation();
 			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
@@ -560,7 +562,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 		//--------------------------- Draw the suns --------------------
 		if(!isWarp) {
 			//Set sun color and distance
-			drawStar(buffer, solarOrbitalDistance, sunSize, sunColor, multiplier);
+			drawStar(buffer, isBlackHole, solarOrbitalDistance, sunSize, sunColor, multiplier);
 
 			if(subStars != null && !subStars.isEmpty()) {
 				GL11.glPushMatrix();
@@ -572,7 +574,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 					
 					GL11.glRotatef(subStar.getStarSeparation()*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance), 1, 0, 0);
 					float color[] = subStar.getColor();
-					drawStar(buffer, solarOrbitalDistance, subStar.getSize(), new Vec3d(color[0], color[1], color[2]), multiplier);
+					drawStar(buffer, isBlackHole, solarOrbitalDistance, subStar.getSize(), new Vec3d(color[0], color[1], color[2]), multiplier);
 					GL11.glPopMatrix();
 				}
 				GL11.glPopMatrix();
@@ -855,16 +857,107 @@ public class RenderAsteroidSky extends IRenderHandler {
 		GlStateManager.color(1f, 1f, 1f, 1f);
 	}
 
-	private void drawStar(BufferBuilder buffer, int solarOrbitalDistance, float sunSize, Vec3d sunColor, float multiplier) {
-		//Set sun color and distance
-		GlStateManager.color((float)sunColor.x, (float)sunColor.y , (float)sunColor.z ,Math.min((multiplier)*2f,1f));
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
-		float f10 = sunSize*15f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
-		//multiplier = 2;
-		buffer.pos((double)(-f10), 100.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
-		buffer.pos((double)f10, 100.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
-		buffer.pos((double)f10, 100.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
-		buffer.pos((double)(-f10), 100.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
-		Tessellator.getInstance().draw();
+	private void drawStar(BufferBuilder buffer, boolean blackHole, int solarOrbitalDistance, float sunSize, Vec3d sunColor, float multiplier) {
+		if(blackHole) {
+			GlStateManager.depthMask(true);
+			GlStateManager.enableAlpha();
+			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.01f);
+			mc.renderEngine.bindTexture(TextureResources.locationBlackHole);
+
+			GL11.glPushMatrix();
+			GL11.glTranslatef(0, 100, 0);
+			float phase = -(System.currentTimeMillis() % 3600)/3600f;
+			float scale = 1+(float)Math.sin(phase*3.14)*0.1f;
+			phase*=360f;
+			GL11.glRotatef(phase, 0, 1, 0);
+
+			GL11.glScaled(scale,scale,scale);
+
+			//Set sun color and distance
+			GlStateManager.color((float)1, (float).5 , (float).4 ,1f);
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			float f10 = sunSize*2.5f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
+			buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
+			buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
+			buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
+			buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+			Tessellator.getInstance().draw();
+			GL11.glPopMatrix();
+
+
+			//Render accretion disk
+			mc.renderEngine.bindTexture(TextureResources.locationAccretionDisk);
+			GlStateManager.depthMask(false);
+			for(int i = 0; i < 3; i++)
+			{
+				float speedMult = (i)*1.01f + 1;
+				GL11.glPushMatrix();
+				GL11.glTranslatef(0, 100, 0);
+				GL11.glRotatef(80, -1, 1, 0);
+				GL11.glRotatef((System.currentTimeMillis() % (int)(speedMult*36000))/(100f*speedMult), 0, 1, 0);
+
+				GlStateManager.color((float)1, (float).5 , (float).4 ,1f);
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+				f10 = sunSize*20f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
+				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
+				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
+				buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+				Tessellator.getInstance().draw();
+				GL11.glPopMatrix();
+
+				GL11.glPushMatrix();
+
+				GL11.glTranslatef(0, 99.99f, 0);
+				GL11.glRotatef(80, -1, 1, 0);
+				GL11.glRotatef((System.currentTimeMillis() % (int)(speedMult*360*50))/(50f*speedMult), 0, 1, 0);
+
+				GlStateManager.color((float)0.8, (float).7 , (float).4 ,1f);
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+				f10 = sunSize*15f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
+				//multiplier = 2;
+				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
+				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
+				buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+				Tessellator.getInstance().draw();
+				GL11.glPopMatrix();
+
+				GL11.glPushMatrix();
+
+				GL11.glTranslatef(0, 99.98f, 0);
+				GL11.glRotatef(80, -1, 1, 0);
+				GL11.glRotatef((System.currentTimeMillis() % (int)(speedMult*360*25))/(25f*speedMult), 0, 1, 0);
+
+				GlStateManager.color((float)0.2, (float).4 , (float)1 ,1f);
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+				f10 = sunSize*7.5f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
+				//multiplier = 2;
+				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
+				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
+				buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+				Tessellator.getInstance().draw();
+				GL11.glPopMatrix();
+			}
+
+			GlStateManager.depthMask(true);
+			GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+			GlStateManager.depthMask(false);
+
+		}
+		else {
+			mc.renderEngine.bindTexture(TextureResources.locationSunPng);
+			//Set sun color and distance
+			GlStateManager.color((float)sunColor.x, (float)sunColor.y , (float)sunColor.z ,Math.min((multiplier)*2f,1f));
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			float f10 = sunSize*15f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
+			//multiplier = 2;
+			buffer.pos((double)(-f10), 100.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
+			buffer.pos((double)f10, 100.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
+			buffer.pos((double)f10, 100.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
+			buffer.pos((double)(-f10), 100.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+			Tessellator.getInstance().draw();
+		}
 	}
 }
