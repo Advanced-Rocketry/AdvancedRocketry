@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenBase;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.ARConfiguration;
@@ -39,9 +40,7 @@ public class MapGenGeode extends MapGenBase {
 	}
 
 	@Override
-	protected void recursiveGenerate(World world, int chunkX,
-			int chunkZ, int p_180701_4_, int p_180701_5_,
-			ChunkPrimer chunkPrimerIn) {
+	protected void recursiveGenerate(World world, int chunkX, int chunkZ, int p_180701_4_, int p_180701_5_, ChunkPrimer chunkPrimerIn) {
 
 		int dimid = world.provider.getDimension();
 		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(dimid);
@@ -54,7 +53,7 @@ public class MapGenGeode extends MapGenBase {
 						.collect(Collectors.toSet())
 		);
 
-		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk || rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk) {
+		if((rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk || rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk) && canGeodeGenerate(world, chunkX * 16, chunkZ * 16)) {
 
 			int radius = rand.nextInt(ARConfiguration.getCurrentConfig().geodeVariation) + ARConfiguration.getCurrentConfig().geodeBaseSize - (ARConfiguration.getCurrentConfig().geodeVariation/2); //24; 24 -> 48
 
@@ -122,5 +121,10 @@ public class MapGenGeode extends MapGenBase {
 				}
 			}
 		}
+	}
+
+	//Geodes should absolutely not be generating on top of liquid. That they could before was a huge oversight
+	private static boolean canGeodeGenerate(World world, int x, int z) {
+		return !BiomeDictionary.hasType(world.getBiome(new BlockPos(x, 0, z)), BiomeDictionary.Type.OCEAN) && !BiomeDictionary.hasType(world.getBiome(new BlockPos(x, 0, z)), BiomeDictionary.Type.RIVER) && !BiomeDictionary.hasType(world.getBiome(new BlockPos(x, 0, z)), BiomeDictionary.Type.BEACH);
 	}
 }
