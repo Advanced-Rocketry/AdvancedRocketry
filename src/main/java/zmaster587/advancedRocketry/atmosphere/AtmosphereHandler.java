@@ -177,7 +177,7 @@ public class AtmosphereHandler {
 
 			//Block handling for what should and shoudln't exist or what should be on fire
 			//Things should be on fire
-			if (handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATED || handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATEDNOO2) {
+			if (handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATED) {
 				if(world.getBlockState(bpos).getBlock().isLeaves(world.getBlockState(bpos), world, bpos)) {
 					world.setBlockToAir(bpos);
 				} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.CACTUS) {
@@ -201,7 +201,7 @@ public class AtmosphereHandler {
 				}
 			}
 			//Plants should die
-			if(!handler.getAtmosphereType(bpos).allowsCombustion()) {
+			else if(!handler.getAtmosphereType(bpos).allowsCombustion()) {
 					if(world.getBlockState(bpos).getBlock().isLeaves(world.getBlockState(bpos), world, bpos)) {
 						world.setBlockToAir(bpos);
 					} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.FIRE) {
