@@ -36,7 +36,6 @@ public class AdvancedRocketryItems {
 	public static Item itemSpaceSuit_Chest;
 	public static Item itemSpaceSuit_Leggings;
 	public static Item itemSpaceSuit_Boots;
-	public static Item itemBucketRocketFuel;
 	public static Item itemSmallAirlockDoor;
 	public static Item itemCarbonScrubberCartridge;
 	public static Item itemSealDetector;
@@ -48,15 +47,10 @@ public class AdvancedRocketryItems {
 	public static Item itemUpgrade;
 	public static Item itemAtmAnalyser;
 	public static Item itemBiomeChanger;
-	public static Item itemBucketNitrogen;
-	public static Item itemBucketHydrogen;
-
-	public static Item itemBucketOxygen;
 	public static Item itemAstroBed;
 	public static Item itemBasicLaserGun;
 	public static Item itemSpaceElevatorChip;
 	public static Item itemBeaconFinder;
 	public static Item itemThermite;
-	public static Item itemBucketEnrichedLava;
 	public static Item itemHovercraft;
 }

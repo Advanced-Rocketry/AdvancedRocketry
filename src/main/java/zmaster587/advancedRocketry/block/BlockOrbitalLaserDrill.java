@@ -7,7 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import zmaster587.advancedRocketry.tile.multiblock.drill.TileOrbitalLaserDrill;
+import zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill.TileOrbitalLaserDrill;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.inventory.GuiHandler;
 
@@ -55,7 +55,6 @@ public class BlockOrbitalLaserDrill extends BlockMultiblockMachine {
 	@Override
 	public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos,
 			Explosion explosionIn) {
-		// TODO Auto-generated method stub
 		super.onBlockDestroyedByExplosion(worldIn, pos, explosionIn);
 		((TileOrbitalLaserDrill)worldIn.getTileEntity(pos)).onDestroy();
 	}

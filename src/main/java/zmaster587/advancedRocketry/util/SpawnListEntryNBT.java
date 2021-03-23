@@ -1,15 +1,14 @@
 package zmaster587.advancedRocketry.util;
 
-import java.util.UUID;
-
-import org.w3c.dom.DOMException;
-
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
+import org.w3c.dom.DOMException;
+
+import java.util.UUID;
 
 public class SpawnListEntryNBT extends SpawnListEntry {
 

@@ -289,7 +289,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		Iterator<ModuleBase> itr = modules.iterator();
 		while(itr.hasNext()) {
 			ModuleBase module = itr.next();
-			if(module instanceof ModuleButton && ((ModuleButton)module).getText().equalsIgnoreCase("Select Dst")) {
+			if(module instanceof ModuleButton && ((ModuleButton)module).buttonId == 1) {
 				itr.remove();
 				break;
 			}
@@ -463,7 +463,6 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 	@Override
 	public void writeMissionPersistantNBT(NBTTagCompound nbt) {
-		// TODO Auto-generated method stub
 		super.writeMissionPersistantNBT(nbt);
 		nbt.setInteger("fwd", forwardDirection.ordinal());
 

@@ -57,8 +57,6 @@ public class WorldProviderAsteroid extends WorldProviderPlanet {
 	
 	@Override
 	protected void init() {
-		// TODO Auto-generated method stub
-		//super.createBiomeProvider();
 		this.hasSkyLight=true;
 		world.getWorldInfo().setTerrainType(AdvancedRocketry.planetWorldType);
 		

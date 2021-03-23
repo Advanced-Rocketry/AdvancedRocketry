@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.tile;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -13,6 +14,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.block.*;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
@@ -208,6 +210,7 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 					for(int zCurr = (int) bb.minZ; zCurr <= bb.maxZ; zCurr++) {
 
 						BlockPos currPos = new BlockPos(xCurr, yCurr, zCurr);
+						BlockPos belowPos = new BlockPos(xCurr, yCurr - 1, zCurr);
 						if(!world.isAirBlock(currPos)) {
 							IBlockState state = world.getBlockState(currPos);
 							Block block = state.getBlock();
@@ -233,18 +236,6 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 								} else if(block instanceof BlockOxidizerFuelTank) {
 									fuelCapacityOxidizer += (((IFuelTank) block).getMaxFill(world, currPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);
 								}
-							}
-
-							if(block instanceof BlockSeat) {
-
-								if(stats.hasSeat()) 
-									stats.addPassengerSeat((int)(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f)) , (int)(yCurr  -actualMinY), (int)(zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f)));
-								else
-									stats.setSeatLocation((int)(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f)) , (int)(yCurr  -actualMinY), (int)(zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f)));
-							}
-
-							if(block instanceof IMiningDrill) {
-								drillPower += ((IMiningDrill)block).getMiningSpeed(world, currPos);
 							}
 
 							if(block instanceof IIntake) {
@@ -295,10 +286,10 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 			//if(!stats.hasSeat() && !hasSatellite) 
 			//status = ErrorCodes.NOSEAT;
 			/*else*/
-			if(((thrustBipropellant >= thrustMonopropellant) && getFuel(FuelType.LIQUID_BIPROPELLANT) < getNeededFuel(FuelType.LIQUID_BIPROPELLANT)*(1 + fluidCapacity/1000)) || ((thrustMonopropellant >= thrustBipropellant) && getFuel(FuelType.LIQUID_MONOPROPELLANT) < getNeededFuel(FuelType.LIQUID_MONOPROPELLANT)*(1 + fluidCapacity/1000)))
-				status = ErrorCodes.NOFUEL;
-			else if(getThrust() < getNeededThrust()) 
+			if(getThrust() < getNeededThrust())
 				status = ErrorCodes.NOENGINES;
+			else if(((thrustBipropellant >= thrustMonopropellant) && getFuel(FuelType.LIQUID_BIPROPELLANT) < getNeededFuel(FuelType.LIQUID_BIPROPELLANT)*(1 + fluidCapacity/1000)) || ((thrustMonopropellant >= thrustBipropellant) && getFuel(FuelType.LIQUID_MONOPROPELLANT) < getNeededFuel(FuelType.LIQUID_MONOPROPELLANT)*(1 + fluidCapacity/1000)))
+				status = ErrorCodes.NOFUEL;
 			else
 				status = ErrorCodes.SUCCESS;
 		}
@@ -306,7 +297,7 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 
 	@Override
 	public float getNeededFuel(FuelType fuelType) {
-		return getAcceleration() > 0 ? stats.getFuelRate(fuelType) : 0;
+		return getAcceleration(DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier()) > 0 ? stats.getFuelRate(fuelType) : 0;
 	}
 
 	//No additional scanning is needed

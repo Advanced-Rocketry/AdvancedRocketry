@@ -65,12 +65,12 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 
 	@Override
 	public double getProgress(World world) {
-		return (AdvancedRocketry.proxy.getWorldTimeUniversal(0) - startWorldTime) / (double)duration;
+		return Math.max((AdvancedRocketry.proxy.getWorldTimeUniversal(0) - startWorldTime) / (double)duration, 0);
 	}
 	
 	@Override
 	public int getTimeRemainingInSeconds() {
-		return (int)(( duration -AdvancedRocketry.proxy.getWorldTimeUniversal(0) + startWorldTime)/20);
+		return (int)Math.max((( duration -AdvancedRocketry.proxy.getWorldTimeUniversal(0) + startWorldTime)/20), 0);
 	}
 
 	@Override

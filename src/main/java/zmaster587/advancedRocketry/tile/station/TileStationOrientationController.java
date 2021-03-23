@@ -11,6 +11,7 @@ import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.*;
@@ -23,7 +24,6 @@ import java.util.List;
 
 public class TileStationOrientationController extends TileEntity implements ITickable, IModularInventory, INetworkMachine, ISliderBar {
 
-	int numRotationsPerHour[];
 	int progress[];
 
 	private ModuleText moduleAngularVelocity, numThrusters, maxAngularAcceleration, targetRotations;
@@ -33,7 +33,6 @@ public class TileStationOrientationController extends TileEntity implements ITic
 		//numThrusters = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
 		targetRotations = new ModuleText(6, 25, LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.tgtalt"), 0x202020);
 		progress = new int[3];
-		numRotationsPerHour = new int[3];
 
 		progress[0] = getTotalProgress(0)/2;
 		progress[1] = getTotalProgress(1)/2;
@@ -68,8 +67,8 @@ public class TileStationOrientationController extends TileEntity implements ITic
 			}
 
 			//numThrusters.setText("Number Of Thrusters: 0");
-
-			targetRotations.setText(String.format("%s%d %d %d", LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.tgtalt"), numRotationsPerHour[0], numRotationsPerHour[1], numRotationsPerHour[2]));
+			int[] targetRotationsPerHour = ((SpaceStationObject) object).targetRotationsPerHour;
+			targetRotations.setText(String.format("%s%d %d %d", LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.tgtalt"), targetRotationsPerHour[0], targetRotationsPerHour[1], targetRotationsPerHour[2]));
 		}
 	}
 
@@ -82,9 +81,17 @@ public class TileStationOrientationController extends TileEntity implements ITic
 				boolean update = false;
 
 				if(object != null) {
+
 					EnumFacing dirs[] = { EnumFacing.EAST, EnumFacing.UP, EnumFacing.NORTH };
+					int[] targetRotationsPerHour = ((SpaceStationObject) object).targetRotationsPerHour;
+					for (int i = 0; i < 3; i++) {
+						setProgress(i, targetRotationsPerHour[i] + (getTotalProgress(i)/2));
+					}
+
+
 					for(int i = 0; i < 3; i++) {
-						double targetAngularVelocity = numRotationsPerHour[i]/72000D;
+
+						double targetAngularVelocity = targetRotationsPerHour[i]/72000D;
 						double angVel = object.getDeltaRotation(dirs[i]);
 						double acc = object.getMaxRotationalAcceleration();
 
@@ -154,23 +161,12 @@ public class TileStationOrientationController extends TileEntity implements ITic
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setShort("numRotationsX", (short)numRotationsPerHour[0]);
-		nbt.setShort("numRotationsY", (short)numRotationsPerHour[1]);
-		nbt.setShort("numRotationsZ", (short)numRotationsPerHour[2]);
 		return nbt;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		numRotationsPerHour[0] = nbt.getShort("numRotationsX");
-		progress[0] = numRotationsPerHour[0] + getTotalProgress(0)/2;
-
-		numRotationsPerHour[1] = nbt.getShort("numRotationsX");
-		progress[1] = numRotationsPerHour[1] + getTotalProgress(1)/2;
-
-		numRotationsPerHour[2] = nbt.getShort("numRotationsX");
-		progress[2] = numRotationsPerHour[2] + getTotalProgress(2)/2;
 	}
 
 
@@ -183,7 +179,9 @@ public class TileStationOrientationController extends TileEntity implements ITic
 	public void setProgress(int id, int progress) {
 
 		this.progress[id] = progress;
-		numRotationsPerHour[id] = (progress - getTotalProgress(id)/2);
+		if (SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos) != null) {
+			((SpaceStationObject) (SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos))).setTargetRotationsPerHour(id, (progress - getTotalProgress(id)/2));
+		}
 	}
 
 	@Override

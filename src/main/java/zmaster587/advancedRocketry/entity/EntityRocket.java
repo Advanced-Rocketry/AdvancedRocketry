@@ -35,7 +35,7 @@ import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.achievements.ARAchivements;
+import zmaster587.advancedRocketry.achievements.ARAdvancements;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
@@ -242,7 +242,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox() {
-		// TODO Auto-generated method stub
 		return getEntityBoundingBox();
 	}
 
@@ -670,14 +669,17 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if ((canRocketFitFluid(fluidStack))) {
 
 					if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())) {
+						stats.setFuelRate(FuelType.LIQUID_MONOPROPELLANT, (int)(stats.getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT) * FuelRegistry.instance.getMultiplier(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())));
 						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityMonopropellant() - getFuelAmountMonopropellant());
 						FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
 						this.addFuelAmountMonopropellant(rocketFakeTank.getFluidAmount());
 					} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid())) {
+						stats.setFuelRate(FuelType.LIQUID_BIPROPELLANT, (int)(stats.getBaseFuelRate(FuelType.LIQUID_BIPROPELLANT) * FuelRegistry.instance.getMultiplier(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid())));
 						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityBipropellant() - getFuelAmountBipropellant());
 						FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
 						this.addFuelAmountBipropellant(rocketFakeTank.getFluidAmount());
 					} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())) {
+						stats.setFuelRate(FuelType.LIQUID_OXIDIZER, (int)(stats.getBaseFuelRate(FuelType.LIQUID_OXIDIZER) * FuelRegistry.instance.getMultiplier(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())));
 						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityBipropellant() - getFuelAmountBipropellant());
 						FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
 						this.addFuelAmountOxidizer(rocketFakeTank.getFluidAmount());
@@ -1158,9 +1160,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			if(burningFuel || descentPhase) {
 				//Burn the rocket fuel
 				if(!world.isRemote && !descentPhase) {
-					setFuelAmountBipropellant((int) (getFuelAmountBipropellant() - stats.getFuelRate(FuelType.LIQUID_BIPROPELLANT)*(ARConfiguration.getCurrentConfig().gravityAffectsFuel ? DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier() : 1f)));
-					setFuelAmountOxidizer((int) (getFuelAmountOxidizer() - stats.getFuelRate(FuelType.LIQUID_OXIDIZER)*(ARConfiguration.getCurrentConfig().gravityAffectsFuel ? DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier() : 1f)));
-					setFuelAmountMonoproellant((int) (getFuelAmountMonopropellant() - stats.getFuelRate(FuelType.LIQUID_MONOPROPELLANT)*(ARConfiguration.getCurrentConfig().gravityAffectsFuel ? DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier() : 1f)));
+					setFuelAmountBipropellant((int) (getFuelAmountBipropellant() - stats.getFuelRate(FuelType.LIQUID_BIPROPELLANT)));
+					setFuelAmountOxidizer((int) (getFuelAmountOxidizer() - stats.getFuelRate(FuelType.LIQUID_OXIDIZER)));
+					setFuelAmountMonoproellant((int) (getFuelAmountMonopropellant() - stats.getFuelRate(FuelType.LIQUID_MONOPROPELLANT)));
 				    if (getFuelAmountBipropellant() == 0 && getFuelAmountMonopropellant() == 0) {
 				    	stats.setFuelFluid("null");
 					}
@@ -1199,7 +1201,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					this.motionY = this.motionY - 0.001;
 				} else
 					//this.motionY = Math.min(this.motionY + 0.001, 1);
-					this.motionY += stats.getAcceleration() * deltaTime;
+					this.motionY += stats.getAcceleration(DimensionManager.getInstance().getDimensionProperties(this.world.provider.getDimension()).getGravitationalMultiplier()) * deltaTime;
 
 
 				double lastPosY = this.posY;
@@ -1560,9 +1562,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if(DimensionManager.getInstance().getDimensionProperties(destinationDimId).getName().equals("Luna")) {
 					for(Entity player : this.getPassengers()) {
 						if(player instanceof EntityPlayer) {
-							ARAchivements.MOON_LANDING.trigger((EntityPlayerMP) player);
+							ARAdvancements.MOON_LANDING.trigger((EntityPlayerMP) player);
 							if(!DimensionManager.hasReachedMoon)
-								ARAchivements.ONE_SMALL_STEP.trigger((EntityPlayerMP) player);
+								ARAdvancements.ONE_SMALL_STEP.trigger((EntityPlayerMP) player);
 						}
 					}
 					DimensionManager.hasReachedMoon = true;
@@ -1720,7 +1722,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		//Check to see what place we should be going to
 		//This is bad but it works and is mostly intelligible so it's here for now
-		stats.orbitHeight = storage.getGuidanceComputer().getLaunchSequence(this.world.provider.getDimension(), this.getPosition());
+		stats.orbitHeight = (storage.getGuidanceComputer() == null) ? getEntryHeight(this.world.provider.getDimension()) : storage.getGuidanceComputer().getLaunchSequence(this.world.provider.getDimension(), this.getPosition());
 
 
 		//TODO: Clean this logic a bit?
@@ -2333,13 +2335,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	@Override
 	public boolean startRiding(Entity entityIn, boolean force) {
-		// TODO Auto-generated method stub
 		return super.startRiding(entityIn, force);
 	}
 
 	@Override
 	public boolean startRiding(Entity entityIn) {
-		// TODO Auto-generated method stub
 		return super.startRiding(entityIn);
 	}
 

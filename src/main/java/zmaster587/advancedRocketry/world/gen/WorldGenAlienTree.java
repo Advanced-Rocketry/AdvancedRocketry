@@ -23,7 +23,7 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 	
 	@Override
 	protected boolean canGrowInto(Block blockType) {
-		return super.canGrowInto(blockType) || blockType == AdvancedRocketryBlocks.blockAlienSapling || blockType == AdvancedRocketryBlocks.blockAlienWood || blockType == AdvancedRocketryBlocks.blockAlienLeaves;
+		return super.canGrowInto(blockType) || blockType == AdvancedRocketryBlocks.blockLightwoodSapling || blockType == AdvancedRocketryBlocks.blockLightwoodWood || blockType == AdvancedRocketryBlocks.sblockLightwoodLeaves;
 	}
 
 	@Override
@@ -109,29 +109,29 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 
 						if (world.isAirBlock(new BlockPos(trunkX, trunkY, trunkZ)) || block1.isLeaves(state1, world, new BlockPos(trunkX, trunkY, trunkZ)))
 						{
-							this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX, trunkY, trunkZ), AdvancedRocketryBlocks.blockAlienWood.getDefaultState());
-							this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX + 1, trunkY, trunkZ), AdvancedRocketryBlocks.blockAlienWood.getDefaultState());
-							this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX, trunkY, trunkZ + 1), AdvancedRocketryBlocks.blockAlienWood.getDefaultState());
-							this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX + 1, trunkY, trunkZ + 1), AdvancedRocketryBlocks.blockAlienWood.getDefaultState());
+							this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX, trunkY, trunkZ), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+							this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX + 1, trunkY, trunkZ), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+							this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX, trunkY, trunkZ + 1), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+							this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX + 1, trunkY, trunkZ + 1), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
 							i2 = trunkY;
 						}
 					}
 
 					//Genthe root
-					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX - 1, y, trunkZ), AdvancedRocketryBlocks.blockAlienWood.getDefaultState());
-					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX + 2, y, trunkZ), AdvancedRocketryBlocks.blockAlienWood.getDefaultState());
-					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX + 2, y, trunkZ + 1), AdvancedRocketryBlocks.blockAlienWood.getDefaultState());
-					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX - 1, y, trunkZ + 1), AdvancedRocketryBlocks.blockAlienWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX - 1, y, trunkZ), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX + 2, y, trunkZ), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX + 2, y, trunkZ + 1), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX - 1, y, trunkZ + 1), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
 
-					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX, y, trunkZ - 1), AdvancedRocketryBlocks.blockAlienWood.getDefaultState());
-					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX + 1, y, trunkZ - 1), AdvancedRocketryBlocks.blockAlienWood.getDefaultState());
-					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX + 1, y, trunkZ + 2), AdvancedRocketryBlocks.blockAlienWood.getDefaultState());
-					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX, y, trunkZ + 2), AdvancedRocketryBlocks.blockAlienWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX, y, trunkZ - 1), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX + 1, y, trunkZ - 1), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX + 1, y, trunkZ + 2), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX, y, trunkZ + 2), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
 
-					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX, y, trunkZ), AdvancedRocketryBlocks.blockAlienWood.getDefaultState());
-					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX + 1, y, trunkZ), AdvancedRocketryBlocks.blockAlienWood.getDefaultState());
-					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX, y, trunkZ +1 ), AdvancedRocketryBlocks.blockAlienWood.getDefaultState());
-					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX + 1, y, trunkZ + 1), AdvancedRocketryBlocks.blockAlienWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX, y, trunkZ), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX + 1, y, trunkZ), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX, y, trunkZ +1 ), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(trunkX + 1, y, trunkZ + 1), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
 					
 					
 					generatePod(world, random, 6, trunkX + 1, random.nextInt(10) + y + treeHeight / 6, trunkZ, 1, 1);
@@ -253,8 +253,8 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 		
 		Block block = state.getBlock();
 
-		if( block.isReplaceable(world, pos) ||  block.isLeaves(state, world, pos) || block == AdvancedRocketryBlocks.blockAlienWood || block == AdvancedRocketryBlocks.blockAlienSapling) {
-			this.setBlockAndNotifyAdequately(world, pos, AdvancedRocketryBlocks.blockAlienWood.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.fromFacingAxis(direction.getAxis())));
+		if( block.isReplaceable(world, pos) ||  block.isLeaves(state, world, pos) || block == AdvancedRocketryBlocks.blockLightwoodWood || block == AdvancedRocketryBlocks.blockLightwoodSapling) {
+			this.setBlockAndNotifyAdequately(world, pos, AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.fromFacingAxis(direction.getAxis())));
 			return true;
 		}
 		else
@@ -267,7 +267,7 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 
 		if (world.isAirBlock(pos))
 		{
-			this.setBlockAndNotifyAdequately(world, pos, AdvancedRocketryBlocks.blockAlienLeaves.getDefaultState());
+			this.setBlockAndNotifyAdequately(world, pos, AdvancedRocketryBlocks.sblockLightwoodLeaves.getDefaultState());
 		}
 	}
 

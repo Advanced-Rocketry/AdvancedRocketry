@@ -1,12 +1,8 @@
 package zmaster587.advancedRocketry.item;
 
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -22,6 +18,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.entity.EntityHoverCraft;
 import zmaster587.libVulpes.LibVulpes;
+
+import java.util.List;
 
 public class ItemHovercraft extends Item {
     

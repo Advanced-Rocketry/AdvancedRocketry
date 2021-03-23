@@ -18,7 +18,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import org.apache.commons.lang3.ArrayUtils;
-import scala.util.Random;
+import java.util.Random;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.ARConfiguration;
@@ -236,6 +236,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public double prevOrbitalTheta;
 	public double orbitalPhi;
 	public double rotationalPhi;
+	public boolean isRetrograde;
 	public OreGenProperties oreProperties = null;
 	public List<ItemStack> laserDrillOres;
 	public List<String> geodeOres;
@@ -292,6 +293,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		parentPlanet = Constants.INVALID_PLANET;
 		childPlanets = new HashSet<Integer>();
 		orbitalPhi = 0;
+		isRetrograde = false;
 		ringColor = new float[] {.4f, .4f, .7f};
 		oceanBlock = null;
 		fillerBlock = null;
@@ -977,6 +979,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		return satellites.get(id);
 	}
 
+	/**
+	 * Returns all of a dimension's satellites
+	 * @return a Collection containing all of a dimension's satellites
+	 */
+	public Collection<SatelliteBase> getAllSatellites() {
+		return this.satellites.values();
+	}
+
 	//TODO: multithreading
 	/**
 	 * Tick satellites as needed
@@ -1000,9 +1010,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public void updateOrbit() {
 		this.prevOrbitalTheta = this.orbitTheta;
 		if (this.isMoon()) {
-			this.orbitTheta = AstronomicalBodyHelper.getMoonOrbitalTheta(orbitalDist, getParentProperties().gravitationalMultiplier) + baseOrbitTheta;
+			this.orbitTheta = (AstronomicalBodyHelper.getMoonOrbitalTheta(orbitalDist, getParentProperties().gravitationalMultiplier) + baseOrbitTheta) * (isRetrograde ? -1 : 1);
 		} else if (!this.isMoon()) {
-			this.orbitTheta = AstronomicalBodyHelper.getOrbitalTheta(orbitalDist, getStar().getSize()) + baseOrbitTheta;
+			this.orbitTheta = (AstronomicalBodyHelper.getOrbitalTheta(orbitalDist, getStar().getSize()) + baseOrbitTheta) * (isRetrograde ? -1 : 1);
 		}
 	}
 
@@ -1446,6 +1456,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		baseOrbitTheta = nbt.getDouble("baseOrbitTheta");
 		orbitalPhi = nbt.getDouble("orbitPhi");
 		rotationalPhi = nbt.getDouble("rotationalPhi");
+		isRetrograde = nbt.getBoolean("isRetrograde");
 		hasOxygen = nbt.getBoolean("hasOxygen");
 		atmosphereDensity = nbt.getInteger("atmosphereDensity");
 
@@ -1635,6 +1646,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setDouble("baseOrbitTheta", baseOrbitTheta);
 		nbt.setDouble("orbitPhi", orbitalPhi);
 		nbt.setDouble("rotationalPhi", rotationalPhi);
+		nbt.setBoolean("isRetrograde", isRetrograde);
 		nbt.setBoolean("hasOxygen", hasOxygen);
 		nbt.setInteger("atmosphereDensity", atmosphereDensity);
 		nbt.setInteger("originalAtmosphereDensity", originalAtmosphereDensity);

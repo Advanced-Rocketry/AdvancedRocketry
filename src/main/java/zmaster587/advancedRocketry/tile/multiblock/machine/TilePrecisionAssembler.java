@@ -3,7 +3,6 @@ package zmaster587.advancedRocketry.tile.multiblock.machine;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
@@ -13,8 +12,6 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.api.material.Material;
-import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.inventory.modules.*;
@@ -114,14 +111,6 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 		TileEntity tileEntity = world.getTileEntity(pos);
 		return tileEntity instanceof TilePrecisionAssembler;
 	}
-
-	/*
-	@Override
-	public boolean shouldHideBlock(World world, BlockPos pos2, IBlockState tile) {
-		TileEntity tileEntity = world.getTileEntity(pos2);
-		return !TileMultiBlock.getMapping('P').contains(new BlockMeta(tile.getBlock(), BlockMeta.WILDCARD)) && tileEntity != null && !(tileEntity instanceof TileElectrolyser);
-	}
-	 */
 
 	@Override
 	public void setTotalProgress(int id, int progress) {

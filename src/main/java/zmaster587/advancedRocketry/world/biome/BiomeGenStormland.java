@@ -34,7 +34,6 @@ public class BiomeGenStormland extends Biome {
 
 	@Override
 	public void decorate(World worldIn, Random rand, BlockPos pos) {
-		// TODO Auto-generated method stub
 		super.decorate(worldIn, rand, pos);
 		
         int x = pos.getX() + rand.nextInt(16);

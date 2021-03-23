@@ -51,7 +51,6 @@ public class BlockSeat extends Block {
 	@Override
 	public void onBlockDestroyedByExplosion(World world, BlockPos pos,
 			Explosion explosionIn) {
-		// TODO Auto-generated method stub
 		super.onBlockDestroyedByExplosion(world, pos, explosionIn);
 		
 		List<EntityDummy> list = world.getEntitiesWithinAABB(EntityDummy.class, new AxisAlignedBB(pos, pos.add(1,1,1)));

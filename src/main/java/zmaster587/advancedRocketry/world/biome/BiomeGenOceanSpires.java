@@ -38,7 +38,6 @@ public class BiomeGenOceanSpires extends Biome {
 	@Override
 	public void genTerrainBlocks(World worldIn, Random rand,
 			ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal) {
-		// TODO Auto-generated method stub
 		super.genTerrainBlocks(worldIn, rand, chunkPrimerIn, x, z, noiseVal);
 		
 		if(x % 16 == 0 && z % 16 == 0 )

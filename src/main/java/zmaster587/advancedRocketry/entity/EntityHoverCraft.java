@@ -203,7 +203,6 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 
 
 	public double getMaxAcceleration() {
-		// TODO Auto-generated method stub
 		return 0.05D;
 	}
 
@@ -269,7 +268,8 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 			this.motionY = 0;
 		else if (this.getPosition().getY() > getMaxHeight())
 			this.motionY *= 0.1;
-		
+        if (this.getRidingEntity() != null)
+		    this.getRidingEntity().fallDistance = 0;
 		this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 
 	}

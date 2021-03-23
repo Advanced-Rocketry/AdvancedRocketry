@@ -14,8 +14,8 @@ import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
 import zmaster587.advancedRocketry.item.ItemStationChip;
-import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.*;
@@ -141,6 +141,8 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 
 			this.status = ErrorCodes.FINISHED;
 			storedId = null;
+			inventory.decrStackSize(0, 1);
+			inventory.decrStackSize(1, 1);
 			this.markDirty();
 			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);	
 		}
@@ -193,12 +195,9 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 		
 		super.useNetworkData(player, side, id, nbt);
 		if(id == 1 && isScanningFlag) {
-			inventory.decrStackSize(0, 1);
 
 			storedId = (long)ItemStationChip.getUUID(inventory.getStackInSlot(1));
 			if(storedId == 0) storedId = null;
-			if(storedId == null)
-				inventory.decrStackSize(1, 1);
 		}
 	}
 

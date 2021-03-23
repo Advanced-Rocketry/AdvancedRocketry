@@ -215,7 +215,6 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 
 	@Override
 	public void onEntityUpdate() {
-		// TODO Auto-generated method stub
 		super.onEntityUpdate();
 
 		//Make sure to update client
