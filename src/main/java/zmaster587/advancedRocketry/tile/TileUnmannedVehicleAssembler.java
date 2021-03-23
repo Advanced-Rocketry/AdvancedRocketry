@@ -238,10 +238,6 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 								}
 							}
 
-							if(block instanceof IMiningDrill) {
-								drillPower += ((IMiningDrill)block).getMiningSpeed(world, currPos);
-							}
-
 							if(block instanceof IIntake) {
 								stats.setStatTag("intakePower", (int)stats.getStatTag("intakePower") + ((IIntake)block).getIntakeAmt(state));
 							}
