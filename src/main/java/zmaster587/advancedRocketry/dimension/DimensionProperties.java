@@ -239,6 +239,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public boolean isRetrograde;
 	public OreGenProperties oreProperties = null;
 	public List<ItemStack> laserDrillOres;
+	public List<String> geodeOres;
 	// The parsing of laserOreDrills is destructive of the actual oredict entries, so we keep a copy of the raw data around for XML writing
 	public String laserDrillOresRaw;
 	public String customIcon;
@@ -298,6 +299,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		fillerBlock = null;
 
 		laserDrillOres = new ArrayList<>();
+		geodeOres = new ArrayList<>();
 
 		allowedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
 		terraformedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
@@ -1435,6 +1437,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				laserDrillOres.add(new ItemStack((NBTTagCompound) entry));
 			}
 		}
+		if(nbt.hasKey("geodeOres")) {
+			geodeOres.clear();
+			list = nbt.getTagList("geodeOres", NBT.TAG_STRING);
+			for(NBTBase entry: list) {
+				assert entry instanceof NBTTagString;
+				geodeOres.add(((NBTTagString) entry).getString());
+			}
+		}
 
 		if(nbt.hasKey("laserDrillOresRaw")) {
 			laserDrillOresRaw = nbt.getString("laserDrillOresRaw");
@@ -1619,6 +1629,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		if(laserDrillOresRaw != null) {
 			nbt.setTag("laserDrillOresRaw",new NBTTagString(laserDrillOresRaw));
+		}
+
+		if(!geodeOres.isEmpty()) {
+			list = new NBTTagList();
+			for(String ore: geodeOres) {
+				list.appendTag(new NBTTagString(ore));
+			}
+			nbt.setTag("geodeOres",list);
 		}
 
 		nbt.setInteger("starId", starId);
