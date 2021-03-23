@@ -63,7 +63,7 @@ public class MapGenCrater extends MapGenBase {
 						if (!isCraterIgnoredBlock(chunkPrimerIn.getBlockState(x, y, z).getBlock())) {
 							int count = (depth - (((xCoord * 16) + x) * ((xCoord * 16) + x) + ((zCoord * 16) + z) * ((zCoord * 16) + z))) / (radius * 2);
 
-
+							//Places filler blocks to excavate the crater
 							for (int dist = 0; dist < count; dist++) {
 								if (y - dist > 2) {
 									if (y-dist <= fluidMaxY) {
@@ -74,15 +74,17 @@ public class MapGenCrater extends MapGenBase {
 								}
 							}
 
+							//Places blocks to form the surface of the bowl
 							int ridgeSize = 12;
 							if (count <= 0 && count > -2 * ridgeSize) {
-								for (int dist = 0; dist < ((ridgeSize * ridgeSize) - (count + ridgeSize) * (count + ridgeSize)) / (ridgeSize * 2); dist++) {
+								for (int dist = 0; dist < ((ridgeSize * ridgeSize) - (count + ridgeSize) * (count + ridgeSize)) / (ridgeSize * 2) + 2; dist++) {
 									if (y + dist < 255) {
 										chunkPrimerIn.setBlockState(x, y + dist, z, world.getBiome(new BlockPos(chunkX * 16, 0, chunkZ * 16)).topBlock);
 									}
 								}
 							}
 
+							//Places blocks to form the ridges
 							if (count > 1 && (y - count > 2))
 								chunkPrimerIn.setBlockState(x, y - count, z, world.getBiome(new BlockPos(chunkX * 16, 0, chunkZ * 16)).topBlock);
 							break;
