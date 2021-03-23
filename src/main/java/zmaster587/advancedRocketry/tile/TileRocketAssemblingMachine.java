@@ -10,6 +10,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -292,6 +293,8 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 					for(int zCurr = (int) bb.minZ; zCurr <= bb.maxZ; zCurr++) {
 
 						BlockPos currBlockPos = new BlockPos(xCurr, yCurr, zCurr);
+						BlockPos abovePos = new BlockPos(xCurr, yCurr + 1, zCurr);
+						BlockPos belowPos = new BlockPos(xCurr, yCurr - 1, zCurr);
 
 						if(!world.isAirBlock(currBlockPos)) {
 							IBlockState state = world.getBlockState(currBlockPos);
@@ -311,7 +314,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 							numBlocks++;
 							
 							//If rocketEngine increaseThrust
-							if(block instanceof IRocketEngine) {
+							if(block instanceof IRocketEngine && (world.getBlockState(abovePos).getBlock().isAir(world.getBlockState(abovePos), world, abovePos) || world.getBlockState(belowPos).getBlock() instanceof BlockLandingPad || world.getBlockState(belowPos).getBlock() == AdvancedRocketryBlocks.blockLaunchpad )) {
 								if (block instanceof BlockBipropellantRocketMotor || block instanceof BlockAdvancedBipropellantRocketMotor ) {
 									bipropellantfuelUse += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
 									thrustBipropellant += ((IRocketEngine)block).getThrust(world, currBlockPos);
@@ -332,7 +335,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 								}
 							}
 
-							if(block instanceof BlockSeat) {
+							if(block instanceof BlockSeat && world.getBlockState(abovePos).getBlock().isAir(world.getBlockState(abovePos), world, abovePos)) {
 								stats.addPassengerSeat((int)(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f)) , (int)(yCurr  -actualMinY), (int)(zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f)));
 							}
 
@@ -384,10 +387,10 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 				status = ErrorCodes.INVALIDBLOCK;
 			else if(!hasGuidance && !hasSatellite)
 				status = ErrorCodes.NOGUIDANCE;
+			else if(getThrust() <= getNeededThrust())
+				status = ErrorCodes.NOENGINES;
 			else if(((thrustBipropellant >= thrustMonopropellant) && getFuel(FuelType.LIQUID_BIPROPELLANT) <= getNeededFuel(FuelType.LIQUID_BIPROPELLANT)) || ((thrustMonopropellant >= thrustBipropellant) && getFuel(FuelType.LIQUID_MONOPROPELLANT) <= getNeededFuel(FuelType.LIQUID_MONOPROPELLANT)))
 				status = ErrorCodes.NOFUEL;
-			else if(getThrust() <= getNeededThrust()) 
-				status = ErrorCodes.NOENGINES;
 			else
 				status = ErrorCodes.SUCCESS;
 		}
