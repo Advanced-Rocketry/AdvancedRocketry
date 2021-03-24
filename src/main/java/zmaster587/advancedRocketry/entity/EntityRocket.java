@@ -1,6 +1,9 @@
 package zmaster587.advancedRocketry.entity;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.BlockDirt;
+import net.minecraft.block.BlockSand;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
@@ -46,6 +49,7 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.block.BlockRegolith;
 import zmaster587.advancedRocketry.client.SoundRocketEngine;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -1743,6 +1747,55 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					connectedTiles.remove();
 				}
 			}
+		}
+		if (ARConfiguration.getCurrentConfig().launchingDestroysBlocks)
+		    damageGroundBelowRocket(world, (int)posX, (int)posY, (int)posZ, (int)Math.pow(stats.getThrust(), 0.3333));
+	}
+
+	private void damageGroundBelowRocket(World world, int x, int y, int z, int radius) {
+		//Actually, we affect the blocks that are one lower
+		y--;
+		System.out.println(y + " " + chunkCoordY);
+		for (int i = 0; i <= radius; i++) {
+			for (int j = 0; j < radius; j++) {
+				//Set blocks to their damaged variants
+				setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x + i, y, z + j))), world, new BlockPos(x + i, y, z + j));
+				setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x + i, y, z - j))), world, new BlockPos(x + i, y, z - j));
+				setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y, z + j))), world, new BlockPos(x - i, y, z + j));
+				setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y, z - j))), world, new BlockPos(x - i, y, z - j));
+				//Set fire above that
+				BlockPos blocksAbove = new BlockPos(x, y + 1, z);
+				if (world.getBlockState(blocksAbove).getBlock().isReplaceable(world, blocksAbove)) {
+					world.setBlockState(blocksAbove, Blocks.FIRE.getDefaultState());
+				}
+			}
+		}
+	}
+
+	private static IBlockState getDamagedBlock(IBlockState blockState) {
+		if (blockState.getBlock().getMaterial(blockState) == Material.ROCK && blockState.getBlock() != AdvancedRocketryBlocks.blockLaunchpad && blockState.getBlock() != AdvancedRocketryBlocks.blockLandingPad && blockState.getBlock() != AdvancedRocketryBlocks.blockBasalt) {
+			return AdvancedRocketryBlocks.blockBasalt.getDefaultState();
+		} else if (blockState.getBlock() == AdvancedRocketryBlocks.blockBasalt) {
+			return Blocks.LAVA.getDefaultState();
+		} else if (blockState.getBlock().getMaterial(blockState) == Material.GRASS) {
+			return Blocks.DIRT.getDefaultState();
+		} else if (blockState.getBlock() instanceof BlockDirt) {
+			return Blocks.SAND.getDefaultState();
+		} else if (blockState.getBlock() instanceof BlockSand || blockState.getBlock() instanceof BlockRegolith) {
+			return Blocks.GLASS.getDefaultState();
+		} else if (blockState.getBlock().getMaterial(blockState) == Material.ICE || blockState.getBlock().getMaterial(blockState) == Material.PACKED_ICE|| blockState.getBlock().getMaterial(blockState) == Material.SNOW || blockState.getBlock().getMaterial(blockState) == Material.CRAFTED_SNOW) {
+			return Blocks.WATER.getDefaultState();
+		} else if (blockState.getBlock().getMaterial(blockState) == Material.WATER) {
+			return Blocks.AIR.getDefaultState();
+		} else if (blockState.getBlock().getMaterial(blockState) == Material.WOOD || blockState.getBlock().getMaterial(blockState) == Material.LEAVES || blockState.getBlock().getMaterial(blockState) == Material.PLANTS || blockState.getBlock().getMaterial(blockState) == Material.GOURD || blockState.getBlock().getMaterial(blockState) == Material.WEB || blockState.getBlock().getMaterial(blockState) == Material.CLOTH || blockState.getBlock().getMaterial(blockState) == Material.CARPET || blockState.getBlock().getMaterial(blockState) == Material.CACTUS || blockState.getBlock().getMaterial(blockState) == Material.SPONGE) {
+			return Blocks.FIRE.getDefaultState();
+		}
+		return blockState;
+	}
+
+	private static void setDamagedBlock(IBlockState blockState, World world, BlockPos position) {
+		if (blockState != world.getBlockState(position)) {
+			world.setBlockState(position, blockState);
 		}
 	}
 

@@ -525,6 +525,7 @@ public class ARConfiguration {
 		arConfig.asteroidTBIBurnMult = (float) config.get(ROCKET, "warpTBIBurnMult", 10.0, "The multiplier that warp rocket flights should be considered as for TBI distance").getDouble();
 		arConfig.experimentalSpaceFlight = config.get(ROCKET, "experimentalSpaceFlight", false, "If true, rockets will be able to actually fly around space, EXPERIMENTAL").getBoolean();
 		arConfig.gravityAffectsFuel = config.get(ROCKET, "gravityAffectsFuels", true, "If true planets with higher gravity require more fuel and lower gravity would require less").getBoolean();
+		arConfig.launchingDestroysBlocks = config.get(ROCKET, "launchBlockDestruction", false, "If true rocket launches will kill plants, glass soil, turn rock into lava, and more").getBoolean();
 		blackListRocketBlocksStr = config.getStringList("rocketBlockBlackList", ROCKET, new String[] {"minecraft:portal","minecraft:bedrock", "minecraft:snow_layer", "minecraft:water", "minecraft:flowing_water", "minecraft:lava", "minecraft:flowing_lava"}, "Mod:Blockname  for example \"minecraft:chest\"");
 
 		//Ore and worldgen configuration
@@ -873,6 +874,9 @@ public class ARConfiguration {
 
 	@ConfigProperty
 	public boolean enableOxygen = true;
+
+	@ConfigProperty
+	public boolean launchingDestroysBlocks;
 
 	@ConfigProperty
 	public float buildSpeedMultiplier = 1f;
