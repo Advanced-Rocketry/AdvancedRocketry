@@ -9,18 +9,37 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraftforge.fluids.IFluidBlock;
+import net.minecraftforge.oredict.OreDictionary;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 public class MapGenCrater extends MapGenBase {
     
 	int chancePerChunk;
-	
+	Random rand;
+
 	public MapGenCrater(int chancePerChunk) {
 		this.chancePerChunk = chancePerChunk;
+		this.rand = new Random();
 	}
 	
 	
 	@Override
 	protected void recursiveGenerate(World world, int chunkX, int chunkZ, int p_180701_4_, int p_180701_5_, ChunkPrimer chunkPrimerIn) {
+
+		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
+
+		List<IBlockState> ores = props.craterOres.stream()
+					   .map(s->OreDictionary.getOres(s).get(0))
+					   .map(itemStack->Block.getBlockFromItem(itemStack.getItem())
+											   .getDefaultState()
+					   )
+					   .collect(Collectors.toList());
 		
 		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk && rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk) {
 
@@ -78,13 +97,13 @@ public class MapGenCrater extends MapGenBase {
 							if (count <= 0 && count > -2 * ridgeSize) {
 								for (int dist = 0; dist < ((ridgeSize * ridgeSize) - (count + ridgeSize) * (count + ridgeSize)) / (ridgeSize * 2); dist++) {
 									if (y + dist < 255) {
-										chunkPrimerIn.setBlockState(x, y + dist, z, world.getBiome(new BlockPos(chunkX * 16, 0, chunkZ * 16)).topBlock);
+										chunkPrimerIn.setBlockState(x, y + dist, z, this.getBlockToPlace(world,chunkX, chunkZ * 16,ores));
 									}
 								}
 							}
 
 							if (count > 1 && (y - count > 2))
-								chunkPrimerIn.setBlockState(x, y - count, z, world.getBiome(new BlockPos(chunkX * 16, 0, chunkZ * 16)).topBlock);
+								chunkPrimerIn.setBlockState(x, y - count, z, this.getBlockToPlace(world,chunkX, chunkZ * 16,ores));
 							break;
 						}
 					}
@@ -96,5 +115,13 @@ public class MapGenCrater extends MapGenBase {
 	//Ignore liquids, and ignore air. Everything else is fair game
 	private static boolean isCraterIgnoredBlock(Block block) {
 		return block instanceof BlockLiquid || block instanceof IFluidBlock || block == Blocks.AIR || block == Blocks.ICE;
+	}
+
+	private IBlockState getBlockToPlace(World world, int chunkX, int chunkZ, List<IBlockState> ores) {
+		if(rand.nextInt(24) == 0 && !ores.isEmpty()) {
+			return ores.get(rand.nextInt(ores.size()));
+		} else {
+			return world.getBiome(new BlockPos(chunkX * 16, 0, chunkZ * 16)).topBlock;
+		}
 	}
 }

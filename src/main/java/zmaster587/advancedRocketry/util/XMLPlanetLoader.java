@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class XMLPlanetLoader {
 
@@ -81,6 +82,7 @@ public class XMLPlanetLoader {
 	private static final String ELEMENT_OREGEN = "oreGen";
 	private static final String ELEMENT_LASER_DRILL_ORES = "laserDrillOres";
 	private static final String ELEMENT_GEODE_ORES = "geodeOres";
+	private static final String ELEMENT_CRATER_ORES = "craterOres";
 	private static final String ELEMENT_BIOMEIDS = "biomeIds";
 	private static final String ELEMENT_ARTIFACT = "artifact";
 	private static final String ELEMENT_OCEANBLOCK = "oceanBlock";
@@ -517,11 +519,17 @@ public class XMLPlanetLoader {
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GEODE_ORES)) {
 				String[] entries = planetPropertyNode.getTextContent().split(",");
-				for (String entry : entries) {
-					if(OreDictionary.doesOreNameExist(entry.trim())) {
-						properties.geodeOres.add(entry);
-					}
-				}
+				properties.geodeOres.addAll(Arrays.stream(entries)
+						.filter(e->OreDictionary.doesOreNameExist(e.trim()))
+						.collect(Collectors.toSet())
+				);
+			}
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_CRATER_ORES)) {
+				String[] entries = planetPropertyNode.getTextContent().split(",");
+				properties.craterOres.addAll(Arrays.stream(entries)
+						.filter(e->OreDictionary.doesOreNameExist(e.trim()))
+						.collect(Collectors.toSet())
+				);
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GENTYPE)) {
 				try {
@@ -957,6 +965,13 @@ public class XMLPlanetLoader {
 				joiner.add(ore);
 			}
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_GEODE_ORES, joiner.toString()));
+		}
+		if(!properties.craterOres.isEmpty()) {
+			StringJoiner joiner = new StringJoiner(",");
+			for(String ore: properties.craterOres) {
+				joiner.add(ore);
+			}
+			nodePlanet.appendChild(createTextNode(doc, ELEMENT_CRATER_ORES, joiner.toString()));
 		}
 
 		if(properties.isDecorationOverridden())
