@@ -12,20 +12,17 @@ import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.libVulpes.block.BlockMeta;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class MapGenCrater extends MapGenBase {
     
 	int chancePerChunk;
-	Random rand;
 
 	public MapGenCrater(int chancePerChunk) {
 		this.chancePerChunk = chancePerChunk;
-		this.rand = new Random();
 	}
 	
 	
@@ -35,19 +32,14 @@ public class MapGenCrater extends MapGenBase {
 		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
 
 		List<IBlockState> ores = props.craterOres.stream()
-					   .map(s->OreDictionary.getOres(s).get(0))
-					   .map(itemStack->Block.getBlockFromItem(itemStack.getItem())
-											   .getDefaultState()
-					   )
-					   .collect(Collectors.toList());
+				.filter(OreDictionary::doesOreNameExist)
+				.map(s->OreDictionary.getOres(s).get(0))
+				.map(itemStack-> new BlockMeta(Block.getBlockFromItem(itemStack.getItem()),itemStack.getItemDamage()).getBlockState())
+				.collect(Collectors.toList());
 		
 		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk && rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk) {
 
 			int radius = rand.nextInt(56) + 8; //64; 8 -> 64
-			
-			//TODO: make hemisphere from surface and line the side with ore of some kind
-
-
 
 			int depth = radius*radius;
 			
@@ -96,16 +88,16 @@ public class MapGenCrater extends MapGenBase {
 							//Places blocks to form the surface of the bowl
 							int ridgeSize = 12;
 							if (count <= 0 && count > -2 * ridgeSize) {
-								for (int dist = 0; dist < ((ridgeSize * ridgeSize) - (count + ridgeSize) * (count + ridgeSize)) / (ridgeSize * 2) + 2; dist++) {
+								for (int dist = 0; dist < ((ridgeSize * ridgeSize) - (count + ridgeSize) * (count + ridgeSize)) / (ridgeSize * 2) + 1; dist++) {
 									if (y + dist < 255) {
-										chunkPrimerIn.setBlockState(x, y + dist, z, this.getBlockToPlace(world,chunkX, chunkZ * 16,ores));
+										chunkPrimerIn.setBlockState(x, y + dist, z, this.getBlockToPlace(world,chunkX, chunkZ,ores));
 									}
 								}
 							}
 
 							//Places blocks to form the ridges
 							if (count > 1 && (y - count > 2))
-								chunkPrimerIn.setBlockState(x, y - count, z, this.getBlockToPlace(world,chunkX, chunkZ * 16,ores));
+								chunkPrimerIn.setBlockState(x, y - count, z, this.getBlockToPlace(world,chunkX, chunkZ,ores));
 							break;
 						}
 					}
