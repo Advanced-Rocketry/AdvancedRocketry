@@ -1000,6 +1000,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				launch();
 			launchCount--;
 			this.dataManager.set(LAUNCH_COUNTER, launchCount);
+			//Just before launch, damage the ground. We'll do it again on the tick that we launch
+			if (launchCount == 20 && ARConfiguration.getCurrentConfig().launchingDestroysBlocks)
+				damageGroundBelowRocket(world, (int)this.posX, (int)this.posY, (int)this.posZ, (int)Math.pow(stats.getThrust(), 0.3333));
 		}
 		
 		// When flying around in space
@@ -1291,6 +1294,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 		else if(isStartupPhase())
 			runEngines();
+
+		//When we're landing, we should also destroy the blocks below the rocket if they are valid to be destroyed - but overall we do it fewer times than on launch (once instead of twice)
+		if((int)this.posY == world.getTopSolidOrLiquidBlock(new BlockPos(this.posX, this.posY, this.posZ)).getY() + 2 && ARConfiguration.getCurrentConfig().launchingDestroysBlocks && this.isDescentPhase()) {
+			damageGroundBelowRocket(world, (int)this.posX, (int)this.posY -1, (int)this.posZ, (int)Math.pow(stats.getThrust(), 0.3333));
+		}
 	}
 
 	public void onTurnRight(boolean state) {
@@ -1750,6 +1758,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				}
 			}
 		}
+		//When we launch, we want to damage blocks a second time if possible
 		if (ARConfiguration.getCurrentConfig().launchingDestroysBlocks)
 		    damageGroundBelowRocket(world, (int)posX, (int)posY, (int)posZ, (int)Math.pow(stats.getThrust(), 0.3333));
 	}
@@ -1759,15 +1768,19 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		y--;
 		for (int i = 0; i <= radius; i++) {
 			for (int j = 0; j <= radius; j++) {
-				for (int k = 1; k > -2; k--) {
-					//Set blocks to their damaged variants
+				for (int k = 1; k >= -2; k--) {
+					//Set blocks to their damaged variants, the if statements make sure we don't set cardinal directions twice the times we should be
 					setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x + i, y + k, z + j))), world, new BlockPos(x + i, y + k, z + j));
-					setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x + i, y + k, z - j))), world, new BlockPos(x + i, y + k, z - j));
-					setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y + k, z + j))), world, new BlockPos(x - i, y + k, z + j));
-					setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y + k, z - j))), world, new BlockPos(x - i, y + k, z - j));
+					if (j != 0)
+					    setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x + i, y + k, z - j))), world, new BlockPos(x + i, y + k, z - j));
+					if (i != 0) {
+						setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y + k, z + j))), world, new BlockPos(x - i, y + k, z + j));
+						if (j != 0)
+						    setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y + k, z - j))), world, new BlockPos(x - i, y + k, z - j));
+					}
 					//Set fire above that
-					BlockPos blocksAbove = new BlockPos(x, y + k, z);
-					if (world.getBlockState(blocksAbove).getBlock().isReplaceable(world, blocksAbove)) {
+					BlockPos blocksAbove = new BlockPos(x + i, y + k, z + j);
+					if (world.getBlockState(blocksAbove).getBlock().isReplaceable(world, blocksAbove) || world.getBlockState(blocksAbove).getBlock() == Blocks.AIR) {
 						world.setBlockState(blocksAbove, Blocks.FIRE.getDefaultState());
 					}
 				}
@@ -1793,9 +1806,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			return Blocks.SAND.getDefaultState();
 		} else if (blockState.getBlock() instanceof BlockSand || blockState.getBlock() instanceof BlockRegolith || ZUtils.isItemInOreDict(stack, "regolith")) {
 			return Blocks.GLASS.getDefaultState();
-		} else if (blockState.getBlock().getMaterial(blockState) == Material.ICE || blockState.getBlock().getMaterial(blockState) == Material.PACKED_ICE|| blockState.getBlock().getMaterial(blockState) == Material.SNOW) {
+		} else if (blockState.getBlock().getMaterial(blockState) == Material.ICE || blockState.getBlock().getMaterial(blockState) == Material.PACKED_ICE || ((blockState.getBlock().getMaterial(blockState) == Material.SNOW || blockState.getBlock().getMaterial(blockState) == Material.CRAFTED_SNOW) && blockState.getBlock() != Blocks.SNOW_LAYER )) {
 			return Blocks.WATER.getDefaultState();
-		} else if (blockState.getBlock().getMaterial(blockState) == Material.WATER || blockState.getBlock().getMaterial(blockState) == Material.CRAFTED_SNOW) {
+		} else if (blockState.getBlock().getMaterial(blockState) == Material.WATER || blockState.getBlock() == Blocks.SNOW_LAYER) {
 			return Blocks.AIR.getDefaultState();
 		} else if (blockState.getBlock().getMaterial(blockState) == Material.WOOD || blockState.getBlock().getMaterial(blockState) == Material.LEAVES || blockState.getBlock().getMaterial(blockState) == Material.PLANTS || blockState.getBlock().getMaterial(blockState) == Material.GOURD || blockState.getBlock().getMaterial(blockState) == Material.WEB || blockState.getBlock().getMaterial(blockState) == Material.CLOTH || blockState.getBlock().getMaterial(blockState) == Material.CARPET || blockState.getBlock().getMaterial(blockState) == Material.CACTUS || blockState.getBlock().getMaterial(blockState) == Material.SPONGE) {
 			return Blocks.FIRE.getDefaultState();
