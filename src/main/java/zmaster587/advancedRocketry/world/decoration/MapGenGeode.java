@@ -47,7 +47,7 @@ public class MapGenGeode extends MapGenBase {
 		ores.addAll(
 				props.geodeOres.stream()
 						.filter(OreDictionary::doesOreNameExist)
-						.flatMap(s->OreDictionary.getOres(s).stream())
+						.map(s->OreDictionary.getOres(s).get(0))
 						.map(itemStack-> new BlockMeta(Block.getBlockFromItem(itemStack.getItem()),itemStack.getItemDamage()))
 						.filter(block -> !ores.contains(block))
 						.collect(Collectors.toSet())
