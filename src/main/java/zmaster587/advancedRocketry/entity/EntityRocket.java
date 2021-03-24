@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -37,6 +38,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.achievements.ARAdvancements;
 import zmaster587.advancedRocketry.api.*;
@@ -79,10 +81,7 @@ import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.util.FluidUtils;
-import zmaster587.libVulpes.util.HashedBlockPosition;
-import zmaster587.libVulpes.util.IconResource;
-import zmaster587.libVulpes.util.Vector3F;
+import zmaster587.libVulpes.util.*;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -1773,15 +1772,22 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	}
 
 	private static IBlockState getDamagedBlock(IBlockState blockState) {
-		if (blockState.getBlock().getMaterial(blockState) == Material.ROCK && blockState.getBlock() != AdvancedRocketryBlocks.blockLaunchpad && blockState.getBlock() != AdvancedRocketryBlocks.blockLandingPad && blockState.getBlock() != AdvancedRocketryBlocks.blockBasalt) {
+		ItemStack stack = new ItemStack(blockState.getBlock(), 1, blockState.getBlock().getMetaFromState(blockState));
+		if (ZUtils.isItemInOreDict(stack, "stone")) {
+			return Blocks.COBBLESTONE.getDefaultState();
+		} else if (ZUtils.isItemInOreDict(stack, "cobblestone") || ZUtils.isItemInOreDict(stack, "gravel")) {
 			return AdvancedRocketryBlocks.blockBasalt.getDefaultState();
 		} else if (blockState.getBlock() == AdvancedRocketryBlocks.blockBasalt) {
+			return Blocks.MAGMA.getDefaultState();
+		} else if (blockState.getBlock() == Blocks.NETHERRACK) {
+			return Blocks.MAGMA.getDefaultState();
+		} else if (blockState.getBlock() == Blocks.MAGMA) {
 			return Blocks.LAVA.getDefaultState();
 		} else if (blockState.getBlock().getMaterial(blockState) == Material.GRASS) {
 			return Blocks.DIRT.getDefaultState();
 		} else if (blockState.getBlock() instanceof BlockDirt) {
 			return Blocks.SAND.getDefaultState();
-		} else if (blockState.getBlock() instanceof BlockSand || blockState.getBlock() instanceof BlockRegolith) {
+		} else if (blockState.getBlock() instanceof BlockSand || blockState.getBlock() instanceof BlockRegolith || ZUtils.isItemInOreDict(stack, "regolith")) {
 			return Blocks.GLASS.getDefaultState();
 		} else if (blockState.getBlock().getMaterial(blockState) == Material.ICE || blockState.getBlock().getMaterial(blockState) == Material.PACKED_ICE|| blockState.getBlock().getMaterial(blockState) == Material.SNOW || blockState.getBlock().getMaterial(blockState) == Material.CRAFTED_SNOW) {
 			return Blocks.WATER.getDefaultState();
