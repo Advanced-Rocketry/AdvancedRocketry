@@ -248,7 +248,6 @@ public class ClientProxy extends CommonProxy {
 		Item item = Item.getItemFromBlock((Block) fluidBlock);
 
 		final ModelResourceLocation modelResourceLocation = new ModelResourceLocation("advancedrocketry:fluid", fluidBlock.getFluid().getName());
-		System.out.println(fluidBlock.getFluid().getName());
 
 		if (item != Items.AIR) {
 			ModelLoader.registerItemVariants(item);

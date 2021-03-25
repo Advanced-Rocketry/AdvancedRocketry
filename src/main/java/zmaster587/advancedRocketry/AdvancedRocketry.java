@@ -274,6 +274,10 @@ public class AdvancedRocketry {
         BiomeDictionary.addTypes(AdvancedRocketryBiomes.oceanSpires,
         		BiomeDictionary.Type.OCEAN
         		);
+		BiomeDictionary.addTypes(AdvancedRocketryBiomes.crystalChasms,
+				BiomeDictionary.Type.SNOWY,
+				BiomeDictionary.Type.WASTELAND
+		);
 	}
 
 	@EventHandler
