@@ -1,19 +1,19 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"xxx"
+    "pattern": [
+	    "xsx"
     ],
-    "key":
-    {
-        "x":
-        {
+    "key": {
+        "x": {
             "item": "minecraft:wool",
             "data": 32767
+        },
+        "s": {
+            "type": "forge:ore_dict",
+            "ore": "plateSteel"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:seat",
         "count": 1
     }
