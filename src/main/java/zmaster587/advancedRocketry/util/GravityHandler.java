@@ -1,6 +1,8 @@
 package zmaster587.advancedRocketry.util;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityFlying;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import zmaster587.advancedRocketry.AdvancedRocketry;
@@ -44,7 +46,11 @@ public class GravityHandler implements IGravityManager {
 	public static void applyGravity(Entity entity) {
 		if(entity.hasNoGravity()) return;
 		if(!entity.isInWater() || entity instanceof EntityItem) {
-			if(!(entity instanceof EntityPlayer) || !((EntityPlayer)entity).capabilities.isFlying) {
+			//Because working gravity on elytra-flying players can cause..... severe problems at lower gravity, it is my utter delight to announce to you elytra are now magic!
+			//This totally isn't because Mojang decided for some godforsaken @#@#@#% reason to make ALL WAYS TO SET ELYTRA FLIGHT _protected_
+			//With no set methods
+			//So I cannot, without much more effort than it's worth, set elytra flight. Therefore, they're magic.
+			if((!(entity instanceof EntityPlayer) && !(entity instanceof EntityFlying)) || (!(entity instanceof EntityFlying) && !(((EntityPlayer)entity).capabilities.isFlying || ((EntityLivingBase)entity).isElytraFlying()))) {
 				Double d;
 				if(entityMap.containsKey(entity) && (d = entityMap.get(entity)) != null)  {
 
@@ -83,7 +89,7 @@ public class GravityHandler implements IGravityManager {
 							//entity.motionY -= 0.005d;
 					}
 				}
-			}		
+			}
 		}
 	}
 
