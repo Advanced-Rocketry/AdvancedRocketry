@@ -278,6 +278,8 @@ key.turnRocketDown=Move Vehicle Down
 
 enchantment.advancedrocketry.spacebreathing.desc=Allows the piece of armor to form an airtight seal
 
+machine.tooltip.smallplatepress=Requires obsidian two blocks below to function
+
 msg.crystalliser.gravityTooHigh=Gravity is not low enough!
 msg.crystalliser.gravityTooHigh=Gravity is not low enough!
 msg.observetory.scan.tooltip=Scans for new asteroids, consumes 100 distance data
