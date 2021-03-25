@@ -1802,7 +1802,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			return Blocks.LAVA.getDefaultState();
 		} else if (blockState.getBlock().getMaterial(blockState) == Material.GRASS) {
 			return Blocks.DIRT.getDefaultState();
-		} else if (blockState.getBlock() instanceof BlockDirt) {
+		} else if (blockState.getBlock().getMaterial(blockState) == Material.GROUND && !(blockState.getBlock() instanceof BlockRegolith)) {
 			return Blocks.SAND.getDefaultState();
 		} else if (blockState.getBlock() instanceof BlockSand || blockState.getBlock() instanceof BlockRegolith || ZUtils.isItemInOreDict(stack, "regolith")) {
 			return Blocks.GLASS.getDefaultState();
