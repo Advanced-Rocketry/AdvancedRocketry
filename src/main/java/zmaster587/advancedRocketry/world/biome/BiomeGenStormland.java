@@ -18,10 +18,8 @@ public class BiomeGenStormland extends Biome {
 
 	WorldGenAbstractTree charTree = new WorldGenCharredTree(false, 6);
 	
-	public BiomeGenStormland() {
-		super(new BiomeProperties("Stormland").setBaseHeight(1f).setHeightVariation(0.1f).setRainfall(0.9f).setTemperature(0.9f));
-		
-        this.setRegistryName(new ResourceLocation("advancedrocketry:Stormland"));
+	public BiomeGenStormland(BiomeProperties properties) {
+		super(properties);
 		
 		spawnableMonsterList.clear();
 		this.spawnableMonsterList.add(new Biome.SpawnListEntry(EntityCreeper.class, 5, 1, 1));

@@ -20,10 +20,8 @@ public class BiomeGenDeepSwamp extends Biome {
 
 	private final static WorldGenNoTree noTree = new WorldGenNoTree(false);
 	
-	public BiomeGenDeepSwamp() {
-		super(new BiomeProperties("DeepSwamp").setBaseHeight(-0.1f).setHeightVariation(0.2f).setRainfall(0.9f).setTemperature(0.9f).setWaterColor(14745518));
-
-        this.setRegistryName(new ResourceLocation("advancedrocketry:DeepSwamp"));
+	public BiomeGenDeepSwamp(BiomeProperties properties) {
+		super(properties);
 		
 		this.decorator.treesPerChunk = 10;
         this.decorator.flowersPerChunk = 1;

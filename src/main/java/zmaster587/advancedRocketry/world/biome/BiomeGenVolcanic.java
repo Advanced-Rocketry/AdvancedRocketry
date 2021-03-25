@@ -17,12 +17,10 @@ public class BiomeGenVolcanic extends Biome {
 	public static MapGenBase volcano;
 	WorldGenAbstractTree charTree = new WorldGenCharredTree(false, 6);
 	
-	public BiomeGenVolcanic() {
+	public BiomeGenVolcanic(BiomeProperties properties) {
 		
-		super(new BiomeProperties("Volcanic").setRainDisabled().setBaseHeight(0f).setHeightVariation(0.9f).setRainfall(0).setTemperature(1.0f));
-		
-        this.setRegistryName(new ResourceLocation("advancedrocketry:Volcanic"));
-		
+		super(properties);
+
 		spawnableMonsterList.clear();
 		this.spawnableMonsterList.add(new Biome.SpawnListEntry(EntityCreeper.class, 5, 1, 1));
 		this.spawnableCreatureList.clear();

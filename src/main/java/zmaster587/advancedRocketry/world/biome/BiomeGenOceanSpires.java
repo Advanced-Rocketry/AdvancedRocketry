@@ -16,10 +16,8 @@ public class BiomeGenOceanSpires extends Biome {
 
 	MapGenBase oceanSpire;
 	
-	public BiomeGenOceanSpires() {
-		super(new BiomeProperties("OceanSpires").setBaseHeight(-0.5f).setHeightVariation(0f));
-
-        this.setRegistryName(new ResourceLocation("advancedrocketry:OceanSpires"));
+	public BiomeGenOceanSpires(BiomeProperties properties) {
+		super(properties);
 		
 		this.decorator.clayPerChunk = 0;
 		this.decorator.flowersPerChunk = 0;

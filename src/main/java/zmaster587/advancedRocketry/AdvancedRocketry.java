@@ -183,20 +183,36 @@ public class AdvancedRocketry {
 	public void register(RegistryEvent.Register<Biome> evt)
 	{
 	    System.out.println("REGISTERING BIOMES");
-        AdvancedRocketryBiomes.moonBiome = new BiomeGenMoon();
-        AdvancedRocketryBiomes.alienForest = new BiomeGenAlienForest();
-        AdvancedRocketryBiomes.hotDryBiome = new BiomeGenHotDryRock();
-        AdvancedRocketryBiomes.spaceBiome = new BiomeGenSpace();
-        AdvancedRocketryBiomes.stormLandsBiome = new BiomeGenStormland();
-        AdvancedRocketryBiomes.crystalChasms = new BiomeGenCrystal();
-        AdvancedRocketryBiomes.swampDeepBiome = new BiomeGenDeepSwamp();
-        AdvancedRocketryBiomes.marsh = new BiomeGenMarsh();
-        AdvancedRocketryBiomes.oceanSpires = new BiomeGenOceanSpires();
-        AdvancedRocketryBiomes.moonBiomeDark = new BiomeGenMoonDark();
-        AdvancedRocketryBiomes.volcanic = new BiomeGenVolcanic();
-        AdvancedRocketryBiomes.volcanicBarren = new BiomeGenBarrenVolcanic();
+	    //Biome properties
+        AdvancedRocketryBiomes.moonBiome = new BiomeGenMoon(new Biome.BiomeProperties("Regolith Highlands").setRainDisabled().setBaseHeight(1f).setHeightVariation(0.2f).setRainfall(0).setTemperature(0.3f));
+        AdvancedRocketryBiomes.alienForest = new BiomeGenAlienForest(new Biome.BiomeProperties("Alien Forest").setWaterColor(0x8888FF));
+        AdvancedRocketryBiomes.hotDryBiome = new BiomeGenHotDryRock(new Biome.BiomeProperties("Ferric Regolith Wasteland").setRainDisabled().setBaseHeight(1f).setHeightVariation(0.01f).setRainfall(0).setTemperature(0.9f));
+        AdvancedRocketryBiomes.spaceBiome = new BiomeGenSpace(new Biome.BiomeProperties("Space").setRainDisabled().setBaseHeight(-2f).setHeightVariation(0f).setTemperature(1f));
+        AdvancedRocketryBiomes.stormLandsBiome = new BiomeGenStormland(new Biome.BiomeProperties("Stormland").setBaseHeight(1f).setHeightVariation(0.1f).setRainfall(0.9f).setTemperature(0.9f));
+        AdvancedRocketryBiomes.crystalChasms = new BiomeGenCrystal(new Biome.BiomeProperties("Crystal Chasms").setHeightVariation(0.1f).setBaseHeight(1f).setRainfall(0.2f).setTemperature(0.1f));
+        AdvancedRocketryBiomes.swampDeepBiome = new BiomeGenDeepSwamp(new Biome.BiomeProperties("Deep Swamp").setBaseHeight(-0.1f).setHeightVariation(0.2f).setRainfall(0.9f).setTemperature(0.9f).setWaterColor(14745518));
+        AdvancedRocketryBiomes.marsh = new BiomeGenMarsh(new Biome.BiomeProperties("Marsh").setBaseHeight(-0.4f).setHeightVariation(0f));
+        AdvancedRocketryBiomes.oceanSpires = new BiomeGenOceanSpires(new Biome.BiomeProperties("Ocean Spires").setBaseHeight(-0.5f).setHeightVariation(0f));
+        AdvancedRocketryBiomes.moonBiomeDark = new BiomeGenMoonDark(new Biome.BiomeProperties("Regolith Lowlands").setRainDisabled().setBaseHeight(0.5f).setHeightVariation(0.01f).setRainfall(0).setTemperature(0.3f));
+        AdvancedRocketryBiomes.volcanic = new BiomeGenVolcanic(new Biome.BiomeProperties("Volcanic").setRainDisabled().setBaseHeight(0f).setHeightVariation(0.9f).setRainfall(0).setTemperature(1.0f));
+        AdvancedRocketryBiomes.volcanicBarren = new BiomeGenBarrenVolcanic(new Biome.BiomeProperties("Volcanic Lowlands").setRainDisabled().setBaseHeight(0f).setHeightVariation(0.9f).setRainfall(0).setTemperature(1.0f));
 
-        AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiome, evt.getRegistry());
+        //Biome registry names outside of constructor
+		AdvancedRocketryBiomes.moonBiome.setRegistryName(Constants.modId, "moon");
+		AdvancedRocketryBiomes.alienForest.setRegistryName(Constants.modId, "alien_forest");
+		AdvancedRocketryBiomes.hotDryBiome.setRegistryName(Constants.modId, "hotdryrock");
+		AdvancedRocketryBiomes.spaceBiome.setRegistryName(Constants.modId, "space");
+		AdvancedRocketryBiomes.stormLandsBiome.setRegistryName(Constants.modId, "stormland");
+		AdvancedRocketryBiomes.crystalChasms.setRegistryName(Constants.modId, "crystalchasms");
+		AdvancedRocketryBiomes.swampDeepBiome.setRegistryName(Constants.modId, "deepswamp");
+		AdvancedRocketryBiomes.marsh.setRegistryName(Constants.modId, "marsh");
+		AdvancedRocketryBiomes.oceanSpires.setRegistryName(Constants.modId, "oceanspires");
+		AdvancedRocketryBiomes.moonBiomeDark.setRegistryName(Constants.modId, "moondark");
+		AdvancedRocketryBiomes.volcanic.setRegistryName(Constants.modId, "volcanic");
+		AdvancedRocketryBiomes.volcanicBarren.setRegistryName(Constants.modId, "volcanicbarren");
+
+		//Actual registry
+		AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.moonBiome, evt.getRegistry());
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.alienForest, evt.getRegistry());
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.hotDryBiome, evt.getRegistry());
         AdvancedRocketryBiomes.instance.registerBiome(AdvancedRocketryBiomes.spaceBiome, evt.getRegistry());
