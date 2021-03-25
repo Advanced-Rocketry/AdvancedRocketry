@@ -1,7 +1,6 @@
 package zmaster587.advancedRocketry.entity;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockSand;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -13,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -38,7 +36,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.achievements.ARAdvancements;
 import zmaster587.advancedRocketry.api.*;
@@ -630,11 +627,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
 
 		//Handle linkers and right-click with fuel
+		boolean isHoldingFluidItemOrLinker = false;
 		if(heldItem != null) {
 			float fuelMult;
 			FluidStack fluidStack;
 
 			if(heldItem.getItem() instanceof ItemLinker) {
+				isHoldingFluidItemOrLinker = true;
 				if(ItemLinker.isSet(heldItem)) {
 
 
@@ -668,6 +667,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 
 			else if((FluidUtils.containsFluid(heldItem) && FluidUtils.getFluidForItem(heldItem) != null) && ARConfiguration.getCurrentConfig().canBeFueledByHand) {
+				isHoldingFluidItemOrLinker = true;
 				fluidStack = FluidUtils.getFluidForItem(heldItem);
 				if ((canRocketFitFluid(fluidStack))) {
 
@@ -694,7 +694,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 
 		//If player is holding shift open GUI
-		if(player.isSneaking()) {
+		if(player.isSneaking() || (!stats.hasSeat() && !isHoldingFluidItemOrLinker)) {
 			openGui(player);
 		}
 		else if(stats.hasSeat()) { //If pilot seat is open mount entity there
