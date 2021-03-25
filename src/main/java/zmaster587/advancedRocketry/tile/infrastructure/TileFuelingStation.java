@@ -101,7 +101,8 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 				}
 			}
 			//If the rocket is full then emit redstone
-			setRedstoneState(linkedRocket.getFuelAmountMonopropellant() == linkedRocket.getFuelCapacityMonopropellant());
+			if (tank.getFluid() != null)
+			    setRedstoneState(!canRocketFitFluid(tank.getFluid().getFluid()));
 		}
 		useBucket(0, inventory.getStackInSlot(0));
 	}
@@ -143,6 +144,10 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	@Override
 	public boolean canFill(Fluid fluid) {
 		return FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT,fluid) || FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT,fluid) || FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER,fluid);
+	}
+
+	public boolean canRocketFitFluid(Fluid fluid) {
+		return isFluidFillable(fluid) && (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluid)) ? linkedRocket.getFuelCapacityMonopropellant() > linkedRocket.getFuelAmountMonopropellant() : (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluid)) ? linkedRocket.getFuelCapacityBipropellant() > linkedRocket.getFuelAmountBipropellant() : linkedRocket.getFuelCapacityOxidizer() > linkedRocket.getFuelAmountOxidizer();
 	}
 
 
@@ -235,7 +240,8 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	@Override
 	public boolean linkRocket(EntityRocketBase rocket) {
 		this.linkedRocket = rocket;
-		setRedstoneState(linkedRocket.getFuelAmountMonopropellant() == linkedRocket.getFuelCapacityMonopropellant());
+		if (tank.getFluid() != null)
+		    setRedstoneState(!canRocketFitFluid(tank.getFluid().getFluid()));
 		return true;
 	}
 
@@ -389,8 +395,8 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 			NBTTagCompound nbt) {
 		state = RedstoneState.values()[nbt.getByte("state")];
 
-		if(linkedRocket != null)
-			setRedstoneState(linkedRocket.getFuelAmountMonopropellant() == linkedRocket.getFuelCapacityMonopropellant());
+		if(linkedRocket != null && tank.getFluid() != null)
+			setRedstoneState(!canRocketFitFluid(tank.getFluid().getFluid()));
 	}
 
 	@Override
