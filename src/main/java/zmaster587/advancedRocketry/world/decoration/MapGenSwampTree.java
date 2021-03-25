@@ -1,6 +1,7 @@
-package zmaster587.advancedRocketry.world.gen;
+package zmaster587.advancedRocketry.world.decoration;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -8,22 +9,23 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenBase;
+import net.minecraftforge.common.BiomeDictionary;
+import zmaster587.advancedRocketry.world.biome.BiomeGenDeepSwamp;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-public class WorldGenSwampTree extends MapGenBase {
+public class MapGenSwampTree extends MapGenBase {
 
 	Map<BlockPos, IBlockState> cachedCanopy;
 	Map<BlockPos, IBlockState> cachedRoots;
 	private final static double arcSize = 16.0;
 	int chancePerChunk;
 
-	public WorldGenSwampTree(int chancePerChunk) {
+	public MapGenSwampTree(int chancePerChunk) {
 		super();
-		chancePerChunk= 10;
 		cachedCanopy = new HashMap<BlockPos, IBlockState>();
 		cachedRoots = new HashMap<BlockPos, IBlockState>();
 		this.chancePerChunk = chancePerChunk;
@@ -80,7 +82,7 @@ public class WorldGenSwampTree extends MapGenBase {
 
 				for(int yyy = -2 ; yyy < 4; yyy++)
 					if(!cachedCanopy.containsKey(new BlockPos(2 + xx - xOffset, yyy + yy - yOffset +2, zz- zOffset)))
-					cachedCanopy.put(new BlockPos(2 + xx - xOffset, yyy + yy - yOffset +2, zz- zOffset), Blocks.LEAVES.getDefaultState());
+					cachedCanopy.put(new BlockPos(2 + xx - xOffset, yyy + yy - yOffset +2, zz- zOffset), Blocks.LEAVES.getDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false));
 				//world.setBlock( x + 2 + xx - xOffset - radius/2, treeHeight -3 + yy - yOffset +2, z + zz- zOffset, Blocks.vine, 0,2);
 			}
 
@@ -88,12 +90,11 @@ public class WorldGenSwampTree extends MapGenBase {
 	}
 
 	@Override
-	protected void recursiveGenerate(World worldIn, int rangeX,
-			int rangeZ, int chunkX, int chunkZ, ChunkPrimer blocks) {
-		if(rand.nextInt(chancePerChunk) == Math.abs(rangeX) % chancePerChunk && rand.nextInt(chancePerChunk) == Math.abs(rangeZ) % chancePerChunk) {
+	protected void recursiveGenerate(World worldIn, int chunkX, int chunkZ, int rangeX, int rangeZ, ChunkPrimer blocks) {
+		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk && rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk && canSwampTreeGenerateGenerate(world, chunkX * 16, chunkZ * 16)) {
 
-			int x = (rangeX - chunkX)*16;
-			int z =  (rangeZ- chunkZ)*16;
+			int x = -(rangeX - chunkX)*16;
+			int z =  -(rangeZ- chunkZ)*16;
 			int y = 56;
 			
 			
@@ -103,13 +104,10 @@ public class WorldGenSwampTree extends MapGenBase {
 			int edgeRadius = 1;
 			int numDiag = edgeRadius + 1;
 
-			int meta = 3;
 			IBlockState block = Blocks.LOG.getDefaultState();
 			int currentEdgeRadius;
 
 			final float SHAPE = 0.1f;
-
-			currentEdgeRadius = (int)((SHAPE*(edgeRadius * treeHeight )) + ((1f-SHAPE)*edgeRadius));
 
 			y++;
 
@@ -183,7 +181,7 @@ public class WorldGenSwampTree extends MapGenBase {
 					//Leaf caps on bottom
 					for(zz = -1; zz < 2; zz++)
 						for(xx = -1; xx < 2; xx++)
-							setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState(), blocks);
+							setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false), blocks);
 					xx=xxx;
 					zz=zzz;
 					//Descending 
@@ -192,7 +190,7 @@ public class WorldGenSwampTree extends MapGenBase {
 
 						for(zz = -2; zz < 3; zz++)
 							for(xx = -2; xx < 3; xx++)
-								setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState(), blocks);
+								setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false), blocks);
 						xx=xxx;
 						zz=zzz;
 
@@ -214,13 +212,6 @@ public class WorldGenSwampTree extends MapGenBase {
 				setBlock( entry.getKey().add( + x - radius/2, y, z), entry.getValue(), blocks);
 		}
 	}
-	
-	protected void func_151538_a(World world2, int rangeX,
-			int rangeZ, int chunkX, int chunkZ,
-			Block[] blocks) {
-		
-
-	}
 
 	private void setBlock(BlockPos pos, IBlockState block, ChunkPrimer blocks) {
 		
@@ -233,19 +224,7 @@ public class WorldGenSwampTree extends MapGenBase {
 		
 		blocks.setBlockState(x, y, z, block);
 	}
-	
-	private IBlockState getBlock(BlockPos pos, Block block, ChunkPrimer blocks) {
-		int x = pos.getX();
-		int y = pos.getY();
-		int z = pos.getZ();
-		
-		if(x > 15 || x < 0 || z > 15 || z < 0 || y < 0 || y > 255)
-			return Blocks.AIR.getDefaultState();
-		
-		return blocks.getBlockState(x, y, z);
-	}
-	
-	
+
 	public boolean generate(World world, Random rand, int x, int y, int z)
 	{
 
@@ -369,7 +348,7 @@ public class WorldGenSwampTree extends MapGenBase {
 				//Leaf caps on bottom
 				for(zz = -1; zz < 2; zz++)
 					for(xx = -1; xx < 2; xx++)
-						world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2,y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState(), 5);
+						world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2,y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false), 5);
 				xx=xxx;
 				zz=zzz;
 				//Descending 
@@ -378,7 +357,7 @@ public class WorldGenSwampTree extends MapGenBase {
 
 					for(zz = -2; zz < 3; zz++)
 						for(xx = -2; xx < 3; xx++)
-							world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y +treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState(), 5);
+							world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y +treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false), 5);
 					xx=xxx;
 					zz=zzz;
 
@@ -402,12 +381,8 @@ public class WorldGenSwampTree extends MapGenBase {
 		return true;
 	}
 
-
-
-	//Just a helper macro
-	private void onPlantGrow(World world, int x, int y, int z, int sourceX, int sourceY, int sourceZ)
-	{
-		
-		world.getBlockState(new BlockPos(x,y,z)).getBlock().onPlantGrow(world.getBlockState(new BlockPos(x,y,z)), world, new BlockPos(x, y, z), new BlockPos(sourceX, sourceY, sourceZ));
+	//Woo hacky shit to place these trees LIKE they were biome trees but they aren't. $@#$#@#$ walls need to go.
+	private static boolean canSwampTreeGenerateGenerate(World world, int x, int z) {
+		return world.getBiome(new BlockPos(x, 0, z)) instanceof BiomeGenDeepSwamp;
 	}
 }
