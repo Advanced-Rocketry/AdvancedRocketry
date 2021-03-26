@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class CableTickHandler {
-
+/*
 	@SubscribeEvent
 	public void onTick(TickEvent.ServerTickEvent tick) {
 		try {
@@ -99,5 +99,5 @@ public class CableTickHandler {
 				}
 			}
 		}
-	}
+	}*/
 }
