@@ -7,6 +7,8 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 public class TileCO2Scrubber extends TileInventoryHatch {
 	public TileCO2Scrubber() {
 		super(1);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanExtractSlot(0, true);
 	}
 	
 	@Override
