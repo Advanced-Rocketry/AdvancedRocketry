@@ -90,11 +90,14 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 		DimensionProperties properties = getDimensionProperties(Minecraft.getMinecraft().player.getPosition());
 		SpaceStationObject spaceStation = (SpaceStationObject) getSpaceObject(Minecraft.getMinecraft().player.getPosition());
 
-		//Vary brightness depending upon sun luminosity and planet distance
-		//This takes into account how eyes work, that they're not linear in sensing light
-		float preWarpBrightnessMultiplier = (float) AstronomicalBodyHelper.getPlanetaryLightLevelMultiplier(AstronomicalBodyHelper.getStellarBrightness(properties.getStar(), properties.getSolarOrbitalDistance()));
-		//Warp is no light, because there are no stars
-		return (spaceStation.isWarping()) ? (float) 0.0 : preWarpBrightnessMultiplier * world.getSunBrightnessBody(partialTicks);
+		if (spaceStation != null) {
+			//Vary brightness depending upon sun luminosity and planet distance
+			//This takes into account how eyes work, that they're not linear in sensing light
+			float preWarpBrightnessMultiplier = (float) AstronomicalBodyHelper.getPlanetaryLightLevelMultiplier(AstronomicalBodyHelper.getStellarBrightness(properties.getStar(), properties.getSolarOrbitalDistance()));
+			//Warp is no light, because there are no stars
+			return (spaceStation.isWarping()) ? (float) 0.0 : preWarpBrightnessMultiplier * world.getSunBrightnessBody(partialTicks);
+		}
+		return 0;
 	}
 
 	@Override

@@ -18,7 +18,10 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
@@ -60,6 +63,7 @@ import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.util.BiomeHandler;
 import zmaster587.advancedRocketry.util.GravityHandler;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
@@ -69,6 +73,7 @@ import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -188,6 +193,29 @@ public class PlanetEventHandler {
 					event.getEntity().getPosition().distanceSq(2347,80, 67) < 512 ) {
 				ARAdvancements.WENT_TO_THE_MOON.trigger((EntityPlayerMP)event.getEntity());
 			}
+		}
+		if(event.getEntity() instanceof EntityPlayer && event.getEntity().world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.getEntity().getPosition()) == null) {
+			double distance = 0;
+			HashedBlockPosition teleportPosition = null;
+			for (ISpaceObject object : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
+				if (object instanceof SpaceStationObject) {
+					SpaceStationObject station = ((SpaceStationObject) object);
+					double distanceTo = event.getEntity().getPosition().getDistance(station.getSpawnLocation().x, station.getSpawnLocation().y, station.getSpawnLocation().z);
+					if (distanceTo > distance) {
+						distance = distanceTo;
+                        teleportPosition = station.getSpawnLocation();
+					}
+				}
+			}
+			if (teleportPosition != null) {
+				event.getEntity().sendMessage(new TextComponentString("You wake up on the space station with a lingering feeling that your far-reaching spacewalk was frowned upon by some elder fox deity, and that it would be foolish to attempt so again and to expect different results"));
+				event.getEntity().sendMessage(new TextComponentString("Maybe you should think before overstepping clearly logical and absolute boundaries again then deciding it was a good idea and not your fault if things go wrong"));
+				event.getEntity().setPositionAndUpdate(teleportPosition.x, teleportPosition.y, teleportPosition.z);
+			} else {
+				event.getEntity().sendMessage(new TextComponentString("You must be on a space station to be in this dimension, and none have been created!"));
+				event.getEntity().getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)event.getEntity(), 0, new TeleporterNoPortal( net.minecraftforge.common.DimensionManager.getWorld(0) ));
+			}
+
 		}
 
 		//GravityHandler.applyGravity(event.getEntity());
