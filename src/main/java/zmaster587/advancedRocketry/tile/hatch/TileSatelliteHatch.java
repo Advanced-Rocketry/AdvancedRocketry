@@ -15,6 +15,8 @@ public class TileSatelliteHatch extends TileInventoryHatch {
 
 	public TileSatelliteHatch(int i) {
 		super(1);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanExtractSlot(0, true);
 	}
 
 	@Override

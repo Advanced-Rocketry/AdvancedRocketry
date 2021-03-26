@@ -41,6 +41,8 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 
 	public TileGuidanceComputer() {
 		super(1);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanExtractSlot(0, true);
 		landingPos = new Vector3F<Float>(0f, 0f, 0f);
 		destinationId = Constants.INVALID_PLANET;
 		landingLoc = new HashMap<Integer, HashedBlockPosition>();

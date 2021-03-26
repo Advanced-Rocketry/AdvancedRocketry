@@ -58,6 +58,14 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 
 	public TileRocketLoader(int size) {
 		super(size);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanInsertSlot(1, true);
+		inventory.setCanInsertSlot(2, true);
+		inventory.setCanInsertSlot(3, true);
+		inventory.setCanExtractSlot(0, false);
+		inventory.setCanExtractSlot(1, false);
+		inventory.setCanExtractSlot(2, false);
+		inventory.setCanExtractSlot(3, false);
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 0, "", this, LibVulpes.proxy.getLocalizedString("msg.rocketLoader.loadingState"));
 		state = RedstoneState.ON;
 		inputRedstoneControl = new ModuleRedstoneOutputButton(174, 32, 1, "", this, LibVulpes.proxy.getLocalizedString("msg.rocketLoader.allowLoading"));

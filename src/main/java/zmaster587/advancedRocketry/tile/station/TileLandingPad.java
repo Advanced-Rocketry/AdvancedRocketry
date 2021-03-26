@@ -54,6 +54,8 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 	public TileLandingPad() {
 		super(1);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanExtractSlot(0, true);
 		MinecraftForge.EVENT_BUS.register(this);
 		blockPos = new LinkedList<HashedBlockPosition>();
 		moduleNameTextbox = new ModuleTextBox(this, 40, 30, 60, 12, 9);
