@@ -15,6 +15,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -22,6 +23,8 @@ import zmaster587.advancedRocketry.item.ItemBlockFluidTank;
 import zmaster587.advancedRocketry.tile.TileFluidTank;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
+import zmaster587.libVulpes.util.FluidUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -41,11 +44,13 @@ public class BlockPressurizedFluidTank extends Block {
 	}
 	
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		
-		if(!world.isRemote)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		TileEntity tile = world.getTileEntity(pos);
+
+		//Do some fancy fluid stuff
+		if (FluidUtils.containsFluid(player.getHeldItem(hand))) {
+			FluidUtil.interactWithFluidHandler(player, hand, ((TileFluidHatch) tile).getFluidTank());
+		} else if(!world.isRemote)
 			player.openGui(LibVulpes.instance, guiId.MODULAR.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
