@@ -403,7 +403,7 @@ public class RocketEventHandler extends Gui {
 			}
 
 			//Draw the O2 Bar if needed
-			if(!Minecraft.getMinecraft().player.capabilities.isCreativeMode) {
+			if(!(Minecraft.getMinecraft().player.capabilities.isCreativeMode || Minecraft.getMinecraft().player.isSpectator())) {
 				ItemStack chestPiece = Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 				IFillableArmor fillable = null;
 				if(!chestPiece.isEmpty() && chestPiece.getItem() instanceof IFillableArmor)

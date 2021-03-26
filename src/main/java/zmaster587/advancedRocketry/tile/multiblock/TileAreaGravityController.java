@@ -200,15 +200,15 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 
 							if(e instanceof EntityLivingBase) {
 								{
-									e.motionX += dir.getFrontOffsetX()*GravityHandler.ENTITY_OFFSET*currentProgress;
-									e.motionY += dir.getFrontOffsetY()*GravityHandler.ENTITY_OFFSET*currentProgress;
-									e.motionZ += dir.getFrontOffsetZ()*GravityHandler.ENTITY_OFFSET*currentProgress;
+									e.motionX += dir.getFrontOffsetX()*GravityHandler.LIVING_OFFSET*currentProgress;
+									e.motionY += dir.getFrontOffsetY()*GravityHandler.LIVING_OFFSET*currentProgress;
+									e.motionZ += dir.getFrontOffsetZ()*GravityHandler.LIVING_OFFSET*currentProgress;
 								}
 							}
 							else if (e instanceof EntityItem || e instanceof EntityArrow) {
-								e.motionX += dir.getFrontOffsetX()*GravityHandler.ITEM_GRAV_OFFSET*currentProgress;
-								e.motionY += dir.getFrontOffsetY()*GravityHandler.ITEM_GRAV_OFFSET*currentProgress;
-								e.motionZ += dir.getFrontOffsetZ()*GravityHandler.ITEM_GRAV_OFFSET*currentProgress;
+								e.motionX += dir.getFrontOffsetX()*GravityHandler.OTHER_OFFSET *currentProgress;
+								e.motionY += dir.getFrontOffsetY()*GravityHandler.OTHER_OFFSET *currentProgress;
+								e.motionZ += dir.getFrontOffsetZ()*GravityHandler.OTHER_OFFSET *currentProgress;
 							}
 
 							//Spawn particle effect
@@ -224,7 +224,7 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 
 				//Only apply gravity if none of the directions are set and it's not a player in flight
 				if(allowApply && !additive)
-					e.motionY += (e instanceof EntityItem || e instanceof EntityArrow) ? GravityHandler.ITEM_GRAV_OFFSET :  GravityHandler.ENTITY_OFFSET + 0.005;
+					e.motionY += (e instanceof EntityItem) ? GravityHandler.OTHER_OFFSET :  (e instanceof EntityArrow) ? GravityHandler.ARROW_OFFSET : GravityHandler.LIVING_OFFSET + 0.005;
 			}
 		}
 		else if (currentProgress > 0) {

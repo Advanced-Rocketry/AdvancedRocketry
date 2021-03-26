@@ -24,6 +24,9 @@ public class ClassTransformer implements IClassTransformer {
 	private static final String CLASS_KEY_ENTITY_PLAYER_MP = "net.minecraft.client.entity.EntityPlayerMP";
 	private static final String CLASS_KEY_ENTITY_PLAYER = "net.minecraft.entity.player.EntityPlayer";
 	private static final String CLASS_KEY_ENTITY_ITEM = "net.minecraft.entity.EntityItem";
+	private static final String CLASS_KEY_ENTITY_FALLING_BLOCK = "net.minecraft.entity.item.EntityFallingBlock";
+	private static final String CLASS_KEY_ENTITY_MINECART = "net.minecraft.entity.item.EntityMinecart";
+	private static final String CLASS_KEY_ENTITY_TNT = "net.minecraft.entity.item.EntityTNTPrimed";
 	private static final String CLASS_KEY_NETHANDLERPLAYSERVER = "net.minecraft.network.NetHandlerPlayServer";
 	private static final String CLASS_KEY_C03PACKETPLAYER = "net.minecraft.network.play.client.C03PacketPlayer";
 	private static final String CLASS_KEY_WORLD = "net.minecraft.world.World";
@@ -91,6 +94,9 @@ public class ClassTransformer implements IClassTransformer {
 		entryMap.put(CLASS_KEY_ENTITYLIVEINGBASE, new SimpleEntry<String, String>("net/minecraft/entity/EntityLivingBase", "vp"));
 		//entryMap.put(CLASS_KEY_ENTITYLIVINGRENDERER, new SimpleEntry<String, String>("net/minecraft/client/renderer/entity/RendererLivingEntity", ""));
 		entryMap.put(CLASS_KEY_ENTITY, new SimpleEntry<String, String>("net/minecraft/entity/Entity","vg"));
+		entryMap.put(CLASS_KEY_ENTITY_FALLING_BLOCK, new SimpleEntry<String, String>("net/minecraft/entity/item/EntityFallingBlock","ack"));
+		entryMap.put(CLASS_KEY_ENTITY_MINECART, new SimpleEntry<String, String>("net/minecraft/entity/item/EntityMinecart","afe"));
+		entryMap.put(CLASS_KEY_ENTITY_TNT, new SimpleEntry<String, String>("net/minecraft/entity/item/EntityTNTPrimed","acm"));
 		//entryMap.put(CLASS_KEY_ENTITY_PLAYER_SP, new SimpleEntry<String, String>("net/minecraft/client/entity/EntityPlayerSP",""));
 		entryMap.put(CLASS_KEY_ENTITY_PLAYER_MP, new SimpleEntry<String, String>("net/minecraft/entity/player/EntityPlayerMP","oq"));
 		entryMap.put(CLASS_KEY_ENTITY_PLAYER, new SimpleEntry<String, String>("net/minecraft/entity/player/EntityPlayer","aed"));
@@ -723,9 +729,10 @@ public class ClassTransformer implements IClassTransformer {
 			return finishInjection(cn);
 		}
 
-		//Allows items to be affected by gravity
-		//Why isn't this handled by the onEntityUpdate call?
-		if(changedName.equals(getName(CLASS_KEY_ENTITY_ITEM))) {
+		//Allows things OTHER than living things to be affected by gravity
+		//Why isn't this handled by the onEntityUpdate call by default?
+		//Regardless, NONE of minecart || TNT || sand actually every _call_ their super, so we need to ASM all three
+		if(changedName.equals(getName(CLASS_KEY_ENTITY)) || changedName.equals(getName(CLASS_KEY_ENTITY_FALLING_BLOCK)) || changedName.equals(getName(CLASS_KEY_ENTITY_MINECART)) || changedName.equals(getName(CLASS_KEY_ENTITY_TNT))) {
 			ClassNode cn = startInjection(bytes);
 
 			MethodNode onUpdate = getMethod(cn, getName(METHOD_KEY_ONUPDATE), "()V");
@@ -733,7 +740,6 @@ public class ClassTransformer implements IClassTransformer {
 			if(onUpdate != null) {
 				final InsnList nodeAdd = new InsnList();
 				AbstractInsnNode pos = null;
-				List<AbstractInsnNode> removeNodes = new LinkedList<AbstractInsnNode>();
 				int numALoadsInARow = 0;
 				int firstALoadIndex = 0;
 				AbstractInsnNode ain;
@@ -744,8 +750,7 @@ public class ClassTransformer implements IClassTransformer {
 						if(numALoadsInARow == 0)
 							firstALoadIndex = i;
 						numALoadsInARow++;
-						if(numALoadsInARow == 2) {
-							pos = ain;
+						if(numALoadsInARow == 4) {
 							break;
 						}
 					}
@@ -753,18 +758,8 @@ public class ClassTransformer implements IClassTransformer {
 						numALoadsInARow = 0;
 				}
 				int i = firstALoadIndex;
-				while((ain = onUpdate.instructions.get(--i)).getOpcode() != Opcodes.PUTFIELD);
-
-
-				while((ain = onUpdate.instructions.get(i--)).getOpcode() != Opcodes.ALOAD) {
-					removeNodes.add(ain);
-				}
-				removeNodes.add(ain);
 
 				pos = onUpdate.instructions.get(i);
-
-				for(AbstractInsnNode node : removeNodes)
-					onUpdate.instructions.remove(node);
 
 				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/util/GravityHandler", "applyGravity", "(L" + getName(CLASS_KEY_ENTITY) + ";)V", false));

@@ -187,10 +187,10 @@ public class PlanetEventHandler {
 			if(DimensionManager.getInstance().getDimensionProperties(event.getEntity().world.provider.getDimension()).getName().equals("Luna") && 
 					event.getEntity().getPosition().distanceSq(2347,80, 67) < 512 ) {
 				ARAdvancements.WENT_TO_THE_MOON.trigger((EntityPlayerMP)event.getEntity());
-			}	
+			}
 		}
 
-		GravityHandler.applyGravity(event.getEntity());
+		//GravityHandler.applyGravity(event.getEntity());
 	}
 
 	@SubscribeEvent
