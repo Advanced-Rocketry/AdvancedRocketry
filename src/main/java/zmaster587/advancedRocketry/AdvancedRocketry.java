@@ -928,7 +928,7 @@ public class AdvancedRocketry {
 		ARAdvancements.register();
 		proxy.init();
 
-		zmaster587.advancedRocketry.cable.NetworkRegistry.registerFluidNetwork();
+		//zmaster587.advancedRocketry.cable.NetworkRegistry.registerFluidNetwork();
 
 		//Register Alloys
 		MaterialRegistry.registerMixedMaterial(new MixedMaterial(TileElectricArcFurnace.class, "oreRutile", new ItemStack[] {MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("INGOT"))}));
@@ -1222,7 +1222,7 @@ public class AdvancedRocketry {
 	@EventHandler
 	public void serverStopped(FMLServerStoppedEvent event) {
 		zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().onServerStopped();
-		zmaster587.advancedRocketry.cable.NetworkRegistry.clearNetworks();
+		//zmaster587.advancedRocketry.cable.NetworkRegistry.clearNetworks();
 		SpaceObjectManager.getSpaceManager().onServerStopped();
 		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().MoonId = Constants.INVALID_PLANET;
 		((BlockSeal)AdvancedRocketryBlocks.blockPipeSealer).clearMap();
