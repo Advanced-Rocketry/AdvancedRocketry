@@ -1,23 +1,19 @@
 {
+    "forge_marker": 1,
     "defaults": {
         "textures": {
-            "#None": "advancedrocketry:/models/combustion"
+            "#None": "advancedrocketry:/models/advcombustion"
         },
-        "model": "advancedrocketry:models/rocketmotor.obj",
+        "model": "advancedrocketry:models/advrocketmotor.obj",
         "transform": "forge:default-block"
     },
     "variants": {
-        "facing=north": { "model": "advancedrocketry:models/advRocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90 },
-        "facing=south": {  "model": "advancedrocketry:models/advRocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90, "y": 180 },
-        "facing=west":  { "model": "advancedrocketry:models/advRocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90, "y": 270 },
-        "facing=east":  { "model": "advancedrocketry:models/advRocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90, "y": 90 },
-        "facing=up":  { "model": "advancedrocketry:models/advRocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 180 },
-        "facing=down":  { "model": "advancedrocketry:models/advRocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png" },
-        "inventory": {
-            "model": "advancedrocketry:models/advRocketmotor.obj",
-            "textures": {
-                "layer0": "advancedrocketry:textures/models/combustion.png"
-            }
-        }
+        "facing=north": { "model": "advancedrocketry:models/advrocketmotor.obj", "texture": "advancedrocketry:textures/models/advcombustion", "x": 90 },
+        "facing=south": {  "model": "advancedrocketry:models/advrocketmotor.obj", "texture": "advancedrocketry:textures/models/advcombustion", "x": 90, "y": 180 },
+        "facing=west":  { "model": "advancedrocketry:models/advrocketmotor.obj", "texture": "advancedrocketry:textures/models/advcombustion", "x": 90, "y": 270 },
+        "facing=east":  { "model": "advancedrocketry:models/advrocketmotor.obj", "texture": "advancedrocketry:textures/models/advcombustion", "x": 90, "y": 90 },
+        "facing=up":  { "model": "advancedrocketry:models/advrocketmotor.obj", "texture": "advancedrocketry:textures/models/advcombustion", "x": 180 },
+        "facing=down":  { "model": "advancedrocketry:models/advrocketmotor.obj", "texture": "advancedrocketry:textures/models/advcombustion" },
+        "inventory": { "model": "advancedrocketry:models/advrocketmotor.obj", "texture": "advancedrocketry:textures/models/advcombustion"}
     }
 }

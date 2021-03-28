@@ -1,17 +1,18 @@
 {
+    "forge_marker": 1,
     "defaults": {
         "textures": {},
-        "model": "advancedrocketry:models/middleTank.obj",
+        "model": "advancedrocketry:models/middletank.obj",
         "transform": "forge:default-block"
     },
     "variants": {
-        "tankstates=top": { "model": "advancedrocketry:models/topTank.obj" },
-        "tankstates=middle": { "model": "advancedrocketry:models/middleTank.obj" },
-        "tankstates=bottom": { "model": "advancedrocketry:models/bottomTank.obj" },
+        "tankstates=top": { "model": "advancedrocketry:models/toptank.obj" },
+        "tankstates=middle": { "model": "advancedrocketry:models/middletank.obj" },
+        "tankstates=bottom": { "model": "advancedrocketry:models/bottomtank.obj" },
         "inventory": {
-            "model": "advancedrocketry:models/middleTank.obj",
+            "model": "advancedrocketry:models/middletank.obj",
             "textures": {
-                "layer0": "advancedrocketry:textures/models/tank.png"
+                "layer0": "advancedrocketry:textures/models/tank"
             }
         }
     }
