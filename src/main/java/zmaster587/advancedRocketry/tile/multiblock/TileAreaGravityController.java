@@ -245,11 +245,6 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {return true;}
 
 	@Override
-	public boolean getMachineEnabled() {
-		return super.getMachineEnabled();
-	}
-
-	@Override
 	public String getModularInventoryName() {
 		return "tile.gravityMachine.name";
 	}

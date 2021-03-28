@@ -36,11 +36,6 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 	}
 	
 	@Override
-	protected float getTimeMultiplierForRecipe(IRecipe recipe) {
-		return super.getTimeMultiplierForRecipe(recipe);
-	}
-	
-	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		
 		return new AxisAlignedBB(pos.add(-3,-2,-3),pos.add(3,2,3));

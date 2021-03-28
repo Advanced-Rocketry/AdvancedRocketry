@@ -465,11 +465,6 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 	}
 
 	@Override
-	public AxisAlignedBB getEntityBoundingBox() {
-		return super.getEntityBoundingBox();//new AxisAlignedBB(-10,-20,-10, 10,10,10);
-	}
-
-	@Override
 	public AxisAlignedBB getCollisionBoundingBox() {
 		AxisAlignedBB aabb = new AxisAlignedBB(getEntityBoundingBox().minX, getEntityBoundingBox().minY, getEntityBoundingBox().minZ, getEntityBoundingBox().maxX, getEntityBoundingBox().maxY-3, getEntityBoundingBox().maxZ);
 		return isAscending() || isDescending() ? null : aabb;

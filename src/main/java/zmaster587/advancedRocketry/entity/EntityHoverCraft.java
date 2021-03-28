@@ -174,11 +174,6 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 		}
 		return false;
 	}
-
-	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		return super.getRenderBoundingBox();
-	}
 	
 	public ItemStack[] getItemsDropOnDeath()
 	{

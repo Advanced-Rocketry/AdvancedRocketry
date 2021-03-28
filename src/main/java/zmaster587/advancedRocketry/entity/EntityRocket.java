@@ -2410,16 +2410,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	public void setTotalProgress(int id, int progress) {}
 
 	@Override
-	public boolean startRiding(Entity entityIn, boolean force) {
-		return super.startRiding(entityIn, force);
-	}
-
-	@Override
-	public boolean startRiding(Entity entityIn) {
-		return super.startRiding(entityIn);
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	public void onInventoryButtonPressed(int buttonId) {
 		switch(buttonId) {
