@@ -120,6 +120,11 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 	}
 
 	@Override
+	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
+		return true;
+	}
+
+	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> modules = super.getModules(ID, player);
 

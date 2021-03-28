@@ -75,7 +75,7 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 
 	@Override
 	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
-		return false;
+		return true;
 	}
 
 	@Override
