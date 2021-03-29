@@ -49,7 +49,7 @@ public class GravityHandler implements IGravityManager {
 
 	public static void applyGravity(Entity entity) {
 		if(entity.hasNoGravity()) return;
-		if(!entity.isInWater() || entity instanceof EntityItem) {
+		if(!entity.isInWater() && !entity.isInLava()) {
 			//Because working gravity on elytra-flying players can cause..... severe problems at lower gravity, it is my utter delight to announce to you elytra are now magic!
 			//This totally isn't because Mojang decided for some godforsaken @#@#@#% reason to make ALL WAYS TO SET ELYTRA FLIGHT _protected_
 			//With no set methods
