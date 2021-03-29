@@ -435,6 +435,7 @@ msg.itemsatellite.pwr=Power Storage:
 msg.itemsatellite.nopwr=No Power Storage
 msg.itemsatellite.pwrgen=Power Generation: 
 msg.itemsatellite.nopwrgen=No Power Generation!
+msg.itemsatellite.microwavestatus=Collecting Power
 msg.itemsatellite.data=Data Storage: 
 msg.itemsatellite.nodata=No Data Storage!
 msg.itemsatellite.empty=Empty Chassis
@@ -485,3 +486,7 @@ msg.entityDeployedRocket.notGasGiant=No Gas Here
 msg.tooHot=Warning: It's too hot!
 msg.tooDense=Warning: Air Pressure too high!
 msg.muchTooDense=Warning: air pressure critically dense, air unbreathable!
+
+msg.chat.nostation1=You wake up on the space station with a lingering feeling that your far-reaching spacewalk was frowned upon by some elder fox deity, and that it would be foolish to attempt so again and to expect different results
+msg.chat.nostation2=Maybe you should think before overstepping clearly logical and absolute boundaries again then deciding it was a good idea and not your fault if things go wrong
+msg.chat.nostation3=You must be on a space station to be in this dimension, and none have been created!

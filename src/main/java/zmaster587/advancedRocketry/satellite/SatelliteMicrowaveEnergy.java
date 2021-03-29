@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IUniversalEnergyTransmitter;
 
 public class SatelliteMicrowaveEnergy extends SatelliteBase implements IUniversalEnergyTransmitter {
@@ -25,7 +26,7 @@ public class SatelliteMicrowaveEnergy extends SatelliteBase implements IUniversa
 	
 	@Override
 	public String getInfo(World world) {
-		return "Collecting Energy";
+		return LibVulpes.proxy.getLocalizedString("msg.itemsatellite.microwavestatus");
 	}
 
 

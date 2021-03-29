@@ -71,6 +71,7 @@ import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
@@ -208,11 +209,11 @@ public class PlanetEventHandler {
 				}
 			}
 			if (teleportPosition != null) {
-				event.getEntity().sendMessage(new TextComponentString("You wake up on the space station with a lingering feeling that your far-reaching spacewalk was frowned upon by some elder fox deity, and that it would be foolish to attempt so again and to expect different results"));
-				event.getEntity().sendMessage(new TextComponentString("Maybe you should think before overstepping clearly logical and absolute boundaries again then deciding it was a good idea and not your fault if things go wrong"));
+				event.getEntity().sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.chat.nostation1")));
+				event.getEntity().sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.chat.nostation2")));
 				event.getEntity().setPositionAndUpdate(teleportPosition.x, teleportPosition.y, teleportPosition.z);
 			} else {
-				event.getEntity().sendMessage(new TextComponentString("You must be on a space station to be in this dimension, and none have been created!"));
+				event.getEntity().sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.chat.nostation3")));
 				event.getEntity().getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)event.getEntity(), 0, new TeleporterNoPortal( net.minecraftforge.common.DimensionManager.getWorld(0) ));
 			}
 
