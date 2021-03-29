@@ -25,6 +25,7 @@ public class GravityHandler implements IGravityManager {
 	public static final float THROWABLE_OFFSET = 0.03f;
 	public static final float OTHER_OFFSET = 0.04f;
 	public static final float ARROW_OFFSET = 0.05f;
+
 	static Class gcWorldProvider;
 	static Method gcGetGravity;
 	
@@ -56,16 +57,13 @@ public class GravityHandler implements IGravityManager {
 			//So I cannot, without much more effort than it's worth, set elytra flight. Therefore, they're magic.
 			if ((!(entity instanceof EntityPlayer) && !(entity instanceof EntityFlying)) || (!(entity instanceof EntityFlying) && !(((EntityPlayer) entity).capabilities.isFlying || ((EntityLivingBase) entity).isElytraFlying()))) {
 				Double d;
-				/*
 				if(entityMap.containsKey(entity) && (d = entityMap.get(entity)) != null)  {
 
 					double multiplier = (isOtherEntity(entity) || entity instanceof EntityItem) ? OTHER_OFFSET * d : (entity instanceof EntityArrow ) ? ARROW_OFFSET * d : (entity instanceof EntityThrowable) ? THROWABLE_OFFSET * d : LIVING_OFFSET * d;
 
 					entity.motionY += multiplier;
 					
-				}
-				else*/
-				if (DimensionManager.getInstance().isDimensionCreated(entity.world.provider.getDimension()) || entity.world.provider instanceof WorldProviderSpace) {
+				} else if (DimensionManager.getInstance().isDimensionCreated(entity.world.provider.getDimension()) || entity.world.provider instanceof WorldProviderSpace) {
 					double gravMult;
 
 					if (entity.world.provider instanceof IPlanetaryProvider)
@@ -85,9 +83,6 @@ public class GravityHandler implements IGravityManager {
 						entity.motionY -= (gravMult * FLUID_LIVING_OFFSET - FLUID_LIVING_OFFSET);
 					else if (entity instanceof  EntityLivingBase)
 						entity.motionY -= (gravMult * LIVING_OFFSET - LIVING_OFFSET);
-
-
-
 
 					return;
 				} else {
