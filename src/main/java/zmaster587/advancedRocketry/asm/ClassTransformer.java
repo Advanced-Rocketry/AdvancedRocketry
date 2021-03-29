@@ -740,30 +740,23 @@ public class ClassTransformer implements IClassTransformer {
 			if(onUpdate != null) {
 				final InsnList nodeAdd = new InsnList();
 				AbstractInsnNode pos = null;
-				int numALoadsInARow = 0;
-				int firstALoadIndex = 0;
+				int lastReturnIndex = 0;
 				AbstractInsnNode ain;
 
-				for(int i = 0; i < onUpdate.instructions.size(); i++) {
+				for(int i = 0; i <  onUpdate.instructions.size() ; i++) {
 					ain = onUpdate.instructions.get(i);
-					if(ain.getOpcode() == Opcodes.GETFIELD) {
-						if(numALoadsInARow == 0)
-							firstALoadIndex = i;
-						numALoadsInARow++;
-						if(numALoadsInARow == 4) {
-							break;
-						}
-					}
-					else
-						numALoadsInARow = 0;
-				}
-				int i = firstALoadIndex;
+					if(ain.getOpcode() == Opcodes.ALOAD) {
+						lastReturnIndex = i;
 
-				pos = onUpdate.instructions.get(i);
+						break;
+					}
+				}
+
+				pos = onUpdate.instructions.get(lastReturnIndex);
 
 				nodeAdd.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				nodeAdd.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "zmaster587/advancedRocketry/util/GravityHandler", "applyGravity", "(L" + getName(CLASS_KEY_ENTITY) + ";)V", false));
-				onUpdate.instructions.insert(pos, nodeAdd);
+				onUpdate.instructions.insertBefore(pos, nodeAdd);
 			}
 
 			return finishInjection(cn);
