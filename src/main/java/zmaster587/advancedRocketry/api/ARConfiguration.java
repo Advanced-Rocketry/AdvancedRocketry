@@ -402,7 +402,7 @@ public class ARConfiguration {
 		{
 			blocks[index++] = block.getRegistryName().toString();
 		}
-		config.get(net.minecraftforge.common.config.Configuration.CATEGORY_GENERAL, "torchBlocks","").set(blocks);
+		config.get(OXYGEN, "torchBlocks","").set(blocks);
 		save();
 	}
 
@@ -415,7 +415,7 @@ public class ARConfiguration {
 		{
 			blocks[index++] = block.getRegistryName().toString();
 		}
-		config.get(net.minecraftforge.common.config.Configuration.CATEGORY_GENERAL, "sealableBlockWhiteList","").set(blocks);
+		config.get(OXYGEN, "sealableBlockWhiteList","").set(blocks);
 		save();
 	}
 
