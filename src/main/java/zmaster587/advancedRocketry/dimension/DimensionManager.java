@@ -180,8 +180,8 @@ public class DimensionManager implements IGalaxy {
 	 * @param dimId id to register the planet with
 	 * @return the name for the next planet
 	 */
-	private String getNextName(int dimId) {
-		return "Sol-" + dimId;
+	private String getNextName(int starId, int dimId) {
+		return getStar(starId).getName() + " " + dimId;
 	}
 
 	/**
@@ -256,7 +256,7 @@ public class DimensionManager implements IGalaxy {
 			return null;
 
 		if(name == "")
-			properties.setName(getNextName(properties.getId()));
+			properties.setName(getNextName(starId, properties.getId()));
 		else {
 			properties.setName(name);
 		}
@@ -339,7 +339,7 @@ public class DimensionManager implements IGalaxy {
 		DimensionProperties properties = new DimensionProperties(getNextFreeDim(dimOffset));
 
 		if(name == "")
-			properties.setName(getNextName(properties.getId()));
+			properties.setName(getNextName(starId, properties.getId()));
 		else {
 			properties.setName(name);
 		}
