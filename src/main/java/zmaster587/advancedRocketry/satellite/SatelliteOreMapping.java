@@ -203,11 +203,6 @@ public class SatelliteOreMapping extends SatelliteBase  {
 		return "Ore Mapper";
 	}
 
-	@Override
-	public boolean canTick() {
-		return false;
-	}
-
 
 	public int getZoomRadius() {
 		return Math.min(satelliteProperties.getPowerGeneration()/4,7);
