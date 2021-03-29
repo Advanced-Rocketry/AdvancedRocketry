@@ -471,7 +471,7 @@ public class PlanetEventHandler {
 
 	@SubscribeEvent
 	public void serverTickEvent(TickEvent.WorldTickEvent event) {
-		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowTerraforming && event.world.provider.getClass() == WorldProviderPlanet.class) {
+		if(ARConfiguration.getCurrentConfig().enableTerraforming && event.world.provider.getClass() == WorldProviderPlanet.class) {
 
 			if(DimensionManager.getInstance().getDimensionProperties(event.world.provider.getDimension()).isTerraformed()) {
 				Collection<Chunk> list = ((WorldServer)event.world).getChunkProvider().getLoadedChunks();
@@ -500,7 +500,7 @@ public class PlanetEventHandler {
 
 	@SubscribeEvent
 	public void chunkLoadEvent(PopulateChunkEvent.Post event) {
-		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowTerraforming && event.getWorld().provider.getClass() == WorldProviderPlanet.class) {
+		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableTerraforming && event.getWorld().provider.getClass() == WorldProviderPlanet.class) {
 
 			if(DimensionManager.getInstance().getDimensionProperties(event.getWorld().provider.getDimension()).isTerraformed()) {
 				Chunk chunk = event.getWorld().getChunkFromChunkCoords(event.getChunkX(), event.getChunkZ());

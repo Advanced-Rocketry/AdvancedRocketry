@@ -434,7 +434,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 
 	@Override
 	public boolean isRunning() {
-		boolean bool = getMachineEnabled() && super.isRunning() && zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowTerraforming;
+		boolean bool = getMachineEnabled() && super.isRunning() && zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableTerraforming;
 
 		if(!bool)
 			currentTime = 0;

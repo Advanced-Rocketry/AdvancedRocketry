@@ -596,7 +596,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 
 		//If a planet is terraformed chenge upper blocks
-		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowTerraforming && worldObj.provider.getClass() == WorldProviderPlanet.class) {
+		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableTerraforming && worldObj.provider.getClass() == WorldProviderPlanet.class) {
 
 			if(DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).isTerraformed()) {
 				Chunk chunk = worldObj.getChunkFromChunkCoords(x, z);
