@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.item.ItemBlockFluidTank;
 import zmaster587.advancedRocketry.tile.TileFluidTank;
@@ -57,7 +58,7 @@ public class BlockPressurizedFluidTank extends Block {
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileFluidTank((int) (64000*Math.pow(2,0)));
+		return new TileFluidTank((int) (64000 * ARConfiguration.getCurrentConfig().blockTankCapacity));
 	}
 	
 	@Override
