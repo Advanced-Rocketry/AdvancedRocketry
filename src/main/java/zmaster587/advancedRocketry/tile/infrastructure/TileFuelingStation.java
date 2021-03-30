@@ -3,19 +3,20 @@ package zmaster587.advancedRocketry.tile.infrastructure;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
@@ -169,51 +170,34 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 
 	}
 
-	//Yes i was lazy
-	//TODO: make better
-	//Returns true if bucket was actually used
-	//TODO centralize
+	//Handles internal bucket tank interaction
+	//Returns true on successful bucket use
 	private boolean useBucket( int slot, ItemStack stack) {
 		if(slot == 0 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
 			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
 			FluidStack fluidStack = fluidItem.getTankProperties()[0].getContents();
 
-			if(fluidStack != null && (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid()) || FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid()) || FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())) && tank.getFluidAmount() + fluidItem.getTankProperties()[0].getCapacity() <= tank.getCapacity()) {
+			if(fluidStack != null && (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid()) || FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid()) || FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid()))) {
 
-				ItemStack emptyContainer = stack.copy();
-				emptyContainer.setCount(1);
-				emptyContainer.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP).drain(8000, true);
+				FluidStack preTransfer = FluidUtil.tryFluidTransfer(tank, FluidUtil.getFluidHandler(stack), 5000, false);
+				if (preTransfer != null) {
+					FluidUtil.tryFluidTransfer(tank, FluidUtil.getFluidHandler(stack), 5000, true);
+					ItemStack resultContainer = FluidUtil.getFluidHandler(stack).getContainer();
 
-				//disposable tank
-				if(emptyContainer.isEmpty()) {
-					tank.fill(fluidStack, true);
-					decrStackSize(0, 1);
-				}
-				else
-				{
-					emptyContainer = emptyContainer.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP).getContainer();
-
-					if(!emptyContainer.isEmpty() && inventory.getStackInSlot(1).isEmpty() || (emptyContainer.isItemEqual(inventory.getStackInSlot(1)) && inventory.getStackInSlot(1).getCount() < inventory.getStackInSlot(1).getMaxStackSize())) {
-						tank.fill(fluidStack, true);
-
-						if(inventory.getStackInSlot(1).isEmpty())
-							super.setInventorySlotContents(1, emptyContainer);
-						else {
-							inventory.getStackInSlot(1).setCount(inventory.getStackInSlot(1).getCount() + 1);
-						}
-						decrStackSize(0, 1);
+                    if (!resultContainer.isEmpty() && resultContainer.isItemEqual(inventory.getStackInSlot(1)) && inventory.getStackInSlot(1).getMaxStackSize() > inventory.getStackInSlot(1).getCount()) {
+						inventory.getStackInSlot(1).setCount(inventory.getStackInSlot(1).getCount() + 1);
+						super.setInventorySlotContents(0, ItemStack.EMPTY);
+					} else if (!resultContainer.isEmpty() && inventory.getStackInSlot(1).isEmpty()) {
+						super.setInventorySlotContents(1, resultContainer.copy());
+						super.setInventorySlotContents(0, ItemStack.EMPTY);
 					}
-					else 
-						return false;
-				}
-			}
-			else
+                    return true;
+				} else
+					return false;
+			} else
 				return false;
-		}
-		else
+		} else
 			return false;
-
-		return true;
 	}
 
 	@Override
