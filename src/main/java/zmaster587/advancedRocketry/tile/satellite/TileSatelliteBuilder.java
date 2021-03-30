@@ -73,7 +73,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		//First make sure everything is a satellite part, and check to see if satellite has any power generation
 		for(int i = primaryFunctionSlot; i <= modularFunctionSlotEnd; i++) {
 			ItemStack stack = getStackInSlot(i);
-			if (SatelliteRegistry.getSatelliteProperty(stack).getPowerGeneration() > 0 )
+			if (!stack.isEmpty() && SatelliteRegistry.getSatelliteProperty(stack).getPowerGeneration() > 0 )
 				hasPowerGeneration = true;
 			if(!stack.isEmpty() && SatelliteRegistry.getSatelliteProperty(stack) == null)
 				return false;
