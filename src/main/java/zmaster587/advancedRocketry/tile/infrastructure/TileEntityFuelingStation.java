@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
@@ -40,6 +41,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
+import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
@@ -81,26 +83,26 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 			//Lock rocket to a specific fluid so that it has only one oxidizer/bipropellant/monopropellant
 			if (tank.getFluid() != null && linkedRocket.stats.getFuelFluid() == null) {
 				if ((FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid())  && linkedRocket.stats.getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT) > 0)|| (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid()) && linkedRocket.stats.getFuelCapacity(FuelType.LIQUID_BIPROPELLANT) > 0)) {
-					linkedRocket.stats.setFuelFluid(tank.getFluid().getFluid().getName());
+					linkedRocket.stats.setFuelFluid(tank.getFluid().getFluid().getRegistryName());
 				}
 			} else if (tank.getFluid() != null && linkedRocket.stats.getOxidizerFluid() == null) {
 				if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid())) {
-					linkedRocket.stats.setOxidizerFluid(tank.getFluid().getFluid().getName());
+					linkedRocket.stats.setOxidizerFluid(tank.getFluid().getFluid().getRegistryName());
 				}
 			}
 
 			if (tank.getFluid() != null && isFluidFillable(tank.getFluid().getFluid())) {
 				if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid())) {
-					int fuelRate = (int)FuelRegistry.instance.getMultiplier(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid()) * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT);
+					int fuelRate = (int)(FuelRegistry.instance.getMultiplier(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid()) * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT));
 
 					tank.drain(linkedRocket.addFuelAmountMonopropellant(ARConfiguration.getCurrentConfig().fuelPointsPer10Mb.get()), FluidAction.EXECUTE);
 					linkedRocket.setFuelRateMonopropellant(fuelRate);
 				} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid())) {
-					int fuelRate = (int)FuelRegistry.instance.getMultiplier(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid()) * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_BIPROPELLANT);
+					int fuelRate = (int)(FuelRegistry.instance.getMultiplier(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid()) * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_BIPROPELLANT));
 					tank.drain(linkedRocket.addFuelAmountBipropellant(ARConfiguration.getCurrentConfig().fuelPointsPer10Mb.get()), FluidAction.EXECUTE);
 					linkedRocket.setFuelRateBipropellant(fuelRate);
 				} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid())) {
-					int fuelRate = (int)FuelRegistry.instance.getMultiplier(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid()) * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_OXIDIZER);
+					int fuelRate = (int)(FuelRegistry.instance.getMultiplier(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid()) * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_OXIDIZER));
 
 					tank.drain(linkedRocket.addFuelAmountOxidizer(ARConfiguration.getCurrentConfig().fuelPointsPer10Mb.get()), FluidAction.EXECUTE);
 					linkedRocket.setFuelRateOxidizer(fuelRate);
@@ -113,7 +115,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	}
 
 	public boolean isFluidFillable (Fluid fluid) {
-		return fluid == FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid()) || (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluid) && fluid == FluidRegistry.getFluid(linkedRocket.stats.getOxidizerFluid()) && FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid())));
+		return FluidUtils.areFluidsSameType(linkedRocket.stats.getFuelFluid(),fluid) || (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluid) && FluidUtils.areFluidsSameType(linkedRocket.stats.getOxidizerFluid(),fluid) && FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, ForgeRegistries.FLUIDS.getValue(linkedRocket.stats.getFuelFluid())));
 	}
 
 	@Override

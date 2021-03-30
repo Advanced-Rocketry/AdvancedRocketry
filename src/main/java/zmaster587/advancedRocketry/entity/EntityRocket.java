@@ -720,17 +720,17 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	public boolean canRocketFitFluid(FluidStack fluidStack) {
 		if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())) {
-			boolean isCorrectFluid = (stats.getFuelFluid() == null) ? true : fluidStack.getFluid() == FluidRegistry.getFluid(stats.getFuelFluid());
+			boolean isCorrectFluid = (stats.getFuelFluid() == null) ? true : FluidUtils.areFluidsSameType(stats.getFuelFluid(), fluidStack.getFluid());
 			if (stats.getFuelFluid() == null && isCorrectFluid)
 				stats.setFuelFluid(fluidStack.getFluid().getRegistryName());
 			return isCorrectFluid;
 		} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid())) {
-			boolean isCorrectFluid = (stats.getFuelFluid() == null) ? true : fluidStack.getFluid() == FluidRegistry.getFluid(stats.getFuelFluid());
+			boolean isCorrectFluid = (stats.getFuelFluid() == null) ? true : FluidUtils.areFluidsSameType(stats.getFuelFluid(), fluidStack.getFluid());
 			if (stats.getFuelFluid() == null && isCorrectFluid)
 				stats.setFuelFluid(fluidStack.getFluid().getRegistryName());
 			return isCorrectFluid;
 		} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())) {
-			boolean isCorrectFluid = (stats.getOxidizerFluid() == null) ? true : fluidStack.getFluid() == FluidRegistry.getFluid(stats.getOxidizerFluid());
+			boolean isCorrectFluid = (stats.getOxidizerFluid() == null) ? true : FluidUtils.areFluidsSameType(stats.getOxidizerFluid(), fluidStack.getFluid());
 			if (stats.getOxidizerFluid() == null && isCorrectFluid)
 				stats.setOxidizerFluid(fluidStack.getFluid().getRegistryName());
 			return isCorrectFluid;
