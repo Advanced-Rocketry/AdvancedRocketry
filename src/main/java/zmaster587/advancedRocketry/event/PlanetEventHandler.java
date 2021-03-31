@@ -289,8 +289,6 @@ public class PlanetEventHandler {
 		for(ISpaceObject obj : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
 			PacketHandler.sendToPlayer(new PacketSpaceStationInfo(obj.getId(), obj), mgr);
 		}
-
-		PacketHandler.sendToPlayer(new PacketDimInfo(DimensionManager.getInstance().overworldProperties.getId(), DimensionManager.overworldProperties), mgr);
 	}
 
 	@OnlyIn(value=Dist.CLIENT)
