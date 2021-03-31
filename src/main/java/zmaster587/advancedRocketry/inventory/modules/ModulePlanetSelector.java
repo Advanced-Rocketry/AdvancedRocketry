@@ -56,7 +56,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	}
 
 	ModuleButton btnUpLevel, btnConfirm, btnPlanetList;
-	
+
 	private static final int size = 2000;
 	private ResourceLocation topLevel;
 	ISelectionNotify hostTile;
@@ -110,11 +110,11 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 		//renderPlanetarySystem(properties, center, center, 3f);
 		if(EffectiveSide.get().isClient()) {
-			
+
 			//bgTexture = new ModuleImage(0, 54, zmaster587.libVulpes.inventory.TextureResources.buttonScan[0], 128,256);
-			
+
 			//staticModuleList.add(bgTexture);
-			
+
 			if(star) {
 				topLevel = Constants.INVALID_PLANET;
 				currentSystem = DimensionManager.getInstance().getStar(planetId).getId();
@@ -127,8 +127,8 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			}
 			refreshSideBar(true, currentSystem);
 		}
-		
-		
+
+
 	}
 
 	@Override
@@ -136,11 +136,11 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		//TODO
 		//zoom = Math.min(Math.max(zoom + dwheel/1000.0, 0.36), 2.0);
 		//redrawSystem();
-		
+
 		if(clickablePlanetList != null)
 			clickablePlanetList.onScroll(dwheel);
 	}
-	
+
 	public void setAllowStarSelection(boolean allow) {
 		this.allowStarSelection = allow;
 	}
@@ -166,7 +166,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			int offsetX = star.getPosX() + posX - displaySize/2; 
 			int offsetY = star.getPosZ() + posY - displaySize/2;
 			ModuleButton button;
-			
+
 			if(star.getSubStars() != null && !star.getSubStars().isEmpty()) {
 				float phaseInc = 360/star.getSubStars().size();
 				float phase = 0;
@@ -184,7 +184,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 					phase += phaseInc;
 				}
 			}
-			
+
 			planetList.add(button = new ModuleButton(offsetX, offsetY, "", this, new ResourceLocation[] { star.isBlackHole() ? TextureResources.locationBlackHole_icon : TextureResources.locationSunNew }, String.format("Name: %s\nNumber of Planets: %d",star.getName(), star.getNumPlanets()), displaySize, displaySize));
 			button.setAdditionalData(star.getId());
 			button.setSound("buttonblipa");
@@ -273,10 +273,10 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 		for(ResourceLocation childId : planet.getChildPlanets()) {
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(childId);
-			
+
 			if(planetDefiner != null && !planetDefiner.isPlanetKnown(properties))
 				continue;
-			
+
 			renderPlanets(properties, offsetX + displaySize/2, offsetY + displaySize/2, displaySize, distanceZoomMultiplier, planetSizeMultiplier);
 		}
 
@@ -377,7 +377,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			clickablePlanetList.onMouseClicked(gui, x, y, button);
 
 		super.onMouseClicked(gui, x, y, button);
-		
+
 		int screenSizeX = Minecraft.getInstance().getMainWindow().getWidth();
 		int screenSizeY = Minecraft.getInstance().getMainWindow().getHeight();
 
@@ -574,13 +574,13 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 					if(planetDefiner != null && !planetDefiner.isPlanetKnown(properties))
 						continue;
 
-						ModuleButton button = new ModuleButton(0, i*18, properties.getName(), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
-						button.setAdditionalData(properties.getId());
-						list2.add(button);
+					ModuleButton button = new ModuleButton(0, i*18, properties.getName(), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
+					button.setAdditionalData(properties.getId());
+					list2.add(button);
 
-						if(properties.getId() == selectedPlanet)
-							button.setColor(0xFFFF2222);
-					
+					if(properties.getId() == selectedPlanet)
+						button.setColor(0xFFFF2222);
+
 					i++;
 				}
 			}
@@ -600,8 +600,9 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 						if(properties.getId() == selectedPlanet)
 							button.setColor(0xFFFF2222);
+						i++;
 					}
-					i++;
+					
 				}
 			}
 		}
@@ -626,7 +627,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		boolean enabled = clickablePlanetList != null && clickablePlanetList.isEnabled();
 
 		int offX = 0, offY = 0;
-		
+
 		if(clickablePlanetList != null) {
 			staticModuleList.remove(clickablePlanetList);
 			offX = clickablePlanetList.getScrollX();
@@ -636,13 +637,13 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		clickablePlanetList = new ModuleContainerPan(0, 128, list2, new LinkedList<ModuleBase>(), null, 512, 256, 0, 0, 258, 8192);
 		staticModuleList.add(clickablePlanetList);
 		clickablePlanetList.addButtons(0, 0);
-		
+
 		//Hacky fix for bug in containerPan
 		if(!planetChanged)
 			clickablePlanetList.setOffset2(-offX, -offY);
 		else
 			clickablePlanetList.setOffset2(0, 64);
-		
+
 		clickablePlanetList.setEnabled(enabled);
 		//bgTexture.setEnabled(enabled);
 	}
