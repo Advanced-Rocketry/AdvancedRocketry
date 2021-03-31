@@ -27,17 +27,17 @@ public class TileWarpCore extends TileMultiBlock {
 	private SpaceStationObject station;
 
 	public static final Object[][][] structure = { 
-		{{"blockWarpCoreRim", "blockWarpCoreRim", "blockWarpCoreRim"},
-			{"blockWarpCoreRim", 'I', "blockWarpCoreRim"},
-			{"blockWarpCoreRim", "blockWarpCoreRim", "blockWarpCoreRim"}},
+		{{new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcorerim")},
+			{new ResourceLocation("advancedrocketry", "warpcorerim"), 'I', new ResourceLocation("advancedrocketry", "warpcorerim")},
+			{new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcorerim")}},
 
 			{{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null},
-				{new BlockMeta(LibVulpesBlocks.blockStructureBlock), "blockWarpCoreCore", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+				{new BlockMeta(LibVulpesBlocks.blockStructureBlock), new ResourceLocation("advancedrocketry", "warpcore"), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
 				{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null}},
 			
-				{{"blockWarpCoreRim", 'c', "blockWarpCoreRim"},
-					{"blockWarpCoreRim", "blockWarpCoreCore", "blockWarpCoreRim"},
-					{"blockWarpCoreRim", "blockWarpCoreRim", "blockWarpCoreRim"}},
+				{{new ResourceLocation("advancedrocketry", "warpcorerim"), 'c', new ResourceLocation("advancedrocketry", "warpcorerim")},
+					{new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcore"), new ResourceLocation("advancedrocketry", "warpcorerim")},
+					{new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcorerim")}},
 
 	};
 
@@ -74,7 +74,7 @@ public class TileWarpCore extends TileMultiBlock {
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				ItemStack stack = inv.getStackInSlot(i);
 				int amt = 0;
-				if(stack != null && ItemTags.getCollection().getOwningTags(stack.getItem()).stream().anyMatch(value -> { return value.getPath().equalsIgnoreCase("gem/dilithium"); }) ) {
+				if(!stack.isEmpty() && ItemTags.getCollection().getOwningTags(stack.getItem()).stream().anyMatch(value -> { return value.getPath().equalsIgnoreCase("gems/dilithium"); }) ) {
 					int stackSize = stack.getCount();
 					if(!world.isRemote)
 						amt = getSpaceObject().addFuel(ARConfiguration.getCurrentConfig().fuelPointsPerDilithium.get());

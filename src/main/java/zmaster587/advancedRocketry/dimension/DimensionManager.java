@@ -1041,7 +1041,7 @@ public class DimensionManager implements IGalaxy {
 		}
 
 		//Register hard coded dimensions
-		Map<ResourceLocation,IDimensionProperties> loadedPlanets = loadDimensions(ServerLifecycleHooks.getCurrentServer().func_240776_a_(new FolderName(DimensionManager.workingPath)).toString());
+		Map<ResourceLocation,IDimensionProperties> loadedPlanets = loadDimensions(DimensionManager.workingPath);
 		if(loadedPlanets.isEmpty() && (dimCouplingList == null || dimCouplingList.dims == null || dimCouplingList.dims.isEmpty())) {
 			int numRandomGeneratedPlanets = 9;
 			int numRandomGeneratedGasGiants = 1;

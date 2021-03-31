@@ -27,7 +27,6 @@ import zmaster587.libVulpes.util.ZUtils;
 import java.util.*;
 
 public class SpaceObjectManager implements ISpaceObjectManager {
-	private int nextId = 1;
 	public static final ResourceLocation WARPDIMID = new ResourceLocation("warp" , "warp");
 	private long nextStationTransitionTick = -1;
 	//station ids to object
@@ -440,13 +439,11 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 		
 		
 		nbt.put("spaceContents", nbtList);
-		nbt.putInt("nextInt", nextId);
 		nbt.putLong("nextStationTransitionTick", nextStationTransitionTick);
 	}
 
 	public void readFromNBT(CompoundNBT nbt) {
 		ListNBT list = nbt.getList("spaceContents", NBT.TAG_COMPOUND);
-		nextId = nbt.getInt("nextInt");
 		nextStationTransitionTick = nbt.getLong("nextStationTransitionTick");
 
 		for(int i = 0; i < list.size(); i++) {

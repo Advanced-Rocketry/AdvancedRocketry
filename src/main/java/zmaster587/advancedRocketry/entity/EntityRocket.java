@@ -641,7 +641,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		ItemStack heldItem = player.getHeldItem(Hand.MAIN_HAND);
 
 		//Handle linkers and right-click with fuel
-		if(heldItem != null) {
+		if(!heldItem.isEmpty()) {
 			float fuelMult;
 			FluidStack fluidStack;
 
