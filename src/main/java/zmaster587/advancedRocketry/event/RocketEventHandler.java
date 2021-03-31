@@ -335,7 +335,7 @@ public class RocketEventHandler extends Screen {
 		//RenderSystem.bindTexture(outerBounds.getTextureId());
 		Minecraft.getInstance().textureManager.bindTexture(props.getPlanetIconLEO());
 		double size2 = size*16;
-		float brightness2 =brightness*.43f;
+		float brightness2 =brightness;
 		RenderHelper.renderTopFaceWithUV(matrix, buffer, -10.1, size2, size2, -size2, -size2, 0, 1, 0, 1, brightness2, brightness2, brightness2, MathHelper.clamp(((float)Minecraft.getInstance().getRenderViewEntity().getPosY() -400f)/50f, 0f, 1f));
 		Tessellator.getInstance().draw();
 
@@ -346,13 +346,8 @@ public class RocketEventHandler extends Screen {
 		float opacityFromHeight = MathHelper.clamp(((float)Minecraft.getInstance().getRenderViewEntity().getPosY() -200f)/100f, 0f, 1f);
 
 		//Detailed Land
-<<<<<<< HEAD
 		RenderSystem.color4f(brightness2, brightness2, brightness2, MathHelper.clamp(((float)Minecraft.getInstance().getRenderViewEntity().getPosY() -200f)/50f, 0f, 1f));
 		RenderHelper.renderTopFaceWithUV(matrix, buffer, -10 , size, size, -size,  -size, 0f, 1f, 0f, 1f);
-=======
-		GlStateManager.color(brightness2, brightness2, brightness2, MathHelper.clamp(((float)Minecraft.getMinecraft().getRenderViewEntity().posY -200f)/50f, 0f, 1f));
-		RenderHelper.renderTopFaceWithUV(buffer, -10 , -size, -size, size,  size, 0f, 1f, 0f, 1f);
->>>>>>> origin/1.12
 
 		Tessellator.getInstance().draw();*/
 
@@ -366,13 +361,13 @@ public class RocketEventHandler extends Screen {
 		//RenderSystem.bindTexture(0);
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-		RenderSystem.color4f((float)skyColor.x, (float)skyColor.y, (float)skyColor.z, 0.05f);
+		RenderSystem.color4f((float)skyColor.x, (float)skyColor.y, (float)skyColor.z, 0.15f);
 
 		size = (getImgSize*100/(180-Minecraft.getInstance().getRenderViewEntity().getPosY() - deltaY));
 
 
 		for(int i = 0; i < 5 * MathHelper.clamp(( ( DimensionManager.getInstance().getDimensionProperties(Minecraft.getInstance().getRenderViewEntity().world).getAtmosphereDensity() *.01f * (float)Minecraft.getInstance().getRenderViewEntity().getPosY() -280f) )/150f, 0f, 2f); i++) {
-			RenderHelper.renderTopFace(matrix, buffer, -9 + i*.6, size, size, -size , -size, (float)skyColor.x, (float)skyColor.y, (float)skyColor.z, 0.05f);
+			RenderHelper.renderTopFace(matrix, buffer, -9 + i*.6, size, size, -size , -size, (float)skyColor.x/255f, (float)skyColor.y/255f, (float)skyColor.z/255f, 0.1f);
 		}
 
 		//
