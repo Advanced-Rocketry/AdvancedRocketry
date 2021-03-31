@@ -152,6 +152,10 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 		return 0;
 	}
 
+	public IUniversalEnergy getBattery() {
+		return battery;
+	}
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
