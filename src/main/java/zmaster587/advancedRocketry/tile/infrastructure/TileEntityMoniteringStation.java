@@ -60,7 +60,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	public TileEntityMoniteringStation() {
 		super(AdvancedRocketryTileEntityType.TILE_MONITORIING_STATION);
 		mission = null;
-		missionText = new ModuleText(20, 90, LibVulpes.proxy.getLocalizedString("msg.monitoringStation.missionprogressna"), 0x2b2b2b);
+		missionText = new ModuleText(20, 90, LibVulpes.proxy.getLocalizedString("msg.monitoringstation.missionprogressna"), 0x2b2b2b);
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, "", this);
 		state = RedstoneState.ON;
 	}

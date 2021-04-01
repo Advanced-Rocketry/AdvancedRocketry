@@ -55,7 +55,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	private static ResourceLocation eyeCandySpinner = new ResourceLocation("advancedrocketry:textures/gui/eyecandy/spinnything.png");
 	
 	private static String breathable = LibVulpes.proxy.getLocalizedString("msg.atmanal.canbreathe");
-	private static String atmtype = LibVulpes.proxy.getLocalizedString("msg.atmanal.atmType");
+	private static String atmtype = LibVulpes.proxy.getLocalizedString("msg.atmanal.atmtype");
 	private static String yes = LibVulpes.proxy.getLocalizedString("msg.yes");
 	private static String no = LibVulpes.proxy.getLocalizedString("msg.no");
 

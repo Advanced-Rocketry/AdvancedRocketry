@@ -61,7 +61,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 		networkID = -1;
 		data = new MultiData();
 		data.setMaxData(100);
-		toggle = new ModuleToggleSwitch(50, 50, LibVulpes.proxy.getLocalizedString("msg.wirelessTransciever.extract"), this, TextureResources.buttonGeneric, 64, 18, false);
+		toggle = new ModuleToggleSwitch(50, 50, LibVulpes.proxy.getLocalizedString("msg.wirelesstransciever.extract"), this, TextureResources.buttonGeneric, 64, 18, false);
 		toggleSwitch = new ModuleToggleSwitch(160, 5, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, true);
 	}
 

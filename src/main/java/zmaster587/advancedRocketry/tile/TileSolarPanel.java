@@ -28,7 +28,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 
 	public TileSolarPanel() {
 		super(AdvancedRocketryTileEntityType.TILE_SOLAR_PANEL, 10000, 1);
-		text = new ModuleText(60, 40, LibVulpes.proxy.getLocalizedString("msg.solar.collectingEnergy"), 0x2f2f2f);
+		text = new ModuleText(60, 40, LibVulpes.proxy.getLocalizedString("msg.solar.collectingenergy"), 0x2f2f2f);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 	public void tick() {
 		if(canGeneratePower()) {
 			if(world.isRemote)
-				text.setText(LibVulpes.proxy.getLocalizedString("msg.solar.collectingEnergy") + "\n" + getPowerPerOperation() + " " + LibVulpes.proxy.getLocalizedString("msg.powerunit.rfpertick"));
+				text.setText(LibVulpes.proxy.getLocalizedString("msg.solar.collectingenergy") + "\n" + getPowerPerOperation() + " " + LibVulpes.proxy.getLocalizedString("msg.powerunit.rfpertick"));
 			if(hasEnoughEnergyBuffer(getPowerPerOperation())) {
 				if(!world.isRemote) this.energy.acceptEnergy(getPowerPerOperation(), false);
 				onGeneratePower();
@@ -49,7 +49,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 				notEnoughBufferForFunction();
 		}
 		else if(world.isRemote)
-			text.setText(LibVulpes.proxy.getLocalizedString("msg.solar.cannotcollectEnergy"));
+			text.setText(LibVulpes.proxy.getLocalizedString("msg.solar.cannotcollectenergy"));
 
 		if(!world.isRemote)
 			transmitPower();
