@@ -1005,6 +1005,11 @@ public class TileRocketBuilder extends TileEntityRFConsumer implements IButtonIn
 		}
 
 		if(getBBCache() != null) {
+			
+			// PRevent deadlock
+			if(!world.isAreaLoaded(new BlockPos(bbCache.minX, bbCache.minY, bbCache.minZ), new BlockPos(bbCache.maxX, bbCache.maxY, bbCache.maxZ)))
+				return;
+			
 			List<EntityRocketBase> rockets = world.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 
 			if(rockets.contains(rocket)) {
