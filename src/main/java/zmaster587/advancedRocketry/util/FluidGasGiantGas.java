@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.util;
 
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 
 public class FluidGasGiantGas {

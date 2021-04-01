@@ -33,29 +33,16 @@ public class RendererChemicalReactor  extends TileEntitySpecialRenderer {
 		if(!multiBlockTile.canRender())
 			return;
 
-		GL11.glPushMatrix();
-
-		
 		//Rotate and move the model into position
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+.5f, y, z + 0.5f);
 		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		
+
 		GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) - front.getFrontOffsetX()*90f, 0, 1, 0);
+		GL11.glTranslated(1.5f, -1.0f, -.5f);
+
 		bindTexture(texture);
-		model.renderOnly("mesh");
-		GL11.glPopMatrix();
-		
-		
-		
-		GL11.glTranslated(x+.5f, y, z + 0.5f);
-		GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) - front.getFrontOffsetX()*90f, 0, 1, 0);
-		
-		GL11.glTranslated(0f, -0.5f, 1f );
-		if(multiBlockTile.isRunning())
-			GL11.glRotated((8*tile.getWorld().getTotalWorldTime()) % 360, 1, 0, 0);
-		model.renderOnly("Cylinder");
-		
+		model.renderOnly("Hull");
 		GL11.glPopMatrix();
 	}
 }

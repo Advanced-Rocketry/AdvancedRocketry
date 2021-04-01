@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AreaBlob;
 import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
-import zmaster587.advancedRocketry.tile.TileSeal;
+import zmaster587.advancedRocketry.tile.atmosphere.TileSeal;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
 import java.util.HashMap;

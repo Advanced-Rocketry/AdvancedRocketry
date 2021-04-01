@@ -7,8 +7,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.HashedBlockPosition;
@@ -23,7 +23,6 @@ public class BlockWarpCore extends BlockMultiblockMachine {
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
 			EntityLivingBase placer, ItemStack stack) {
-		// TODO Auto-generated method stub
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
 		
 		if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
@@ -37,7 +36,6 @@ public class BlockWarpCore extends BlockMultiblockMachine {
 	@Override
 	public void onBlockDestroyedByPlayer(World world, BlockPos pos,
 			IBlockState state) {
-		// TODO Auto-generated method stub
 		super.onBlockDestroyedByPlayer(world, pos, state);
 		
 		if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {

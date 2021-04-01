@@ -15,6 +15,7 @@
         "varient=12": { "model": "advancedrocketry:blastBrick" },
         "varient=13": { "model": "advancedrocketry:blastBrick" },
         "varient=14": { "model": "advancedrocketry:blastBrick" },
-        "varient=15": { "model": "advancedrocketry:blastBrick" }
+        "varient=15": { "model": "advancedrocketry:blastBrick" },
+        "inventory" : { "model": "advancedrocketry:blastbrick" }
     }
 }

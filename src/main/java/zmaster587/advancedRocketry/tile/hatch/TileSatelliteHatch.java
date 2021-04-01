@@ -15,6 +15,8 @@ public class TileSatelliteHatch extends TileInventoryHatch {
 
 	public TileSatelliteHatch(int i) {
 		super(1);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanExtractSlot(0, true);
 	}
 
 	@Override
@@ -31,7 +33,7 @@ public class TileSatelliteHatch extends TileInventoryHatch {
 			if(properties == null)
 				return null;
 
-			SatelliteBase satellite = SatelliteRegistry.getSatallite(properties.getSatelliteType());
+			SatelliteBase satellite = SatelliteRegistry.getSatellite(properties.getSatelliteType());
 
 			if(satellite == null)
 				return null;

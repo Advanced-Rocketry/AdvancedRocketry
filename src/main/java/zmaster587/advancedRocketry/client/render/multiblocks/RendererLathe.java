@@ -27,7 +27,7 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 		}
 
 		GL11.glNewList(bodyList = GL11.glGenLists(1), GL11.GL_COMPILE);
-		model.renderOnly("body");
+		model.renderOnly("Hull");
 		GL11.glEndList();
 	}
 
@@ -44,7 +44,7 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 		//Rotate and move the model into position
 		GL11.glTranslated(x + .5f, y, z + 0.5f);
 		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
+		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 0 : 180) + front.getFrontOffsetZ()*90f, 0, 1, 0);
 		GL11.glTranslated(-.5f, -1f, -2.5f);
 
 
@@ -54,22 +54,23 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 			float progress = multiBlockTile.getProgress(0)/(float)multiBlockTile.getTotalProgress(0);
 
 			bindTexture(texture);
-			model.renderPart("body");
+			model.renderPart("Hull");
 
 			GL11.glPushMatrix();
 
 			if(progress < 0.95f)
-				GL11.glTranslatef(0f, 0f, progress/.95f);
+				GL11.glTranslatef(0f, 0f, -(progress/.85f));
 			else
-				GL11.glTranslatef(0f, 0f, (1 - progress)/.05f);
+				GL11.glTranslatef(0f, 0f, -((1 - progress)/.05f));
 
-			model.renderOnly("Tray");
+			model.renderOnly("Tool");
 			GL11.glPopMatrix();
 
 			GL11.glPushMatrix();
-			GL11.glTranslatef(.5f, 1.5625f, 0f);
+			GL11.glTranslatef(0.375f, 0.9375f, 0f);
 			GL11.glRotatef(progress*1500, 0, 0, 1);
-			model.renderOnly("Cylinder");
+			model.renderOnly("Shaft");
+			GL11.glPopMatrix();
 
 			int color;
 			//Check for rare bug when outputs is null, usually occurs if player opens machine within 1st tick
@@ -77,20 +78,27 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 				color = MaterialRegistry.getColorFromItemMaterial(outputStack);
 			else
 				color = 0;
-			
-			GL11.glColor3d((0xff & color >> 16)/256f, (0xff & color >> 8)/256f , (color & 0xff)/256f);
 
-			model.renderOnly("rod");
+			GL11.glPushMatrix();
+			GL11.glColor3d((0xff & color >> 16)/256f, (0xff & color >> 8)/256f , (color & 0xff)/256f);
+			GL11.glTranslatef(0.375f, 1.1875f, 0f);
+			GL11.glRotatef(progress*1500, 0, 0, 1);
+			model.renderOnly("Rod");
 			GL11.glPopMatrix();
 			
 			GL11.glColor4f(1f, 1f, 1f, 1f);
 		}
 		else {
 			bindTexture(texture);
-			model.renderPart("body");
+			model.renderPart("Hull");
 
-			model.renderPart("Tray");
+			model.renderPart("Tool");
 			//model.renderAllExcept("rod", "Cylinder");
+
+			GL11.glPushMatrix();
+			GL11.glTranslatef(0.375f, 0.9375f, 0f);
+			model.renderOnly("Shaft");
+			GL11.glPopMatrix();
 		}
 		GL11.glPopMatrix();
 	}

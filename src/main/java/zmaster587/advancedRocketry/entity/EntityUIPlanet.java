@@ -12,18 +12,18 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
+import zmaster587.advancedRocketry.tile.station.TileHolographicPlanetSelector;
 
 public class EntityUIPlanet extends Entity {
 
 	DimensionProperties properties;
-	protected TilePlanetaryHologram tile;
+	protected TileHolographicPlanetSelector tile;
 	protected static final DataParameter<Integer> planetID =  EntityDataManager.<Integer>createKey(EntityUIPlanet.class, DataSerializers.VARINT);
 	protected static final DataParameter<Float> scale =  EntityDataManager.<Float>createKey(EntityUIPlanet.class, DataSerializers.FLOAT);
 	protected static final DataParameter<Boolean> selected =  EntityDataManager.<Boolean>createKey(EntityUIPlanet.class, DataSerializers.BOOLEAN);
 	
 	
-	public EntityUIPlanet(World worldIn, DimensionProperties properties, TilePlanetaryHologram tile, double x, double y, double z) {
+	public EntityUIPlanet(World worldIn, DimensionProperties properties, TileHolographicPlanetSelector tile, double x, double y, double z) {
 		this(worldIn);
 		setPosition(x, y, z);
 		setProperties(properties);

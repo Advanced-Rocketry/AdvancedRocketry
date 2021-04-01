@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.integration.jei;
 
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;
+import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
@@ -14,7 +15,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MachineRecipe extends BlankRecipeWrapper {
+public class MachineRecipe implements IRecipeWrapper {
 	
 	private List<List<ItemStack>> ingredients;
 	private ArrayList<ItemStack> result;

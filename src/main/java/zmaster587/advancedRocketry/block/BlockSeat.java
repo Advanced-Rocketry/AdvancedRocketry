@@ -5,6 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -24,10 +25,15 @@ public class BlockSeat extends Block {
 	public BlockSeat(Material mat) {
 		super(mat);
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
+	}
+
+	@Override
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.CUTOUT;
 	}
 	
 	@Override
@@ -51,7 +57,6 @@ public class BlockSeat extends Block {
 	@Override
 	public void onBlockDestroyedByExplosion(World world, BlockPos pos,
 			Explosion explosionIn) {
-		// TODO Auto-generated method stub
 		super.onBlockDestroyedByExplosion(world, pos, explosionIn);
 		
 		List<EntityDummy> list = world.getEntitiesWithinAABB(EntityDummy.class, new AxisAlignedBB(pos, pos.add(1,1,1)));

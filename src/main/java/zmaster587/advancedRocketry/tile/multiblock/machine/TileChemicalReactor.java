@@ -2,7 +2,6 @@ package zmaster587.advancedRocketry.tile.multiblock.machine;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -18,18 +17,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
-import zmaster587.advancedRocketry.api.*;
+import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.recipe.NumberedOreDictStack;
 import zmaster587.libVulpes.recipe.RecipesMachine;
-import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 import java.util.LinkedList;
@@ -41,17 +41,12 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 			{'L', 'I','L'}},
 
 			{{'P', LibVulpesBlocks.motors, 'P'}, 
-				{'l', new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'O'}},
+				{'l', 'O', 'l'}},
 
 	};
 
 	@Override
-	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
-		TileEntity tileEntity = world.getTileEntity(pos);
-
-		return !TileMultiBlock.getMapping('P').contains(new BlockMeta(tile.getBlock(), BlockMeta.WILDCARD)) && tileEntity != null && !(tileEntity instanceof TileChemicalReactor);
-
-	}
+	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) { return true; }
 
 	//Called by inventory blocks that are part of the structure
 	//This includes recipe management etc

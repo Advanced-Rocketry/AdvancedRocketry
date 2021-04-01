@@ -50,34 +50,28 @@ public class EntityLaserNode extends Entity {
 	
 	@Override
 	public void setDead() {
-		super.setDead();
 		this.cleanUp();
+		super.setDead();
 	}
 
-	//TODO: make safe
-	/**Removes all the lightblocks created by the laser
-	 * For the love of all things good... do NOT call this twice
+	/**
+	 * Removes all the light blocks created by the laser
 	 */
-	public void cleanUp() {
-		if(!this.world.isRemote)
-			new Thread(cleanThread).run();
+	private void cleanUp() {
+		if(!this.world.isRemote && this.isDead)
+			new Thread(() -> {
+				for(int h = 0; h < world.getHeight(); h++) {
+					for(int i = 0; i < 9; i++) {
+						int x = (int)posX + (i % 3) - 1;
+						int z = (int)posZ + (i / 3) - 1;
+						BlockPos pos = new BlockPos(x, h, z);
+						if(world.getBlockState(pos).getBlock() == AdvancedRocketryBlocks.blockLightSource)
+							world.setBlockToAir(pos);
+					}
+				}
+			}).start();
 	}
 
-	Runnable cleanThread = new Runnable() {
-		@Override
-		public void run() {
-			for(int h = 0; h < world.getHeight(); h++) {
-				for(int i = 0; i < 9; i++) {
-					int x = (int)posX + (i % 3) - 1;
-					int z = (int)posZ + (i / 3) - 1;
-					BlockPos pos = new BlockPos(x, h, z);
-					if(world.getBlockState(pos).getBlock() == AdvancedRocketryBlocks.blockLightSource)
-						world.setBlockToAir(pos);
-				}
-			}
-		}
-	};
-	
 	@Override
 	public void onUpdate() {
 
@@ -106,15 +100,13 @@ public class EntityLaserNode extends Entity {
 		}
 	}
 
-	
-	@Override
 	/**
 	 * Checks if the entity is in range to render by using the past in distance and comparing it to its average edge
 	 * length * 64 * renderDistanceWeight Args: distance
 	 */
+	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean isInRangeToRenderDist(double par1)
-	{
+	public boolean isInRangeToRenderDist(double par1) {
 		//double d1 = this.boundingBox.getAverageEdgeLength();
 		//d1 *= 4096.0D * this.renderDistanceWeight;
 		return par1 < 16777216D;

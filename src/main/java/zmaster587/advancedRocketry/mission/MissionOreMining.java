@@ -11,6 +11,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
@@ -112,6 +113,8 @@ public class MissionOreMining extends MissionResourceCollection {
 		}
 
 		rocketStorage.getGuidanceComputer().setInventorySlotContents(0, ItemStack.EMPTY);
+		//Return asteroid ID chip
+		rocketStorage.getGuidanceComputer().setInventorySlotContents(0, new ItemStack(AdvancedRocketryItems.itemAsteroidChip));
 		EntityRocket rocket = new EntityRocket(DimensionManager.getWorld(launchDimension), rocketStorage, rocketStats, x, 999, z);
 
 		World world = DimensionManager.getWorld(launchDimension);

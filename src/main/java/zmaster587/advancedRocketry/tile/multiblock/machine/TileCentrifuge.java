@@ -1,21 +1,19 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -23,17 +21,31 @@ import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.recipe.RecipesMachine;
+import zmaster587.libVulpes.recipe.RecipesMachine.ChanceFluidStack;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
 public class TileCentrifuge extends TileMultiblockMachine {
-	public static final Object[][][] structure = { 
-			{   {new BlockMeta(LibVulpesBlocks.blockStructureBlock),'c',new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
-				{new BlockMeta(LibVulpesBlocks.blockStructureBlock),'L',new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
-			  {new BlockMeta(LibVulpesBlocks.blockStructureBlock), new BlockMeta(LibVulpesBlocks.blockStructureBlock),new BlockMeta(LibVulpesBlocks.blockStructureBlock)}},
-			
-			{{LibVulpesBlocks.motors, new BlockMeta(LibVulpesBlocks.blockStructureBlock), LibVulpesBlocks.motors}, 
-				{'l', 'O', 'l'},
-				{new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'P', new BlockMeta(LibVulpesBlocks.blockStructureBlock)}},
+	public static final Object[][][] structure = {
+
+			{{Blocks.AIR, new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'},
+					{"casingCentrifuge", "casingCentrifuge", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+					{"casingCentrifuge", "casingCentrifuge", null}},
+
+			{{Blocks.AIR, new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'},
+					{"casingCentrifuge", "casingCentrifuge", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+					{"casingCentrifuge", "casingCentrifuge", 'l'}},
+
+			{{'c', new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'},
+					{"casingCentrifuge", "casingCentrifuge", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+					{"casingCentrifuge", "casingCentrifuge", 'l'}},
+
+			{   {'P','L', 'l'},
+				{LibVulpesBlocks.motors,'O', new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+			  {new BlockMeta(LibVulpesBlocks.blockStructureBlock), new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'}},
 
 		};
 		
@@ -88,17 +100,17 @@ public class TileCentrifuge extends TileMultiblockMachine {
             }
             
             List<List<ItemStack>> inputItems = new LinkedList<List<ItemStack>>();
-            List<RecipesMachine.ChanceFluidStack> outputFluid = new LinkedList<RecipesMachine.ChanceFluidStack>();
             List<FluidStack> inputFluid = new LinkedList<FluidStack>();
             inputFluid.add(new FluidStack(AdvancedRocketryFluids.fluidEnrichedLava, 1000));
-            RecipesMachine.Recipe rec =  new RecipesMachine.Recipe(nuggetList, inputItems,outputFluid,inputFluid, 200, 10, new HashMap<Integer, String>());
+			List<ChanceFluidStack> outputFluid = new LinkedList<ChanceFluidStack>();
+			outputFluid.add(new ChanceFluidStack(new FluidStack(FluidRegistry.getFluid("lava"), 1000), 1.0f));
+            RecipesMachine.Recipe rec =  new RecipesMachine.Recipe(nuggetList, inputItems, outputFluid,inputFluid, 200, 10, new HashMap<Integer, String>());
             rec.setMaxOutputSize(4);
             RecipesMachine.getInstance().getRecipes(TileCentrifuge.class).add(rec);
 		}
 		
 		@Override
 		public SoundEvent getSound() {
-			// TODO Auto-generated method stub
 			return AudioRegistry.electrolyser;
 		}
 

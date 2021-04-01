@@ -58,13 +58,29 @@ public class RendererCuttingMachine extends TileEntitySpecialRenderer {
 
 
 
+			List<ItemStack> inputList = multiBlockTile.getInputs();
+			if(inputList != null && !inputList.isEmpty() && progress < 0.65) {
+				ItemStack inputStack = null;
+				for (ItemStack stack: inputList) {
+					if (stack != null && inputStack == null)
+						inputStack = stack;
+				}
+
+				GL11.glPushMatrix();
+				GL11.glRotatef(90, 1, 0, 0);
+				GL11.glTranslated(1f, tray + .45, -1.05);
+				RenderHelper.renderItem(multiBlockTile, inputStack, Minecraft.getMinecraft().getRenderItem());
+				GL11.glPopMatrix();
+			}
+
+
 			List<ItemStack> outputList = multiBlockTile.getOutputs();
-			if(outputList != null && !outputList.isEmpty()) {
+			if(outputList != null && !outputList.isEmpty() && progress >= 0.65) {
 				ItemStack stack = outputList.get(0);
 
 				GL11.glPushMatrix();
 				GL11.glRotatef(90, 1, 0, 0);
-				GL11.glTranslated(1f, tray + .25, -1.05);
+				GL11.glTranslated(1f, tray + .45, -1.05);
 				RenderHelper.renderItem(multiBlockTile, stack, Minecraft.getMinecraft().getRenderItem());
 				GL11.glPopMatrix();
 			}

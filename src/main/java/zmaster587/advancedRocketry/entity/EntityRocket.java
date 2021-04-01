@@ -1,6 +1,8 @@
 package zmaster587.advancedRocketry.entity;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.BlockSand;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
@@ -9,7 +11,6 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,11 +34,10 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.*;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.achievements.ARAchivements;
+import zmaster587.advancedRocketry.achievements.ARAdvancements;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
@@ -48,6 +48,7 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.block.BlockRegolith;
 import zmaster587.advancedRocketry.client.SoundRocketEngine;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -77,10 +78,7 @@ import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.util.FluidUtils;
-import zmaster587.libVulpes.util.HashedBlockPosition;
-import zmaster587.libVulpes.util.IconResource;
-import zmaster587.libVulpes.util.Vector3F;
+import zmaster587.libVulpes.util.*;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -107,7 +105,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	protected long lastWorldTickTicked;
 
-	private SatelliteBase satallite;
+	private SatelliteBase satellite;
 	protected int destinationDimId;
 	//Offset for buttons linking to the tileEntityGrid
 	private int tilebuttonOffset = 3;
@@ -244,7 +242,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox() {
-		// TODO Auto-generated method stub
 		return getEntityBoundingBox();
 	}
 
@@ -630,11 +627,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
 
 		//Handle linkers and right-click with fuel
+		boolean isHoldingFluidItemOrLinker = false;
 		if(heldItem != null) {
 			float fuelMult;
 			FluidStack fluidStack;
 
 			if(heldItem.getItem() instanceof ItemLinker) {
+				isHoldingFluidItemOrLinker = true;
 				if(ItemLinker.isSet(heldItem)) {
 
 
@@ -668,18 +667,22 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 
 			else if((FluidUtils.containsFluid(heldItem) && FluidUtils.getFluidForItem(heldItem) != null) && ARConfiguration.getCurrentConfig().canBeFueledByHand) {
+				isHoldingFluidItemOrLinker = true;
 				fluidStack = FluidUtils.getFluidForItem(heldItem);
 				if ((canRocketFitFluid(fluidStack))) {
 
 					if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())) {
+						stats.setFuelRate(FuelType.LIQUID_MONOPROPELLANT, (int)(stats.getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT) * FuelRegistry.instance.getMultiplier(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())));
 						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityMonopropellant() - getFuelAmountMonopropellant());
 						FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
 						this.addFuelAmountMonopropellant(rocketFakeTank.getFluidAmount());
 					} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid())) {
+						stats.setFuelRate(FuelType.LIQUID_BIPROPELLANT, (int)(stats.getBaseFuelRate(FuelType.LIQUID_BIPROPELLANT) * FuelRegistry.instance.getMultiplier(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid())));
 						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityBipropellant() - getFuelAmountBipropellant());
 						FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
 						this.addFuelAmountBipropellant(rocketFakeTank.getFluidAmount());
 					} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())) {
+						stats.setFuelRate(FuelType.LIQUID_OXIDIZER, (int)(stats.getBaseFuelRate(FuelType.LIQUID_OXIDIZER) * FuelRegistry.instance.getMultiplier(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())));
 						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityBipropellant() - getFuelAmountBipropellant());
 						FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
 						this.addFuelAmountOxidizer(rocketFakeTank.getFluidAmount());
@@ -691,7 +694,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 
 		//If player is holding shift open GUI
-		if(player.isSneaking()) {
+		if(player.isSneaking() || (!stats.hasSeat() && !isHoldingFluidItemOrLinker)) {
 			openGui(player);
 		}
 		else if(stats.hasSeat()) { //If pilot seat is open mount entity there
@@ -900,6 +903,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	}
 
 	@Override
+	public void setFire(int seconds) {}
+
+	@Override
 	public void onUpdate() {
 		super.onUpdate();
 		long deltaTime = world.getTotalWorldTime() - lastWorldTickTicked;
@@ -994,6 +1000,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				launch();
 			launchCount--;
 			this.dataManager.set(LAUNCH_COUNTER, launchCount);
+			//Just before launch, damage the ground. We'll do it again on the tick that we launch
+			if (launchCount == 20 && ARConfiguration.getCurrentConfig().launchingDestroysBlocks)
+				damageGroundBelowRocket(world, (int)this.posX, (int)this.posY, (int)this.posZ, (int)Math.pow(stats.getThrust(), 0.3333));
 		}
 		
 		// When flying around in space
@@ -1160,9 +1169,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			if(burningFuel || descentPhase) {
 				//Burn the rocket fuel
 				if(!world.isRemote && !descentPhase) {
-					setFuelAmountBipropellant((int) (getFuelAmountBipropellant() - stats.getFuelRate(FuelType.LIQUID_BIPROPELLANT)*(ARConfiguration.getCurrentConfig().gravityAffectsFuel ? DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier() : 1f)));
-					setFuelAmountOxidizer((int) (getFuelAmountOxidizer() - stats.getFuelRate(FuelType.LIQUID_OXIDIZER)*(ARConfiguration.getCurrentConfig().gravityAffectsFuel ? DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier() : 1f)));
-					setFuelAmountMonoproellant((int) (getFuelAmountMonopropellant() - stats.getFuelRate(FuelType.LIQUID_MONOPROPELLANT)*(ARConfiguration.getCurrentConfig().gravityAffectsFuel ? DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier() : 1f)));
+					setFuelAmountBipropellant((int) (getFuelAmountBipropellant() - stats.getFuelRate(FuelType.LIQUID_BIPROPELLANT)));
+					setFuelAmountOxidizer((int) (getFuelAmountOxidizer() - stats.getFuelRate(FuelType.LIQUID_OXIDIZER)));
+					setFuelAmountMonoproellant((int) (getFuelAmountMonopropellant() - stats.getFuelRate(FuelType.LIQUID_MONOPROPELLANT)));
 				    if (getFuelAmountBipropellant() == 0 && getFuelAmountMonopropellant() == 0) {
 				    	stats.setFuelFluid("null");
 					}
@@ -1201,7 +1210,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					this.motionY = this.motionY - 0.001;
 				} else
 					//this.motionY = Math.min(this.motionY + 0.001, 1);
-					this.motionY += stats.getAcceleration() * deltaTime;
+					this.motionY += stats.getAcceleration(DimensionManager.getInstance().getDimensionProperties(this.world.provider.getDimension()).getGravitationalMultiplier()) * deltaTime;
 
 
 				double lastPosY = this.posY;
@@ -1285,6 +1294,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 		else if(isStartupPhase())
 			runEngines();
+
+		//When we're landing, we should also destroy the blocks below the rocket if they are valid to be destroyed - but overall we do it fewer times than on launch (once instead of twice)
+		if((int)this.posY == world.getTopSolidOrLiquidBlock(new BlockPos(this.posX, this.posY, this.posZ)).getY() + 2 && ARConfiguration.getCurrentConfig().launchingDestroysBlocks && this.isDescentPhase()) {
+			damageGroundBelowRocket(world, (int)this.posX, (int)this.posY -1, (int)this.posZ, (int)Math.pow(stats.getThrust(), 0.3333));
+		}
 	}
 
 	public void onTurnRight(boolean state) {
@@ -1380,7 +1394,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			DimensionProperties properties = DimensionManager.getEffectiveDimId(world, getPosition());
 
 			miningMission.setDimensionId(world);
-			properties.addSatallite(miningMission, world);
+			properties.addSatellite(miningMission, world);
 
 			if(!world.isRemote)
 				PacketHandler.sendToAll(new PacketSatellite(miningMission));
@@ -1562,9 +1576,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if(DimensionManager.getInstance().getDimensionProperties(destinationDimId).getName().equals("Luna")) {
 					for(Entity player : this.getPassengers()) {
 						if(player instanceof EntityPlayer) {
-							ARAchivements.MOON_LANDING.trigger((EntityPlayerMP) player);
+							ARAdvancements.MOON_LANDING.trigger((EntityPlayerMP) player);
 							if(!DimensionManager.hasReachedMoon)
-								ARAchivements.ONE_SMALL_STEP.trigger((EntityPlayerMP) player);
+								ARAdvancements.ONE_SMALL_STEP.trigger((EntityPlayerMP) player);
 						}
 					}
 					DimensionManager.hasReachedMoon = true;
@@ -1629,7 +1643,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				else
 					world2 = destinationId;
 
-				properties.addSatallite(satellite, world2, world.isRemote);
+				properties.addSatellite(satellite, world2, world.isRemote);
 				tile.setInventorySlotContents(0, ItemStack.EMPTY);
 			}
 		}
@@ -1711,7 +1725,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 
 			//Check to see if it's possible to reach
-			if(finalDest != Constants.INVALID_PLANET && (!storage.hasWarpCore() || DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId() != DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId()) && !DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(finalDest, thisDimId)) {
+			if(finalDest != Constants.INVALID_PLANET && (!storage.hasWarpCore() || DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId() != DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId()) && !PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(finalDest, thisDimId)) {
 				setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
 				return;
 			}
@@ -1743,6 +1757,68 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					connectedTiles.remove();
 				}
 			}
+		}
+		//When we launch, we want to damage blocks a second time if possible
+		if (ARConfiguration.getCurrentConfig().launchingDestroysBlocks)
+		    damageGroundBelowRocket(world, (int)posX, (int)posY, (int)posZ, (int)Math.pow(stats.getThrust(), 0.3333));
+	}
+
+	private void damageGroundBelowRocket(World world, int x, int y, int z, int radius) {
+		//Actually, we affect the blocks that are one lower
+		y--;
+		for (int i = 0; i <= radius; i++) {
+			for (int j = 0; j <= radius; j++) {
+				for (int k = 1; k >= -2; k--) {
+					//Set blocks to their damaged variants, the if statements make sure we don't set cardinal directions twice the times we should be
+					setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x + i, y + k, z + j))), world, new BlockPos(x + i, y + k, z + j));
+					if (j != 0)
+					    setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x + i, y + k, z - j))), world, new BlockPos(x + i, y + k, z - j));
+					if (i != 0) {
+						setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y + k, z + j))), world, new BlockPos(x - i, y + k, z + j));
+						if (j != 0)
+						    setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y + k, z - j))), world, new BlockPos(x - i, y + k, z - j));
+					}
+					//Set fire above that
+					BlockPos blocksAbove = new BlockPos(x + i, y + k, z + j);
+					if (world.getBlockState(blocksAbove).getBlock().isReplaceable(world, blocksAbove) || world.getBlockState(blocksAbove).getBlock() == Blocks.AIR) {
+						world.setBlockState(blocksAbove, Blocks.FIRE.getDefaultState());
+					}
+				}
+			}
+		}
+	}
+
+	private static IBlockState getDamagedBlock(IBlockState blockState) {
+		ItemStack stack = new ItemStack(blockState.getBlock(), 1, blockState.getBlock().getMetaFromState(blockState));
+		if (ZUtils.isItemInOreDict(stack, "stone")) {
+			return Blocks.COBBLESTONE.getDefaultState();
+		} else if (ZUtils.isItemInOreDict(stack, "cobblestone") || ZUtils.isItemInOreDict(stack, "gravel")) {
+			return AdvancedRocketryBlocks.blockBasalt.getDefaultState();
+		} else if (blockState.getBlock() == AdvancedRocketryBlocks.blockBasalt) {
+			return Blocks.MAGMA.getDefaultState();
+		} else if (blockState.getBlock() == Blocks.NETHERRACK) {
+			return Blocks.MAGMA.getDefaultState();
+		} else if (blockState.getBlock() == Blocks.MAGMA) {
+			return Blocks.LAVA.getDefaultState();
+		} else if (blockState.getBlock().getMaterial(blockState) == Material.GRASS) {
+			return Blocks.DIRT.getDefaultState();
+		} else if (blockState.getBlock().getMaterial(blockState) == Material.GROUND && !(blockState.getBlock() instanceof BlockRegolith)) {
+			return Blocks.SAND.getDefaultState();
+		} else if (blockState.getBlock() instanceof BlockSand || blockState.getBlock() instanceof BlockRegolith || ZUtils.isItemInOreDict(stack, "regolith")) {
+			return Blocks.GLASS.getDefaultState();
+		} else if (blockState.getBlock().getMaterial(blockState) == Material.ICE || blockState.getBlock().getMaterial(blockState) == Material.PACKED_ICE || ((blockState.getBlock().getMaterial(blockState) == Material.SNOW || blockState.getBlock().getMaterial(blockState) == Material.CRAFTED_SNOW) && blockState.getBlock() != Blocks.SNOW_LAYER )) {
+			return Blocks.WATER.getDefaultState();
+		} else if (blockState.getBlock().getMaterial(blockState) == Material.WATER || blockState.getBlock() == Blocks.SNOW_LAYER) {
+			return Blocks.AIR.getDefaultState();
+		} else if (blockState.getBlock().getMaterial(blockState) == Material.WOOD || blockState.getBlock().getMaterial(blockState) == Material.LEAVES || blockState.getBlock().getMaterial(blockState) == Material.PLANTS || blockState.getBlock().getMaterial(blockState) == Material.GOURD || blockState.getBlock().getMaterial(blockState) == Material.WEB || blockState.getBlock().getMaterial(blockState) == Material.CLOTH || blockState.getBlock().getMaterial(blockState) == Material.CARPET || blockState.getBlock().getMaterial(blockState) == Material.CACTUS || blockState.getBlock().getMaterial(blockState) == Material.SPONGE) {
+			return Blocks.FIRE.getDefaultState();
+		}
+		return blockState;
+	}
+
+	private static void setDamagedBlock(IBlockState blockState, World world, BlockPos position) {
+		if (blockState != world.getBlockState(position)) {
+			world.setBlockState(position, blockState);
 		}
 	}
 
@@ -1889,8 +1965,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		// TODO: Fix spelling
 		//Satellite
 		if(nbt.hasKey("satallite")) {
-			NBTTagCompound satalliteNbt = nbt.getCompoundTag("satallite");
-			satallite = SatelliteRegistry.createFromNBT(satalliteNbt);
+			NBTTagCompound satelliteNBT = nbt.getCompoundTag("satallite");
+			satellite = SatelliteRegistry.createFromNBT(satelliteNBT);
 		}
 
 		spacePosition.readFromNBT(nbt);
@@ -1920,13 +1996,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		nbt.setInteger("destinationDimId", destinationDimId);
 
-		//Satallite
-		if(satallite != null) {
-			NBTTagCompound satalliteNbt = new NBTTagCompound();
-			satallite.writeToNBT(satalliteNbt);
-			satalliteNbt.setString("DataType",SatelliteRegistry.getKey(satallite.getClass()));
+		//Satellite
+		if(satellite != null) {
+			NBTTagCompound satelliteNBT = new NBTTagCompound();
+			satellite.writeToNBT(satelliteNBT);
+			satelliteNBT.setString("DataType",SatelliteRegistry.getKey(satellite.getClass()));
 
-			nbt.setTag("satallite", satalliteNbt);
+			nbt.setTag("satallite", satelliteNBT);
 		}
 		spacePosition.writeToNBT(nbt);
 	}
@@ -2332,18 +2408,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	@Override
 	public void setTotalProgress(int id, int progress) {}
-
-	@Override
-	public boolean startRiding(Entity entityIn, boolean force) {
-		// TODO Auto-generated method stub
-		return super.startRiding(entityIn, force);
-	}
-
-	@Override
-	public boolean startRiding(Entity entityIn) {
-		// TODO Auto-generated method stub
-		return super.startRiding(entityIn);
-	}
 
 	@Override
 	@SideOnly(Side.CLIENT)

@@ -56,71 +56,28 @@ public class RenderCentrifuge extends TileEntitySpecialRenderer {
 		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
 		GL11.glTranslated(x + 0.5, y, z + 0.5);
 		GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) - front.getFrontOffsetX()*90f, 0, 1, 0);
-		GL11.glTranslated(0, 0, 0 + 1);
+		GL11.glTranslated(-0.5f, -1f, 1.5f);
 
 		bindTexture(texture);
 
-		model.renderOnly("Frame");
+		model.renderOnly("Hull");
+
 
 
 		if(multiBlockTile.isRunning())
 		{
-			float lavaheight = multiBlockTile.getNormallizedProgress(0);
-			GL11.glRotated(multiBlockTile.getWorld().getTotalWorldTime() * -10f, 0, 1, 0);
-			model.renderOnly("Spinning");
+			GL11.glPushMatrix();
+			GL11.glRotated(multiBlockTile.getWorld().getTotalWorldTime() * -100f, 0, 1, 0);
+			model.renderOnly("Cylinder");
+			GL11.glPopMatrix();
 
-
-			ResourceLocation fluidIcon = new ResourceLocation("advancedrocketry:textures/blocks/fluid/oxygen_flow.png");
-			Fluid fluid = FluidRegistry.getFluid("enrichedlava");
-			if(fluid != null)
-			{
-				GL11.glPushMatrix();
-
-				double minU = 0, maxU = 1, minV = 0, maxV = 1;
-				TextureMap map = Minecraft.getMinecraft().getTextureMapBlocks();
-				TextureAtlasSprite sprite = map.getTextureExtry(fluid.getStill().toString());
-				if(sprite != null) {
-					minU = sprite.getMinU();
-					maxU = sprite.getMaxU();
-					minV = sprite.getMinV();
-					maxV = sprite.getMaxV();
-					GlStateManager.bindTexture(map.getGlTextureId());
-				}
-				else {
-					int color = fluid.getColor();
-					GlStateManager.color(((color >>> 16) & 0xFF)/255f, ((color >>> 8) & 0xFF)/255f, ((color& 0xFF)/255f),1f);
-
-					bindTexture(fluidIcon);
-				}
-				Tessellator tess = Tessellator.getInstance();
-
-				float amt = 1.0f;
-
-				GlStateManager.disableLighting();
-				GlStateManager.enableBlend();
-
-				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-				AxisAlignedBB bb = new AxisAlignedBB(-1.2, -0.5, -0.5, 1.2, 0.3 - 0.6*lavaheight, 0.5);
-
-				for(int i = 0; i < 4; i++)
-				{
-					tess.getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-					RenderHelper.renderCubeWithUV(tess.getBuffer(), bb.minX + 0.01, bb.minY + 0.01, bb.minZ + 0.01, bb.maxX - 0.01, bb.maxY*amt - 0.01, bb.maxZ - 0.01, minU, maxU, minV, maxV);
-					tess.draw();
-					GL11.glRotatef(45f, 0, 1, 0);
-				}
-
-				GlStateManager.enableLighting();
-				GlStateManager.disableBlend();
-				GL11.glPopMatrix();
-				GlStateManager.color(1f, 1f, 1f);
-			}
-		}
-		else
-		{
-			model.renderOnly("Spinning");
+		} else {
+			GL11.glPushMatrix();
+			model.renderOnly("Cylinder");
+			GL11.glPopMatrix();
 		}
 		GL11.glPopMatrix();
+
+
 	}
 }

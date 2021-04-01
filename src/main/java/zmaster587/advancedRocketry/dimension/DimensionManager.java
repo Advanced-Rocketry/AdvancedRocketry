@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.dimension;
 
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,7 +13,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.io.Files;
@@ -33,10 +31,10 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.backwardCompat.VersionCompat;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes;
-import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
+import zmaster587.advancedRocketry.util.PlanetaryTravelHelper;
 import zmaster587.advancedRocketry.util.FluidGasGiantGas;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader;
@@ -182,8 +180,8 @@ public class DimensionManager implements IGalaxy {
 	 * @param dimId id to register the planet with
 	 * @return the name for the next planet
 	 */
-	private String getNextName(int dimId) {
-		return "Sol-" + dimId;
+	private String getNextName(int starId, int dimId) {
+		return getStar(starId).getName() + " " + dimId;
 	}
 
 	/**
@@ -258,7 +256,7 @@ public class DimensionManager implements IGalaxy {
 			return null;
 
 		if(name == "")
-			properties.setName(getNextName(properties.getId()));
+			properties.setName(getNextName(starId, properties.getId()));
 		else {
 			properties.setName(name);
 		}
@@ -341,7 +339,7 @@ public class DimensionManager implements IGalaxy {
 		DimensionProperties properties = new DimensionProperties(getNextFreeDim(dimOffset));
 
 		if(name == "")
-			properties.setName(getNextName(properties.getId()));
+			properties.setName(getNextName(starId, properties.getId()));
 		else {
 			properties.setName(name);
 		}
@@ -1165,34 +1163,14 @@ public class DimensionManager implements IGalaxy {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param destinationDimId
 	 * @param dimension
 	 * @return true if the two dimensions are in the same planet/moon system
 	 */
 	public boolean areDimensionsInSamePlanetMoonSystem(int destinationDimId,
 			int dimension) {
-		//This is a mess, clean up later
-		if(dimension == SpaceObjectManager.WARPDIMID || destinationDimId == SpaceObjectManager.WARPDIMID)
-			return false;
-
-		DimensionProperties properties = getDimensionProperties(dimension);
-		DimensionProperties properties2 = getDimensionProperties(destinationDimId);
-
-		while(properties.getParentProperties() != null) properties = properties.getParentProperties();
-		while(properties2.getParentProperties() != null) properties2 = properties2.getParentProperties();
-
-		return areDimensionsInSamePlanetMoonSystem(properties, destinationDimId) || areDimensionsInSamePlanetMoonSystem(properties2, dimension);
-	}
-
-	private boolean areDimensionsInSamePlanetMoonSystem(DimensionProperties properties, int id) {
-		if(properties.getId() == id)
-			return true;
-
-		for(int child : properties.getChildPlanets()) {
-			if(areDimensionsInSamePlanetMoonSystem(getDimensionProperties(child), id)) return true;
-		}
-		return false;
+		return PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(destinationDimId,dimension);
 	}
 
 	public static DimensionProperties getEffectiveDimId(int dimId, BlockPos pos) {

@@ -56,7 +56,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 
 		list.add(pan);
 		list.add(new ModuleButton(120, 124, -1, LibVulpes.proxy.getLocalizedString("msg.biomechanger.scan"), this, TextureResources.buttonScan));
-		list.add(new ModulePower(16, 48, (IUniversalEnergy) sat));
+		list.add(new ModulePower(16, 48, sat.getBattery()));
 
 		return list;
 	}

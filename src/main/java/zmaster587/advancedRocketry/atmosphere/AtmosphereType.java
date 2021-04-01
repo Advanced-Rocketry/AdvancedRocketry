@@ -11,7 +11,7 @@ public class AtmosphereType implements IAtmosphere {
 	//We're probably not getting a polluted atmosphere type
 	public static final AtmosphereType AIR = new AtmosphereType(false, true, "air");
 	public static final AtmosphereType PRESSURIZEDAIR = new AtmosphereType(false, true, true, "PressurizedAir");
-	public static final AtmosphereType LOWOXYGEN = new AtmosphereLowOxygen(true, false, false, "lowO2");
+	public static final AtmosphereType LOWOXYGEN = new AtmosphereLowOxygen(true, false, true, "lowO2");
 	public static final AtmosphereType VACUUM = new AtmosphereVacuum();
 	public static final AtmosphereType HIGHPRESSURE = new AtmosphereHighPressure(true, false, true, "HighPressure");
 	public static final AtmosphereType SUPERHIGHPRESSURE = new AtmosphereSuperHighPressure(true, false, true, "SuperHighPressure");

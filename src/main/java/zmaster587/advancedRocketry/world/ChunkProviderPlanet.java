@@ -28,12 +28,7 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.util.OreGenProperties.OreEntry;
-import zmaster587.advancedRocketry.world.decoration.MapGenCaveExt;
-import zmaster587.advancedRocketry.world.decoration.MapGenCrater;
-import zmaster587.advancedRocketry.world.decoration.MapGenGeode;
-import zmaster587.advancedRocketry.world.decoration.MapGenRavineExt;
-import zmaster587.advancedRocketry.world.decoration.MapGenSpaceVillage;
-import zmaster587.advancedRocketry.world.decoration.MapGenVolcano;
+import zmaster587.advancedRocketry.world.decoration.*;
 import zmaster587.advancedRocketry.world.ore.CustomizableOreGen;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 
@@ -84,6 +79,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	private MapGenCrater craterGenerator;
 	private MapGenGeode geodeGenerator;
 	private MapGenVolcano volcanoGenerator;
+	private MapGenSwampTree swampTreeGenerator;
 
 	{
 		caveGenerator = TerrainGen.getModdedMapGen(caveGenerator, CAVE);
@@ -182,6 +178,10 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		}
 		else
 			volcanoGenerator = null;
+
+		//Yes, the trees shouldn't be here. This, however, makes them NOT MAKE WALLS. So they're here
+		swampTreeGenerator = new MapGenSwampTree(10);
+
 	}
 
 	public void setBlocksInChunk(int x, int z, ChunkPrimer primer)
@@ -298,6 +298,9 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 		if(this.geodeGenerator != null)
 			this.geodeGenerator.generate(this.worldObj, x, z, chunkprimer);
+
+		//Trees are always
+		this.swampTreeGenerator.generate(this.worldObj, x, z, chunkprimer);
 
 		if (this.mapFeaturesEnabled && habitable)
 		{
@@ -593,7 +596,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 
 		//If a planet is terraformed chenge upper blocks
-		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowTerraforming && worldObj.provider.getClass() == WorldProviderPlanet.class) {
+		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableTerraforming && worldObj.provider.getClass() == WorldProviderPlanet.class) {
 
 			if(DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).isTerraformed()) {
 				Chunk chunk = worldObj.getChunkFromChunkCoords(x, z);

@@ -1,5 +1,6 @@
 {
     "variants": {
-        "normal": { "model": "advancedrocketry:blockPipeSealer" }
+        "normal": { "model": "advancedrocketry:blockPipeSealer" },
+        "inventory" : { "model": "advancedrocketry:blockpipesealer" }
     }
 }

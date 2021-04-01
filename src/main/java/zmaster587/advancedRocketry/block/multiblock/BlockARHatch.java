@@ -40,7 +40,8 @@ public class BlockARHatch extends BlockHatch {
 
 
 		boolean isPointer = blockAccess.getTileEntity(pos.offset(direction.getOpposite())) instanceof TilePointer;
-		
+		if (blockState.getValue(VARIANT) == 8)
+			return false;
 		if(isPointer || blockState.getValue(VARIANT) < 2)
 			return super.shouldSideBeRendered(blockState, blockAccess, pos, direction);
 		return true;
@@ -80,7 +81,7 @@ public class BlockARHatch extends BlockHatch {
 		
 		//TODO: multiple sized Hatches
 		if((metadata & 7) == 0)
-			return new TileDataBus(4);
+			return new TileDataBus(2);
 		else if((metadata & 7) == 1)
 			return new TileSatelliteHatch(1);	
 		else if((metadata & 7) == 2)
@@ -92,7 +93,7 @@ public class BlockARHatch extends BlockHatch {
 		else if((metadata & 7) == 5)
 			return new TileRocketFluidLoader();
 		else if((metadata & 7) == 6)
-			return new TileGuidanceComputerHatch();
+			return new TileGuidanceComputerAccessHatch();
 		
 		return null;
 	}

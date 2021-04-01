@@ -118,8 +118,8 @@ public interface IDimensionProperties {
 	 * @param satellite satellite to add
 	 * @param world world to add the satellite to
 	 */
-	public void addSatallite(SatelliteBase satellite, World world);
-	public void addSatallite(SatelliteBase satellte);
+	public void addSatellite(SatelliteBase satellite, World world);
+	public void addSatellite(SatelliteBase satellte);
 	
 	/**
 	 * Returns the satellite with that ID
