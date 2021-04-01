@@ -23,6 +23,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import zmaster587.advancedRocketry.block.BlockAdvancedRocketMotor;
 import zmaster587.advancedRocketry.block.BlockBeacon;
+import zmaster587.advancedRocketry.block.BlockBipropellantFuelTank;
+import zmaster587.advancedRocketry.block.BlockBipropellantRocketMotor;
 import zmaster587.advancedRocketry.block.BlockElectricMushroom;
 import zmaster587.advancedRocketry.block.BlockForceField;
 import zmaster587.advancedRocketry.block.BlockForceFieldProjector;
@@ -83,8 +85,10 @@ public class AdvancedRocketryBlocks {
 
 	public static Block blockGenericSeat = new BlockSeat(AbstractBlock.Properties.create(Material.WOOL).hardnessAndResistance(0.5f));
 	public static Block blockEngine = new BlockRocketMotor(machineLineProperties);
+	public static Block blockBipropellantEngine = new BlockBipropellantRocketMotor(machineLineProperties);
 	public static Block blockAdvEngine = new BlockAdvancedRocketMotor(machineLineProperties);
 	public static Block blockFuelTank = new BlockFuelTank(machineLineProperties);
+	public static Block blockBipropellantFuelTank = new BlockBipropellantFuelTank(machineLineProperties);
 	public static Block blockSawBlade = new BlockMotor(machineLineProperties,1f);
 
 	public static Block blockConcrete = new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2f, 16f));
@@ -239,7 +243,9 @@ public class AdvancedRocketryBlocks {
 				AdvancedRocketryBlocks.blockGenericSeat.setRegistryName("seat"),
 				AdvancedRocketryBlocks.blockEngine.setRegistryName("rocketmotor"),
 				AdvancedRocketryBlocks.blockAdvEngine.setRegistryName("advrocketmotor"),
+				AdvancedRocketryBlocks.blockBipropellantEngine.setRegistryName("bipropellantrocketmotor"),
 				AdvancedRocketryBlocks.blockFuelTank.setRegistryName("fueltank"),
+				AdvancedRocketryBlocks.blockBipropellantFuelTank.setRegistryName("bipropellantfueltank"),
 				AdvancedRocketryBlocks.blockFuelingStation.setRegistryName("fuelingstation"),
 				AdvancedRocketryBlocks.blockMonitoringStation.setRegistryName("monitoringstation"),
 				AdvancedRocketryBlocks.blockSatelliteBuilder.setRegistryName("satellitebuilder"),

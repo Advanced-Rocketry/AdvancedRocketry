@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"sss",
+	" t ",
+	"t t"
+    ],
+    "key":
+    {
+        "s":
+        {
+            "type": "forge:ore_dict",
+            "ore": "ingotTitanium"
+        },
+	"t":
+        {
+            "type": "forge:ore_dict",
+            "ore": "plateSteel"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:bipropellantrocketmotor",
+        "count": 1
+    }
+}

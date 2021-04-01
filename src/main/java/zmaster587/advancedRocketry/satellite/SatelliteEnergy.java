@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
@@ -42,10 +43,10 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 		return "Collecting Energy";
 	}
 
-	protected int energyCreated(World world, boolean simulate) {
-		int amt =(int) ((world.getGameTime() - lastActionTime)*getPowerPerTick());
+	protected int energyCreated(boolean simulate) {
+		int amt =(int) ((AdvancedRocketry.proxy.getWorldTimeUniversal() - lastActionTime)*getPowerPerTick());
 		if(!simulate)
-			lastActionTime = world.getGameTime();
+			lastActionTime = AdvancedRocketry.proxy.getWorldTimeUniversal();
 		return amt;
 	}
 
@@ -81,16 +82,10 @@ public class SatelliteEnergy extends SatelliteBase implements IUniversalEnergyTr
 	
 	@Override
 	public int transmitEnergy(Direction dir, boolean simulate) {
-		if(!Constants.INVALID_PLANET.equals(getDimensionId().get())) {
-			World world = ZUtils.getWorld(getDimensionId().get());
-			if(world != null) {
-				int energyCreated = energyCreated(world, simulate);
+				int energyCreated = energyCreated(simulate);
 				battery.acceptEnergy(Math.max((energyCreated - getEnergyMTU(Direction.DOWN)), 0), simulate);
 				int energy = battery.extractEnergy(Math.max(getEnergyMTU(Direction.DOWN) - energyCreated,0), simulate);
 				return energy + energyCreated;
-			}
-		}
-		return 0;
 	}
 
 	@Override

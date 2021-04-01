@@ -24,6 +24,8 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
+import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IUniversalEnergyTransmitter;
 import zmaster587.libVulpes.block.BlockMeta;
@@ -53,12 +55,15 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 
 	List<Long> connectedSatellites;
 	boolean initialCheck;
+	double insolationPowerMultiplier;
+	ResourceLocation powerSourceDimensionID;
 	int powerMadeLastTick, prevPowerMadeLastTick;
 	ModuleText textModule;
 	public TileMicrowaveReciever() {
 		super(AdvancedRocketryTileEntityType.TILE_MICROWAVE_RECIEVER);
 		connectedSatellites = new LinkedList<Long>();
 		initialCheck = false;
+		insolationPowerMultiplier = 0;
 		textModule = new ModuleText(40, 20, LibVulpes.proxy.getLocalizedString("msg.microwaverec.notgenerating"), 0x2b2b2b);
 	}
 
@@ -136,6 +141,14 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 			initialCheck = true;
 		}
 
+		//Checks whenever a station changes dimensions or when the multiblock is intialized - ie any time the multipler could concieveably change
+		if(insolationPowerMultiplier == 0 || ((ZUtils.getDimensionIdentifier(world).getPath().equals(ARConfiguration.getCurrentConfig().spaceDimId.get())) && (powerSourceDimensionID != SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getOrbitingPlanetId()))) {
+			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world);
+			insolationPowerMultiplier = (ZUtils.getDimensionIdentifier(world).getPath().equals(ARConfiguration.getCurrentConfig().spaceDimId.get())) ? SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getInsolationMultiplier() : properties.getPeakInsolationMultiplierWithoutAtmosphere();
+			//Sets the ID of the place it's sourcing power from so it does not have to recheck
+			if (ZUtils.getDimensionIdentifier(world).getPath().equals(ARConfiguration.getCurrentConfig().spaceDimId.get()))
+			    powerSourceDimensionID = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getOrbitingPlanetId();
+		}
 		if(!isComplete())
 			return;
 
@@ -147,7 +160,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 			List<Entity> entityList = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(this.getPos().getX() - offset.x, this.getPos().getY(), this.getPos().getZ() - offset.z, this.getPos().getX() - offset.x + getStructure()[0][0].length, 256, this.getPos().getZ() - offset.z + getStructure()[0].length));
 
 			for(Entity e : entityList) {
-				e.setFire(5);
+				e.setFire(powerMadeLastTick/10);
 			}
 
 			for(int x=0 ; x < getStructure()[0][0].length; x++) {
@@ -167,11 +180,12 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 		}
 
 		DimensionProperties properties;
-		if(!world.isRemote && (DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(world)) || ZUtils.getDimensionIdentifier(world) == DimensionManager.overworldProperties.getId())) {
-			properties = DimensionManager.getInstance().getDimensionProperties(world);
-
+		ResourceLocation dimid = ZUtils.getDimensionIdentifier(world);
+        SpaceStationObject spaceStation = (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos);
+		if(!world.isRemote && (DimensionManager.getInstance().isDimensionCreated(dimid) || ZUtils.getDimensionIdentifier(world) == DimensionManager.overworldProperties.getId())) {
+			//This way we check to see if it's on a station, and if so, if it has any satellites in orbit around the planet the station is around to pull from
+			properties = (spaceStation != null) ? spaceStation.getOrbitingPlanet() : DimensionManager.getInstance().getDimensionProperties(dimid);
 			int energyRecieved = 0;
-
 			if(enabled) {
 				for(long lng : connectedSatellites) {
 					SatelliteBase satellite =  properties.getSatellite(lng);
@@ -180,6 +194,9 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 						energyRecieved += ((IUniversalEnergyTransmitter)satellite).transmitEnergy(Direction.UP, false);
 					}
 				}
+
+				//Multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency, and by insolation mult for solar stuff
+				energyRecieved *= 2 * insolationPowerMultiplier;
 			}
 			powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().microwaveRecieverMulitplier.get());
 

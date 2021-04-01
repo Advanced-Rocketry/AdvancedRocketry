@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
@@ -40,6 +41,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
+import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
@@ -78,15 +80,42 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	@Override
 	public void performFunction() {
 		if(!world.isRemote) {
-			if(tank.getFluid() != null) {
-				float multiplier = FuelRegistry.instance.getMultiplier(FuelType.LIQUID, tank.getFluid().getFluid());
+			//Lock rocket to a specific fluid so that it has only one oxidizer/bipropellant/monopropellant
+			if (tank.getFluid() != null && linkedRocket.stats.getFuelFluid() == null) {
+				if ((FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid())  && linkedRocket.stats.getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT) > 0)|| (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid()) && linkedRocket.stats.getFuelCapacity(FuelType.LIQUID_BIPROPELLANT) > 0)) {
+					linkedRocket.stats.setFuelFluid(tank.getFluid().getFluid().getRegistryName());
+				}
+			} else if (tank.getFluid() != null && linkedRocket.stats.getOxidizerFluid() == null) {
+				if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid())) {
+					linkedRocket.stats.setOxidizerFluid(tank.getFluid().getFluid().getRegistryName());
+				}
+			}
 
-				tank.drain(linkedRocket.addFuelAmount((int)(multiplier*ARConfiguration.getCurrentConfig().fuelPointsPer10Mb.get())), FluidAction.EXECUTE);
+			if (tank.getFluid() != null && isFluidFillable(tank.getFluid().getFluid())) {
+				if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid())) {
+					int fuelRate = (int)(FuelRegistry.instance.getMultiplier(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid()) * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT));
+
+					tank.drain(linkedRocket.addFuelAmountMonopropellant(ARConfiguration.getCurrentConfig().fuelPointsPer10Mb.get()), FluidAction.EXECUTE);
+					linkedRocket.setFuelRateMonopropellant(fuelRate);
+				} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid())) {
+					int fuelRate = (int)(FuelRegistry.instance.getMultiplier(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid()) * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_BIPROPELLANT));
+					tank.drain(linkedRocket.addFuelAmountBipropellant(ARConfiguration.getCurrentConfig().fuelPointsPer10Mb.get()), FluidAction.EXECUTE);
+					linkedRocket.setFuelRateBipropellant(fuelRate);
+				} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid())) {
+					int fuelRate = (int)(FuelRegistry.instance.getMultiplier(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid()) * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_OXIDIZER));
+
+					tank.drain(linkedRocket.addFuelAmountOxidizer(ARConfiguration.getCurrentConfig().fuelPointsPer10Mb.get()), FluidAction.EXECUTE);
+					linkedRocket.setFuelRateOxidizer(fuelRate);
+				}
 			}
 			//If the rocket is full then emit redstone
-			setRedstoneState(linkedRocket.getFuelAmount() == linkedRocket.getFuelCapacity());
+			setRedstoneState(linkedRocket.getFuelAmountMonopropellant() == linkedRocket.getFuelCapacityMonopropellant());
 		}
 		useBucket(0, inventory.getStackInSlot(0));
+	}
+
+	public boolean isFluidFillable (Fluid fluid) {
+		return FluidUtils.areFluidsSameType(linkedRocket.stats.getFuelFluid(),fluid) || (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluid) && FluidUtils.areFluidsSameType(linkedRocket.stats.getOxidizerFluid(),fluid) && FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, ForgeRegistries.FLUIDS.getValue(linkedRocket.stats.getFuelFluid())));
 	}
 
 	@Override
@@ -113,12 +142,15 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	@Override
 	public boolean canPerformFunction() {
 		// TODO Solid fuel?
-		return linkedRocket != null && ( /*(inv != null) ||*/ (tank.getFluid() != null && tank.getFluidAmount() > 9 && linkedRocket.getRocketStats().getFuelAmount(FuelType.LIQUID) < linkedRocket.getRocketStats().getFuelCapacity(FuelType.LIQUID)) );
+		return linkedRocket != null && ( /*(inv != null) ||*/ (tank.getFluid() != null && tank.getFluidAmount() > 9 &&
+				(linkedRocket.getRocketStats().getFuelAmount(FuelType.LIQUID_MONOPROPELLANT) < linkedRocket.getRocketStats().getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT) ||
+				linkedRocket.getRocketStats().getFuelAmount(FuelType.LIQUID_BIPROPELLANT) < linkedRocket.getRocketStats().getFuelCapacity(FuelType.LIQUID_BIPROPELLANT) ||
+				linkedRocket.getRocketStats().getFuelAmount(FuelType.LIQUID_OXIDIZER) < linkedRocket.getRocketStats().getFuelCapacity(FuelType.LIQUID_OXIDIZER))));
 	}
 
 	@Override
 	public boolean canFill(Fluid fluid) {
-		return FuelRegistry.instance.isFuel(FuelType.LIQUID,fluid);
+		return FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT,fluid) || FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT,fluid) || FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER,fluid);
 	}
 
 
@@ -144,8 +176,8 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 		if(slot == 0 && stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()) {
 			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).orElse(null);
 			FluidStack fluidStack = fluidItem.getFluidInTank(0);
+			if(fluidStack != null && (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid()) || FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid()) || FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())) && tank.getFluidAmount() + fluidItem.getTankCapacity(0) <= tank.getCapacity()) {
 
-			if(fluidStack != null && FuelRegistry.instance.isFuel(FuelType.LIQUID, fluidStack.getFluid()) && tank.getFluidAmount() + fluidItem.getTankCapacity(0) <= tank.getCapacity()) {
 
 				ItemStack emptyContainer = stack.copy();
 				emptyContainer.setCount(1);
@@ -187,9 +219,9 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		if(stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()) {
 			FluidStack fstack = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).orElse(null).getFluidInTank(0);
-			return fstack != null && FuelRegistry.instance.isFuel(FuelType.LIQUID, fstack.getFluid());
+			return fstack != null && FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fstack.getFluid());
 		}
-		return FuelRegistry.instance.isFuel(FuelType.LIQUID,stack);
+		return FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT,stack);
 	}
 
 	@Override
@@ -207,7 +239,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	@Override
 	public boolean linkRocket(EntityRocketBase rocket) {
 		this.linkedRocket = rocket;
-		setRedstoneState(linkedRocket.getFuelAmount() == linkedRocket.getFuelCapacity());
+		setRedstoneState(linkedRocket.getFuelAmountMonopropellant() == linkedRocket.getFuelCapacityMonopropellant());
 		return true;
 	}
 
@@ -357,7 +389,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 		state = RedstoneState.values()[nbt.getByte("state")];
 
 		if(linkedRocket != null)
-			setRedstoneState(linkedRocket.getFuelAmount() == linkedRocket.getFuelCapacity());
+			setRedstoneState(linkedRocket.getFuelAmountMonopropellant() == linkedRocket.getFuelCapacityMonopropellant());
 	}
 
 	@Override

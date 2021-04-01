@@ -27,17 +27,17 @@ public class TileWarpCore extends TileMultiBlock {
 	private SpaceStationObject station;
 
 	public static final Object[][][] structure = { 
-		{{new ResourceLocation("forge","block/titanium"), new ResourceLocation("forge","block/titanium"), new ResourceLocation("forge","block/titanium")},
-			{new ResourceLocation("forge","block/titanium"), 'I', new ResourceLocation("forge","block/titanium")},
-			{new ResourceLocation("forge","block/titanium"), new ResourceLocation("forge","block/titanium"), new ResourceLocation("forge","block/titanium")}},
+		{{new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcorerim")},
+			{new ResourceLocation("advancedrocketry", "warpcorerim"), 'I', new ResourceLocation("advancedrocketry", "warpcorerim")},
+			{new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcorerim")}},
 
 			{{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null},
-				{new BlockMeta(LibVulpesBlocks.blockStructureBlock), new BlockMeta(Blocks.GOLD_BLOCK), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+				{new BlockMeta(LibVulpesBlocks.blockStructureBlock), new ResourceLocation("advancedrocketry", "warpcore"), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
 				{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null}},
-
-				{{new ResourceLocation("forge","block/titanium"), 'c', new ResourceLocation("forge","block/titanium")}, 
-					{new ResourceLocation("forge","block/titanium"), new BlockMeta(Blocks.GOLD_BLOCK), new ResourceLocation("forge","block/titanium")},
-					{new ResourceLocation("forge","block/titanium"), new ResourceLocation("forge","block/titanium"), new ResourceLocation("forge","block/titanium")}},
+			
+				{{new ResourceLocation("advancedrocketry", "warpcorerim"), 'c', new ResourceLocation("advancedrocketry", "warpcorerim")},
+					{new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcore"), new ResourceLocation("advancedrocketry", "warpcorerim")},
+					{new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcorerim")}},
 
 	};
 
@@ -68,23 +68,21 @@ public class TileWarpCore extends TileMultiBlock {
 			attemptCompleteStructure(world.getBlockState(pos));
 		}
 		
-		if(getSpaceObject() == null || getSpaceObject().getFuelAmount() == getSpaceObject().getMaxFuelAmount())
+		if(getSpaceObject() == null || (getSpaceObject().getMaxFuelAmount() - getSpaceObject().getFuelAmount() < ARConfiguration.getCurrentConfig().fuelPointsPerDilithium.get()))
 			return;
 		for(IInventory inv : itemInPorts) {
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				ItemStack stack = inv.getStackInSlot(i);
 				int amt = 0;
-				if(stack != null && ItemTags.getCollection().getOwningTags(stack.getItem()).stream().anyMatch(value -> { return value.getPath().equalsIgnoreCase("gem/dilithium"); }) ) {
+				if(!stack.isEmpty() && ItemTags.getCollection().getOwningTags(stack.getItem()).stream().anyMatch(value -> { return value.getPath().equalsIgnoreCase("gems/dilithium"); }) ) {
 					int stackSize = stack.getCount();
 					if(!world.isRemote)
-						amt = getSpaceObject().addFuel(ARConfiguration.getCurrentConfig().fuelPointsPerDilithium.get()*stack.getCount());
-					else
-						amt = Math.min(getSpaceObject().getFuelAmount() + 10*stack.getCount(), getSpaceObject().getMaxFuelAmount()) - getSpaceObject().getFuelAmount();//
-					inv.decrStackSize(i, amt/10);
+						amt = getSpaceObject().addFuel(ARConfiguration.getCurrentConfig().fuelPointsPerDilithium.get());
+					inv.decrStackSize(i, amt/ARConfiguration.getCurrentConfig().fuelPointsPerDilithium.get());
 					inv.markDirty();
 					
 					//If full
-					if(stackSize/10 != amt)
+					if(getSpaceObject().getMaxFuelAmount() - getSpaceObject().getFuelAmount() < ARConfiguration.getCurrentConfig().fuelPointsPerDilithium.get())
 						return;
 				}
 			}

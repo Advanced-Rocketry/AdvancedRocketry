@@ -5,7 +5,11 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.inventory.ContainerModular;
@@ -14,6 +18,7 @@ import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.tile.TileInventoriedForgePowerMachine;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.List;
 
@@ -62,7 +67,12 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 
 	@Override
 	public int getPowerPerOperation() {
-		return zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().solarGeneratorMult.get();
+		DimensionProperties properties =DimensionManager.getInstance().getDimensionProperties(world);
+		double insolationMultiplier = (ZUtils.getDimensionIdentifier(world).equals(ARConfiguration.getCurrentConfig().spaceDimId.get())) ? SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getInsolationMultiplier() : properties.getPeakInsolationMultiplier();
+		//Slight adjustment to make Earth 0.9995 into a 1.0
+		//Then multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency
+		//Makes solar panels not return 0 everywhere
+		return (int)Math.min((1.0005d * 2d * ARConfiguration.getCurrentConfig().solarGeneratorMult.get() * insolationMultiplier), 10000);
 	}
 
 	@Override

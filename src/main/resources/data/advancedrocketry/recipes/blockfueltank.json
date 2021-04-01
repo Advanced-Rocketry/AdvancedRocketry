@@ -4,13 +4,18 @@
     [
 	"s s",
 	"p p",
-	"s s"
+	"sSs"
     ],
     "key":
     {
         "s":
         {
             "tag": "forge:sticks/steel"
+        },
+        "S":
+        {
+            "type": "forge:ore_dict",
+            "ore": "sheetSteel"
         },
 	"p":
         {

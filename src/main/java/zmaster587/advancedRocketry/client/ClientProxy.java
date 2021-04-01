@@ -161,7 +161,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInitBlocks()
 	{
-
 		//TODO fluids
 		/*registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockOxygenFluid);
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockNitrogenFluid);

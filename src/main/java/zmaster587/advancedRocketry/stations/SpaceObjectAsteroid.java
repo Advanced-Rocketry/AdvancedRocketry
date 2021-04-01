@@ -102,6 +102,11 @@ public class SpaceObjectAsteroid extends SpaceObjectBase implements IDataHandler
 	}
 
 	@Override
+	public double getInsolationMultiplier() {
+		return 0;
+	}
+
+	@Override
 	public int extractData(int maxAmount, DataType type, Direction dir, boolean commit) {
 		// TODO Auto-generated method stub
 		return 0;

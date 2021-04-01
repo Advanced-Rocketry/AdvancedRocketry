@@ -8,6 +8,7 @@ import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.util.SpacePosition;
 
+import java.util.Collection;
 import java.util.Set;
 
 public interface IDimensionProperties {
@@ -73,6 +74,16 @@ public interface IDimensionProperties {
 	public boolean hasAtmosphere();
 	
 	/**
+	 * @return the multiplier compared to Earth(1040W) for peak insolation of the body
+	 */
+	public double getPeakInsolationMultiplier();
+
+	/**
+	 * @return the multiplier compared to Earth(1040W) for peak insolation of the body, disregarding atmosphere
+	 */
+	public double getPeakInsolationMultiplierWithoutAtmosphere();
+	
+	/**
 	 * @return true if the planet has rings
 	 */
 	public boolean hasRings();
@@ -116,6 +127,12 @@ public interface IDimensionProperties {
 	 * @return
 	 */
 	public SatelliteBase getSatellite(long lng);
+
+	/**
+	 * Returns all of a dimension's satellites
+	 * @return a Collection containing all of a dimension's satellites
+	 */
+	public Collection<SatelliteBase> getAllSatellites();
 	
 	/**
 	 * Removes the satellite from orbit around this world
