@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:blocks/titaniumiridium"
+    }
+  ],
+  "result": {
+    "item": "libvulpes:ingottitaniumiridium",
+    "count": 9
+  }
+}

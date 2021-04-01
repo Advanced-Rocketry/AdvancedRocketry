@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:ingots/titanium"
+      "tag": "forge:blocks/titanium"
     }
   ],
   "result": {
-    "item": "libvulpes:blocktitanium",
+    "item": "libvulpes:ingottitanium",
     "count": 9
   }
 }

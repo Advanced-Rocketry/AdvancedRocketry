@@ -4,14 +4,15 @@
     [
         
         {
-            "tag": "forge:ores/rutile"
+            "tag": "forge:ores/titanium"
         }
     ],
     "time": 300,
     "energy": 20,
     "itemresults":
     {
-            "tag": "forge:dusts/titanium",
+            "tag":
+"forge:dusts/titanium",
             "count": 2
     }
 }

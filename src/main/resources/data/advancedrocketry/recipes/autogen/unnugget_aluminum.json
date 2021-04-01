@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:nuggets/aluminum"
+      "tag": "forge:ingots/aluminum"
     }
   ],
   "result": {
-    "item": "libvulpes:ingotaluminum",
+    "item": "libvulpes:nuggetaluminum",
     "count": 9
   }
 }

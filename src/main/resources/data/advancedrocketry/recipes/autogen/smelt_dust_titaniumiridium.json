@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "libvulpes:dusttitaniumiridium"
+  },
+  "result": "libvulpes:ingottitaniumiridium",
+  "experience": 0.0,
+  "cookingtime": 200
+}

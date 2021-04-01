@@ -1,0 +1,18 @@
+{
+"type": "advancedrocketry:smallplate",
+    "itemingredients":
+    [
+        
+        {
+            "tag": "forge:ores/titaniumaluminide"
+        }
+    ],
+    "time": 300,
+    "energy": 20,
+    "itemresults":
+    {
+            "tag":
+"forge:dusts/titaniumaluminide",
+            "count": 2
+    }
+}

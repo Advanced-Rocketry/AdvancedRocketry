@@ -9,11 +9,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.integration.jei.ARPlugin;
+import zmaster587.advancedRocketry.integration.jei.ItemDraw;
 import zmaster587.advancedRocketry.integration.jei.MachineCategoryTemplate;
 import zmaster587.advancedRocketry.integration.jei.MachineRecipe;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -32,7 +35,7 @@ public class ChemicalReactorCategory extends MachineCategoryTemplate<MachineReci
 
 	@Override
 	public String getTitle() {
-		return LibVulpes.proxy.getLocalizedString("tile.chemreactor.name");
+		return LibVulpes.proxy.getLocalizedString("block.advancedrocketry.chemicalreactor");
 	}
 	
 	@Override

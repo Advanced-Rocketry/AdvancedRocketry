@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "advancedrocketry:thermitetorch_wall"
+          "name": "advancedrocketry:thermitetorch"
         }
       ],
       "conditions": [

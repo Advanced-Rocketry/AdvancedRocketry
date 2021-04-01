@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:blocks/titaniumaluminide"
+    }
+  ],
+  "result": {
+    "item": "libvulpes:ingottitaniumaluminide",
+    "count": 9
+  }
+}

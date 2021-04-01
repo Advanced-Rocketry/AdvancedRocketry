@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "sps",
+    " r ",
+    "sps"
+  ],
+  "key": {
+    "s": {
+      "tag": "forge:sticks/titaniumaluminide"
+    },
+    "p": {
+      "tag": "forge:plates/titaniumaluminide"
+    },
+    "r": {
+      "tag": "forge:ingots/titaniumaluminide"
+    }
+  },
+  "result": {
+    "item": "libvulpes:geartitaniumaluminide"
+  }
+}

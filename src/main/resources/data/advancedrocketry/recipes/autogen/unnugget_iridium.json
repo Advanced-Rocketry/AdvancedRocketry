@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:nuggets/iridium"
+      "tag": "forge:ingots/iridium"
     }
   ],
   "result": {
-    "item": "libvulpes:ingotiridium",
+    "item": "libvulpes:nuggetiridium",
     "count": 9
   }
 }

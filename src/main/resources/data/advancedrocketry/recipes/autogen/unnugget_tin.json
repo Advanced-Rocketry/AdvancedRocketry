@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:nuggets/tin"
+      "tag": "forge:ingots/tin"
     }
   ],
   "result": {
-    "item": "libvulpes:ingottin",
+    "item": "libvulpes:nuggettin",
     "count": 9
   }
 }

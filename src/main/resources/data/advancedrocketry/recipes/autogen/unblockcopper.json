@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:ingots/copper"
+      "tag": "forge:blocks/copper"
     }
   ],
   "result": {
-    "item": "libvulpes:blockcopper",
+    "item": "libvulpes:ingotcopper",
     "count": 9
   }
 }
