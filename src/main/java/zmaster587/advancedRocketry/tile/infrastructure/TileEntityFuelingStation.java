@@ -55,7 +55,8 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 	HashedBlockPosition masterBlock;
 	ModuleRedstoneOutputButton redstoneControl;
 	RedstoneState state;
-
+	final int fuelPointsPer10Mb = 10;
+	
 	public TileEntityFuelingStation() {
 		super( AdvancedRocketryTileEntityType.TILE_FUELING_STATION, 1000, 3, 5000);
 		masterBlock = new HashedBlockPosition(0, -1, 0);
@@ -79,6 +80,7 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 
 	@Override
 	public void performFunction() {
+		
 		if(!world.isRemote) {
 			//Lock rocket to a specific fluid so that it has only one oxidizer/bipropellant/monopropellant
 			if (tank.getFluid() != null && linkedRocket.stats.getFuelFluid() == null) {
@@ -95,16 +97,16 @@ public class TileEntityFuelingStation extends TileInventoriedRFConsumerTank impl
 				if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid())) {
 					int fuelRate = (int)(FuelRegistry.instance.getMultiplier(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid()) * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT));
 
-					tank.drain(linkedRocket.addFuelAmountMonopropellant(ARConfiguration.getCurrentConfig().fuelPointsPer10Mb.get()), FluidAction.EXECUTE);
+					tank.drain(linkedRocket.addFuelAmountMonopropellant(fuelPointsPer10Mb), FluidAction.EXECUTE);
 					linkedRocket.setFuelRateMonopropellant(fuelRate);
 				} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid())) {
 					int fuelRate = (int)(FuelRegistry.instance.getMultiplier(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid()) * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_BIPROPELLANT));
-					tank.drain(linkedRocket.addFuelAmountBipropellant(ARConfiguration.getCurrentConfig().fuelPointsPer10Mb.get()), FluidAction.EXECUTE);
+					tank.drain(linkedRocket.addFuelAmountBipropellant(fuelPointsPer10Mb), FluidAction.EXECUTE);
 					linkedRocket.setFuelRateBipropellant(fuelRate);
 				} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid())) {
 					int fuelRate = (int)(FuelRegistry.instance.getMultiplier(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid()) * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_OXIDIZER));
 
-					tank.drain(linkedRocket.addFuelAmountOxidizer(ARConfiguration.getCurrentConfig().fuelPointsPer10Mb.get()), FluidAction.EXECUTE);
+					tank.drain(linkedRocket.addFuelAmountOxidizer(fuelPointsPer10Mb), FluidAction.EXECUTE);
 					linkedRocket.setFuelRateOxidizer(fuelRate);
 				}
 			}

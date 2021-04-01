@@ -937,9 +937,6 @@ public class ARConfiguration {
 	@ConfigProperty(needsSync=true, internalType=String.class)
 	public  ConfigValue<String> spaceDimId;
 
-	@ConfigProperty
-	public  ConfigValue<Integer> fuelPointsPer10Mb;
-
 	@ConfigProperty(needsSync=true, internalType=Integer.class)
 	public  ConfigValue<Integer> stationSize;
 
