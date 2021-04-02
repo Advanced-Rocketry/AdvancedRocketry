@@ -74,7 +74,7 @@ public class ItemAsteroidChip  extends ItemMultiData {
 		else {
 			if(stack.getDamage()  == 0) {
 
-				list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.asteroidChip.asteroid") + "-" + TextFormatting.DARK_GREEN  + getUUID(stack)));
+				list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.asteroidchip.asteroid") + "-" + TextFormatting.DARK_GREEN  + getUUID(stack)));
 
 				super.addInformation(stack, player, list, bool);
 

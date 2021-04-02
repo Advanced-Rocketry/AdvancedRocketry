@@ -1,0 +1,15 @@
+{
+    "type": "advancedrocketry:electricarcfurnace",
+    "itemingredients":
+    [
+        {
+	    "item": "libvulpes:dusttitanium"
+        }
+    ],
+    "time": 12000,
+    "energy": 1,
+    "itemresults":
+    {
+            "tag": "forge:ingots/titanium"
+    }
+}
