@@ -376,7 +376,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		originalAtmosphereDensity = atmosphereDensity = 100;
 		childPlanets = new HashSet<ResourceLocation>();
 		requiredArtifacts = new LinkedList<ItemStack>();
-		parentPlanet = null;
+		parentPlanet = Constants.INVALID_PLANET;
 		starId = Constants.INVALID_STAR;
 		averageTemperature = 100;
 		hasRings = false;
@@ -1940,6 +1940,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 */
 	@Override
 	public int getAverageTemp() {
+		
+		// Star is sometimes null early on in the loading process
+		if(this.getStar() == null)
+			return averageTemperature;
 		averageTemperature = AstronomicalBodyHelper.getAverageTemperature(this.getStar(), this.getSolarOrbitalDistance(), this.getAtmosphereDensity());
 		return averageTemperature;
 	}
