@@ -21,6 +21,14 @@ Material("iridium", 0xdedcce, ("ORE", "COIL", "BLOCK", "DUST", "INGOT", "NUGGET"
 Material("titaniumaluminide", 0xaec2de, ("GEAR", "COIL", "BLOCK", "INGOT", "PLATE", "SHEET", "DUST", "NUGGET", "SHEET")),
 Material("titaniumiridium", 0xd7dfe4, ("GEAR", "COIL", "BLOCK", "INGOT", "PLATE", "SHEET", "DUST", "NUGGET", "SHEET"))]
 
+
+def getNamespace(material):
+    if material == "titaniumaluminide" or material == "titaniumiridium":
+        return "advancedrocketry"
+    else:
+        return "libvulpes"
+
+
 vanilla = ["iron", "gold"]
 
 itemIngredientTag = '\n        {\n            "tag": "<TAG>"\n        }'
@@ -87,38 +95,42 @@ def generalCrafting(name, template, output, item1, item2="", item3="", count=1):
 
 
 for mat in materials:
+    
+    namespace_name = getNamespace(mat.name)
+    
     if "BOULE" in mat.outputs:
         createRecipeSimple("crystalize_" + mat.name, "crystallizer", 300, 20, ("forge:ingots/"+ mat.name, "forge:nuggets/" + mat.name), "forge:boules/" + mat.name)
     if "GEM" in mat.outputs:
         createRecipeSimple("crystalize_gem_" + mat.name, "crystallizer", 300, 20, ("forge:dusts/"+ mat.name,), "forge:gems/" + mat.name)
     if "STICK" in mat.outputs:
         createRecipeSimple("lathe_" + mat.name, "lathe", 300, 20, ("forge:ingots/"+ mat.name,), "forge:sticks/" + mat.name, 2)
-        generalCrafting("stick_hand_" + mat.name, jsonshapedcraftstick, "libvulpes:stick"+mat.name, "forge:ingots/" + mat.name)
+        generalCrafting("stick_hand_" + mat.name, jsonshapedcraftstick, namespace_name + ":stick"+mat.name, "forge:ingots/" + mat.name)
     if "PLATE" in mat.outputs:
         createRecipeWater("rolling_" + mat.name, "rollingmachine", 300, 20, ("forge:ingots/"+ mat.name,), "forge:plates/" + mat.name)
         if "BLOCK" in mat.outputs or mat.name in vanilla:
             createRecipeWater("rolling_block_" + mat.name, "rollingmachine", 300, 20, ("forge:blocks/"+ mat.name,), "forge:plates/" + mat.name, 9)
+            createRecipeSimple("crusher_block_plate" + mat.name, "smallplate", 300, 20, ("forge:blocks/"+ mat.name,), "forge:plates/" + mat.name, 4)
     if "SHEET" in mat.outputs:
         createRecipeWater("rolling_sheet_" + mat.name, "rollingmachine", 300, 20, ("forge:plates/"+ mat.name,), "forge:sheets/" + mat.name, 2)
     if "DUST" in mat.outputs:
         createRecipeSimple("crusher_dust_" + mat.name, "smallplate", 300, 20, ("forge:ores/"+ mat.name,), "forge:dusts/" + mat.name, 2)
         if "INGOT" in mat.outputs:
             if mat.name in vanilla:
-                smeltingRecipe("smelt_dust_" + mat.name, "libvulpes:dust" + mat.name, "minecraft:" + mat.name + "_ingot")
+                smeltingRecipe("smelt_dust_" + mat.name, namespace_name + ":dust" + mat.name, "minecraft:" + mat.name + "_ingot")
             else:
-                smeltingRecipe("smelt_dust_" + mat.name, "libvulpes:dust" + mat.name, "libvulpes:ingot" + mat.name)
+                smeltingRecipe("smelt_dust_" + mat.name, namespace_name + ":dust" + mat.name, namespace_name + ":ingot" + mat.name)
     if "NUGGET" in mat.outputs and mat.name not in vanilla:
-            generalCrafting("nugget_" + mat.name, jsonshapedcraftblock, "libvulpes:ingot" + mat.name, "forge:nuggets/" + mat.name)
-            generalCrafting("unnugget_" + mat.name, jsonnugget, "libvulpes:nugget" + mat.name, "forge:ingots/" + mat.name, "","", 9)
+            generalCrafting("nugget_" + mat.name, jsonshapedcraftblock, namespace_name + ":ingot" + mat.name, "forge:nuggets/" + mat.name)
+            generalCrafting("unnugget_" + mat.name, jsonnugget, namespace_name + ":nugget" + mat.name, "forge:ingots/" + mat.name, "","", 9)
     if "GEAR" in mat.outputs:
-        generalCrafting("gear_" + mat.name, jsonshapedcraftgear, "libvulpes:gear" + mat.name, "forge:sticks/" + mat.name, "forge:plates/" + mat.name, "forge:ingots/" + mat.name)
+        generalCrafting("gear_" + mat.name, jsonshapedcraftgear, namespace_name + ":gear" + mat.name, "forge:sticks/" + mat.name, "forge:plates/" + mat.name, "forge:ingots/" + mat.name)
     if "FAN" in mat.outputs:
-        generalCrafting("fan_" + mat.name, jsonshapedcraftfan, "libvulpes:fan" + mat.name, "forge:sticks/" + mat.name, "forge:plates/" + mat.name)
+        generalCrafting("fan_" + mat.name, jsonshapedcraftfan, namespace_name + ":fan" + mat.name, "forge:sticks/" + mat.name, "forge:plates/" + mat.name)
     if "COIL" in mat.outputs:
-        generalCrafting("coil_" + mat.name, jsonshapedcraftcoil, "libvulpes:coil" + mat.name, "forge:ingots/" + mat.name)
+        generalCrafting("coil_" + mat.name, jsonshapedcraftcoil, namespace_name + ":coil" + mat.name, "forge:ingots/" + mat.name)
     if "BLOCK" in mat.outputs:
         if mat.name not in vanilla:
-            generalCrafting("block_" + mat.name, jsonshapedcraftblock, "libvulpes:block" + mat.name, "forge:ingots/" + mat.name)
-            generalCrafting("unblock" + mat.name, jsonnugget, "libvulpes:ingot" + mat.name, "forge:blocks/" + mat.name, "","", 9)
+            generalCrafting("block_" + mat.name, jsonshapedcraftblock, namespace_name + ":block" + mat.name, "forge:ingots/" + mat.name)
+            generalCrafting("unblock" + mat.name, jsonnugget, namespace_name + ":ingot" + mat.name, "forge:blocks/" + mat.name, "","", 9)
     if "ORE" in mat.outputs and "INGOT" in mat.outputs:
-        smeltingRecipe("smelt_ore_" + mat.name, "libvulpes:ore" + mat.name, "libvulpes:ingot" + mat.name)
+        smeltingRecipe("smelt_ore_" + mat.name, namespace_name + ":ore" + mat.name, namespace_name + ":ingot" + mat.name)

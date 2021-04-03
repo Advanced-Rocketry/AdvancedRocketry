@@ -1,9 +1,9 @@
 {
   "type": "minecraft:smelting",
   "ingredient": {
-    "item": "libvulpes:dusttitaniumaluminide"
+    "item": "advancedrocketry:dusttitaniumaluminide"
   },
-  "result": "libvulpes:ingottitaniumaluminide",
+  "result": "advancedrocketry:ingottitaniumaluminide",
   "experience": 0.0,
   "cookingtime": 200
 }
