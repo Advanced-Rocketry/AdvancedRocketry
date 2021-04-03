@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.event;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PortalInfo;
+import net.minecraft.block.WallTorchBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -57,6 +58,7 @@ import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.block.BlockTorchUnlitWall;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketConfigSync;
@@ -179,8 +181,17 @@ public class PlanetEventHandler {
 		if(!world.isRemote  && AtmosphereHandler.getOxygenHandler(world) != null &&
 				!AtmosphereHandler.getOxygenHandler(world).getAtmosphereType(event.getPos()).allowsCombustion()) {
 
+			//TODO: move hardcoded torches to config
 			if(event.getPlacedBlock().getBlock() == Blocks.TORCH) {
 				event.getWorld().setBlockState(event.getPos(), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState(),20);
+			}
+			else if(event.getPlacedBlock().getBlock() == Blocks.WALL_TORCH) {
+				
+				
+				BlockState stateToPlace = AdvancedRocketryBlocks.blockUnlitTorchWall.getDefaultState().with(
+						WallTorchBlock.HORIZONTAL_FACING, event.getPlacedBlock().get(WallTorchBlock.HORIZONTAL_FACING));
+				
+				event.getWorld().setBlockState(event.getPos(), stateToPlace,20);
 			}
 			else if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().torchBlocks.contains(event.getPlacedBlock().getBlock()))
 			{

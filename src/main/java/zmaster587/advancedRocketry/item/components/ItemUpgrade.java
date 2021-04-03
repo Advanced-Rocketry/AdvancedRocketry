@@ -54,10 +54,8 @@ public class ItemUpgrade extends Item implements IArmorComponent {
 				}
 				//Walkspeed
 				player.abilities.setWalkSpeed((itemCount+1)*0.1f);
-				//ReflectionHelper.setPrivateValue(net.minecraft.entity.player.PlayerCapabilities.class, player.capabilities, (itemCount+1)*0.1f, "walkSpeed", "field_75097_g");
 			} else
 				player.abilities.setWalkSpeed(0.1f);
-				//ReflectionHelper.setPrivateValue(net.minecraft.entity.player.PlayerCapabilities.class, player.capabilities, 0.1f,"walkSpeed", "field_75097_g");
 		}
 		else if(componentStack.getItem() == AdvancedRocketryItems.itemUpgradeFallBoots && 
 				(!ARConfiguration.getCurrentConfig().lowGravityBoots.get() || DimensionManager.getInstance().getDimensionProperties(world).getGravitationalMultiplier() < 1f))
