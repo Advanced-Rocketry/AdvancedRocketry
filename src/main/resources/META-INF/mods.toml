@@ -48,7 +48,7 @@ Hey, listen!  The mod author managed to forget to fill this out, probably due to
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[1.0.0.6,)" #mandatory
+    versionRange="[1.0.1-10,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="BEFORE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
