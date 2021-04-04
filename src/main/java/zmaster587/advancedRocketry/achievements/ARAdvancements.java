@@ -81,20 +81,4 @@ public class ARAdvancements {
 				electrifying,
 				blockPresser));
 	}*/
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/achievements/ARAchivements.java
-=======
-
-	public static void register() {
-		Method method;
-		try {
-			method = ReflectionHelper.findMethod(CriteriaTriggers.class, "register", "func_192118_a", ICriterionTrigger.class);
-			method.setAccessible(true);
-			for (int i = 0; i < ARAdvancements.TRIGGER_ARRAY.length; i++) {
-				method.invoke(null, ARAdvancements.TRIGGER_ARRAY[i]);
-			} 
-		} catch (Exception e) {
-			
-		}
-	}
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/achievements/ARAdvancements.java
 }

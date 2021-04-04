@@ -33,10 +33,10 @@ import zmaster587.advancedRocketry.block.BlockFuelTank;
 import zmaster587.advancedRocketry.block.BlockHalfTile;
 import zmaster587.advancedRocketry.block.BlockIntake;
 import zmaster587.advancedRocketry.block.BlockLandingPad;
-import zmaster587.advancedRocketry.block.BlockLaser;
 import zmaster587.advancedRocketry.block.BlockLightSource;
 import zmaster587.advancedRocketry.block.BlockLinkedHorizontalTexture;
 import zmaster587.advancedRocketry.block.BlockMiningDrill;
+import zmaster587.advancedRocketry.block.BlockOrbitalLaserDrill;
 import zmaster587.advancedRocketry.block.BlockPress;
 import zmaster587.advancedRocketry.block.BlockPressurizedFluidTank;
 import zmaster587.advancedRocketry.block.BlockQuartzCrucible;
@@ -52,8 +52,8 @@ import zmaster587.advancedRocketry.block.BlockTileWithMultitooltip;
 import zmaster587.advancedRocketry.block.BlockTorchUnlit;
 import zmaster587.advancedRocketry.block.BlockTorchUnlitWall;
 import zmaster587.advancedRocketry.block.BlockTransciever;
+import zmaster587.advancedRocketry.block.BlockWarpController;
 import zmaster587.advancedRocketry.block.BlockWarpCore;
-import zmaster587.advancedRocketry.block.BlockWarpShipMonitor;
 import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
 import zmaster587.advancedRocketry.world.tree.AlienTree;
 import zmaster587.libVulpes.block.BlockAlphaTexture;
@@ -141,7 +141,7 @@ public class AdvancedRocketryBlocks {
 
 	public static Block blockMonitoringStation = new BlockTileNeighborUpdate(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
 
-	public static Block blockWarpShipMonitor = new BlockWarpShipMonitor(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
+	public static Block blockWarpShipMonitor = new BlockWarpController(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
 
 	public static Block blockSatelliteBuilder = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
 
@@ -221,7 +221,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockGravityMachine = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
 
 
-	public static Block blockSpaceLaser = new BlockLaser(machineLineProperties);
+	public static Block blockSpaceLaser = new BlockOrbitalLaserDrill(machineLineProperties);
 	public static Block blockSolarArray;
 	public static Block blockSolarArrayPanel;
 
