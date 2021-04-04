@@ -1,0 +1,8 @@
+{
+    "parent": "block/cube_bottom_top",
+    "textures": {
+        "bottom": "advancedrocketry:blocks/platepresser_top",
+        "side": "advancedrocketry:blocks/platepresser_side",
+        "top": "advancedrocketry:blocks/platepresser_bottom"
+    }
+}

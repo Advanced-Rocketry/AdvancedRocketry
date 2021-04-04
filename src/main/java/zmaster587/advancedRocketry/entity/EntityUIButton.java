@@ -7,14 +7,14 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
-import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
+import zmaster587.advancedRocketry.tile.station.TileHolographicPlanetSelector;
 
 public class EntityUIButton extends EntityUIPlanet {
 
 	String id;
-	TilePlanetaryHologram tile;
+	TileHolographicPlanetSelector tile;
 	
-	public EntityUIButton(World worldIn, ResourceLocation id, TilePlanetaryHologram tile) {
+	public EntityUIButton(World worldIn, ResourceLocation id, TileHolographicPlanetSelector tile) {
 		this(AdvancedRocketryEntities.ENTITY_UIBUTTON, worldIn);
 		this.id = id.toString();
 		this.tile = tile;

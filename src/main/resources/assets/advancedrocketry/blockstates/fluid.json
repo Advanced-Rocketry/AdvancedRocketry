@@ -1,42 +1,35 @@
-
 {
 	"forge_marker": 1,
+	"defaults": {
+		"model": "forge:fluid",
+		"transform": "forge:default-item"
+	},
 	"variants": {
-		"nitrogen": [
-                    {
-			"model": "forge:fluid",
+		"nitrogen": [{
 			"custom": {
 				"fluid": "nitrogen"
 			}
                     }
 		],
-		"rocketfuel": [
-                    {
-			"model": "forge:fluid",
+		"rocketfuel": [{
 			"custom": {
 				"fluid": "rocketfuel"
 			}
                     }
 		],
-		"oxygen": [
-                    {
-			"model": "forge:fluid",
+		"oxygen": [{
 			"custom": {
 				"fluid": "oxygen"
 			}
                     }
 		],
-		"hydrogen": [
-                    {
-			"model": "forge:fluid",
+		"hydrogen": [{
 			"custom": {
 				"fluid": "hydrogen"
 			}
                     }
 		],
-		"enrichedlava": [
-                    {
-			"model": "forge:fluid",
+		"enrichedlava": [{
 			"custom": {
 				"fluid": "enrichedlava"
 			}

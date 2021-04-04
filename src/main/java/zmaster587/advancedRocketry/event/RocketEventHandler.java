@@ -40,12 +40,10 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
-import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
@@ -440,7 +438,8 @@ public class RocketEventHandler extends Screen {
 			}
 
 			//Draw the O2 Bar if needed
-			if(!Minecraft.getInstance().player.isCreative()) {
+			boolean isCreativeOrSpec = Minecraft.getInstance().player.isCreative() || Minecraft.getInstance().player.isSpectator();
+			if(!isCreativeOrSpec) {
 				ItemStack chestPiece = Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.CHEST);
 				IFillableArmor fillable = null;
 				if(!chestPiece.isEmpty() && chestPiece.getItem() instanceof IFillableArmor)
@@ -465,7 +464,7 @@ public class RocketEventHandler extends Screen {
 			}
 
 			//Draw module icons
-			if(!Minecraft.getInstance().player.isCreative() && Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD) != null && Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() instanceof IModularArmor) {
+			if(!isCreativeOrSpec && Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD) != null && Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() instanceof IModularArmor) {
 				for(EquipmentSlotType slot : EquipmentSlotType.values()) {
 					renderModuleSlots(Minecraft.getInstance().player.getItemStackFromSlot(slot), 4-slot.getIndex(), event);
 				}

@@ -74,18 +74,32 @@ public class RendererCuttingMachine extends TileEntityRenderer<TileCuttingMachin
 			float tray;
 			tray = 2.2f*progress;
 
+			List<ItemStack> inputList = tile.getInputs();
+			if(inputList != null && !inputList.isEmpty() && progress < 0.65) {
+				ItemStack inputStack = null;
+				for (ItemStack stack: inputList) {
+					if (stack != null && inputStack == null)
+						inputStack = stack;
+				}
+
+				matrix.push();
+				matrix.rotate(new Quaternion(90, 0, 0, true));
+				matrix.translate(1f, tray + .45, -1.05);
+				//RenderHelper.renderItem(tile, inputStack, Minecraft.getInstance().getItemRenderer());
+				matrix.pop();
+			}
 
 
-			/*List<ItemStack> outputList = tile.getOutputs();
-			if(outputList != null && !outputList.isEmpty()) {
+			List<ItemStack> outputList = tile.getOutputs();
+			if(outputList != null && !outputList.isEmpty() && progress >= 0.65) {
 				ItemStack stack = outputList.get(0);
 
 				matrix.push();
-				GL11.glRotatef(90, 1, 0, 0);
-				matrix.translate(1f, tray + .25, -1.05);
-				RenderHelper.renderItem(tile, stack, Minecraft.getInstance().getRenderItem());
+				matrix.rotate(new Quaternion(90, 0, 0, true));
+				matrix.translate(1f, tray + .45, -1.05);
+				//RenderHelper.renderItem(tile, stack, Minecraft.getInstance().getRenderItem());
 				matrix.pop();
-			}*/
+			}
 
 			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entityTransparentBuilder, "Hull");
 

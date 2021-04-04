@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,7 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.recipe.RecipeCentrifuge;
 import zmaster587.advancedRocketry.util.AudioRegistry;
@@ -27,17 +29,31 @@ import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.recipe.RecipesMachine;
+import zmaster587.libVulpes.recipe.RecipesMachine.ChanceFluidStack;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
-public class TileCentrifuge extends TileMultiblockMachine {
-	public static final Object[][][] structure = { 
-			{   {new BlockMeta(LibVulpesBlocks.blockStructureBlock),'c',new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
-				{new BlockMeta(LibVulpesBlocks.blockStructureBlock),'L',new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
-				{new BlockMeta(LibVulpesBlocks.blockStructureBlock), new BlockMeta(LibVulpesBlocks.blockStructureBlock),new BlockMeta(LibVulpesBlocks.blockStructureBlock)}},
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
-			{{LibVulpesBlocks.motors, new BlockMeta(LibVulpesBlocks.blockStructureBlock), LibVulpesBlocks.motors}, 
-					{'l', 'O', 'l'},
-					{new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'P', new BlockMeta(LibVulpesBlocks.blockStructureBlock)}},
+public class TileCentrifuge extends TileMultiblockMachine {
+	public static final Object[][][] structure = {
+
+			{{Blocks.AIR, new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'},
+					{"casingCentrifuge", "casingCentrifuge", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+					{"casingCentrifuge", "casingCentrifuge", null}},
+
+			{{Blocks.AIR, new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'},
+					{"casingCentrifuge", "casingCentrifuge", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+					{"casingCentrifuge", "casingCentrifuge", 'l'}},
+
+			{{'c', new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'},
+					{"casingCentrifuge", "casingCentrifuge", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+					{"casingCentrifuge", "casingCentrifuge", 'l'}},
+
+			{   {'P','L', 'l'},
+				{LibVulpesBlocks.motors,'O', new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+			  {new BlockMeta(LibVulpesBlocks.blockStructureBlock), new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'}},
 
 	};
 
@@ -67,6 +83,7 @@ public class TileCentrifuge extends TileMultiblockMachine {
 		// Nuggets for centrifuge
 /*		List<RecipesMachine.ChanceItemStack> nuggetList = new LinkedList<RecipesMachine.ChanceItemStack>();
 		
+<<<<<<< HEAD
 		for(String entry : ARConfiguration.getCurrentConfig().lavaCentrifugeOutputs)
 		{
 			try
@@ -74,6 +91,66 @@ public class TileCentrifuge extends TileMultiblockMachine {
 				String[] split = entry.split(";");
 				String chance = split[split.length-1];
 				ResourceLocation item = new ResourceLocation(split[0]);
+=======
+		@Override
+		public boolean shouldHideBlock(World world, BlockPos pos2, IBlockState tile) {
+			
+			return true;
+		}
+		
+		@Override
+		public AxisAlignedBB getRenderBoundingBox() {
+			return new AxisAlignedBB(pos.add(-2,-2,-2), pos.add(2,2,2));
+		}
+		
+		@Override
+		public void registerRecipes() {
+            // Nuggets for centrifuge
+            List<RecipesMachine.ChanceItemStack> nuggetList = new LinkedList<RecipesMachine.ChanceItemStack>();
+            
+            for(String entry : ARConfiguration.getCurrentConfig().lavaCentrifugeOutputs)
+            {
+            	try
+            	{
+	            	String[] split = entry.split(":");
+	            	String chance = split[split.length-1];
+	            	String item = split[0];
+	            	
+	            	if(split.length != 2)
+	            		throw new ArrayIndexOutOfBoundsException();
+	            	
+	            	float floatChance = Float.parseFloat(chance);
+	            	
+	        		List<ItemStack> list2 = OreDictionary.getOres(item);
+	        		if(!list2.isEmpty())
+	        			nuggetList.add(new RecipesMachine.ChanceItemStack(list2.get(0), floatChance ));
+            	}
+            	catch(NumberFormatException e)
+            	{
+            		AdvancedRocketry.logger.warn("Unable to parse the weight for '" + entry + "' in lavaCentrifugeOutputs.  Remember, it should end with colon followed by a number with no spaces");
+            	}
+            	catch(ArrayIndexOutOfBoundsException e)
+            	{
+            		AdvancedRocketry.logger.warn("Unable to parse the entry for '" + entry + "' in lavaCentrifugeOutputs.  Remember, there should be only an 'ore_dictionary_entry:chance' in the entry.  "
+            				+ "Items are not yet supported");
+            	}
+            }
+            
+            List<List<ItemStack>> inputItems = new LinkedList<List<ItemStack>>();
+            List<FluidStack> inputFluid = new LinkedList<FluidStack>();
+            inputFluid.add(new FluidStack(AdvancedRocketryFluids.fluidEnrichedLava, 1000));
+			List<ChanceFluidStack> outputFluid = new LinkedList<ChanceFluidStack>();
+			outputFluid.add(new ChanceFluidStack(new FluidStack(FluidRegistry.getFluid("lava"), 1000), 1.0f));
+            RecipesMachine.Recipe rec =  new RecipesMachine.Recipe(nuggetList, inputItems, outputFluid,inputFluid, 200, 10, new HashMap<Integer, String>());
+            rec.setMaxOutputSize(4);
+            RecipesMachine.getInstance().getRecipes(TileCentrifuge.class).add(rec);
+		}
+		
+		@Override
+		public SoundEvent getSound() {
+			return AudioRegistry.electrolyser;
+		}
+>>>>>>> origin/1.12
 
 				if(split.length != 2)
 					throw new ArrayIndexOutOfBoundsException();

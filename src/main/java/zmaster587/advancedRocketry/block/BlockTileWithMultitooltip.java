@@ -1,8 +1,6 @@
 package zmaster587.advancedRocketry.block;
 
 import java.util.List;
-
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -16,6 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.inventory.GuiHandler;
+
+import java.util.List;
 
 public class BlockTileWithMultitooltip extends BlockTile {
 

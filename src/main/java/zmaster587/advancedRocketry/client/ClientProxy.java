@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.client;
 
-import java.util.LinkedList;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -49,18 +47,19 @@ import zmaster587.advancedRocketry.client.render.RenderLaser;
 import zmaster587.advancedRocketry.client.render.entity.*;
 import zmaster587.advancedRocketry.client.render.multiblocks.*;
 import zmaster587.advancedRocketry.common.CommonProxy;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.*;
 import zmaster587.advancedRocketry.entity.fx.*;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.TileFluidTank;
-import zmaster587.advancedRocketry.tile.TileRocketBuilder;
+import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
 import zmaster587.advancedRocketry.tile.cables.TileDataPipe;
 import zmaster587.advancedRocketry.tile.cables.TileEnergyPipe;
 import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
 import zmaster587.advancedRocketry.tile.multiblock.*;
+import zmaster587.advancedRocketry.tile.multiblock.energy.TileSolarArray;
+import zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill.TileOrbitalLaserDrill;
 import zmaster587.advancedRocketry.tile.multiblock.energy.TileBlackHoleGenerator;
 import zmaster587.advancedRocketry.tile.multiblock.energy.TileMicrowaveReciever;
 import zmaster587.advancedRocketry.tile.multiblock.machine.*;
@@ -80,16 +79,14 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerRenderers() {
-
-
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ROCKET_BUILDER, (dispatcher) -> {return new RendererRocketBuilder(dispatcher);} );
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_STATION_BUILDER, (dispatcher) -> {return new RendererRocketBuilder(dispatcher);} );
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ROCKET_BUILDER, (dispatcher) -> {return new RendererRocketAssemblingMachine(dispatcher);} );
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_STATION_BUILDER, (dispatcher) -> {return new RendererRocketAssemblingMachine(dispatcher);} );
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileModelRender.class, modelBlock);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_PREC_ASS, (dispatcher) -> {return new RendererPrecisionAssembler(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CUTTING_MACHINE, (dispatcher) -> {return new RendererCuttingMachine(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CRYSTALLIZER, (dispatcher) -> {return new RendererCrystallizer(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_OBSERVATORY, (dispatcher) -> {return new RendererObservatory(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ASTROBODY_DATA, (dispatcher) -> {return new RenderPlanetAnalyser(dispatcher);});
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ASTROBODY_DATA, (dispatcher) -> {return new RenderAstrobodyDataProcessor(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_LATHE, (dispatcher) -> {return new RendererLathe(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ROLLING, (dispatcher) -> {return new RendererRollingMachine(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ELECTROLYSER, (dispatcher) -> {return new RendererElectrolyser(dispatcher);});
@@ -101,16 +98,18 @@ public class ClientProxy extends CommonProxy {
 		//ClientRegistry.bindTileEntityRenderer(TileDataPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeData.png")));
 		//ClientRegistry.bindTileEntityRenderer(TileEnergyPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeEnergy.png")));
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_MICROWAVE_RECIEVER, (dispatcher) -> {return new RendererMicrowaveReciever(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_SPACE_LASER, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RenderLaser(dispatcher);});
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_SPACE_LASER, (dispatcher) -> {return new RenderOrbitalLaserDrill(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BIOME_SCANNER, (dispatcher) -> {return new RenderBiomeScanner(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BLACK_HOLE_GENERATOR, (dispatcher) -> {return new RenderBlackHoleEnergy(dispatcher);});
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BLACK_HOLE_GENERATOR, (dispatcher) -> {return new RenderBlackHoleGenerator(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_TERRAFORMER, (dispatcher) -> {return new RenderTerraformerAtm(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_FLUID_TANK, (dispatcher) -> {return new RenderTank(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_RAILGUN, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RendererRailgun(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_GRAVITY_CONTROLLER, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RenderGravityMachine(dispatcher);});
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_GRAVITY_CONTROLLER, (dispatcher) -> {return new RenderAreaGravityController(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_SPACE_ELEVATOR, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RendererSpaceElevator(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BEACON, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RenderBeacon(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CENTRIFUGE, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RenderCentrifuge(dispatcher);});
+		ClientRegistry.bindTileEntityRenderer(TilePrecisionLaserEtcher.class, new RendererPrecisionLaserEtcher());
+		ClientRegistry.bindTileEntityRenderer(TileSolarArray.class, new RendererSolarArray());
 		
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileModelRenderRotatable.class, modelBlock);
 
@@ -162,12 +161,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInitBlocks()
 	{
-		//TODO fluids
-		/*registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockOxygenFluid);
-		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockNitrogenFluid);
-		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockHydrogenFluid);
-		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockFuelFluid);
-		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockEnrichedLavaFluid);*/
 	}
 
 	@Override
@@ -183,19 +176,17 @@ public class ClientProxy extends CommonProxy {
 	/*private void registerFluidModel(IFluidBlock fluidBlock) {
 		Item item = Item.getItemFromBlock((Block) fluidBlock);
 
-		ModelBakery.registerItemVariants(item);
-
 		final ModelResourceLocation modelResourceLocation = new ModelResourceLocation("advancedrocketry:fluid", fluidBlock.getFluid().getName());
+
 
 		//ModelLoader.setCustomMeshDefinition(item, MeshDefinitionFix.create(stack -> modelResourceLocation));
 
 
 		StateMapperBase ignoreState = new FluidStateMapper(modelResourceLocation);
+
 		ModelLoader.setCustomStateMapper((Block) fluidBlock, ignoreState);
-		ModelLoader.setCustomMeshDefinition(item, new FluidItemMeshDefinition(modelResourceLocation));
 		ModelBakery.registerItemVariants(item, modelResourceLocation);
 	}*/
-
 
 	@Override
 	public void registerEventHandlers() {

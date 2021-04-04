@@ -28,7 +28,6 @@ import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.codehaus.plexus.util.StringOutputStream;
 
 import com.google.common.io.Files;
 
@@ -49,6 +48,8 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
+import zmaster587.advancedRocketry.util.PlanetaryTravelHelper;
+import zmaster587.advancedRocketry.util.FluidGasGiantGas;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader.DimensionPropertyCoupling;
@@ -202,13 +203,12 @@ public class DimensionManager implements IGalaxy {
 		return null;
 	}
 
-	//TODO: fix naming system
 	/**
 	 * @param dimId id to register the planet with
 	 * @return the name for the next planet
 	 */
-	private String getNextName(ResourceLocation dimId) {
-		return "Sol-" + dimId;
+	private String getNextName(ResourceLocation starId, ResourceLocation dimId) {
+		return getStar(starId).getName() + " " + dimId;
 	}
 
 	/**
@@ -285,7 +285,7 @@ public class DimensionManager implements IGalaxy {
 			return null;
 
 		if(name == "")
-			properties.setName(getNextName(properties.getId()));
+			properties.setName(getNextName(starId, properties.getId()));
 		else {
 			properties.setName(name);
 		}
@@ -368,7 +368,7 @@ public class DimensionManager implements IGalaxy {
 		DimensionProperties properties = new DimensionProperties(getNextFreeDim());
 
 		if(name == "")
-			properties.setName(getNextName(properties.getId()));
+			properties.setName(getNextName(starId, properties.getId()));
 		else {
 			properties.setName(name);
 		}
@@ -401,8 +401,12 @@ public class DimensionManager implements IGalaxy {
 
 		// Add all gasses for the default world
 		// TODO: add variation
-		for( Fluid gas : AdvancedRocketryFluids.getGasGiantGasses() )
-			properties.getHarvestableGasses().add(gas);
+		for( FluidGasGiantGas gas : AdvancedRocketryFluids.getGasGiantGasses() ) {
+			if (((properties.gravitationalMultiplier * 100)  >= gas.getMinGravity()) && (gas.getMaxGravity() >= (properties.gravitationalMultiplier * 100)) && 0 > (Math.random() - gas.getChance())) {
+				properties.getHarvestableGasses().add(gas.getFluid());
+			}
+		}
+
 		registerDim(properties, true);
 		return properties;
 	}
@@ -1259,24 +1263,14 @@ public class DimensionManager implements IGalaxy {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param destinationDimId
 	 * @param dimension
 	 * @return true if the two dimensions are in the same planet/moon system
 	 */
 	public boolean areDimensionsInSamePlanetMoonSystem(ResourceLocation destinationDimId,
 			ResourceLocation dimension) {
-		//This is a mess, clean up later
-		if(SpaceObjectManager.WARPDIMID.equals(dimension) || SpaceObjectManager.WARPDIMID.equals(destinationDimId))
-			return false;
-
-		DimensionProperties properties = getDimensionProperties(dimension);
-		DimensionProperties properties2 = getDimensionProperties(destinationDimId);
-
-		while(properties.getParentProperties() != null) properties = properties.getParentProperties();
-		while(properties2.getParentProperties() != null) properties2 = properties2.getParentProperties();
-
-		return areDimensionsInSamePlanetMoonSystem(properties, destinationDimId) || areDimensionsInSamePlanetMoonSystem(properties2, dimension);
+		return PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(destinationDimId,dimension);
 	}
 
 	private boolean areDimensionsInSamePlanetMoonSystem(DimensionProperties properties, ResourceLocation id) {

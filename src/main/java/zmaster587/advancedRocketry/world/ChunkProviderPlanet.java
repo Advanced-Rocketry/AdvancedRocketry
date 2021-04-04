@@ -74,9 +74,9 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 		}), DimensionSettings.field_236098_b_.fieldOf("settings").forGetter((p_236090_0_) -> {
 			return p_236090_0_.dimensionSettings;
 		}),
-		StructureFeature.field_242770_c.promotePartial(Util.func_240982_a_("Structure start: ", logger::error)).fieldOf("starts").forGetter((p_242488_0_) -> {
-	        return p_242488_0_.starts;
-	      }),
+				StructureFeature.field_242770_c.promotePartial(Util.func_240982_a_("Structure start: ", logger::error)).fieldOf("starts").forGetter((p_242488_0_) -> {
+					return p_242488_0_.starts;
+				}),
 				Codec.STRING.fieldOf("dimension_props").forGetter((p_236090_0_) -> {
 					return p_236090_0_.dimensionId.toString();
 				})).apply(p_236091_0_, p_236091_0_.stable(ChunkProviderPlanet::new));
@@ -89,7 +89,6 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 				}
 			}
 		}
-
 	});
 	private static final float[] field_236081_j_ = Util.make(new float[25], (p_236092_0_) -> {
 		for(int i = -2; i <= 2; ++i) {
@@ -171,15 +170,15 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 		return planetCodec;
 	}
 
-	
+
 	private DimensionProperties getDimensionProperties()
 	{
 		if(cachedDimensionProps == null || !cachedDimensionProps.getId().equals(dimensionId))
 			cachedDimensionProps = DimensionManager.getInstance().getDimensionProperties(dimensionId);
-		
+
 		return cachedDimensionProps;
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public ChunkGenerator func_230349_a_(long p_230349_1_) {
 		return new ChunkProviderPlanet(this.biomeProvider.getBiomeProvider(p_230349_1_), p_230349_1_, this.dimensionSettings, this.starts, dimensionId);

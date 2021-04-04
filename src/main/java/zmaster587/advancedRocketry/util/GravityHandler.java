@@ -1,8 +1,16 @@
 package zmaster587.advancedRocketry.util;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.FlyingEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.BoatEntity;
+import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.item.TNTEntity;
+import net.minecraft.entity.item.minecart.MinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ArrowEntity;
+import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.util.math.BlockPos;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
@@ -18,8 +26,12 @@ import java.util.WeakHashMap;
 
 public class GravityHandler implements IGravityManager {
 
-	public static final float ENTITY_OFFSET = 0.0755f;
-	public static final float ITEM_GRAV_OFFSET = 0.04f;
+	public static final float LIVING_OFFSET = 0.0755f;
+	public static final float FLUID_LIVING_OFFSET = 0.02f;
+	public static final float THROWABLE_OFFSET = 0.03f;
+	public static final float OTHER_OFFSET = 0.04f;
+	public static final float ARROW_OFFSET = 0.05f;
+
 	static Class gcWorldProvider;
 	static Method gcGetGravity;
 	
@@ -45,46 +57,41 @@ public class GravityHandler implements IGravityManager {
 
 	public static void applyGravity(Entity entity) {
 		if(entity.hasNoGravity()) return;
-		
-		if(!entity.isInWater() || entity instanceof ItemEntity) {
-			if(!(entity instanceof PlayerEntity) || !((PlayerEntity)entity).abilities.isFlying) {
+		    //Because working gravity on elytra-flying players can cause..... severe problems at lower gravity, it is my utter delight to announce to you elytra are now magic!
+			//This totally isn't because Mojang decided for some godforsaken @#@#@#% reason to make ALL WAYS TO SET ELYTRA FLIGHT _protected_
+			//With no set methods
+			//So I cannot, without much more effort than it's worth, set elytra flight. Therefore, they're magic.
+			if ((!(entity instanceof PlayerEntity) && !(entity instanceof FlyingEntity)) || (!(entity instanceof FlyingEntity) && !(((PlayerEntity) entity).abilities.isFlying || ((LivingEntity) entity).isElytraFlying()))) {
 				Double d;
 				if(entityMap.containsKey(entity) && (d = entityMap.get(entity)) != null)  {
 
-					double multiplier = (entity instanceof ItemEntity) ? ITEM_GRAV_OFFSET*d : 0.075f*d;
+					double multiplier = (isOtherEntity(entity) || entity instanceof ItemEntity) ? OTHER_OFFSET * d : (entity instanceof ArrowEntity ) ? ARROW_OFFSET * d : (entity instanceof ThrowableEntity) ? THROWABLE_OFFSET * d : LIVING_OFFSET * d;
+
 
 					entity.setMotion(entity.getMotion().add(0, multiplier, 0));
 					
-				}
-				else if(DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(entity.world)) || ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(entity.world))) {
-					double gravMult;
+				} else if (DimensionManager.getInstance().isDimensionCreated(entity.world)) {
+					double gravMult = DimensionManager.getInstance().getDimensionProperties(entity.world, entity.getPosition()).gravitationalMultiplier;
 
-					gravMult = DimensionManager.getInstance().getDimensionProperties(entity.world, new BlockPos(entity.getPositionVec())).gravitationalMultiplier;
-					if(entity instanceof ItemEntity)
-						entity.setMotion(entity.getMotion().add(0, -gravMult*ITEM_GRAV_OFFSET, 0));
-					else//Not-Items are not ASMed, so they have to subtract the original gravity.
-						entity.setMotion(entity.getMotion().add(0, -(gravMult*ENTITY_OFFSET - ENTITY_OFFSET), 0));
+					if (entity instanceof ItemEntity)
+						entity.setMotion(entity.getMotion().add(0, -(gravMult * OTHER_OFFSET - OTHER_OFFSET),0));
+					else if (isOtherEntity(entity))
+						entity.setMotion(entity.getMotion().add(0, -(gravMult * OTHER_OFFSET - OTHER_OFFSET),0));
+					else if (entity instanceof ThrowableEntity)
+						entity.setMotion(entity.getMotion().add(0, -(gravMult * THROWABLE_OFFSET - THROWABLE_OFFSET),0));
+					else if (entity instanceof ArrowEntity)
+						entity.setMotion(entity.getMotion().add(0, -(gravMult * ARROW_OFFSET - ARROW_OFFSET),0));
+					else if (entity instanceof LivingEntity && entity.isInWater() || entity.isInLava())
+						entity.setMotion(entity.getMotion().add(0, -(gravMult * FLUID_LIVING_OFFSET - FLUID_LIVING_OFFSET),0));
+					else if (entity instanceof  LivingEntity)
+						entity.setMotion(entity.getMotion().add(0, -(gravMult * LIVING_OFFSET - LIVING_OFFSET),0));
 					return;
 				}
-				else {
-					//GC handling
-					/*if(gcWorldProvider != null && gcWorldProvider.isAssignableFrom(entity.world.provider.getClass())) {
-						try {
-							entity.getMotion().y -= 0.075f - (float)gcGetGravity.invoke(entity.world.provider);
-						} catch (IllegalAccessException | IllegalArgumentException
-								| InvocationTargetException e) {
-							e.printStackTrace();
-						}
-					}
-					else {*/
-						if(entity instanceof ItemEntity)
-							entity.setMotion(entity.getMotion().add(0, -ITEM_GRAV_OFFSET, 0));
-						//else//Without the ASM, this added extra gravity in overworld on SMP
-							//entity.getMotion().y -= 0.005d;
-					//}
-				}
-			}		
-		}
+			}
+	}
+
+	public static boolean isOtherEntity(Entity entity) {
+		return entity instanceof BoatEntity || entity instanceof MinecartEntity || entity instanceof FallingBlockEntity || entity instanceof TNTEntity;
 	}
 
 	@Override

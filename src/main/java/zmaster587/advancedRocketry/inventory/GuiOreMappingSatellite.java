@@ -27,7 +27,7 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.render.RenderHelper;
 import java.nio.IntBuffer;
 
-public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingSatallite> {
+public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingSatellite> {
 
 	ClientDynamicTexture texture;
 	Thread currentMapping;
@@ -43,28 +43,31 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 	private int mouseValue;
 	private int scanSize = 2;
 	private int radius = 1;
+	private int zoomScale;
 	private int xSelected, zSelected, xCenter, zCenter, playerPosX, playerPosZ;
 	private static final ResourceLocation backdrop = new ResourceLocation("advancedrocketry", "textures/gui/VideoSatallite.png");
 	int[][] oreMap;
 	World world;
-	SatelliteOreMapping tile;
+	SatelliteOreMapping satellite;
 
-	public GuiOreMappingSatellite(ContainerOreMappingSatallite container, PlayerInventory inventoryPlayer, ITextComponent title) {
+	public GuiOreMappingSatellite(ContainerOreMappingSatellite container, SatelliteOreMapping satellite, PlayerInventory inventoryPlayer, ITextComponent title) {
 		super( container, inventoryPlayer, title);
 		world = container.player.world;
 
 		prevSlot = -1;
-		this.tile = container.inv;
+		this.satellite = container.inv;
 		//masterConsole = tile;
 		playerPosX = xCenter = (int) container.player.getPosX();
 		playerPosZ = zCenter = (int) container.player.getPosZ();
 
 		//Max zoom is 128
-		if(tile != null)
-			maxZoom = (int) Math.pow(2, tile.getZoomRadius());
+		if(satellite != null) {
+			maxZoom = (int) Math.pow(2, satellite.getZoomRadius());
+			zoomScale = satellite.getZoomRadius();
+		}
 
 		if(maxZoom == 1)
-			this.tile = null;
+			this.satellite = null;
 		scanSize = maxZoom;
 
 		prevWorldTickTime = world.getGameTime();
@@ -76,7 +79,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 	Runnable mapper = new Runnable() {
 		@Override
 		public void run() {
-			oreMap = SatelliteOreMapping.scanChunk(world, xCenter, zCenter, scanSize/2, radius);
+			oreMap = satellite.scanChunk(world, xCenter, zCenter, scanSize/2, radius, zoomScale);
 			if(oreMap != null && !Thread.interrupted())
 				merged = true;
 			else merged = false;
@@ -94,7 +97,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 
 		@Override
 		public void run() {
-			oreMap = SatelliteOreMapping.scanChunk(world, xCenter, zCenter, scanSize/2, radius, myBlock);
+			oreMap = satellite.scanChunk(world, xCenter, zCenter, scanSize/2, radius, myBlock, zoomScale);
 			if(oreMap != null && !Thread.interrupted())
 				merged = true;
 			else merged = false;
@@ -105,7 +108,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 	public boolean doesGuiPauseGame(){ return false; }
 
 	private void runMapperWithSelection() {
-		if(tile == null)
+		if(satellite == null)
 			return;
 
 		currentMapping.interrupt();
@@ -131,8 +134,8 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		int xOffset = 47 + (width - 240) / 2, yOffset = 20 + (height - 192) / 2;
 
 		//Get selected slot and begin scan!
-		if(button == 0 && tile.getSelectedSlot() != prevSlot) {
-			prevSlot = tile.getSelectedSlot();
+		if(button == 0 && satellite.getSelectedSlot() != prevSlot) {
+			prevSlot = satellite.getSelectedSlot();
 			runMapperWithSelection();
 		}
 
@@ -217,7 +220,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 
 		ItemStack stack = this.playerInventory.getStackInSlot(0).getStack();
 
-		if(tile != null) {
+		if(satellite != null) {
 			currentMapping = new Thread(mapper);
 			currentMapping.setName("Ore Scan");
 			currentMapping.start();
@@ -293,7 +296,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 
 		//If a slot is selected draw an indicator
 		int slot;
-		if(tile != null && (slot = tile.getSelectedSlot()) != -1) {
+		if(satellite != null && (slot = satellite.getSelectedSlot()) != -1) {
 
 			RenderSystem.disableTexture();
 			RenderSystem.color4f(0f, 0.8f, 0f, 1f);

@@ -62,6 +62,7 @@ public class RendererElectrolyser extends TileEntityRenderer<TileElectrolyser> {
 		matrix.translate(.5f, 0, 0.5f);
 		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
 		matrix.rotate(new Quaternion(0,(front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0, true ));
+		matrix.translate(1.5f, 0f, -0.5f);
 
 		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 		model.tessellateAll(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder);
@@ -78,7 +79,6 @@ public class RendererElectrolyser extends TileEntityRenderer<TileElectrolyser> {
 			double yPos = 1.4;
 			
 			IVertexBuilder entityTransparentBuilder = buffer.getBuffer(RenderHelper.getTranslucentManualRenderType());
-
 			float r = .64f, g = 0.64f, b = 1f, a= 0.4f;
 			
 			double xMin = -0.3f;

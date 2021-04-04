@@ -55,13 +55,12 @@ public class EntityLaserNode extends Entity {
 	
 	@Override
 	public void remove() {
-		super.remove();
 		this.cleanUp();
+		super.remove();
 	}
 
-	//TODO: make safe
-	/**Removes all the lightblocks created by the laser
-	 * For the love of all things good... do NOT call this twice
+	/**
+	 * Removes all the light blocks created by the laser
 	 */
 	public void cleanUp() {
 		if(!this.world.isRemote)
@@ -78,7 +77,6 @@ public class EntityLaserNode extends Entity {
 		}
 	}
 
-	
 	@Override
 	public void tick() {
 
@@ -107,8 +105,6 @@ public class EntityLaserNode extends Entity {
 		}
 	}
 
-	
-	@Override
 	/**
 	 * Checks if the entity is in range to render by using the past in distance and comparing it to its average edge
 	 * length * 64 * renderDistanceWeight Args: distance

@@ -1,5 +1,6 @@
 {
     "variants": {
+<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/electrolyser" },
         "facing=south,state=false": { "model": "advancedrocketry:block/electrolyser", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/electrolyser", "y": 270 },
@@ -8,5 +9,16 @@
         "facing=south,state=true": { "model": "advancedrocketry:block/electrolyser_on", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/electrolyser_on", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/electrolyser_on", "y": 90 }
+=======
+        "facing=north,state=false": { "model": "advancedrocketry:electrolyser" },
+        "facing=south,state=false": { "model": "advancedrocketry:electrolyser", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:electrolyser", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:electrolyser", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:electrolyser_on" },
+        "facing=south,state=true": { "model": "advancedrocketry:electrolyser_on", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:electrolyser_on", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:electrolyser_on", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:electrolyser" }
+>>>>>>> origin/1.12
     }
 }

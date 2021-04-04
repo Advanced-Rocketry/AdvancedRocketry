@@ -1,7 +1,8 @@
 {
-
+    "forge_marker": 1,
     "defaults": {
         "textures": {
+<<<<<<< HEAD
             "#None": "advancedrocketry:block//models/cuttingMachine"
         },
         "model": "advancedrocketry:block/models/sawblade.obj"
@@ -20,5 +21,20 @@
                     "scale": 1.0
                 }
         }
+=======
+            "#None": "advancedrocketry:/models/cuttingmachine2"
+        },
+        "model": "advancedrocketry:models/sawblade.obj",
+        "transform": "forge:default-block"
+    },
+    "variants": {
+        "facing=north": { "model": "advancedrocketry:models/sawblade.obj" },
+        "facing=south": { "model": "advancedrocketry:models/sawblade.obj", "y": 180 },
+        "facing=west":  { "model": "advancedrocketry:models/sawblade.obj", "y": 270 },
+        "facing=east":  { "model": "advancedrocketry:models/sawblade.obj", "y": 90 },
+        "facing=up":  { "model": "advancedrocketry:models/sawblade.obj", "x": 90 },
+        "facing=down":  { "model": "advancedrocketry:models/sawblade.obj", "x": -90 },
+        "inventory": { "model": "advancedrocketry:models/sawblade.obj" }
+>>>>>>> origin/1.12
     }
 }

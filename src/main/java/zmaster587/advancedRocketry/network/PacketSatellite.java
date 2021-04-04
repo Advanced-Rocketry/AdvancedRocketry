@@ -47,11 +47,10 @@ public class PacketSatellite extends BasePacket {
 		
 		PacketBuffer packetBuffer = new PacketBuffer(in);
 		CompoundNBT nbt;
-		
 		nbt = packetBuffer.readCompoundTag();
 		SatelliteBase satellite = SatelliteRegistry.createFromNBT(nbt);
 		
-		DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId().get()).addSatallite(satellite);
+		DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId().get()).addSatellite(satellite);
 	}
 
 	@Override

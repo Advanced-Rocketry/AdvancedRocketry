@@ -28,8 +28,7 @@ import java.util.List;
 
 public class RendererPrecisionAssembler extends TileEntityRenderer<TilePrecisionAssembler> {
 	WavefrontObject model;
-
-	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/precassembler.png");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/precisionassembler.png");
 
 	//private final RenderItem dummyItem = Minecraft.getInstance().getRenderItem();
 	
@@ -43,7 +42,7 @@ public class RendererPrecisionAssembler extends TileEntityRenderer<TilePrecision
 	public RendererPrecisionAssembler(TileEntityRendererDispatcher tile) {
 		super(tile);
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/precassembler.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry","models/precisionassembler.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}

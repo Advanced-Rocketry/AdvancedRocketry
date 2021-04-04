@@ -116,7 +116,7 @@ public class StatsRocket {
 	public ResourceLocation getOxidizerFluid() {return oxidizerFluid;}
 	public float getDrillingPower() {return drillingPower;}
 	public void setDrillingPower(float power) {drillingPower = power;}
-	public float getAcceleration() { return (getThrust() - weight)/10000f; }
+	public float getAcceleration(float gravitationalMultiplier) { return (getThrust() - (weight * ((ARConfiguration.getCurrentConfig().gravityAffectsFuel.get()) ? gravitationalMultiplier : 1)))/10000f; }
 	public List<Vector3F<Float>> getEngineLocations() { return engineLoc; }
 
 	public void setThrust(int thrust) { this.thrust = thrust; }

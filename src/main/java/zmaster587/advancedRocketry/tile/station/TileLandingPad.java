@@ -26,8 +26,8 @@ import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.entity.EntityRocket;
-import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.util.StationLandingLocation;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesItems;
@@ -57,6 +57,8 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 	public TileLandingPad() {
 		super(AdvancedRocketryTileEntityType.TILE_LANDING_PAD , 1);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanExtractSlot(0, true);
 		MinecraftForge.EVENT_BUS.register(this);
 		blockPos = new LinkedList<HashedBlockPosition>();
 		moduleNameTextbox = new ModuleTextBox(this, 40, 30, 60, 12, 9);

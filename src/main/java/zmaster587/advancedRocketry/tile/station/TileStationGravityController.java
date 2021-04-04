@@ -20,6 +20,7 @@ import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.inventory.ContainerModular;
@@ -36,7 +37,6 @@ import java.util.List;
 
 public class TileStationGravityController extends TileEntity implements IModularInventory, ITickableTileEntity, INetworkMachine, ISliderBar {
 
-	int gravity;
 	int progress;
 	
 	public static int minGravity = 10;
@@ -70,8 +70,6 @@ public class TileStationGravityController extends TileEntity implements IModular
 	@Override
 	public SUpdateTileEntityPacket getUpdatePacket() {
 		CompoundNBT nbt = write(new CompoundNBT());
-		nbt.putInt("gravity", gravity);
-		
 
 		SUpdateTileEntityPacket packet = new SUpdateTileEntityPacket(pos, 0, nbt);
 		return packet;
@@ -80,9 +78,6 @@ public class TileStationGravityController extends TileEntity implements IModular
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		super.onDataPacket(net, pkt);
-
-		gravity = pkt.getNbtCompound().getInt("gravity");
-
 	}
 	
 	private void updateText() {
@@ -95,7 +90,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 
 			//numThrusters.setText("Number Of Thrusters: 0");
 
-			targetGrav.setText(String.format("%s%d", LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.tgtalt"), gravity));
+			targetGrav.setText(String.format("%s%d", LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.tgtalt"), ((SpaceStationObject) object).targetGravity));
 		}
 	}
 
@@ -108,9 +103,10 @@ public class TileStationGravityController extends TileEntity implements IModular
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(object != null) {
-					if(gravity < 11  && !ARConfiguration.getCurrentConfig().allowZeroGSpacestations.get())
-						gravity = 11;
-					double targetGravity = gravity/100D;
+					progress = ((SpaceStationObject) object).targetGravity - minGravity;
+
+					int targetMultiplier = (ARConfiguration.getCurrentConfig().allowZeroGSpacestations.get()) ? ((SpaceStationObject) object).targetGravity : Math.max(11, ((SpaceStationObject) object).targetGravity);
+					double targetGravity = targetMultiplier/100D;
 					double angVel = object.getProperties().getGravitationalMultiplier();
 					double acc = 0.001;
 
@@ -170,20 +166,6 @@ public class TileStationGravityController extends TileEntity implements IModular
 
 	}
 
-	@Override
-	public CompoundNBT write(CompoundNBT nbt) {
-		super.write(nbt);
-		nbt.putShort("numRotations", (short)gravity);
-		return nbt;
-	}
-
-	@Override
-	public void read(BlockState state, CompoundNBT nbt) {
-		super.read(state, nbt);
-		gravity = nbt.getShort("numRotations");
-		progress = gravity -minGravity;
-	}
-
 
 	@Override
 	public float getNormallizedProgress(int id) {
@@ -194,7 +176,9 @@ public class TileStationGravityController extends TileEntity implements IModular
 	public void setProgress(int id, int progress) {
 
 		this.progress = progress;
-		gravity = progress + minGravity;
+		if (SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos) != null) {
+			((SpaceStationObject) (SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos))).targetGravity = progress + minGravity;
+		}
 	}
 
 	@Override

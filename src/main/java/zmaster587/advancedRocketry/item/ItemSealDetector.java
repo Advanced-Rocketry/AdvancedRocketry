@@ -17,7 +17,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.IFluidBlock;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
-import zmaster587.libVulpes.LibVulpes;
 
 /**
  * Detects if a block can be used to seal a room.

@@ -56,7 +56,7 @@ public class RendererRailgun extends TileEntityRenderer<TileRailgun> {
 		//Rotate and move the model into position
 		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
 		matrix.rotate(new Quaternion(0, (front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, true));
-		matrix.translate(2f, 0, 0f);
+		matrix.translate(3f, 0, 0f);
 		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));
 		
 		

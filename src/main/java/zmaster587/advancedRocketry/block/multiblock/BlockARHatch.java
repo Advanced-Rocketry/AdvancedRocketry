@@ -17,7 +17,7 @@ import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.tile.TilePointer;
 
 public class BlockARHatch extends BlockHatch {
-	
+
 	public BlockARHatch(Properties material) {
 		super(material);
 	}

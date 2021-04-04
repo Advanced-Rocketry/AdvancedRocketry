@@ -174,11 +174,6 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 		}
 		return false;
 	}
-
-	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		return super.getRenderBoundingBox();
-	}
 	
 	public ItemStack[] getItemsDropOnDeath()
 	{
@@ -203,7 +198,6 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 
 
 	public double getMaxAcceleration() {
-		// TODO Auto-generated method stub
 		return 0.05D;
 	}
 
@@ -262,12 +256,14 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 		
 		float friction = 0.9f;
 		float motionYMult = 1f;
-		
+
 		if (this.getPosY() > getMaxHeight()*1.1)
 			motionYMult = 0;
 		else if (this.getPosY() > getMaxHeight())
 			motionYMult *= 0.1;
-		
+
+		if (this.getRidingEntity() != null)
+		    this.getRidingEntity().fallDistance = 0;
 		
 		Vector3d newMotion = new Vector3d(friction*(motion.x + acc*MathHelper.sin(-yawAngle)), 
 				motionYMult*friction*( motion.y + (turningUp ? getMaxAcceleration() : 0) - (turningDownforWhat ? getMaxAcceleration() : 0)),

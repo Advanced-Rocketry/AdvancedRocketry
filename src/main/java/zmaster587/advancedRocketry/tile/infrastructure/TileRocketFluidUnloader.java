@@ -16,6 +16,7 @@ public class TileRocketFluidUnloader extends TileRocketFluidLoader implements II
 
 	public TileRocketFluidUnloader() {
 		super(AdvancedRocketryTileEntityType.TILE_FLUID_UNLOADER);
+		this.setOutputOnly(true);
 	}
 
 	public TileRocketFluidUnloader(int size) {

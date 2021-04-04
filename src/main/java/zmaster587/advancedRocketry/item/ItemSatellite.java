@@ -46,7 +46,7 @@ public class ItemSatellite extends ItemIdWithName {
 				return null;
 			
 			String satType = SatelliteRegistry.getSatelliteProperty(inv.getStackInSlot(0)).getSatelliteType();
-			SatelliteBase sat = SatelliteRegistry.getSatallite(satType);
+			SatelliteBase sat = SatelliteRegistry.getSatellite(satType);
 
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				ItemStack stack = inv.getStackInSlot(i);
@@ -89,28 +89,21 @@ public class ItemSatellite extends ItemIdWithName {
 		nbt.put("inv", tag);
 	}
 
-	public void setSatellite(ItemStack stack, SatelliteProperties satellite) {
+	public void setSatellite(ItemStack stack, SatelliteProperties properties) {
 
-		SatelliteBase satellite2 = SatelliteRegistry.getSatallite(satellite.getSatelliteType());
-		if(satellite2 != null) {
+		SatelliteBase testSatellite = SatelliteRegistry.getSatellite(properties.getSatelliteType());
+		if(testSatellite != null) {
 				
 			CompoundNBT nbt;
 			if(stack.hasTag())
 				nbt = stack.getTag();
 			else
 				nbt = new CompoundNBT();
-
-			SatelliteProperties internalProps = getSatelliteProperties(stack);
-			if(internalProps != null) {
-				satellite.setMaxData(internalProps.getMaxDataStorage());
-				satellite.setPowerGeneration(internalProps.getPowerGeneration());
-				satellite.setPowerStorage(internalProps.getPowerStorage());
-			}
-			
-			satellite.writeToNBT(nbt);
+			//Stick the properties into the NBT of the stack
+			properties.writeToNBT(nbt);
 			stack.setTag(nbt);
 
-			setName(stack, satellite2.getName());
+			setName(stack, testSatellite.getName());
 		}
 		else
 			stack.setTag(null);

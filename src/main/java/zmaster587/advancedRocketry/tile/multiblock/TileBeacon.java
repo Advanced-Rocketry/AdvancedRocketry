@@ -1,7 +1,10 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -58,7 +61,6 @@ public class TileBeacon extends TileMultiPowerConsumer {
 
 	@Override
 	public String getMachineName() {
-		// TODO Auto-generated method stub
 		return getModularInventoryName();
 	}
 	
@@ -75,7 +77,10 @@ public class TileBeacon extends TileMultiPowerConsumer {
 				props.removeBeaconLocation(world,new HashedBlockPosition(getPos()));
 		}
 	}
-	
+
+	@Override
+	public boolean shouldHideBlock(World world, BlockPos pos, BlockState tile) { return true; }
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 

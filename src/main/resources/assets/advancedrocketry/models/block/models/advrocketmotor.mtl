@@ -1,5 +1,5 @@
 # Blender MTL File: 'None'
 # Material Count: 1
 
-newmtl None
-map_Kd advancedrocketry:models/combustion
+newmtl Material
+map_Kd advancedrocketry:models/advcombustion

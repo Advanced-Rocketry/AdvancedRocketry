@@ -23,8 +23,7 @@ import zmaster587.libVulpes.render.RenderHelper;
 public class RendererObservatory  extends TileEntityRenderer<TileObservatory> {
 
 	WavefrontObject model;
-
-	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/t1observatory.png");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/observatory.png");
 
 	public RendererObservatory(TileEntityRendererDispatcher tile) {
 		super(tile);
@@ -71,12 +70,12 @@ public class RendererObservatory  extends TileEntityRenderer<TileObservatory> {
 			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entityTransparentBuilder, "Axis");
 
 			matrix.push();
-			matrix.translate(0, 0, -offset);
+			matrix.translate(0, 0, -offset* 1.125f);
 			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder, "CasingXMinus");
 			matrix.pop();
 
 			matrix.push();
-			matrix.translate(0,0,offset);
+			matrix.translate(0,0,offset * 1.125f);
 			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder, "CasingXPlus");
 			matrix.pop();
 

@@ -20,13 +20,14 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileCrystallizer;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 import java.util.List;
 
-public class RendererCrystallizer extends TileEntityRenderer {
+public class RendererCrystallizer extends TileEntityRenderer<TileCrystallizer> {
 
 	WavefrontObject model;
 
@@ -39,17 +40,15 @@ public class RendererCrystallizer extends TileEntityRenderer {
 		try {
 			model =  new WavefrontObject(new ResourceLocation("advancedrocketry","models/crystallizer.obj"));
 		} catch (ModelFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void render(TileEntity tile, float partialTicks, MatrixStack matrix,
+	public void render(TileCrystallizer tile, float partialTicks, MatrixStack matrix,
 			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
-		TileMultiblockMachine multiBlockTile = (TileMultiblockMachine)tile;
 
-		if(!multiBlockTile.canRender())
+		if(!tile.canRender())
 			return;
 
 		if (tile.getWorld() != null) {
@@ -67,13 +66,13 @@ public class RendererCrystallizer extends TileEntityRenderer {
 		matrix.translate(-.5f, 0, -1.5f);
 		IVertexBuilder entityTransparentBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));
 		
-		if(multiBlockTile.isRunning()) {
+		if(tile.isRunning()) {
 
-			float progress = multiBlockTile.getProgress(0)/(float)multiBlockTile.getTotalProgress(0);
+			float progress = tile.getProgress(0)/(float)tile.getTotalProgress(0);
 			
 			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entityTransparentBuilder, "Hull");
 
-			List<ItemStack> outputList = multiBlockTile.getOutputs();
+			List<ItemStack> outputList = tile.getOutputs();
 			if(outputList != null && !outputList.isEmpty()) {
 				ItemStack stack = outputList.get(0);
 				ItemEntity entity = new ItemEntity(tile.getWorld(), 0,0,0);

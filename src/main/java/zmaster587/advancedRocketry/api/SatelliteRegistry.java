@@ -73,7 +73,7 @@ public class SatelliteRegistry {
 	 * @return Satellite constructed from the passed NBT
 	 */
 	public static SatelliteBase createFromNBT(CompoundNBT nbt) {
-		SatelliteBase satellite = getSatallite(nbt.getString("dataType"));
+		SatelliteBase satellite = getSatellite(nbt.getString("dataType"));
 
 		satellite.readFromNBT(nbt);
 
@@ -84,7 +84,7 @@ public class SatelliteRegistry {
 	 * @param name String identifier for a satellite
 	 * @return new satellite registered to the String identifier, SatelliteDefunct otherwise
 	 */
-	public static SatelliteBase getSatallite(String name) {
+	public static SatelliteBase getSatellite(String name) {
 		Class<? extends SatelliteBase> clazz = registry.get(name);
 
 		if(clazz == null) {

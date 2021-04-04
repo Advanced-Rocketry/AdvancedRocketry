@@ -7,9 +7,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.Constants;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.LibVulpes;
@@ -19,6 +23,7 @@ import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 import java.util.List;
@@ -31,10 +36,8 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 		{AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible, AdvancedRocketryBlocks.blockQuartzCrucible}},
 		
 		{{'O', 'c', 'I'}, 
-			{new ResourceLocation("forge","coils"), 'P', new ResourceLocation("forge","coils")}},
-
-	};
-
+			{'l', 'P', 'L'}}};
+	
 	Material coil[];
 	
 	public TileCrystallizer() {
@@ -64,8 +67,8 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	}
 
 	@Override
-	protected float getTimeMultiplierForRecipe(IRecipe recipe) {
-		return super.getTimeMultiplierForRecipe(recipe);
+	public boolean shouldHideBlock(World world, BlockPos pos2, BlockState tile) {
+		return true;
 	}
 	
 	@Override
@@ -78,11 +81,29 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 		return new AxisAlignedBB(pos.add(-2,-2,-2), pos.add(2,2,2));
 	}
 
+	public boolean isGravityWithinBounds() {
+		if (!(ARConfiguration.getCurrentConfig().crystalliserMaximumGravity == 0)) {
+			return ARConfiguration.getCurrentConfig().crystalliserMaximumGravity > DimensionManager.getInstance().getDimensionProperties(world).gravitationalMultiplier;
+		}
+		return true;
+	}
+
+	@Override
+	protected void onRunningPoweredTick() {
+		if (isGravityWithinBounds()) {
+			super.onRunningPoweredTick();
+		}
+
+	}
+
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = super.getModules(ID, player);
 
 		modules.add(new ModuleProgress(100, 4, 0, TextureResources.crystallizerProgressBar, this));
+		if (!isGravityWithinBounds()) {
+			modules.add(new ModuleText(10, 75, LibVulpes.proxy.getLocalizedString("msg.crystalliser.gravityTooHigh"), 0xFF1b1b));
+		}
 		return modules;
 	}
 

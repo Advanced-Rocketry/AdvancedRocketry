@@ -1,5 +1,6 @@
 {
     "variants": {
+<<<<<<< HEAD
         "type=all": { "model": "advancedrocketry:block/launchpad_all" },
         "type=nredge": { "model": "advancedrocketry:block/launchpad_nredge" },
         "type=ntedge": { "model": "advancedrocketry:block/launchpad_ntedge" },
@@ -19,5 +20,24 @@
     },
     "inventory": {
         "model": "advancedrocketry:block/launchpad_all"
+=======
+        "type=all": { "model": "advancedrocketry:launchpad_all" },
+        "type=nredge": { "model": "advancedrocketry:launchpad_nrEdge" },
+        "type=ntedge": { "model": "advancedrocketry:launchpad_ntEdge" },
+        "type=trcorner": { "model": "advancedrocketry:launchpad_trCorner" },
+        "type=nledge": { "model": "advancedrocketry:launchpad_nlEdge" },
+        "type=xcross": { "model": "advancedrocketry:launchpad_xCross" },
+        "type=tlcorner": { "model": "advancedrocketry:launchpad_tlCorner" },
+        "type=bottomedge": { "model": "advancedrocketry:launchpad_bottomEdge" },
+        "type=nbedge": { "model": "advancedrocketry:launchpad_nbEdge" },
+        "type=brcorner": { "model": "advancedrocketry:launchpad_brCorner" },
+        "type=ycross": { "model": "advancedrocketry:launchpad_yCross" },
+        "type=leftedge": { "model": "advancedrocketry:launchpad_leftEdge" },
+        "type=blcorner": { "model": "advancedrocketry:launchpad_blCorner" },
+        "type=topedge": { "model": "advancedrocketry:launchpad_topEdge" },
+        "type=rightedge": { "model": "advancedrocketry:launchpad_rightEdge" },
+        "type=noedge": { "model": "advancedrocketry:launchpad_noEdge" },
+        "inventory" : { "model": "advancedrocketry:launchpad_all" }
+>>>>>>> origin/1.12
     }
 }

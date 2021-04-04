@@ -1,5 +1,6 @@
 {
     "variants": {
+<<<<<<< HEAD:src/main/resources/assets/advancedrocketry/blockstates/rocketassembler.json
         "facing=north,state=false": { "model": "advancedrocketry:block/rocketbuilder" },
         "facing=south,state=false": { "model": "advancedrocketry:block/rocketbuilder", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/rocketbuilder", "y": 270 },
@@ -8,5 +9,16 @@
         "facing=south,state=true": { "model": "advancedrocketry:block/rocketbuilder", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/rocketbuilder", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/rocketbuilder", "y": 90 }
+=======
+        "facing=north,state=false": { "model": "advancedrocketry:rocketBuilder" },
+        "facing=south,state=false": { "model": "advancedrocketry:rocketBuilder", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:rocketBuilder", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:rocketBuilder", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:rocketBuilder" },
+        "facing=south,state=true": { "model": "advancedrocketry:rocketBuilder", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:rocketBuilder", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:rocketBuilder", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:rocketbuilder" }
+>>>>>>> origin/1.12:src/main/resources/assets/advancedrocketry/blockstates/rocketbuilder.json
     }
 }

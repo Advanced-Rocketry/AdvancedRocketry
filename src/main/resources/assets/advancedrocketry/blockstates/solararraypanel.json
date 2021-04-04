@@ -1,0 +1,59 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block"
+    },
+    "variants": {
+        "inventory": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "varient=0": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "varient=1": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "varient=2": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "varient=3": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "varient=4": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "varient=5": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "varient=6": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "varient=7": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "varient=8": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "varient=9": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "varient=10": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "varient=11": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "varient=12": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "varient=13": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "varient=14": [{
+            "model": "advancedrocketry:solararraypanel"
+        }],
+        "varient=15": [{
+            "model": "advancedrocketry:solararraypanel"
+        }]
+    }
+}

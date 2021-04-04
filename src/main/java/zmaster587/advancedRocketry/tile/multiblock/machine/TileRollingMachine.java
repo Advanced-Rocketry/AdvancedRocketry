@@ -29,14 +29,13 @@ import java.util.List;
 public class TileRollingMachine extends TileMultiblockMachine {
 
 	public static final Object structure[][][] = new Object[][][] { 
-		{   {'c', null, Blocks.AIR, Blocks.AIR},
-			{'I', Blocks.AIR, LibVulpesBlocks.blockStructureBlock, Blocks.AIR},
-			{'I', Blocks.AIR, LibVulpesBlocks.blockStructureBlock, Blocks.AIR}},
+		{   {Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},
+			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock},
+			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, "blockSteel", LibVulpesBlocks.blockStructureBlock}},
 
-			{{'P', 'L', LibVulpesBlocks.blockStructureBlock, null},
-				{new ResourceLocation("forge","coils"), LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'},
-				{new ResourceLocation("forge","coils"), LibVulpesBlocks.motors, LibVulpesBlocks.blockStructureBlock, 'O'}}
-	};
+		{{'P', 'c', 'I', Blocks.AIR, Blocks.AIR},
+				{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.motors, LibVulpesBlocks.motors, "blockSteel", LibVulpesBlocks.blockStructureBlock},
+				{LibVulpesBlocks.blockStructureBlock, 'L', 'O', "blockSteel", LibVulpesBlocks.blockStructureBlock}}};
 	
 	public TileRollingMachine() {
 		super(AdvancedRocketryTileEntityType.TILE_ROLLING);
@@ -83,9 +82,7 @@ public class TileRollingMachine extends TileMultiblockMachine {
 	}
 	
 	@Override
-	public boolean shouldHideBlock(World world, BlockPos pos, BlockState tile) {
-		return tile.getBlock() != Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem());
-	}
+	public boolean shouldHideBlock(World world, BlockPos pos, BlockState tile) { return true; }
 
 	@Override
 	public String getMachineName() {

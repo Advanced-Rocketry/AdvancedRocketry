@@ -22,7 +22,6 @@ import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
-import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
@@ -82,7 +81,6 @@ public class TileElectrolyser extends TileMultiblockMachine {
 	
 	@Override
 	public SoundEvent getSound() {
-		// TODO Auto-generated method stub
 		return AudioRegistry.electrolyser;
 	}
 

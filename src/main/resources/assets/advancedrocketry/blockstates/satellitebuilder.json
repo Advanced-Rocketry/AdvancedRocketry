@@ -1,5 +1,6 @@
 {
     "variants": {
+<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/satellitebuilder" },
         "facing=south,state=false": { "model": "advancedrocketry:block/satellitebuilder", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/satellitebuilder", "y": 270 },
@@ -8,5 +9,16 @@
         "facing=south,state=true": { "model": "advancedrocketry:block/satellitebuilder", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/satellitebuilder", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/satellitebuilder", "y": 90 }
+=======
+        "facing=north,state=false": { "model": "advancedrocketry:satelliteBuilder" },
+        "facing=south,state=false": { "model": "advancedrocketry:satelliteBuilder", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:satelliteBuilder", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:satelliteBuilder", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:satelliteBuilder" },
+        "facing=south,state=true": { "model": "advancedrocketry:satelliteBuilder", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:satelliteBuilder", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:satelliteBuilder", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:satellitebuilder" }
+>>>>>>> origin/1.12
     }
 }

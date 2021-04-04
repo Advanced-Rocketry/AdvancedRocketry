@@ -54,71 +54,22 @@ public class RenderCentrifuge extends TileEntityRenderer<TileCentrifuge> {
 		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
 		matrix.translate( 0.5, 0, 0.5);
 		matrix.rotate(new Quaternion(0, (front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0 ,true));
-		matrix.translate(0, 0, 1);
+		matrix.translate(-0.5f, -1f, 1.5f);
 		
 		IVertexBuilder builder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture)); 
 
-		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, builder, "Frame");
+		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, builder, "Hull");
 
 
 		if(tile.isRunning())
 		{
-			float lavaheight = tile.getNormallizedProgress(0);
-			matrix.rotate(new Quaternion(0, tile.getWorld().getGameTime() * -10f, 0, true));
-			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, builder, "Spinning");
+			matrix.push();
+			matrix.rotate(new Quaternion(0, System.currentTimeMillis() * -100f, 0, true));
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, builder, "Cylinder");
+			matrix.pop();
 
-
-			ResourceLocation fluidIcon = new ResourceLocation("advancedrocketry:textures/blocks/fluid/oxygen_flow.png");
-			
-			Fluid fluid = AdvancedRocketryFluids.enrichedLavaStill.get();
-			if(fluid != null)
-			{
-				matrix.push();
-
-				if(fluid.getAttributes().getStillTexture() == null)
-					return;
-
-				
-				float amt = 1.0f;
-				
-				IVertexBuilder lavaRender;
-
-				AxisAlignedBB bb = new AxisAlignedBB(-1.2, -0.5, -0.5, 1.2, 0.3 - 0.6*lavaheight, 0.5);
-
-				double minU = 0, maxU = 1, minV = 0, maxV = 1;
-				float r = 1f, g = 1f, b = 1f, a = 1f;
-				TextureAtlasSprite sprite  = null;
-				
-				if(fluid.getAttributes().getStillTexture() != null)
-					sprite = Minecraft.getInstance().getAtlasSpriteGetter(fluid.getAttributes().getStillTexture()).apply(fluid.getAttributes().getStillTexture());
-				if(sprite != null) {
-					minU = sprite.getMinU();
-					maxU = sprite.getMaxU();
-					minV = sprite.getMinV();
-					maxV = sprite.getMaxV();
-					lavaRender = buffer.getBuffer(RenderHelper.getTranslucentTexturedManualRenderType(fluid.getAttributes().getStillTexture())); 
-				}
-				else {
-					int color = fluid.getAttributes().getColor();
-					r = ((color >>> 16) & 0xFF)/255f;
-					g = ((color >>> 8) & 0xFF)/255f;
-					b = ((color & 0xFF)/255f);
-
-					Minecraft.getInstance().textureManager.bindTexture(fluidIcon);
-					lavaRender = buffer.getBuffer(RenderHelper.getTranslucentTexturedManualRenderType(fluidIcon));
-				}
-				
-				for(int i = 0; i < 4; i++)
-				{
-					RenderHelper.renderCubeWithUV(matrix, lavaRender, bb.minX + 0.01, bb.minY + 0.01, bb.minZ + 0.01, bb.maxX - 0.01, bb.maxY*amt - 0.01, bb.maxZ - 0.01, (float)minU, (float)maxU,(float) minV, (float)maxV, r,g,b,a);
-					matrix.rotate(new Quaternion(0, 45f, 0, true));
-				}
-				matrix.pop();
-			}
-		}
-		else
-		{
-			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, builder, "Spinning");
+		} else {
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, builder, "Cylinder");
 		}
 		matrix.pop();
 	}

@@ -29,7 +29,7 @@ import zmaster587.advancedRocketry.api.IMission;
 import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
-import zmaster587.advancedRocketry.tile.TileRocketBuilder;
+import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
@@ -73,6 +73,14 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 	public TileRocketLoader(TileEntityType<?> type, int size) {
 		super(type, size);
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, "", this, LibVulpes.proxy.getLocalizedString("msg.rocketloader.loadingstate"));
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanInsertSlot(1, true);
+		inventory.setCanInsertSlot(2, true);
+		inventory.setCanInsertSlot(3, true);
+		inventory.setCanExtractSlot(0, false);
+		inventory.setCanExtractSlot(1, false);
+		inventory.setCanExtractSlot(2, false);
+		inventory.setCanExtractSlot(3, false);
 		state = RedstoneState.ON;
 		inputRedstoneControl = new ModuleRedstoneOutputButton(174, 32, "", this, LibVulpes.proxy.getLocalizedString("msg.rocketloader.allowloading"));
 		inputstate = RedstoneState.OFF;
@@ -84,8 +92,8 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 	@Override
 	public void remove() {
 		super.remove();
-		if(getMasterBlock() instanceof TileRocketBuilder)
-			((TileRocketBuilder)getMasterBlock()).removeConnectedInfrastructure(this);
+		if(getMasterBlock() instanceof TileRocketAssemblingMachine)
+			((TileRocketAssemblingMachine)getMasterBlock()).removeConnectedInfrastructure(this);
 	}
 
 	@Override

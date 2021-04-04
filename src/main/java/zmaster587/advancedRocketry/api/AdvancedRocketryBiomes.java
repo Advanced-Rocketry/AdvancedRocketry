@@ -86,13 +86,12 @@ import zmaster587.advancedRocketry.world.CustomPlanetBiomeProvider;
 import zmaster587.advancedRocketry.world.decoration.MapGenInvertedPillar;
 import zmaster587.advancedRocketry.world.decoration.StructurePieceVolcano;
 import zmaster587.advancedRocketry.world.decoration.StructureVolcano;
+import zmaster587.advancedRocketry.world.decoration.WorldGenSwampTree;
 import zmaster587.advancedRocketry.world.decoration.StructureCrater;
 import zmaster587.advancedRocketry.world.decoration.StructureGeode;
 import zmaster587.advancedRocketry.world.gen.WorldGenAlienTree;
 import zmaster587.advancedRocketry.world.gen.WorldGenCharredTree;
 import zmaster587.advancedRocketry.world.gen.WorldGenLargeCrystal;
-import zmaster587.advancedRocketry.world.gen.WorldGenSwampTree;
-
 
 /**
  * Stores information relating to the biomes and biome registry of AdvancedRocketry

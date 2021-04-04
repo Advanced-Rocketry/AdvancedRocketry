@@ -10,7 +10,6 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
@@ -20,26 +19,26 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
+import zmaster587.advancedRocketry.tile.station.TileHolographicPlanetSelector;
 import zmaster587.libVulpes.network.PacketSpawnEntity;
 
 public class EntityUIPlanet extends Entity {
 
 	DimensionProperties properties;
-	protected TilePlanetaryHologram tile;
+	protected TileHolographicPlanetSelector tile;
 	protected static final DataParameter<String> planetID =  EntityDataManager.<String>createKey(EntityUIPlanet.class, DataSerializers.STRING);
 	protected static final DataParameter<Float> scale =  EntityDataManager.<Float>createKey(EntityUIPlanet.class, DataSerializers.FLOAT);
 	protected static final DataParameter<Boolean> selected =  EntityDataManager.<Boolean>createKey(EntityUIPlanet.class, DataSerializers.BOOLEAN);
 	protected EntitySize size;
 	
-	public EntityUIPlanet(World worldIn, DimensionProperties properties, TilePlanetaryHologram tile, double x, double y, double z) {
+	public EntityUIPlanet(World worldIn, DimensionProperties properties, TileHolographicPlanetSelector tile, double x, double y, double z) {
 		this(AdvancedRocketryEntities.ENTITY_UIPLANET, worldIn);
 		setPosition(x, y, z);
 		setProperties(properties);
 		this.tile = tile;
 	}
 	
-	public EntityUIPlanet(EntityType<?> type, World worldIn, DimensionProperties properties, TilePlanetaryHologram tile, double x, double y, double z) {
+	public EntityUIPlanet(EntityType<?> type, World worldIn, DimensionProperties properties, TileHolographicPlanetSelector tile, double x, double y, double z) {
 		this(type, worldIn);
 		setPosition(x, y, z);
 		setProperties(properties);

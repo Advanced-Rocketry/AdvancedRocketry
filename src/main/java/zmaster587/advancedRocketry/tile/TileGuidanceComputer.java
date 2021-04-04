@@ -20,8 +20,8 @@ import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip.LandingLocation;
-import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.util.PlanetaryTravelHelper;
 import zmaster587.advancedRocketry.util.StationLandingLocation;
 import zmaster587.libVulpes.api.LibVulpesItems;
@@ -44,6 +44,8 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 
 	public TileGuidanceComputer() {
 		super( AdvancedRocketryTileEntityType.TILE_GUIDANCE_COMPUTER, 1);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanExtractSlot(0, true);
 		landingPos = new Vector3F<Float>(0f, 0f, 0f);
 		destinationId = Constants.INVALID_PLANET;
 		landingLoc = new HashMap<ResourceLocation, HashedBlockPosition>();
@@ -264,6 +266,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		ISpaceObject destinationSpaceStation = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(getStackInSlot(0)));
 		destinationDimensionID = ((destinationDimensionID.getPath().equals(ARConfiguration.getCurrentConfig().spaceDimId.get())) && (destinationSpaceStation != null)) ? destinationSpaceStation.getOrbitingPlanetId() : destinationDimensionID;
 
+		if (destinationDimensionID == Constants.INVALID_PLANET) {return 0;}
 		return (PlanetaryTravelHelper.isTravelWithinOrbit(currentDimensionID, destinationDimensionID) && !isAsteroidMission()) ? 0 : PlanetaryTravelHelper.getTransbodyInjectionBurn(currentDimensionID, destinationDimensionID, isAsteroidMission());
 	}
 
@@ -272,6 +275,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		ISpaceObject destinationSpaceStation = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(getStackInSlot(0)));
 		destinationDimensionID = ((destinationDimensionID.getPath().equals(ARConfiguration.getCurrentConfig().spaceDimId.get())) && (destinationSpaceStation != null)) ? destinationSpaceStation.getOrbitingPlanetId() : destinationDimensionID;
 
+		if (destinationDimensionID == Constants.INVALID_PLANET) {return 0;}
 		return (PlanetaryTravelHelper.isTravelWithinOrbit(currentSpaceStation.getOrbitingPlanetId(), destinationDimensionID) && !isAsteroidMission()) ? 0 : PlanetaryTravelHelper.getTransbodyInjectionBurn(currentSpaceStation.getOrbitingPlanetId(), destinationDimensionID, isAsteroidMission());
 	}
 

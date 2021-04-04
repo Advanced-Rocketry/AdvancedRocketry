@@ -231,9 +231,10 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 	
 	@Override
 	public void tick() {
-		// TODO Auto-generated method stub
 		super.tick();
 
+		boolean isInSpaceDim = ZUtils.getDimensionIdentifier(getEntityWorld()).equals(ARConfiguration.getCurrentConfig().spaceDimId);
+		
 		//Make sure to update client
 		if(!world.isRemote && this.ticksExisted == 5) {
 			if(dstTilePos != null)
@@ -256,9 +257,9 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 					if(this.getRidingEntity() == null)
 						ent.startRiding(this);
 				}
-
+				
 				if(this.getPosY() > MAX_HEIGHT) {
-					setCapsuleMotion(-1);
+					setCapsuleMotion(1);
 					double landingLocX, landingLocZ;
 					World world = ZUtils.getWorld(dstTilePos.dimid);
 
@@ -289,14 +290,33 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 							return;
 						}
 					}
-
-					changeDimension(ZUtils.getWorld(dstTilePos.dimid), landingLocX, ARConfiguration.getCurrentConfig().orbit.get(), landingLocZ);
+					changeDimension(ZUtils.getWorld(dstTilePos.dimid), landingLocX, 10, landingLocZ);
 
 					MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDeOrbitingEvent(this));
 				}
 			}
+			if(this.getPosY() >= dstTilePos.pos.y -4 && isInSpaceDim) {
+				setCapsuleMotion(0);
 
-			this.move(MoverType.SELF, this.getMotion());
+
+				setPosition(dstTilePos.pos.x, dstTilePos.pos.y - 5, dstTilePos.pos.z);
+
+				TileEntity e;
+
+				if((e = world.getTileEntity(dstTilePos.pos.getBlockPos())) instanceof TileSpaceElevator) {
+					((TileSpaceElevator)e).notifyLanded(this);
+					standTime = 0;
+				}
+				else
+					this.setDead();
+
+				//Dismount rider after being put in final place
+				for(Entity ent : this.getPassengers()) {
+					ent.dismount();
+				}
+			}
+
+			this.move(MoverType.SELF,new Vector3d(0, this.getMotion().y, 0));
 		}
 		else if(isDescending()) {
 			
@@ -319,11 +339,11 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 						ent.startRiding(this);
 				}
 
-				if(this.getPosY() <= dstTilePos.pos.y) {
+				if(this.getPosY() <= dstTilePos.pos.y + 1 && !isInSpaceDim) {
 					setCapsuleMotion(0);
 
 
-					setPosition(dstTilePos.pos.x, dstTilePos.pos.y, dstTilePos.pos.z);
+					setPosition(dstTilePos.pos.x, dstTilePos.pos.y + 1, dstTilePos.pos.z);
 
 					TileEntity e;
 
@@ -338,6 +358,47 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 					for(Entity ent : this.getPassengers()) {
 						ent.stopRiding();
 					}
+				} else if(this.getPosY() <= 15 && isInSpaceDim) {
+					setCapsuleMotion(-1);
+					double landingLocX, landingLocZ;
+					World world;
+
+					if((world = ZUtils.getWorld(dstTilePos.dimid)) == null) {
+						DimensionManager.initDimension(dstTilePos.dimid);
+						world = DimensionManager.getWorld(dstTilePos.dimid);
+					}
+
+					if(world != null) {
+						TileEntity tile = world.getTileEntity(dstTilePos.pos.getBlockPos());
+
+						if(tile instanceof TileSpaceElevator) {
+							landingLocX = ((TileSpaceElevator)tile).getLandingLocationX();
+							landingLocZ = ((TileSpaceElevator)tile).getLandingLocationZ();
+						}
+						else {
+							setDead();
+							return;
+						}
+					}
+					else {
+						dstTilePos = srcTilePos;
+						world = this.getEntityWorld();
+
+						TileEntity tile = world.getTileEntity(dstTilePos.pos.getBlockPos());
+
+						if(tile instanceof TileSpaceElevator) {
+							landingLocX = ((TileSpaceElevator)tile).getLandingLocationX();
+							landingLocZ = ((TileSpaceElevator)tile).getLandingLocationZ();
+						}
+						else {
+							setDead();
+							return;
+						}
+					}
+
+					changeDimension(dstTilePos.dimid, landingLocX, ARConfiguration.getCurrentConfig().orbit, landingLocZ);
+
+					MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDeOrbitingEvent(this));
 				}
 				else
 					this.move(MoverType.SELF, getMotion());
@@ -353,7 +414,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 				TileEntity srcTile = null;
 				if(list.isEmpty())
 					standTime = 0;
-				else if(dstTilePos != null && dstTilePos.dimid != ZUtils.getDimensionIdentifier(world) && TileSpaceElevator.isDstValid(getEntityWorld(), dstTilePos, new HashedBlockPosition(getPositionVec())))
+				else if(dstTilePos != null  && TileSpaceElevator.isDestinationValid(dstTilePos.dimid, dstTilePos, new HashedBlockPosition(getPosition()), ZUtils.getDimensionIdentifier(world)))
 					standTime++;
 
 				if(srcTilePos != null && srcTilePos.pos != null)
@@ -373,7 +434,11 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 
 						if(srcTile instanceof TileSpaceElevator && ((TileSpaceElevator)srcTile).attemptLaunch()) {
 
-							setCapsuleMotion(1);
+							if (isInSpaceDim) {
+								setCapsuleMotion(-1);
+							} else {
+								setCapsuleMotion(1);
+							}
 							//Make sure we mount player before takeoff
 							List<PlayerEntity> list2 = world.getEntitiesWithinAABB(PlayerEntity.class, getBoundingBox());
 

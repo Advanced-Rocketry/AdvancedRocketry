@@ -34,7 +34,6 @@ public class RendererLathe extends TileEntityRenderer<TileLathe> {
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}
-
 	}
 	
 	@Override
@@ -52,27 +51,28 @@ public class RendererLathe extends TileEntityRenderer<TileLathe> {
 		matrix.translate(-.5f, -1f, -2.5f);
 		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));
 
+
 		ItemStack outputStack;
 		if(tile.isRunning()) {
 
 			float progress = tile.getProgress(0)/(float)tile.getTotalProgress(0);
-
-			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "body");
+			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "Hull");
 
 			matrix.push();
 
 			if(progress < 0.95f)
-				matrix.translate(0f, 0f, progress/.95f);
+				matrix.translate(0f, 0f, -progress/.85f);
 			else
-				matrix.translate(0f, 0f, (1 - progress)/.05f);
+				matrix.translate(0f, 0f, -(1 - progress)/.05f);
 
-			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Tray");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Tool");
 			matrix.pop();
 
 			matrix.push();
-			matrix.translate(.5f, 1.5625f, 0f);
+			matrix.translate(0.375f, 0.9375f, 0f);
 			matrix.rotate(new Quaternion(0,0, progress*1500, true));
-			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Cylinder");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Shaft");
+			matrix.pop();
 
 			int color;
 			//Check for rare bug when outputs is null, usually occurs if player opens machine within 1st tick
@@ -81,17 +81,24 @@ public class RendererLathe extends TileEntityRenderer<TileLathe> {
 			else
 				color = 0;
 			
-			//GL11.glColor3d((0xff & color >> 16)/256f, (0xff & color >> 8)/256f , (color & 0xff)/256f);
-
-			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "rod");
+			float r = (0xff & color >> 16)/255f, g =  (0xff & color >> 8)/255f, b = (color & 0xff)/255f;
+			matrix.push();
+			matrix.translate(0.375f, 1.1875f, 0f);
+			matrix.rotate(new Quaternion(0,0, progress*1500, true));
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder,r,g,b,1f, "Rod");
 			matrix.pop();
 			
 			//GL11.glColor4f(1f, 1f, 1f, 1f);
 		}
 		else {
-			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "body");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "Hull");
 
-			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "Tray");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "Tool");
+			
+			matrix.push();
+			GL11.glTranslatef(0.375f, 0.9375f, 0f);
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "Sool");
+			matrix.pop();
 		}
 		matrix.pop();
 	}

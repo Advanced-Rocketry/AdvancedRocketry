@@ -18,10 +18,12 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.item.ItemStationChip;
-import zmaster587.advancedRocketry.tile.TileRocketBuilder;
+import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.util.ZUtils;
+
+import java.util.List;
 
 public class BuildRocketTest extends BaseTest {
 	
@@ -155,9 +157,9 @@ public class BuildRocketTest extends BaseTest {
 		
 		TileEntity tile = world.getTileEntity(builderPos);
 		
-		if(!(tile instanceof TileRocketBuilder))
+		if(!(tile instanceof TileRocketAssemblingMachine))
 			throw new AssertionError("Expected tile rocket builder!");
-		if(((TileRocketBuilder)tile).getRocketPadBounds(world, builderPos) == null)
+		if(((TileRocketAssemblingMachine)tile).getRocketPadBounds(world, builderPos) == null)
 			throw new AssertionError("Invalid Rocket pad!");
 	}
 	
@@ -186,14 +188,14 @@ public class BuildRocketTest extends BaseTest {
 	public void buildRocket(World world, PlayerEntity player, BlockPos tilePos)
 	{
 		TileEntity tile = world.getTileEntity(tilePos);
-		if(!(tile instanceof TileRocketBuilder))
+		if(!(tile instanceof TileRocketAssemblingMachine))
 			throw new AssertionError("Expected tile rocket builder!");
 		
-		if(((TileRocketBuilder)tile).getRocketPadBounds(world, tilePos) == null)
+		if(((TileRocketAssemblingMachine)tile).getRocketPadBounds(world, tilePos) == null)
 			throw new AssertionError("Invalid Rocket pad!");
 		
 		//Build the rocket
-		((TileRocketBuilder)tile).useNetworkData(player, Dist.DEDICATED_SERVER, (byte) 1, new CompoundNBT());
+		((TileRocketAssemblingMachine)tile).useNetworkData(player, Dist.DEDICATED_SERVER, (byte) 1, new CompoundNBT());
 	}
 	
 	public void mountPlayerToRocket(PlayerEntity player, EntityRocket rocket)

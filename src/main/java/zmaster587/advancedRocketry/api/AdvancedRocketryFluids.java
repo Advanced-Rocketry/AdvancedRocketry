@@ -1,8 +1,9 @@
 package zmaster587.advancedRocketry.api;
 
+import zmaster587.advancedRocketry.util.FluidGasGiantGas;
+
 import java.util.HashSet;
 import java.util.Set;
-
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
@@ -26,22 +27,27 @@ import zmaster587.libVulpes.LibVulpes;
  *
  */
 public class AdvancedRocketryFluids {
-	private static Set<Fluid> gasses = new HashSet<Fluid>();
+
+	public static Fluid fluidOxygen;
+	public static Fluid fluidHydrogen;
+	public static Fluid fluidRocketFuel;
+	public static Fluid fluidNitrogen;
+	public static Fluid fluidEnrichedLava;
+	private static Set<FluidGasGiantGas> gasses = new HashSet<FluidGasGiantGas>();
 
 	// Registers a gas that can be spawned on a gas giant
-	public static void registerGasGiantGas(Fluid gas)
-	{
-		gasses.add(gas);
+	public static void registerGasGiantGas(Fluid gas, int minGravity, int maxGravity, double chance) {
+		gasses.add(new FluidGasGiantGas(gas, minGravity, maxGravity, chance));
 	}
-
-	public static Set<Fluid> getGasGiantGasses()
+	
+	public static Set<FluidGasGiantGas> getGasGiantGasses()
 	{
 		return gasses;
 	}
 
 	public static boolean isGasGiantGasRegistered(ResourceLocation name)
 	{
-		for(Fluid gas : getGasGiantGasses())
+		for(FluidGasGiantGas gas : getGasGiantGasses())
 		{
 			if(name.equals(gas.getRegistryName()))
 				return true;
@@ -51,9 +57,9 @@ public class AdvancedRocketryFluids {
 
 	public static boolean isGasGiantGasRegistered(Fluid gasToCheck)
 	{
-		for(Fluid gas : getGasGiantGasses())
+		for(FluidGasGiantGas gas : getGasGiantGasses())
 		{
-			if(gas == gasToCheck)
+			if(gas.getFluid() == gasToCheck)
 				return true;
 		}
 		return false;

@@ -29,11 +29,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.Constants;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 import zmaster587.advancedRocketry.util.AudioRegistry;
+import zmaster587.advancedRocketry.util.PlanetaryTravelHelper;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.inventory.modules.*;
@@ -55,63 +56,130 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	RedstoneState state;
 	ModuleRedstoneOutputButton redstoneControl;
 
-	public static final Object[][][] structure = {
-		{	{null, null, null, null, null}, 
-			{null, null, new ResourceLocation("forge", "coil/copper"), null, null},
-			{null, new ResourceLocation("forge", "coil/copper"), new ResourceLocation("forge", "coil/copper") , new ResourceLocation("forge", "coil/copper"), null},
-			{null, null, new ResourceLocation("forge", "coil/copper") , null, null},
-			{null, null, null, null, null}},
-
-			{	{null, null, null, null, null}, 
-				{null, null, new ResourceLocation("forge", "coil/copper") , null, null},
-				{null, new ResourceLocation("forge", "coil/copper"), Blocks.AIR , new ResourceLocation("forge", "coil/copper"), null},
-				{null, null, new ResourceLocation("forge", "coil/copper") , null, null},
-				{null, null, null, null, null}},
-
-				{	{null, null, null, null, null}, 
-					{null, null, new ResourceLocation("forge", "coil/copper") , null, null},
-					{null, new ResourceLocation("forge", "coil/copper"), Blocks.AIR , new ResourceLocation("forge", "coil/copper"), null},
-					{null, null, new ResourceLocation("forge", "coil/copper") , null, null},
-					{null, null, null, null, null}},
-
-					{	{null, null, null, null, null}, 
-						{null, null, new ResourceLocation("forge", "coil/copper") , null, null},
-						{null, new ResourceLocation("forge", "coil/copper"), Blocks.AIR , new ResourceLocation("forge", "coil/copper"), null},
-						{null, null, new ResourceLocation("forge", "coil/copper") , null, null},
-						{null, null, null, null, null}},
-
-						{	{null, null, null, null, null}, 
-							{null, null, new ResourceLocation("forge", "coil/copper") , null, null},
-							{null, new ResourceLocation("forge", "coil/copper"), Blocks.AIR , new ResourceLocation("forge", "coil/copper"), null},
-							{null, null, new ResourceLocation("forge", "coil/copper") , null, null},
-							{null, null, null, null, null}},
-
-
-							{	{null, null, null, null, null}, 
-								{null, null, new ResourceLocation("forge", "coil/copper") , null, null},
-								{null, new ResourceLocation("forge", "coil/copper"), Blocks.AIR , new ResourceLocation("forge", "coil/copper"), null},
-								{null, null, new ResourceLocation("forge", "coil/copper") , null, null},
-								{null, null, null, null, null}},
-
-								{	{null, null, null, null, null}, 
-									{null, null, new ResourceLocation("forge", "coil/copper") , null, null},
-									{null, new ResourceLocation("forge", "coil/copper"), Blocks.AIR , new ResourceLocation("forge", "coil/copper"), null},
-									{null, null, new ResourceLocation("forge", "coil/copper") , null, null},
-									{null, null, null, null, null}},
-
-									{	{'*', '*', '*', '*', '*'}, 
-										{'*', new ResourceLocation("forge", "block/titanium"), new ResourceLocation("forge", "block/titanium") , new ResourceLocation("forge", "block/titanium"), '*'},
-										{'*', new ResourceLocation("forge", "block/titanium"), new ResourceLocation("forge", "block/titanium") , new ResourceLocation("forge", "block/titanium"), '*'},
-										{'*', new ResourceLocation("forge", "block/titanium"), new ResourceLocation("forge", "block/titanium") , new ResourceLocation("forge", "block/titanium"), '*'},
-										{'*', '*', '*', '*', '*'}},
-
-										{{'*', '*', 'c', '*', '*'}, 
-											{'*', new ResourceLocation("forge", "block/titanium"), new ResourceLocation("forge", "block/titanium") , new ResourceLocation("forge", "block/titanium"), '*'},
-											{'*', new ResourceLocation("forge", "block/titanium"), new ResourceLocation("forge", "block/titanium") , new ResourceLocation("forge", "block/titanium"), '*'},
-											{'*', new ResourceLocation("forge", "block/titanium"), new ResourceLocation("forge", "block/titanium") , new ResourceLocation("forge", "block/titanium"), '*'},
-											{'*', '*', '*', '*', '*'}}
-
-	};
+	static final Object[][][] structure = new Object[][][]
+			{
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","blocks/steel"),null,null,null,null},
+							{null,null,null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("forge","blocks/titanium"),LibVulpesBlocks.blockAdvStructureBlock,null,null,null},
+							{null,null,new ResourceLocation("forge","blocks/steel"),new ResourceLocation("forge","blocks/titanium"),new ResourceLocation("forge","blocks/titanium"),new ResourceLocation("forge","blocks/titanium"),new ResourceLocation("forge","blocks/steel"),null,null},
+							{null,null,null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("forge","blocks/titanium"),LibVulpesBlocks.blockAdvStructureBlock,null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","blocks/steel"),null,null,null,null},
+							{null,null,null,null,null,null,null,null,null},
+							{null,null,null,null,null,null,null,null,null}
+					},
+					{
+							{new ResourceLocation("forge","blocks/steel"),null,null,new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab"),null,null,new ResourceLocation("forge","blocks/steel")},
+							{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slab"),'I','c','O',new ResourceLocation("minecraft","slab"),LibVulpesBlocks.blockAdvStructureBlock,null},
+							{null,new ResourceLocation("minecraft","slab"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slab"),null},
+							{new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab")},
+							{new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.motors,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab")},
+							{new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab")},
+							{null,new ResourceLocation("minecraft","slab"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slab"),null},
+							{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slab"),'P','P','P',new ResourceLocation("minecraft","slab"),LibVulpesBlocks.blockAdvStructureBlock,null},
+							{new ResourceLocation("forge","blocks/steel"),null,null,new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab"),null,null,new ResourceLocation("forge","blocks/steel")}
+					}
+			};
 
 	public TileRailgun() {
 		super(AdvancedRocketryTileEntityType.TILE_RAILGUN);
@@ -132,6 +200,11 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 			return Math.min(distance, super.requiredPowerPerTick());
 		}
 		return super.requiredPowerPerTick();
+	}
+
+	@Override
+	public boolean shouldHideBlock(World world, BlockPos pos, BlockState tile) {
+		return true;
 	}
 	
 	/**
@@ -154,18 +227,6 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 			return ItemLinker.getMasterCoords(stack);
 		}
 		return null;
-	}
-
-	@Override
-	public List<BlockMeta> getAllowableWildCardBlocks() {
-		List<BlockMeta> blocks = super.getAllowableWildCardBlocks();
-
-		blocks.addAll(getAllowableBlocks('P'));
-		blocks.addAll(getAllowableBlocks('I'));
-		blocks.addAll(getAllowableBlocks('O'));
-		blocks.add(new BlockMeta(LibVulpesBlocks.blockAdvStructureBlock));
-
-		return blocks;
 	}
 
 	@Override
@@ -291,9 +352,9 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 					TileEntity tile;
 
 					if(world != null && (tile = world.getTileEntity(pos)) instanceof TileRailgun && ((TileRailgun)tile).canRecieveCargo(tfrStack) &&
-							(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(ZUtils.getDimensionIdentifier(this.world),
-									zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(world, pos).getId()) ||
-									zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(world, pos).getId() == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(this.world, this.pos).getId()) ) {
+							(PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(ZUtils.getDimensionIdentifier(this.world),
+									DimensionManager.getEffectiveDimId(world, pos).getId()) ||
+									DimensionManager.getEffectiveDimId(world, pos).getId() == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(this.world, this.pos).getId()) ) {
 
 						((TileRailgun)tile).onRecieveCargo(tfrStack);
 						inv2.setInventorySlotContents(index, ItemStack.EMPTY);

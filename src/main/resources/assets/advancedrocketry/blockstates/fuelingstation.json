@@ -1,5 +1,6 @@
 {
     "variants": {
+<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/fuelingstation" },
         "facing=south,state=false": { "model": "advancedrocketry:block/fuelingstation", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/fuelingstation", "y": 270 },
@@ -8,5 +9,16 @@
         "facing=south,state=true": { "model": "advancedrocketry:block/fuelingstation", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/fuelingstation", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/fuelingstation", "y": 90 }
+=======
+        "facing=north,state=false": { "model": "advancedrocketry:fuelingStation" },
+        "facing=south,state=false": { "model": "advancedrocketry:fuelingStation", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:fuelingStation", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:fuelingStation", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:fuelingStation" },
+        "facing=south,state=true": { "model": "advancedrocketry:fuelingStation", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:fuelingStation", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:fuelingStation", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:fuelingstation" }
+>>>>>>> origin/1.12
     }
 }

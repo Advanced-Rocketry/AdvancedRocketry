@@ -1,5 +1,6 @@
 {
     "variants": {
+<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/chemicalreactor" },
         "facing=south,state=false": { "model": "advancedrocketry:block/chemicalreactor", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/chemicalreactor", "y": 270 },
@@ -8,5 +9,16 @@
         "facing=south,state=true": { "model": "advancedrocketry:block/chemicalreactor_on", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/chemicalreactor_on", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/chemicalreactor_on", "y": 90 }
+=======
+        "facing=north,state=false": { "model": "advancedrocketry:chemicalReactor" },
+        "facing=south,state=false": { "model": "advancedrocketry:chemicalReactor", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:chemicalReactor", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:chemicalReactor", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:chemicalReactor_on" },
+        "facing=south,state=true": { "model": "advancedrocketry:chemicalReactor_on", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:chemicalReactor_on", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:chemicalReactor_on", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:chemicalreactor" }
+>>>>>>> origin/1.12
     }
 }

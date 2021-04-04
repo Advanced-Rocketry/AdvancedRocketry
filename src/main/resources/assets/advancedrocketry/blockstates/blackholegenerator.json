@@ -1,5 +1,6 @@
 {
     "variants": {
+<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/blackholegenerator" },
         "facing=south,state=false": { "model": "advancedrocketry:block/blackholegenerator", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/blackholegenerator", "y": 270 },
@@ -8,5 +9,16 @@
         "facing=south,state=true": { "model": "advancedrocketry:block/blackholegenerator", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/blackholegenerator", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/blackholegenerator", "y": 90 }
+=======
+        "facing=north,state=false": { "model": "advancedrocketry:blackholegenerator" },
+        "facing=south,state=false": { "model": "advancedrocketry:blackholegenerator", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:blackholegenerator", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:blackholegenerator", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:blackholegenerator" },
+        "facing=south,state=true": { "model": "advancedrocketry:blackholegenerator", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:blackholegenerator", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:blackholegenerator", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:blackholegenerator" }
+>>>>>>> origin/1.12
     }
 }

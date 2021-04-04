@@ -222,7 +222,8 @@ public class AdvancedRocketryBlocks {
 
 
 	public static Block blockSpaceLaser = new BlockLaser(machineLineProperties);
-
+	public static Block blockSolarArray;
+	public static Block blockSolarArrayPanel;
 
 
 	@SubscribeEvent(priority=EventPriority.HIGH)

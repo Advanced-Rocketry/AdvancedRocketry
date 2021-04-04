@@ -1,5 +1,10 @@
 {
     "variants": {
+<<<<<<< HEAD
         "": { "model": "advancedrocketry:block/blockpipesealer" }
+=======
+        "normal": { "model": "advancedrocketry:blockPipeSealer" },
+        "inventory" : { "model": "advancedrocketry:blockpipesealer" }
+>>>>>>> origin/1.12
     }
 }

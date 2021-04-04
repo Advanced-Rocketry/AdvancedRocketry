@@ -1,5 +1,20 @@
 {
     "variants": {
+<<<<<<< HEAD
         "": { "model": "advancedrocketry:block/crystal" }
+=======
+        "type=amethyst" : { "model": "advancedrocketry:crystal" },
+		"type=sapphire" : { "model": "advancedrocketry:crystal" },
+		"type=emerald" : { "model": "advancedrocketry:crystal" },
+		"type=ruby" : { "model": "advancedrocketry:crystal" },
+		"type=citrine" : { "model": "advancedrocketry:crystal" },
+		"type=wulfentite" : { "model": "advancedrocketry:crystal" },
+		"inventory,type=amethyst" : { "model": "advancedrocketry:crystal" },
+        "inventory,type=sapphire" : { "model": "advancedrocketry:crystal" },
+        "inventory,type=emerald" : { "model": "advancedrocketry:crystal" },
+        "inventory,type=ruby" : { "model": "advancedrocketry:crystal" },
+        "inventory,type=citrine" : { "model": "advancedrocketry:crystal" },
+        "inventory,type=wulfentite" : { "model": "advancedrocketry:crystal" }
+>>>>>>> origin/1.12
     }
 }

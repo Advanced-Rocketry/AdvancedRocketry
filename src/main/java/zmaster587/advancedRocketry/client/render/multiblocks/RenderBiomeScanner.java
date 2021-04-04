@@ -22,8 +22,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 public class RenderBiomeScanner extends TileEntityRenderer<TileBiomeScanner> {
 
 	WavefrontObject model;
-
-	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/biomescanner.jpg");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/biomescanner.png");
 
 	public RenderBiomeScanner(TileEntityRendererDispatcher tile){
 		super(tile);
@@ -52,8 +51,8 @@ public class RenderBiomeScanner extends TileEntityRenderer<TileBiomeScanner> {
 		//Initial setup
 
 		//Rotate and move the model into position
-		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		matrix.translate(0.5, 0, 0.5);
+		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
+		matrix.translate(0, 0, 1);
 		IVertexBuilder entityTransparentBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 		
 		model.tessellateAll(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder);

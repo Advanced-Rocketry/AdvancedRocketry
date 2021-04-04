@@ -89,6 +89,20 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	public Direction getForwardDirection() {
 			return Direction.DOWN;
 	}
+
+	/**
+	 * @return if the object is anchored in place by anything
+	 */
+	@Override
+	public boolean isAnchored() { return false;}
+
+	/**
+	 * Sets if the object is anchored or not
+	 */
+	@Override
+	public void setIsAnchored(boolean anchored) {
+	}
+
 	/**
 	 * @return the altitude above the parent DIM the object currently is
 	 */

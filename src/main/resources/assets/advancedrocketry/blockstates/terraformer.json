@@ -1,5 +1,6 @@
 {
     "variants": {
+<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/terraformer" },
         "facing=south,state=false": { "model": "advancedrocketry:block/terraformer", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/terraformer", "y": 270 },
@@ -8,5 +9,16 @@
         "facing=south,state=true": { "model": "advancedrocketry:block/terraformer_on", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/terraformer_on", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/terraformer_on", "y": 90 }
+=======
+        "facing=north,state=false": { "model": "advancedrocketry:terraformer" },
+        "facing=south,state=false": { "model": "advancedrocketry:terraformer", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:terraformer", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:terraformer", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:terraformer_on" },
+        "facing=south,state=true": { "model": "advancedrocketry:terraformer_on", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:terraformer_on", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:terraformer_on", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:terraformer" }
+>>>>>>> origin/1.12
     }
 }

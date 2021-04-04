@@ -21,7 +21,6 @@ import zmaster587.libVulpes.render.RenderHelper;
 public class RenderBeacon extends TileEntityRenderer<TileBeacon> {
 
 	WavefrontObject model;
-
 	public ResourceLocation baseTexture =  new ResourceLocation("advancedrocketry","textures/models/beacon.jpg");
 	RenderLaser laser;
 

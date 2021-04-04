@@ -39,7 +39,6 @@ public class WorldGenAlienTree extends StraightTrunkPlacer {
 		super(i, j, k);
 	}
 
-
 	public List<FoliagePlacer.Foliage> func_230382_a_(IWorldGenerationReader world, Random random, int p_230382_3_, BlockPos pos, Set<BlockPos> p_230382_5_, MutableBoundingBox boundingBox, BaseTreeFeatureConfig p_230382_7_)
 	{
 		int treeHeight = random.nextInt(10) + 20;
@@ -124,7 +123,7 @@ public class WorldGenAlienTree extends StraightTrunkPlacer {
 					func_236913_a_(world, new BlockPos(trunkX + 1, trunkY, trunkZ + 1), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
 					i2 = trunkY;
 				}
-
+				
 				//Genthe root
 				func_236913_a_(world, new BlockPos(trunkX - 1, y, trunkZ), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
 				func_236913_a_(world, new BlockPos(trunkX + 2, y, trunkZ), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
@@ -255,8 +254,13 @@ public class WorldGenAlienTree extends StraightTrunkPlacer {
 
 		Block block = state.getBlock();
 
+<<<<<<< HEAD
 		if( block.isReplaceable(world, pos) ||  block.isLeaves(state, world, pos) || block == AdvancedRocketryBlocks.blockAlienWood || block == AdvancedRocketryBlocks.blockAlienSapling) {
 			func_236913_a_(world, pos, AdvancedRocketryBlocks.blockAlienWood.getDefaultState().with(BlockLog.LOG_AXIS, BlockLog.EnumAxis.fromFacingAxis(direction.getAxis())));
+=======
+		if( block.isReplaceable(world, pos) ||  block.isLeaves(state, world, pos) || block == AdvancedRocketryBlocks.blockLightwoodWood || block == AdvancedRocketryBlocks.blockLightwoodSapling) {
+			this.setBlockAndNotifyAdequately(world, pos, AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.fromFacingAxis(direction.getAxis())));
+>>>>>>> origin/1.12
 			return true;
 		}
 		else

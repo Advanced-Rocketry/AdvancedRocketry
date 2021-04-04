@@ -8,8 +8,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
@@ -26,7 +26,6 @@ public class BlockWarpCore extends BlockMultiblockMachine {
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state,
 			LivingEntity placer, ItemStack stack) {
-		// TODO Auto-generated method stub
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
 		
 		if(!world.isRemote && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
@@ -40,6 +39,7 @@ public class BlockWarpCore extends BlockMultiblockMachine {
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		if(state.getBlock() != newState.getBlock() && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
+
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObj instanceof SpaceStationObject)
 				((SpaceStationObject)spaceObj).removeWarpCore(new HashedBlockPosition(pos));

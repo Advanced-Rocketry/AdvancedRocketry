@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.atmosphere;
 
+import net.minecraft.block.Blocks;
+import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -14,6 +16,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import zmaster587.advancedRocketry.api.AreaBlob;
 import zmaster587.advancedRocketry.api.ARConfiguration;
@@ -173,6 +176,44 @@ public class AtmosphereHandler {
 			//there is a possibility handler can be null here
 			if(handler == null)
 				return; //WTF
+
+			//Block handling for what should and shoudln't exist or what should be on fire
+			//Things should be on fire
+			if (handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATED) {
+				if(world.getBlockState(bpos).getMaterial().isFlammable()) {
+				} else if (world.getBlockState(bpos).getMaterial() == Material.WEB) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				} else if (world.getBlockState(bpos).getMaterial() == Material.GOURD) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				}
+			}
+			//Plants should die
+			else if(!handler.getAtmosphereType(bpos).allowsCombustion()) {
+					if(world.getBlockState(bpos).getMaterial() == Material.LEAVES) {
+						world.setBlockState(bpos, Blocks.AIR.getDefaultState());
+					} else if (world.getBlockState(bpos).getMaterial() == Material.FIRE) {
+						world.setBlockState(bpos, Blocks.AIR.getDefaultState());
+					} else if (world.getBlockState(bpos).getMaterial() == Material.CACTUS) {
+						world.setBlockState(bpos, Blocks.AIR.getDefaultState());
+					} else if (world.getBlockState(bpos).getMaterial() == Material.PLANTS && world.getBlockState(bpos).getBlock() != Blocks.DEAD_BUSH) {
+						world.setBlockState(bpos, Blocks.DEAD_BUSH.getDefaultState());
+					}
+			}
+			//Gasses should automatically vaporize and dissipate
+			if (handler.getAtmosphereType(bpos) == AtmosphereType.VACUUM) {
+				 if (world.getBlockState(bpos).getMaterial() == Material.WATER && !(world.getBlockState(bpos).getBlock() instanceof FlowingFluidBlock)) {
+					 IFluidBlock fluidblock = (IFluidBlock)world.getBlockState(bpos).getBlock();
+					 if (fluidblock.getFluid().getAttributes().isGaseous())
+						 world.setBlockState(bpos, Blocks.AIR.getDefaultState());
+				 }
+			}
+			//Water blocks should also vaporize and disappear
+			if (handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATED || handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATEDNOO2 || handler.getAtmosphereType(bpos) == AtmosphereType.VERYHOT || handler.getAtmosphereType(bpos) == AtmosphereType.VERYHOTNOO2) {
+				if (world.getBlockState(bpos).getMaterial() == Material.WATER) {
+					world.setBlockState(bpos, Blocks.AIR.getDefaultState());
+				}
+			}
+
 
 			List<AreaBlob> nearbyBlobs = handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS);
 			for(AreaBlob blob : nearbyBlobs) {

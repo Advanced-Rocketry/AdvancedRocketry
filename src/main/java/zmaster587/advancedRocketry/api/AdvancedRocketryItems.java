@@ -106,7 +106,6 @@ public class AdvancedRocketryItems {
 	public static Item itemUpgradeFogGoggles;
 	public static Item itemAtmAnalyser;
 	public static Item itemBiomeChanger;
-
 	public static Item itemAstroBed;
 	public static Item itemBasicLaserGun;
 	public static Item itemSpaceElevatorChip;
@@ -264,7 +263,7 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemThermite = new Item(typicalProperties).setRegistryName("thermite");
 
 		//TODO: move registration in the case we have more than one chip type
-		AdvancedRocketryItems.itemDataUnit = new ItemData(typicalProperties).setRegistryName("dataunit");
+		AdvancedRocketryItems.itemDataUnit = new ItemData(singleStackSize).setRegistryName("dataunit");
 		AdvancedRocketryItems.itemOreScanner = new ItemOreScanner(singleStackSize).setRegistryName("ore_scanner");
 		AdvancedRocketryItems.itemQuartzCrucible = new BlockItem(AdvancedRocketryBlocks.blockQuartzCrucible, typicalProperties).setRegistryName("qcrucible");
 		AdvancedRocketryItems.itemSatellite = new ItemSatellite(singleStackSize).setRegistryName("satellite");

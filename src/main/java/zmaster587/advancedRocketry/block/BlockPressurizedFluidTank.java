@@ -24,16 +24,19 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.network.NetworkHooks;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.item.ItemBlockFluidTank;
 import zmaster587.advancedRocketry.tile.TileFluidTank;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.util.FluidUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -53,8 +56,13 @@ public class BlockPressurizedFluidTank extends Block {
 	
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
-			Hand handIn, BlockRayTraceResult hit) {
-		if(!world.isRemote)
+			Hand hand, BlockRayTraceResult hit) {
+		
+		
+		//Do some fancy fluid stuff
+		if (FluidUtils.containsFluid(player.getHeldItem(hand))) {
+			FluidUtil.interactWithFluidHandler(player, hand, ((TileFluidHatch) tile).getFluidTank());
+		} else if(!world.isRemote)
 		{
 			TileEntity te = world.getTileEntity(pos);
 			if(te != null)
@@ -65,7 +73,7 @@ public class BlockPressurizedFluidTank extends Block {
 	
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new TileFluidTank((int) (64000*Math.pow(2,0)));
+		return new TileFluidTank((int) (64000*ARConfiguration.getCurrentConfig().blockTankCapacity.get()));
 	}
 	
 	@Override

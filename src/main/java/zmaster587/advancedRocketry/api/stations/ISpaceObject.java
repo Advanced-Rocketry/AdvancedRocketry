@@ -27,6 +27,16 @@ public interface ISpaceObject {
 	 * @return the DIMID of the planet the object is currently orbiting, Constants.INVALID_PLANET if none
 	 */
 	public ResourceLocation getOrbitingPlanetId();
+
+	/**
+	 * @return if the object is anchored in place by anything
+	 */
+	public boolean isAnchored();
+
+	/**
+	 * Sets if the object is anchored or not
+	 */
+	public void setIsAnchored(boolean anchored);
 	
 	/**
 	 * @param id the space object id of this object (NOT DIMID)

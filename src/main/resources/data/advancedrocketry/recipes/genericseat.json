@@ -1,19 +1,27 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"xxx"
+    "pattern": [
+	    "xsx"
     ],
+<<<<<<< HEAD:src/main/resources/data/advancedrocketry/recipes/genericseat.json
     "key":
     {
         "x":
         {
             "tag": "minecraft:wool",
+=======
+    "key": {
+        "x": {
+            "item": "minecraft:wool",
+>>>>>>> origin/1.12:src/main/resources/assets/advancedrocketry/recipes/genericseat.json
             "data": 32767
+        },
+        "s": {
+            "type": "forge:ore_dict",
+            "ore": "plateSteel"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:seat",
         "count": 1
     }

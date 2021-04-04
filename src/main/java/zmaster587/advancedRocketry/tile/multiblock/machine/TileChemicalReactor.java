@@ -29,13 +29,11 @@ import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.recipe.RecipeChemicalReactor;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.recipe.NumberedOreDictStack;
 import zmaster587.libVulpes.recipe.RecipesMachine;
-import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 import java.util.LinkedList;
@@ -47,7 +45,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 			{'L', 'I','L'}},
 
 			{{'P', LibVulpesBlocks.motors, 'P'}, 
-				{'l', new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'O'}},
+				{'l', 'O', 'l'}},
 
 	};
 
@@ -56,12 +54,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 	}
 	
 	@Override
-	public boolean shouldHideBlock(World world, BlockPos pos, BlockState tile) {
-		TileEntity tileEntity = world.getTileEntity(pos);
-
-		return !TileMultiBlock.getMapping('P').contains(new BlockMeta(tile, BlockMeta.WILDCARD)) && tileEntity != null && !(tileEntity instanceof TileChemicalReactor);
-
-	}
+	public boolean shouldHideBlock(World world, BlockPos pos, BlockState tile) { return true; }
 
 	//Called by inventory blocks that are part of the structure
 	//This includes recipe management etc

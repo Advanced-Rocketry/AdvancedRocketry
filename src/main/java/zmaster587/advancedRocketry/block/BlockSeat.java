@@ -28,7 +28,6 @@ public class BlockSeat extends Block {
 	public BlockSeat(Properties mat) {
 		super(mat);
 	}
-
 	
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,

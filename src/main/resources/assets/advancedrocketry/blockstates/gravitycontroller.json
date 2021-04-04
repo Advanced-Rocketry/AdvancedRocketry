@@ -1,5 +1,6 @@
 {
     "variants": {
+<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/gravitycontroller" },
         "facing=south,state=false": { "model": "advancedrocketry:block/gravitycontroller", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/gravitycontroller", "y": 270 },
@@ -8,5 +9,16 @@
         "facing=south,state=true": { "model": "advancedrocketry:block/gravitycontroller", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/gravitycontroller", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/gravitycontroller", "y": 90 }
+=======
+        "facing=north,state=false": { "model": "advancedrocketry:gravityController" },
+        "facing=south,state=false": { "model": "advancedrocketry:gravityController", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:gravityController", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:gravityController", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:gravityController" },
+        "facing=south,state=true": { "model": "advancedrocketry:gravityController", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:gravityController", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:gravityController", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:gravitycontroller" }
+>>>>>>> origin/1.12
     }
 }
