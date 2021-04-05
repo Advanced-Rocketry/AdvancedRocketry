@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:ingots/iridium"
+      "tag": "forge:blocks/iridium"
     }
   ],
   "result": {
-    "item": "libvulpes:blockiridium",
+    "item": "libvulpes:ingotiridium",
     "count": 9
   }
 }

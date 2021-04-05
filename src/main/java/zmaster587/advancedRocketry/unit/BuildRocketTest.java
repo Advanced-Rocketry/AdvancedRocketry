@@ -211,7 +211,7 @@ public class BuildRocketTest extends BaseTest {
 	
 	public void FuelRocket(EntityRocket rocket)
 	{
-		rocket.setFuelAmount(rocket.getFuelCapacity());
+		rocket.setFuelAmountMonoproellant(rocket.getFuelCapacityMonopropellant());
 	}
 	
 	public EntityRocket findRocketOnPad(World world)

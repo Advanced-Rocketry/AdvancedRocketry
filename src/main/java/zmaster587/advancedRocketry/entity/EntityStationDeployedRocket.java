@@ -123,7 +123,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			setInFlight(true);
 			return;
 		}
-		if(getFuelAmount() < getFuelCapacity())
+		if(getFuelAmountMonopropellant() < getFuelCapacityMonopropellant())
 			return;
 
 		ISpaceObject spaceObj;
@@ -304,7 +304,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			}
 		}
 		else {
-			atmText.setText(LibVulpes.proxy.getLocalizedString("msg.entityDeployedRocket.notGasGiant"));
+			atmText.setText(LibVulpes.proxy.getLocalizedString("msg.entityDeployedRocket.notgasgiant"));
 		}
 		modules.add(new ModuleButton(170, 114, "", this, zmaster587.libVulpes.inventory.TextureResources.buttonLeft, 5, 8).setAdditionalData(1));
 		modules.add(atmText);

@@ -153,6 +153,7 @@ public class ClientProxy extends CommonProxy {
 		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockThermiteTorch, RenderType.getCutout());
 		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockThermiteTorchWall, RenderType.getCutout());
 		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockLens, RenderType.getTranslucent());
+		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockForceField, RenderType.getTranslucent());
 
 		for(Block block : AdvancedRocketryBlocks.crystalBlocks)
 			RenderTypeLookup.setRenderLayer(block, RenderType.getTranslucent());
@@ -161,7 +162,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInitBlocks()
 	{
-
 		//TODO fluids
 		/*registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockOxygenFluid);
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockNitrogenFluid);

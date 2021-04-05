@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:ingots/steel"
+      "tag": "forge:blocks/steel"
     }
   ],
   "result": {
-    "item": "libvulpes:blocksteel",
+    "item": "libvulpes:ingotsteel",
     "count": 9
   }
 }

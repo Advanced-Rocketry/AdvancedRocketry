@@ -18,7 +18,7 @@ public class AtmosphereSuperHighPressure extends AtmosphereNeedsSuit {
 
 	@Override
 	public String getDisplayMessage() {
-		return LibVulpes.proxy.getLocalizedString("msg.muchTooDense");
+		return LibVulpes.proxy.getLocalizedString("msg.muchtoodense");
 	}
 	
 	// Needs full pressure suit

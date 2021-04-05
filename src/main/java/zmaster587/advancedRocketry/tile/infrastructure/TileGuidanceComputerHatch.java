@@ -64,20 +64,20 @@ public class TileGuidanceComputerHatch extends TilePointer implements IInfrastru
 		buttonState = new boolean[4];
 		chipEjected = false;
 
-		redstoneControl = new ModuleRedstoneOutputButton(174, 4, "", this, LibVulpes.proxy.getLocalizedString("msg.guidanceComputerHatch.loadingState"));
+		redstoneControl = new ModuleRedstoneOutputButton(174, 4, "", this, LibVulpes.proxy.getLocalizedString("msg.guidancecomputerhatch.loadingstate"));
 		state = RedstoneState.ON;
 		redstoneControl.setAdditionalData(redstoneState);
 		
-		module_autoEject = new ModuleToggleSwitch(90, 15, "", this, TextureResources.buttonAutoEject, LibVulpes.proxy.getLocalizedString("msg.guidanceComputerHatch.ejectonlanding"), 24, 24, false);
+		module_autoEject = new ModuleToggleSwitch(90, 15, "", this, TextureResources.buttonAutoEject, LibVulpes.proxy.getLocalizedString("msg.guidancecomputerhatch.ejectonlanding"), 24, 24, false);
 		module_autoEject.setAdditionalData(buttonAutoEject);
 		
-		module_satellite = new ModuleToggleSwitch(64, 41, "", this, TextureResources.buttonAutoEject, LibVulpes.proxy.getLocalizedString("msg.guidanceComputerHatch.ejectonsatlanding"), 24, 24, false); 
+		module_satellite = new ModuleToggleSwitch(64, 41, "", this, TextureResources.buttonAutoEject, LibVulpes.proxy.getLocalizedString("msg.guidancecomputerhatch.ejectonsatlanding"), 24, 24, false); 
 		module_satellite.setAdditionalData(buttonSatellite);
 		
-		module_planet = new ModuleToggleSwitch(90, 41, "", this, TextureResources.buttonAutoEject, LibVulpes.proxy.getLocalizedString("msg.guidanceComputerHatch.ejectonplanetlanding"), 24, 24, false);
+		module_planet = new ModuleToggleSwitch(90, 41, "", this, TextureResources.buttonAutoEject, LibVulpes.proxy.getLocalizedString("msg.guidancecomputerhatch.ejectonplanetlanding"), 24, 24, false);
 		module_planet.setAdditionalData(buttonPlanet);
 		
-		module_station = new ModuleToggleSwitch(116, 41, "", this, TextureResources.buttonAutoEject, LibVulpes.proxy.getLocalizedString("msg.guidanceComputerHatch.ejectonstationlanding"), 24, 24, false);
+		module_station = new ModuleToggleSwitch(116, 41, "", this, TextureResources.buttonAutoEject, LibVulpes.proxy.getLocalizedString("msg.guidancecomputerhatch.ejectonstationlanding"), 24, 24, false);
 		module_station.setAdditionalData(buttonStation);
 	}
 
@@ -194,7 +194,7 @@ public class TileGuidanceComputerHatch extends TilePointer implements IInfrastru
 		}
 
 		if(player.world.isRemote)
-			Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessage(new TranslationTextComponent("%s %s",new TranslationTextComponent("msg.guidanceComputerHatch.link"), ": " + getPos().getX() + " " + getPos().getY() + " " + getPos().getZ()));
+			Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessage(new TranslationTextComponent("%s %s",new TranslationTextComponent("msg.guidancecomputerhatch.link"), ": " + getPos().getX() + " " + getPos().getY() + " " + getPos().getZ()));
 		return true;
 	}
 
@@ -202,7 +202,7 @@ public class TileGuidanceComputerHatch extends TilePointer implements IInfrastru
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
 		if(player.world.isRemote)
-			Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessage(new TranslationTextComponent("msg.linker.error.firstMachine"));
+			Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessage(new TranslationTextComponent("msg.linker.error.firstmachine"));
 		return false;
 	}
 

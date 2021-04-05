@@ -1,9 +1,12 @@
 package zmaster587.advancedRocketry.integration.jei.crystallizer;
 
+import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.integration.jei.ARPlugin;
+import zmaster587.advancedRocketry.integration.jei.ItemDraw;
 import zmaster587.advancedRocketry.integration.jei.MachineCategoryTemplate;
 import zmaster587.advancedRocketry.integration.jei.MachineRecipe;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -27,6 +30,6 @@ public class CrystallizerCategory extends MachineCategoryTemplate<MachineRecipe>
 	
 	@Override
 	public String getTitle() {
-		return LibVulpes.proxy.getLocalizedString("tile.Crystallizer.name");
+		return LibVulpes.proxy.getLocalizedString("block.advancedrocketry.crystallizer");
 	}
 }

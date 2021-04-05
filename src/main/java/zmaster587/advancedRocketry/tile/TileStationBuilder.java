@@ -38,6 +38,7 @@ public class TileStationBuilder extends TileRocketBuilder implements IInventory 
 		super(AdvancedRocketryTileEntityType.TILE_STATION_BUILDER);
 		inventory = new EmbeddedInventory(4);
 		status = ErrorCodes.EMPTY;
+		storedId = Constants.INVALID_PLANET;
 	}
 
 	@Override

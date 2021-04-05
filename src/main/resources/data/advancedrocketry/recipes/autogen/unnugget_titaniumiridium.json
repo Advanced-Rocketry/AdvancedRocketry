@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:ingots/titaniumiridium"
+    }
+  ],
+  "result": {
+    "item": "advancedrocketry:nuggettitaniumiridium",
+    "count": 9
+  }
+}

@@ -21,7 +21,7 @@ public class AtmosphereHighPressureNoOxygen extends AtmosphereNeedsSuit {
 
 	@Override
 	public String getDisplayMessage() {
-		return LibVulpes.proxy.getLocalizedString("msg.lowOxygen");
+		return LibVulpes.proxy.getLocalizedString("msg.lowoxygen");
 	}
 	
 	// Needs full pressure suit

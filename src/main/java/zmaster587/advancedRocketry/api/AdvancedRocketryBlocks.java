@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.api;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.LeavesBlock;
@@ -23,6 +24,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import zmaster587.advancedRocketry.block.BlockAdvancedRocketMotor;
 import zmaster587.advancedRocketry.block.BlockBeacon;
+import zmaster587.advancedRocketry.block.BlockBipropellantFuelTank;
+import zmaster587.advancedRocketry.block.BlockBipropellantRocketMotor;
 import zmaster587.advancedRocketry.block.BlockElectricMushroom;
 import zmaster587.advancedRocketry.block.BlockForceField;
 import zmaster587.advancedRocketry.block.BlockForceFieldProjector;
@@ -83,8 +86,10 @@ public class AdvancedRocketryBlocks {
 
 	public static Block blockGenericSeat = new BlockSeat(AbstractBlock.Properties.create(Material.WOOL).hardnessAndResistance(0.5f));
 	public static Block blockEngine = new BlockRocketMotor(machineLineProperties);
+	public static Block blockBipropellantEngine = new BlockBipropellantRocketMotor(machineLineProperties);
 	public static Block blockAdvEngine = new BlockAdvancedRocketMotor(machineLineProperties);
 	public static Block blockFuelTank = new BlockFuelTank(machineLineProperties);
+	public static Block blockBipropellantFuelTank = new BlockBipropellantFuelTank(machineLineProperties);
 	public static Block blockSawBlade = new BlockMotor(machineLineProperties,1f);
 
 	public static Block blockConcrete = new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2f, 16f));
@@ -126,9 +131,9 @@ public class AdvancedRocketryBlocks {
 	public static Block blockCircleLight = new Block(AbstractBlock.Properties.create(Material.ROCK).setLightLevel((p_235470_0_) -> {
 		return 14;
 	}));
-	public static Block blockLens = new BlockAlphaTexture(AbstractBlock.Properties.create(Material.GLASS).hardnessAndResistance(0.3f));
+	public static Block blockLens = new BlockAlphaTexture(AbstractBlock.Properties.create(Material.GLASS).hardnessAndResistance(0.3f).notSolid());
 	public static Block blockRocketBuilder = new BlockTileWithMultitooltip(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
-	public static Block blockForceField = new BlockForceField(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(-1.0F, 3600000.0F).noDrops());
+	public static Block blockForceField = new BlockForceField(AbstractBlock.Properties.create(Material.GLASS).hardnessAndResistance(-1.0F, 3600000.0F).noDrops().notSolid());
 	public static Block blockForceFieldProjector = new BlockForceFieldProjector(machineLineProperties);
 	public static Block blockDeployableRocketBuilder = new BlockTileWithMultitooltip(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
 	public static Block blockStationBuilder = new BlockTileWithMultitooltip(machineLineProperties, GuiHandler.guiId.MODULAR);
@@ -239,7 +244,9 @@ public class AdvancedRocketryBlocks {
 				AdvancedRocketryBlocks.blockGenericSeat.setRegistryName("seat"),
 				AdvancedRocketryBlocks.blockEngine.setRegistryName("rocketmotor"),
 				AdvancedRocketryBlocks.blockAdvEngine.setRegistryName("advrocketmotor"),
+				AdvancedRocketryBlocks.blockBipropellantEngine.setRegistryName("bipropellantrocketmotor"),
 				AdvancedRocketryBlocks.blockFuelTank.setRegistryName("fueltank"),
+				AdvancedRocketryBlocks.blockBipropellantFuelTank.setRegistryName("bipropellantfueltank"),
 				AdvancedRocketryBlocks.blockFuelingStation.setRegistryName("fuelingstation"),
 				AdvancedRocketryBlocks.blockMonitoringStation.setRegistryName("monitoringstation"),
 				AdvancedRocketryBlocks.blockSatelliteBuilder.setRegistryName("satellitebuilder"),

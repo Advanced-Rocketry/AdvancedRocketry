@@ -11,7 +11,9 @@ public class FuelRegistry {
 	public static final FuelRegistry instance = new FuelRegistry();
 	
 	public enum FuelType {
-		LIQUID,		//Used in ground to space rockets
+		LIQUID_MONOPROPELLANT,		//Used in ground to space rockets
+		LIQUID_BIPROPELLANT,
+		LIQUID_OXIDIZER,
 		NUCLEAR,	//Used in ground to asteroid missions
 		ION,		//Used in satellites
 		WARP,		//Used in intersteller missions

@@ -187,7 +187,7 @@ public class DimensionManager implements IGalaxy {
 		//Because there should never be a tile in the world where no planets have been generated load file first
 		//Worst thing that can happen is there is no file and it gets genned later and the monitor does not reconnect
 		if(!hasBeenInitiallized && EffectiveSide.get().isServer() ) {
-			DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.workingPath);
+			DimensionManager.getInstance().loadDimensions(ServerLifecycleHooks.getCurrentServer().func_240776_a_(new FolderName(DimensionManager.workingPath)).toString());
 		}
 
 		SatelliteBase satellite = overworldProperties.getSatellite(satId);
@@ -761,6 +761,11 @@ public class DimensionManager implements IGalaxy {
 
 		try {
 			File planetXMLOutput = new File(saveDir, filePath + worldXML);
+			
+			File advRocketrySaveDir = new File(saveDir, filePath);
+			if(!advRocketrySaveDir.exists())
+				advRocketrySaveDir.mkdirs();
+			
 			if(!planetXMLOutput.exists())
 				planetXMLOutput.createNewFile();
 
@@ -1036,7 +1041,7 @@ public class DimensionManager implements IGalaxy {
 		}
 
 		//Register hard coded dimensions
-		Map<ResourceLocation,IDimensionProperties> loadedPlanets = loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.workingPath);
+		Map<ResourceLocation,IDimensionProperties> loadedPlanets = loadDimensions(DimensionManager.workingPath);
 		if(loadedPlanets.isEmpty() && (dimCouplingList == null || dimCouplingList.dims == null || dimCouplingList.dims.isEmpty())) {
 			int numRandomGeneratedPlanets = 9;
 			int numRandomGeneratedGasGiants = 1;

@@ -97,13 +97,13 @@ public class KeyBindings {
 	}
 
 	//static KeyBinding launch = new KeyBinding("Launch", Keyboard.KEY_SPACE, "key.controls." + Constants.modId);
-	static KeyBinding toggleJetpack = new KeyBinding(LibVulpes.proxy.getLocalizedString("key.toggleJetpack"), GLFW.GLFW_KEY_X, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
-	static KeyBinding openRocketUI	= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.openRocketUI"), GLFW.GLFW_KEY_C, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
+	static KeyBinding toggleJetpack = new KeyBinding(LibVulpes.proxy.getLocalizedString("key.togglejetpack"), GLFW.GLFW_KEY_X, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
+	static KeyBinding openRocketUI	= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.openrocketui"), GLFW.GLFW_KEY_C, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
 	static KeyBinding toggleRCS		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.togglercs"), GLFW.GLFW_KEY_R, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
-	static KeyBinding turnRocketLeft		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnRocketLeft"), GLFW.GLFW_KEY_A, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
-	static KeyBinding turnRocketRight		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnRocketRight"), GLFW.GLFW_KEY_D, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
-	static KeyBinding turnRocketUp		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnRocketUp"), GLFW.GLFW_KEY_Z, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
-	static KeyBinding turnRocketDown		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnRocketDown"), GLFW.GLFW_KEY_X, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
+	static KeyBinding turnRocketLeft		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnrocketleft"), GLFW.GLFW_KEY_A, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
+	static KeyBinding turnRocketRight		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnrocketright"), GLFW.GLFW_KEY_D, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
+	static KeyBinding turnRocketUp		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnrocketup"), GLFW.GLFW_KEY_Z, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
+	static KeyBinding turnRocketDown		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnrocketdown"), GLFW.GLFW_KEY_X, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
 
 	public static final void init() {
 		//ClientRegistry.registerKeyBinding(launch);

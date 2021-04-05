@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -21,12 +20,6 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.api.material.AllowedProducts;
-import zmaster587.libVulpes.api.material.MaterialRegistry;
-import zmaster587.libVulpes.config.CommonConfig;
-
 import java.io.InvalidClassException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -60,8 +53,7 @@ public class ARConfiguration {
 	public static Logger logger = LogManager.getLogger(Constants.modId);
 
 	static ConfigValue<List<? extends String>> sealableBlockWhiteList;
-	static ConfigValue<List<? extends String>>  sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, entityList, asteriodOres, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres;
-	static ConfigValue<List<? extends String>> liquidRocketFuel;
+	static ConfigValue<List<? extends String>>  sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, entityList, asteriodOres, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidMonopropellant, liquidBipropellantFuel, liquidBipropellantOxidizer;
 	public static ConfigValue<List<? extends String>> biomeBlackList;
 	public static ConfigValue<List<? extends String>> biomeHighPressure;
 	public static ConfigValue<List<? extends String>> biomeSingle;
@@ -132,11 +124,20 @@ public class ARConfiguration {
 		arConfig.terraformRequiresFluid = builder.define("TerraformerRequiresFluids", true);
 		arConfig.terraformliquidRate = builder.comment("how many millibuckets/t are required to keep the terraformer running").define("TerraformerFluidConsumeRate", 40);
 		arConfig.allowTerraformNonAR = builder.comment("If true, dimensions not added by AR can be terraformed").define("allowTerraformingNonARWorlds", false);
-
+		
 		List<String> fuels = new LinkedList();
-		fuels.add("advancedrocketry:rocket_fuel");
-		liquidRocketFuel = builder.comment("List of fluid names for fluids that can be used as rocket fuel").defineList("rocketFuels", fuels, (val) -> {return true;} );
+		fuels.add("advancedrocketry:rocket_fuel;2");
+		liquidMonopropellant = builder.comment("List of fluid names for fluids that can be used as rocket monopropellants").defineList("rocketFuels", fuels, (val) -> {return true;} );
+		
+		List<String> bifuels = new LinkedList();
+		bifuels.add("advancedrocketry:hydrogen");
+		liquidBipropellantFuel = builder.comment("List of fluid names for fluids that can be used as rocket bipropellant fuels").defineList("rocketBipropellants", bifuels, (val) -> {return true;} );
 
+		List<String> bioxydizers = new LinkedList();
+		bioxydizers.add("oxygen");
+		liquidBipropellantOxidizer = builder.comment("List of fluid names for fluids that can be used as rocket bipropellant oxidizers").defineList("rocketBipropellants", bioxydizers, (val) -> {return true;} );
+
+		
 		arConfig.stationSize = builder.comment("The largest size a space station can be.  Should also be a power of 2 (512)").define("SpaceStationBuildRadius", 1024);
 		arConfig.canPlayerRespawnInSpace = builder.comment("If true, players will respawn near beds on planets IF the spawn location is in a breathable atmosphere").define("allowPlanetRespawn", false);
 		arConfig.forcePlayerRespawnInSpace = builder.comment("If true, players will respawn near beds on planets REGARDLESS of the spawn location being in a non-breathable atmosphere. Requires 'allowPlanetRespawn' being true.").define("forcePlanetRespawn", false);
@@ -218,6 +219,7 @@ public class ARConfiguration {
 
 		//Client
 		arConfig.rocketRequireFuel = builder.comment("Set to false if rockets should not require fuel to fly").define("rocketsRequireFuel", true);
+		arConfig.canBeFueledByHand = builder.comment("Set to false if rockets should not be able to be fueled by and and will require a fueling station").define("canBeFueledByHand", true);
 		arConfig.rocketThrustMultiplier = builder.comment("Multiplier for per-engine thrust").define("thrustMultiplier", 1d);
 		arConfig.fuelCapacityMultiplier = builder.comment("Multiplier for per-tank capacity").define("fuelCapacityMultiplier", 1d);
 		
@@ -695,18 +697,59 @@ public class ARConfiguration {
 
 		//Register fuels
 		logger.info("Start registering liquid rocket fuels");
-		for(String str : liquidRocketFuel.get()) {
-			Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(str));
+		for(String str : liquidMonopropellant.get()) {
+			String splitStr[] = str.split(";");
+			Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(splitStr[0]));
+			float multiplier = 1.0f;
+			if (splitStr.length > 1) {
+				multiplier = Float.parseFloat(splitStr[1]);
+			}
 
 			if(fluid != null) {
-				logger.info("Registering fluid "+ str + " as rocket fuel");
-				FuelRegistry.instance.registerFuel(FuelType.LIQUID, fluid, 1f);
+				logger.info("Registering fluid "+ str + " as rocket monopropellant");
+				FuelRegistry.instance.registerFuel(FuelType.LIQUID_MONOPROPELLANT, fluid, multiplier);
 			}
 			else
 				logger.warn("Fluid name" + str  + " is not a registered fluid!");
 		}
+
+
+		liquidMonopropellant = null; //clean up
+		for(String str : liquidBipropellantFuel.get()) {
+			String splitStr[] = str.split(";");
+			Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(splitStr[0]));
+			float multiplier = 1.0f;
+			if (splitStr.length > 1) {
+				multiplier = Float.parseFloat(splitStr[1]);
+			}
+
+			if(fluid != null) {
+				logger.info("Registering fluid "+ str + " as rocket bipropellant");
+				FuelRegistry.instance.registerFuel(FuelType.LIQUID_BIPROPELLANT, fluid, multiplier);
+			}
+			else
+				logger.warn("Fluid name" + str  + " is not a registered fluid!");
+		}
+		
+		liquidBipropellantFuel = null; //clean up
+		for(String str : liquidBipropellantOxidizer.get()) {
+			String splitStr[] = str.split(";");
+			Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(splitStr[0]));
+			float multiplier = 1.0f;
+			if (splitStr.length > 1) {
+				multiplier = Float.parseFloat(splitStr[1]);
+			}
+
+			if(fluid != null) {
+				logger.info("Registering fluid "+ str + " as rocket oxidizer");
+				FuelRegistry.instance.registerFuel(FuelType.LIQUID_OXIDIZER, fluid, multiplier);
+			}
+			else
+				logger.warn("Fluid name" + str  + " is not a registered fluid!");
+		}
+		liquidBipropellantOxidizer = null; //clean up
 		logger.info("Finished registering liquid rocket fuels");
-		liquidRocketFuel = null; //clean up
+
 
 		//Register Whitelisted Sealable Blocks
 
@@ -876,14 +919,23 @@ public class ARConfiguration {
 	@ConfigProperty
 	public  ConfigValue<Boolean> resetFromXML;
 
+	@ConfigProperty(needsSync=true)
+	public int stationClearanceHeight = 1000;
+
+	@ConfigProperty(needsSync=true)
+	public int transBodyInjection = 0;
+
+	@ConfigProperty(needsSync=true)
+	public double asteroidTBIBurnMult = 1.0;
+
+	@ConfigProperty(needsSync=true)
+	public double warpTBIBurnMult = 10.0;
+
 	@ConfigProperty
 	public ResourceLocation MoonId = Constants.INVALID_PLANET;
 
 	@ConfigProperty(needsSync=true, internalType=String.class)
 	public  ConfigValue<String> spaceDimId;
-
-	@ConfigProperty
-	public  ConfigValue<Integer> fuelPointsPer10Mb;
 
 	@ConfigProperty(needsSync=true, internalType=Integer.class)
 	public  ConfigValue<Integer> stationSize;
@@ -902,6 +954,9 @@ public class ARConfiguration {
 
 	@ConfigProperty
 	public  ConfigValue<Boolean> enableNausea;
+	
+	@ConfigProperty
+	public ConfigValue<Boolean> canBeFueledByHand;
 
 	@ConfigProperty
 	public  ConfigValue<Boolean> enableOxygen;

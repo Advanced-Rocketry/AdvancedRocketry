@@ -29,7 +29,6 @@ import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -46,6 +45,7 @@ import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
@@ -322,8 +322,7 @@ public class RocketEventHandler extends Screen {
 			brightness = Minecraft.getInstance().getRenderViewEntity().world.getBrightness(new BlockPos( Minecraft.getInstance().getRenderViewEntity().getPositionVec()));
 
 		double deltaY = (Minecraft.getInstance().getRenderViewEntity().getPosY() - Minecraft.getInstance().getRenderViewEntity().lastTickPosY)*partialTicks;
-
-		double size = (getImgSize*5/(72-Minecraft.getInstance().getRenderViewEntity().getPosY() - deltaY));
+		double size = (getImgSize*5/(72-(Minecraft.getInstance().getRenderViewEntity().getPosY() * 1000 / ARConfiguration.getCurrentConfig().orbit.get())));
 		
 		
 		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(Minecraft.getInstance().getRenderViewEntity().world);
@@ -336,7 +335,7 @@ public class RocketEventHandler extends Screen {
 		//RenderSystem.bindTexture(outerBounds.getTextureId());
 		Minecraft.getInstance().textureManager.bindTexture(props.getPlanetIconLEO());
 		double size2 = size*16;
-		float brightness2 =brightness*.43f;
+		float brightness2 =brightness;
 		RenderHelper.renderTopFaceWithUV(matrix, buffer, -10.1, size2, size2, -size2, -size2, 0, 1, 0, 1, brightness2, brightness2, brightness2, MathHelper.clamp(((float)Minecraft.getInstance().getRenderViewEntity().getPosY() -400f)/50f, 0f, 1f));
 		Tessellator.getInstance().draw();
 
@@ -362,13 +361,13 @@ public class RocketEventHandler extends Screen {
 		//RenderSystem.bindTexture(0);
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-		RenderSystem.color4f((float)skyColor.x, (float)skyColor.y, (float)skyColor.z, 0.05f);
+		RenderSystem.color4f((float)skyColor.x, (float)skyColor.y, (float)skyColor.z, 0.15f);
 
 		size = (getImgSize*100/(180-Minecraft.getInstance().getRenderViewEntity().getPosY() - deltaY));
 
 
 		for(int i = 0; i < 5 * MathHelper.clamp(( ( DimensionManager.getInstance().getDimensionProperties(Minecraft.getInstance().getRenderViewEntity().world).getAtmosphereDensity() *.01f * (float)Minecraft.getInstance().getRenderViewEntity().getPosY() -280f) )/150f, 0f, 2f); i++) {
-			RenderHelper.renderTopFace(matrix, buffer, -9 + i*.6, size, size, -size , -size, (float)skyColor.x, (float)skyColor.y, (float)skyColor.z, 0.05f);
+			RenderHelper.renderTopFace(matrix, buffer, -9 + i*.6, size, size, -size , -size, (float)skyColor.x/255f, (float)skyColor.y/255f, (float)skyColor.z/255f, 0.1f);
 		}
 
 		//
@@ -404,7 +403,12 @@ public class RocketEventHandler extends Screen {
 				this.blit(event.getMatrixStack(), 3, 94 + (int)(69*(0.5 - (MathHelper.clamp((float) (rocket.getMotion().y), -1f, 1f)/2f))), 17, 0, 6, 6); //94 to 161
 
 				//Draw fuel indicator
-				int size = (int)(68*(rocket.getFuelAmount() /(float)rocket.getFuelCapacity()));
+				int size = 0;
+				if (rocket.getFuelCapacityMonopropellant() > 0) {
+					size = (int) (68 * (rocket.getFuelAmountMonopropellant() / (float) rocket.getFuelCapacityMonopropellant()));
+				} else {
+					size = (int) (68 * ((rocket.getFuelAmountBipropellant() + rocket.getFuelAmountOxidizer()) / (float) (rocket.getFuelCapacityBipropellant() + rocket.getFuelCapacityOxidizer())));
+				}
 				this.blit(event.getMatrixStack(), 3, 242 - size, 17, 75 - size, 3, size); //94 to 161
 
 				RenderSystem.disableBlend();

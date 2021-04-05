@@ -15,7 +15,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.ISpaceObjectManager;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -28,7 +27,6 @@ import zmaster587.libVulpes.util.ZUtils;
 import java.util.*;
 
 public class SpaceObjectManager implements ISpaceObjectManager {
-	private int nextId = 1;
 	public static final ResourceLocation WARPDIMID = new ResourceLocation("warp" , "warp");
 	private long nextStationTransitionTick = -1;
 	//station ids to object
@@ -441,13 +439,11 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 		
 		
 		nbt.put("spaceContents", nbtList);
-		nbt.putInt("nextInt", nextId);
 		nbt.putLong("nextStationTransitionTick", nextStationTransitionTick);
 	}
 
 	public void readFromNBT(CompoundNBT nbt) {
 		ListNBT list = nbt.getList("spaceContents", NBT.TAG_COMPOUND);
-		nextId = nbt.getInt("nextInt");
 		nextStationTransitionTick = nbt.getLong("nextStationTransitionTick");
 
 		for(int i = 0; i < list.size(); i++) {

@@ -228,6 +228,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public int orbitalDist;
 	public boolean hasOxygen;
 	private int originalAtmosphereDensity;
+	//Used in solar panels
+	public double peakInsolationMultiplier;
+	public double peakInsolationMultiplierWithoutAtmosphere;
 	private int atmosphereDensity;
 	//Stored in Kelvin
 	public int averageTemperature;
@@ -373,7 +376,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		originalAtmosphereDensity = atmosphereDensity = 100;
 		childPlanets = new HashSet<ResourceLocation>();
 		requiredArtifacts = new LinkedList<ItemStack>();
-		parentPlanet = null;
+		parentPlanet = Constants.INVALID_PLANET;
 		starId = Constants.INVALID_STAR;
 		averageTemperature = 100;
 		hasRings = false;
@@ -840,6 +843,19 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public boolean hasAtmosphere() {
 		return AtmosphereTypes.getAtmosphereTypeFromValue(atmosphereDensity).compareTo(AtmosphereTypes.NONE) < 0;
 	}
+	
+	/**
+	 * @return the multiplier compared to Earth(1040W) for peak insolation of the body
+	 */
+	public double getPeakInsolationMultiplier() { return peakInsolationMultiplier; }
+
+	/**
+	 * @return the multiplier compared to Earth(1040W) for peak insolation of the body, ignoring the atmosphere
+	 */
+	public double getPeakInsolationMultiplierWithoutAtmosphere() {
+		return peakInsolationMultiplierWithoutAtmosphere;
+	}
+
 
 	public boolean isAsteroid() {
 		return generatorType == Constants.GENTYPE_ASTEROID;
@@ -989,6 +1005,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 */
 	public SatelliteBase getSatellite(long id) {
 		return satallites.get(id);
+	}
+
+	/**
+	 * Returns all of a dimension's satellites
+	 * @return a Collection containing all of a dimension's satellites
+	 */
+	public Collection<SatelliteBase> getAllSatellites() {
+		return this.satallites.values();
 	}
 
 	//TODO: multithreading
@@ -1465,6 +1489,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		else 
 			originalAtmosphereDensity = atmosphereDensity;
 
+		peakInsolationMultiplier = nbt.getDouble("peakInsolationMultiplier");
+		peakInsolationMultiplierWithoutAtmosphere = nbt.getDouble("peakInsolationMultiplierWithoutAtmosphere");
 		averageTemperature = nbt.getInt("avgTemperature");
 		rotationalPeriod = nbt.getInt("rotationalPeriod");
 		name = nbt.getString("name");
@@ -1632,6 +1658,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.putBoolean("hasOxygen", hasOxygen);
 		nbt.putInt("atmosphereDensity", atmosphereDensity);
 		nbt.putInt("originalAtmosphereDensity", originalAtmosphereDensity);
+		nbt.putDouble("peakInsolationMultiplier", peakInsolationMultiplier);
+		nbt.putDouble("peakInsolationMultiplierWithoutAtmosphere", peakInsolationMultiplierWithoutAtmosphere);
 		nbt.putInt("avgTemperature", averageTemperature);
 		nbt.putInt("rotationalPeriod", rotationalPeriod);
 		nbt.putString("name", name);
@@ -1647,7 +1675,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.putFloat("geodeFrequencyMultiplier", geodeFrequencyMultiplier);
 		nbt.putFloat("craterFrequencyMultiplier", craterFrequencyMultiplier);
 		nbt.putFloat("volcanoFrequencyMultiplier", volcanoFrequencyMultiplier);
-
 		//Hierarchy
 		if(!childPlanets.isEmpty()) {
 
@@ -1913,6 +1940,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 */
 	@Override
 	public int getAverageTemp() {
+		
+		// Star is sometimes null early on in the loading process
+		if(this.getStar() == null)
+			return averageTemperature;
 		averageTemperature = AstronomicalBodyHelper.getAverageTemperature(this.getStar(), this.getSolarOrbitalDistance(), this.getAtmosphereDensity());
 		return averageTemperature;
 	}

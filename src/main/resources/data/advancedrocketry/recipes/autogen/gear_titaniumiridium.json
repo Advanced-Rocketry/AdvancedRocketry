@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "sps",
+    " r ",
+    "sps"
+  ],
+  "key": {
+    "s": {
+      "tag": "forge:sticks/titaniumiridium"
+    },
+    "p": {
+      "tag": "forge:plates/titaniumiridium"
+    },
+    "r": {
+      "tag": "forge:ingots/titaniumiridium"
+    }
+  },
+  "result": {
+    "item": "advancedrocketry:geartitaniumiridium"
+  }
+}

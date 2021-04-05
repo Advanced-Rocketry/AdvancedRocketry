@@ -17,11 +17,13 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.IMission;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -58,7 +60,7 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 	public TileEntityMoniteringStation() {
 		super(AdvancedRocketryTileEntityType.TILE_MONITORIING_STATION);
 		mission = null;
-		missionText = new ModuleText(20, 90, LibVulpes.proxy.getLocalizedString("msg.monitoringStation.missionprogressna"), 0x2b2b2b);
+		missionText = new ModuleText(20, 90, LibVulpes.proxy.getLocalizedString("msg.monitoringstation.missionprogressna"), 0x2b2b2b);
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, "", this);
 		state = RedstoneState.ON;
 	}
@@ -329,7 +331,11 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 		else if(id == 1)
 			return (int)(linkedRocket.getMotion().y*100);
 		else if (id == 2)
-			return (int)(linkedRocket.getFuelAmount());
+			if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, ForgeRegistries.FLUIDS.getValue(linkedRocket.stats.getFuelFluid()))) {
+				return (linkedRocket.getFuelAmountMonopropellant());
+			} else {
+				return (linkedRocket.getFuelAmountBipropellant() + linkedRocket.getFuelAmountOxidizer());
+			}
 
 		return 0;
 	}
@@ -346,8 +352,11 @@ public class TileEntityMoniteringStation extends TileEntity  implements IModular
 			else
 				if(linkedRocket == null)
 					return 0;
-				else
-					return linkedRocket.getFuelCapacity();
+		    else if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, ForgeRegistries.FLUIDS.getValue(linkedRocket.stats.getFuelFluid()))) {
+			    return (linkedRocket.getFuelCapacityMonopropellant());
+		    } else {
+			    return (linkedRocket.getFuelCapacityBipropellant() + linkedRocket.getFuelCapacityOxidizer());
+		}
 
 		return 1;
 	}

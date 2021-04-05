@@ -33,10 +33,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class AtmosphereHandler {
-	public static final DamageSource vacuumDamage = new DamageSource("Vacuum").setDamageBypassesArmor().setDamageIsAbsolute();
-	public static final DamageSource lowOxygenDamage = new DamageSource("LowOxygen").setDamageBypassesArmor().setDamageIsAbsolute();
-	public static final DamageSource heatDamage = new DamageSource("Heat").setDamageBypassesArmor().setDamageIsAbsolute();
-	public static final DamageSource oxygenToxicityDamage = new DamageSource("OxygenToxicity").setDamageBypassesArmor().setDamageIsAbsolute();
+	public static final DamageSource vacuumDamage = new DamageSource("vacuum").setDamageBypassesArmor().setDamageIsAbsolute();
+	public static final DamageSource lowOxygenDamage = new DamageSource("lowoxygen").setDamageBypassesArmor().setDamageIsAbsolute();
+	public static final DamageSource heatDamage = new DamageSource("heat").setDamageBypassesArmor().setDamageIsAbsolute();
+	public static final DamageSource oxygenToxicityDamage = new DamageSource("oxygentoxicity").setDamageBypassesArmor().setDamageIsAbsolute();
 
 	public static long lastSuffocationTime = Integer.MIN_VALUE;
 	private static final int MAX_BLOB_RADIUS = ((ARConfiguration.getCurrentConfig().atmosphereHandleBitMask.get() & 1) == 1) ? 256 : ARConfiguration.getCurrentConfig().oxygenVentSize.get();

@@ -33,10 +33,10 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> implement
 	
 	public MachineCategoryTemplate(IGuiHelper helper, ProgressBarImage bar, ItemStack icon) {
 		//blit(3,3, 7, 16, 163, 55);
-		background = helper.createDrawable(new ResourceLocation("advancedrocketry:textures/gui/GenericNeiBackground.png"), 7, 16, 163, 55 ); //helper.createDrawable(bar.getResourceLocation(), bar.getBackOffsetX(),
+		background = helper.createDrawable(new ResourceLocation("advancedrocketry:textures/gui/genericneibackground.png"), 7, 16, 163, 55 ); //helper.createDrawable(bar.getResourceLocation(), bar.getBackOffsetX(),
 				//bar.getBackOffsetY(), bar.getBackWidth(), bar.getBackHeight());
 		this.bar = bar;
-		this.icon = new ItemDraw(icon);
+		this.icon = helper.createDrawableIngredient(icon);
 	}
 	
 	@Override
@@ -60,21 +60,19 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> implement
 		Minecraft.getInstance().currentScreen.blit(matrixStack, 65, 3, progressBar.getBackOffsetX(), progressBar.getBackOffsetY(), progressBar.getBackWidth(), progressBar.getBackHeight());
 
 		progressBar.renderProgressBar(matrixStack, 65, 3, (System.currentTimeMillis() % 3000)/3000f, Minecraft.getInstance().currentScreen);
-		//drawProgressBar(65 + progressBar.getInsetX(), 3 +  + progressBar.getInsetY(), progressBar.getForeOffsetX(), progressBar.getForeOffsetY(), progressBar.getForeWidth(),  progressBar.getForeHeight(), 50, progressBar.getDirection().rotateAround(Direction.Axis.Z));
-	
 	}
 	
 	
 	@Override
 	public void setIngredients(T recipe, IIngredients ingredients) {
 		// TODO Auto-generated method stub
-		ingredients.setInputLists(VanillaTypes.ITEM, recipe.getPossibleIngredients());
+		ingredients.setInputLists(VanillaTypes.ITEM, recipe.getInputs());
 		ingredients.setInputs(VanillaTypes.FLUID, recipe.getFluidIngredients());
 		
 		List<ItemStack> outputStacks = new LinkedList<>();
-		for(ChanceItemStack stack : recipe._getRawOutput())
+		for(ItemStack stack : recipe.getResults())
 		{
-			outputStacks.add(stack.stack);
+			outputStacks.add(stack);
 		}
 		
 		List<FluidStack> outputFluids = new LinkedList<>();

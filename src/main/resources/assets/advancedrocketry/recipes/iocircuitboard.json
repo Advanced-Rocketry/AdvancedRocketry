@@ -1,0 +1,43 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"rvr",
+	"dwd",
+	"dpd"
+    ],
+    "key":
+    {
+        "d":
+        {
+            "type": "forge:ore_dict",
+            "ore": "dustGold"
+        },
+        "r":
+        {
+            "type": "forge:ore_dict",
+            "ore": "dustRedstone"
+        },
+        "p":
+	{
+            "type": "forge:ore_dict",
+            "ore": "plateIron"
+        },
+        "w":
+        {
+            "type": "forge:ore_dict",
+            "ore": "slabWood"
+        },
+        "v":
+        {
+            "type": "forge:ore_dict",
+            "ore": "gemQuartz"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:ic",
+        "count": 1,
+        "data": 4
+    }
+}
