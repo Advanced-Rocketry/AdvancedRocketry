@@ -246,6 +246,9 @@ curseforge{
   project {
   //Advanced Rocketry
     id = "236542"
+    relations {
+        requiredDependency 'libvulpes'
+    }
     changelog = file('changelog.html')
     changelogType = 'html'
     releaseType = "alpha"
