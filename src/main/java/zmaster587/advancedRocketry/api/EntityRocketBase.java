@@ -51,6 +51,13 @@ public abstract class EntityRocketBase extends Entity {
 	public abstract int addFuelAmountOxidizer(int amt);
 
 	/**
+	 * Attempts to add amt fuel points to the rocket for nuclear working fluid
+	 * @param amt
+	 * @return the amount of fuel actually added to the rocket
+	 */
+	public abstract int addFuelAmountNuclearWorkingFluid(int amt);
+
+	/**
 	 * AttempTs to set the fuel rate for the rocket for monopropellants
 	 * @param rate
 	 * @return the rate of consumption for the rocket
@@ -70,6 +77,13 @@ public abstract class EntityRocketBase extends Entity {
 	 * @return the rate of consumption for the rocket
 	 */
 	public abstract void setFuelRateOxidizer(int rate);
+
+	/**
+	 * Attempts to set the fuel rate for the rocket for nuclear working fluid
+	 * @param rate
+	 * @return the rate of consumption for the rocket
+	 */
+	public abstract void setFuelRateNuclearWorkingFluid(int rate);
 
 	/**
 	 * Unlinks the given infrastructure
@@ -114,6 +128,11 @@ public abstract class EntityRocketBase extends Entity {
 	public abstract int getFuelAmountOxidizer();
 
 	/**
+	 * @return the amount of fuel points in the rocket for nuclear working fluid
+	 */
+	public abstract int getFuelAmountNuclearWorkingFluid();
+
+	/**
 	 * @return the total fuel capacity of the rocket for monopropellants
 	 */
 	public abstract int getFuelCapacityMonopropellant();
@@ -129,6 +148,11 @@ public abstract class EntityRocketBase extends Entity {
 	public abstract int getFuelCapacityOxidizer();
 
 	/**
+	 * @return the total fuel capacity of the rocket for nuclear working fluid
+	 */
+	public abstract int getFuelCapacityNuclearWorkingFluid();
+
+	/**
 	 * @return the rate of consumption for monopropellants
 	 */
 	public abstract int getFuelRateMonopropellant();
@@ -142,6 +166,11 @@ public abstract class EntityRocketBase extends Entity {
 	 * @return the rate of consumption  for oxidizers
 	 */
 	public abstract int getFuelRateOxidizer();
+
+	/**
+	 * @return the rate of consumption  for nuclear working fluid
+	 */
+	public abstract int getFuelRateNuclearWorkingFluid();
 
 	/**
 	 * @return the location of the rocket in the world

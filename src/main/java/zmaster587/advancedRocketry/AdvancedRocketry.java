@@ -671,9 +671,12 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockBipropellantEngine = new BlockBipropellantRocketMotor(Material.IRON).setUnlocalizedName("bipropellantrocket").setCreativeTab(tabAdvRocketry).setHardness(2f);
 		AdvancedRocketryBlocks.blockAdvEngine = new BlockAdvancedRocketMotor(Material.IRON).setUnlocalizedName("advRocket").setCreativeTab(tabAdvRocketry).setHardness(2f);
 		AdvancedRocketryBlocks.blockAdvBipropellantEngine = new BlockAdvancedBipropellantRocketMotor(Material.IRON).setUnlocalizedName("advbipropellantRocket").setCreativeTab(tabAdvRocketry).setHardness(2f);
+		AdvancedRocketryBlocks.blockNuclearEngine = new BlockNuclearRocketMotor(Material.IRON).setUnlocalizedName("nuclearrocket").setCreativeTab(tabAdvRocketry).setHardness(2f);
 		AdvancedRocketryBlocks.blockFuelTank = new BlockFuelTank(Material.IRON).setUnlocalizedName("fuelTank").setCreativeTab(tabAdvRocketry).setHardness(2f);
 		AdvancedRocketryBlocks.blockBipropellantFuelTank = new BlockBipropellantFuelTank(Material.IRON).setUnlocalizedName("bipropellantfueltank").setCreativeTab(tabAdvRocketry).setHardness(2f);
 		AdvancedRocketryBlocks.blockOxidizerFuelTank = new BlockOxidizerFuelTank(Material.IRON).setUnlocalizedName("oxidizerfueltank").setCreativeTab(tabAdvRocketry).setHardness(2f);
+		AdvancedRocketryBlocks.blockNuclearFuelTank = new BlockNuclearFuelTank(Material.IRON).setUnlocalizedName("nuclearfueltank").setCreativeTab(tabAdvRocketry).setHardness(2f);
+		AdvancedRocketryBlocks.blockNuclearCore = new BlockNuclearCore(Material.IRON).setUnlocalizedName("nuclearcore").setCreativeTab(tabAdvRocketry).setHardness(2f);
 		AdvancedRocketryBlocks.blockGuidanceComputer = new BlockTile(TileGuidanceComputer.class,GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("guidanceComputer").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockIntake = new BlockIntake(Material.IRON).setUnlocalizedName("gasIntake").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockDrill = new BlockMiningDrill().setUnlocalizedName("drill").setCreativeTab(tabAdvRocketry).setHardness(3f);
@@ -829,9 +832,12 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockBipropellantEngine.setRegistryName("bipropellantrocketmotor"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockAdvEngine.setRegistryName("advRocketmotor"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockAdvBipropellantEngine.setRegistryName("advbipropellantRocketmotor"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockNuclearEngine.setRegistryName("nuclearrocketmotor"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockFuelTank.setRegistryName("fuelTank"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockBipropellantFuelTank.setRegistryName("bipropellantfueltank"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockOxidizerFuelTank.setRegistryName("oxidizerfueltank"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockNuclearFuelTank.setRegistryName("nuclearfueltank"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockNuclearCore.setRegistryName("nuclearcore"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockGuidanceComputer.setRegistryName("guidanceComputer"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockIntake.setRegistryName("intake"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockDrill.setRegistryName("drill"));

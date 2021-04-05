@@ -14,7 +14,7 @@ public class FuelRegistry {
 		LIQUID_MONOPROPELLANT,		//Used in ground to space rockets
 		LIQUID_BIPROPELLANT,
 		LIQUID_OXIDIZER,
-		NUCLEAR,	//Used in ground to asteroid missions
+		NUCLEAR_WORKING_FLUID,
 		ION,		//Used in satellites
 		WARP,		//Used in intersteller missions
 		IMPULSE;	//Used in interplanetary missions

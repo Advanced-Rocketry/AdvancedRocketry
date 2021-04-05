@@ -698,19 +698,6 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		return null;
 	}
 
-	public boolean hasWarpCore() {
-		Iterator<TileEntity> iterator = getTileEntityList().iterator();
-		while(iterator.hasNext()) {
-			TileEntity tile = iterator.next();
-
-			if(tile instanceof TileWarpCore) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	/**
 	 * @return destination ID or Constants.INVALID_PLANET if none
 	 */

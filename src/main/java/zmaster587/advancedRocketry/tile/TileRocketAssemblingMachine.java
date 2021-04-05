@@ -102,7 +102,8 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 		NOSATELLITEHATCH(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.nosatellitehatch")),
 		NOSATELLITECHIP(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.nosatellitechip")),
 		OUTPUTBLOCKED(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.outputblocked")),
-		INVALIDBLOCK(LibVulpes.proxy.getLocalizedString("msg.rocketbuild.invalidblock"));
+		INVALIDBLOCK(LibVulpes.proxy.getLocalizedString("msg.rocketbuild.invalidblock")),
+		COMBINEDTHRUST(LibVulpes.proxy.getLocalizedString("msg.rocketbuild.combinedthrust"));
 		
 		String code;
 		private ErrorCodes(String code) {
@@ -240,11 +241,16 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 
 		int thrustMonopropellant = 0;
 		int thrustBipropellant = 0;
+		int thrustNuclearNozzleLimit = 0;
+		int thrustNuclearReactorLimit = 0;
+		int thrustNuclearTotalLimit = 0;
 		int monopropellantfuelUse = 0;
 		int bipropellantfuelUse = 0;
+		int nuclearWorkingFluidUseMax = 0;
 		int fuelCapacityMonopropellant = 0;
 		int fuelCapacityBipropellant = 0;
 		int fuelCapacityOxidizer = 0;
+		int fuelCapacityNuclearWorkingFluid = 0;
 		int numBlocks = 0;
 		float drillPower = 0f;
 		stats.reset();
@@ -314,8 +320,11 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 							numBlocks++;
 							
 							//If rocketEngine increaseThrust
-							if(block instanceof IRocketEngine && (world.getBlockState(abovePos).getBlock().isAir(world.getBlockState(abovePos), world, abovePos) || world.getBlockState(belowPos).getBlock() instanceof BlockLandingPad || world.getBlockState(belowPos).getBlock() == AdvancedRocketryBlocks.blockLaunchpad )) {
-								if (block instanceof BlockBipropellantRocketMotor || block instanceof BlockAdvancedBipropellantRocketMotor ) {
+							if(block instanceof IRocketEngine && (world.getBlockState(belowPos).getBlock().isAir(world.getBlockState(belowPos), world, belowPos) || world.getBlockState(belowPos).getBlock() instanceof BlockLandingPad || world.getBlockState(belowPos).getBlock() == AdvancedRocketryBlocks.blockLaunchpad )) {
+								if (block instanceof BlockNuclearRocketMotor) {
+									nuclearWorkingFluidUseMax += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
+									thrustNuclearNozzleLimit += ((IRocketEngine)block).getThrust(world, currBlockPos);
+								} else if (block instanceof BlockBipropellantRocketMotor || block instanceof BlockAdvancedBipropellantRocketMotor ) {
 									bipropellantfuelUse += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
 									thrustBipropellant += ((IRocketEngine)block).getThrust(world, currBlockPos);
 								} else if (block instanceof BlockRocketMotor || block instanceof BlockAdvancedRocketMotor ) {
@@ -332,7 +341,13 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 									fuelCapacityBipropellant += (((IFuelTank) block).getMaxFill(world, currBlockPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);
 								} else if(block instanceof BlockOxidizerFuelTank) {
 									fuelCapacityOxidizer += (((IFuelTank) block).getMaxFill(world, currBlockPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);
+								} else if(block instanceof BlockNuclearFuelTank) {
+									fuelCapacityNuclearWorkingFluid += (((IFuelTank) block).getMaxFill(world, currBlockPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);
 								}
+							}
+
+							if (block instanceof IRocketNuclearCore && ((world.getBlockState(belowPos).getBlock() instanceof  IRocketNuclearCore) || (world.getBlockState(belowPos).getBlock() instanceof  IRocketEngine))) {
+								thrustNuclearReactorLimit += ((IRocketNuclearCore) block).getMaxThrust(world, currBlockPos);
 							}
 
 							if(block instanceof BlockSeat && world.getBlockState(abovePos).getBlock().isAir(world.getBlockState(abovePos), world, abovePos)) {
@@ -354,42 +369,48 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 				}
 			}
 
-			if (thrustBipropellant >= thrustMonopropellant) {
-				//Thrust depending on rocket type
-				stats.setBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT, 0);
-				stats.setBaseFuelRate(FuelType.LIQUID_BIPROPELLANT, bipropellantfuelUse);
-				stats.setBaseFuelRate(FuelType.LIQUID_OXIDIZER, bipropellantfuelUse);
-				//Fuel storage depending on rocket type
-				stats.setFuelCapacity(FuelType.LIQUID_MONOPROPELLANT, 0);
-				stats.setFuelCapacity(FuelType.LIQUID_BIPROPELLANT, fuelCapacityBipropellant);
-				stats.setFuelCapacity(FuelType.LIQUID_OXIDIZER, fuelCapacityOxidizer);
-			} else {
-				//Thrust depending on rocket type
-				stats.setBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT, monopropellantfuelUse);
-				stats.setBaseFuelRate(FuelType.LIQUID_BIPROPELLANT, 0);
-				stats.setBaseFuelRate(FuelType.LIQUID_OXIDIZER, 0);
-				//Fuel storage depending on rocket type
-				stats.setFuelCapacity(FuelType.LIQUID_MONOPROPELLANT, fuelCapacityMonopropellant);
-				stats.setFuelCapacity(FuelType.LIQUID_BIPROPELLANT, 0);
-				stats.setFuelCapacity(FuelType.LIQUID_OXIDIZER, 0);
+			int nuclearWorkingFluidUse = 0;
+			if (thrustNuclearNozzleLimit > 0) {
+				//Only run the number of engines our cores can support - we can't throttle these effectively because they're small, so they shut off if they don't get full power
+				thrustNuclearTotalLimit = Math.min(thrustNuclearNozzleLimit, thrustNuclearReactorLimit);
+				nuclearWorkingFluidUse = (int) (nuclearWorkingFluidUseMax * (thrustNuclearTotalLimit / (float) thrustNuclearNozzleLimit));
+				thrustNuclearTotalLimit = (nuclearWorkingFluidUse * thrustNuclearNozzleLimit) / nuclearWorkingFluidUseMax;
 			}
+
+			//Set fuel stats
+			//Thrust depending on rocket type
+			stats.setBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT, monopropellantfuelUse);
+			stats.setBaseFuelRate(FuelType.LIQUID_BIPROPELLANT, bipropellantfuelUse);
+			stats.setBaseFuelRate(FuelType.LIQUID_OXIDIZER, bipropellantfuelUse);
+			stats.setBaseFuelRate(FuelType.NUCLEAR_WORKING_FLUID, nuclearWorkingFluidUse);
+			//Fuel storage depending on rocket type
+			stats.setFuelCapacity(FuelType.LIQUID_MONOPROPELLANT, fuelCapacityMonopropellant);
+			stats.setFuelCapacity(FuelType.LIQUID_BIPROPELLANT, fuelCapacityBipropellant);
+			stats.setFuelCapacity(FuelType.LIQUID_OXIDIZER, fuelCapacityOxidizer);
+			stats.setFuelCapacity(FuelType.NUCLEAR_WORKING_FLUID, fuelCapacityNuclearWorkingFluid);
+
 			//Non-fuel stats
 			stats.setWeight(numBlocks);
-			stats.setThrust(Math.max(thrustMonopropellant, thrustBipropellant));
+			stats.setThrust(Math.max(Math.max(thrustMonopropellant, thrustBipropellant), thrustNuclearTotalLimit));
 			stats.setDrillingPower(drillPower);
+
+			//Total stats, used to check if the user has tried to apply two or more types of thrust/fuel
+			int totalFuel = fuelCapacityBipropellant + fuelCapacityNuclearWorkingFluid + fuelCapacityMonopropellant;
+			int totalFuelUse = bipropellantfuelUse + nuclearWorkingFluidUse + monopropellantfuelUse;
 
 			//Set status
 			//TODO: warn if seat OR satellite missing
-			//if(!stats.hasSeat() && !hasSatellite) 
-			//status = ErrorCodes.NOSEAT;
-			/*else*/ 
 			if(invalidBlock)
 				status = ErrorCodes.INVALIDBLOCK;
+			else if (((fuelCapacityBipropellant > 0 && totalFuel > fuelCapacityBipropellant) || (fuelCapacityMonopropellant > 0 && totalFuel > fuelCapacityMonopropellant) || (fuelCapacityNuclearWorkingFluid > 0 && totalFuel > fuelCapacityNuclearWorkingFluid))
+					||
+					((thrustBipropellant > 0 && totalFuelUse > bipropellantfuelUse) || (thrustMonopropellant > 0 && totalFuelUse > monopropellantfuelUse) || (thrustNuclearTotalLimit > 0 && totalFuelUse > nuclearWorkingFluidUse)))
+			    status = ErrorCodes.COMBINEDTHRUST;
 			else if(!hasGuidance && !hasSatellite)
 				status = ErrorCodes.NOGUIDANCE;
 			else if(getThrust() <= getNeededThrust())
 				status = ErrorCodes.NOENGINES;
-			else if(((thrustBipropellant >= thrustMonopropellant) && getFuel(FuelType.LIQUID_BIPROPELLANT) <= getNeededFuel(FuelType.LIQUID_BIPROPELLANT)) || ((thrustMonopropellant >= thrustBipropellant) && getFuel(FuelType.LIQUID_MONOPROPELLANT) <= getNeededFuel(FuelType.LIQUID_MONOPROPELLANT)))
+			else if(((thrustBipropellant > 0) && getFuel(FuelType.LIQUID_BIPROPELLANT) < getNeededFuel(FuelType.LIQUID_BIPROPELLANT)) || ((thrustMonopropellant > 0) && getFuel(FuelType.LIQUID_MONOPROPELLANT) < getNeededFuel(FuelType.LIQUID_MONOPROPELLANT)) || ((thrustNuclearTotalLimit > 0) && getFuel(FuelType.NUCLEAR_WORKING_FLUID) < getNeededFuel(FuelType.NUCLEAR_WORKING_FLUID)))
 				status = ErrorCodes.NOFUEL;
 			else
 				status = ErrorCodes.SUCCESS;
@@ -742,7 +763,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	protected void updateText() {
 		thrustText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.thrust") + ": ???") :  String.format("%s: %dkN",LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.thrust"), getThrust() * 10));
 		weightText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.weight") + ": ???")  : String.format("%s: %.2fkN", LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.weight"), (getWeight() * 10 * getGravityMultiplier()) ));
-		fuelText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.fuel") + ": ???") :  String.format("%s: %dmb/s", LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.fuel"), (int)getRocketStats().getBaseFuelRate((stats.getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT) > 0) ? FuelType.LIQUID_MONOPROPELLANT : FuelType.LIQUID_BIPROPELLANT)));
+		fuelText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.fuel") + ": ???") :  String.format("%s: %dmb/s", LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.fuel"), (int)getRocketStats().getBaseFuelRate((stats.getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT) > 0) ? FuelType.LIQUID_MONOPROPELLANT : (stats.getFuelCapacity(FuelType.NUCLEAR_WORKING_FLUID) > 0) ? FuelType.NUCLEAR_WORKING_FLUID : FuelType.LIQUID_BIPROPELLANT)));
 		accelerationText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.acc") + ": ???") : String.format("%s: %.2fm/s\u00b2", LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.acc"), getAcceleration(getGravityMultiplier())*20f));
 		if(!world.isRemote) { 
 			if(getRocketPadBounds(world, pos) == null)
@@ -805,7 +826,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 
 		switch(id) {
 		case 0:
-			FuelType fuelType = (stats.getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT) > 0) ? FuelType.LIQUID_MONOPROPELLANT : FuelType.LIQUID_BIPROPELLANT;
+			FuelType fuelType = (stats.getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT) > 0) ? FuelType.LIQUID_MONOPROPELLANT : (stats.getBaseFuelRate(FuelType.NUCLEAR_WORKING_FLUID) > 0) ? FuelType.NUCLEAR_WORKING_FLUID : FuelType.LIQUID_BIPROPELLANT;
 			return (this.getAcceleration(getGravityMultiplier()) > 0) ? MathHelper.clamp(0.5f + 0.5f*((this.getFuel(fuelType) - this.getNeededFuel(fuelType))/this.getNeededFuel(fuelType)), 0f, 1f) : 0;
 		case 1:
 			return MathHelper.clamp(0.5f + this.getAcceleration(getGravityMultiplier())*10, 0f, 1f);

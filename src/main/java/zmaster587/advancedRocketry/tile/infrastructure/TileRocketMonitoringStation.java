@@ -320,6 +320,8 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		else if (id == 2)
 			if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid()))) {
 				return (linkedRocket.getFuelAmountMonopropellant());
+			} else if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.NUCLEAR_WORKING_FLUID, FluidRegistry.getFluid(linkedRocket.stats.getWorkingFluid()))) {
+				return (linkedRocket.getFuelAmountNuclearWorkingFluid());
 			} else {
 				return (linkedRocket.getFuelAmountBipropellant() + linkedRocket.getFuelAmountOxidizer());
 			}
@@ -340,11 +342,12 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 				if(linkedRocket == null)
 					return 0;
 		    else if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid()))) {
-			    return (linkedRocket.getFuelCapacityMonopropellant());
-		    } else {
-			    return (linkedRocket.getFuelCapacityBipropellant() + linkedRocket.getFuelCapacityOxidizer());
-		}
-
+					return (linkedRocket.getFuelCapacityMonopropellant());
+				} else if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.NUCLEAR_WORKING_FLUID, FluidRegistry.getFluid(linkedRocket.stats.getWorkingFluid()))) {
+					return (linkedRocket.getFuelCapacityNuclearWorkingFluid());
+				} else {
+					return (linkedRocket.getFuelCapacityBipropellant() + linkedRocket.getFuelCapacityOxidizer());
+				}
 		return 1;
 	}
 

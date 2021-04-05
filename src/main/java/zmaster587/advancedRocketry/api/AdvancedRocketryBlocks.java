@@ -7,7 +7,7 @@ import net.minecraft.block.Block;
  *
  */
 public class AdvancedRocketryBlocks {
-	public static Block blockMissionComp;
+	public static Block blockNuclearEngine;
 	public static Block blockSpaceLaser;
 	public static Block blockPrecisionAssembler;
 	public static Block blockArcFurnace;
@@ -29,9 +29,9 @@ public class AdvancedRocketryBlocks {
 	public static Block blockOxidizerFuelTank;
 	public static Block blockFuelingStation;
 	public static Block blockMonitoringStation, blockSatelliteBuilder, blockSatelliteControlCenter;
-	public static Block blockChipStorage;
+	public static Block blockNuclearFuelTank;
 	public static Block blockMoonTurf, blockHotTurf;
-	public static Block blockMultiMineOre;
+	public static Block blockNuclearCore;
 	public static Block blockLightSource;
 	public static Block blockLightwoodWood, sblockLightwoodLeaves, blockLightwoodSapling;
 	public static Block blockGuidanceComputer;

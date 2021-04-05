@@ -51,7 +51,7 @@ public class ARConfiguration {
 	final static String CLIENT = "Client";
 	public static Logger logger = LogManager.getLogger(Constants.modId);
 
-	static String[] sealableBlockWhiteList, sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, spawnableGasses, entityList, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidMonopropellant, liquidBipropellantFuel, liquidBipropellantOxidizer;
+	static String[] sealableBlockWhiteList, sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, spawnableGasses, entityList, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidMonopropellant, liquidBipropellantFuel, liquidBipropellantOxidizer, liquidNuclearWorkingFluid;
 
 
 	//Only to be set in preinit
@@ -514,8 +514,10 @@ public class ARConfiguration {
 		liquidMonopropellant = config.get(ROCKET, "rocketFuels", new String[] {"rocketfuel;2"}, "List of fluid names for fluids that can be used as rocket monopropellants").getStringList();
 		liquidBipropellantFuel = config.get(ROCKET, "rocketBipropellants", new String[] {"hydrogen"}, "List of fluid names for fluids that can be used as rocket bipropellant fuels").getStringList();
 		liquidBipropellantOxidizer = config.get(ROCKET, "rocketOxidizers", new String[] {"oxygen"}, "List of fluid names for fluids that can be used as rocket bipropellant oxidizers").getStringList();
+		liquidNuclearWorkingFluid = config.get(ROCKET, "rocketNuclearWorkingFluids", new String[] {"hydrogen"}, "List of fluid names for fluids that can be used as rocket nuclear working fluids").getStringList();
 		arConfig.rocketThrustMultiplier = config.get(ROCKET, "thrustMultiplier", 1f, "Multiplier for per-engine thrust").getDouble();
 		arConfig.fuelCapacityMultiplier = config.get(ROCKET, "fuelCapacityMultiplier", 1f, "Multiplier for per-tank capacity").getDouble();
+		arConfig.nuclearCoreThrustRatio = config.get(ROCKET, "nuclearCoreThrustRatio", 1.0, "The multiplier for the thrust of the nuclear core block. With default configuration, this value provides a (max) thrust of 1000 per core.").getDouble();
 		arConfig.automaticRetroRockets = config.get(ROCKET, "autoRetroRockets", true, "Setting to false will disable the retrorockets that fire automatically on reentry on both player and automated rockets").getBoolean();
 		arConfig.orbit = config.getInt("orbitHeight", ROCKET, 1000, 255, Integer.MAX_VALUE, "How high the rocket has to go before it reaches orbit. This is used by itself when launching from a planet to LEO, which can be either a satellite, a space station, or another point on this planet's surface. It's used in conjunction with the TBI burn when launching to the moon or asteroids. Warp flights will need orbit height + 10x TBI to launch from planets");
 		arConfig.stationClearanceHeight = config.getInt("stationClearance", ROCKET, 1000, 255, Integer.MAX_VALUE, "How high the rocket has to go before it clears a space station and can enter its own orbit - WARNING: This property is not synced with orbitHeight and so will be displayed incorrectly on monitors if not equal to it. Burn length here is used by itself when launching from a station to either another station or the same station, or to the planet it is orbiting. it is used in conjunction with the TBI burn when launching to a moon or asteroid");
@@ -631,8 +633,23 @@ public class ARConfiguration {
 				logger.warn("Fluid name" + str  + " is not a registered fluid!");
 		}
 		liquidBipropellantOxidizer = null; //clean up
-		logger.info("Finished registering liquid rocket fuels");
+		for(String str : liquidNuclearWorkingFluid) {
+			String splitStr[] = str.split(";");
+			Fluid fluid = FluidRegistry.getFluid(splitStr[0]);
+			float multiplier = 1.0f;
+			if (splitStr.length > 1) {
+				multiplier = Float.parseFloat(splitStr[1]);
+			}
 
+			if(fluid != null) {
+				logger.info("Registering fluid "+ str + " as rocket nuclear working fluid");
+				FuelRegistry.instance.registerFuel(FuelType.NUCLEAR_WORKING_FLUID, fluid, multiplier);
+			}
+			else
+				logger.warn("Fluid name" + str  + " is not a registered fluid!");
+		}
+		liquidNuclearWorkingFluid = null; //clean up
+		logger.info("Finished registering liquid rocket fuels");
 
 		//Register Whitelisted Sealable Blocks
 
@@ -855,6 +872,9 @@ public class ARConfiguration {
 
 	@ConfigProperty
 	public double rocketThrustMultiplier;
+
+	@ConfigProperty
+	public double nuclearCoreThrustRatio;
 
 	@ConfigProperty
 	public double fuelCapacityMultiplier;
