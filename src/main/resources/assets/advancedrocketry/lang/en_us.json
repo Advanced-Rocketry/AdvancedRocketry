@@ -244,7 +244,7 @@
     "fluid.hydrogen": "Hydrogen",
     "fluid.nitrogen": "Nitrogen",
     "fluid.rocket_fuel": "Rocket Fuel",
-    "fluid.enrichedlava": "Enriched Lava",
+    "fluid.enriched_lava": "Enriched Lava",
 
     "mission.asteroidmining": "Asteroid Mining",
     "mission.gascollection": "Gas Collection",

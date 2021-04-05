@@ -88,7 +88,7 @@ public class TileFluidTank extends TileFluidHatch {
 	
 	@Override
 	public String getModularInventoryName() {
-		return "tile.pressurizedTank.name";
+		return "block.advancedrocketry.pressurizedtank";
 	}
 
 	@Override
