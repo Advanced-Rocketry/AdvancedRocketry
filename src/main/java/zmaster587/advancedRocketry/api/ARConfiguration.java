@@ -104,9 +104,9 @@ public class ARConfiguration {
 		arConfig.lowGravityBoots = builder.comment("If true, the boots only protect the player on planets with low gravity").define("lowGravityBoots", false);
 		arConfig.jetPackThrust = builder.comment("Amount of force the jetpack provides with respect to gravity").define("jetPackForce", 1.3);
 		arConfig.buildSpeedMultiplier = builder.comment("Multiplier for the build speed of the Rocket Builder (0.5 is twice as fast 2 is half as fast").define("buildSpeedMultiplier", 1d);
-//blocktankcapacity
+		arConfig.blockTankCapacity = builder.comment("Multiplier for the amount of fluid this tank can hold").define("blockTankCapacity", 1.0);
 		//Enriched Lava in the centrifuge
-		//Crystallizer gravity
+		arConfig.crystalliserMaximumGravity = builder.comment("Maximum gravity the crystallizer can work at. 0 to disable!").define("crystalliserMaximumGravity", 0);
 		arConfig.enableGravityController = builder.comment("If false, the gravity controller cannot be built or used").define("enableGravityMachine", true);
 
 		builder.push(this.CATEGORY_LASERDRILL);
@@ -143,7 +143,7 @@ public class ARConfiguration {
 		arConfig.dropExTorches = builder.comment("If true, breaking an extinguished torch will drop an extinguished torch instead of a vanilla torch").define("dropExtinguishedTorches", false);
 		arConfig.overrideGCAir = builder.comment("If true, Galacticcraft's air will be disabled entirely requiring use of Advanced Rocketry's Oxygen system on GC planets").define("OverrideGCAir", true);
 		arConfig.oxygenVentConsumptionMult = builder.comment("Multiplier on how much O2 an oxygen vent consumes per tick").define("oxygenVentConsumptionMultiplier", 1d);
-		//Suit tank capacity
+		arConfig.suitTankCapacity = builder.comment("Multiplier for the amount of fluid this tank can hold").define("suitTankMultiplier", 1.0);
 		sealableBlockWhiteList = builder.comment("Blocks that are not automatically detected as sealable but should seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"").defineList("sealableBlockWhiteList", new LinkedList<String>(), (val) -> { return true; });
 		sealableBlockBlackList = builder.comment("Blocks that are automatically detected as sealable but should not seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"").defineList("sealableBlockBlackList", new LinkedList<String>(), (val) -> { return true; });
 		entityList = builder.comment("list entities which should not be affected by atmosphere properties").defineList("entityAtmBypass", new LinkedList<String>(), (val) -> {return true;});
@@ -223,11 +223,11 @@ public class ARConfiguration {
 		blackListRocketBlocksStrList.add( "minecraft:lava");
 		blackListRocketBlocksStrList.add("minecraft:flowing_lava");
 		blackListRocketBlocksStr = builder.comment("Mod:Blockname  for example \"minecraft:chest\"").defineList("rocketBlockBlackList", blackListRocketBlocksStrList, (val) -> {return true;} );
-        //Rockets destroy blocks
-		//clear height
-		//ATBI mult
-		//TBI
-		//warp TBI
+		arConfig.launchingDestroysBlocks = builder.comment("Set to false if rockets should not damage blocks").define("rocketsDamageBlocks", false);
+		arConfig.stationClearanceHeight = builder.comment("How high the rocket has to go before it reaches station clearance").defineInRange("stationClearanceHeight", 1000, 255, Integer.MAX_VALUE);
+		arConfig.asteroidTBIBurnMult = builder.comment("TBI multiplier for asteroid flights").define("asteroidTBIBurnMult", 1.0);
+		arConfig.transBodyInjection = builder.comment("How long transbody injection is before the rocket can exit").define("transBodyInjection", 0);
+		arConfig.warpTBIBurnMult = builder.comment("TBI multiplier for warp flights").define("warpTBIBurnMult", 10.0);
 
 		builder.push(this.CATEGORY_WORLD_GENERATION);
 		arConfig.electricPlantsSpawnLightning = builder.comment("Should Electric Mushrooms be able to spawn lightning").define("electricPlantsSpawnLightning", true);
@@ -913,6 +913,18 @@ public class ARConfiguration {
 	}
 
 	@ConfigProperty
+	public ConfigValue<Boolean> launchingDestroysBlocks;
+
+	@ConfigProperty
+	public ConfigValue<Double> suitTankCapacity;
+
+	@ConfigProperty
+	public ConfigValue<Double> blockTankCapacity;
+
+	@ConfigProperty
+	public ConfigValue<Integer> crystalliserMaximumGravity;
+
+	@ConfigProperty
 	public  ConfigValue<Integer> vacuumDamageValue;
 
 	@ConfigProperty(needsSync=true, internalType=Integer.class)
@@ -922,16 +934,16 @@ public class ARConfiguration {
 	public  ConfigValue<Boolean> resetFromXML;
 
 	@ConfigProperty(needsSync=true)
-	public int stationClearanceHeight = 1000;
+	public ConfigValue<Integer> stationClearanceHeight;
 
 	@ConfigProperty(needsSync=true)
-	public int transBodyInjection = 0;
+	public ConfigValue<Integer> transBodyInjection;
 
 	@ConfigProperty(needsSync=true)
-	public double asteroidTBIBurnMult = 1.0;
+	public ConfigValue<Double> asteroidTBIBurnMult;
 
 	@ConfigProperty(needsSync=true)
-	public double warpTBIBurnMult = 10.0;
+	public ConfigValue<Double> warpTBIBurnMult;
 
 	@ConfigProperty
 	public ResourceLocation MoonId = Constants.INVALID_PLANET;

@@ -1325,7 +1325,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			runEngines();
 
 		//When we're landing, we should also destroy the blocks below the rocket if they are valid to be destroyed - but overall we do it fewer times than on launch (once instead of twice)
-		if((int)this.getPosY() == world.getHeight(Type.WORLD_SURFACE, getPosition()).getY() + 2 && ARConfiguration.getCurrentConfig().launchingDestroysBlocks && this.isDescentPhase()) {
+		if((int)this.getPosY() == world.getHeight(Type.WORLD_SURFACE, getPosition()).getY() + 2 && ARConfiguration.getCurrentConfig().launchingDestroysBlocks.get() && this.isDescentPhase()) {
 			damageGroundBelowRocket(world, (int)this.getPosX(), (int)this.getPosY() -1, (int)this.getPosZ(), (int)Math.pow(stats.getThrust(), 0.3333));
 		}
 	}
@@ -1395,7 +1395,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	private int getEntryHeight(ResourceLocation entryLocationDimID){
 		if (entryLocationDimID.getPath() == ARConfiguration.getCurrentConfig().spaceDimId.get()) {
-			return ARConfiguration.getCurrentConfig().stationClearanceHeight;
+			return ARConfiguration.getCurrentConfig().stationClearanceHeight.get();
 		} else {
 			return ARConfiguration.getCurrentConfig().orbit.get();
 		}
@@ -1784,7 +1784,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 		}
 		//When we launch, we want to damage blocks a second time if possible
-		if (ARConfiguration.getCurrentConfig().launchingDestroysBlocks)
+		if (ARConfiguration.getCurrentConfig().launchingDestroysBlocks.get())
 		    damageGroundBelowRocket(world, (int)getPosX(), (int)getPosY(), (int)getPosZ(), (int)Math.pow(stats.getThrust(), 0.3333));
 	}
 

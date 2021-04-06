@@ -82,8 +82,8 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 	}
 
 	public boolean isGravityWithinBounds() {
-		if (!(ARConfiguration.getCurrentConfig().crystalliserMaximumGravity == 0)) {
-			return ARConfiguration.getCurrentConfig().crystalliserMaximumGravity > DimensionManager.getInstance().getDimensionProperties(world).gravitationalMultiplier;
+		if (!(ARConfiguration.getCurrentConfig().crystalliserMaximumGravity.get() == 0)) {
+			return ARConfiguration.getCurrentConfig().crystalliserMaximumGravity.get() > DimensionManager.getInstance().getDimensionProperties(world).gravitationalMultiplier;
 		}
 		return true;
 	}

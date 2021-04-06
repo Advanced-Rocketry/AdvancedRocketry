@@ -255,7 +255,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	}
 
 	public int getLaunchSequence(ResourceLocation currentDimensionID, BlockPos currentPosition) {
-		int totalBurn = (currentDimensionID.getPath().equals(ARConfiguration.getCurrentConfig().spaceDimId.get())) ? ARConfiguration.getCurrentConfig().stationClearanceHeight : ARConfiguration.getCurrentConfig().orbit.get();
+		int totalBurn = (currentDimensionID.getPath().equals(ARConfiguration.getCurrentConfig().spaceDimId.get())) ? ARConfiguration.getCurrentConfig().stationClearanceHeight.get() : ARConfiguration.getCurrentConfig().orbit.get();
 		ResourceLocation destinationDimensionID = getDestinationDimId(currentDimensionID, currentPosition);
 
 		totalBurn += (currentDimensionID.getPath().equals(ARConfiguration.getCurrentConfig().spaceDimId.get())) ? getTransBodyInjection(currentDimensionID, destinationDimensionID, currentPosition) : getTransBodyInjection(currentDimensionID, destinationDimensionID);

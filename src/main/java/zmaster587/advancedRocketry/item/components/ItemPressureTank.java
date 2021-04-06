@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.capability.TankCapabilityItemStack;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.client.ResourceIcon;
@@ -75,7 +76,7 @@ public class ItemPressureTank extends Item implements IArmorComponent {
 	}
 	
 	public int getCapacity(ItemStack container) {
-		return capacity;
+		return (int)(capacity * ARConfiguration.getCurrentConfig().suitTankCapacity.get());
 	}
 
 	@Override

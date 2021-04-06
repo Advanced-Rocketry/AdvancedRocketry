@@ -33,12 +33,12 @@ public class PlanetaryTravelHelper {
 		return isPlanetMoonSystem;
 	}
 	public static int getTransbodyInjectionBurn(ResourceLocation currentDimensionID, ResourceLocation destinationDimensionID, boolean toAsteroids) {
-		int baseInjectionHeight = ARConfiguration.getCurrentConfig().transBodyInjection;
+		int baseInjectionHeight = ARConfiguration.getCurrentConfig().transBodyInjection.get();
 		//This is probably one of the worst ways to do this and I don't really care about realism, just tapering results.... if this turns out to be realistic well then, that's nice.
 		//Not like the mod has an semblance of a concept of orbital mechanics anyway :P
 		//This is vaugely a multiplier based on TLI burns, burning for 2x as long can get you 4x as far
 		//This grabs the body distance multipier, then takes the square root of it, or if warp multiplies by the config option for that
-		return (isTravelBetweenBodiesWithinPlanetarySystem(currentDimensionID, destinationDimensionID)) ? (int) (baseInjectionHeight * Math.pow(getBodyDistanceMultiplier(currentDimensionID, destinationDimensionID, toAsteroids), 0.5d)) : (int) ARConfiguration.getCurrentConfig().warpTBIBurnMult * baseInjectionHeight;
+		return (isTravelBetweenBodiesWithinPlanetarySystem(currentDimensionID, destinationDimensionID)) ? (int) (baseInjectionHeight * Math.pow(getBodyDistanceMultiplier(currentDimensionID, destinationDimensionID, toAsteroids), 0.5d)) : (int) (ARConfiguration.getCurrentConfig().warpTBIBurnMult.get() * baseInjectionHeight);
 	}
 	public static double getBodyDistanceMultiplier(ResourceLocation currentDimensionID, ResourceLocation destinationDimensionID, boolean toAsteroids) {
 		//Check the orbital distance of the moon or planet we're going to
@@ -56,7 +56,7 @@ public class PlanetaryTravelHelper {
 		}
 		//If it's asteroids, check the config for the multiplier there
 		if (toAsteroids) {
-			bodyDistanceMultiplier = ARConfiguration.getCurrentConfig().asteroidTBIBurnMult;
+			bodyDistanceMultiplier = ARConfiguration.getCurrentConfig().asteroidTBIBurnMult.get();
 		}
 		return bodyDistanceMultiplier;
 	}
