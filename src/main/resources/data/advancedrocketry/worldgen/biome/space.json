@@ -2,10 +2,10 @@
   "surface_builder": "advancedrocketry:spacegeneration",
   "depth": -2,
   "scale": 0,
-  "temperature": 0,
+  "temperature": 0.5,
   "downfall": 0,
   "precipitation": "none",
-  "temperature_modifier": "frozen",
+  "temperature_modifier": "none",
   "category": "none",
   "creature_spawn_probability": 0,
   "effects": {
