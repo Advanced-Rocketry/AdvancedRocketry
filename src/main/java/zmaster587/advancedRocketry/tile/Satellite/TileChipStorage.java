@@ -86,7 +86,7 @@ public class TileChipStorage extends TileMultiPowerConsumer  implements IModular
 
 	@Override
 	public String getMachineName() {
-		return "tile.satelliteBuilder.name";
+		return "block.advancedrocketry.satellitebuilder";
 	}
 
 	@Override

@@ -344,7 +344,7 @@ public class TilePlanetaryHologram extends TileEntity implements ITickableTileEn
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.planetHoloSelector.name";
+		return "block.advancedrocketry.planetholoselector";
 	}
 
 	@Override

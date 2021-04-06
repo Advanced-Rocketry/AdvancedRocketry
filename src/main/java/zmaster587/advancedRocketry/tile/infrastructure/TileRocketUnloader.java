@@ -28,7 +28,7 @@ public class TileRocketUnloader extends TileRocketLoader implements IInfrastruct
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.loader.2.name";
+		return "block.advancedrocketry.runloader";
 	}
 
 

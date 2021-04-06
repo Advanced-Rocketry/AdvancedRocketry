@@ -82,7 +82,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.solarGenerator.name";
+		return "block.advancedrocketry.solargenerator";
 	}
 
 	@Override

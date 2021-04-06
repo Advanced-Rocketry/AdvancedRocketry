@@ -53,7 +53,7 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.suitWorkStation.name";
+		return "block.advancedrocketry.suitworkstation";
 	}
 
 	@Override

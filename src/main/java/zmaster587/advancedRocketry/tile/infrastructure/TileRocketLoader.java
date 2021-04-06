@@ -90,7 +90,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.loader.3.name";
+		return "block.advancedrocketry.rloader";
 	}
 
 	@Override

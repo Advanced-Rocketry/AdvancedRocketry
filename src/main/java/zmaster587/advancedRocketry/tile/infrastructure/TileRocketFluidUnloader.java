@@ -24,7 +24,7 @@ public class TileRocketFluidUnloader extends TileRocketFluidLoader implements II
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.loader.4.name";
+		return "block.advancedrocketry.funloader";
 	}
 
 
