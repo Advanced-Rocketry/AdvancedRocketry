@@ -3,11 +3,11 @@
     "fluidingredients":
     [
 	{
-	    "fluid": "oxygen",
+	    "fluid": "advancedrocketry:oxygen",
 	    "amount": 10
 	},
 	{
-	    "fluid": "hydrogen",
+	    "fluid": "advancedrocketry:hydrogen",
 	    "amount": 10
 	}
     ],
@@ -16,7 +16,7 @@
     "fluidresults":
     [
 	{
-	    "fluid": "rocketfuel",
+	    "fluid": "advancedrocketry:rocket_fuel",
 	    "amount": 20
 	}
     ]

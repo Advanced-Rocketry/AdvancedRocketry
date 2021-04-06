@@ -12,11 +12,11 @@
     "fluidresults":
     [
 	{
-	    "fluid": "hydrogen",
+	    "fluid": "advancedrocketry:hydrogen",
 	    "amount": 100
 	},
 	{
-	    "fluid": "oxygen",
+	    "fluid": "advancedrocketry:oxygen",
 	    "amount": 100
 	}
     ]

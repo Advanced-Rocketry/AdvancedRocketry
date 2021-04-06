@@ -240,11 +240,11 @@
     "data.atmospheredensity": "Atmosphere Density",
     "data.mass": "Mass",
 
-    "fluid.oxygen": "Oxygen",
-    "fluid.hydrogen": "Hydrogen",
-    "fluid.nitrogen": "Nitrogen",
-    "fluid.rocket_fuel": "Rocket Fuel",
-    "fluid.enriched_lava": "Enriched Lava",
+    "fluid.advancedrocketry.oxygen": "Oxygen",
+    "fluid.advancedrocketry.hydrogen": "Hydrogen",
+    "fluid.advancedrocketry.nitrogen": "Nitrogen",
+    "fluid.advancedrocketry.rocket_fuel": "Rocket Fuel",
+    "fluid.advancedrocketry.enriched_lava": "Enriched Lava",
 
     "mission.asteroidmining": "Asteroid Mining",
     "mission.gascollection": "Gas Collection",

@@ -9,7 +9,7 @@
     "fluidingredients":
     [
 	{
-	    "fluid": "nitrogen",
+	    "fluid": "advancedrocketry:nitrogen",
 	    "amount": 10
 	}
     ],
