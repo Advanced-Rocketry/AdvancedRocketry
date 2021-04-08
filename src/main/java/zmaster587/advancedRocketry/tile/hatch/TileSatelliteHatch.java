@@ -20,7 +20,7 @@ public class TileSatelliteHatch extends TileInventoryHatch {
 
 	@Override
 	public String getModularInventoryName() {
-		return "container.satellite";
+		return "block.advancedrocketry.satellitecontrolcenter";
 	}
 
 	public SatelliteBase getSatellite() {

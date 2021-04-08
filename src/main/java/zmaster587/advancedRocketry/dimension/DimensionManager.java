@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.dimension;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -23,6 +24,7 @@ import net.minecraft.world.gen.DimensionSettings;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.FolderName;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -39,6 +41,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.Constants;
+import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -200,6 +203,27 @@ public class DimensionManager implements IGalaxy {
 				return satellite;
 		}
 		return null;
+	}
+	
+	/**
+	 * @param satId long id of the satellite
+	 * @return a reference to the satellite object with the supplied ID
+	 */
+	public Collection<SatelliteBase> getSatellites() {
+
+		//Hack to allow monitoring stations to properly reload after a server restart
+		//Because there should never be a tile in the world where no planets have been generated load file first
+		//Worst thing that can happen is there is no file and it gets genned later and the monitor does not reconnect
+		if(!hasBeenInitiallized && EffectiveSide.get().isServer() ) {
+			DimensionManager.getInstance().loadDimensions(ServerLifecycleHooks.getCurrentServer().func_240776_a_(new FolderName(DimensionManager.workingPath)).toString());
+		}
+
+		Collection<SatelliteBase> satellites = new LinkedList<SatelliteBase>();
+
+		for(ResourceLocation i : DimensionManager.getInstance().getLoadedDimensions()) {
+			satellites.addAll(DimensionManager.getInstance().getDimensionProperties(i).getAllSatellites());
+		}
+		return satellites;
 	}
 
 	//TODO: fix naming system
@@ -786,6 +810,16 @@ public class DimensionManager implements IGalaxy {
 
 			if(!file.exists())
 				file.createNewFile();
+			
+			//satellites
+			ListNBT satelliteNbt = new ListNBT();
+			for(SatelliteBase sat : getSatellites())
+			{
+				CompoundNBT satTag = new CompoundNBT();
+				sat.writeToNBT(satTag);
+				satelliteNbt.add(satTag);
+			}
+			nbt.put("satellites", satelliteNbt);
 
 			//Getting real sick of my planet file getting toasted during debug...
 			File tmpFile = File.createTempFile("dimprops", ".DAT", saveDir);
@@ -1250,6 +1284,15 @@ public class DimensionManager implements IGalaxy {
 		if(nbt.contains("spaceObjects")) {
 			CompoundNBT nbtTag = nbt.getCompound("spaceObjects");
 			SpaceObjectManager.getSpaceManager().readFromNBT(nbtTag);
+		}
+		
+		ListNBT satNbtList = nbt.getList("satellites", NBT.TAG_COMPOUND);
+		for(int i = 0; i < satNbtList.size(); i++)
+		{
+			CompoundNBT satTag = satNbtList.getCompound(i);
+			SatelliteBase sat = SatelliteRegistry.createFromNBT(satTag);
+			
+			sat.getDimensionId().ifPresent( (r) -> { DimensionProperties dimprops; if((dimprops = getDimensionProperties(r)) != null) { dimprops.addSatallite(sat); }} );
 		}
 
 		prevBuild = nbt.getString("prevVersion");
