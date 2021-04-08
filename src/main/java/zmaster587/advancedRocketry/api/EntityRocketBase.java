@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.api;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
@@ -30,64 +31,8 @@ public abstract class EntityRocketBase extends Entity {
 	}
 
 	/**
-	 * AttempTs to add amt fuel points to the rocket for monopropellants
-	 * @param amt
-	 * @return the amount of fuel actually added to the rocket
-	 */
-	public abstract int addFuelAmountMonopropellant(int amt);
-
-	/**
-	 * AttempTs to add amt fuel points to the rocket for bipropellants
-	 * @param amt
-	 * @return the amount of fuel actually added to the rocket
-	 */
-	public abstract int addFuelAmountBipropellant(int amt);
-
-	/**
-	 * AttempTs to add amt fuel points to the rocket for oxidizers
-	 * @param amt
-	 * @return the amount of fuel actually added to the rocket
-	 */
-	public abstract int addFuelAmountOxidizer(int amt);
-
-	/**
-	 * Attempts to add amt fuel points to the rocket for nuclear working fluid
-	 * @param amt
-	 * @return the amount of fuel actually added to the rocket
-	 */
-	public abstract int addFuelAmountNuclearWorkingFluid(int amt);
-
-	/**
-	 * AttempTs to set the fuel rate for the rocket for monopropellants
-	 * @param rate
-	 * @return the rate of consumption for the rocket
-	 */
-	public abstract void setFuelRateMonopropellant(int rate);
-
-	/**
-	 * AttempTs to set the fuel rate for the rocket for bipropellants
-	 * @param rate
-	 * @return the rate of consumption for the rocket
-	 */
-	public abstract void setFuelRateBipropellant(int rate);
-
-	/**
-	 * AttempTs to set the fuel rate for the rocket for oxidizers
-	 * @param rate
-	 * @return the rate of consumption for the rocket
-	 */
-	public abstract void setFuelRateOxidizer(int rate);
-
-	/**
-	 * Attempts to set the fuel rate for the rocket for nuclear working fluid
-	 * @param rate
-	 * @return the rate of consumption for the rocket
-	 */
-	public abstract void setFuelRateNuclearWorkingFluid(int rate);
-
-	/**
 	 * Unlinks the given infrastructure
-	 * @param infrastructure
+	 * @param tile
 	 */
 	public void unlinkInfrastructure(IInfrastructure tile) {
 		connectedInfrastructure.remove(tile);
@@ -113,64 +58,48 @@ public abstract class EntityRocketBase extends Entity {
 	public abstract void launch();
 
 	/**
-	 * @return the amount of fuel points in the rocket for monopropellants
+	 * @param fuelType
+	 * @return the amount of fuel stored in the rocket
 	 */
-	public abstract int getFuelAmountMonopropellant();
+	public abstract int getFuelAmount(FuelRegistry.FuelType fuelType);
 
 	/**
-	 * @return the amount of fuel points in the rocket for bipropellants
+	 * Adds fuel and updates the datawatcher
+	 * @param fuelType
+	 * @param amount amount of fuel to add
+	 * @return the amount of fuel added
 	 */
-	public abstract int getFuelAmountBipropellant();
+	public abstract int addFuelAmount(FuelRegistry.FuelType fuelType, int amount);
 
 	/**
-	 * @return the amount of fuel points in the rocket for oxidizers
+	 * Updates the data option
+	 * @param fuelType
+	 * @param amt sets the amount of monopropellant fuel in the rocket
 	 */
-	public abstract int getFuelAmountOxidizer();
+	public abstract void setFuelAmount(FuelRegistry.FuelType fuelType, int amt);
 
 	/**
-	 * @return the amount of fuel points in the rocket for nuclear working fluid
+	 * @param fuelType sets the type of fuel to set a rate for
+	 * @param rate sets the rate of fuel in the rocket
 	 */
-	public abstract int getFuelAmountNuclearWorkingFluid();
+	public abstract void setFuelConsumptionRate(FuelRegistry.FuelType fuelType, int rate);
 
 	/**
-	 * @return the total fuel capacity of the rocket for monopropellants
+	 * @param fuelType is the fuel type to get
+	 * @return gets the fuel capacity of the rocket
 	 */
-	public abstract int getFuelCapacityMonopropellant();
+	public abstract int getFuelCapacity(FuelRegistry.FuelType fuelType);
 
 	/**
-	 * @return the total fuel capacity of the rocket for bipropellants
+	 * @param fuelType is the fuel type to get
+	 * @return the rate of fuel consumption for the rocket
 	 */
-	public abstract int getFuelCapacityBipropellant();
+	public abstract int getFuelConsumptionRate(FuelRegistry.FuelType fuelType);
 
 	/**
-	 * @return the total fuel capacity of the rocket for oxidizers
+	 * @return the fuel type that this rocket uses, null if the rocket does not use any
 	 */
-	public abstract int getFuelCapacityOxidizer();
-
-	/**
-	 * @return the total fuel capacity of the rocket for nuclear working fluid
-	 */
-	public abstract int getFuelCapacityNuclearWorkingFluid();
-
-	/**
-	 * @return the rate of consumption for monopropellants
-	 */
-	public abstract int getFuelRateMonopropellant();
-
-	/**
-	 * @return the rate of consumption for bipropellants
-	 */
-	public abstract int getFuelRateBipropellant();
-
-	/**
-	 * @return the rate of consumption  for oxidizers
-	 */
-	public abstract int getFuelRateOxidizer();
-
-	/**
-	 * @return the rate of consumption  for nuclear working fluid
-	 */
-	public abstract int getFuelRateNuclearWorkingFluid();
+	public abstract FuelRegistry.FuelType getRocketFuelType();
 
 	/**
 	 * @return the location of the rocket in the world

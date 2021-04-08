@@ -252,94 +252,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		return spacePosition;
 	}
 
-	/**
-	 * @return the amount of monopropellant fuel stored in the rocket
-	 */
-	public int getFuelAmountMonopropellant() {
-		int amount = dataManager.get(fuelLevelMonopropellant);
-		stats.setFuelAmount(FuelType.LIQUID_MONOPROPELLANT,amount);
-		return amount;
-	}
-
-	/**
-	 * @return the amount of bipropellant fuel stored in the rocket
-	 */
-	public int getFuelAmountBipropellant() {
-		int amount = dataManager.get(fuelLevelBipropellant);
-		stats.setFuelAmount(FuelType.LIQUID_BIPROPELLANT,amount);
-		return amount;
-	}
-
-	/**
-	 * @return the amount of oxidizer fuel stored in the rocket
-	 */
-	public int getFuelAmountOxidizer() {
-		int amount = dataManager.get(fuelLevelOxidizer);
-		stats.setFuelAmount(FuelType.LIQUID_OXIDIZER,amount);
-		return amount;
-	}
-
-	/**
-	 * @return the amount of oxidizer fuel stored in the rocket
-	 */
-	public int getFuelAmountNuclearWorkingFluid() {
-		int amount = dataManager.get(fuelLevelNuclearWorkingFluid);
-		stats.setFuelAmount(FuelType.NUCLEAR_WORKING_FLUID,amount);
-		return amount;
-	}
-
-	/**
-	 * Adds monopropellant fuel and updates the datawatcher
-	 * @param amount amount of fuel to add
-	 * @return the amount of fuel added
-	 */
-	public int addFuelAmountMonopropellant(int amount) {
-		int ret = stats.addFuelAmount(FuelType.LIQUID_MONOPROPELLANT, amount);
-
-		setFuelAmountMonoproellant(stats.getFuelAmount(FuelType.LIQUID_MONOPROPELLANT));
-
-		return ret;
-	}
-
-	/**
-	 * Adds bipropellant fuel and updates the datawatcher
-	 * @param amount amount of fuel to add
-	 * @return the amount of fuel added
-	 */
-	public int addFuelAmountBipropellant(int amount) {
-		int ret = stats.addFuelAmount(FuelType.LIQUID_BIPROPELLANT, amount);
-
-		setFuelAmountBipropellant(stats.getFuelAmount(FuelType.LIQUID_BIPROPELLANT));
-
-		return ret;
-	}
-
-	/**
-	 * Adds oxidizer fuel and updates the datawatcher
-	 * @param amount amount of fuel to add
-	 * @return the amount of fuel added
-	 */
-	public int addFuelAmountOxidizer(int amount) {
-		int ret = stats.addFuelAmount(FuelType.LIQUID_OXIDIZER, amount);
-
-		setFuelAmountOxidizer(stats.getFuelAmount(FuelType.LIQUID_OXIDIZER));
-
-		return ret;
-	}
-
-	/**
-	 * Adds nuclear working fluid fuel and updates the datawatcher
-	 * @param amount amount of fuel to add
-	 * @return the amount of fuel added
-	 */
-	public int addFuelAmountNuclearWorkingFluid(int amount) {
-		int ret = stats.addFuelAmount(FuelType.NUCLEAR_WORKING_FLUID, amount);
-
-		setFuelAmountNuclearWorkingFluid(stats.getFuelAmount(FuelType.NUCLEAR_WORKING_FLUID));
-
-		return ret;
-	}
-
 	public void disconnectInfrastructure(IInfrastructure infrastructure){
 		infrastructure.unlinkRocket();
 		infrastructureCoords.remove(new HashedBlockPosition(((TileEntity)infrastructure).getPos()));
@@ -480,121 +392,96 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	}
 
 	/**
+	 * @param fuelType
+	 * @return the amount of fuel stored in the rocket
+	 */
+	public int getFuelAmount(FuelType fuelType) {
+		if (fuelType == FuelType.LIQUID_MONOPROPELLANT) {
+			int amount = dataManager.get(fuelLevelMonopropellant);
+			stats.setFuelAmount(FuelType.LIQUID_MONOPROPELLANT,amount);
+			return amount;
+		} else if (fuelType == FuelType.LIQUID_BIPROPELLANT) {
+			int amount = dataManager.get(fuelLevelBipropellant);
+			stats.setFuelAmount(FuelType.LIQUID_BIPROPELLANT,amount);
+			return amount;
+		} else if (fuelType == FuelType.LIQUID_OXIDIZER) {
+			int amount = dataManager.get(fuelLevelOxidizer);
+			stats.setFuelAmount(FuelType.LIQUID_OXIDIZER,amount);
+			return amount;
+		} else if (fuelType == FuelType.NUCLEAR_WORKING_FLUID) {
+			int amount = dataManager.get(fuelLevelNuclearWorkingFluid);
+			stats.setFuelAmount(FuelType.NUCLEAR_WORKING_FLUID,amount);
+			return amount;
+		}
+		return 0;
+	}
+
+	/**
+	 * Adds fuel and updates the datawatcher
+	 * @param fuelType
+	 * @param amount amount of fuel to add
+	 * @return the amount of fuel added
+	 */
+	public int addFuelAmount(FuelType fuelType, int amount) {
+		int ret = stats.addFuelAmount(fuelType, amount);
+		setFuelAmount(fuelType, stats.getFuelAmount(fuelType));
+		return ret;
+	}
+
+	/**
 	 * Updates the data option
+	 * @param fuelType
 	 * @param amt sets the amount of monopropellant fuel in the rocket
 	 */
-	public void setFuelAmountMonoproellant(int amt) {
-		dataManager.set(fuelLevelMonopropellant, amt);
-		dataManager.setDirty(fuelLevelMonopropellant);
+	public void setFuelAmount(FuelType fuelType, int amt) {
+		if (fuelType == FuelType.LIQUID_MONOPROPELLANT) {
+			dataManager.set(fuelLevelMonopropellant, amt);
+			dataManager.setDirty(fuelLevelMonopropellant);
+		} else if (fuelType == FuelType.LIQUID_BIPROPELLANT) {
+			dataManager.set(fuelLevelBipropellant, amt);
+			dataManager.setDirty(fuelLevelBipropellant);
+		} else if (fuelType == FuelType.LIQUID_OXIDIZER) {
+			dataManager.set(fuelLevelOxidizer, amt);
+			dataManager.setDirty(fuelLevelOxidizer);
+		} else if (fuelType == FuelType.NUCLEAR_WORKING_FLUID) {
+			dataManager.set(fuelLevelNuclearWorkingFluid, amt);
+			dataManager.setDirty(fuelLevelNuclearWorkingFluid);
+		}
 	}
 
 	/**
-	 * Updates the data option
-	 * @param amt sets the amount of bipropellant fuel in the rocket
+	 * @param fuelType sets the type of fuel to set a rate for
+	 * @param rate sets the rate of fuel in the rocket
 	 */
-	public void setFuelAmountBipropellant(int amt) {
-		dataManager.set(fuelLevelBipropellant, amt);
-		dataManager.setDirty(fuelLevelBipropellant);
+	public void setFuelConsumptionRate(FuelType fuelType, int rate) { stats.setFuelRate(fuelType, rate); }
+
+	/**
+	 * @param fuelType is the fuel type to get
+	 * @return gets the fuel capacity of the rocket
+	 */
+	public int getFuelCapacity(FuelType fuelType) {
+		return stats.getFuelCapacity(fuelType);
 	}
 
 	/**
-	 * Updates the data option
-	 * @param amt sets the amount of oxidizer fuel in the rocket
+	 * @param fuelType is the fuel type to get
+	 * @return the rate of fuel consumption for the rocket
 	 */
-	public void setFuelAmountOxidizer(int amt) {
-		dataManager.set(fuelLevelOxidizer, amt);
-		dataManager.setDirty(fuelLevelOxidizer);
+	public int getFuelConsumptionRate(FuelType fuelType) {
+		return stats.getFuelRate(fuelType);
 	}
 
 	/**
-	 * Updates the data option
-	 * @param amt sets the amount of nuclear working fluid fuel in the rocket
+	 * @return the fuel type that this rocket uses, null if the rocket does not use any
 	 */
-	public void setFuelAmountNuclearWorkingFluid(int amt) {
-		dataManager.set(fuelLevelNuclearWorkingFluid, amt);
-		dataManager.setDirty(fuelLevelNuclearWorkingFluid);
-	}
-
-	/**
-	 * @param rate sets the rate of monopropellant fuel in the rocket
-	 */
-	public void setFuelRateMonopropellant(int rate) { stats.setFuelRate(FuelType.LIQUID_MONOPROPELLANT, rate); }
-
-	/**
-	 * @param rate sets the rate of bipropellant fuel in the rocket
-	 */
-	public void setFuelRateBipropellant(int rate) {
-		stats.setFuelRate(FuelType.LIQUID_BIPROPELLANT, rate);
-	}
-
-	/**
-	 * @param rate sets the rate of oxidizer fuel in the rocket
-	 */
-	public void setFuelRateOxidizer(int rate) {
-		stats.setFuelRate(FuelType.LIQUID_OXIDIZER, rate);
-	}
-
-	/**
-	 * @param rate sets the rate of nuclear working fluid fuel in the rocket
-	 */
-	public void setFuelRateNuclearWorkingFluid(int rate) {
-		stats.setFuelRate(FuelType.NUCLEAR_WORKING_FLUID, rate);
-	}
-
-	/**
-	 * @return gets the monopropellant fuel capacity of the rocket
-	 */
-	public int getFuelCapacityMonopropellant() {
-		return stats.getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT);
-	}
-
-	/**
-	 * @return gets the bipropellant fuel capacity of the rocket
-	 */
-	public int getFuelCapacityBipropellant() {
-		return stats.getFuelCapacity(FuelType.LIQUID_BIPROPELLANT);
-	}
-
-	/**
-	 * @return gets the oxidizer fuel capacity of the rocket
-	 */
-	public int getFuelCapacityOxidizer() {
-		return stats.getFuelCapacity(FuelType.LIQUID_OXIDIZER);
-	}
-
-	/**
-	 * @return gets the nuclear working fluid fuel capacity of the rocket
-	 */
-	public int getFuelCapacityNuclearWorkingFluid() {
-		return stats.getFuelCapacity(FuelType.NUCLEAR_WORKING_FLUID);
-	}
-
-	/**
-	 * @return the rate of monoproellant consumption for the rocket
-	 */
-	public int getFuelRateMonopropellant() {
-		return stats.getFuelRate(FuelType.LIQUID_MONOPROPELLANT);
-	}
-
-	/**
-	 * @return the rate of bipropellant consumption for the rocket
-	 */
-	public int getFuelRateBipropellant() {
-		return stats.getFuelRate(FuelType.LIQUID_BIPROPELLANT);
-	}
-
-	/**
-	 * @return the rate of oxidizer consumption for the rocket
-	 */
-	public int getFuelRateOxidizer() {
-		return stats.getFuelRate(FuelType.LIQUID_OXIDIZER);
-	}
-
-	/**
-	 * @return the rate of nuclear working fluid consumption for the rocket
-	 */
-	public int getFuelRateNuclearWorkingFluid() {
-		return stats.getFuelRate(FuelType.NUCLEAR_WORKING_FLUID);
+	public FuelType getRocketFuelType() {
+		if (getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT) > 0)
+			return FuelType.LIQUID_MONOPROPELLANT;
+		else if (getFuelCapacity(FuelType.LIQUID_BIPROPELLANT) > 0)
+			return FuelType.LIQUID_BIPROPELLANT;
+		else if (getFuelCapacity(FuelType.NUCLEAR_WORKING_FLUID) > 0)
+		    return FuelType.NUCLEAR_WORKING_FLUID;
+		return null;
 	}
 
 	@Override
@@ -625,7 +512,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	/**
 	 * Sets the the status of flight of the rocket and updates the datawatcher
-	 * @param inflight status of flight
+	 * @param inOrbit status of flight
 	 */
 	public void setInOrbit(boolean inOrbit) {
 		this.isInOrbit = inOrbit;
@@ -724,25 +611,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				isHoldingFluidItemOrLinker = true;
 				fluidStack = FluidUtils.getFluidForItem(heldItem);
 				if ((canRocketFitFluid(fluidStack))) {
+					FuelType type = getRocketFuelType();
 
-					if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())) {
-						stats.setFuelRate(FuelType.LIQUID_MONOPROPELLANT, (int)(stats.getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT) * FuelRegistry.instance.getMultiplier(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())));
-						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityMonopropellant() - getFuelAmountMonopropellant());
-						FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
-						this.addFuelAmountMonopropellant(rocketFakeTank.getFluidAmount());
-					} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid())) {
-						stats.setFuelRate(FuelType.LIQUID_BIPROPELLANT, (int)(stats.getBaseFuelRate(FuelType.LIQUID_BIPROPELLANT) * FuelRegistry.instance.getMultiplier(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid())));
-						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityBipropellant() - getFuelAmountBipropellant());
-						FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
-						this.addFuelAmountBipropellant(rocketFakeTank.getFluidAmount());
-					} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())) {
-						stats.setFuelRate(FuelType.LIQUID_OXIDIZER, (int)(stats.getBaseFuelRate(FuelType.LIQUID_OXIDIZER) * FuelRegistry.instance.getMultiplier(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())));
-						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityBipropellant() - getFuelAmountBipropellant());
-						FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
-						this.addFuelAmountOxidizer(rocketFakeTank.getFluidAmount());
-					}
+					stats.setFuelRate(type, (int) (stats.getBaseFuelRate(type) * FuelRegistry.instance.getMultiplier(type, fluidStack.getFluid())));
+					FluidTank rocketFakeTank = new FluidTank(getFuelCapacity(type) - getFuelAmount(type));
+					FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
+					this.addFuelAmount(type, rocketFakeTank.getFluidAmount());
 				}
-
 				return true;
 			}
 		}
@@ -806,7 +681,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 
 	public boolean isBurningFuel() {
-		return ((getFuelAmountMonopropellant() > 0 || (getFuelAmountBipropellant() > 0 && getFuelAmountOxidizer() > 0)) || getFuelAmountNuclearWorkingFluid() > 0 || !ARConfiguration.getCurrentConfig().rocketRequireFuel) && ((!this.getPassengers().isEmpty() && getPassengerMovingForward() > 0) || !isInOrbit());
+		return (((getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT ) ? getFuelAmount(getRocketFuelType()) > 0 && getFuelAmount(FuelType.LIQUID_OXIDIZER) > 0 : getFuelAmount(getRocketFuelType()) > 0)  || !ARConfiguration.getCurrentConfig().rocketRequireFuel) && ((!this.getPassengers().isEmpty() && getPassengerMovingForward() > 0) || !isInOrbit());
 	}
 
 	public float getPassengerMovingForward() {
@@ -1223,18 +1098,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			if(burningFuel || descentPhase) {
 				//Burn the rocket fuel
 				if(!world.isRemote && !descentPhase) {
-					setFuelAmountBipropellant((int) (getFuelAmountBipropellant() - stats.getFuelRate(FuelType.LIQUID_BIPROPELLANT)));
-					setFuelAmountOxidizer((int) (getFuelAmountOxidizer() - stats.getFuelRate(FuelType.LIQUID_OXIDIZER)));
-					setFuelAmountMonoproellant((int) (getFuelAmountMonopropellant() - stats.getFuelRate(FuelType.LIQUID_MONOPROPELLANT)));
-					setFuelAmountNuclearWorkingFluid((int) (getFuelAmountNuclearWorkingFluid() - stats.getFuelRate(FuelType.NUCLEAR_WORKING_FLUID)));
-				    if (getFuelAmountBipropellant() == 0 && getFuelAmountMonopropellant() == 0) {
+					setFuelAmount(getRocketFuelType(), getFuelAmount(getRocketFuelType()) - getFuelConsumptionRate(getRocketFuelType()));
+					if (getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT)
+						setFuelAmount(FuelType.LIQUID_OXIDIZER, getFuelAmount(FuelType.LIQUID_OXIDIZER) - getFuelConsumptionRate(FuelType.LIQUID_OXIDIZER));
+
+				    if (getFuelAmount(getRocketFuelType()) == 0) {
 				    	stats.setFuelFluid("null");
-					}
-					if (getFuelAmountOxidizer() == 0) {
-						stats.setOxidizerFluid("null");
-					}
-					if (getFuelAmountNuclearWorkingFluid() == 0) {
 						stats.setWorkingFluid("null");
+					}
+					if (getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT && getFuelAmount(FuelType.LIQUID_OXIDIZER) == 0) {
+						stats.setOxidizerFluid("null");
 					}
 				}
 
@@ -1990,10 +1863,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		setRCS(rcs_mode);
 		stats.readFromNBT(nbt);
 
-		setFuelAmountMonoproellant(stats.getFuelAmount(FuelType.LIQUID_MONOPROPELLANT));
-		setFuelAmountBipropellant(stats.getFuelAmount(FuelType.LIQUID_BIPROPELLANT));
-		setFuelAmountOxidizer(stats.getFuelAmount(FuelType.LIQUID_OXIDIZER));
-		setFuelAmountNuclearWorkingFluid(stats.getFuelAmount(FuelType.NUCLEAR_WORKING_FLUID));
+		setFuelAmount(getRocketFuelType(), stats.getFuelAmount(getRocketFuelType()));
+		if (getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT)
+			setFuelAmount(FuelType.LIQUID_OXIDIZER, stats.getFuelAmount(FuelType.LIQUID_OXIDIZER));
 
 		setInFlight(isInFlight = nbt.getBoolean("flight"));
 
@@ -2441,14 +2313,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	@Override
 	public float getNormallizedProgress(int id) {
 		if(id == 0)
-			if (getFuelCapacityMonopropellant() > 0) {
-				return (getFuelAmountMonopropellant()/(float) getFuelCapacityMonopropellant());
-			} else if (getFuelCapacityNuclearWorkingFluid() > 0) {
-				return (getFuelAmountNuclearWorkingFluid()/(float) getFuelCapacityNuclearWorkingFluid());
-			} else {
-				return (getFuelAmountBipropellant() + getFuelAmountOxidizer())/((float) (getFuelCapacityBipropellant() + getFuelCapacityOxidizer()));
-			}
-
+			return (((getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT) ? getFuelAmount(FuelType.LIQUID_OXIDIZER) : 0 ) + getFuelAmount(getRocketFuelType())) / (float)(getFuelCapacity(getRocketFuelType()) + ((getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT) ? getFuelCapacity(FuelType.LIQUID_OXIDIZER) : 0 ));
 		return 0;
 	}
 

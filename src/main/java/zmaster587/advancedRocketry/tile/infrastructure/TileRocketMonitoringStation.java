@@ -318,13 +318,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		else if(id == 1)
 			return (int)(linkedRocket.motionY*100);
 		else if (id == 2)
-			if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid()))) {
-				return (linkedRocket.getFuelAmountMonopropellant());
-			} else if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.NUCLEAR_WORKING_FLUID, FluidRegistry.getFluid(linkedRocket.stats.getWorkingFluid()))) {
-				return (linkedRocket.getFuelAmountNuclearWorkingFluid());
-			} else {
-				return (linkedRocket.getFuelAmountBipropellant() + linkedRocket.getFuelAmountOxidizer());
-			}
+			return (linkedRocket.getRocketFuelType() == FuelRegistry.FuelType.LIQUID_BIPROPELLANT) ? linkedRocket.getFuelAmount(linkedRocket.getRocketFuelType()) + linkedRocket.getFuelAmount(FuelRegistry.FuelType.LIQUID_OXIDIZER) : linkedRocket.getFuelAmount(linkedRocket.getRocketFuelType());
 
 		return 0;
 	}
@@ -338,16 +332,10 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		else if(id == 2)
 			if(world.isRemote)
 				return maxFuelLevel;
-			else
-				if(linkedRocket == null)
-					return 0;
-		    else if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid()))) {
-					return (linkedRocket.getFuelCapacityMonopropellant());
-				} else if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.NUCLEAR_WORKING_FLUID, FluidRegistry.getFluid(linkedRocket.stats.getWorkingFluid()))) {
-					return (linkedRocket.getFuelCapacityNuclearWorkingFluid());
-				} else {
-					return (linkedRocket.getFuelCapacityBipropellant() + linkedRocket.getFuelCapacityOxidizer());
-				}
+			else if(linkedRocket == null)
+				return 0;
+		    else
+		    	return (linkedRocket.getRocketFuelType() == FuelRegistry.FuelType.LIQUID_BIPROPELLANT) ? linkedRocket.getFuelCapacity(linkedRocket.getRocketFuelType()) + linkedRocket.getFuelCapacity(FuelRegistry.FuelType.LIQUID_OXIDIZER): linkedRocket.getFuelCapacity(linkedRocket.getRocketFuelType());
 		return 1;
 	}
 

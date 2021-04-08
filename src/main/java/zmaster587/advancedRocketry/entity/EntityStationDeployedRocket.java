@@ -112,7 +112,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			setInFlight(true);
 			return;
 		}
-		if(getFuelAmountMonopropellant() < getFuelCapacityMonopropellant())
+		if(getFuelAmount(getRocketFuelType()) < getFuelCapacity(getRocketFuelType()))
 			return;
 
 		ISpaceObject spaceObj;

@@ -12,6 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IInfrastructure;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
 import zmaster587.libVulpes.LibVulpes;
@@ -60,9 +61,10 @@ public class MissionGasCollection extends MissionResourceCollection {
 		}
 		
 		EntityStationDeployedRocket rocket = new EntityStationDeployedRocket(world, rocketStorage, rocketStats, x, y, z);
-		rocket.setFuelAmountMonoproellant(0);
-		rocket.setFuelAmountBipropellant(0);
-		rocket.setFuelAmountOxidizer(0);
+
+		rocket.setFuelAmount(rocket.getRocketFuelType(), 0);
+		if (rocket.getRocketFuelType() == FuelRegistry.FuelType.LIQUID_BIPROPELLANT)
+			rocket.setFuelAmount(FuelRegistry.FuelType.LIQUID_OXIDIZER, 0);
 		rocket.readMissionPersistantNBT(missionPersistantNBT);
 
 		EnumFacing dir = rocket.forwardDirection;
