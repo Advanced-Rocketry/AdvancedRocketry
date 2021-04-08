@@ -193,6 +193,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 				return false;
 		} else
 			return false;
+		return false;
 	}
 
 	@Override
