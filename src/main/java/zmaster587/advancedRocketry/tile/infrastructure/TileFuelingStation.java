@@ -143,6 +143,11 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 		return FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT,fluid) || FuelRegistry.instance.isFuel(FuelType.NUCLEAR_WORKING_FLUID,fluid) || FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT,fluid) || FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER,fluid);
 	}
 
+
+	/**
+	 * @param fluid the fluid to check whether the rocket has space for it
+	 * @return boolean on whether the rocket can accept the fluid
+	 */
 	public boolean canRocketFitFluid(Fluid fluid) {
 		return canFill(fluid) && (linkedRocket.getFuelCapacity(linkedRocket.getRocketFuelType()) > linkedRocket.getFuelAmount(linkedRocket.getRocketFuelType()));
 	}
@@ -166,8 +171,11 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 
 	}
 
-	//Handles internal bucket tank interaction
-	//Returns true on successful bucket use
+	/**
+	 * @param slot integer slot to insert into
+	 * @param stack the itemstack to work fluid handling on
+	 * @return boolean on whether the fluid stack was successfully filled from or not, returns false if the stack cannot be extracted from or has no fluid left
+	 */
 	private boolean useBucket( int slot, ItemStack stack) {
 		if(slot == 0 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
 			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);

@@ -635,11 +635,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		return true;
 	}
 
-	protected boolean canFitPassenger(Entity passenger)
-	{
+	protected boolean canFitPassenger(Entity passenger) {
 		return this.getPassengers().size() < stats.getNumPassengerSeats();
 	}
 
+	/**
+	 * @param fluidStack the stack to check whether the rocket can fit
+	 * @return boolean on whether said fluid stack can fit into the rocket's internal fuel point storage
+	 */
 	public boolean canRocketFitFluid(FluidStack fluidStack) {
 		if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())) {
 			boolean isCorrectFluid = (stats.getFuelFluid() == "null") ? true : fluidStack.getFluid() == FluidRegistry.getFluid(stats.getFuelFluid());
@@ -680,6 +683,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	}
 
 
+	/**
+	 * @return boolean on whether the rocket is burning any type of fuel at the current moment, including all fuel types
+	 */
 	public boolean isBurningFuel() {
 		return (((getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT ) ? getFuelAmount(getRocketFuelType()) > 0 && getFuelAmount(FuelType.LIQUID_OXIDIZER) > 0 : getFuelAmount(getRocketFuelType()) > 0)  || !ARConfiguration.getCurrentConfig().rocketRequireFuel) && ((!this.getPassengers().isEmpty() && getPassengerMovingForward() > 0) || !isInOrbit());
 	}
@@ -747,8 +753,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 	}
 
-	private BlockPos getTopBlock(BlockPos pos)
-	{
+	private BlockPos getTopBlock(BlockPos pos) {
 		//Yeah... because minecraft's World.getTopSolidOrLiquidBlock does not actually check for liquids like lava
 		Chunk chunk = world.getChunkFromBlockCoords(pos);
 		BlockPos blockpos;
@@ -766,14 +771,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		return blockpos;
 	}
 
-	private Vec3d calculatePullFromPlanets()
-	{
+	private Vec3d calculatePullFromPlanets() {
 		double x = 0;
 		double y = 0;
 		double z = 0;
 		double gravityMultiplier = 0.01;
-		if(this.spacePosition.world != null)
-		{
+		if(this.spacePosition.world != null) {
 			//Sun 
 			// This is totally cheesed because none of the input is in real values anyway
 			SpacePosition planetSpacePosition = new SpacePosition();
@@ -791,10 +794,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				z += shipAcceleration*vector.z;
 			}
 		}
-		else if(this.spacePosition.star != null)
-		{
-			for(IDimensionProperties planet : this.spacePosition.star.getPlanets())
-			{
+		else if(this.spacePosition.star != null) {
+			for(IDimensionProperties planet : this.spacePosition.star.getPlanets()) {
 				// This is totally cheesed because none of the input is in real values anyway
 				SpacePosition planetSpacePosition = planet.getSpacePosition();
 				double acceleration = planet.getGravitationalMultiplier()*9.81f*gravityMultiplier;
@@ -855,8 +856,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			if(world.isRemote)
 				LibVulpes.proxy.playSound(new SoundRocketEngine( AudioRegistry.combustionRocket, SoundCategory.NEUTRAL,this));
-			else
-			{
+			else {
 				int rocketSizeX = storage.getSizeX()/2+1;
 				int rocketSizeZ = storage.getSizeZ()/2+1;
 				final int bufferSize = 3;
@@ -1295,6 +1295,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 	}
 
+	/**
+	 * @param entryLocationDimID the dimension ID for the dimension the rocket is entering
+	 * @return integer for world height in blocks the rocket will spawn in at when it reaches the dimension
+	 */
 	private int getEntryHeight(int entryLocationDimID){
 		if (entryLocationDimID == ARConfiguration.getCurrentConfig().spaceDimId) {
 			return ARConfiguration.getCurrentConfig().stationClearanceHeight;
@@ -1303,8 +1307,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 	}
 
-	private void reachSpaceUnmanned()
-	{
+	private void reachSpaceUnmanned() {
 		TileGuidanceComputer computer = storage.getGuidanceComputer();
 		if(computer != null && computer.getStackInSlot(0) != null &&
 				computer.getStackInSlot(0).getItem() instanceof ItemAsteroidChip) {
@@ -1426,8 +1429,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 	}
 
-	private void reachSpaceManned()
-	{
+	private void reachSpaceManned() {
 		unpackSatellites();
 		Vector3F<Float> destPos = new Vector3F<Float>(0f, 0f, 0f);
 
@@ -1470,8 +1472,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 
 		}
-		else
-		{
+		else {
 			//TODO: maybe add orbit dimension
 			this.motionY = -this.motionY;
 			setInOrbit(true);
@@ -1608,6 +1609,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 	}
 
+	/**
+	 * Launches the rocket post determining its height, checking whether it can launch to the selected planet and whether it can exist,
+	 * among other factors. Also handles orbital height calculations
+	 */
 	@Override
 	public void launch() {
 
@@ -1694,6 +1699,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		    damageGroundBelowRocket(world, (int)posX, (int)posY, (int)posZ, (int)Math.pow(stats.getThrust(), 0.3333));
 	}
 
+	/**
+	 * Damages the ground beneath the rocket, depending on block type
+	 */
 	private void damageGroundBelowRocket(World world, int x, int y, int z, int radius) {
 		//Actually, we affect the blocks that are one lower
 		y--;
@@ -1719,6 +1727,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 	}
 
+	/**
+	 * @param blockState the blockstate to damage
+	 * @return the blockstate that the input blockstate turns into
+	 */
 	private static IBlockState getDamagedBlock(IBlockState blockState) {
 		ItemStack stack = new ItemStack(blockState.getBlock(), 1, blockState.getBlock().getMetaFromState(blockState));
 		if (ZUtils.isItemInOreDict(stack, "stone")) {
@@ -1747,6 +1759,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		return blockState;
 	}
 
+	/**
+	 * Sets the damaged blockstate, checking to see if it can
+	 */
 	private static void setDamagedBlock(IBlockState blockState, World world, BlockPos position) {
 		if (blockState != world.getBlockState(position)) {
 			world.setBlockState(position, blockState);
