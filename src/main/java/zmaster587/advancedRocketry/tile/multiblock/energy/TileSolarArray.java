@@ -1,11 +1,21 @@
 package zmaster587.advancedRocketry.tile.multiblock.energy;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -20,7 +30,7 @@ import zmaster587.libVulpes.util.Vector3F;
 
 import java.util.List;
 
-public class TileSolarArray extends TileMultiPowerProducer implements ITickable {
+public class TileSolarArray extends TileMultiPowerProducer implements ITickableTileEntity {
 
 	static final Object[][][] structure = new Object[][][] {
 		{
@@ -53,11 +63,12 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 	int numPanels;
 	ModuleText textModule;
 	public TileSolarArray() {
+		super(AdvancedRocketryTileEntityType.TILE_SOLAR_ARRAY);
 		textModule = new ModuleText(40, 20, LibVulpes.proxy.getLocalizedString("msg.microwaverec.notgenerating"), 0x2b2b2b);
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = super.getModules(ID, player);
 
 		modules.add(textModule);
@@ -66,7 +77,7 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 	}
 
 	@Override
-	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
+	public boolean shouldHideBlock(World world, BlockPos pos, BlockState tile) {
 		return true;
 	}
 
@@ -79,16 +90,16 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 	public List<BlockMeta> getAllowableWildCardBlocks() {
 		List<BlockMeta> blocks = super.getAllowableWildCardBlocks();
 
-		blocks.add(new BlockMeta(AdvancedRocketryBlocks.blockSolarArrayPanel, -1));
+		blocks.add(new BlockMeta(AdvancedRocketryBlocks.blockSolarArrayPanel, true));
 		blocks.add(new BlockMeta(Blocks.AIR));
 
 		return blocks;
 	}
 
 	@Override
-	protected boolean completeStructure(IBlockState state) {
+	protected boolean completeStructure(BlockState state) {
 		//Needed definitions
-		EnumFacing front = this.getFrontDirection(state);
+		Direction front = this.getFrontDirection(state);
 		Vector3F<Integer> offset = this.getControllerOffset(structure);
 
 		//Panel-checker iterator
@@ -96,9 +107,9 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 		for(int y = 0; y < structure.length; ++y) {
 			for(int z = 0; z < structure[0].length; ++z) {
 				for(int x = 0; x < structure[0][0].length; ++x) {
-					int globalX = this.pos.getX() + (x - offset.x) * front.getFrontOffsetZ() - (z - offset.z) * front.getFrontOffsetX();
+					int globalX = this.pos.getX() + (x - offset.x) * front.getZOffset() - (z - offset.z) * front.getXOffset();
 					int globalY = this.pos.getY() - y + offset.y;
-					int globalZ = this.pos.getZ() - (x - offset.x) * front.getFrontOffsetX() - (z - offset.z) * front.getFrontOffsetZ();
+					int globalZ = this.pos.getZ() - (x - offset.x) * front.getXOffset() - (z - offset.z) * front.getZOffset();
 					if (world.getBlockState(new BlockPos(globalX, globalY, globalZ)).getBlock() == AdvancedRocketryBlocks.blockSolarArrayPanel) {
 						numPanels++;
 					}
@@ -114,7 +125,7 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 	}
 
 	@Override
-	public void update() {
+	public void tick() {
 
 		if(!initialCheck && !world.isRemote) {
 			completeStructure = attemptCompleteStructure(world.getBlockState(pos));
@@ -125,19 +136,20 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 			return;
 
 		if(!world.isRemote) {
-			DimensionProperties properties =DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
-			double insolationPowerMultiplier = (world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) ? SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getInsolationMultiplier() : properties.getPeakInsolationMultiplier();
+			boolean isSpaceDim = DimensionManager.getInstance().isSpaceDimension(world);
+			DimensionProperties properties =DimensionManager.getInstance().getDimensionProperties(world);
+			double insolationPowerMultiplier = isSpaceDim ? SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getInsolationMultiplier() : properties.getPeakInsolationMultiplier();
 			int energyRecieved = 0;
-			if(enabled && ((world.isDaytime()  && world.canBlockSeeSky(this.pos.up())) || (world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId && world.canBlockSeeSky(this.pos.down())))) {
+			if(enabled && ((world.isDaytime()  && world.canBlockSeeSky(this.pos.up())) || isSpaceDim && world.canBlockSeeSky(this.pos.down()))) {
 				//Multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency, and by insolation mult for solar stuff
 				//Slight adjustment to make Earth 0.9995 into a 1.0
 				energyRecieved = (int) (numPanels * 1.0005d * 2 * insolationPowerMultiplier);
 			}
-			powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().solarGeneratorMult);
+			powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().solarGeneratorMult.get());
 
 			if(powerMadeLastTick != prevPowerMadeLastTick) {
 				prevPowerMadeLastTick = powerMadeLastTick;
-				PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), world.provider.getDimension(),pos, 128);
+				PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), world, pos, 128);
 
 			}
 			producePower(powerMadeLastTick);
@@ -147,34 +159,34 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setInteger("amtPwr", powerMadeLastTick);
+	public SUpdateTileEntityPacket getUpdatePacket() {
+		CompoundNBT nbt = new CompoundNBT();
+		nbt.putInt("amtPwr", powerMadeLastTick);
 		writeNetworkData(nbt);
-		return new SPacketUpdateTileEntity(pos, 0, nbt);
+		return new SUpdateTileEntityPacket(pos, 0, nbt);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		NBTTagCompound nbt = pkt.getNbtCompound();
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+		CompoundNBT nbt = pkt.getNbtCompound();
 
-		powerMadeLastTick = nbt.getInteger("amtPwr");
+		powerMadeLastTick = nbt.getInt("amtPwr");
 		readNetworkData(nbt);
 	}
 	
 	@Override
-	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setInteger("powerMadeLastTick", powerMadeLastTick);
-		nbt.setInteger("numPanels", numPanels);
-		writeToNBT(nbt);
+	public CompoundNBT getUpdateTag() {
+		CompoundNBT nbt = new CompoundNBT();
+		nbt.putInt("powerMadeLastTick", powerMadeLastTick);
+		nbt.putInt("numPanels", numPanels);
+		write(nbt);
 		return nbt;
 	}
 
 	@Override
-	public void handleUpdateTag(NBTTagCompound nbt) {
-		powerMadeLastTick = nbt.getInteger("powerMadeLastTick");
-		numPanels = nbt.getInteger("numPanels");
+	public void handleUpdateTag(BlockState state, CompoundNBT nbt) {
+		powerMadeLastTick = nbt.getInt("powerMadeLastTick");
+		numPanels = nbt.getInt("numPanels");
 		canRender = nbt.getBoolean("canRender");
 		readNetworkData(nbt);
 	}
@@ -182,7 +194,7 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 	
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		super.writeDataToNetwork(out, id);
 
 		if(id == 1) {
@@ -191,34 +203,34 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+			CompoundNBT nbt) {
 		super.readDataFromNetwork(in, packetId, nbt);	
 
 		if(packetId == 1) {
-			nbt.setInteger("amtPwr", in.readInt());
+			nbt.putInt("amtPwr", in.readInt());
 		}
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 		super.useNetworkData(player, side, id, nbt);
 
 		if(id == 1) {
-			powerMadeLastTick = nbt.getInteger("amtPwr");
+			powerMadeLastTick = nbt.getInt("amtPwr");
 		}
 	}
 
 	@Override
-	protected void writeNetworkData(NBTTagCompound nbt) {
+	protected void writeNetworkData(CompoundNBT nbt) {
 		super.writeNetworkData(nbt);
-		nbt.setInteger("numPanels", this.numPanels);
+		nbt.putInt("numPanels", this.numPanels);
 	}
 
 	@Override
-	protected void readNetworkData(NBTTagCompound nbt) {
+	protected void readNetworkData(CompoundNBT nbt) {
 		super.readNetworkData(nbt);
-		this.numPanels = nbt.getInteger("numPanels");
+		this.numPanels = nbt.getInt("numPanels");
 	}
 }

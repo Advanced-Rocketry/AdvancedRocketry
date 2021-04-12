@@ -38,7 +38,7 @@ public class PlanetaryTravelHelper {
 		//Not like the mod has an semblance of a concept of orbital mechanics anyway :P
 		//This is vaugely a multiplier based on TLI burns, burning for 2x as long can get you 4x as far
 		//This grabs the body distance multipier, then takes the square root of it, or if warp multiplies by the config option for that
-		return (isTravelBetweenBodiesWithinPlanetarySystem(currentDimensionID, destinationDimensionID)) ? (int) (baseInjectionHeight * Math.pow(getBodyDistanceMultiplier(currentDimensionID, destinationDimensionID, toAsteroids), 0.5d)) : (int) (ARConfiguration.getCurrentConfig().warpTBIBurnMult.get() * baseInjectionHeight);
+		return (isTravelWithinPlanetarySystem(currentDimensionID, destinationDimensionID)) ? (int) (baseInjectionHeight * Math.pow(getBodyDistanceMultiplier(currentDimensionID, destinationDimensionID, toAsteroids), 0.5d)) : (int) (ARConfiguration.getCurrentConfig().warpTBIBurnMult.get() * baseInjectionHeight);
 	}
 	public static double getBodyDistanceMultiplier(ResourceLocation currentDimensionID, ResourceLocation destinationDimensionID, boolean toAsteroids) {
 		//Check the orbital distance of the moon or planet we're going to
@@ -62,7 +62,7 @@ public class PlanetaryTravelHelper {
 	}
 	
 	public static boolean isTravelAnywhereInPlanetarySystem(ResourceLocation currentDimensionID, ResourceLocation destinationDimensionID) {
-		return isTravelWithinOrbit(currentDimensionID, destinationDimensionID) || isTravelBetweenBodiesWithinPlanetarySystem(currentDimensionID, destinationDimensionID);
+		return isTravelWithinOrbit(currentDimensionID, destinationDimensionID) || isTravelWithinPlanetarySystem(currentDimensionID, destinationDimensionID);
 	}
 	
 	public static boolean isTravelWithinOrbit(ResourceLocation currentDimensionID, ResourceLocation destinationDimensionID) {

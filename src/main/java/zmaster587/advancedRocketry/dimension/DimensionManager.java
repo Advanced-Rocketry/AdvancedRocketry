@@ -169,6 +169,22 @@ public class DimensionManager implements IGalaxy {
 	public ResourceLocation[] getLoadedDimensions() {
 		return getRegisteredDimensions();
 	}
+	
+	public boolean isSpaceDimension(ResourceLocation dimid)
+	{
+		if(dimid == null)
+			return false;
+		
+		return dimid.equals(ARConfiguration.GetSpaceDimId());
+	}
+	
+	public boolean isSpaceDimension(World dimid)
+	{
+		if(dimid == null)
+			return false;
+		
+		return isSpaceDimension(ZUtils.getDimensionIdentifier(dimid));
+	}
 
 	/**
 	 * Increments the nextAvalible satellite ID and returns one

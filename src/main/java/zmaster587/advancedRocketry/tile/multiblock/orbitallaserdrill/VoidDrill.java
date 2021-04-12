@@ -1,17 +1,21 @@
 package zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -39,9 +43,16 @@ class VoidDrill extends AbstractDrill {
 			for (int i = 0; i < ARConfiguration.getCurrentConfig().standardLaserDrillOres.size(); i++) {
 				String oreDictName = ARConfiguration.getCurrentConfig().standardLaserDrillOres.get(i);
 
-				String[] args = oreDictName.split(":");
+				String[] args = oreDictName.split(";");
+				
+				List<Item> items = ItemTags.getCollection().getTagByID(new ResourceLocation(args[0])).getAllElements();
+		
 
-				List<ItemStack> globalOres = OreDictionary.getOres(args[0]);
+				List<ItemStack> globalOres = new LinkedList<ItemStack>();
+				for(Item item : items)
+				{
+					globalOres.add(item.getDefaultInstance());
+				}
 
 				if (globalOres != null && !globalOres.isEmpty()) {
 					int amt = 5;
@@ -50,39 +61,35 @@ class VoidDrill extends AbstractDrill {
 							amt = Integer.parseInt(args[1]);
 						} catch (NumberFormatException ignored) {}
 					}
-					ores.add(new ItemStack(globalOres.get(0).getItem(), amt, globalOres.get(0).getItemDamage()));
+					ores.add(new ItemStack(globalOres.get(0).getItem(), amt));
 				} else {
-					String[] splitStr = oreDictName.split(":");
-					String name;
-					try {
-						name = splitStr[0] + ":" + splitStr[1];
-					} catch (IndexOutOfBoundsException e) {
-						AdvancedRocketry.logger.warn("Unexpected ore name: \"" + oreDictName + "\" during laser drill harvesting");
+					String[] splitStr = oreDictName.split(";");
+					ResourceLocation name;
+					
+					name = ResourceLocation.tryCreate(splitStr[0]);
+					if(name == null)
+					{
+						AdvancedRocketry.logger.error("Cannot load item or itemtag '" + name + "' for void Drill");
 						continue;
 					}
-
-					int meta = 0;
+					
 					int size = 1;
-					//format: "name meta size"
+					//format: "name size"
 					if (splitStr.length > 2) {
 						try {
-							meta = Integer.parseInt(splitStr[2]);
-						} catch (NumberFormatException ignored) {}
-					}
-					if (splitStr.length > 3) {
-						try {
-							size = Integer.parseInt(splitStr[3]);
+							size = Integer.parseInt(splitStr[2]);
 						} catch (NumberFormatException ignored) {}
 					}
 
 					ItemStack stack = ItemStack.EMPTY;
-					Block block = Block.getBlockFromName(name);
-					if (block == null) {
-						Item item = Item.getByNameOrId(name);
-						if (item != null)
-							stack = new ItemStack(item, size, meta);
-					} else
-						stack = new ItemStack(block, size, meta);
+					
+					if(ForgeRegistries.ITEMS.containsKey(name))
+						stack = new ItemStack(ForgeRegistries.ITEMS.getValue(name), size);
+					else
+					{
+						AdvancedRocketry.logger.error("Cannot load item or itemtag '" + name + "' for void Drill");
+						continue;
+					}
 
 					if (!stack.isEmpty())
 						ores.add(stack);
@@ -115,7 +122,7 @@ class VoidDrill extends AbstractDrill {
 	boolean activate(World world, int x, int z) {
 		// Ideally, this should be done in the constructor, but the world provider is null there for reasons unknown, so this gets delayed until first activation
 		if(!this.planetOresInitialized) {
-			DimensionProperties dimProperties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
+			DimensionProperties dimProperties = DimensionManager.getInstance().getDimensionProperties(world);
 			ores.addAll(dimProperties.laserDrillOres.stream().filter(s->!ores.contains(s)).collect(Collectors.toSet()));
 			this.planetOresInitialized = true;
 		}

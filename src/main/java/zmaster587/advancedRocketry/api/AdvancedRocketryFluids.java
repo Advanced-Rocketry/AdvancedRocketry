@@ -49,7 +49,7 @@ public class AdvancedRocketryFluids {
 	{
 		for(FluidGasGiantGas gas : getGasGiantGasses())
 		{
-			if(name.equals(gas.getRegistryName()))
+			if(name.equals(gas.getFluid().getRegistryName()))
 				return true;
 		}
 		return false;

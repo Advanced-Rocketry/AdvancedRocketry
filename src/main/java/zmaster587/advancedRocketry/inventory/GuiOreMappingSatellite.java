@@ -50,7 +50,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 	World world;
 	SatelliteOreMapping satellite;
 
-	public GuiOreMappingSatellite(ContainerOreMappingSatellite container, SatelliteOreMapping satellite, PlayerInventory inventoryPlayer, ITextComponent title) {
+	public GuiOreMappingSatellite(ContainerOreMappingSatellite container, PlayerInventory inventoryPlayer, ITextComponent title) {
 		super( container, inventoryPlayer, title);
 		world = container.player.world;
 
@@ -60,6 +60,8 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		playerPosX = xCenter = (int) container.player.getPosX();
 		playerPosZ = zCenter = (int) container.player.getPosZ();
 
+		satellite = container.inv;
+		
 		//Max zoom is 128
 		if(satellite != null) {
 			maxZoom = (int) Math.pow(2, satellite.getZoomRadius());

@@ -37,13 +37,13 @@ import zmaster587.advancedRocketry.block.BlockLightSource;
 import zmaster587.advancedRocketry.block.BlockLinkedHorizontalTexture;
 import zmaster587.advancedRocketry.block.BlockMiningDrill;
 import zmaster587.advancedRocketry.block.BlockOrbitalLaserDrill;
-import zmaster587.advancedRocketry.block.BlockPress;
 import zmaster587.advancedRocketry.block.BlockPressurizedFluidTank;
 import zmaster587.advancedRocketry.block.BlockQuartzCrucible;
 import zmaster587.advancedRocketry.block.BlockRedstoneEmitter;
 import zmaster587.advancedRocketry.block.BlockRocketMotor;
 import zmaster587.advancedRocketry.block.BlockSeal;
 import zmaster587.advancedRocketry.block.BlockSeat;
+import zmaster587.advancedRocketry.block.BlockSmallPlatePress;
 import zmaster587.advancedRocketry.block.BlockStationModuleDockingPort;
 import zmaster587.advancedRocketry.block.BlockSuitWorkstation;
 import zmaster587.advancedRocketry.block.BlockTileNeighborUpdate;
@@ -57,6 +57,7 @@ import zmaster587.advancedRocketry.block.BlockWarpCore;
 import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
 import zmaster587.advancedRocketry.world.tree.AlienTree;
 import zmaster587.libVulpes.block.BlockAlphaTexture;
+import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.block.BlockMotor;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
@@ -93,7 +94,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockSawBlade = new BlockMotor(machineLineProperties,1f);
 
 	public static Block blockConcrete = new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2f, 16f));
-	public static Block blockPlatePress = new BlockPress(machineLineProperties);
+	public static Block blockPlatePress = new BlockSmallPlatePress(machineLineProperties);
 	public static Block blockAirLock = new DoorBlock(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f, 8f));
 	public static Block blockLandingPad = new BlockLandingPad(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f,3f));
 	public static Block blockOxygenDetection = new BlockRedstoneEmitter(machineLineProperties,"advancedrocketry:atmosphereDetector_active");
@@ -153,6 +154,8 @@ public class AdvancedRocketryBlocks {
 
 	//Arcfurnace
 	public static Block blockArcFurnace = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+	
+	public static Block blockPrecisionLaserEtcher = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
 
 	public static Block blockMoonTurf = new Block(AbstractBlock.Properties.create(Material.EARTH, MaterialColor.SNOW).hardnessAndResistance(0.5f));
 	public static Block blockMoonTurfDark = new Block(AbstractBlock.Properties.create(Material.EARTH, MaterialColor.BROWN).hardnessAndResistance(0.5f));
@@ -216,14 +219,16 @@ public class AdvancedRocketryBlocks {
 	public static Block blockBasalt = new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(5, 15));
 	public static Block blockLandingFloat = new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(1,1));
 	public static Block blockTransciever = new BlockTransciever(machineLineProperties, GuiHandler.guiId.MODULAR);
-
+	public static Block blockVacuumLaser = new BlockFullyRotatable(machineLineProperties);
+	
+	
 	//Configurable stuff
 	public static Block blockGravityMachine = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
 
 
 	public static Block blockSpaceLaser = new BlockOrbitalLaserDrill(machineLineProperties);
-	public static Block blockSolarArray;
-	public static Block blockSolarArrayPanel;
+	public static Block blockSolarArray = new Block(machineLineProperties);
+	public static Block blockSolarArrayPanel = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
 
 
 	@SubscribeEvent(priority=EventPriority.HIGH)
@@ -277,6 +282,7 @@ public class AdvancedRocketryBlocks {
 				AdvancedRocketryBlocks.blockPlanetAnalyser.setRegistryName("planetanalyser"),
 				AdvancedRocketryBlocks.blockGuidanceComputer.setRegistryName("guidancecomputer"),
 				AdvancedRocketryBlocks.blockArcFurnace.setRegistryName("arcfurnace"),
+				AdvancedRocketryBlocks.blockPrecisionLaserEtcher.setRegistryName("precisionlaseretcher"),
 				AdvancedRocketryBlocks.blockSawBlade.setRegistryName("sawbladeassbly"),
 				AdvancedRocketryBlocks.blockLathe.setRegistryName("lathe"),
 				AdvancedRocketryBlocks.blockRollingMachine.setRegistryName("rollingmachine"),
@@ -340,10 +346,13 @@ public class AdvancedRocketryBlocks {
 				AdvancedRocketryBlocks.blockThermiteTorch.setRegistryName("thermitetorch"),
 				AdvancedRocketryBlocks.blockThermiteTorchWall.setRegistryName("thermitetorch_wall"),
 				AdvancedRocketryBlocks.blockTransciever.setRegistryName("wirelesstransciever"),
+				AdvancedRocketryBlocks.blockVacuumLaser.setRegistryName("vacuumlaser"),
 				AdvancedRocketryBlocks.blockPump.setRegistryName("blockpump"),
 				AdvancedRocketryBlocks.blockCentrifuge.setRegistryName("centrifuge"),
 				AdvancedRocketryBlocks.blockBasalt.setRegistryName("basalt"),
-				AdvancedRocketryBlocks.blockLandingFloat.setRegistryName("landingfloat"));
+				AdvancedRocketryBlocks.blockLandingFloat.setRegistryName("landingfloat"),
+				AdvancedRocketryBlocks.blockSolarArray.setRegistryName("solararray"),
+				AdvancedRocketryBlocks.blockSolarArrayPanel.setRegistryName("solararraypanel"));
 
 		//if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableGravityController.get())
 		evt.getRegistry().register(AdvancedRocketryBlocks.blockGravityMachine.setRegistryName("gravitymachine"));

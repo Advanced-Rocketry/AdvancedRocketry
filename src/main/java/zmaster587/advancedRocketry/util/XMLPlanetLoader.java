@@ -7,6 +7,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.ResourceLocationException;
 import net.minecraft.world.biome.Biome;
@@ -366,8 +368,9 @@ public class XMLPlanetLoader {
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_BIOMEIDS)) {
 
-				String[] biomeList = planetPropertyNode.getTextContent().split(",");
-				for (String s : biomeList) {
+				String biomeList[] = planetPropertyNode.getTextContent().split(",");
+				for(int j = 0; j < biomeList.length; j++) {
+
 					ResourceLocation location = new ResourceLocation(biomeList[j]);
 					if( AdvancedRocketryBiomes.doesBiomeExist(location)) {
 						Biome biome = AdvancedRocketryBiomes.getBiomeFromResourceLocation(location);
@@ -379,10 +382,10 @@ public class XMLPlanetLoader {
 						try {
 							ResourceLocation biome = new ResourceLocation(biomeList[j]);
 
-							if (!properties.addBiome(biome))
-								AdvancedRocketry.logger.warn(s + " is not a valid biome id"); //TODO: more detailed error msg
+							if(!properties.addBiome(biome))
+								AdvancedRocketry.logger.warn(biomeList[j] + " is not a valid biome id"); //TODO: more detailed error msg
 						} catch (NumberFormatException e) {
-							AdvancedRocketry.logger.warn(s + " is not a valid biome id or name"); //TODO: more detailed error msg
+							AdvancedRocketry.logger.warn(biomeList[j] + " is not a valid biome id or name"); //TODO: more detailed error msg
 						}
 					}
 				}
@@ -477,6 +480,7 @@ public class XMLPlanetLoader {
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_OREGEN)) {
 				properties.oreProperties = XMLOreLoader.loadOre(planetPropertyNode);
 			}
+			//TODO
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_LASER_DRILL_ORES) && !properties.isGasGiant()) {
 
 				properties.laserDrillOresRaw = planetPropertyNode.getTextContent();
@@ -485,9 +489,11 @@ public class XMLPlanetLoader {
 				for (String entry : entries) {
 
 					String[] parts = entry.split(";");
-
-					if (OreDictionary.doesOreNameExist(parts[0].trim())) {
-						ItemStack item = OreDictionary.getOres(parts[0]).get(0);
+					ResourceLocation tagname = ResourceLocation.tryCreate(parts[0].trim());
+					
+					if (ItemTags.getAllTags().contains(tagname)) {
+						List<Item> items = ItemTags.getCollection().getTagByID(tagname).getAllElements();
+						ItemStack item = items.get(0).getDefaultInstance();
 						if(parts.length > 1) {
 							try {
 								item.setCount(Integer.parseInt(parts[1]));
@@ -495,20 +501,15 @@ public class XMLPlanetLoader {
 						}
 						properties.laserDrillOres.add(item);
 					}
-					else if (Item.getByNameOrId(parts[0].trim()) != null) {
+					else if (ForgeRegistries.ITEMS.containsKey(tagname)) {
 						int quantity = 1;
 						int damage = 0;
 						if(parts.length > 1) {
 							try {
 								quantity = Integer.parseInt(parts[1]);
 							} catch (NumberFormatException ignored) {}
-							if (parts.length > 2) {
-								try {
-									damage = Integer.parseInt(parts[2]);
-								} catch (NumberFormatException ignored) {}
-							}
 						}
-						properties.laserDrillOres.add(new ItemStack(Objects.requireNonNull(Item.getByNameOrId(parts[0].trim())),quantity,damage));
+						properties.laserDrillOres.add(new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(tagname)),quantity));
 					}
 					else {
 						AdvancedRocketry.logger.warn(parts[0] + " is not a valid OreDictionary name or item ID");
@@ -518,14 +519,14 @@ public class XMLPlanetLoader {
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GEODE_ORES)) {
 				String[] entries = planetPropertyNode.getTextContent().split(",");
 				properties.geodeOres.addAll(Arrays.stream(entries)
-						.filter(e->OreDictionary.doesOreNameExist(e.trim()))
+						.filter(e -> BlockTags.getAllTags().contains(ResourceLocation.tryCreate(e.trim())))
 						.collect(Collectors.toSet())
 				);
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_CRATER_ORES)) {
 				String[] entries = planetPropertyNode.getTextContent().split(",");
 				properties.craterOres.addAll(Arrays.stream(entries)
-						.filter(e->OreDictionary.doesOreNameExist(e.trim()))
+						.filter(e -> BlockTags.getAllTags().contains(ResourceLocation.tryCreate(e.trim())) )
 						.collect(Collectors.toSet())
 				);
 			}
@@ -999,11 +1000,11 @@ public class XMLPlanetLoader {
 					AdvancedRocketry.logger.warn("Error saving biomes for world, biomes list saved may be incomplete.  World: " + properties.getId());
 				}
 			}
-			if(biomeIds.length() > 0)
-				biomeIds = new StringBuilder(biomeIds.substring(1));
+			if(!biomeIds.isEmpty())
+				biomeIds = biomeIds.substring(1);
 			else
 				AdvancedRocketry.logger.warn("Dim " + properties.getId() + " has no biomes to save!");
-			nodePlanet.appendChild(createTextNode(doc, ELEMENT_BIOMEIDS, biomeIds.toString()));
+			nodePlanet.appendChild(createTextNode(doc, ELEMENT_BIOMEIDS, biomeIds));
 		}
 
 		for(ItemStack stack : properties.getRequiredArtifacts()) {

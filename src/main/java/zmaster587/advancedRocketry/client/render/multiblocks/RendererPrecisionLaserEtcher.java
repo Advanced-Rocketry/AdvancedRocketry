@@ -1,21 +1,34 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Quaternion;
+
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TilePrecisionLaserEtcher;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
-public class RendererPrecisionLaserEtcher extends TileEntitySpecialRenderer {
+public class RendererPrecisionLaserEtcher extends TileEntityRenderer<TilePrecisionLaserEtcher> {
 	WavefrontObject model;
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/precisionlaseretcher.png");
 
-	public RendererPrecisionLaserEtcher() {
+	public RendererPrecisionLaserEtcher(TileEntityRendererDispatcher tile) {
+		super(tile);
 		try {
 			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/precisionlaseretcher.obj"));
 		} catch (ModelFormatException e) {
@@ -25,61 +38,59 @@ public class RendererPrecisionLaserEtcher extends TileEntitySpecialRenderer {
 	}
 
 	@Override
-	public void render(TileEntity tile, double x,
-			double y, double z, float f, int damage, float a) {
-		TileMultiblockMachine multiBlockTile = (TileMultiblockMachine)tile;
+	public void render(TilePrecisionLaserEtcher tile, float f, MatrixStack matrix,
+			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
 
-		if(!multiBlockTile.canRender())
+		if(!tile.canRender())
 			return;
 
-		GL11.glPushMatrix();
+		matrix.push();
 
 		//Rotate and move the model into position
-		GL11.glTranslated(x + .5f, y, z + 0.5f);
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
-		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 0 : 180) + front.getFrontOffsetZ()*90f, 0, 1, 0);
-		GL11.glTranslated(0.5f, 0f, 1.5f);
+		matrix.translate(0.5, 0, 0.5);
+		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
+		matrix.rotate(new Quaternion(0,(front.getXOffset() == 1 ? 0 : 180) + front.getZOffset()*90f,0, true));
+		matrix.translate(0.5f, 0f, 1.5f);
+		
+		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 
+		if(tile.isRunning()) {
 
-		if(multiBlockTile.isRunning()) {
+			float progress = tile.getProgress(0)/(float)tile.getTotalProgress(0) + 90f/(float)tile.getTotalProgress(0);
 
-			float progress = multiBlockTile.getProgress(0)/(float)multiBlockTile.getTotalProgress(0) + f/(float)multiBlockTile.getTotalProgress(0);
-
-			bindTexture(texture);
-			model.renderPart("Hull");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Hull"); 
 
             //Full assembly translation and render
-			GL11.glPushMatrix();
+			matrix.push();
 			float progress2 = ((16 * progress) - (int)(16 * progress));
 
 			if (progress < 0.875){
 				if (progress2 > 0.875) {
-					GL11.glTranslatef(0f, 0f, (progress2 - 0.875f)/2f);
+					matrix.translate(0f, 0f, (progress2 - 0.875f)/2f);
 				}
-				GL11.glTranslatef(0f, 0f, (progress - (progress2/16f)));
+				matrix.translate(0f, 0f, (progress - (progress2/16f)));
 			} else
-			    GL11.glTranslatef(0f, 0f, ((1 - progress) / .15f));
+				matrix.translate(0f, 0f, ((1 - progress) / .15f));
 
-			model.renderPart("Mount");
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Mount");
 
 			//Render laser and laser translation
-			GL11.glPushMatrix();
+			matrix.push();
 			if (progress < 0.875) {
 				if (progress2 < 0.875f)
-					GL11.glTranslatef(-progress2, 0f, 0f);
+					matrix.translate(-progress2, 0f, 0f);
 				else
-					GL11.glTranslatef(-((1 - progress2) / .15f), 0f, 0f);
+					matrix.translate(-((1 - progress2) / .15f), 0f, 0f);
 			}
-			model.renderPart("Laser");
-			GL11.glPopMatrix();
-			GL11.glPopMatrix();
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Laser");
+			matrix.pop();
+			matrix.pop();
 
 
 		}
 		else {
-			bindTexture(texture);
-			model.renderAll();
+			model.tessellateAll(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder);
 		}
-		GL11.glPopMatrix();
+		matrix.pop();
 	}
 }

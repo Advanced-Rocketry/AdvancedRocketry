@@ -38,6 +38,7 @@ import net.minecraftforge.event.TickEvent.ServerTickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -160,28 +161,26 @@ public class PlanetEventHandler {
 		if(!event.getEntity().world.isRemote && event.getEntity().world.getGameTime() % 20 ==0 && event.getEntity() instanceof PlayerEntity) {
 			if(DimensionManager.getInstance().getDimensionProperties(event.getEntity().world).getName().equals("Luna") && 
 					event.getEntity().getPositionVec().squareDistanceTo(2347,80, 67) < 512 ) {
-				ARAchivements.triggerAchievement(ARAchivements.WENT_TO_THE_MOON, (ServerPlayerEntity)event.getEntity());
+				ARAdvancements.triggerAchievement(ARAdvancements.WENT_TO_THE_MOON, (ServerPlayerEntity)event.getEntity());
 			}
-		if(event.getEntity() instanceof PlayerEntity && ZUtils.getDimensionIdentifier(event.getEntity().world).equals(ARConfiguration.getCurrentConfig().spaceDimId) && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.getEntity().getPosition()) == null) {
-			double distance = 0;
-			HashedBlockPosition teleportPosition = null;
-			for (ISpaceObject object : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
-				if (object instanceof SpaceStationObject) {
-					SpaceStationObject station = ((SpaceStationObject) object);
-					double distanceTo = event.getEntity().getDistanceSq(station.getSpawnLocation().x, station.getSpawnLocation().y, station.getSpawnLocation().z);
-					if (distanceTo > distance) {
-						distance = distanceTo;
-                        teleportPosition = station.getSpawnLocation();
+			if(event.getEntity() instanceof PlayerEntity && ZUtils.getDimensionIdentifier(event.getEntity().world).equals(ARConfiguration.getCurrentConfig().spaceDimId) && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.getEntity().getPosition()) == null) {
+				double distance = 0;
+				HashedBlockPosition teleportPosition = null;
+				for (ISpaceObject object : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
+					if (object instanceof SpaceStationObject) {
+						SpaceStationObject station = ((SpaceStationObject) object);
+						double distanceTo = event.getEntity().getDistanceSq(station.getSpawnLocation().x, station.getSpawnLocation().y, station.getSpawnLocation().z);
+						if (distanceTo > distance) {
+							distance = distanceTo;
+							teleportPosition = station.getSpawnLocation();
+						}
 					}
 				}
-			}
-			if (teleportPosition != null) {
-				event.getEntity().sendMessage(new TranslationTextComponent("msg.chat.nostation1"), Util.DUMMY_UUID);
-				event.getEntity().sendMessage(new TranslationTextComponent("msg.chat.nostation2"), Util.DUMMY_UUID);
-				event.getEntity().setPositionAndUpdate(teleportPosition.x, teleportPosition.y, teleportPosition.z);
-			} else {
-				event.getEntity().sendMessage(new TranslationTextComponent("msg.chat.nostation3"), Util.DUMMY_UUID);
-				event.getEntity().getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)event.getEntity(), 0, new TeleporterNoPortal( net.minecraftforge.common.DimensionManager.getWorld(0) ));
+				if (teleportPosition != null) {
+					event.getEntity().sendMessage(new TranslationTextComponent("msg.chat.nostation1"), Util.DUMMY_UUID);
+					event.getEntity().sendMessage(new TranslationTextComponent("msg.chat.nostation2"), Util.DUMMY_UUID);
+					event.getEntity().setPositionAndUpdate(teleportPosition.x, teleportPosition.y, teleportPosition.z);
+				}
 			}
 		}
 	}
@@ -209,11 +208,11 @@ public class PlanetEventHandler {
 				event.getWorld().setBlockState(event.getPos(), AdvancedRocketryBlocks.blockUnlitTorch.getDefaultState(),20);
 			}
 			else if(event.getPlacedBlock().getBlock() == Blocks.WALL_TORCH) {
-				
-				
+
+
 				BlockState stateToPlace = AdvancedRocketryBlocks.blockUnlitTorchWall.getDefaultState().with(
 						WallTorchBlock.HORIZONTAL_FACING, event.getPlacedBlock().get(WallTorchBlock.HORIZONTAL_FACING));
-				
+
 				event.getWorld().setBlockState(event.getPos(), stateToPlace,20);
 			}
 			else if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().torchBlocks.contains(event.getPlacedBlock().getBlock()))
@@ -237,7 +236,7 @@ public class PlanetEventHandler {
 		}
 
 		if(!event.getWorld().isRemote && event.getItemStack() != null && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
-			ARAchivements.triggerAchievement(ARAchivements.BEER, (ServerPlayerEntity)event.getEntity());
+			ARAdvancements.triggerAchievement(ARAdvancements.BEER, (ServerPlayerEntity)event.getEntity());
 		}
 	}
 
@@ -358,7 +357,7 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	@OnlyIn(value=Dist.CLIENT)
 	public void fogColor(FogColors event) {
-		
+
 		Entity entity = event.getInfo().getRenderViewEntity();
 		World world = entity.world;
 		BlockState state = event.getInfo().getBlockAtCamera();
@@ -432,7 +431,7 @@ public class PlanetEventHandler {
 
 		if(event.getInfo().getRenderViewEntity().getEntityWorld() == null || event.getInfo().getRenderViewEntity().getEntityWorld() instanceof WorldDummy)
 			return;
-		
+
 
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getInfo().getRenderViewEntity().getEntityWorld());
 		if(properties != null && event.getInfo().getBlockAtCamera().getBlock() != Blocks.WATER && event.getInfo().getBlockAtCamera().getBlock() != Blocks.LAVA) {//& properties.atmosphereDensity > 125) {
@@ -486,7 +485,7 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void worldSaveEvent(WorldEvent.Save event) {
 		//TODO: save only the one dimension
-		
+
 		if(event.getWorld() instanceof World && ZUtils.getDimensionIdentifier((World)event.getWorld()).equals(DimensionType.OVERWORLD_ID))
 			try {
 				DimensionManager.getInstance().saveDimensions(DimensionManager.workingPath);

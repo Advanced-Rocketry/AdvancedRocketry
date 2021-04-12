@@ -1601,9 +1601,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				if(DimensionManager.getInstance().getDimensionProperties(destinationDimId).getName().equals("Luna")) {
 					for(Entity player : this.getPassengers()) {
 						if(player instanceof PlayerEntity) {
-							ARAchivements.triggerAchievement(ARAchivements.MOON_LANDING, (ServerPlayerEntity) player);
+							ARAdvancements.triggerAchievement(ARAdvancements.MOON_LANDING, (ServerPlayerEntity) player);
 							if(!DimensionManager.hasReachedMoon)
-								ARAchivements.triggerAchievement(ARAchivements.ONE_SMALL_STEP, (ServerPlayerEntity) player);
+								ARAdvancements.triggerAchievement(ARAdvancements.ONE_SMALL_STEP, (ServerPlayerEntity) player);
 						}
 					}
 					DimensionManager.hasReachedMoon = true;

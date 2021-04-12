@@ -32,6 +32,7 @@ import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.RocketEvent;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.tile.multiblock.TileSpaceElevator;
 import zmaster587.advancedRocketry.util.DimensionBlockPosition;
@@ -364,8 +365,8 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 					World world;
 
 					if((world = ZUtils.getWorld(dstTilePos.dimid)) == null) {
-						DimensionManager.initDimension(dstTilePos.dimid);
-						world = DimensionManager.getWorld(dstTilePos.dimid);
+						ZUtils.initDimension(dstTilePos.dimid);
+						world = ZUtils.getWorld(dstTilePos.dimid);
 					}
 
 					if(world != null) {
@@ -396,7 +397,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 						}
 					}
 
-					changeDimension(dstTilePos.dimid, landingLocX, ARConfiguration.getCurrentConfig().orbit, landingLocZ);
+					changeDimension(ZUtils.getWorld(dstTilePos.dimid), landingLocX, ARConfiguration.getCurrentConfig().orbit.get(), landingLocZ);
 
 					MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDeOrbitingEvent(this));
 				}

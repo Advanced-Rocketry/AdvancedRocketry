@@ -1,32 +1,19 @@
 package zmaster587.advancedRocketry.world.decoration;
 
 import net.minecraft.block.Block;
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/world/gen/WorldGenSwampTree.java
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.util.Direction.Axis;
-=======
-import net.minecraft.block.BlockLeaves;
-import net.minecraft.block.BlockLog;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/world/decoration/MapGenSwampTree.java
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkPrimer;
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/world/gen/WorldGenSwampTree.java
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraft.world.gen.carver.WorldCarver;
 import net.minecraft.world.gen.feature.ProbabilityConfig;
-=======
-import net.minecraft.world.gen.MapGenBase;
-import net.minecraftforge.common.BiomeDictionary;
-import zmaster587.advancedRocketry.world.biome.BiomeGenDeepSwamp;
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/world/decoration/MapGenSwampTree.java
 
 import java.util.BitSet;
 import java.util.HashMap;
@@ -38,29 +25,18 @@ import com.mojang.serialization.Codec;
 import java.util.Random;
 import java.util.function.Function;
 
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/world/gen/WorldGenSwampTree.java
-public class WorldGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
-=======
-public class MapGenSwampTree extends MapGenBase {
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/world/decoration/MapGenSwampTree.java
+public class MapGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 
 	Map<BlockPos, BlockState> cachedCanopy;
 	Map<BlockPos, BlockState> cachedRoots;
 	private final static double arcSize = 16.0;
 	int chancePerChunk;
 
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/world/gen/WorldGenSwampTree.java
-	public WorldGenSwampTree(Codec<ProbabilityConfig> codec, int chancePerChunk) {
+	public MapGenSwampTree(Codec<ProbabilityConfig> codec, int chancePerChunk) {
 		super(codec, chancePerChunk);
 		chancePerChunk= 10;
 		cachedCanopy = new HashMap<BlockPos, BlockState>();
 		cachedRoots = new HashMap<BlockPos, BlockState>();
-=======
-	public MapGenSwampTree(int chancePerChunk) {
-		super();
-		cachedCanopy = new HashMap<BlockPos, IBlockState>();
-		cachedRoots = new HashMap<BlockPos, IBlockState>();
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/world/decoration/MapGenSwampTree.java
 		this.chancePerChunk = chancePerChunk;
 		buildCanopy();
 		buildRoots();
@@ -120,11 +96,8 @@ public class MapGenSwampTree extends MapGenBase {
 
 				for(int yyy = -2 ; yyy < 4; yyy++)
 					if(!cachedCanopy.containsKey(new BlockPos(2 + xx - xOffset, yyy + yy - yOffset +2, zz- zOffset)))
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/world/gen/WorldGenSwampTree.java
 						cachedCanopy.put(new BlockPos(2 + xx - xOffset, yyy + yy - yOffset +2, zz- zOffset), Blocks.OAK_LEAVES.getDefaultState().with(LeavesBlock.PERSISTENT, true));
-=======
-					cachedCanopy.put(new BlockPos(2 + xx - xOffset, yyy + yy - yOffset +2, zz- zOffset), Blocks.LEAVES.getDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false));
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/world/decoration/MapGenSwampTree.java
+
 				//world.setBlock( x + 2 + xx - xOffset - radius/2, treeHeight -3 + yy - yOffset +2, z + zz- zOffset, Blocks.vine, 0,2);
 			}
 
@@ -132,7 +105,6 @@ public class MapGenSwampTree extends MapGenBase {
 	}
 
 	@Override
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/world/gen/WorldGenSwampTree.java
 	public boolean carveRegion(IChunk world, Function<BlockPos, Biome> biomePos, Random rand,
 			int p_225555_8_, int rangeX, int rangeZ, int chunkX, int chunkZ, BitSet carvingMask,
 			ProbabilityConfig config) {
@@ -144,40 +116,19 @@ public class MapGenSwampTree extends MapGenBase {
 
 		int treeHeight = rand.nextInt(10) + 40;
 		int radius = 4;
-=======
-	protected void recursiveGenerate(World worldIn, int chunkX, int chunkZ, int rangeX, int rangeZ, ChunkPrimer blocks) {
-		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk && rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk && canSwampTreeGenerateGenerate(world, chunkX * 16, chunkZ * 16)) {
-
-			int x = -(rangeX - chunkX)*16;
-			int z =  -(rangeZ- chunkZ)*16;
-			int y = 56;
-			
-			
-			int treeHeight = rand.nextInt(10) + 40;
-			int radius = 4;
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/world/decoration/MapGenSwampTree.java
 
 		int edgeRadius = 1;
 		int numDiag = edgeRadius + 1;
 
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/world/gen/WorldGenSwampTree.java
 		int meta = 3;
 		BlockState block = Blocks.OAK_LOG.getDefaultState();
 		int currentEdgeRadius;
-=======
-			IBlockState block = Blocks.LOG.getDefaultState();
-			int currentEdgeRadius;
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/world/decoration/MapGenSwampTree.java
 
 		final float SHAPE = 0.1f;
 
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/world/gen/WorldGenSwampTree.java
 		currentEdgeRadius = (int)((SHAPE*(edgeRadius * treeHeight )) + ((1f-SHAPE)*edgeRadius));
 
 		y++;
-=======
-			y++;
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/world/decoration/MapGenSwampTree.java
 
 
 		for(int yOff = -20; yOff < treeHeight; yOff++) {
@@ -240,7 +191,6 @@ public class MapGenSwampTree extends MapGenBase {
 			//Generate the hangy things
 			if(rand.nextInt(4) == 0) {
 
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/world/gen/WorldGenSwampTree.java
 				int yy = (int)(arcSize*Math.sin(Math.PI/3.0));
 				double xzRadius = (1.25*arcSize*Math.cos(Math.PI/2.0));
 				int xx = (int) (xzRadius*Math.cos(Yangle));
@@ -262,38 +212,6 @@ public class MapGenSwampTree extends MapGenBase {
 							setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState().with(LeavesBlock.PERSISTENT, true), world);
 					xx=xxx;
 					zz=zzz;
-=======
-					int yy = (int)(arcSize*Math.sin(Math.PI/3.0));
-					double xzRadius = (1.25*arcSize*Math.cos(Math.PI/2.0));
-					int xx = (int) (xzRadius*Math.cos(Yangle));
-					int zz = (int) (xzRadius*Math.sin(Yangle));
-					int xxx = xx;
-					int zzz = zz;
-					//Leaf caps on bottom
-					for(zz = -1; zz < 2; zz++)
-						for(xx = -1; xx < 2; xx++)
-							setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false), blocks);
-					xx=xxx;
-					zz=zzz;
-					//Descending 
-					for(int yyy = 0; yyy < 10; yyy++) {
-
-
-						for(zz = -2; zz < 3; zz++)
-							for(xx = -2; xx < 3; xx++)
-								setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false), blocks);
-						xx=xxx;
-						zz=zzz;
-
-						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-						setBlock( new BlockPos(x + 3 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-						setBlock( new BlockPos(x + 1 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +3, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset + 1), Blocks.LOG.getDefaultState(), blocks);
-						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset - 1), Blocks.LOG.getDefaultState(), blocks);
-					}
-				}
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/world/decoration/MapGenSwampTree.java
 
 					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), world);
 					setBlock( new BlockPos(x + 3 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), world);
@@ -313,7 +231,6 @@ public class MapGenSwampTree extends MapGenBase {
 		
 		return true;
 	}
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/world/gen/WorldGenSwampTree.java
 
 	protected void func_151538_a(World world2, int rangeX,
 			int rangeZ, int chunkX, int chunkZ,
@@ -321,8 +238,6 @@ public class MapGenSwampTree extends MapGenBase {
 
 
 	}
-=======
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/world/decoration/MapGenSwampTree.java
 
 	private void setBlock(BlockPos pos, BlockState block, IChunk world) {
 
@@ -336,7 +251,6 @@ public class MapGenSwampTree extends MapGenBase {
 		world.setBlockState(new BlockPos(x, y, z), block, false);
 	}
 
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/world/gen/WorldGenSwampTree.java
 	private BlockState getBlock(BlockPos pos, Block block, ChunkPrimer blocks) {
 		int x = pos.getX();
 		int y = pos.getY();
@@ -348,9 +262,6 @@ public class MapGenSwampTree extends MapGenBase {
 		return blocks.getBlockState(pos);
 	}
 
-
-=======
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/world/decoration/MapGenSwampTree.java
 	public boolean generate(World world, Random rand, int x, int y, int z)
 	{
 
@@ -474,11 +385,7 @@ public class MapGenSwampTree extends MapGenBase {
 				//Leaf caps on bottom
 				for(zz = -1; zz < 2; zz++)
 					for(xx = -1; xx < 2; xx++)
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/world/gen/WorldGenSwampTree.java
 						world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2,y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState().with(LeavesBlock.PERSISTENT, true), 5);
-=======
-						world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2,y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false), 5);
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/world/decoration/MapGenSwampTree.java
 				xx=xxx;
 				zz=zzz;
 				//Descending 
@@ -487,11 +394,7 @@ public class MapGenSwampTree extends MapGenBase {
 
 					for(zz = -2; zz < 3; zz++)
 						for(xx = -2; xx < 3; xx++)
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/world/gen/WorldGenSwampTree.java
 							world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y +treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState().with(LeavesBlock.PERSISTENT, true), 5);
-=======
-							world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2, y +treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false), 5);
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/world/decoration/MapGenSwampTree.java
 					xx=xxx;
 					zz=zzz;
 
@@ -515,19 +418,12 @@ public class MapGenSwampTree extends MapGenBase {
 		return true;
 	}
 
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/world/gen/WorldGenSwampTree.java
-
 
 	//Just a helper macro
 	private void onPlantGrow(World world, int x, int y, int z, int sourceX, int sourceY, int sourceZ)
 	{
 
 		world.getBlockState(new BlockPos(x,y,z)).getBlock().onPlantGrow(world.getBlockState(new BlockPos(x,y,z)), world, new BlockPos(x, y, z), new BlockPos(sourceX, sourceY, sourceZ));
-=======
-	//Woo hacky shit to place these trees LIKE they were biome trees but they aren't. $@#$#@#$ walls need to go.
-	private static boolean canSwampTreeGenerateGenerate(World world, int x, int z) {
-		return world.getBiome(new BlockPos(x, 0, z)) instanceof BiomeGenDeepSwamp;
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/world/decoration/MapGenSwampTree.java
 	}
 
 	@Override

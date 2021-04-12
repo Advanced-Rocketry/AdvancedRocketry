@@ -1,20 +1,14 @@
 package zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill;
 
 import io.netty.buffer.ByteBuf;
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/tile/multiblock/TileSpaceLaser.java
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
-=======
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/tile/multiblock/orbitallaserdrill/TileOrbitalLaserDrill.java
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/tile/multiblock/TileSpaceLaser.java
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
@@ -23,6 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -30,22 +25,6 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
-=======
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.ForgeChunkManager.Ticket;
-import net.minecraftforge.common.ForgeChunkManager.Type;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import zmaster587.advancedRocketry.AdvancedRocketry;
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/tile/multiblock/orbitallaserdrill/TileOrbitalLaserDrill.java
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
@@ -489,7 +468,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 				|| batteries.getUniversalEnergyStored() == 0 
 				|| ZUtils.getDimensionIdentifier(world).equals(ARConfiguration.GetSpaceDimId()) 
 				|| !DimensionManager.getInstance().canTravelTo(DimensionManager.getInstance().getDimensionProperties(world, getPos()).getParentPlanet()) 
-				|| ARConfiguration.getCurrentConfig().laserBlackListDims.contains(DimensionManager.getInstance().getDimensionProperties(world, getPos()).getParentPlanet().toString());
+				|| ARConfiguration.getCurrentConfig().laserBlackListDims.get().contains(DimensionManager.getInstance().getDimensionProperties(world, getPos()).getParentPlanet().toString());
 		}
 	
 	/**
@@ -502,7 +481,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 			drill.deactivate();
 
 			setRunning(false);
-		} else if(!this.finished && !this.isJammed && world.isBlockIndirectlyGettingPowered(getPos()) > 0) {
+		} else if(!this.finished && !this.isJammed && world.isBlockPowered(getPos())) {
 
 			//Laser will be on at this point
 			ResourceLocation orbitDimId = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getOrbitingPlanetId();

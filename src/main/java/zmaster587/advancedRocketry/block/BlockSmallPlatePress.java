@@ -1,27 +1,15 @@
 package zmaster587.advancedRocketry.block;
 
 import com.google.common.collect.Lists;
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/block/BlockPress.java
 import com.google.common.collect.Maps;
 
 import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
-=======
-import com.mojang.realmsclient.gui.ChatFormatting;
-import net.minecraft.block.*;
-import net.minecraft.block.state.BlockPistonStructureHelper;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/block/BlockSmallPlatePress.java
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.properties.PistonType;
@@ -31,14 +19,15 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/block/BlockPress.java
 import net.minecraft.world.server.ServerWorld;
-=======
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import zmaster587.libVulpes.LibVulpes;
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/block/BlockSmallPlatePress.java
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 
@@ -46,17 +35,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/block/BlockPress.java
-public class BlockPress extends PistonBlock {
+public class BlockSmallPlatePress extends PistonBlock {
 
-	public BlockPress(Properties properties) {
+	public BlockSmallPlatePress(Properties properties) {
 		super(false, properties);
-=======
-public class BlockSmallPlatePress extends BlockPistonBase {
-
-	public BlockSmallPlatePress() {
-		super(false);
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/block/BlockSmallPlatePress.java
 	}
 
 	@Override
@@ -265,7 +247,6 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 		}
 	}
 
-<<<<<<< HEAD:src/main/java/zmaster587/advancedRocketry/block/BlockPress.java
 	/**
 	 * Called on server when World#addBlockEvent is called. If server returns true, then also called on the client. On
 	 * the Server, this may perform additional changes to the world, like pistons replacing the block with an extended
@@ -316,12 +297,16 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 		 net.minecraftforge.event.ForgeEventFactory.onPistonMovePost(worldIn, pos, direction, (id == 0));
 		 return true;
 	 }
-=======
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
-		super.addInformation(stack, player, tooltip, advanced);
-		tooltip.add(ChatFormatting.DARK_GRAY + "" + ChatFormatting.ITALIC + LibVulpes.proxy.getLocalizedString("machine.tooltip.smallplatepress"));
+
+
+	@Override
+	@OnlyIn(value=Dist.CLIENT)
+	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
+			ITooltipFlag flagIn)  {
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+		Style style = Style.EMPTY.setFormatting(TextFormatting.DARK_GRAY).setFormatting(TextFormatting.ITALIC);
+		
+		tooltip.add( new TranslationTextComponent("machine.tooltip.smallplatepress").mergeStyle(style));
 	}
->>>>>>> origin/1.12:src/main/java/zmaster587/advancedRocketry/block/BlockSmallPlatePress.java
 
 }

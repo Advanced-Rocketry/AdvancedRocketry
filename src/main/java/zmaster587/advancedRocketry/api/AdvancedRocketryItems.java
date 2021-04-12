@@ -127,6 +127,7 @@ public class AdvancedRocketryItems {
 	public static Item itemSpaceLaser;
 	public static Item itemPrecisionAssembler;
 	public static Item itemArcFurnace;
+	public static Item itemPrecisionLaserEtcher;
 	public static Item itemBlastBrick;
 	public static Item itemCrystallizer;
 	public static Item itemLathe;
@@ -220,6 +221,7 @@ public class AdvancedRocketryItems {
 	public static Item itemAlienPlanks;
 	public static Item itemThermiteTorch;
 	public static Item itemTransciever;
+	public static Item itemVacuumLaser;
 	public static Item itemMoonTurfDark;
 	public static Item itemBlackHoleGenerator;
 	public static Item itemPump;
@@ -373,6 +375,7 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemSpaceLaser = new BlockItem(AdvancedRocketryBlocks.blockSpaceLaser, typicalBlockProperties);
 		AdvancedRocketryItems.itemPrecisionAssembler = new BlockItem(AdvancedRocketryBlocks.blockPrecisionAssembler, typicalBlockProperties);
 		AdvancedRocketryItems.itemArcFurnace = new BlockItem(AdvancedRocketryBlocks.blockArcFurnace, typicalBlockProperties);
+		AdvancedRocketryItems.itemPrecisionLaserEtcher = new BlockItem(AdvancedRocketryBlocks.blockPrecisionLaserEtcher, typicalBlockProperties);
 		AdvancedRocketryItems.itemBlastBrick = new BlockItem(AdvancedRocketryBlocks.blockBlastBrick, typicalBlockProperties);
 		AdvancedRocketryItems.itemCrystallizer = new BlockItem(AdvancedRocketryBlocks.blockCrystallizer, typicalBlockProperties);
 		AdvancedRocketryItems.itemLathe = new BlockItem(AdvancedRocketryBlocks.blockLathe, typicalBlockProperties);
@@ -466,6 +469,7 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemAlienPlanks = new BlockItem(AdvancedRocketryBlocks.blockAlienPlanks, typicalBlockProperties);
 		AdvancedRocketryItems.itemThermiteTorch = new WallOrFloorItem(AdvancedRocketryBlocks.blockThermiteTorch, AdvancedRocketryBlocks.blockThermiteTorchWall, typicalBlockProperties);
 		AdvancedRocketryItems.itemTransciever = new BlockItem(AdvancedRocketryBlocks.blockTransciever, typicalBlockProperties);
+		AdvancedRocketryItems.itemVacuumLaser = new BlockItem(AdvancedRocketryBlocks.blockVacuumLaser, typicalBlockProperties);
 		AdvancedRocketryItems.itemMoonTurfDark = new BlockItem(AdvancedRocketryBlocks.blockMoonTurfDark, typicalBlockProperties);
 		AdvancedRocketryItems.itemBlackHoleGenerator = new BlockItem(AdvancedRocketryBlocks.blockBlackHoleGenerator, typicalBlockProperties);
 		AdvancedRocketryItems.itemPump = new BlockItem(AdvancedRocketryBlocks.blockPump, typicalBlockProperties);
@@ -501,6 +505,7 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemPlanetAnalyser.setRegistryName("planetanalyser"),
 				AdvancedRocketryItems.itemGuidanceComputer.setRegistryName("guidancecomputer"),
 				AdvancedRocketryItems.itemArcFurnace.setRegistryName("arcfurnace"),
+				AdvancedRocketryItems.itemPrecisionLaserEtcher.setRegistryName("precisionlaseretcher"),
 				AdvancedRocketryItems.itemSawBladeBlock.setRegistryName("sawbladeassbly"),
 				AdvancedRocketryItems.itemLathe.setRegistryName("lathe"),
 				AdvancedRocketryItems.itemRollingMachine.setRegistryName("rollingmachine"),
@@ -565,6 +570,7 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemAlienPlanks.setRegistryName("planks"),
 				AdvancedRocketryItems.itemThermiteTorch.setRegistryName("thermitetorch"),
 				AdvancedRocketryItems.itemTransciever.setRegistryName("wirelesstransciever"),
+				AdvancedRocketryItems.itemVacuumLaser.setRegistryName("vacuumlaser"),
 				AdvancedRocketryItems.itemPump.setRegistryName("blockpump"),
 				AdvancedRocketryItems.itemCentrifuge.setRegistryName("centrifuge"),
 				AdvancedRocketryItems.itemBasalt.setRegistryName("basalt"),

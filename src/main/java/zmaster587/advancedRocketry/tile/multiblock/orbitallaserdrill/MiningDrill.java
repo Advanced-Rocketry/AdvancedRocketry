@@ -1,14 +1,22 @@
 package zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
+import java.util.List;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraft.world.chunk.ChunkStatus;
+import net.minecraft.world.gen.Heightmap.Type;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.world.ForgeChunkManager;
+import net.minecraftforge.common.world.ForgeChunkManager.TicketOwner;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.entity.EntityLaserNode;
@@ -17,7 +25,7 @@ import zmaster587.advancedRocketry.event.BlockBreakEvent;
 class MiningDrill extends AbstractDrill {
 
 	private EntityLaserNode laser;
-	private ForgeChunkManager.Ticket ticketLaser;
+	private Vector3i ticketLaser;
 	protected boolean finished;
 
 	MiningDrill() {
@@ -30,12 +38,12 @@ class MiningDrill extends AbstractDrill {
 		ItemStack[] stacks = new ItemStack[0];
 
 		for (int i = 0; i < 9; i++) {
-			int x = (int) laser.posX + (i % 3) - 1;
-			int z = (int) laser.posZ + (i / 3) - 1;
-			BlockPos laserPos = new BlockPos(x, (int) laser.posY, z);
-			IBlockState state = laser.world.getBlockState(laserPos);
+			int x = (int) laser.getPosX() + (i % 3) - 1;
+			int z = (int) laser.getPosZ() + (i / 3) - 1;
+			BlockPos laserPos = new BlockPos(x, (int) laser.getPosY(), z);
+			BlockState state = laser.world.getBlockState(laserPos);
 			//Post an event to the eventbus to make protections easier
-			BlockBreakEvent.LaserBreakEvent event = new BlockBreakEvent.LaserBreakEvent(x, (int) laser.posY, z);
+			BlockBreakEvent.LaserBreakEvent event = new BlockBreakEvent.LaserBreakEvent(x, (int) laser.getPosY(), z);
 			MinecraftForge.EVENT_BUS.post(event);
 
 			if (event.isCanceled())
@@ -46,8 +54,8 @@ class MiningDrill extends AbstractDrill {
 				continue;
 			}
 
-			NonNullList<ItemStack> items = NonNullList.create();
-			state.getBlock().getDrops(items, laser.world, laserPos, state, 0);
+			List<ItemStack> items = NonNullList.create();
+			items = Block.getDrops(state, (ServerWorld) laser.world, laserPos, laser.world.getTileEntity(laserPos));
 
 			//TODO: may need to fix in later builds
 			if (!state.getMaterial().isOpaque() || state.getBlock() == Blocks.BEDROCK)
@@ -68,26 +76,26 @@ class MiningDrill extends AbstractDrill {
 		boolean blockInWay = false;
 		do {
 
-			if (laser.posY < 1) {
-				laser.setDead();
+			if (laser.getPosY() < 1) {
+				laser.remove();
 				laser = null;
 				finished = true;
 				break;
 			}
 
-			laser.setPosition((int) laser.posX, laser.posY - 1, (int) laser.posZ);
+			laser.setPosition((int) laser.getPosX(), laser.getPosY() - 1, (int) laser.getPosZ());
 
 			for (int i = 0; i < 9; i++) {
-				int x = (int) laser.posX + (i % 3) - 1;
-				int z = (int) laser.posZ + (i / 3) - 1;
-				BlockPos laserPos = new BlockPos(x, (int) laser.posY, z);
-				IBlockState state = laser.world.getBlockState(laserPos);
+				int x = (int) laser.getPosX() + (i % 3) - 1;
+				int z = (int) laser.getPosZ() + (i / 3) - 1;
+				BlockPos laserPos = new BlockPos(x, (int) laser.getPosY(), z);
+				BlockState state = laser.world.getBlockState(laserPos);
 
 				if (!state.getMaterial().isOpaque() || state.getBlock() == Blocks.BEDROCK)
 					continue;
 
 				if (state == Blocks.AIR.getDefaultState() || state.getMaterial().isLiquid()) {
-					laser.world.setBlockToAir(laserPos);
+					laser.world.setBlockState(laserPos, Blocks.AIR.getDefaultState());
 					continue;
 				}
 
@@ -102,17 +110,19 @@ class MiningDrill extends AbstractDrill {
 	}
 
 	boolean activate(World world, int x, int z) {
-		ticketLaser = ForgeChunkManager.requestTicket(AdvancedRocketry.instance, world, ForgeChunkManager.Type.NORMAL);
+		
+		ServerWorld worldServer = (ServerWorld)world;
+		ticketLaser = new Vector3i(x>> 4, 0, z >> 4);
+		worldServer.forceChunk(x >> 4, z >> 4, true);
 
 		if (ticketLaser != null) {
-			ForgeChunkManager.forceChunk(ticketLaser, new ChunkPos(x >> 4, z >> 4));
 
 			int y = 64;
 
-			if (world.getChunkFromChunkCoords(x >> 4, z >> 4).isLoaded()) {
+			if(world.getChunk( new BlockPos(x,0,z) ).getStatus().isAtLeast(ChunkStatus.FULL)) {
 				int current;
 				for (int i = 0; i < 9; i++) {
-					current = world.getTopSolidOrLiquidBlock(new BlockPos(x + (i % 3) - 1, 0xFF, z + (i / 3) - 1)).getY();
+					current = world.getHeight(Type.WORLD_SURFACE,x + (i % 3) - 1, z + (i / 3) - 1);
 					if (current > y)
 						y = current;
 				}
@@ -122,7 +132,7 @@ class MiningDrill extends AbstractDrill {
 			laser = new EntityLaserNode(world, x, y, z);
 			laser.markValid();
 			laser.forceSpawn = true;
-			world.spawnEntity(laser);
+			world.addEntity(laser);
 			return true;
 		}
 		return false;
@@ -130,12 +140,16 @@ class MiningDrill extends AbstractDrill {
 
 	void deactivate() {
 		if (laser != null) {
-			laser.setDead();
+			laser.remove();
 			laser = null;
 		}
 
-		if (ticketLaser != null)
-			ForgeChunkManager.releaseTicket(ticketLaser);
+		if(ticketLaser != null)
+		{
+			ServerWorld worldServer = (ServerWorld)laser.getEntityWorld();
+			worldServer.forceChunk(ticketLaser.getX(), ticketLaser.getZ(), true);
+			ticketLaser = null;
+		}
 
 		finished = false;
 	}

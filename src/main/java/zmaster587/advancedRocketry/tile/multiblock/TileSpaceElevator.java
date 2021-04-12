@@ -26,6 +26,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -107,16 +108,16 @@ boolean openFullScreen = false;
 
 
 		World otherPlanet;
-		if((otherPlanet = DimensionManager.getWorld(dimBlockPos.dimid)) == null) {
-			DimensionManager.initDimension(dimBlockPos.dimid);
-			otherPlanet = DimensionManager.getWorld(dimBlockPos.dimid);
+		if((otherPlanet = ZUtils.getWorld(dimBlockPos.dimid)) == null) {
+			ZUtils.initDimension(dimBlockPos.dimid);
+			otherPlanet = ZUtils.getWorld(dimBlockPos.dimid);
 		}
 
 		if(otherPlanet != null) {
 			TileEntity tile = otherPlanet.getTileEntity(dimBlockPos.pos.getBlockPos());
 			if(tile instanceof TileSpaceElevator) {
 				((TileSpaceElevator) tile).updateTetherLinkPosition(dimBlockPos, null);
-				updateTetherLinkPosition(new DimensionBlockPosition(world.provider.getDimension(), new HashedBlockPosition(getPos())), null);
+				updateTetherLinkPosition(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(world), new HashedBlockPosition(getPos())), null);
 			}
 		}
 	}
@@ -149,7 +150,7 @@ boolean openFullScreen = false;
 
 
 		if(ID == GuiHandler.guiId.MODULAR.ordinal()) {
-			modules.add(new ModuleButton(50, 47, 1, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.button.summon"), this, TextureResources.buttonBuild, 80, 18));
+			modules.add(new ModuleButton(50, 47, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.button.summon"), this, TextureResources.buttonBuild, 80, 18));
 			if (isTetherConnected()) {
 				modules.add(new ModuleText(30, 23, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.anchored0"), 0x2d2d2d));
 				modules.add(new ModuleText(30, 35, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.anchored1"), 0x2d2d2d));
@@ -161,25 +162,22 @@ boolean openFullScreen = false;
 		return modules;
 	}
 
-	public static boolean isDestinationValid(int destinationDimensionID, DimensionBlockPosition pos, HashedBlockPosition myPos, int myDimensionID) {
+	public static boolean isDestinationValid(ResourceLocation destinationDimensionID, DimensionBlockPosition pos, HashedBlockPosition myPos, ResourceLocation myDimensionID) {
 		if (pos == null || pos.pos == null)
 			return false;
-<<<<<<< HEAD
 		
-		return !ZUtils.getDimensionIdentifier(worldObj).equals(pos.dimid) && zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(pos.dimid, pos.pos.getBlockPos()).getId(), zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(worldObj, myPos.getBlockPos()).getId()) ;
-=======
-		if (myDimensionID == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPos.getBlockPos()) != null) {
+		
+		if (DimensionManager.getInstance().isSpaceDimension(myDimensionID) && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPos.getBlockPos()) != null) {
 			return PlanetaryTravelHelper.isTravelWithinGeostationaryOrbit((SpaceStationObject)SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPos.getBlockPos()), pos.dimid);
-		} else if (pos.dimid == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos.pos.getBlockPos()) != null) {
+		} else if (DimensionManager.getInstance().isSpaceDimension(pos.dimid) && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos.pos.getBlockPos()) != null) {
 			return PlanetaryTravelHelper.isTravelWithinGeostationaryOrbit((SpaceStationObject)SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos.pos.getBlockPos()), myDimensionID);
 		}
 		return false;
 	}
 
-	public static boolean wouldTetherBreakOnConnect(int destinationDimensionID, DimensionBlockPosition pos, HashedBlockPosition myPos, int myDimensionID) {
-		SpaceStationObject spaceStation = (myDimensionID == ARConfiguration.getCurrentConfig().spaceDimId) ? (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPos.getBlockPos()) : (SpaceStationObject)SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos.pos.getBlockPos());
+	public static boolean wouldTetherBreakOnConnect(ResourceLocation destinationDimensionID, DimensionBlockPosition pos, HashedBlockPosition myPos, ResourceLocation myDimensionID) {
+		SpaceStationObject spaceStation = (DimensionManager.getInstance().isSpaceDimension(myDimensionID)) ? (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPos.getBlockPos()) : (SpaceStationObject)SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos.pos.getBlockPos());
         return spaceStation != null && spaceStation.wouldStationBreakTether();
->>>>>>> origin/1.12
 	}
 
 	public boolean attemptLaunch() {
@@ -253,15 +251,6 @@ boolean openFullScreen = false;
 		if(id == SUMMON_PACKET) {
 			summonCapsule();
 		}
-<<<<<<< HEAD
-		else if (id == SELECT_DST) {
-			openFullScreen = true;
-			player.closeScreen();
-			NetworkHooks.openGui((ServerPlayerEntity) player, this, buf -> {buf.writeInt(GuiHandler.guiId.MODULARFULLSCREEN.ordinal()); buf.writeBlockPos(pos); });
-			openFullScreen = false;
-		}
-=======
->>>>>>> origin/1.12
 		else if(id == BUTTON_ID_OFFSET) {
 			dimBlockPos = null;
 			capsule.setDst(null);
@@ -269,50 +258,6 @@ boolean openFullScreen = false;
 			markDirty();
 			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 		}
-<<<<<<< HEAD
-		else if(id > BUTTON_ID_OFFSET) {
-			ItemStack stack = inv.getStackInSlot(0);
-
-			if(stack != null && stack.getItem() instanceof ItemSpaceElevatorChip) {
-				List<DimensionBlockPosition> list;
-				list = ((ItemSpaceElevatorChip)AdvancedRocketryItems.itemSpaceElevatorChip).getBlockPositions(stack);
-
-				try {
-					DimensionBlockPosition dstpos = list.get(id - BUTTON_ID_OFFSET - 1);
-					if(isDstValid(world,dstpos, new HashedBlockPosition(getPos()))) {
-
-						dimBlockPos = dstpos;
-						World world;
-						if((world = ZUtils.getWorld(dimBlockPos.dimid)) == null) {
-							ZUtils.initDimension(dimBlockPos.dimid);
-							world = ZUtils.getWorld(dimBlockPos.dimid);
-						}
-
-						if(world != null) {
-							TileEntity tile = world.getTileEntity(dimBlockPos.pos.getBlockPos());
-
-							if(tile instanceof TileSpaceElevator) {
-
-								summonCapsule();
-
-								capsule.setDst(dimBlockPos);
-								capsule.setSourceTile(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(this.getWorld()), new HashedBlockPosition(getPos())));
-								markDirty();
-								this.world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
-								return;
-							}
-						}
-					}
-				} catch (IndexOutOfBoundsException e) {
-					AdvancedRocketry.logger.warn("Space Elevator at location " + this.pos + " recieved invalid button press!");
-					//Sigh...
-				}
-				dimBlockPos = null;
-			}
-		}
-
-=======
->>>>>>> origin/1.12
 		super.useNetworkData(player, side, id, nbt);
 	}
 
@@ -332,23 +277,13 @@ boolean openFullScreen = false;
 	}
 
 	public double getLandingLocationX() {
-<<<<<<< HEAD
 		Direction facing = RotatableBlock.getFront(world.getBlockState(getPos()));
-		return getPos().getX() + facing.getXOffset()*-3 - facing.getZOffset() + 0.5;
+		return getPos().getX() + facing.getXOffset()*-5 - facing.getZOffset()*2 + 0.5;
 	}
 
 	public double getLandingLocationZ() {
 		Direction facing = RotatableBlock.getFront(world.getBlockState(getPos()));
-		return getPos().getZ() + facing.getXOffset()*1 + facing.getZOffset()*-3 + 0.5;
-=======
-		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
-		return getPos().getX() + facing.getFrontOffsetX()*-5 - facing.getFrontOffsetZ()*2 + 0.5;
-	}
-
-	public double getLandingLocationZ() {
-		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
-		return getPos().getZ() + facing.getFrontOffsetX()*2 + facing.getFrontOffsetZ()*-5 + 0.5;
->>>>>>> origin/1.12
+		return getPos().getZ() + facing.getXOffset()*2 + facing.getZOffset()*-5 + 0.5;
 	}
 
 
@@ -375,17 +310,11 @@ boolean openFullScreen = false;
 
 		double capsulePosX = getLandingLocationX();
 		double capsulePosZ = getLandingLocationZ();
-<<<<<<< HEAD
-		capsule.setPositionAndRotation(capsulePosX, getPos().getY() - 1, capsulePosZ, capsule.rotationYaw, capsule.rotationPitch);
-
-		capsule.setSourceTile(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(world), new HashedBlockPosition(this.getPos())));
-=======
 		int yOffset = (isAnchorOnSpaceStation()) ? - 4 : 1;
 		capsule.setPosition(capsulePosX, getPos().getY() + yOffset, capsulePosZ);
 
 		capsule.setDst(dimBlockPos);
-		capsule.setSourceTile(new DimensionBlockPosition(world.provider.getDimension(), new HashedBlockPosition(this.getPos())));
->>>>>>> origin/1.12
+		capsule.setSourceTile(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(world), new HashedBlockPosition(this.getPos())));
 
 		world.addEntity(capsule);
 	}
@@ -394,15 +323,11 @@ boolean openFullScreen = false;
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
 		ItemLinker.setMasterCoords(item, this.getPos());
-<<<<<<< HEAD
 		ItemLinker.setDimId(item, ZUtils.getDimensionIdentifier(world));
-=======
-		ItemLinker.setDimId(item, world.provider.getDimension());
 		if(dimBlockPos != null) {
-			player.sendMessage(new TextComponentTranslation("msg.spaceElevator.linkCannotChangeError"));
+			player.sendMessage(new TranslationTextComponent("msg.spaceelevator.linkcannotchangeerror"), Util.DUMMY_UUID);
 			return false;
 		}
->>>>>>> origin/1.12
 		if(!world.isRemote)
 			player.sendMessage(new TranslationTextComponent("msg.linker.program"), Util.DUMMY_UUID);
 		return true;
@@ -432,47 +357,30 @@ boolean openFullScreen = false;
 				world = ZUtils.getWorld(dimPos.dimid);
 			}
 
-			if(!isDestinationValid(dimPos.dimid, dimPos, new HashedBlockPosition(getPos()), myWorld.provider.getDimension())) {
-				player.sendMessage(new TextComponentTranslation("msg.spaceElevator.linkNotGeostationaryError"));
+			if(!isDestinationValid(dimPos.dimid, dimPos, new HashedBlockPosition(getPos()), ZUtils.getDimensionIdentifier(myWorld))) {
+				player.sendMessage(new TranslationTextComponent("msg.spaceElevator.linkNotGeostationaryError"), Util.DUMMY_UUID);
 				return false;
 			}
 
-			if(wouldTetherBreakOnConnect(dimPos.dimid, dimPos, new HashedBlockPosition(getPos()), myWorld.provider.getDimension())) {
-				player.sendMessage(new TextComponentTranslation("msg.spaceElevator.tetherWouldBreakError"));
+			if(wouldTetherBreakOnConnect(dimPos.dimid, dimPos, new HashedBlockPosition(getPos()), ZUtils.getDimensionIdentifier(myWorld))) {
+				player.sendMessage(new TranslationTextComponent("msg.spaceElevator.tetherWouldBreakError"), Util.DUMMY_UUID);
 				return false;
 			}
 
 			if(dimBlockPos != null) {
-				player.sendMessage(new TextComponentTranslation("msg.spaceElevator.linkCannotChangeError"));
+				player.sendMessage(new TranslationTextComponent("msg.spaceElevator.linkCannotChangeError"), Util.DUMMY_UUID);
 				return false;
 			}
 
 			if(world != null) {
 				TileEntity tile = world.getTileEntity(dimPos.pos.getBlockPos());
 				if(tile instanceof TileSpaceElevator) {
-					updateTetherLinkPosition(new DimensionBlockPosition(this.world.provider.getDimension(), new HashedBlockPosition(getPos())), dimPos);
-					((TileSpaceElevator) tile).updateTetherLinkPosition(dimPos, new DimensionBlockPosition(this.world.provider.getDimension(), new HashedBlockPosition(getPos())));
-					player.sendMessage(new TextComponentTranslation("msg.spaceElevator.newDstAdded"));
+					updateTetherLinkPosition(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(this.world), new HashedBlockPosition(getPos())), dimPos);
+					((TileSpaceElevator) tile).updateTetherLinkPosition(dimPos, new DimensionBlockPosition(ZUtils.getDimensionIdentifier(this.world), new HashedBlockPosition(getPos())));
+					player.sendMessage(new TranslationTextComponent("msg.spaceElevator.newDstAdded"), Util.DUMMY_UUID);
 
-<<<<<<< HEAD
-					boolean flag = getChip() != null && ((TileSpaceElevator) tile).getChip() != null;
-					if(flag) {
-						addEntryToList(dimPos);
-						addEntryToList(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(myWorld), new HashedBlockPosition(getPos())));
-						((TileSpaceElevator) tile).addEntryToList(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(myWorld), new HashedBlockPosition(getPos())));
-						((TileSpaceElevator) tile).addEntryToList(dimPos);
-						
-						player.sendMessage(new TranslationTextComponent("msg.spaceelevator.newdstadded"), Util.DUMMY_UUID);
-						return true;
-					}
-					else
-					{
-						player.sendMessage(new TranslationTextComponent("msg.spaceelevator.nocchiperror"), Util.DUMMY_UUID);
-						return false;
-=======
 					if (capsule != null) {
 						capsule.setDst(dimBlockPos);
->>>>>>> origin/1.12
 					}
 					markDirty();
 					world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
@@ -482,39 +390,20 @@ boolean openFullScreen = false;
 			}
 
 		}
-<<<<<<< HEAD
-		return false;
-	}
-
-	@Override
-	public int getSizeInventory() {
-		return inv.getSizeInventory();
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int index) {
-		return inv.getStackInSlot(index);
-	}
-
-	@Override
-	public ItemStack decrStackSize(int index, int count) {
-		return inv.decrStackSize(index, count);
-=======
 
 		return false;
 	}
 
 	public boolean isAnchorOnSpaceStation() {
-		return world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId;
->>>>>>> origin/1.12
+		return DimensionManager.getInstance().isSpaceDimension(world);
 	}
 
 	public void updateTetherLinkPosition(DimensionBlockPosition myPosition, DimensionBlockPosition dimensionBlockPosition) {
-		if (myPosition.dimid == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()) != null) {
+		if (DimensionManager.getInstance().isSpaceDimension(myPosition.dimid) && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()) != null) {
 			if (dimensionBlockPosition != null) {
-				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation(0, EnumFacing.EAST);
-				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation( 0, EnumFacing.UP);
-				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation( 0, EnumFacing.NORTH);
+				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation(0, Direction.EAST);
+				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation( 0, Direction.UP);
+				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation( 0, Direction.NORTH);
 			}
 			SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setIsAnchored( (dimensionBlockPosition == null) ? false : true);
 		}
@@ -532,41 +421,6 @@ boolean openFullScreen = false;
 	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
-<<<<<<< HEAD
-	
-	@Override
-	public boolean isEmpty() {
-		return inv.isEmpty();
-	}
-
-	@Override
-	public void openInventory(PlayerEntity player) {
-		inv.openInventory(player);
-	}
-
-	@Override
-	public void closeInventory(PlayerEntity player) {
-		inv.closeInventory(player);
-
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		return inv.isItemValidForSlot(index, stack);
-	}
-	
-	@Override
-	public void clear() {
-		inv.clear();
-	}
-
-	@Override
-	public CompoundNBT write(CompoundNBT nbt) {
-		inv.write(nbt);
-		return super.write(nbt);
-	}
-=======
->>>>>>> origin/1.12
 
 	@Override
 	public void writeNetworkData(CompoundNBT nbt) {
@@ -583,14 +437,8 @@ boolean openFullScreen = false;
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void read(BlockState state, CompoundNBT nbt) {
-		inv.readFromNBT(nbt);
 		super.read(state, nbt);
-=======
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
->>>>>>> origin/1.12
 	}
 
 	@Override

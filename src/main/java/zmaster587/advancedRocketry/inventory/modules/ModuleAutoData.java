@@ -1,7 +1,13 @@
 package zmaster587.advancedRocketry.inventory.modules;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
+import net.minecraft.inventory.container.Slot;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.inventory.TextureResources;
@@ -12,6 +18,8 @@ import zmaster587.libVulpes.util.IconResource;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 public class ModuleAutoData extends ModuleBase {
 
@@ -68,8 +76,7 @@ public class ModuleAutoData extends ModuleBase {
 	}
 
 	@Override
-	public void sendChanges(Container container, IContainerListener crafter,
-			int variableId, int localId) {
+	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {
 		if(localId < data.length)
 			crafter.sendWindowProperty(container, variableId, data[localId].getData());
 		else
@@ -84,9 +91,10 @@ public class ModuleAutoData extends ModuleBase {
 			data[0].setDataType(DataStorage.DataType.values()[value]);
 	}
 
-	@SideOnly(Side.CLIENT)
+	
 	@Override
-	public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, GuiContainer gui, FontRenderer font) {
+	@OnlyIn(value=Dist.CLIENT)
+	public void renderForeground(MatrixStack matrix, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, ContainerScreen<? extends Container>  gui, FontRenderer font) {
 
 		int relativeX = mouseX - offsetX;
 		int relativeY = mouseY - offsetY;
@@ -104,17 +112,17 @@ public class ModuleAutoData extends ModuleBase {
 			list.add(totalData + " / " + totalMaxData + " Data");
 			list.add("Type: " +  I18n.format(data[0].getDataType().toString(), new Object[0]));
 
-			this.drawTooltip(gui, list, mouseX, mouseY, zLevel, font);
+			this.drawTooltip(gui, matrix, list, mouseX, mouseY, zLevel, font);
 		}
 
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY, FontRenderer font) {
+	@OnlyIn(value=Dist.CLIENT)
+	public void renderBackground(ContainerScreen<? extends Container>  gui, MatrixStack matrix, int x, int y, int mouseX, int mouseY, FontRenderer font) {
 
 		for(Slot slot : slotList) {
-			gui.drawTexturedModalRect(x + slot.xPos - 1, y + slot.yPos - 1, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());
+			gui.blit(matrix, x + slot.xPos - 1, y + slot.yPos - 1, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());
 		}
 
 		int totalData = 0, totalMaxData = 0;
@@ -126,9 +134,9 @@ public class ModuleAutoData extends ModuleBase {
 
 		float percent = totalData/(float)totalMaxData;
 
-		gui.drawTexturedModalRect(offsetX + x, offsetY + y, 176, 18, 8, 40);
-		gui.drawTexturedModalRect(offsetX + x - 1, offsetY + y + barYSize + 4, 19, 171, 10, 10);
+		gui.blit(matrix, offsetX + x, offsetY + y, 176, 18, 8, 40);
+		gui.blit(matrix, offsetX + x - 1, offsetY + y + barYSize + 4, 19, 171, 10, 10);
 
-		gui.drawTexturedModalRect(offsetX + x + 1, 1 + offsetY + y + (barYSize-(int)(percent*barYSize)), textureOffsetX, barYSize- (int)(percent*barYSize) + textureOffsetY, barXSize, (int)(percent*barYSize));
+		gui.blit(matrix, offsetX + x + 1, 1 + offsetY + y + (barYSize-(int)(percent*barYSize)), textureOffsetX, barYSize- (int)(percent*barYSize) + textureOffsetY, barXSize, (int)(percent*barYSize));
 	}
 }

@@ -36,6 +36,7 @@ import zmaster587.advancedRocketry.tile.TileFluidTank;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.FluidUtils;
 
 import java.util.LinkedList;
@@ -58,15 +59,16 @@ public class BlockPressurizedFluidTank extends Block {
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
 			Hand hand, BlockRayTraceResult hit) {
 		
-		
+		TileEntity tile = world.getTileEntity(pos);
 		//Do some fancy fluid stuff
 		if (FluidUtils.containsFluid(player.getHeldItem(hand))) {
-			FluidUtil.interactWithFluidHandler(player, hand, ((TileFluidHatch) tile).getFluidTank());
+			IFluidHandler fluidHndl =  tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).orElse(null);
+			if(fluidHndl != null)
+				FluidUtil.interactWithFluidHandler(player, hand, fluidHndl);
 		} else if(!world.isRemote)
 		{
-			TileEntity te = world.getTileEntity(pos);
-			if(te != null)
-				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, buf -> {buf.writeInt(((IModularInventory)te).getModularInvType().ordinal()); buf.writeBlockPos(pos); });
+			if(tile != null)
+				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tile, buf -> {buf.writeInt(((IModularInventory)tile).getModularInvType().ordinal()); buf.writeBlockPos(pos); });
 		}
 		return ActionResultType.SUCCESS;
 	}

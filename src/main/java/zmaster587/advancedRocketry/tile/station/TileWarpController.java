@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.tile.station;
 
 import com.google.common.base.Predicate;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -21,7 +22,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.network.NetworkHooks;
-import zmaster587.advancedRocketry.achievements.ARAchivements;
 import zmaster587.advancedRocketry.achievements.ARAdvancements;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
@@ -500,9 +500,9 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 						return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos( input.getPositionVec())) == station;
 					};
 				})) {
-					ARAdvancements.ALL_SHE_GOT.trigger((EntityPlayerMP) player2);
+					ARAdvancements.triggerAchievement(ARAdvancements.ALL_SHE_GOT, (ServerPlayerEntity) player2);
 					if(!DimensionManager.hasReachedWarp)
-						ARAdvancements.FLIGHT_OF_PHEONIX.trigger((EntityPlayerMP) player2);
+						ARAdvancements.triggerAchievement(ARAdvancements.FLIGHT_OF_PHEONIX, (ServerPlayerEntity)player2);
 				}
 
 				DimensionManager.hasReachedWarp = true;

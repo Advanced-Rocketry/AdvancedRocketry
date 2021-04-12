@@ -84,9 +84,9 @@ import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderSpace;
 import zmaster587.advancedRocketry.world.CustomPlanetBiomeProvider;
 import zmaster587.advancedRocketry.world.decoration.MapGenInvertedPillar;
+import zmaster587.advancedRocketry.world.decoration.MapGenSwampTree;
 import zmaster587.advancedRocketry.world.decoration.StructurePieceVolcano;
 import zmaster587.advancedRocketry.world.decoration.StructureVolcano;
-import zmaster587.advancedRocketry.world.decoration.WorldGenSwampTree;
 import zmaster587.advancedRocketry.world.decoration.StructureCrater;
 import zmaster587.advancedRocketry.world.decoration.StructureGeode;
 import zmaster587.advancedRocketry.world.gen.WorldGenAlienTree;
@@ -191,7 +191,7 @@ public class AdvancedRocketryBiomes {
     // End structure features
 	
 	// Start Carver config
-	public static WorldCarver<ProbabilityConfig> BIG_TREE = new WorldGenSwampTree(ProbabilityConfig.CODEC, 256);
+	public static WorldCarver<ProbabilityConfig> BIG_TREE = new MapGenSwampTree(ProbabilityConfig.CODEC, 256);
 	public static WorldCarver<ProbabilityConfig> INVERTED_PILLAR = new MapGenInvertedPillar(ProbabilityConfig.CODEC, 256, Blocks.STONE.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.DIRT.getDefaultState());
 
 	public static ConfiguredCarver<ProbabilityConfig> CONFIGURED_BIG_TREE = configureCarver("big_tree", BIG_TREE.func_242761_a(new ProbabilityConfig(0.02F)));

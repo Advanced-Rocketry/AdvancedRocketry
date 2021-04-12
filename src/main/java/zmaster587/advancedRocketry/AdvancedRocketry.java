@@ -24,10 +24,13 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.carver.WorldCarver;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.world.ForgeChunkManager;
+import net.minecraftforge.common.world.ForgeChunkManager.LoadingValidationCallback;
+import net.minecraftforge.common.world.ForgeChunkManager.TicketHelper;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -248,7 +251,7 @@ public class AdvancedRocketry {
 		LibVulpes.registerRecipeHandler(TileElectricArcFurnace.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/ElectricArcFurnace.xml");
 		LibVulpes.registerRecipeHandler(TileLathe.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/Lathe.xml");
 		LibVulpes.registerRecipeHandler(TileRollingMachine.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/RollingMachine.xml");
-		LibVulpes.registerRecipeHandler(BlockPress.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/SmallPlatePress.xml");
+		LibVulpes.registerRecipeHandler(BlockSmallPlatePress.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/SmallPlatePress.xml");
 		LibVulpes.registerRecipeHandler(TileCentrifuge.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/Centrifuge.xml");
 
 
@@ -276,7 +279,7 @@ public class AdvancedRocketry {
         machineRecipes.registerMachine(TileRollingMachine.class);
         machineRecipes.registerMachine(TileCrystallizer.class);
         machineRecipes.registerMachine(TileCentrifuge.class);
-        machineRecipes.registerMachine(BlockPress.class);
+        machineRecipes.registerMachine(BlockSmallPlatePress.class);
         machineRecipes.registerMachine(TilePrecisionLaserEtcher.class);
 	}
 	
@@ -413,7 +416,6 @@ public class AdvancedRocketry {
 	public void load(FMLCommonSetupEvent event)
 	{
 		preInit();
-		ARAdvancements.register();
 		proxy.init();
 
 		zmaster587.advancedRocketry.cable.NetworkRegistry.registerFluidNetwork();
@@ -527,7 +529,7 @@ public class AdvancedRocketry {
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileElectrolyser(), (BlockTile)AdvancedRocketryBlocks.blockElectrolyser);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileChemicalReactor(), (BlockTile)AdvancedRocketryBlocks.blockChemicalReactor);
 		//T2 processing machines
-		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TilePrecisionLaserEtcher(), (BlockTile)AdvancedRocketryBlocks.blockPrecisionLaserEngraver);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TilePrecisionLaserEtcher(), (BlockTile)AdvancedRocketryBlocks.blockPrecisionLaserEtcher);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileObservatory(), (BlockTile)AdvancedRocketryBlocks.blockObservatory);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileAstrobodyDataProcessor(), (BlockTile)AdvancedRocketryBlocks.blockPlanetAnalyser);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileCentrifuge(), (BlockTile)AdvancedRocketryBlocks.blockCentrifuge);
@@ -578,10 +580,6 @@ public class AdvancedRocketry {
 		// End compat stuff
 
 		MinecraftForge.EVENT_BUS.register(SpaceObjectManager.getSpaceManager());
-
-		GameRegistry.registerWorldGenerator(new OreGenerator(), 100);
-
-		ForgeChunkManager.setForcedChunkLoadingCallback(instance, new WorldEvents());
 		
 		//Register mixed material's recipes
 		int mixedMetalCount = 0;

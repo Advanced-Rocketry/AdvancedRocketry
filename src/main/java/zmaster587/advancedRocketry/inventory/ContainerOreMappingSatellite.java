@@ -52,7 +52,7 @@ public class ContainerOreMappingSatellite extends Container {
 		}
 		this.player = player;
 	}
-
+	
 	@Override
 	public ItemStack slotClick(int slot, int dragType, ClickType clickTypeIn,
 			PlayerEntity player) {

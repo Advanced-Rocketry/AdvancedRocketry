@@ -108,8 +108,8 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_SPACE_ELEVATOR, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RendererSpaceElevator(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BEACON, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RenderBeacon(dispatcher);});
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CENTRIFUGE, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RenderCentrifuge(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(TilePrecisionLaserEtcher.class, new RendererPrecisionLaserEtcher());
-		ClientRegistry.bindTileEntityRenderer(TileSolarArray.class, new RendererSolarArray());
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_PREC_LASER_ETCHER, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RendererPrecisionLaserEtcher(dispatcher);});
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_SOLAR_ARRAY, (dispatcher) -> {return new RendererSolarArray(dispatcher);});
 		
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileModelRenderRotatable.class, modelBlock);
 

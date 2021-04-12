@@ -1,19 +1,22 @@
 package zmaster587.advancedRocketry.integration.jei.precisionLaserEtcher;
 
-import mezz.jei.api.IGuiHelper;
+import mezz.jei.api.helpers.IGuiHelper;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import zmaster587.advancedRocketry.integration.jei.ARPlugin;
 import zmaster587.advancedRocketry.integration.jei.MachineCategoryTemplate;
+import zmaster587.advancedRocketry.integration.jei.MachineRecipe;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.LibVulpes;
 
-public class PrecisionLaserEtcherCategory extends MachineCategoryTemplate<PrecisionLaserEtcherWrapper> {
+public class PrecisionLaserEtcherCategory extends MachineCategoryTemplate<MachineRecipe> {
 
-	public PrecisionLaserEtcherCategory(IGuiHelper helper) {
-		super(helper, TextureResources.latheProgressBar);
+	public PrecisionLaserEtcherCategory(IGuiHelper helper, ItemStack icon) {
+		super(helper, TextureResources.latheProgressBar, icon);
 	}
 	
 	@Override
-	public String getUid() {
+	public ResourceLocation getUid() {
 		return ARPlugin.precisionLaserEngraverUUID;
 	}
 
@@ -22,10 +25,9 @@ public class PrecisionLaserEtcherCategory extends MachineCategoryTemplate<Precis
 		return LibVulpes.proxy.getLocalizedString("tile.precisionlaseretcher.name");
 	}
 
-    @Override
-    public String getModName()
-    {
-        return "Advanced Rocketry";
-    }
+	@Override
+	public Class<? extends MachineRecipe> getRecipeClass() {
+		return MachineRecipe.class;
+	}
 
 }

@@ -6,8 +6,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.DistExecutor;
-import zmaster587.libVulpes.inventory.ContainerModular;
-import zmaster587.libVulpes.inventory.GuiModular;
 
 public class ContainerRegistry {
 

@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Constants;
-import zmaster587.advancedRocketry.block.BlockPress;
+import zmaster587.advancedRocketry.block.BlockSmallPlatePress;
 import zmaster587.advancedRocketry.integration.jei.arcFurnace.ArcFurnaceCategory;
 import zmaster587.advancedRocketry.integration.jei.arcFurnace.ArcFurnaceRecipeMaker;
 import zmaster587.advancedRocketry.integration.jei.centrifuge.CentrifugeCategory;
@@ -28,7 +28,6 @@ import zmaster587.advancedRocketry.integration.jei.platePresser.PlatePressRecipe
 import zmaster587.advancedRocketry.integration.jei.precisionAssembler.PrecisionAssemblerCategory;
 import zmaster587.advancedRocketry.integration.jei.precisionAssembler.PrecisionAssemblerRecipeMaker;
 import zmaster587.advancedRocketry.integration.jei.precisionLaserEtcher.PrecisionLaserEtcherCategory;
-import zmaster587.advancedRocketry.integration.jei.precisionLaserEtcher.PrecisionLaserEtcherRecipeHandler;
 import zmaster587.advancedRocketry.integration.jei.precisionLaserEtcher.PrecisionLaserEtcherRecipeMaker;
 import zmaster587.advancedRocketry.integration.jei.rollingMachine.RollingMachineCategory;
 import zmaster587.advancedRocketry.integration.jei.rollingMachine.RollingMachineRecipeMaker;
@@ -49,6 +48,7 @@ public class ARPlugin implements IModPlugin {
 	public static final ResourceLocation arcFurnaceUUID =  new ResourceLocation(Constants.modId, "zmaster587.ar.arcfurnace");
 	public static final ResourceLocation platePresser =  new ResourceLocation(Constants.modId, "zmaster587.ar.platepresser");
 	public static final ResourceLocation centrifugeUUID =  new ResourceLocation(Constants.modId, "zmaster587.ar.centrifuge");
+	public static final ResourceLocation precisionLaserEngraverUUID =  new ResourceLocation(Constants.modId, "zmaster587.ar.precisionlasterengraver");
 	
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry) {
@@ -63,7 +63,8 @@ public class ARPlugin implements IModPlugin {
 		new ElectrolyzerCategory(guiHelper, new ItemStack(AdvancedRocketryBlocks.blockElectrolyser)),
 		new ArcFurnaceCategory(guiHelper, new ItemStack(AdvancedRocketryBlocks.blockArcFurnace)),
 		new PlatePressCategory(guiHelper, new ItemStack(AdvancedRocketryBlocks.blockPlatePress)),
-		new CentrifugeCategory(guiHelper, new ItemStack(AdvancedRocketryBlocks.blockCentrifuge)));
+		new CentrifugeCategory(guiHelper, new ItemStack(AdvancedRocketryBlocks.blockCentrifuge)),
+		new PrecisionLaserEtcherCategory(guiHelper, new ItemStack(AdvancedRocketryBlocks.blockPrecisionLaserEtcher)));
 	}
 	
 	
@@ -77,10 +78,11 @@ public class ARPlugin implements IModPlugin {
 		registry.addRecipes(SawMillRecipeMaker.getMachineRecipes(jeiHelpers, TileCuttingMachine.class), sawMillUUID);
 		registry.addRecipes(CrystallizerRecipeMaker.getMachineRecipes(jeiHelpers, TileCrystallizer.class), crystallizerUUID);
 		registry.addRecipes(ArcFurnaceRecipeMaker.getMachineRecipes(jeiHelpers, TileElectricArcFurnace.class), arcFurnaceUUID);
-		registry.addRecipes(PlatePressRecipeMaker.getMachineRecipes(jeiHelpers, BlockPress.class), platePresser);
+		registry.addRecipes(PlatePressRecipeMaker.getMachineRecipes(jeiHelpers, BlockSmallPlatePress.class), platePresser);
 		registry.addRecipes(ElectrolyzerRecipeMaker.getMachineRecipes(jeiHelpers, TileElectrolyser.class), electrolyzerUUID);
 		registry.addRecipes(ChemicalReactorRecipeMaker.getMachineRecipes(jeiHelpers, TileChemicalReactor.class), chemicalReactorUUID);
 		registry.addRecipes(CentrifugeRecipeMaker.getMachineRecipes(jeiHelpers, TileCentrifuge.class), centrifugeUUID);
+		registry.addRecipes(PrecisionLaserEtcherRecipeMaker.getMachineRecipes(jeiHelpers, TilePrecisionLaserEtcher.class), precisionLaserEngraverUUID);
 	}
 
 	@Override
