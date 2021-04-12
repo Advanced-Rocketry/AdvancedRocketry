@@ -4,13 +4,6 @@
         "transform": "forge:default-block"
     },
     "variants": {
-	"facing=north,state=false": { "model": "advancedrocketry:block/solararraypanel" },
-        "facing=south,state=false": { "model": "advancedrocketry:block/solararraypanel", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:block/solararraypanel", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:block/solararraypanel", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:block/solararraypanel" },
-        "facing=south,state=true": { "model": "advancedrocketry:block/solararraypanel", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:block/solararraypanel", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:block/solararraypanel", "y": 90 }
+	"": { "model": "advancedrocketry:block/solararraypanel" }
     }
 }

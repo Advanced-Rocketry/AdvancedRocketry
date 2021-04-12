@@ -2,7 +2,7 @@
     "ambientocclusion": false,
     "textures": {
         "generic": "libvulpes:blocks/machinegeneric",
-        "wool": "blocks/wool_colored_silver",
+        "wool": "block/light_gray_wool",
         "support": "advancedrocketry:blocks/smallconnector",
         "panel": "advancedrocketry:blocks/panelside",
         "particle": "advancedrocketry:blocks/solar"
@@ -140,12 +140,5 @@
                 "west": { "texture": "#support", "uv": [ 4, 7, 12, 9 ] }
             }
         }
-<<<<<<< HEAD
-    ],
-    "textures": {
-        "wool": "block/light_gray_wool"
-    }
-=======
     ]
->>>>>>> origin/1.12
 }

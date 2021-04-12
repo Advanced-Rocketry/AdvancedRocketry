@@ -1,11 +1,7 @@
 # Blender v2.78 (sub 0) OBJ File: ''
 # www.blender.org
-mtllib advrocketmotor.mtl
-<<<<<<< HEAD
-o Cylinder
-=======
+mtllib advcombustion.mtl
 o Material
->>>>>>> origin/1.12
 v 0.050000 0.760000 0.400000
 v 0.093301 0.577936 0.425000
 v 0.050000 0.560000 0.400000
