@@ -1,7 +1,7 @@
 {
     "variants": {
-        "powered=false": { "model": "advancedrocketry:oxygenDetection" },
-        "powered=true": { "model": "advancedrocketry:oxygenDetection_on" },
-        "inventory" : { "model": "advancedrocketry:oxygendetection" }
+        "powered=false": { "model": "advancedrocketry:block/oxygendetection" },
+        "powered=true": { "model": "advancedrocketry:block/oxygendetection_on" },
+        "inventory" : { "model": "advancedrocketry:block/oxygendetection" }
     }
 }

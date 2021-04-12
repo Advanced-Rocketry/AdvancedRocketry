@@ -20,11 +20,7 @@ import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.tile.TilePointer;
 
 public class BlockARHatch extends BlockHatch {
-<<<<<<< HEAD
-
-=======
 	public static final BooleanProperty POWERED = BooleanProperty.create("powered");
->>>>>>> 1.16.5
 	public BlockARHatch(Properties material) {
 		super(material);
 		this.setDefaultState(this.stateContainer.getBaseState().with(VISIBLE,true).with(POWERED, false));

@@ -1,26 +1,6 @@
 {
     "variants": {
-<<<<<<< HEAD
         "visible=true": { "model": "advancedrocketry:block/blastbrick" },
         "visible=false": { "model": "advancedrocketry:block/blastbrick" }
-=======
-        "varient=0": { "model": "advancedrocketry:blastBrick" },
-        "varient=1": { "model": "advancedrocketry:blastBrick" },
-        "varient=2": { "model": "advancedrocketry:blastBrick" },
-        "varient=3": { "model": "advancedrocketry:blastBrick" },
-        "varient=4": { "model": "advancedrocketry:blastBrick" },
-        "varient=5": { "model": "advancedrocketry:blastBrick" },
-        "varient=6": { "model": "advancedrocketry:blastBrick" },
-        "varient=7": { "model": "advancedrocketry:blastBrick" },
-        "varient=8": { "model": "advancedrocketry:blastBrick" },
-        "varient=9": { "model": "advancedrocketry:blastBrick" },
-        "varient=10": { "model": "advancedrocketry:blastBrick" },
-        "varient=11": { "model": "advancedrocketry:blastBrick" },
-        "varient=12": { "model": "advancedrocketry:blastBrick" },
-        "varient=13": { "model": "advancedrocketry:blastBrick" },
-        "varient=14": { "model": "advancedrocketry:blastBrick" },
-        "varient=15": { "model": "advancedrocketry:blastBrick" },
-        "inventory" : { "model": "advancedrocketry:blastbrick" }
->>>>>>> origin/1.12
     }
 }

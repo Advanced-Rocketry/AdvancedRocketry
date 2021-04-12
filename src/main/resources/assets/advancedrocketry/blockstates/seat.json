@@ -4,11 +4,7 @@
         "transform": "forge:default-block"
     },
     "variants": {
-<<<<<<< HEAD
+	"inventory": { "model": "advancedrocketry:block/seat"},
         "": { "model": "advancedrocketry:block/seat" }
-=======
-        "inventory": { "model": "advancedrocketry:seat"},
-        "normal": { "model": "advancedrocketry:seat" }
->>>>>>> origin/1.12
     }
 }

@@ -1,6 +1,5 @@
 {
     "variants": {
-<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/biomescanner" },
         "facing=south,state=false": { "model": "advancedrocketry:block/biomescanner", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/biomescanner", "y": 270 },
@@ -9,17 +8,6 @@
         "facing=south,state=true": { "model": "advancedrocketry:block/biomescanner", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/biomescanner", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/biomescanner", "y": 90 }
-=======
-        "facing=north,state=false": { "model": "advancedrocketry:biomeScanner" },
-        "facing=south,state=false": { "model": "advancedrocketry:biomeScanner", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:biomeScanner", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:biomeScanner", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:biomeScanner" },
-        "facing=south,state=true": { "model": "advancedrocketry:biomeScanner", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:biomeScanner", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:biomeScanner", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:biomescanner" }
->>>>>>> origin/1.12
     }
     
 }

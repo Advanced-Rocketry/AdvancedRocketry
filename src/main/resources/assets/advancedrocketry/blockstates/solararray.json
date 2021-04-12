@@ -1,13 +1,13 @@
 {
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:solararray" },
-        "facing=south,state=false": { "model": "advancedrocketry:solararray", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:solararray", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:solararray", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:solararray" },
-        "facing=south,state=true": { "model": "advancedrocketry:solararray", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:solararray", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:solararray", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:solararray" }
+        "facing=north,state=false": { "model": "advancedrocketry:block/solararray" },
+        "facing=south,state=false": { "model": "advancedrocketry:block/solararray", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:block/solararray", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:block/solararray", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:block/solararray" },
+        "facing=south,state=true": { "model": "advancedrocketry:block/solararray", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:block/solararray", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:block/solararray", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:block/solararray" }
     }
 }

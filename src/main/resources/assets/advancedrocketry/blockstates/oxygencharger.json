@@ -1,6 +1,5 @@
 {
     "variants": {
-<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/oxygencharger" },
         "facing=south,state=false": { "model": "advancedrocketry:block/oxygencharger", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/oxygencharger", "y": 270 },
@@ -8,21 +7,7 @@
         "facing=north,state=true": { "model": "advancedrocketry:block/oxygencharger" },
         "facing=south,state=true": { "model": "advancedrocketry:block/oxygencharger", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/oxygencharger", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:block/oxygencharger", "y": 90 }
-=======
-        "facing=north,state=false": { "model": "advancedrocketry:oxygenCharger" },
-        "facing=south,state=false": { "model": "advancedrocketry:oxygenCharger", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:oxygenCharger", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:oxygenCharger", "y": 90 },
-        "facing=down,state=true":  { "model": "advancedrocketry:oxygenCharger" },
-        "facing=up,state=true":  { "model": "advancedrocketry:oxygenCharger" },
-        "facing=north,state=true": { "model": "advancedrocketry:oxygenCharger" },
-        "facing=south,state=true": { "model": "advancedrocketry:oxygenCharger", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:oxygenCharger", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:oxygenCharger", "y": 90 },
-        "facing=down,state=true":  { "model": "advancedrocketry:oxygenCharger" },
-        "facing=up,state=true":  { "model": "advancedrocketry:oxygenCharger" },
-        "inventory" : { "model": "advancedrocketry:oxygencharger" }
->>>>>>> origin/1.12
+        "facing=east,state=true":  { "model": "advancedrocketry:block/oxygencharger", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:block/oxygencharger" }
     }
 }

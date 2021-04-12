@@ -1,6 +1,5 @@
 {
     "variants": {
-<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/gravitymachine" },
         "facing=south,state=false": { "model": "advancedrocketry:block/gravitymachine", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/gravitymachine", "y": 270 },
@@ -9,16 +8,5 @@
         "facing=south,state=true": { "model": "advancedrocketry:block/gravitymachine", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/gravitymachine", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/gravitymachine", "y": 90 }
-=======
-        "facing=north,state=false": { "model": "advancedrocketry:gravityMachine" },
-        "facing=south,state=false": { "model": "advancedrocketry:gravityMachine", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:gravityMachine", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:gravityMachine", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:gravityMachine" },
-        "facing=south,state=true": { "model": "advancedrocketry:gravityMachine", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:gravityMachine", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:gravityMachine", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:gravitymachine" }
->>>>>>> origin/1.12
     }
 }

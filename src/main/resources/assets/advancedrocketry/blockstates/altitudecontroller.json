@@ -1,6 +1,5 @@
 {
     "variants": {
-<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/altitudecontroller" },
         "facing=south,state=false": { "model": "advancedrocketry:block/altitudecontroller", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/altitudecontroller", "y": 270 },
@@ -9,16 +8,5 @@
         "facing=south,state=true": { "model": "advancedrocketry:block/altitudecontroller", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/altitudecontroller", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/altitudecontroller", "y": 90 }
-=======
-        "facing=north,state=false": { "model": "advancedrocketry:altitudeController" },
-        "facing=south,state=false": { "model": "advancedrocketry:altitudeController", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:altitudeController", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:altitudeController", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:altitudeController" },
-        "facing=south,state=true": { "model": "advancedrocketry:altitudeController", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:altitudeController", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:altitudeController", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:altitudecontroller" }
->>>>>>> origin/1.12
     }
 }

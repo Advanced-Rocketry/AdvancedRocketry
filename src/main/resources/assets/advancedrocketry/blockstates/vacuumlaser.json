@@ -1,11 +1,11 @@
 {
     "variants": {
-        "facing=north": { "model": "advancedrocketry:vacuumLaser", "x": 90 },
-        "facing=south": { "model": "advancedrocketry:vacuumLaser", "y": 180, "x": 90 },
-        "facing=west":  { "model": "advancedrocketry:vacuumLaser", "y": 270, "x": 90 },
-        "facing=east":  { "model": "advancedrocketry:vacuumLaser", "y": 90, "x": 90 },
-        "facing=up": { "model": "advancedrocketry:vacuumLaser" },
-        "facing=down": { "model": "advancedrocketry:vacuumLaser", "y": 180 },
-        "inventory": { "model": "advancedrocketry:vacuumLaser" }
+        "facing=north": { "model": "advancedrocketry:block/vacuumLaser", "x": 90 },
+        "facing=south": { "model": "advancedrocketry:block/vacuumLaser", "y": 180, "x": 90 },
+        "facing=west":  { "model": "advancedrocketry:block/vacuumLaser", "y": 270, "x": 90 },
+        "facing=east":  { "model": "advancedrocketry:block/vacuumLaser", "y": 90, "x": 90 },
+        "facing=up": { "model": "advancedrocketry:block/vacuumLaser" },
+        "facing=down": { "model": "advancedrocketry:block/vacuumLaser", "y": 180 },
+        "inventory": { "model": "advancedrocketry:block/vacuumLaser" }
     }
 }

@@ -23,13 +23,8 @@
         },
 	"r":
         {
-<<<<<<< HEAD:src/main/resources/data/advancedrocketry/recipes/observatory_alt.json
 
             "tag": "forge:sticks/iron"
-=======
-	    "type": "forge:ore_dict",
-            "ore": "stickIron"
->>>>>>> origin/1.12:src/main/resources/assets/advancedrocketry/recipes/solararray.json
         }
     },
     "result":

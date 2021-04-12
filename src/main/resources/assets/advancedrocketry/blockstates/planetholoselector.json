@@ -1,6 +1,5 @@
 {
     "variants": {
-<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/planetholoselector" },
         "facing=south,state=false": { "model": "advancedrocketry:block/planetholoselector", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/planetholoselector", "y": 270 },
@@ -8,21 +7,7 @@
         "facing=north,state=true": { "model": "advancedrocketry:block/planetholoselector" },
         "facing=south,state=true": { "model": "advancedrocketry:block/planetholoselector", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/planetholoselector", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:block/planetholoselector", "y": 90 }
-=======
-        "facing=north,state=false": { "model": "advancedrocketry:planetHoloSelector" },
-        "facing=south,state=false": { "model": "advancedrocketry:planetHoloSelector", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:planetHoloSelector", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:planetHoloSelector", "y": 90 },
-        "facing=down,state=true":  { "model": "advancedrocketry:planetHoloSelector" },
-        "facing=up,state=true":  { "model": "advancedrocketry:planetHoloSelector" },
-        "facing=north,state=true": { "model": "advancedrocketry:planetHoloSelector" },
-        "facing=south,state=true": { "model": "advancedrocketry:planetHoloSelector", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:planetHoloSelector", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:planetHoloSelector", "y": 90 },
-        "facing=down,state=true":  { "model": "advancedrocketry:planetHoloSelector" },
-        "facing=up,state=true":  { "model": "advancedrocketry:planetHoloSelector" },
-        "inventory" : { "model": "advancedrocketry:planetholoselector" }
->>>>>>> origin/1.12
+        "facing=east,state=true":  { "model": "advancedrocketry:block/planetholoselector", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:block/planetholoselector" }
     }
 }

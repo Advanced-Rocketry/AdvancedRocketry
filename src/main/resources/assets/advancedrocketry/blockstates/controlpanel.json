@@ -1,6 +1,5 @@
 {
     "variants": {
-<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/controlPanel" },
         "facing=south,state=false": { "model": "advancedrocketry:block/controlPanel", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/controlPanel", "y": 270 },
@@ -9,16 +8,5 @@
         "facing=south,state=true": { "model": "advancedrocketry:block/controlPanel", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/controlPanel", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/controlPanel", "y": 90 }
-=======
-        "facing=north,state=false": { "model": "advancedrocketry:controlPanel" },
-        "facing=south,state=false": { "model": "advancedrocketry:controlPanel", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:controlPanel", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:controlPanel", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:controlPanel" },
-        "facing=south,state=true": { "model": "advancedrocketry:controlPanel", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:controlPanel", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:controlPanel", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:controlpanel" }
->>>>>>> origin/1.12
     }
 }

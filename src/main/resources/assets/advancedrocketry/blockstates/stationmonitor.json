@@ -1,6 +1,5 @@
 {
     "variants": {
-<<<<<<< HEAD:src/main/resources/assets/advancedrocketry/blockstates/stationmonitor.json
         "facing=north,state=false": { "model": "advancedrocketry:block/warpmonitor" },
         "facing=south,state=false": { "model": "advancedrocketry:block/warpmonitor", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/warpmonitor", "y": 270 },
@@ -8,17 +7,7 @@
         "facing=north,state=true": { "model": "advancedrocketry:block/warpmonitor" },
         "facing=south,state=true": { "model": "advancedrocketry:block/warpmonitor", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/warpmonitor", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:block/warpmonitor", "y": 90 }
-=======
-        "facing=north,state=false": { "model": "advancedrocketry:warpMonitor" },
-        "facing=south,state=false": { "model": "advancedrocketry:warpMonitor", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:warpMonitor", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:warpMonitor", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:warpMonitor" },
-        "facing=south,state=true": { "model": "advancedrocketry:warpMonitor", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:warpMonitor", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:warpMonitor", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:warpMonitor" }
->>>>>>> origin/1.12:src/main/resources/assets/advancedrocketry/blockstates/warpmonitor.json
+        "facing=east,state=true":  { "model": "advancedrocketry:block/warpmonitor", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:block/warpMonitor" }
     }
 }

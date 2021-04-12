@@ -1,6 +1,5 @@
 {
     "variants": {
-<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/precisionassemblingmachine" },
         "facing=south,state=false": { "model": "advancedrocketry:block/precisionassemblingmachine", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/precisionassemblingmachine", "y": 270 },
@@ -8,17 +7,7 @@
         "facing=north,state=true": { "model": "advancedrocketry:block/precisionassemblingmachine_on" },
         "facing=south,state=true": { "model": "advancedrocketry:block/precisionassemblingmachine_on", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/precisionassemblingmachine_on", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:block/precisionassemblingmachine_on", "y": 90 }
-=======
-        "facing=north,state=false": { "model": "advancedrocketry:precisionassemblingmachine" },
-        "facing=south,state=false": { "model": "advancedrocketry:precisionassemblingmachine", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:precisionassemblingmachine", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:precisionassemblingmachine", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:precisionassemblingmachine_on" },
-        "facing=south,state=true": { "model": "advancedrocketry:precisionassemblingmachine_on", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:precisionassemblingmachine_on", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:precisionassemblingmachine_on", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:precisionassemblingmachine" }
->>>>>>> origin/1.12
+        "facing=east,state=true":  { "model": "advancedrocketry:block/precisionassemblingmachine_on", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:block/precisionassemblingmachine" }
     }
 }

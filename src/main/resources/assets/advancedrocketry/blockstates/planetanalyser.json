@@ -1,6 +1,5 @@
 {
     "variants": {
-<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/planetanalyser" },
         "facing=south,state=false": { "model": "advancedrocketry:block/planetanalyser", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/planetanalyser", "y": 270 },
@@ -8,17 +7,7 @@
         "facing=north,state=true": { "model": "advancedrocketry:block/planetanalyser_on" },
         "facing=south,state=true": { "model": "advancedrocketry:block/planetanalyser_on", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/planetanalyser_on", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:block/planetanalyser_on", "y": 90 }
-=======
-        "facing=north,state=false": { "model": "advancedrocketry:planetAnalyser" },
-        "facing=south,state=false": { "model": "advancedrocketry:planetAnalyser", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:planetAnalyser", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:planetAnalyser", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:planetAnalyser_on" },
-        "facing=south,state=true": { "model": "advancedrocketry:planetAnalyser_on", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:planetAnalyser_on", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:planetAnalyser_on", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:planetanalyser" }
->>>>>>> origin/1.12
+        "facing=east,state=true":  { "model": "advancedrocketry:block/planetanalyser_on", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:block/planetanalyser" }
     }
 }

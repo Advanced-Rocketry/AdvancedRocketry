@@ -1,6 +1,5 @@
 {
     "variants": {
-<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/oxygenvent" },
         "facing=south,state=false": { "model": "advancedrocketry:block/oxygenvent", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/oxygenvent", "y": 270 },
@@ -8,17 +7,7 @@
         "facing=north,state=true": { "model": "advancedrocketry:block/oxygenvent" },
         "facing=south,state=true": { "model": "advancedrocketry:block/oxygenvent", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/oxygenvent", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:block/oxygenvent", "y": 90 }
-=======
-        "facing=north,state=false": { "model": "advancedrocketry:oxygenVent" },
-        "facing=south,state=false": { "model": "advancedrocketry:oxygenVent", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:oxygenVent", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:oxygenVent", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:oxygenVent" },
-        "facing=south,state=true": { "model": "advancedrocketry:oxygenVent", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:oxygenVent", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:oxygenVent", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:oxygenvent" }
->>>>>>> origin/1.12
+        "facing=east,state=true":  { "model": "advancedrocketry:block/oxygenvent", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:block/oxygenvent" }
     }
 }

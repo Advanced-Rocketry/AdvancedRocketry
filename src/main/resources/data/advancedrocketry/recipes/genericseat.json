@@ -3,17 +3,11 @@
     "pattern": [
 	    "xsx"
     ],
-<<<<<<< HEAD:src/main/resources/data/advancedrocketry/recipes/genericseat.json
     "key":
     {
         "x":
         {
             "tag": "minecraft:wool",
-=======
-    "key": {
-        "x": {
-            "item": "minecraft:wool",
->>>>>>> origin/1.12:src/main/resources/assets/advancedrocketry/recipes/genericseat.json
             "data": 32767
         },
         "s": {

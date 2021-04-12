@@ -1,6 +1,5 @@
 {
     "variants": {
-<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/deployablerocketbuilder" },
         "facing=south,state=false": { "model": "advancedrocketry:block/deployablerocketbuilder", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/deployablerocketbuilder", "y": 270 },
@@ -9,16 +8,5 @@
         "facing=south,state=true": { "model": "advancedrocketry:block/deployablerocketbuilder", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/deployablerocketbuilder", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/deployablerocketbuilder", "y": 90 }
-=======
-        "facing=north,state=false": { "model": "advancedrocketry:deployableRocketBuilder" },
-        "facing=south,state=false": { "model": "advancedrocketry:deployableRocketBuilder", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:deployableRocketBuilder", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:deployableRocketBuilder", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:deployableRocketBuilder" },
-        "facing=south,state=true": { "model": "advancedrocketry:deployableRocketBuilder", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:deployableRocketBuilder", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:deployableRocketBuilder", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:deployablerocketbuilder" }
->>>>>>> origin/1.12
     }
 }

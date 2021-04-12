@@ -139,7 +139,9 @@ public class AdvancedRocketryItems {
 	public static Item itemRocketBuilder;
 	public static Item itemGenericSeat;
 	public static Item itemEngine;
+	public static Item itemBiPropellantEngine;
 	public static Item itemFuelTank;
+	public static Item itemBiPropellantFuelTank;
 	public static Item itemFuelingStation;
 	public static Item itemMonitoringStation;
 	public static Item itemSatelliteBuilder;
@@ -387,7 +389,9 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemRocketBuilder = new BlockItem(AdvancedRocketryBlocks.blockRocketBuilder, typicalBlockProperties);
 		AdvancedRocketryItems.itemGenericSeat = new BlockItem(AdvancedRocketryBlocks.blockGenericSeat, typicalBlockProperties);
 		AdvancedRocketryItems.itemEngine = new BlockItem(AdvancedRocketryBlocks.blockEngine, typicalBlockProperties);
+		AdvancedRocketryItems.itemBiPropellantEngine = new BlockItem(AdvancedRocketryBlocks.blockBipropellantEngine, typicalBlockProperties);
 		AdvancedRocketryItems.itemFuelTank = new BlockItem(AdvancedRocketryBlocks.blockFuelTank, typicalBlockProperties);
+		AdvancedRocketryItems.itemBiPropellantFuelTank = new BlockItem(AdvancedRocketryBlocks.blockBipropellantFuelTank, typicalBlockProperties);
 		AdvancedRocketryItems.itemFuelingStation = new BlockItem(AdvancedRocketryBlocks.blockFuelingStation, typicalBlockProperties);
 		AdvancedRocketryItems.itemMonitoringStation = new BlockItem(AdvancedRocketryBlocks.blockMonitoringStation, typicalBlockProperties);
 		AdvancedRocketryItems.itemSatelliteBuilder = new BlockItem(AdvancedRocketryBlocks.blockSatelliteBuilder, typicalBlockProperties);
@@ -482,8 +486,10 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemStructureTower.setRegistryName("structuretower"),
 				AdvancedRocketryItems.itemGenericSeat.setRegistryName("seat"),
 				AdvancedRocketryItems.itemEngine.setRegistryName("rocketmotor"),
+				AdvancedRocketryItems.itemBiPropellantEngine.setRegistryName("bipropellantrocketmotor"),
 				AdvancedRocketryItems.itemAdvEngine.setRegistryName("advrocketmotor"),
 				AdvancedRocketryItems.itemFuelTank.setRegistryName("fueltank"),
+				AdvancedRocketryItems.itemBiPropellantFuelTank.setRegistryName("bipropellantfueltank"),
 				AdvancedRocketryItems.itemFuelingStation.setRegistryName("fuelingstation"),
 				AdvancedRocketryItems.itemMonitoringStation.setRegistryName("monitoringstation"),
 				AdvancedRocketryItems.itemSatelliteBuilder.setRegistryName("satellitebuilder"),

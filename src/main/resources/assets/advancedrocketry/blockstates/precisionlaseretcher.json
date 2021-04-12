@@ -1,13 +1,14 @@
 {
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:precisionlaseretcher" },
-        "facing=south,state=false": { "model": "advancedrocketry:precisionlaseretcher", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:precisionlaseretcher", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:precisionlaseretcher", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:precisionlaseretcher" },
-        "facing=south,state=true": { "model": "advancedrocketry:precisionlaseretcher", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:precisionlaseretcher", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:precisionlaseretcher", "y": 90 },
-        "inventory": { "model": "advancedrocketry:precisionlaseretcher" }
+"variants": {
+        "facing=north,state=false": { "model": "advancedrocketry:block/precisionlaseretcher" },
+        "facing=south,state=false": { "model": "advancedrocketry:block/precisionlaseretcher", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:block/precisionlaseretcher", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:block/precisionlaseretcher", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:block/precisionlaseretcher" },
+        "facing=south,state=true": { "model": "advancedrocketry:block/precisionlaseretcher", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:block/precisionlaseretcher", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:block/precisionlaseretcher", "y": 90 },
+        "inventory": { "model": "advancedrocketry:block/precisionlaseretcher" }
     }
 }

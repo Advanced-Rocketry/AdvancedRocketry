@@ -1,12 +1,7 @@
 {
     "variants": {
-<<<<<<< HEAD
         "stage=0": { "model": "advancedrocketry:block/aliensapling" },
-        "stage=1": { "model": "advancedrocketry:block/aliensapling" }
-=======
-        "stage=0": { "model": "advancedrocketry:alienSapling" },
-        "stage=1": { "model": "advancedrocketry:alienSapling" },
+        "stage=1": { "model": "advancedrocketry:block/aliensapling" },
         "inventory" : { "model": "advancedrocketry:aliensapling" }
->>>>>>> origin/1.12
     }
 }

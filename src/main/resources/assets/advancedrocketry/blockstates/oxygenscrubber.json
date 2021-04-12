@@ -1,6 +1,5 @@
 {
     "variants": {
-<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/oxygenscrubber" },
         "facing=south,state=false": { "model": "advancedrocketry:block/oxygenscrubber", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/oxygenscrubber", "y": 270 },
@@ -8,17 +7,7 @@
         "facing=north,state=true": { "model": "advancedrocketry:block/oxygenscrubber_on" },
         "facing=south,state=true": { "model": "advancedrocketry:block/oxygenscrubber_on", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/oxygenscrubber_on", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:block/oxygenscrubber_on", "y": 90 }
-=======
-        "facing=north,state=false": { "model": "advancedrocketry:oxygenScrubber" },
-        "facing=south,state=false": { "model": "advancedrocketry:oxygenScrubber", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:oxygenScrubber", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:oxygenScrubber", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:oxygenScrubber_on" },
-        "facing=south,state=true": { "model": "advancedrocketry:oxygenScrubber_on", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:oxygenScrubber_on", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:oxygenScrubber_on", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:oxygenscrubber" }
->>>>>>> origin/1.12
+        "facing=east,state=true":  { "model": "advancedrocketry:block/oxygenscrubber_on", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:block/oxygenscrubber" }
     }
 }

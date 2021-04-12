@@ -1,6 +1,5 @@
 {
     "variants": {
-<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/guidancecomputer" },
         "facing=south,state=false": { "model": "advancedrocketry:block/guidancecomputer", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/guidancecomputer", "y": 270 },
@@ -9,16 +8,5 @@
         "facing=south,state=true": { "model": "advancedrocketry:block/guidancecomputer", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/guidancecomputer", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/guidancecomputer", "y": 90 }
-=======
-        "facing=north,state=false": { "model": "advancedrocketry:guidanceComputer" },
-        "facing=south,state=false": { "model": "advancedrocketry:guidanceComputer", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:guidanceComputer", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:guidanceComputer", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:guidanceComputer" },
-        "facing=south,state=true": { "model": "advancedrocketry:guidanceComputer", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:guidanceComputer", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:guidanceComputer", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:guidancecomputer" }
->>>>>>> origin/1.12
     }
 }

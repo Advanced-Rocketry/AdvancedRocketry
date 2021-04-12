@@ -1,6 +1,5 @@
 {
     "variants": {
-<<<<<<< HEAD
         "facing=north,state=false": { "model": "advancedrocketry:block/centrifuge" },
         "facing=south,state=false": { "model": "advancedrocketry:block/centrifuge", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/centrifuge", "y": 270 },
@@ -9,16 +8,5 @@
         "facing=south,state=true": { "model": "advancedrocketry:block/centrifuge", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/centrifuge", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/centrifuge", "y": 90 }
-=======
-        "facing=north,state=false": { "model": "advancedrocketry:centrifuge" },
-        "facing=south,state=false": { "model": "advancedrocketry:centrifuge", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:centrifuge", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:centrifuge", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:centrifuge" },
-        "facing=south,state=true": { "model": "advancedrocketry:centrifuge", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:centrifuge", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:centrifuge", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:centrifuge" }
->>>>>>> origin/1.12
     }
 }
