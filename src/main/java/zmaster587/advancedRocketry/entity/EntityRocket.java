@@ -58,6 +58,7 @@ import net.minecraftforge.common.util.ITeleporter;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -116,7 +117,7 @@ import zmaster587.libVulpes.util.ZUtils;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class EntityRocket extends EntityRocketBase implements INetworkEntity, IModularInventory, IProgressBar, IButtonInventory, ISelectionNotify, IPlanetDefiner, INamedContainerProvider, IEntitySpawnNBT {
+public class EntityRocket extends EntityRocketBase implements INetworkEntity, IEntityAdditionalSpawnData, IModularInventory, IProgressBar, IButtonInventory, ISelectionNotify, IPlanetDefiner, INamedContainerProvider, IEntitySpawnNBT {
 
 	//true if the rocket is on decent
 	private boolean isInOrbit;
@@ -2512,9 +2513,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	@Override
 	public IPacket<?> createSpawnPacket() {
-		CompoundNBT nbt = new CompoundNBT();
-		writeAdditional(nbt);
-		return new PacketSpawnEntity(this, nbt);
+		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override
@@ -2531,5 +2530,20 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	@Override
 	public GuiHandler.guiId getModularInvType() {
 		return guiId.MODULAR;
+	}
+
+
+	@Override
+	public void writeSpawnData(PacketBuffer buffer) {
+		CompoundNBT nbt = new CompoundNBT();
+		writeAdditional(nbt);
+		new PacketSpawnEntity(this, nbt).write(buffer);	
+	}
+
+	@Override
+	public void readSpawnData(PacketBuffer additionalData) {
+		PacketSpawnEntity packet = new PacketSpawnEntity();
+		packet.read(additionalData);
+		packet.execute(this);
 	}
 }

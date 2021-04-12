@@ -27,6 +27,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ITeleporter;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
@@ -50,7 +52,7 @@ import zmaster587.libVulpes.util.ZUtils;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEntitySpawnNBT {
+public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEntityAdditionalSpawnData, IEntitySpawnNBT {
 
 	public static final double MAX_HEIGHT = ARConfiguration.getCurrentConfig().orbit.get();
 	public static final double MAX_STANDTIME = 200;
@@ -565,11 +567,23 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 
 	@Override
 	public IPacket<?> createSpawnPacket() {
-		CompoundNBT nbt = new CompoundNBT();
-		writeAdditional(nbt);
-		return new PacketSpawnEntity(this, nbt);
+		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
+	@Override
+	public void writeSpawnData(PacketBuffer buffer) {
+		CompoundNBT nbt = new CompoundNBT();
+		writeAdditional(nbt);
+		new PacketSpawnEntity(this, nbt).write(buffer);	
+	}
+
+	@Override
+	public void readSpawnData(PacketBuffer additionalData) {
+		PacketSpawnEntity packet = new PacketSpawnEntity();
+		packet.read(additionalData);
+		packet.execute(this);
+	}
+	
 	@Override
 	public void readSpawnNBT(CompoundNBT nbt) {
 		
