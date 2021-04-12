@@ -401,7 +401,7 @@ public class AdvancedRocketry {
 		BlockTags.getCollection().getTagByID(new ResourceLocation("minecraft", "leaves")).contains(AdvancedRocketryBlocks.blockAlienLeaves);
 		BlockTags.getCollection().getTagByID(new ResourceLocation("minecraft", "saplings")).contains(AdvancedRocketryBlocks.blockAlienSapling);
 		BlockTags.getCollection().getTagByID(new ResourceLocation("forge", "concrete")).contains(AdvancedRocketryBlocks.blockConcrete);
-		BlockTags.getCollection().getTagByID(new ResourceLocation("advancedrocketry", "casingCentrifuge")).contains(LibVulpesBlocks.blockAdvStructureBlock);
+		BlockTags.getCollection().getTagByID(new ResourceLocation("advancedrocketry", "casingcentrifuge")).contains(LibVulpesBlocks.blockAdvStructureBlock);
 	}
 
 	@OnlyIn(value=Dist.CLIENT)

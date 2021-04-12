@@ -25,7 +25,7 @@ public class RenderAreaGravityController extends TileEntityRenderer<TileAreaGrav
 	
 	WavefrontObject model;
 
-	ResourceLocation texture =  new ResourceLocation("advancedRocketry:textures/models/areagravitycontroller.png");
+	ResourceLocation texture =  new ResourceLocation("advancedrocketry:textures/models/areagravitycontroller.png");
 	
 	public RenderAreaGravityController(TileEntityRendererDispatcher tile) {
 		super(tile);

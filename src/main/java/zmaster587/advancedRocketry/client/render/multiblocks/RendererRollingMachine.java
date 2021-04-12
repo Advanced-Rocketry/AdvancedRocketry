@@ -26,7 +26,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 public class RendererRollingMachine extends TileEntityRenderer<TileRollingMachine> {
 	WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/rollingMachine.png");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/rollingmachine.png");
 	private static int bodyList;
 
 	public RendererRollingMachine(TileEntityRendererDispatcher tile) {
