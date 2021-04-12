@@ -1703,8 +1703,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 * Damages the ground beneath the rocket, depending on block type
 	 */
 	private void damageGroundBelowRocket(World world, int x, int y, int z, int radius) {
-		//Actually, we affect the blocks that are one lower
-		y--;
+		//Start on the same level as the bottom of the rocket
 		for (int i = 0; i <= radius; i++) {
 			for (int j = 0; j <= radius; j++) {
 				for (int k = 1; k >= -2; k--) {
