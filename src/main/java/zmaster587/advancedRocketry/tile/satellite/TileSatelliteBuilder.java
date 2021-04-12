@@ -73,7 +73,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		//First make sure everything is a satellite part, and check to see if satellite has any power generation
 		for(int i = primaryFunctionSlot; i <= modularFunctionSlotEnd; i++) {
 			ItemStack stack = getStackInSlot(i);
-			if (!stack.isEmpty() && SatelliteRegistry.getSatelliteProperty(stack).getPowerGeneration() > 0 )
+			if (!stack.isEmpty() && SatelliteRegistry.getSatelliteProperty(stack) != null && SatelliteRegistry.getSatelliteProperty(stack).getPropertyFlag() == SatelliteProperties.Property.POWER_GEN.getFlag() && SatelliteRegistry.getSatelliteProperty(stack).getPowerGeneration() > 0)
 				hasPowerGeneration = true;
 		}
 
@@ -104,14 +104,17 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		if(!world.isRemote) {
 			//Grab properties from the items in slots 1-6
 			for (int currentSlotIndex = modularFunctionSlotStart; currentSlotIndex <= modularFunctionSlotEnd; currentSlotIndex++) {
-				powerStorage += SatelliteRegistry.getSatelliteProperty(getStackInSlot(currentSlotIndex)).getPowerStorage();
-				powerGeneration += SatelliteRegistry.getSatelliteProperty(getStackInSlot(currentSlotIndex)).getPowerGeneration();
-				maxData += SatelliteRegistry.getSatelliteProperty(getStackInSlot(currentSlotIndex)).getMaxDataStorage();
+				ItemStack stack = getStackInSlot(currentSlotIndex);
+				if (SatelliteRegistry.getSatelliteProperty(stack) != null) {
+					if (SatelliteRegistry.getSatelliteProperty(stack).getPropertyFlag() == SatelliteProperties.Property.BATTERY.getFlag()) powerStorage += SatelliteRegistry.getSatelliteProperty(getStackInSlot(currentSlotIndex)).getPowerStorage();
+					if (SatelliteRegistry.getSatelliteProperty(stack).getPropertyFlag() == SatelliteProperties.Property.POWER_GEN.getFlag()) powerGeneration += SatelliteRegistry.getSatelliteProperty(getStackInSlot(currentSlotIndex)).getPowerGeneration();
+					if (SatelliteRegistry.getSatelliteProperty(stack).getPropertyFlag() == SatelliteProperties.Property.DATA.getFlag()) maxData += SatelliteRegistry.getSatelliteProperty(getStackInSlot(currentSlotIndex)).getMaxDataStorage();
+				}
 			}
 
 			//Set final satellite properties
 			//720 here is the base power buffer, so the satellite has SOMETHING to run on
-			SatelliteProperties properties = new SatelliteProperties(powerGeneration, powerStorage + 720, satType,maxData);
+			SatelliteProperties properties = new SatelliteProperties(powerGeneration, powerStorage + 720, satType, maxData);
 			properties.setId(DimensionManager.getInstance().getNextSatelliteId());
 
 			//Create the output item
