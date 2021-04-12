@@ -222,7 +222,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 
 	@Override
 	public String getMachineName() {
-		return "tile.satelliteBuilder.name";
+		return "block.advancedrocketry.satellitebuilder";
 	}
 
 	@Override

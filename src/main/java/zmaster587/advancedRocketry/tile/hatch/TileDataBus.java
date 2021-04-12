@@ -31,7 +31,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	DataStorage data;
 
 	public TileDataBus() {
-		super(AdvancedRocketryTileEntityType.TILE_DATA_BUS);
+		super(AdvancedRocketryTileEntityType.TILE_DATA_BUS,1);
 		data = new DataStorage(DataStorage.DataType.UNDEFINED);
 		data.setMaxData(2000);
 	}

@@ -225,7 +225,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.pump.name";
+		return "block.advancedrocketry.blockpump";
 	}
 
 	@Override

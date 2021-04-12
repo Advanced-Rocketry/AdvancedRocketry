@@ -1,15 +1,22 @@
 package zmaster587.advancedRocketry.client.render;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.model.RenderMaterial;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import java.util.Optional;
+
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -32,26 +39,28 @@ public class RenderTank extends TileEntityRenderer<TileFluidTank> {
 		FluidStack fluid = fluidTile.getFluidInTank(0);
 		ResourceLocation fluidIcon = new ResourceLocation("advancedrocketry:textures/blocks/fluid/oxygen_flow.png");
 
+		float r = 1, g = 1, b = 1, a = 1;
 		if(fluid != null && fluid.getFluid() != null)
 		{
 			matrix.push();
 
 			float minU = 0, maxU = 1, minV = 0, maxV = 1;
-			/*TextureMap map = Minecraft.getInstance().getTextureMapBlocks();
-			TextureAtlasSprite sprite = map.getTextureExtry(fluid.getFluid().getStill().toString());
-			if(sprite != null) {
+			Optional<RenderMaterial> mat = ForgeHooksClient.getFluidMaterials(fluid.getFluid()).findFirst();
+
+			if(mat.isPresent()) {
+				TextureAtlasSprite sprite = mat.get().getSprite();
+				fluidIcon = mat.get().getAtlasLocation();
 				minU = sprite.getMinU();
 				maxU = sprite.getMaxU();
 				minV = sprite.getMinV();
 				maxV = sprite.getMaxV();
-				GlStateManager.bindTexture(map.getGlTextureId());
 			}
-			else {
-				int color = fluid.getFluid().getColor();
-				GL11.glColor4f(((color >>> 16) & 0xFF)/255f, ((color >>> 8) & 0xFF)/255f, ((color& 0xFF)/255f),1f);
-				
-				bindTexture(fluidIcon);
-			}*/
+			int color = fluid.getFluid().getAttributes().getColor();
+			r = ((color >> 16) & 0xff)/255f;
+			g = ((color >> 8) & 0xff)/255f;
+			b = (color & 0xff)/255f;
+			
+			
 			
 
 			
@@ -62,11 +71,9 @@ public class RenderTank extends TileEntityRenderer<TileFluidTank> {
 			
 			AxisAlignedBB bb = block.getShape(tile.getWorld(), tile.getPos()).getBoundingBox();
 			
-			IVertexBuilder tileBuffer = buffer.getBuffer(RenderHelper.getTranslucentBlock());
+			IVertexBuilder tileBuffer = buffer.getBuffer(RenderHelper.getTranslucentTexturedManualRenderType(fluidIcon));
+			RenderHelper.renderCubeWithUV(matrix, tileBuffer, bb.minX + 0.01, bb.minY + 0.01, bb.minZ + 0.01, bb.maxX - 0.01, bb.maxY*amt - 0.01, bb.maxZ - 0.01, minU, maxU, minV, maxV, r,g,b,a);
 			
-			tess.getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderCubeWithUV(matrix, tileBuffer, bb.minX + 0.01, bb.minY + 0.01, bb.minZ + 0.01, bb.maxX - 0.01, bb.maxY*amt - 0.01, bb.maxZ - 0.01, minU, maxU, minV, maxV,1f,1f,1f,1f);
-			tess.draw();
 			matrix.pop();
 		}
 	}

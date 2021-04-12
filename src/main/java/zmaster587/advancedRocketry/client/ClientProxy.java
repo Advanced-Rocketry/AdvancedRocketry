@@ -153,6 +153,7 @@ public class ClientProxy extends CommonProxy {
 		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockThermiteTorchWall, RenderType.getCutout());
 		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockLens, RenderType.getTranslucent());
 		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockForceField, RenderType.getTranslucent());
+		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockPressureTank, RenderType.getCutout());
 
 		for(Block block : AdvancedRocketryBlocks.crystalBlocks)
 			RenderTypeLookup.setRenderLayer(block, RenderType.getTranslucent());

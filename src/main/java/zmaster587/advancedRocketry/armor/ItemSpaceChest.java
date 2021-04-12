@@ -39,8 +39,12 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 		
 		LazyOptional<IFluidHandlerItem> cap = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
 		
-		return !stack.isEmpty() && cap.isPresent() && 
-				((fstack = cap.orElse(null).getFluidInTank(0)) == null || FluidUtils.areFluidsSameType(fstack.getFluid(), AdvancedRocketryFluids.oxygenFlowing.get()));
+		if(stack.isEmpty() || !cap.isPresent())
+			return false;
+		
+		fstack = cap.orElse(null).getFluidInTank(0);
+		
+		return (fstack == null || fstack.isEmpty() || FluidUtils.areFluidsSameType(fstack.getFluid(), AdvancedRocketryFluids.oxygenFlowing.get()));
 	}
 
 	@Override

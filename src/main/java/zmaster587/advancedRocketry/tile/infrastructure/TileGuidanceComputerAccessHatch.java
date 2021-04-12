@@ -325,7 +325,7 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.loader.6.name";
+		return "block.advancedrocketry.compaccesshatch";
 	}
 
 	@Override

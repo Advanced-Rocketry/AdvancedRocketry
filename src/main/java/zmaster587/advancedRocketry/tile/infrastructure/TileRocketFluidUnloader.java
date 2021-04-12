@@ -61,7 +61,7 @@ public class TileRocketFluidUnloader extends TileFluidOutputHatch implements IIn
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.loader.4.name";
+		return "block.advancedrocketry.funloader";
 	}
 
 	protected boolean getStrongPowerForSides(World world, BlockPos pos) {

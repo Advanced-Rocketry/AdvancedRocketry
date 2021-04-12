@@ -68,7 +68,7 @@ public class TileDrill extends TileEntity implements IModularInventory, IToggleB
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.drill.name";
+		return "block.advancedrocketry.drill";
 	}
 
 	@Override

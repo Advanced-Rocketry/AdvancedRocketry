@@ -108,7 +108,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.landingPad.name";
+		return "block.advancedrocketry.landingpad";
 	}
 
 	@Override

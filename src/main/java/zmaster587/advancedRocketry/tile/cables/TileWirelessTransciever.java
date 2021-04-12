@@ -188,7 +188,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.wirelessTransciever.name";
+		return "block.advancedrocketry.wirelesstransciever";
 	}
 
 	@Override

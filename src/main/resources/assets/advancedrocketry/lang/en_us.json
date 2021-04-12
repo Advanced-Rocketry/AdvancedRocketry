@@ -32,10 +32,10 @@
     "block.advancedrocketry.fuelingstation": "Fueling station",                                                                                                                                                                                 
     "block.advancedrocketry.databus": "Data Bus",                                                                                                                                                                                            
     "block.advancedrocketry.satbay": "Satellite Bay",                                                                                                                                                                                        
-    "block.advancedrocketry.floader": "Rocket Unloader",                                                                                                                                                                                     
-    "block.advancedrocketry.funloader": "Rocket Loader",                                                                                                                                                                                     
-    "block.advancedrocketry.rloader": "Rocket Fluid Unloader",                                                                                                                                                                               
-    "block.advancedrocketry.runloader": "Rocket Fluid Loader",                                                                                                                                                                               
+    "block.advancedrocketry.runloader": "Rocket Unloader",                                                                                                                                                                                     
+    "block.advancedrocketry.rloader": "Rocket Loader",                                                                                                                                                                                     
+    "block.advancedrocketry.funloader": "Rocket Fluid Unloader",                                                                                                                                                                               
+    "block.advancedrocketry.floader": "Rocket Fluid Loader",                                                                                                                                                                               
     "block.advancedrocketry.compaccesshatch": "Guidance Computer Access Hatch",                                                                                                                                                              
     "block.advancedrocketry.observatory": "Observatory",                                                                                                                                                                                     
     "block.advancedrocketry.satellitebuilder": "Satellite Builder",                                                                                                                                                                          
@@ -133,10 +133,6 @@
     "block.advancedrocketry.liquidtank": "Liquid Tank",
     "block.advancedrocketry.planks": "Alien Planks",
 
-
-    "block.advancedrocketry.dilithium": "Dilithium Ore",
-
-    "block.advancedrocketry.coil.dilithium": "Dilithium Coil",
 
     "item.advancedrocketry.basiclens": "Basic Lens",
     "item.advancedrocketry.wafer": "Silicon Wafer",
@@ -240,11 +236,11 @@
     "data.atmospheredensity": "Atmosphere Density",
     "data.mass": "Mass",
 
-    "fluid.oxygen": "Oxygen",
-    "fluid.hydrogen": "Hydrogen",
-    "fluid.nitrogen": "Nitrogen",
-    "fluid.rocket_fuel": "Rocket Fuel",
-    "fluid.enrichedlava": "Enriched Lava",
+    "fluid.advancedrocketry.oxygen": "Oxygen",
+    "fluid.advancedrocketry.hydrogen": "Hydrogen",
+    "fluid.advancedrocketry.nitrogen": "Nitrogen",
+    "fluid.advancedrocketry.rocket_fuel": "Rocket Fuel",
+    "fluid.advancedrocketry.enriched_lava": "Enriched Lava",
 
     "mission.asteroidmining": "Asteroid Mining",
     "mission.gascollection": "Gas Collection",

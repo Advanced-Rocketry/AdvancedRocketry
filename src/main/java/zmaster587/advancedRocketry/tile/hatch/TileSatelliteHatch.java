@@ -22,7 +22,7 @@ inventory.setCanExtractSlot(0, true);
 
 	@Override
 	public String getModularInventoryName() {
-		return "container.satellite";
+		return "block.advancedrocketry.satellitecontrolcenter";
 	}
 
 	public SatelliteBase getSatellite() {

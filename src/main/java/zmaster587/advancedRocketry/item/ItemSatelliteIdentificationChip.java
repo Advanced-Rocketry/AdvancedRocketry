@@ -50,7 +50,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 			if(satellite != null) {
 
 				if(!nbt.contains("dimId") || Constants.INVALID_PLANET.equals(new ResourceLocation(nbt.getString("dimId")))) {
-					nbt.putString("dimId", satellite.getDimensionId().toString());
+					nbt.putString("dimId", satellite.getDimensionId().get().toString());
 				}
 
 				if( zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId().get()) != null)
