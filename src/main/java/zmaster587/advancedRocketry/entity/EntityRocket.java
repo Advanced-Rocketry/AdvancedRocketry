@@ -1719,11 +1719,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 							if (j != 0)
 								setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y + k, z - j))), world, new BlockPos(x - i, y + k, z - j));
 						}
-						//Set fire above that
-						BlockPos blocksAbove = new BlockPos(x + i, y + k, z + j);
-						if (world.getBlockState(blocksAbove).getBlock().isReplaceable(world, blocksAbove) || world.getBlockState(blocksAbove).getBlock() == Blocks.AIR) {
-							world.setBlockState(blocksAbove, Blocks.FIRE.getDefaultState());
-						}
 					}
 				}
 			}
@@ -1766,8 +1761,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 * Sets the damaged blockstate, checking to see if it can
 	 */
 	private static void setDamagedBlock(IBlockState blockState, World world, BlockPos position) {
+		//Damage our block
 		if (blockState != world.getBlockState(position)) {
 			world.setBlockState(position, blockState);
+		}
+		//Set fire above that
+		BlockPos blockAbove = new BlockPos(position.getX(), position.getY() + 1, position.getZ());
+		if (world.getBlockState(blockAbove).getBlock().isReplaceable(world, blockAbove) || world.getBlockState(blockAbove).getBlock() == Blocks.AIR) {
+			world.setBlockState(blockAbove, Blocks.FIRE.getDefaultState());
 		}
 	}
 
