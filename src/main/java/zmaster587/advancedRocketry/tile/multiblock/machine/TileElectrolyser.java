@@ -69,8 +69,7 @@ public class TileElectrolyser extends TileMultiblockMachine {
 	
 	@Override
 	public boolean shouldHideBlock(World world, BlockPos pos2, BlockState tile) {
-		TileEntity tileEntity = world.getTileEntity(pos2);
-		return !TileMultiBlock.getMapping('P').contains(new BlockMeta(tile.getBlock(), true)) && tileEntity != null && !(tileEntity instanceof TileElectrolyser);
+		return true;
 	}
 	
 	

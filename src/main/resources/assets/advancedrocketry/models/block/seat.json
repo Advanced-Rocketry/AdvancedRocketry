@@ -1,10 +1,10 @@
 {
     "ambientocclusion": false,
     "textures": {
-        "generic": "libvulpes:blocks/machineGeneric",
+        "generic": "libvulpes:blocks/machinegeneric",
         "wool": "blocks/wool_colored_silver",
         "support": "advancedrocketry:blocks/smallconnector",
-        "panel": "advancedrocketry:blocks/panelSide",
+        "panel": "advancedrocketry:blocks/panelside",
         "particle": "advancedrocketry:blocks/solar"
     },
     "elements": [

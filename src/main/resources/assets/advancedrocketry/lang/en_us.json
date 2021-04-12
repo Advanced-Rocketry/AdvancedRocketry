@@ -132,7 +132,10 @@
     "block.advancedrocketry.airlock_door": "Small Airlock Door",
     "block.advancedrocketry.liquidtank": "Liquid Tank",
     "block.advancedrocketry.planks": "Alien Planks",
-
+    "block.advancedrocketry.vacuumlaser": "Vacuum-Chamber High Power Laser Emitter",
+    "block.advancedrocketry.precisionlaseretcher": "Precision Laser Etcher",
+    "block.advancedrocketry.solararray": "Solar Array",
+    "block.advancedrocketry.solararray": "Solar Array Panel",
 
     "item.advancedrocketry.basiclens": "Basic Lens",
     "item.advancedrocketry.wafer": "Silicon Wafer",

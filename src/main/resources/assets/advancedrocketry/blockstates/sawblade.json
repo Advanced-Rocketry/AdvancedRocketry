@@ -2,7 +2,7 @@
     "forge_marker": 1,
     "defaults": {
         "textures": {
-            "#None": "advancedrocketry:block//models/cuttingMachine"
+            "#None": "advancedrocketry:block/models/cuttingmachine"
         },
         "model": "advancedrocketry:models/sawblade.obj",
         "transform": "forge:default-block"

@@ -7,6 +7,6 @@
         "west": "advancedrocketry:blocks/forcefieldprojector_off",
         "east": "advancedrocketry:blocks/forcefieldprojector_off",
         "down": "advancedrocketry:blocks/vacuumlaserfront",
-        "particle": "advancedrocketry:blocks/machineGeneric"
+        "particle": "advancedrocketry:blocks/machinegeneric"
     }
 }

@@ -70,7 +70,8 @@ public class RendererElectrolyser extends TileEntityRenderer<TileElectrolyser> {
 		//Lightning effect
 
 		if(multiBlockTile.isRunning()) {
-
+			matrix.push();
+			matrix.translate(-1.5, 0.05f, 0.5f);
 			double width = 0.01;
 
 			//Isn't precision fun?
@@ -106,7 +107,7 @@ public class RendererElectrolyser extends TileEntityRenderer<TileElectrolyser> {
 			xMin += 0.15;
 
 			RenderHelper.renderCrossXZ(matrix, entityTransparentBuilder, width, xMin, yPos + ySkew, zMin + xSkew, xMax, yPos, zMax, r,g,b,a);
-			
+			matrix.pop();
 		}
 		matrix.pop();
 	}
