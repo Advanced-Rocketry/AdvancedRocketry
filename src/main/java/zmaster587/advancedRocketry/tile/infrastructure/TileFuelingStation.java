@@ -149,7 +149,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	 * @return boolean on whether the rocket can accept the fluid
 	 */
 	public boolean canRocketFitFluid(Fluid fluid) {
-		return canFill(fluid) && (linkedRocket.getFuelCapacity(linkedRocket.getRocketFuelType()) > linkedRocket.getFuelAmount(linkedRocket.getRocketFuelType()));
+		return canFill(fluid) && ((linkedRocket.getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT && FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluid)) ? linkedRocket.getFuelCapacity(FuelType.LIQUID_OXIDIZER) > linkedRocket.getFuelAmount(FuelType.LIQUID_OXIDIZER) : linkedRocket.getFuelCapacity(linkedRocket.getRocketFuelType()) > linkedRocket.getFuelAmount(linkedRocket.getRocketFuelType()));
 	}
 
 

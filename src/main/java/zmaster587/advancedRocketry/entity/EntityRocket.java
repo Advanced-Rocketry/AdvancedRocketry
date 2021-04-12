@@ -1708,19 +1708,22 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		for (int i = 0; i <= radius; i++) {
 			for (int j = 0; j <= radius; j++) {
 				for (int k = 1; k >= -2; k--) {
-					//Set blocks to their damaged variants, the if statements make sure we don't set cardinal directions twice the times we should be
-					setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x + i, y + k, z + j))), world, new BlockPos(x + i, y + k, z + j));
-					if (j != 0)
-					    setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x + i, y + k, z - j))), world, new BlockPos(x + i, y + k, z - j));
-					if (i != 0) {
-						setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y + k, z + j))), world, new BlockPos(x - i, y + k, z + j));
+					//Check for a circle, not a square
+					if (Math.sqrt((i*i) + (j*j)) <= radius) {
+						//Set blocks to their damaged variants, the if statements make sure we don't set cardinal directions twice the times we should be
+						setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x + i, y + k, z + j))), world, new BlockPos(x + i, y + k, z + j));
 						if (j != 0)
-						    setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y + k, z - j))), world, new BlockPos(x - i, y + k, z - j));
-					}
-					//Set fire above that
-					BlockPos blocksAbove = new BlockPos(x + i, y + k, z + j);
-					if (world.getBlockState(blocksAbove).getBlock().isReplaceable(world, blocksAbove) || world.getBlockState(blocksAbove).getBlock() == Blocks.AIR) {
-						world.setBlockState(blocksAbove, Blocks.FIRE.getDefaultState());
+							setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x + i, y + k, z - j))), world, new BlockPos(x + i, y + k, z - j));
+						if (i != 0) {
+							setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y + k, z + j))), world, new BlockPos(x - i, y + k, z + j));
+							if (j != 0)
+								setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y + k, z - j))), world, new BlockPos(x - i, y + k, z - j));
+						}
+						//Set fire above that
+						BlockPos blocksAbove = new BlockPos(x + i, y + k, z + j);
+						if (world.getBlockState(blocksAbove).getBlock().isReplaceable(world, blocksAbove) || world.getBlockState(blocksAbove).getBlock() == Blocks.AIR) {
+							world.setBlockState(blocksAbove, Blocks.FIRE.getDefaultState());
+						}
 					}
 				}
 			}
@@ -1733,7 +1736,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 */
 	private static IBlockState getDamagedBlock(IBlockState blockState) {
 		ItemStack stack = new ItemStack(blockState.getBlock(), 1, blockState.getBlock().getMetaFromState(blockState));
-		if (ZUtils.isItemInOreDict(stack, "stone")) {
+		if (ZUtils.isItemInOreDict(stack, "stone") || blockState.getBlock() == Blocks.STONEBRICK || ZUtils.isItemInOreDict(stack, "bricksStone")) {
 			return Blocks.COBBLESTONE.getDefaultState();
 		} else if (ZUtils.isItemInOreDict(stack, "cobblestone") || ZUtils.isItemInOreDict(stack, "gravel")) {
 			return AdvancedRocketryBlocks.blockBasalt.getDefaultState();
@@ -1747,7 +1750,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			return Blocks.DIRT.getDefaultState();
 		} else if (blockState.getBlock().getMaterial(blockState) == Material.GROUND && !(blockState.getBlock() instanceof BlockRegolith)) {
 			return Blocks.SAND.getDefaultState();
-		} else if (blockState.getBlock() instanceof BlockSand || blockState.getBlock() instanceof BlockRegolith || ZUtils.isItemInOreDict(stack, "regolith")) {
+		} else if (blockState.getBlock() instanceof BlockSand || blockState.getBlock() instanceof BlockRegolith || ZUtils.isItemInOreDict(stack, "regolith") || ZUtils.isItemInOreDict(stack, "sandstone")) {
 			return Blocks.GLASS.getDefaultState();
 		} else if (blockState.getBlock().getMaterial(blockState) == Material.ICE || blockState.getBlock().getMaterial(blockState) == Material.PACKED_ICE || ((blockState.getBlock().getMaterial(blockState) == Material.SNOW || blockState.getBlock().getMaterial(blockState) == Material.CRAFTED_SNOW) && blockState.getBlock() != Blocks.SNOW_LAYER )) {
 			return Blocks.WATER.getDefaultState();
