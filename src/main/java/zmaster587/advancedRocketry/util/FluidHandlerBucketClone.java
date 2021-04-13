@@ -18,6 +18,6 @@ public class FluidHandlerBucketClone extends FluidHandlerItemStackSimple {
     @Override
     public ItemStack getContainer()
     {
-        return this.getFluid() == null ? empty.copy() : container;
+        return this.getFluid().isEmpty() ? empty.copy() : container;
     }
 }

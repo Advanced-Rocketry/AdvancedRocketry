@@ -50,7 +50,7 @@ public class TileFluidTank extends TileFluidHatch {
 	@Override
 	public int fill(FluidStack resource, FluidAction doFill) {
 		
-		if(resource == null)
+		if(resource == null || resource.isEmpty())
 			return 0;
 
 		TileFluidTank handler2 = this.getFluidTankInDirection(Direction.UP);
@@ -123,8 +123,8 @@ public class TileFluidTank extends TileFluidHatch {
 	@Override
 	public FluidStack drain(FluidStack resource,
 			FluidAction doDrain) {
-		if(this.fluidTank.getFluid() == null || resource.getFluid() != this.fluidTank.getFluid().getFluid())
-			return null;
+		if(this.fluidTank.getFluid().isEmpty() || resource.getFluid() != this.fluidTank.getFluid().getFluid())
+			return FluidStack.EMPTY;
 
 		return this.drain(resource.getAmount(), doDrain);
 	}
@@ -142,7 +142,7 @@ public class TileFluidTank extends TileFluidHatch {
 	{
 		FluidStack stack2 = fluidTank.getFluid();
 		
-		return stack2 == null || (stack2.getFluid() == stack.getFluid());
+		return stack2.isEmpty() || (stack2.getFluid() == stack.getFluid());
 	}
 
 	@Override
@@ -181,7 +181,7 @@ public class TileFluidTank extends TileFluidHatch {
 		TileFluidTank tank = getFluidTankInDirection(Direction.UP);
 
 		if(tank != null && tank.getFluidInTank(0) != null) {
-			if(fluidTank.getFluid() == null) {
+			if(fluidTank.getFluid().isEmpty()) {
 				fluidTank.fill(tank.fluidTank.drain(fluidTank.getCapacity(),  FluidAction.EXECUTE),  FluidAction.EXECUTE);
 			}
 			else if(tank.getFluidInTank(0).getFluid() == fluidTank.getFluid().getFluid()) {

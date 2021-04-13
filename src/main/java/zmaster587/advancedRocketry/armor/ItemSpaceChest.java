@@ -278,7 +278,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 					IFluidHandlerItem fHandler = cap.orElse(null);
 					FluidStack fluidStack = fHandler.getFluidInTank(0);
 
-					if(fluidStack == null || fluidStack.getFluid() == null || FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.oxygenStill.get()))
+					if(fluidStack == null || fluidStack.isEmpty() || FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.oxygenStill.get()))
 						maxAir += fHandler.getTankCapacity(0);
 			}
 

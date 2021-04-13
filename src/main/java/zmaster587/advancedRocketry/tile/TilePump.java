@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -20,10 +23,10 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.network.PacketAirParticle;
 import zmaster587.advancedRocketry.network.PacketFluidParticle;
@@ -34,6 +37,7 @@ import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.tile.TileEntityRFConsumer;
 import zmaster587.libVulpes.util.HashedBlockPosition;
@@ -68,20 +72,20 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		super.tick();
 		
 		//Attempt fluid Eject
-		if(!world.isRemote && tank.getFluid() != null) {
+		if(!world.isRemote && !tank.getFluid().isEmpty()) {
 			for(Direction direction : Direction.values()) {
 				BlockPos newBlock = getPos().offset(direction);
 				TileEntity tile  = world.getTileEntity(newBlock);
 				if(tile != null && tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite()).isPresent())
 				{
 					IFluidHandler cap = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite()).orElse(null);
-					FluidStack stack = tank.getFluid().copy();
+					FluidStack stack =  tank.getFluid().copy();
 					stack.setAmount((int)Math.min(tank.getFluid().getAmount(), 1000));
 					//Perform the drain
 					cap.fill(tank.drain(cap.fill(stack, FluidAction.SIMULATE), FluidAction.EXECUTE), FluidAction.EXECUTE);
 					
 					//Abort if we run out of fluid
-					if(tank.getFluid() == null)
+					if(tank.getFluid().isEmpty())
 						break;
 				}
 			}
@@ -110,15 +114,16 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 			{
 				if(canFitFluid(nextPos))
 				{
-					Block worldBlock = world.getBlockState(nextPos).getBlock();
+					BlockState state = world.getBlockState(nextPos);
+					Block worldBlock = state.getBlock();
 					Material mat = world.getBlockState(nextPos).getMaterial();
-					if(worldBlock instanceof IFluidBlock)
+					if(worldBlock instanceof FlowingFluidBlock)
 					{
-						FluidStack stack = ((IFluidBlock)worldBlock).drain(world, nextPos, FluidAction.EXECUTE);
+						Fluid stack = ((FlowingFluidBlock)worldBlock).pickupFluid(world, nextPos, state);
 
 						if(stack != null)
-							tank.fill(stack, FluidAction.EXECUTE);
-						int colour = ((IFluidBlock)worldBlock).getFluid().getAttributes().getColor();
+							tank.fill(new FluidStack(stack, 1000), FluidAction.EXECUTE);
+						int colour = ((FlowingFluidBlock)worldBlock).getFluid().getAttributes().getColor();
 						if(mat == Material.LAVA)
 							colour = 0xFFbd3718;
 						
@@ -132,10 +137,10 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 	private boolean canFitFluid(BlockPos pos)
 	{
 		Block worldBlock = world.getBlockState(pos).getBlock();
-		if(worldBlock instanceof IFluidBlock)
+		if(worldBlock instanceof FlowingFluidBlock)
 		{
 			// Can we put it into the tank?
-			if(tank.getFluid() == null || tank.getFluid().getFluid() == ((IFluidBlock)worldBlock).getFluid())
+			if(tank.getFluid().isEmpty() || tank.getFluid().getFluid() == ((FlowingFluidBlock)worldBlock).getFluid())
 			{
 				return true;
 			}
@@ -158,7 +163,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		Block worldBlock = world.getBlockState(currentPos).getBlock();
 
 		if(canFitFluid(currentPos))
-			findFluidAtOrAbove(currentPos, ((IFluidBlock)worldBlock).getFluid());
+			findFluidAtOrAbove(currentPos, ((FlowingFluidBlock)worldBlock).getFluid());
 		if(!cache.isEmpty())
 			return cache.remove(0);
 		return null;
@@ -173,16 +178,17 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		while(!queue.isEmpty())
 		{
 			BlockPos nextElement = queue.poll();
-			if(visited.contains(nextElement) || nextElement.withinDistance(new Vector3i(pos.getX(), nextElement.getY(), pos.getZ()), RANGE) )
+			if(visited.contains(nextElement) || !nextElement.withinDistance(new Vector3i(pos.getX(), nextElement.getY(), pos.getZ()), RANGE) )
 				continue;
 
-			Block worldBlock = world.getBlockState(nextElement).getBlock();
-			if(worldBlock instanceof IFluidBlock)
+			BlockState state = world.getBlockState(nextElement);
+			Block worldBlock = state.getBlock();
+			if(worldBlock instanceof FlowingFluidBlock)
 			{
-				if(fluid == null || ((IFluidBlock)worldBlock).getFluid() == fluid)
+				if(fluid.isEquivalentTo(Fluids.EMPTY) || ((FlowingFluidBlock)worldBlock).getFluid().isEquivalentTo(fluid))
 				{
 					//only add drainable fluids, allow chaining along flowing fluid tho
-					if(((IFluidBlock)worldBlock).canDrain(world, nextElement))
+					if(((FlowingFluidBlock)worldBlock).getFluidState(state).isSource())
 						cache.add(0, nextElement);
 					visited.add(nextElement);
 					queue.add(nextElement.west());
@@ -198,7 +204,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 
 	@Override
 	public boolean canPerformFunction() {
-		return tank.getFluidAmount() <= tank.getCapacity() && world.getServer().getServerTime() % getFrequencyFromPower() == 0;
+		return tank.getFluidAmount() <= tank.getCapacity() && AdvancedRocketry.proxy.getWorldTimeUniversal() % getFrequencyFromPower() == 0;
 	}
 
 	@Override
@@ -220,6 +226,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 	@Override
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		modules.add(new ModuleLiquidIndicator(27, 18, this));
 		return modules;
 	}
 
@@ -255,7 +262,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 
 	@Override
 	public FluidStack getFluidInTank(int tank) {
-		return this.getFluidInTank(tank);
+		return this.tank.getFluidInTank(tank);
 	}
 
 	@Override

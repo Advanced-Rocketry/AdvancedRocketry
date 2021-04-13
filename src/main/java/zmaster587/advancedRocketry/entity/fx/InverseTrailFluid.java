@@ -60,9 +60,12 @@ public class InverseTrailFluid extends InverseTrailFx {
 	@OnlyIn(Dist.CLIENT)
 	public static class Factory implements IParticleFactory<BasicParticleType> {
 		private final IAnimatedSprite spriteSet;
+		
+		public static IAnimatedSprite spriteSet2;
 
 		public Factory(IAnimatedSprite p_i50630_1_) {
 			this.spriteSet = p_i50630_1_;
+			spriteSet2 = p_i50630_1_;
 		}
 
 		public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
