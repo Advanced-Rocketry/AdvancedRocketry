@@ -102,7 +102,7 @@
     "block.advancedrocketry.deployablerocketbuilder": "Unmanned Vehicle Builder",
     "block.advancedrocketry.pressurizedtank": "Pressurized Tank",
     "block.advancedrocketry.intake": "Intake",
-    "block.advancedrocketry.erraformer": "Terraformer",
+    "block.advancedrocketry.terraformer": "Terraformer",
     "block.advancedrocketry.circlelight": "Station Light",
     "block.advancedrocketry.energypipe": "Energy Pipe(Deprecated)",
     "block.advancedrocketry.solargenerator": "Solar Generator",
@@ -135,7 +135,7 @@
     "block.advancedrocketry.vacuumlaser": "Vacuum-Chamber High Power Laser Emitter",
     "block.advancedrocketry.precisionlaseretcher": "Precision Laser Etcher",
     "block.advancedrocketry.solararray": "Solar Array",
-    "block.advancedrocketry.solararray": "Solar Array Panel",
+    "block.advancedrocketry.solararraypanel": "Solar Array Panel",
 
     "item.advancedrocketry.basiclens": "Basic Lens",
     "item.advancedrocketry.wafer": "Silicon Wafer",

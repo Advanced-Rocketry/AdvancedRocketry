@@ -15,7 +15,6 @@ import zmaster587.advancedRocketry.tile.TileSolarPanel;
 import zmaster587.advancedRocketry.tile.TileStationAssembler;
 import zmaster587.advancedRocketry.tile.TileSuitWorkStation;
 import zmaster587.advancedRocketry.tile.TileUnmannedVehicleAssembler;
-import zmaster587.advancedRocketry.tile.Satellite.TileChipStorage;
 import zmaster587.advancedRocketry.tile.atmosphere.TileAtmosphereDetector;
 import zmaster587.advancedRocketry.tile.atmosphere.TileCO2Scrubber;
 import zmaster587.advancedRocketry.tile.atmosphere.TileGasChargePad;
@@ -110,7 +109,6 @@ public class AdvancedRocketryTileEntityType {
 	public static TileEntityType<TileCO2Scrubber> TILE_CO2_SCRUBBER;
 	public static TileEntityType<TileGasChargePad> TILE_OXYGEN_CHARGER;
 	public static TileEntityType<TileOxygenVent> TILE_OXYGEN_VENT;
-	public static TileEntityType<TileChipStorage> TILE_CHIP_STORAGE;
 	public static TileEntityType<TileSatelliteTerminal> TILE_SAT_CONTROL;
 	public static TileEntityType<TileSatelliteBuilder> TILE_SAT_BUILDER;
 	public static TileEntityType<TileDockingPort> TILE_DOCKING_PORT;
@@ -294,6 +292,7 @@ public class AdvancedRocketryTileEntityType {
 
 		//Arcfurnace
 		((BlockTile)AdvancedRocketryBlocks.blockArcFurnace)._setTile(AdvancedRocketryTileEntityType.TILE_ARC_FURNACE);
+		((BlockTile)AdvancedRocketryBlocks.blockPrecisionLaserEtcher)._setTile(AdvancedRocketryTileEntityType.TILE_PREC_LASER_ETCHER);
 		((BlockARHatch)AdvancedRocketryBlocks.blockDataBus)._setTile(AdvancedRocketryTileEntityType.TILE_DATA_BUS);
 		((BlockARHatch)AdvancedRocketryBlocks.blockSatelliteHatch)._setTile(AdvancedRocketryTileEntityType.TILE_SATELLITE_HATCH);
 		((BlockARHatch)AdvancedRocketryBlocks.blockFluidLoader)._setTile(AdvancedRocketryTileEntityType.TILE_FLUID_LOADER);

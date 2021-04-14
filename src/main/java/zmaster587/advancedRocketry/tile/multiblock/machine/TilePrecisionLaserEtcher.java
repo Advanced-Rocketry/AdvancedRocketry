@@ -29,9 +29,9 @@ import java.util.List;
 public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements IModularInventory {
 
 	public static final Object[][][] structure = { 
-			{{"slab", "slab", "slab"},
-				{Blocks.AIR, "slab", Blocks.AIR},
-				{"slab", "slab", "slab"}},
+			{{new ResourceLocation("minecraft","slabs"), new ResourceLocation("minecraft","slabs"), new ResourceLocation("minecraft","slabs")},
+				{Blocks.AIR, new ResourceLocation("minecraft","slabs"), Blocks.AIR},
+				{new ResourceLocation("minecraft","slabs"), new ResourceLocation("minecraft","slabs"), new ResourceLocation("minecraft","slabs")}},
 
 			{{AdvancedRocketryBlocks.blockStructureTower, Blocks.AIR, LibVulpesBlocks.blockStructureBlock},
 					{Blocks.AIR, AdvancedRocketryBlocks.blockVacuumLaser, LibVulpesBlocks.blockStructureBlock},
@@ -122,6 +122,6 @@ public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements I
 
 	@Override
 	public String getMachineName() {
-		return "tile.precisionlaseretcher.name";
+		return "block.advancedrocketry.precisionlaseretcher";
 	}
 }

@@ -66,15 +66,15 @@ boolean openFullScreen = false;
 		{
 			{
 				{null,null,null,'P','c','P',null,null,null},
-				{new ResourceLocation("forge", "blocks/steel"),null,null,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),null,null,new ResourceLocation("forge", "blocks/steel")},
-				{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,null},
-				{null,new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),null},
-				{new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab")},
-				{new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.motors,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab")},
-				{new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab")},
-				{null,new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),null},
-				{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,null},
-				{new ResourceLocation("forge", "blocks/steel"),null,null,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),null,null,new ResourceLocation("forge", "blocks/steel")}
+				{new ResourceLocation("forge", "blocks/steel"),null,null,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),null,null,new ResourceLocation("forge", "blocks/steel")},
+				{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,null},
+				{null,new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),null},
+				{new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs")},
+				{new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.motors,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs")},
+				{new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs")},
+				{null,new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),null},
+				{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,null},
+				{new ResourceLocation("forge", "blocks/steel"),null,null,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),null,null,new ResourceLocation("forge", "blocks/steel")}
 			}
 		};
 
@@ -415,7 +415,7 @@ boolean openFullScreen = false;
 	}
 
 	@Override
-	public String getModularInventoryName() { return "tile.spaceElevatorController.name"; }
+	public String getModularInventoryName() { return "block.advancedrocketry.spaceelevatorcontroller"; }
 
 	@Override
 	public boolean isUsableByPlayer(PlayerEntity player) {

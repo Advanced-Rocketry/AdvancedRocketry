@@ -56,7 +56,7 @@ public class RenderAstrobodyDataProcessor extends TileEntityRenderer<TileAstrobo
 		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
 		matrix.translate(.5, 0, 0.5);
 		matrix.rotate(new Quaternion(0, (front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, true));
-		matrix.translate(.5, -1, -1.5);
+		matrix.translate(-.5, -1, -1.5);
 
 		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 		

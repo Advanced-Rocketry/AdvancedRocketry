@@ -50,6 +50,7 @@ public class RenderAreaGravityController extends TileEntityRenderer<TileAreaGrav
 		}
 		
 		matrix.push();
+		
 
 		//Initial setup
 
@@ -72,21 +73,25 @@ public class RenderAreaGravityController extends TileEntityRenderer<TileAreaGrav
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0f);*/
 		
-		matrix.push();
-		matrix.scale(1.1f, 1f, 1.1f);
-		entityTransBuilder = buffer.getBuffer(RenderHelper.getLightningTranslucencyNoTexEntityModelRenderType());
-		for(int i = 0; i < 4; i++) {
-			matrix.scale(.93f, 1f, .93f);
-			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransBuilder, "Blur");
-		}
-		matrix.pop();
+		
 		// END render blur
+		matrix.push();
 		entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 		matrix.rotate(new Quaternion(0, (float) tile.getArmRotation(), 0, true));
 		for(int i = 0; i < maxSize; i++) {
 			matrix.rotate(new Quaternion(0, (float) 360/maxSize, 0, true));
 			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Arm");
 		}
+		matrix.pop();
+		
+		matrix.push();
+		matrix.scale(1.11f, 1f, 1.11f);
+		entityTransBuilder = buffer.getBuffer(RenderHelper.getLightningTranslucencyNoTexEntityModelRenderType());
+		for(int i = 0; i < 4; i++) {
+			matrix.scale(.93f, 1f, .93f);
+			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransBuilder, 0f, 1f, 1f, Math.max(((float)tile.getGravityMultiplier() - 0.1f)*0.2f,0f), "Blur");
+		}
+		matrix.pop();
 		matrix.pop();
 	}
 }

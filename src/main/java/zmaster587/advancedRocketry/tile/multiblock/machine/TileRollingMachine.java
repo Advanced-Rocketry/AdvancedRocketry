@@ -31,11 +31,11 @@ public class TileRollingMachine extends TileMultiblockMachine {
 	public static final Object structure[][][] = new Object[][][] { 
 		{   {Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},
 			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock},
-			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, "blockSteel", LibVulpesBlocks.blockStructureBlock}},
+			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, new ResourceLocation("forge","blocks/steel"), LibVulpesBlocks.blockStructureBlock}},
 
 		{{'P', 'c', 'I', Blocks.AIR, Blocks.AIR},
-				{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.motors, LibVulpesBlocks.motors, "blockSteel", LibVulpesBlocks.blockStructureBlock},
-				{LibVulpesBlocks.blockStructureBlock, 'L', 'O', "blockSteel", LibVulpesBlocks.blockStructureBlock}}};
+				{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.motors, LibVulpesBlocks.motors, new ResourceLocation("forge","blocks/steel"), LibVulpesBlocks.blockStructureBlock},
+				{LibVulpesBlocks.blockStructureBlock, 'L', 'O', new ResourceLocation("forge","blocks/steel"), LibVulpesBlocks.blockStructureBlock}}};
 	
 	public TileRollingMachine() {
 		super(AdvancedRocketryTileEntityType.TILE_ROLLING);
