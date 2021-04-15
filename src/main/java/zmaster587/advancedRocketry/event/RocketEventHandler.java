@@ -135,7 +135,7 @@ public class RocketEventHandler extends Screen {
 
 	@OnlyIn(value=Dist.CLIENT)
 	public static void destroyOrbitalTextures(World world) {
-		if(!ARConfiguration.getCurrentConfig().skyOverride.get() && !DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(world))) {
+		if(!DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(world))) {
 			DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(world);
 			props.setSkyRenderer(prevRenderHanlder);
 			prevRenderHanlder = null;
