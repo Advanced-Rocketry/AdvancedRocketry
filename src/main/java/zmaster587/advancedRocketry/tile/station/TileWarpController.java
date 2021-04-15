@@ -24,7 +24,7 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.inventory.IPlanetDefiner;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.inventory.modules.ModuleData;
-import zmaster587.advancedRocketry.inventory.modules.ModulePanetImage;
+import zmaster587.advancedRocketry.inventory.modules.ModulePlanetImage;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
 import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
@@ -56,7 +56,7 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 	DimensionProperties dimCache;
 	private SpaceStationObject station;
 	private static final int ARTIFACT_BEGIN_RANGE = 4, ARTIFACT_END_RANGE = 8;
-	ModulePanetImage srcPlanetImg, dstPlanetImg;
+	ModulePlanetImage srcPlanetImg, dstPlanetImg;
 	ModuleSync sync1, sync2, sync3;
 	ModuleText srcPlanetText, dstPlanetText, warpFuel, status, warpCapacity;
 	int warpCost = -1;
@@ -329,7 +329,7 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 				int sizeX = 65;
 				int sizeY = 65;
 
-				srcPlanetImg = new ModulePanetImage(baseX + 10,baseY + 10,sizeX - 20, location);
+				srcPlanetImg = new ModulePlanetImage(baseX + 10,baseY + 10,sizeX - 20, location);
 				srcPlanetText = new ModuleText(baseX + 4, baseY + 56, "", 0xFFFFFF);
 				srcPlanetText.setAlwaysOnTop(true);
 				warpFuel = new ModuleText(baseX + 100, baseY + sizeY + 25, "", 0x1b1b1b);
@@ -341,7 +341,7 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 				sizeX = 65;
 				sizeY = 65;
 
-				dstPlanetImg = new ModulePanetImage(baseX + 10,baseY + 10,sizeX - 20, location);
+				dstPlanetImg = new ModulePlanetImage(baseX + 10,baseY + 10,sizeX - 20, location);
 				dstPlanetText = new ModuleText(baseX + 4, baseY + 56, "", 0xFFFFFF);
 				dstPlanetText.setAlwaysOnTop(true);
 

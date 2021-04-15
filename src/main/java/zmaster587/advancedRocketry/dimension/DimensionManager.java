@@ -33,6 +33,7 @@ import zmaster587.advancedRocketry.backwardCompat.VersionCompat;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
 import zmaster587.advancedRocketry.util.PlanetaryTravelHelper;
 import zmaster587.advancedRocketry.util.FluidGasGiantGas;
@@ -1056,9 +1057,10 @@ public class DimensionManager implements IGalaxy {
 		for(ISpaceObject i : SpaceObjectManager.getSpaceManager().getSpaceObjects())
 		{
 			int orbitingId = i.getOrbitingPlanetId(); 
-			if(!isDimensionCreated(orbitingId) && orbitingId != 0 && orbitingId != SpaceObjectManager.WARPDIMID && orbitingId < Constants.STAR_ID_OFFSET)
-			{
+			if(!isDimensionCreated(orbitingId) && orbitingId != 0 && orbitingId != SpaceObjectManager.WARPDIMID && orbitingId < Constants.STAR_ID_OFFSET) {
 				AdvancedRocketry.logger.warn("Dimension ID " + i.getOrbitingPlanetId() + " is not registered and a space station is orbiting it, moving to dimid 0");
+				SpaceObjectManager.getSpaceManager().moveStationToBody(i, 0);
+				i.setDestOrbitingBody(0);
 				i.setOrbitingBody(0);
 			}
 		}

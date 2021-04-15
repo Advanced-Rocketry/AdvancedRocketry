@@ -158,9 +158,7 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 		super.setInventorySlotContents(slot, stack);
 		while(useBucket(0, getStackInSlot(0)));
 	}
-
-	//Yes i was lazy
-	//TODO: make better
+	
 	private boolean useBucket( int slot, ItemStack stack) {
 		return FluidUtils.attemptDrainContainerIInv(inventory, tank, stack, 0, 1);
 	}
