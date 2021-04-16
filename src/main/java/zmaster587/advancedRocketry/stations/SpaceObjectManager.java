@@ -1,5 +1,7 @@
 package zmaster587.advancedRocketry.stations;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
@@ -17,8 +19,11 @@ import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.ISpaceObjectManager;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
+import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
@@ -257,34 +262,27 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 				}
 			}
 
-			int result = Math.abs(2*(((int)event.player.posZ + ARConfiguration.getCurrentConfig().stationSize/2) % (2*ARConfiguration.getCurrentConfig().stationSize) )/ARConfiguration.getCurrentConfig().stationSize);
-			if(result == 0 || result == 3) {
-				event.player.motionZ = -event.player.motionZ;
-				if(result == 0) {
-					event.player.setPosition(event.player.posX, event.player.posY, event.player.posZ + (event.player.posZ < 0 ? Math.abs(event.player.posZ % 16) : (16 - event.player.posZ % 16)));
+			if(event.player.world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.player.getPosition()) == null && !(event.player.getRidingEntity() instanceof EntityRocket)) {
+				double distance = 0;
+				HashedBlockPosition teleportPosition = null;
+				for (ISpaceObject object : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
+					if (object instanceof SpaceStationObject) {
+						SpaceStationObject station = ((SpaceStationObject) object);
+						double distanceTo = event.player.getPosition().getDistance(station.getSpawnLocation().x, station.getSpawnLocation().y, station.getSpawnLocation().z);
+						if (distanceTo > distance) {
+							distance = distanceTo;
+							teleportPosition = station.getSpawnLocation();
+						}
+					}
 				}
-				else
-					event.player.setPosition(event.player.posX, event.player.posY, event.player.posZ - (event.player.posZ < 0 ? 16 - Math.abs(event.player.posZ % 16) : (event.player.posZ % 16)));
-
-			}
-
-			//double posX = event.player.posX < 0 ? -event.player.posX - Configuration.stationSize : event.player.posX;
-
-			result = Math.abs(2*(((int)event.player.posX + ARConfiguration.getCurrentConfig().stationSize/2) % (2*ARConfiguration.getCurrentConfig().stationSize) )/ARConfiguration.getCurrentConfig().stationSize);
-
-			if(event.player.posX < -ARConfiguration.getCurrentConfig().stationSize/2)
-				if(result == 3)
-					result = 0;
-				else if(result == 0)
-					result = 3;
-
-			if(result == 0 || result == 3) {
-				event.player.motionX = -event.player.motionX;
-				if(result == 0) {
-					event.player.setPosition(event.player.posX + (event.player.posX < 0 ? Math.abs(event.player.posX % 16) : (16 - event.player.posX % 16)), event.player.posY, event.player.posZ);
+				if (teleportPosition != null) {
+					event.player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.chat.nostation1")));
+					event.player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.chat.nostation2")));
+					event.player.setPositionAndUpdate(teleportPosition.x, teleportPosition.y, teleportPosition.z);
+				} else {
+					event.player.sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.chat.nostation3")));
+					event.player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)event.player, 0, new TeleporterNoPortal( net.minecraftforge.common.DimensionManager.getWorld(0) ));
 				}
-				else
-					event.player.setPosition(event.player.posX - (event.player.posX < 0 ? 16 - Math.abs(event.player.posX % 16) : (event.player.posX % 16)), event.player.posY, event.player.posZ);
 
 			}
 		}

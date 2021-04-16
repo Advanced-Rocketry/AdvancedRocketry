@@ -195,29 +195,6 @@ public class PlanetEventHandler {
 				ARAdvancements.WENT_TO_THE_MOON.trigger((EntityPlayerMP)event.getEntity());
 			}
 		}
-		if(event.getEntity() instanceof EntityPlayer && event.getEntity().world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.getEntity().getPosition()) == null) {
-			double distance = 0;
-			HashedBlockPosition teleportPosition = null;
-			for (ISpaceObject object : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
-				if (object instanceof SpaceStationObject) {
-					SpaceStationObject station = ((SpaceStationObject) object);
-					double distanceTo = event.getEntity().getPosition().getDistance(station.getSpawnLocation().x, station.getSpawnLocation().y, station.getSpawnLocation().z);
-					if (distanceTo > distance) {
-						distance = distanceTo;
-                        teleportPosition = station.getSpawnLocation();
-					}
-				}
-			}
-			if (teleportPosition != null) {
-				event.getEntity().sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.chat.nostation1")));
-				event.getEntity().sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.chat.nostation2")));
-				event.getEntity().setPositionAndUpdate(teleportPosition.x, teleportPosition.y, teleportPosition.z);
-			} else {
-				event.getEntity().sendMessage(new TextComponentString(LibVulpes.proxy.getLocalizedString("msg.chat.nostation3")));
-				event.getEntity().getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP)event.getEntity(), 0, new TeleporterNoPortal( net.minecraftforge.common.DimensionManager.getWorld(0) ));
-			}
-
-		}
 
 		//GravityHandler.applyGravity(event.getEntity());
 	}
