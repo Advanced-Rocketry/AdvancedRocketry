@@ -5,6 +5,7 @@ import mezz.jei.api.recipe.category.extensions.IRecipeCategoryExtension;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import zmaster587.libVulpes.interfaces.IRecipe;
@@ -24,6 +25,7 @@ public class MachineRecipe extends Recipe implements IRecipeCategoryExtension {
 	private List<FluidStack> fluidIngredients;
 	private List<FluidStack> fluidOutputs;
 	private int energy, time;
+	private ResourceLocation name;
 
 
 	protected MachineRecipe(IRecipe rec) {
@@ -35,6 +37,7 @@ public class MachineRecipe extends Recipe implements IRecipeCategoryExtension {
 			
 			int i = -1;
 			float totalChance = 0;
+			this.name = rec.getId();
 			for( ChanceItemStack stack : resultChance )
 				totalChance += stack.chance;
 			
@@ -90,6 +93,10 @@ public class MachineRecipe extends Recipe implements IRecipeCategoryExtension {
 	@Override
 	public void setIngredients(IIngredients ingredients) {
 		// TODO Auto-generated method stub
-		
+	}
+	
+	@Override
+	public ResourceLocation getId() {
+		return name;
 	}
 }
