@@ -7,24 +7,24 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
 
 public class PlanetaryTravelHelper {
-	public static boolean isTravelWithinPlanetarySystem(ResourceLocation currentDimensionID, ResourceLocation destinationDimensionID) {
+	public static boolean isTravelWithinPlanetarySystem(ResourceLocation destDimID, ResourceLocation sourceDimensionID) {
 
 		boolean isPlanetMoonSystem = false;
-		IDimensionProperties launchworldProperties = DimensionManager.getInstance().getDimensionProperties(currentDimensionID);
+		IDimensionProperties launchworldProperties = DimensionManager.getInstance().getDimensionProperties(destDimID);
 
 		//If it's a moon, we need to check moon -> planet and moon -> moon
 		//Otherwise, we need to check planet -> moon
 		//Failing any of those means it's not within the bodies of the planetary system
 		if (launchworldProperties.isMoon()) {
-			isPlanetMoonSystem = (destinationDimensionID == launchworldProperties.getParentPlanet());
+			isPlanetMoonSystem = (sourceDimensionID.equals(launchworldProperties.getParentPlanet()));
 			for (ResourceLocation moonDimID : launchworldProperties.getParentProperties().getChildPlanets()) {
-				if (destinationDimensionID == moonDimID) {
+				if (sourceDimensionID.equals(moonDimID)) {
 					isPlanetMoonSystem = true;
 				}
 			}
 		} else {
 			for (ResourceLocation moonDimID : launchworldProperties.getChildPlanets()) {
-				if (destinationDimensionID == moonDimID) {
+				if (sourceDimensionID.equals(moonDimID)) {
 					isPlanetMoonSystem = true;
 				}
 			}
@@ -32,24 +32,24 @@ public class PlanetaryTravelHelper {
 
 		return isPlanetMoonSystem;
 	}
-	public static int getTransbodyInjectionBurn(ResourceLocation currentDimensionID, ResourceLocation destinationDimensionID, boolean toAsteroids) {
+	public static int getTransbodyInjectionBurn(ResourceLocation destDimID, ResourceLocation sourceDimensionID, boolean toAsteroids) {
 		int baseInjectionHeight = ARConfiguration.getCurrentConfig().transBodyInjection.get();
 		//This is probably one of the worst ways to do this and I don't really care about realism, just tapering results.... if this turns out to be realistic well then, that's nice.
 		//Not like the mod has an semblance of a concept of orbital mechanics anyway :P
 		//This is vaugely a multiplier based on TLI burns, burning for 2x as long can get you 4x as far
 		//This grabs the body distance multipier, then takes the square root of it, or if warp multiplies by the config option for that
-		return (isTravelWithinPlanetarySystem(currentDimensionID, destinationDimensionID)) ? (int) (baseInjectionHeight * Math.pow(getBodyDistanceMultiplier(currentDimensionID, destinationDimensionID, toAsteroids), 0.5d)) : (int) (ARConfiguration.getCurrentConfig().warpTBIBurnMult.get() * baseInjectionHeight);
+		return (isTravelWithinPlanetarySystem(destDimID, sourceDimensionID)) ? (int) (baseInjectionHeight * Math.pow(getBodyDistanceMultiplier(destDimID, sourceDimensionID, toAsteroids), 0.5d)) : (int) (ARConfiguration.getCurrentConfig().warpTBIBurnMult.get() * baseInjectionHeight);
 	}
-	public static double getBodyDistanceMultiplier(ResourceLocation currentDimensionID, ResourceLocation destinationDimensionID, boolean toAsteroids) {
+	public static double getBodyDistanceMultiplier(ResourceLocation destDimID, ResourceLocation sourceDimensionID, boolean toAsteroids) {
 		//Check the orbital distance of the moon or planet we're going to
 		//This gives us a ratio of how far it is compared to the default of 100
 		double bodyDistanceMultiplier = 1.0d;
-		IDimensionProperties destinationProperties = DimensionManager.getInstance().getDimensionProperties(destinationDimensionID);
+		IDimensionProperties destinationProperties = DimensionManager.getInstance().getDimensionProperties(sourceDimensionID);
 		if (destinationProperties.isMoon()) {
 			bodyDistanceMultiplier = destinationProperties.getOrbitalDist()/100d;
 		} else {
 			for (ResourceLocation moonDimID : destinationProperties.getChildPlanets()) {
-				if (currentDimensionID == moonDimID) {
+				if (destDimID.equals(moonDimID)) {
 					bodyDistanceMultiplier = DimensionManager.getInstance().getDimensionProperties(moonDimID).getOrbitalDist()/100d;
 				}
 			}
@@ -61,13 +61,13 @@ public class PlanetaryTravelHelper {
 		return bodyDistanceMultiplier;
 	}
 	
-	public static boolean isTravelAnywhereInPlanetarySystem(ResourceLocation currentDimensionID, ResourceLocation destinationDimensionID) {
-		return isTravelWithinOrbit(currentDimensionID, destinationDimensionID) || isTravelWithinPlanetarySystem(currentDimensionID, destinationDimensionID);
+	public static boolean isTravelAnywhereInPlanetarySystem(ResourceLocation destDimID, ResourceLocation sourceDimensionID) {
+		return isTravelWithinOrbit(destDimID, sourceDimensionID) || isTravelWithinPlanetarySystem(destDimID, sourceDimensionID);
 	}
 	
-	public static boolean isTravelWithinOrbit(ResourceLocation currentDimensionID, ResourceLocation destinationDimensionID) {
+	public static boolean isTravelWithinOrbit(ResourceLocation destDimID, ResourceLocation sourceDimensionID) {
 
-		return (currentDimensionID.equals(destinationDimensionID));
+		return (destDimID.equals(sourceDimensionID));
 	}
 
 	public static boolean isTravelWithinGeostationaryOrbit(SpaceStationObject spaceStation, ResourceLocation planetID) {
