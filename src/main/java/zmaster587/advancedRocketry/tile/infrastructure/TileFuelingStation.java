@@ -184,23 +184,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 			FluidStack fluidStack = fluidItem.getFluidInTank(0);
 			if(fluidStack != null && (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid()) || FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid()) || FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())) && tank.getFluidAmount() + fluidItem.getTankCapacity(0) <= tank.getCapacity()) {
 
-				if(fluidStack != null && (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid()) || FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid()) || FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid()))) {
-
-					FluidStack preTransfer = FluidUtil.tryFluidTransfer(tank, FluidUtil.getFluidHandler(stack).orElse(null), 5000, false);
-					if (preTransfer != null) {
-						FluidUtil.tryFluidTransfer(tank, FluidUtil.getFluidHandler(stack).orElse(null), 5000, true);
-						ItemStack resultContainer = FluidUtil.getFluidHandler(stack).orElse(null).getContainer();
-
-						if (!resultContainer.isEmpty() && resultContainer.isItemEqual(inventory.getStackInSlot(1)) && inventory.getStackInSlot(1).getMaxStackSize() > inventory.getStackInSlot(1).getCount()) {
-							inventory.getStackInSlot(1).setCount(inventory.getStackInSlot(1).getCount() + 1);
-							super.setInventorySlotContents(0, ItemStack.EMPTY);
-						} else if (!resultContainer.isEmpty() && inventory.getStackInSlot(1).isEmpty()) {
-							super.setInventorySlotContents(1, resultContainer.copy());
-							super.setInventorySlotContents(0, ItemStack.EMPTY);
-						}
-						return true;
-					}
-				}
+				return FluidUtils.attemptDrainContainerIInv(inventory, tank, stack, 0, 1);
 			}
 		}
 			
