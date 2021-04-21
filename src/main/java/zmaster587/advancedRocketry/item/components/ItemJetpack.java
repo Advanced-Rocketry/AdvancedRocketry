@@ -73,7 +73,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 					if (item.getItem() == AdvancedRocketryItems.itemUpgradeHover)
 						if(stack.getDamage() == 0)
 							allowsHover = true;
-						else if(stack.getItem() == AdvancedRocketryItems.itemUpgradeSpeed)
+						else if(stack.getItem() == AdvancedRocketryItems.itemUpgradeFlightSpeed)
 							speedUpgrades++;
 				}
 			}
