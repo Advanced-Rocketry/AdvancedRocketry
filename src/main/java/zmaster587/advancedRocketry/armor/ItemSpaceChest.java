@@ -129,7 +129,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 			int amtDrained = amt;
 			for(ItemStack component : list) {
 				
-				LazyOptional<IFluidHandlerItem> cap = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+				LazyOptional<IFluidHandlerItem> cap = component.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
 				
 				if(cap.isPresent()) {
 					IFluidHandlerItem fluidItem = cap.orElse(null);
@@ -186,7 +186,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				if(!inv.getStackInSlot(i).isEmpty()) {
 					
-					LazyOptional<IFluidHandlerItem> cap = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+					LazyOptional<IFluidHandlerItem> cap = inv.getStackInSlot(i).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
 					
 					if( i < 2) {
 						final int count = i;
@@ -210,7 +210,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 					IFluidHandlerItem fHandler = component.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).orElse(null);
 					FluidStack fluidStack = fHandler.getFluidInTank(0);
 
-					if(fluidStack == null || FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.oxygenStill.get()))
+					if(fluidStack == null || fluidStack.isEmpty() || FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.oxygenStill.get()))
 						amtDrained -= fHandler.fill(new FluidStack(AdvancedRocketryFluids.oxygenStill.get(), amtDrained), FluidAction.EXECUTE);
 
 					if(amtDrained == 0)
