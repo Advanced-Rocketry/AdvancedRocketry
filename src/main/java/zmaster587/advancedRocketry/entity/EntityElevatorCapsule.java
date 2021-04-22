@@ -75,11 +75,11 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 		motion = 0;
 		ignoreFrustumCheck = true;
 	}
-	
+
 	public EntityElevatorCapsule(EntityType<? extends EntityElevatorCapsule> type,  World worldIn) {
 		this(worldIn);
 	}
-	
+
 	@Override
 	protected void registerData() {
 		this.dataManager.register(motionDir, motion);
@@ -116,7 +116,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 		this.dataManager.set(standTimeCounter, (standTime = getStandTime()-1));
 		return standTime;
 	}
-	
+
 	@Override
 	protected void readAdditional(CompoundNBT nbt) {
 		setCapsuleMotion(nbt.getByte("motionDir"));
@@ -195,7 +195,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 	public Entity changeDimension(ServerWorld world, ITeleporter teleporter) {
 		return super.changeDimension(world, teleporter);
 	}
-	
+
 	@Nullable
 	public Entity changeDimension(ServerWorld dimensionIn, double posX, double y, double posZ)
 	{
@@ -209,15 +209,15 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 			ServerWorld worldserver =  (ServerWorld) this.getEntityWorld();
 			ServerWorld worldserver1 = dimensionIn;
 			PortalInfo info = new PortalInfo(new Vector3d(posX, y, posZ), this.getMotion(), this.rotationYaw, this.rotationPitch);
-			
+
 			ITeleporter teleporter = new TeleporterNoPortal(worldserver1, info);
 			Entity entity = changeDimension(dimensionIn, teleporter);
 
 			if(entity == null)
 				return null;
-			
+
 			entity.setPositionAndRotation(posX, y, posZ, yaw, pitch);
-			
+
 			int timeOffset = 1;
 			for(Entity e : passengers) {
 				PlanetEventHandler.addDelayedTransition(new TransitionEntity(worldserver.getGameTime() + ++timeOffset, e, dimensionIn, new BlockPos(posX, y, posZ), entity));
@@ -231,22 +231,21 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 	public AxisAlignedBB getRenderBoundingBox() {
 		return super.getRenderBoundingBox(); //getBoundingBox().grow(getPosX(), 2000, getPosZ());
 	}
-	
+
 	@Override
 	public void tick() {
 		super.tick();
+		boolean isInSpaceDim = DimensionManager.getInstance().isSpaceDimension(getEntityWorld());
 
-		boolean isInSpaceDim = ZUtils.getDimensionIdentifier(getEntityWorld()).equals(ARConfiguration.getCurrentConfig().spaceDimId);
-		
 		//Make sure to update client
 		if(!world.isRemote && this.ticksExisted == 5) {
 			if(dstTilePos != null)
 				setDst(dstTilePos);
-			
+
 			if(srcTilePos != null)
 				setSourceTile(srcTilePos);
 		}
-		
+
 		if(isAscending()) {
 
 			if(this.getPosY() > 255)
@@ -255,12 +254,12 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 				this.setMotion( new Vector3d(getMotion().x, 0.85, getMotion().z) );
 
 			if(!world.isRemote) {
-				List<PlayerEntity> list = world.getEntitiesWithinAABB(PlayerEntity.class, getBoundingBox());
+				List<PlayerEntity> list = world.getEntitiesWithinAABB(PlayerEntity.class,  getBoundingBox().expand(0, 2, 0));
 				for(Entity ent : list) {
 					if(this.getRidingEntity() == null)
 						ent.startRiding(this);
 				}
-				
+
 				if(this.getPosY() > MAX_HEIGHT) {
 					setCapsuleMotion(1);
 					double landingLocX, landingLocZ;
@@ -300,9 +299,8 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 			}
 			if(this.getPosY() >= dstTilePos.pos.y -4 && isInSpaceDim) {
 				setCapsuleMotion(0);
-
-
-				setPosition(dstTilePos.pos.x, dstTilePos.pos.y - 5, dstTilePos.pos.z);
+				setMotion(0, 0, 0);
+				setPositionAndUpdate(dstTilePos.pos.x, dstTilePos.pos.y - 5, dstTilePos.pos.z);
 
 				TileEntity e;
 
@@ -310,21 +308,21 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 					((TileSpaceElevator)e).notifyLanded(this);
 					standTime = 0;
 				}
-				else
+				else if(!world.isRemote)
 					this.setDead();
-
+				
 				//Dismount rider after being put in final place
 				for(Entity ent : this.getPassengers()) {
-					ent.dismount();
+					ent.stopRiding();
 				}
 			}
 
 			this.move(MoverType.SELF,new Vector3d(0, this.getMotion().y, 0));
 		}
 		else if(isDescending()) {
-			
+
 			this.onGround = false;
-			
+
 			if(this.getPosY() > 255)
 				this.setMotion( new Vector3d(getMotion().x, -2.85, getMotion().z) );
 			else
@@ -336,7 +334,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 				if(this.ticksExisted == 20)
 					PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, PACKET_DEORBIT), this);
 
-				List<PlayerEntity> list = world.getEntitiesWithinAABB(PlayerEntity.class, getBoundingBox());
+				List<PlayerEntity> list = world.getEntitiesWithinAABB(PlayerEntity.class,  getBoundingBox().expand(0, 2, 0));
 				for(Entity ent : list) {
 					if(this.getRidingEntity() == null)
 						ent.startRiding(this);
@@ -410,10 +408,10 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 				this.move(MoverType.SELF, getMotion());
 		}
 		else {
-			List<PlayerEntity> list = world.getEntitiesWithinAABB(PlayerEntity.class, getBoundingBox());
+			List<PlayerEntity> list = world.getEntitiesWithinAABB(PlayerEntity.class, getBoundingBox().expand(0, 2, 0));
 
 			if(!world.isRemote) {
-				
+
 				TileEntity srcTile = null;
 				if(list.isEmpty())
 					standTime = 0;
@@ -422,11 +420,11 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 
 				if(srcTilePos != null && srcTilePos.pos != null)
 					srcTile = world.getTileEntity(srcTilePos.pos.getBlockPos());
-				
-				
+
+
 				if( srcTile != null && srcTile instanceof TileSpaceElevator && !((TileSpaceElevator)srcTile).getMachineEnabled())
 					standTime = 0;
-				
+
 				setStandTime(standTime);
 
 				//Begin ascending
@@ -443,7 +441,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 								setCapsuleMotion(1);
 							}
 							//Make sure we mount player before takeoff
-							List<PlayerEntity> list2 = world.getEntitiesWithinAABB(PlayerEntity.class, getBoundingBox());
+							List<PlayerEntity> list2 = world.getEntitiesWithinAABB(PlayerEntity.class,  getBoundingBox().expand(0, 2, 0));
 
 							for(Entity ent : list2) {
 								if(this.getRidingEntity() == null)
@@ -459,8 +457,8 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 				TileEntity srcTile = null;
 				if(srcTilePos != null && srcTilePos.pos != null)
 					srcTile = world.getTileEntity(srcTilePos.pos.getBlockPos());
-				
-				
+
+
 				if( srcTile != null && srcTile instanceof TileSpaceElevator && !((TileSpaceElevator)srcTile).getMachineEnabled())
 					AdvancedRocketry.proxy.displayMessage(LibVulpes.proxy.getLocalizedString("msg.spaceelevator.turnedoff"),5);
 				else if(dstTilePos != null) 
@@ -484,7 +482,24 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 		//return aabb;
 		return super.getBoundingBox();
 	}
+
+	/**
+	 * Returns true if other Entities should be prevented from moving through this Entity.
+	 */
+	@Override
+	public boolean canBeCollidedWith() {
+		return !this.removed;
+	}
 	
+	@Override
+	public boolean canCollide(Entity entity) {
+      return true;
+	}
+	
+	@Override
+	public boolean func_241845_aY() {
+	      return true;
+   }
 
 	@OnlyIn(value=Dist.CLIENT)
 	@Override
@@ -552,7 +567,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 			PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, PACKET_WRITE_DST_INFO), this);
 		}
 		else if(id == PACKET_LAUNCH_EVENT && world.isRemote) {
-			List<PlayerEntity> list = world.getEntitiesWithinAABB(PlayerEntity.class, getBoundingBox());
+			List<PlayerEntity> list = world.getEntitiesWithinAABB(PlayerEntity.class,  getBoundingBox().expand(0, 2, 0));
 			for(Entity ent : list) {
 				if(this.getRidingEntity() == null)
 					ent.startRiding(this);
@@ -583,13 +598,9 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 		packet.read(additionalData);
 		packet.execute(this);
 	}
-	
+
 	@Override
 	public void readSpawnNBT(CompoundNBT nbt) {
-		
-		if(nbt.contains("dimid")) {
-			dstTilePos = new DimensionBlockPosition(new ResourceLocation(nbt.getString("dimid")), new HashedBlockPosition(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z")));
-		}
-		else dstTilePos = null;
+		this.readAdditional(nbt);
 	}
 }

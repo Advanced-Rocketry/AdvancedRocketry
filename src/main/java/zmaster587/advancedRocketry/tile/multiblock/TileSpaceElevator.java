@@ -150,12 +150,14 @@ boolean openFullScreen = false;
 
 
 		if(ID == GuiHandler.guiId.MODULAR.ordinal()) {
-			modules.add(new ModuleButton(50, 47, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.button.summon"), this, TextureResources.buttonBuild, 80, 18));
+			ModuleButton summonButton = new ModuleButton(50, 47, LibVulpes.proxy.getLocalizedString("msg.spaceelevator.button.summon"), this, TextureResources.buttonBuild, 80, 18);
+			summonButton.setAdditionalData(1);
+			modules.add(summonButton);
 			if (isTetherConnected()) {
-				modules.add(new ModuleText(30, 23, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.anchored0"), 0x2d2d2d));
-				modules.add(new ModuleText(30, 35, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.anchored1"), 0x2d2d2d));
+				modules.add(new ModuleText(30, 23, LibVulpes.proxy.getLocalizedString("msg.spaceelevator.warning.anchored0"), 0x2d2d2d));
+				modules.add(new ModuleText(30, 35, LibVulpes.proxy.getLocalizedString("msg.spaceelevator.warning.anchored1"), 0x2d2d2d));
 			} else {
-				modules.add(new ModuleText(30, 23, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.unanchored"), 0x2d2d2d));
+				modules.add(new ModuleText(30, 23, LibVulpes.proxy.getLocalizedString("msg.spaceelevator.warning.unanchored"), 0x2d2d2d));
 			}
 		}
 
@@ -358,17 +360,17 @@ boolean openFullScreen = false;
 			}
 
 			if(!isDestinationValid(dimPos.dimid, dimPos, new HashedBlockPosition(getPos()), ZUtils.getDimensionIdentifier(myWorld))) {
-				player.sendMessage(new TranslationTextComponent("msg.spaceElevator.linkNotGeostationaryError"), Util.DUMMY_UUID);
+				player.sendMessage(new TranslationTextComponent("msg.spaceelevator.linknotgeostationaryerror"), Util.DUMMY_UUID);
 				return false;
 			}
 
 			if(wouldTetherBreakOnConnect(dimPos.dimid, dimPos, new HashedBlockPosition(getPos()), ZUtils.getDimensionIdentifier(myWorld))) {
-				player.sendMessage(new TranslationTextComponent("msg.spaceElevator.tetherWouldBreakError"), Util.DUMMY_UUID);
+				player.sendMessage(new TranslationTextComponent("msg.spaceelevator.tetherwouldbreakerror"), Util.DUMMY_UUID);
 				return false;
 			}
 
 			if(dimBlockPos != null) {
-				player.sendMessage(new TranslationTextComponent("msg.spaceElevator.linkCannotChangeError"), Util.DUMMY_UUID);
+				player.sendMessage(new TranslationTextComponent("msg.spaceelevator.linkcannotchangeerror"), Util.DUMMY_UUID);
 				return false;
 			}
 
@@ -377,7 +379,7 @@ boolean openFullScreen = false;
 				if(tile instanceof TileSpaceElevator) {
 					updateTetherLinkPosition(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(this.world), new HashedBlockPosition(getPos())), dimPos);
 					((TileSpaceElevator) tile).updateTetherLinkPosition(dimPos, new DimensionBlockPosition(ZUtils.getDimensionIdentifier(this.world), new HashedBlockPosition(getPos())));
-					player.sendMessage(new TranslationTextComponent("msg.spaceElevator.newDstAdded"), Util.DUMMY_UUID);
+					player.sendMessage(new TranslationTextComponent("msg.spaceelevator.newdstadded"), Util.DUMMY_UUID);
 
 					if (capsule != null) {
 						capsule.setDst(dimBlockPos);

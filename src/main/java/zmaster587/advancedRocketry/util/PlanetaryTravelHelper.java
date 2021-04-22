@@ -71,7 +71,7 @@ public class PlanetaryTravelHelper {
 	}
 
 	public static boolean isTravelWithinGeostationaryOrbit(SpaceStationObject spaceStation, ResourceLocation planetID) {
-		//Returns true if the planet and the dimension (can be any!) are the same parent and if station is 36300 > x > 35500 km
+		//Returns true if the planet and the dimension (can be any!) are the same parent and if station is 35500 < x < 36300 km
 		return spaceStation.getOrbitingPlanetId().equals(planetID) && (spaceStation.getOrbitalDistance() >= 177.0f && 181.0f >= spaceStation.getOrbitalDistance());
 	}
 }

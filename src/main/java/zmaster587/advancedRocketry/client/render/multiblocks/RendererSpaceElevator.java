@@ -71,33 +71,27 @@ public class RendererSpaceElevator extends TileEntityRenderer<TileSpaceElevator>
 		if (tile.isTetherConnected()) {
 			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Tether");
 		}
-		matrix.pop();
-
+		
 		//Render Beads
-
 		IVertexBuilder translucentBuilder = buffer.getBuffer(RenderHelper.getTranslucentManualRenderType());
-
-		matrix.push();
-		matrix.translate(tile.getLandingLocationX() - tile.getPos().getX(), 0, tile.getLandingLocationZ() - tile.getPos().getZ());
-
 		if (tile.isTetherConnected() && !tile.isAnchorOnSpaceStation()) {
 			//Render Beads
 
-			double renderX = tile.getLandingLocationX() - tile.getPos().getX() - ((front.getAxis() == Direction.Axis.X) ? 0.5 : 2.5);
-			double renderZ = tile.getLandingLocationZ() - tile.getPos().getZ() - ((front.getAxis() == Direction.Axis.X) ? -1.5 : 0.5);
-
 			matrix.push();
-			matrix.translate(renderX + 0.5f, 4, renderZ + 0.5f);
+			matrix.translate(0f, 0, -1f);
 			laser.doRender(buffer, matrix);
-
+			matrix.push();
+			matrix.translate(0.5f, 0, 0.5f);
 			double position = (System.currentTimeMillis() % 16000) / 200f;
 			for (int i = 1; i < 11; i++) {
 				for (float radius = 0.25F; radius < 1.25; radius += .25F) {
 					RenderHelper.renderCube(matrix, translucentBuilder, -radius, -radius - position + i*80 + 4, -radius, radius, radius - position + i*80 + 4, radius, 1, 1 , 1 , 0.11f);
 				}
 			}
+			matrix.pop();
+			matrix.pop();
 		}
-
+		
 		matrix.pop();
 	}
 }
