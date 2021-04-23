@@ -192,7 +192,6 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 				//Multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency, and by insolation mult for solar stuff
 				energyRecieved *= 2 * insolationPowerMultiplier;
 			}
-			powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().microwaveRecieverMulitplier);
 
 			if(powerMadeLastTick != prevPowerMadeLastTick) {
 				prevPowerMadeLastTick = powerMadeLastTick;
