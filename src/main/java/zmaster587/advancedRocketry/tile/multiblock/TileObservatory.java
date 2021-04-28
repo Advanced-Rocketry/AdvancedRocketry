@@ -14,8 +14,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -51,33 +51,33 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	private static final Object[][][] structure = new Object[][][]{
 
 		{	{null, null, null, null, null}, 
-			{null, "stone", lens, "stone", null},
-			{null, "stone", "stone", "stone", null},
-			{null, "stone", "stone", "stone", null},
+			{null, LibVulpesBlocks.blockStructureBlock, lens, LibVulpesBlocks.blockStructureBlock, null},
+			{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null},
+			{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null},
 			{null, null, null, null, null}},
 
 			{	{null,null,null,null,null}, 
-				{null, "stone", "stone", "stone", null},
-				{null, "stone", lens, "stone", null},
-				{null, "stone", "stone", "stone", null},
+				{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null},
+				{null, LibVulpesBlocks.blockStructureBlock, lens, LibVulpesBlocks.blockStructureBlock, null},
+				{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null},
 				{null,null,null,null,null}},
 
-				{	{null, "stone", "stone", "stone", null},
-					{"stone", Blocks.AIR, Blocks.AIR, Blocks.AIR, "stone"},
-					{"stone", Blocks.AIR, Blocks.AIR, Blocks.AIR, "stone"},
-					{"stone", Blocks.AIR, lens, Blocks.AIR, "stone"},
-					{null, "stone", "stone", "stone", null}},
+				{	{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null},
+					{LibVulpesBlocks.blockStructureBlock, Blocks.AIR, Blocks.AIR, Blocks.AIR, LibVulpesBlocks.blockStructureBlock},
+					{LibVulpesBlocks.blockStructureBlock, Blocks.AIR, Blocks.AIR, Blocks.AIR, LibVulpesBlocks.blockStructureBlock},
+					{LibVulpesBlocks.blockStructureBlock, Blocks.AIR, lens, Blocks.AIR, LibVulpesBlocks.blockStructureBlock},
+					{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null}},
 
 					{	{ null,'*', 'c', '*',null}, 
-						{'*',"stone", "stone", "stone",'*'},
-						{'*',"stone", "stone", "stone",'*'},
-						{'*',"stone", "stone", "stone",'*'},
+						{'*',LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock,'*'},
+						{'*',LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, '*'},
+						{'*',LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock,'*'},
 						{null,'*', '*', '*', null}},
 
 						{	{null,'*', '*', '*', null}, 
-							{'*',"stone", "stone", "stone",'*'},
-							{'*',"stone", LibVulpesBlocks.motors, "stone",'*'},
-							{'*',"stone", "stone", "stone",'*'},
+							{'*', AdvancedRocketryBlocks.blockStructureTower, AdvancedRocketryBlocks.blockStructureTower, AdvancedRocketryBlocks.blockStructureTower,'*'},
+							{'*', AdvancedRocketryBlocks.blockStructureTower, LibVulpesBlocks.motors, AdvancedRocketryBlocks.blockStructureTower,'*'},
+							{'*',AdvancedRocketryBlocks.blockStructureTower, AdvancedRocketryBlocks.blockStructureTower, AdvancedRocketryBlocks.blockStructureTower,'*'},
 							{null,'*', '*', '*',null}}};
 
 	final static int openTime = 100;
@@ -164,7 +164,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			timeAlive = 0x1;
 		}
 
-		if((world.isRemote && isOpen) || (!world.isRemote && isRunning() && getMachineEnabled() && !world.isRaining() && world.canBlockSeeSky(pos.add(0,1,0)) && !world.isDaytime()) ) {
+		if((world.isRemote && isOpen) || (!world.isRemote && isRunning() && getMachineEnabled() && ((!world.isRaining() && world.canBlockSeeSky(pos.add(0,1,0)) && !world.isDaytime()) || world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) )) {
 
 			if(!isOpen) {
 				isOpen= true;

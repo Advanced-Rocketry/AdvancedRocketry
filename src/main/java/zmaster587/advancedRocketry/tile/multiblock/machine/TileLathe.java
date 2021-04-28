@@ -10,13 +10,10 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.api.material.AllowedProducts;
-import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
-import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 import java.util.List;
@@ -24,15 +21,9 @@ import java.util.List;
 public class TileLathe extends TileMultiblockMachine implements IModularInventory {
 
 	public static final Object[][][] structure = { 
-		{{'I', LibVulpesBlocks.motors, Blocks.AIR, 'c'}},
-		{{'O', LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'P'}},
+		{{'c', LibVulpesBlocks.motors, Blocks.AIR, 'I'}},
+		{{'P', LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'}},
 	};
-	
-	@Override
-	public void registerRecipes() {
-		//TODO: does it work?
-		//RecipesMachine.getInstance().addRecipe(TileLathe.class, MaterialRegistry.getItemStackFromMaterialAndType("Iron", AllowedProducts.getProductByName("STICK"), 2), 300, 100, "ingotIron");
-	}
 	
 	@Override
 	public Object[][][] getStructure() {
@@ -42,11 +33,6 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 	@Override
 	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
 		return true;
-	}
-	
-	@Override
-	protected float getTimeMultiplierForRecipe(IRecipe recipe) {
-		return super.getTimeMultiplierForRecipe(recipe);
 	}
 	
 	@Override

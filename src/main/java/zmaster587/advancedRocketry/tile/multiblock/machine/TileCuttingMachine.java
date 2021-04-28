@@ -1,14 +1,15 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -16,7 +17,6 @@ import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
-import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 	public Object[][][] getStructure() {
 		return structure;
 	}
-	
+
 	@Override
 	public void update() {
 		super.update();
@@ -54,6 +54,11 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 	}
 
 	@Override
+	public boolean shouldHideBlock(World world, BlockPos pos2, IBlockState tile) {
+		return true;
+	}
+
+	@Override
 	public SoundEvent getSound() {
 		return AudioRegistry.cuttingMachine;
 	}
@@ -62,6 +67,8 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 	public String getMachineName() {
 		return "container.cuttingmachine";
 	}
+
+
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {

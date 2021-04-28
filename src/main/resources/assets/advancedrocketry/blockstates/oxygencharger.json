@@ -11,6 +11,7 @@
         "facing=west,state=true":  { "model": "advancedrocketry:oxygenCharger", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:oxygenCharger", "y": 90 },
         "facing=down,state=true":  { "model": "advancedrocketry:oxygenCharger" },
-        "facing=up,state=true":  { "model": "advancedrocketry:oxygenCharger" }
+        "facing=up,state=true":  { "model": "advancedrocketry:oxygenCharger" },
+        "inventory" : { "model": "advancedrocketry:oxygencharger" }
     }
 }

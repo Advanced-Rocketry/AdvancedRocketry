@@ -10,7 +10,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.biome.Biome.TempCategory;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
@@ -19,7 +18,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import org.apache.commons.lang3.ArrayUtils;
-import scala.util.Random;
+import java.util.Random;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.ARConfiguration;
@@ -31,8 +30,6 @@ import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
-import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes;
-import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSatellite;
@@ -239,7 +236,13 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public double prevOrbitalTheta;
 	public double orbitalPhi;
 	public double rotationalPhi;
+	public boolean isRetrograde;
 	public OreGenProperties oreProperties = null;
+	public List<ItemStack> laserDrillOres;
+	public List<String> geodeOres;
+	public List<String> craterOres;
+	// The parsing of laserOreDrills is destructive of the actual oredict entries, so we keep a copy of the raw data around for XML writing
+	public String laserDrillOresRaw;
 	public String customIcon;
 	IAtmosphere atmosphereType;
 
@@ -272,9 +275,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private float geodeFrequencyMultiplier;
 	
 
-	//Satallites
-	private HashMap<Long,SatelliteBase> satallites;
-	private HashMap<Long,SatelliteBase> tickingSatallites;
+	//Satellites
+	private HashMap<Long,SatelliteBase> satellites;
+	private HashMap<Long,SatelliteBase> tickingSatellites;
 	private List<Fluid> harvestableAtmosphere;
 	private List<SpawnListEntryNBT> spawnableEntities;
 	private HashSet<HashedBlockPosition> beaconLocations;
@@ -291,15 +294,20 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		parentPlanet = Constants.INVALID_PLANET;
 		childPlanets = new HashSet<Integer>();
 		orbitalPhi = 0;
+		isRetrograde = false;
 		ringColor = new float[] {.4f, .4f, .7f};
 		oceanBlock = null;
 		fillerBlock = null;
 
+		laserDrillOres = new ArrayList<>();
+		geodeOres = new ArrayList<>();
+		craterOres = new ArrayList<>();
+
 		allowedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
 		terraformedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
-		satallites = new HashMap<>();
+		satellites = new HashMap<>();
 		requiredArtifacts = new LinkedList<ItemStack>();
-		tickingSatallites = new HashMap<Long,SatelliteBase>();
+		tickingSatellites = new HashMap<Long,SatelliteBase>();
 		isNativeDimension = true;
 		hasOxygen = true;
 		isGasGiant = false;
@@ -332,7 +340,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 	
 	public void copySatellites(DimensionProperties props) {
-		this.satallites = props.satallites;
+		this.satellites = props.satellites;
 	}
 	
 	public void copyTerraformedBiomes(DimensionProperties props) {
@@ -384,6 +392,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		oceanBlock = null;
 		fillerBlock = null;
 		generatorType = 0;
+		laserDrillOres = new ArrayList<>();
 	}
 
 	public List<Fluid> getHarvestableGasses() {
@@ -678,7 +687,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		if(update) {
 			if(parentPlanet != Constants.INVALID_PLANET)
-				getParentProperties().childPlanets.remove(new Integer(getId()));
+				getParentProperties().childPlanets.remove(getId());
 
 			if(parent == null) {
 				parentPlanet = Constants.INVALID_PLANET;
@@ -888,25 +897,25 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		childPlanets.remove(id);
 	}
 
-	//Satallites --------------------------------------------------------
+	//Satellites --------------------------------------------------------
 	/**
 	 * Adds a satellite to this DIM
 	 * @param satellite satellite to add
 	 * @param world world to add the satellite to
 	 */
-	public void addSatallite(SatelliteBase satellite, World world) {
+	public void addSatellite(SatelliteBase satellite, World world) {
 		//Prevent dupes
-		if(satallites.containsKey(satellite.getId())) {
-			satallites.remove(satellite.getId());
-			tickingSatallites.remove(satellite.getId());
+		if(satellites.containsKey(satellite.getId())) {
+			satellites.remove(satellite.getId());
+			tickingSatellites.remove(satellite.getId());
 		}
 
-		satallites.put(satellite.getId(), satellite);
+		satellites.put(satellite.getId(), satellite);
 		satellite.setDimensionId(world);
 
 
 		if(satellite.canTick())
-			tickingSatallites.put(satellite.getId(),satellite);
+			tickingSatellites.put(satellite.getId(),satellite);
 
 		if(!world.isRemote)
 			PacketHandler.sendToAll(new PacketSatellite(satellite));
@@ -917,19 +926,19 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @param satellite satellite to add
 	 * @param world world to add the satellite to
 	 */
-	public void addSatallite(SatelliteBase satellite, int world, boolean isRemote) {
+	public void addSatellite(SatelliteBase satellite, int world, boolean isRemote) {
 		//Prevent dupes
-		if(satallites.containsKey(satellite.getId())) {
-			satallites.remove(satellite.getId());
-			tickingSatallites.remove(satellite.getId());
+		if(satellites.containsKey(satellite.getId())) {
+			satellites.remove(satellite.getId());
+			tickingSatellites.remove(satellite.getId());
 		}
 
-		satallites.put(satellite.getId(), satellite);
+		satellites.put(satellite.getId(), satellite);
 		satellite.setDimensionId(world);
 
 
 		if(satellite.canTick())
-			tickingSatallites.put(satellite.getId(),satellite);
+			tickingSatellites.put(satellite.getId(),satellite);
 
 		if(!isRemote)
 			PacketHandler.sendToAll(new PacketSatellite(satellite));
@@ -937,31 +946,31 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	/**
 	 * Really only meant to be used on the client when recieving a packet
-	 * @param satallite
+	 * @param satellite
 	 */
-	public void addSatallite(SatelliteBase satallite) {
-		if(satallites.containsKey(satallite.getId())) {
-			satallites.remove(satallite.getId());
-			tickingSatallites.remove(satallite.getId());
+	public void addSatellite(SatelliteBase satellite) {
+		if(satellites.containsKey(satellite.getId())) {
+			satellites.remove(satellite.getId());
+			tickingSatellites.remove(satellite.getId());
 		}
-		satallites.put(satallite.getId(), satallite);
+		satellites.put(satellite.getId(), satellite);
 
-		if(satallite.canTick()) //TODO: check for dupes
-			tickingSatallites.put(satallite.getId(), satallite);
+		if(satellite.canTick()) //TODO: check for dupes
+			tickingSatellites.put(satellite.getId(), satellite);
 	}
 
 	/**
 	 * Removes the satellite from orbit around this world
-	 * @param satalliteId ID # for this satellite
+	 * @param satelliteId ID # for this satellite
 	 * @return reference to the satellite object
 	 */
-	public SatelliteBase removeSatellite(long satalliteId) {
-		SatelliteBase satallite = satallites.remove(satalliteId);
+	public SatelliteBase removeSatellite(long satelliteId) {
+		SatelliteBase satellite = satellites.remove(satelliteId);
 
-		if(satallite != null && satallite.canTick() && tickingSatallites.containsKey(satalliteId))
-			tickingSatallites.get(satalliteId).setDead();
+		if(satellite != null && satellite.canTick() && tickingSatellites.containsKey(satelliteId))
+			tickingSatellites.get(satelliteId).setDead();
 
-		return satallite;
+		return satellite;
 	}
 
 	/**
@@ -969,7 +978,15 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return a reference to the satelliteBase object given this ID
 	 */
 	public SatelliteBase getSatellite(long id) {
-		return satallites.get(id);
+		return satellites.get(id);
+	}
+
+	/**
+	 * Returns all of a dimension's satellites
+	 * @return a Collection containing all of a dimension's satellites
+	 */
+	public Collection<SatelliteBase> getAllSatellites() {
+		return this.satellites.values();
 	}
 
 	//TODO: multithreading
@@ -978,15 +995,15 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 */
 	public void tick() {
 
-		Iterator<SatelliteBase> iterator = tickingSatallites.values().iterator();
+		Iterator<SatelliteBase> iterator = tickingSatellites.values().iterator();
 
 		while(iterator.hasNext()) {
-			SatelliteBase satallite = iterator.next();
-			satallite.tickEntity();
+			SatelliteBase satellite = iterator.next();
+			satellite.tickEntity();
 
-			if(satallite.isDead()) {
+			if(satellite.isDead()) {
 				iterator.remove();
-				satallites.remove(satallite.getId());
+				satellites.remove(satellite.getId());
 			}
 		}
 		updateOrbit();
@@ -995,9 +1012,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public void updateOrbit() {
 		this.prevOrbitalTheta = this.orbitTheta;
 		if (this.isMoon()) {
-			this.orbitTheta = AstronomicalBodyHelper.getMoonOrbitalTheta(orbitalDist, getParentProperties().gravitationalMultiplier) + baseOrbitTheta;
+			this.orbitTheta = (AstronomicalBodyHelper.getMoonOrbitalTheta(orbitalDist, getParentProperties().gravitationalMultiplier) + baseOrbitTheta) * (isRetrograde ? -1 : 1);
 		} else if (!this.isMoon()) {
-			this.orbitTheta = AstronomicalBodyHelper.getOrbitalTheta(orbitalDist, getStar().getSize()) + baseOrbitTheta;
+			this.orbitTheta = (AstronomicalBodyHelper.getOrbitalTheta(orbitalDist, getStar().getSize()) + baseOrbitTheta) * (isRetrograde ? -1 : 1);
 		}
 	}
 
@@ -1334,26 +1351,26 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		//Satellites
 
 		if(nbt.hasKey("satallites")) {
-			NBTTagCompound allSatalliteNbt = nbt.getCompoundTag("satallites");
+			NBTTagCompound allSatelliteNBT = nbt.getCompoundTag("satallites");
 
-			for(Object keyObject : allSatalliteNbt.getKeySet()) {
+			for(Object keyObject : allSatelliteNBT.getKeySet()) {
 				String key = (String)keyObject;
 				Long longKey = Long.parseLong(key);
 
-				NBTTagCompound satalliteNbt = allSatalliteNbt.getCompoundTag(key);
+				NBTTagCompound satelliteNBT = allSatelliteNBT.getCompoundTag(key);
 
-				if(satallites.containsKey(longKey)){
-					satallites.get(longKey).readFromNBT(satalliteNbt);
+				if(satellites.containsKey(longKey)){
+					satellites.get(longKey).readFromNBT(satelliteNBT);
 				} 
 				else {
 					//Check for NBT errors
 					try {
-						SatelliteBase satallite = SatelliteRegistry.createFromNBT(satalliteNbt);
+						SatelliteBase satellite = SatelliteRegistry.createFromNBT(satelliteNBT);
 
-						satallites.put(longKey, satallite);
+						satellites.put(longKey, satellite);
 
-						if(satallite.canTick()) {
-							tickingSatallites.put(satallite.getId(), satallite);
+						if(satellite.canTick()) {
+							tickingSatellites.put(satellite.getId(), satellite);
 						}
 
 					} catch (NullPointerException e) {
@@ -1414,6 +1431,36 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			allowedBiomes.addAll(getBiomesEntries(biomesList));
 		}
 
+		if(nbt.hasKey("laserDrillOres")) {
+			laserDrillOres.clear();
+			list = nbt.getTagList("laserDrillOres", NBT.TAG_COMPOUND);
+			for(NBTBase entry : list) {
+				assert entry instanceof NBTTagCompound;
+				laserDrillOres.add(new ItemStack((NBTTagCompound) entry));
+			}
+		}
+
+		if(nbt.hasKey("laserDrillOresRaw")) {
+			laserDrillOresRaw = nbt.getString("laserDrillOresRaw");
+		}
+
+		if(nbt.hasKey("geodeOres")) {
+			geodeOres.clear();
+			list = nbt.getTagList("geodeOres", NBT.TAG_STRING);
+			for(NBTBase entry : list) {
+				assert entry instanceof NBTTagString;
+				geodeOres.add(((NBTTagString) entry).getString());
+			}
+		}
+
+		if(nbt.hasKey("craterOres")) {
+			craterOres.clear();
+			list = nbt.getTagList("craterOres", NBT.TAG_STRING);
+			for(NBTBase entry : list) {
+				assert entry instanceof NBTTagString;
+				craterOres.add(((NBTTagString) entry).getString());
+			}
+		}
 
 		gravitationalMultiplier = nbt.getFloat("gravitationalMultiplier");
 		orbitalDist = nbt.getInteger("orbitalDist");
@@ -1421,6 +1468,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		baseOrbitTheta = nbt.getDouble("baseOrbitTheta");
 		orbitalPhi = nbt.getDouble("orbitPhi");
 		rotationalPhi = nbt.getDouble("rotationalPhi");
+		isRetrograde = nbt.getBoolean("isRetrograde");
 		hasOxygen = nbt.getBoolean("hasOxygen");
 		atmosphereDensity = nbt.getInteger("atmosphereDensity");
 
@@ -1527,15 +1575,15 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		
 		//Satellites
 
-		if(!satallites.isEmpty()) {
-			NBTTagCompound allSatalliteNbt = new NBTTagCompound();
-			for(Entry<Long, SatelliteBase> entry : satallites.entrySet()) {
-				NBTTagCompound satalliteNbt = new NBTTagCompound();
+		if(!satellites.isEmpty()) {
+			NBTTagCompound allSatelliteNBT = new NBTTagCompound();
+			for(Entry<Long, SatelliteBase> entry : satellites.entrySet()) {
+				NBTTagCompound satelliteNBT = new NBTTagCompound();
 
-				entry.getValue().writeToNBT(satalliteNbt);
-				allSatalliteNbt.setTag(entry.getKey().toString(), satalliteNbt);
+				entry.getValue().writeToNBT(satelliteNBT);
+				allSatelliteNBT.setTag(entry.getKey().toString(), satelliteNBT);
 			}
-			nbt.setTag("satallites", allSatalliteNbt);
+			nbt.setTag("satallites", allSatelliteNBT);
 		}
 	}
 	
@@ -1581,7 +1629,35 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			nbt.setIntArray("biomes", biomeId);
 		}
 
+		if(!laserDrillOres.isEmpty()) {
+			list = new NBTTagList();
+			for(ItemStack ore : laserDrillOres) {
+				NBTTagCompound entry = new NBTTagCompound();
+				ore.writeToNBT(entry);
+				list.appendTag(entry);
+			}
+			nbt.setTag("laserDrillOres",list);
+		}
 
+		if(laserDrillOresRaw != null) {
+			nbt.setTag("laserDrillOresRaw",new NBTTagString(laserDrillOresRaw));
+		}
+
+		if(!geodeOres.isEmpty()) {
+			list = new NBTTagList();
+			for(String ore : geodeOres) {
+				list.appendTag(new NBTTagString(ore));
+			}
+			nbt.setTag("geodeOres",list);
+		}
+
+		if(!craterOres.isEmpty()) {
+			list = new NBTTagList();
+			for(String ore : craterOres) {
+				list.appendTag(new NBTTagString(ore));
+			}
+			nbt.setTag("craterOres",list);
+		}
 
 		nbt.setInteger("starId", starId);
 		nbt.setFloat("gravitationalMultiplier", gravitationalMultiplier);
@@ -1590,6 +1666,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setDouble("baseOrbitTheta", baseOrbitTheta);
 		nbt.setDouble("orbitPhi", orbitalPhi);
 		nbt.setDouble("rotationalPhi", rotationalPhi);
+		nbt.setBoolean("isRetrograde", isRetrograde);
 		nbt.setBoolean("hasOxygen", hasOxygen);
 		nbt.setInteger("atmosphereDensity", atmosphereDensity);
 		nbt.setInteger("originalAtmosphereDensity", originalAtmosphereDensity);

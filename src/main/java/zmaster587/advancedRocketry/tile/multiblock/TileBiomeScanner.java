@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -40,11 +41,11 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 				{null, null, null, null, null},
 				{null, null, null, null, null}},
 
-				{	{null,Blocks.IRON_BLOCK,Blocks.IRON_BLOCK,Blocks.IRON_BLOCK,null}, 
-					{Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK},
-					{Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK},
-					{Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK},
-					{null,Blocks.IRON_BLOCK,Blocks.IRON_BLOCK,Blocks.IRON_BLOCK,null}},
+				{	{null,"blockAluminum","blockAluminum","blockAluminum",null},
+					{"blockAluminum", "blockAluminum", AdvancedRocketryBlocks.blockStructureTower, "blockAluminum", "blockAluminum"},
+					{"blockAluminum", AdvancedRocketryBlocks.blockStructureTower, LibVulpesBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureTower, "blockAluminum"},
+					{"blockAluminum", "blockAluminum", AdvancedRocketryBlocks.blockStructureTower, "blockAluminum", "blockAluminum"},
+					{null,"blockAluminum","blockAluminum","blockAluminum",null}},
 
 					{	{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR}, 
 						{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},

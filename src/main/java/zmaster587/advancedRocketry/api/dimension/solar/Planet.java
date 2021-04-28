@@ -9,8 +9,8 @@ public class Planet {
 	private int dimId;
 	private StellarBody star;
 	private List<Planet> moons;
-	private List<SatelliteBase> satallites;
-	private List<SatelliteBase> tickingSatallites;
+	private List<SatelliteBase> satellites;
+	private List<SatelliteBase> tickingSatellites;
 	
 	//Between 0 and 2pi
 	private double orbit;
@@ -29,33 +29,33 @@ public class Planet {
 	
 	/**
 	 * Adds a satellite orbiting this body
-	 * @param satallite
+	 * @param satellite
 	 */
-	public void addSatallite(SatelliteBase satallite) {
-		satallites.add(satallite);
+	public void addSatellite(SatelliteBase satellite) {
+		satellites.add(satellite);
 		
-		if(satallite.canTick())
-			tickingSatallites.add(satallite);
+		if(satellite.canTick())
+			tickingSatellites.add(satellite);
 	}
 	
 	/**
 	 * Removes a satellite orbiting this body
-	 * @param satallite
+	 * @param satellite
 	 * @return true if the satellite was removed, false if it doesn't exist
 	 */
-	public boolean removeSatallite(SatelliteBase satallite) {
+	public boolean removeSatellite(SatelliteBase satellite) {
 		
-		if(satallite.canTick())
-			tickingSatallites.remove(satallite);
+		if(satellite.canTick())
+			tickingSatellites.remove(satellite);
 		
-		return satallites.remove(satallite);
+		return satellites.remove(satellite);
 	}
 	
 	/**
 	 * @return a list of satellites orbiting this body
 	 */
-	public List<SatelliteBase> getSatallites() {
-		return satallites;
+	public List<SatelliteBase> getSatellites() {
+		return satellites;
 	}
 	
 	//TODO: multithreading
@@ -63,11 +63,11 @@ public class Planet {
 	 * If a satellite is registered to tick, then it is ticked in this method
 	 */
 	public void tick() {
-		Iterator<SatelliteBase> iterator = tickingSatallites.iterator();
+		Iterator<SatelliteBase> iterator = tickingSatellites.iterator();
 		
 		while(iterator.hasNext()) {
-			SatelliteBase satallite = iterator.next();
-			satallite.tickEntity();
+			SatelliteBase satellite = iterator.next();
+			satellite.tickEntity();
 		}
 	}
 	

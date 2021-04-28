@@ -289,7 +289,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		Iterator<ModuleBase> itr = modules.iterator();
 		while(itr.hasNext()) {
 			ModuleBase module = itr.next();
-			if(module instanceof ModuleButton && ((ModuleButton)module).getText().equalsIgnoreCase("Select Dst")) {
+			if(module instanceof ModuleButton && ((ModuleButton)module).buttonId == 1) {
 				itr.remove();
 				break;
 			}
@@ -387,7 +387,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		MissionGasCollection miningMission = new MissionGasCollection(intakePower == 0 ? 360 : (long)(2*((int)stats.getStatTag("liquidCapacity")/intakePower)), this, connectedInfrastructure, properties.getHarvestableGasses().get(gasId));
 
 		miningMission.setDimensionId(properties.getId());
-		properties.addSatallite(miningMission);
+		properties.addSatellite(miningMission);
 
 		if(!world.isRemote)
 			PacketHandler.sendToAll(new PacketSatellite(miningMission));
@@ -463,7 +463,6 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 	@Override
 	public void writeMissionPersistantNBT(NBTTagCompound nbt) {
-		// TODO Auto-generated method stub
 		super.writeMissionPersistantNBT(nbt);
 		nbt.setInteger("fwd", forwardDirection.ordinal());
 

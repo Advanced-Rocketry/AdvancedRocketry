@@ -35,7 +35,6 @@ import zmaster587.libVulpes.util.EmbeddedInventory;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implements IModularInventory, IInventory {
 
@@ -68,6 +67,9 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 		list.add(new BlockMeta(Blocks.IRON_BLOCK,BlockMeta.WILDCARD));
 		return list;
 	}
+
+	@Override
+	public boolean shouldHideBlock(World world, BlockPos pos2, IBlockState tile) { return true; }
 
 	@Override
 	protected void integrateTile(TileEntity tile) {
@@ -145,7 +147,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 		if(inputHatch == null)
 			return;
 
-		if(getStackInSlot(0) == null) {
+		if(getStackInSlot(0) == ItemStack.EMPTY) {
 			for(int j = 0; j < inputHatch.getSizeInventory(); j++) {
 				ItemStack stack2 = inputHatch.getStackInSlot(j);
 				if(stack2 != null && stack2.getItem() instanceof ItemAsteroidChip && ((ItemAsteroidChip)stack2.getItem()).getUUID(stack2) != null) {
@@ -159,28 +161,14 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 
 	@Override
 	protected void processComplete() {
-		super.processComplete();
-
-		//The machine is done re-enable user input
-
 		if(!world.isRemote) {
-			ItemStack outputItem = new ItemStack(AdvancedRocketryItems.itemAsteroidChip);
-			ItemAsteroidChip item = (ItemAsteroidChip)outputItem.getItem();
-
-			//Get UUID
-			item.setUUID(outputItem, (new Random(world.getTotalWorldTime())).nextLong() % 10000);
-			item.setMaxData(outputItem, 2000);
-			//TODO: fix naming system
-			//int dimensionId = DimensionManager.getInstance().generateRandom("", baseAtmosphere, baseDistance, baseGravity, atmosphereFactor, distanceFactor, gravityFactor);
-
+			//Move chip to output 
 			for(int i = 0; i < outputHatch.getSizeInventory(); i++) {
-				if(outputHatch.getStackInSlot(i) == null) {
-					outputHatch.setInventorySlotContents(i, outputItem);
+				if(outputHatch.getStackInSlot(i) == ItemStack.EMPTY) {
+					outputHatch.setInventorySlotContents(i, this.decrStackSize(0, 1));
 					return;
 				}
 			}
-
-			this.setInventorySlotContents(1, outputItem);
 		}
 	}
 
@@ -203,14 +191,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 			int maxData = item.getMaxData(stack);
 
 			if(item.getData(stack, DataType.COMPOSITION) == maxData && item.getData(stack, DataType.DISTANCE) == maxData && item.getData(stack, DataType.MASS) == maxData) {
-				for(int i = 0; i < outputHatch.getSizeInventory(); i++) {
-					if(outputHatch.getStackInSlot(i) == null) {
-						outputHatch.setInventorySlotContents(i, stack);
-
-						setInventorySlotContents(0, null);
-						return;
-					}
-				}
+				processComplete();
 			}
 		}
 	}

@@ -13,6 +13,7 @@
         "facing=west":  { "model": "advancedrocketry:blockpump", "y": 270 },
         "facing=east":  { "model": "advancedrocketry:blockpump", "y": 90 },
         "facing=up": { "model": "advancedrocketry:blockpump" },
-        "facing=down": { "model": "advancedrocketry:blockpump", "y": 180 }
+        "facing=down": { "model": "advancedrocketry:blockpump", "y": 180 },
+        "inventory" : { "model": "advancedrocketry:blockpump" }
     }
 }

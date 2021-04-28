@@ -12,7 +12,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,7 +24,7 @@ import zmaster587.advancedRocketry.api.IMission;
 import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
-import zmaster587.advancedRocketry.tile.TileRocketBuilder;
+import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
@@ -59,6 +58,14 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 
 	public TileRocketLoader(int size) {
 		super(size);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanInsertSlot(1, true);
+		inventory.setCanInsertSlot(2, true);
+		inventory.setCanInsertSlot(3, true);
+		inventory.setCanExtractSlot(0, false);
+		inventory.setCanExtractSlot(1, false);
+		inventory.setCanExtractSlot(2, false);
+		inventory.setCanExtractSlot(3, false);
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 0, "", this, LibVulpes.proxy.getLocalizedString("msg.rocketLoader.loadingState"));
 		state = RedstoneState.ON;
 		inputRedstoneControl = new ModuleRedstoneOutputButton(174, 32, 1, "", this, LibVulpes.proxy.getLocalizedString("msg.rocketLoader.allowLoading"));
@@ -71,8 +78,8 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		if(getMasterBlock() instanceof TileRocketBuilder)
-			((TileRocketBuilder)getMasterBlock()).removeConnectedInfrastructure(this);
+		if(getMasterBlock() instanceof TileRocketAssemblingMachine)
+			((TileRocketAssemblingMachine)getMasterBlock()).removeConnectedInfrastructure(this);
 	}
 
 	@Override

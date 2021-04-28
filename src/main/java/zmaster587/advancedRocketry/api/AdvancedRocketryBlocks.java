@@ -33,7 +33,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockMoonTurf, blockHotTurf;
 	public static Block blockMultiMineOre;
 	public static Block blockLightSource;
-	public static Block blockAlienWood, blockAlienLeaves, blockAlienSapling;
+	public static Block blockLightwoodWood, sblockLightwoodLeaves, blockLightwoodSapling;
 	public static Block blockGuidanceComputer;
 	public static Block blockLunarAnalyser;
 	public static Block blockPlanetSelector;
@@ -46,6 +46,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockOxygenFluid;
 	public static Block blockHydrogenFluid;
 	public static Block blockChemicalReactor;
+	public static Block blockPrecisionLaserEngraver;
 	public static Block blockFuelFluid;
 	public static Block test;
 	public static Block blockOxygenVent;
@@ -90,11 +91,12 @@ public class AdvancedRocketryBlocks {
 	public static Block blockLens;
 	public static Block blockForceField;
 	public static Block blockForceFieldProjector;
+	public static Block blockVacuumLaser;
 	public static Block blockGravityMachine;
 	public static Block blockPipeSealer;
 	public static Block blockSpaceElevatorController;
 	public static Block blockBeacon;
-	public static Block blockAlienPlanks;
+	public static Block blockLightwoodPlanks;
 	public static Block blockThermiteTorch;
 	public static Block blockTransciever;
 	public static Block blockMoonTurfDark;
@@ -104,4 +106,6 @@ public class AdvancedRocketryBlocks {
 	public static Block blockCentrifuge;
 	public static Block blockBasalt;
 	public static Block blockLandingFloat;
+	public static Block blockSolarArray;
+	public static Block blockSolarArrayPanel;
 }

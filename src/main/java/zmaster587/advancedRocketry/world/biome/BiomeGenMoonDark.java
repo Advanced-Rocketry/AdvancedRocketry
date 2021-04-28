@@ -10,11 +10,8 @@ import java.util.List;
 
 public class BiomeGenMoonDark extends Biome {
 
-	public BiomeGenMoonDark() {
-		super(new BiomeProperties("MoonDark").setRainDisabled().setBaseHeight(0.5f).setHeightVariation(0.01f).setRainfall(0).setTemperature(0.3f));
-
-		this.setRegistryName(new ResourceLocation("advancedrocketry:MoonDark"));
-//		registerBiome(biomeId, "Moon", this);
+	public BiomeGenMoonDark(BiomeProperties properties) {
+		super(properties);
 		
 		//cold and dry
 		this.decorator.generateFalls=false;

@@ -1,30 +1,20 @@
 package zmaster587.advancedRocketry.world.biome;
 
-import java.util.Random;
-
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenBase;
-import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.world.decoration.MapGenVolcano;
-import zmaster587.advancedRocketry.world.gen.WorldGenCharredTree;
 
 public class BiomeGenBarrenVolcanic extends Biome {
 	
 	public static MapGenBase volcano;
 	
-	public BiomeGenBarrenVolcanic() {
+	public BiomeGenBarrenVolcanic(BiomeProperties properties) {
 		
-		super(new BiomeProperties("VolcanicBarren").setRainDisabled().setBaseHeight(0f).setHeightVariation(0.9f).setRainfall(0).setTemperature(1.0f));
-		
-        this.setRegistryName(new ResourceLocation("advancedrocketry:VolcanicBarren"));
+		super(properties);
 		
 		spawnableMonsterList.clear();
 		this.spawnableMonsterList.add(new Biome.SpawnListEntry(EntityCreeper.class, 5, 1, 1));

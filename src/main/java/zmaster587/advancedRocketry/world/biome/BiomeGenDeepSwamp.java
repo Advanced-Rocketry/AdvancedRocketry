@@ -9,24 +9,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.world.gen.WorldGenNoTree;
-import zmaster587.advancedRocketry.world.gen.WorldGenSwampTree;
 
 import java.util.Random;
 
 public class BiomeGenDeepSwamp extends Biome {
 
-	public static MapGenBase swampTree;
 	private final static WorldGenNoTree noTree = new WorldGenNoTree(false);
 	
-	public BiomeGenDeepSwamp() {
-		super(new BiomeProperties("DeepSwamp").setBaseHeight(-0.1f).setHeightVariation(0.2f).setRainfall(0.9f).setTemperature(0.9f).setWaterColor(14745518));
-
-        this.setRegistryName(new ResourceLocation("advancedrocketry:DeepSwamp"));
+	public BiomeGenDeepSwamp(BiomeProperties properties) {
+		super(properties);
 		
 		this.decorator.treesPerChunk = 10;
         this.decorator.flowersPerChunk = 1;
@@ -40,7 +35,6 @@ public class BiomeGenDeepSwamp extends Biome {
         this.spawnableMonsterList.add(new Biome.SpawnListEntry(EntitySlime.class, 1, 1, 1));
         this.flowers.clear();
         this.addFlower(Blocks.RED_FLOWER.getDefaultState(), 10);
-		swampTree = new WorldGenSwampTree(2);
 	}
 	
 	@Override
@@ -90,13 +84,6 @@ public class BiomeGenDeepSwamp extends Biome {
         }
 
         this.generateBiomeTerrain(worldIn, rand, chunkPrimerIn, x, z, noiseVal);
-
-        
-		//Decoration time takes too long due to block relights, so run at terrain gen time
-		///swampTree.func_151539_a(null, world, x, z, block); //Arg 1 never actually used so fake it
-		//Yes this is hacky
-		if(x % 16 == 0 && z % 16 == 0 )
-			swampTree.generate(worldIn, x/16, z/16, chunkPrimerIn);
 	}
 	
     /**

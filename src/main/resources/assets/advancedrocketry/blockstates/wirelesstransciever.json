@@ -7,6 +7,7 @@
         "facing=north,state=true": { "model": "advancedrocketry:wirelesstransciever" },
         "facing=south,state=true": { "model": "advancedrocketry:wirelesstransciever", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:wirelesstransciever", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:wirelesstransciever", "y": 90 }
+        "facing=east,state=true":  { "model": "advancedrocketry:wirelesstransciever", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:wirelesstransciever" }
     }
 }

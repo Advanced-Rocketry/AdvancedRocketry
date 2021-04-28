@@ -1,9 +1,11 @@
 {
+    "forge_marker": 1,
     "defaults": {
         "textures": {
             "#None": "advancedrocketry:/models/bipropellantcombustion"
         },
-        "model": "advancedrocketry:models/bipropellantrocketmotor.obj"
+        "model": "advancedrocketry:models/bipropellantrocketmotor.obj",
+        "transform": "forge:default-block"
     },
     "variants": {
         "facing=north": { "model": "advancedrocketry:models/bipropellantrocketmotor.obj", "texture": "advancedrocketry:textures/models/bipropellantcombustion.png", "x": 90 },
@@ -14,7 +16,6 @@
         "facing=down":  { "model": "advancedrocketry:models/bipropellantrocketmotor.obj", "texture": "advancedrocketry:textures/models/bipropellantcombustion.png" },
         "inventory": {
             "model": "advancedrocketry:models/bipropellantrocketmotor.obj",
-            "transform": "forge:default-block",
             "textures": {
                 "layer0": "advancedrocketry:textures/models/bipropellantcombustion.png"
             }

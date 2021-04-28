@@ -52,7 +52,7 @@ public class PacketSatellite extends BasePacket {
 			nbt = packetBuffer.readCompoundTag();
 			SatelliteBase satellite = SatelliteRegistry.createFromNBT(nbt);
 			
-			zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()).addSatallite(satellite);
+			zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()).addSatellite(satellite);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;

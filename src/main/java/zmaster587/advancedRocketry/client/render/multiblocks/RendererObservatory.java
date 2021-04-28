@@ -16,7 +16,7 @@ public class RendererObservatory  extends TileEntitySpecialRenderer {
 
 	WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/T1Observatory.png");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/observatory.png");
 
 	public RendererObservatory() {
 		try {
@@ -62,12 +62,12 @@ public class RendererObservatory  extends TileEntitySpecialRenderer {
 			model.renderPart("Axis");
 
 			GL11.glPushMatrix();
-			GL11.glTranslatef(0, 0, -offset);
+			GL11.glTranslatef(0, 0, -offset * 1.125f);
 			model.renderOnly("CasingXMinus");
 			GL11.glPopMatrix();
 
 			GL11.glPushMatrix();
-			GL11.glTranslatef(0,0,offset);
+			GL11.glTranslatef(0,0,offset * 1.125f);
 			model.renderOnly("CasingXPlus");
 			GL11.glPopMatrix();
 

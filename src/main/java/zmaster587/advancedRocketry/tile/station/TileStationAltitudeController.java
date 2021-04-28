@@ -12,6 +12,7 @@ import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.*;
@@ -24,7 +25,6 @@ import java.util.List;
 
 public class TileStationAltitudeController extends TileEntity implements IModularInventory, ITickable, INetworkMachine, ISliderBar {
 
-	int gravity;
 	int progress;
 
 	private ModuleText moduleGrav, numGravPylons, maxGravBuildSpeed, targetGrav;
@@ -53,7 +53,6 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbt = writeToNBT(new NBTTagCompound());
-		nbt.setInteger("gravity", gravity);
 		
 
 		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, nbt);
@@ -63,8 +62,6 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		super.onDataPacket(net, pkt);
-
-		gravity = pkt.getNbtCompound().getInteger("gravity");
 
 	}
 	
@@ -78,7 +75,7 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 
 			//numThrusters.setText("Number Of Thrusters: 0");
 
-			targetGrav.setText(String.format("%s %d", LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.tgtalt"), gravity*200 + 100));
+			targetGrav.setText(String.format("%s %d", LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.tgtalt"), ((SpaceStationObject) object).targetOrbitalDistance * 200 + 100));
 		}
 	}
 
@@ -90,8 +87,9 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(object != null) {
-					
-					double targetGravity = gravity;
+					progress = ((SpaceStationObject) object).targetOrbitalDistance;
+
+					double targetGravity = ((SpaceStationObject) object).targetOrbitalDistance;
 					double angVel = object.getOrbitalDistance();
 					double acc = 0.1*(getTotalProgress(0) - angVel + 1)/(float)getTotalProgress(0);
 
@@ -154,14 +152,12 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setShort("numRotations", (short)gravity);
 		return nbt;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		gravity = nbt.getShort("numRotations");
 	}
 
 
@@ -174,7 +170,9 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 	public void setProgress(int id, int progress) {
 
 		this.progress = progress;
-		gravity = progress;
+		if (SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos) != null) {
+			((SpaceStationObject) (SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos))).targetOrbitalDistance = progress;
+		}
 	}
 
 	@Override

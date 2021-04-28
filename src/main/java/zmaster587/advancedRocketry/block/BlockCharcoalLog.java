@@ -36,13 +36,6 @@ public class BlockCharcoalLog extends BlockLog {
 	}
 	
 	@Override
-	public ItemStack getPickBlock(IBlockState state, RayTraceResult target,
-			World world, BlockPos pos, EntityPlayer player) {
-		// TODO Auto-generated method stub
-		return super.getPickBlock(state, target, world, pos, player);
-	}
-	
-	@Override
 	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
         Item item = Item.getItemFromBlock(this);
         return item == null ? null : new ItemStack(item, 1, 0);

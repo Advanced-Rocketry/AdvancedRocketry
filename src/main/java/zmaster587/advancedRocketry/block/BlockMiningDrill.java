@@ -10,7 +10,7 @@ import zmaster587.libVulpes.block.BlockFullyRotatable;
 public class BlockMiningDrill extends BlockFullyRotatable implements IMiningDrill {
 
 	public BlockMiningDrill() {
-		super(Material.ROCK);
+		super(Material.IRON);
 		//super(TileDrill.class, zmaster587.libVulpes.inventory.GuiHandler.guiId.MODULAR.ordinal());
 	}
 

@@ -10,7 +10,6 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -25,8 +24,8 @@ import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.entity.EntityRocket;
-import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.util.StationLandingLocation;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesItems;
@@ -55,6 +54,8 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 	public TileLandingPad() {
 		super(1);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanExtractSlot(0, true);
 		MinecraftForge.EVENT_BUS.register(this);
 		blockPos = new LinkedList<HashedBlockPosition>();
 		moduleNameTextbox = new ModuleTextBox(this, 40, 30, 60, 12, 9);

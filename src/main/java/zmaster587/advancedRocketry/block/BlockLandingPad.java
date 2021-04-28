@@ -32,7 +32,6 @@ public class BlockLandingPad extends Block {
 	
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-		// TODO Auto-generated method stub
 		super.onBlockAdded(worldIn, pos, state);
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if(tile instanceof TileLandingPad) {

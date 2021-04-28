@@ -13,6 +13,7 @@
         "facing=west":  { "model": "advancedrocketry:drill", "y": 270 },
         "facing=east":  { "model": "advancedrocketry:drill", "y": 90 },
         "facing=up": { "model": "advancedrocketry:drill" },
-        "facing=down": { "model": "advancedrocketry:drill", "y": 180 }
+        "facing=down": { "model": "advancedrocketry:drill", "y": 180 },
+        "inventory" : { "model": "advancedrocketry:drill" }
     }
 }
