@@ -49,8 +49,29 @@ minecraft {
 apply from: "gradle/scripts/jars.gradle"
 apply from: "gradle/scripts/version.gradle"
 
-project.ext { gcbuild = "161" }
-apply from: "https://raw.githubusercontent.com/ReadOnlyDevelopment/gradle/galacticraft/dev.gradle"
+project.ext { gcbuild = "261" }
+//apply from: "https://raw.githubusercontent.com/ReadOnlyDevelopment/gradle/galacticraft/dev.gradle"
+
+String gcversion = "1.12.2-4.0.2.${project.gcbuild}"
+
+repositories {
+    ivy {
+        url "https://micdoodle8.com/new-builds/"
+        layout 'pattern', {
+            artifact "[organization]/${project.gcbuild}/[module]-[revision].jar"
+        }
+        metadataSources {
+            artifact()
+        }
+    }
+}
+
+dependencies {
+    compile "GC-1.12-dev:GalacticraftCore-Dev:${gcversion}"
+    compile "GC-1.12-dev:Galacticraft-API:${gcversion}"
+    compile "GC-1.12-dev:Galacticraft-Planets-Dev:${gcversion}"
+    compile "GC-1.12-dev:MicdoodleCore-Dev:${gcversion}"
+}
 
 
 repositories {
@@ -180,6 +201,7 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     gitHubIssuePattern = "nonada123";
     templateContent = """
 {{#tags}}
+<h1> Highly untested and may break world</h1>
   <h3>{{name}}</h3>
   <ul>
     {{#commits}}
