@@ -196,6 +196,7 @@ public class ARConfiguration {
 		arConfig.enableNausea = builder.comment("If true, allows players to experience nausea on non-standard atmosphere types").define("EnableAtmosphericNausea", true);
 		arConfig.stationSkyOverride = builder.comment("If true, AR will use a custom skybox on space stations").define("StationSkyOverride", true);
 		arConfig.planetSkyOverride = builder.comment("If true, AR will use a custom skybox on planets").define("PlanetSkyOverride", true);
+		arConfig.overworldSkyOverride = builder.comment("If true, AR will use a custom skybox in the overworld").define("OverworldSkyOverride", true);
 		arConfig.advancedVFX = builder.comment("Advanced visual effects").define("advancedVFX", true);
 		arConfig.lockUI = builder.comment("If UI is not locked, the middle mouse can be used to drag certain AR UIs around the screen, positions are saved on hitting quit in the menu").define("lockUI", true);
 		builder.pop();
@@ -204,7 +205,7 @@ public class ARConfiguration {
 		arConfig.atmosphereHandleBitMask = builder.comment("BitMask: 0: no threading, radius based; 1: threading, radius based; 2: no threading volume based; 3: threading volume based").define("atmosphereCalculationMethod", 3);
 		arConfig.oxygenVentSize = builder.comment("Radius of the O2 vent.  if atmosphereCalculationMethod is 2 or 3 then max volume is calculated from this radius.  WARNING: larger numbers can lead to lag").define("oxygenVentSize", 32);
 		builder.pop();
-		
+
 		builder.push(ARConfiguration.CATEGORY_ROCKET);
 		arConfig.orbit = builder.comment("How high the rocket has to go before it reaches orbit").defineInRange("OrbitHeight", 1000, 255, Integer.MAX_VALUE);
 		List<String> fuels = new LinkedList();
@@ -237,7 +238,7 @@ public class ARConfiguration {
 		arConfig.transBodyInjection = builder.comment("How long transbody injection is before the rocket can exit").define("transBodyInjection", 0);
 		arConfig.warpTBIBurnMult = builder.comment("TBI multiplier for warp flights").define("warpTBIBurnMult", 10.0);
 		builder.pop();
-		
+
 		builder.push(ARConfiguration.CATEGORY_WORLD_GENERATION);
 		arConfig.electricPlantsSpawnLightning = builder.comment("Should Electric Mushrooms be able to spawn lightning").define("electricPlantsSpawnLightning", true);
 		List<String> geodeOresList = new LinkedList<>();
@@ -1217,6 +1218,9 @@ public class ARConfiguration {
 
 	@ConfigProperty
 	public  ConfigValue<Boolean> stationSkyOverride;
+
+	@ConfigProperty
+	public  ConfigValue<Boolean> overworldSkyOverride;
 
 	@ConfigProperty
 	public  ConfigValue<Boolean> allowTerraformNonAR;

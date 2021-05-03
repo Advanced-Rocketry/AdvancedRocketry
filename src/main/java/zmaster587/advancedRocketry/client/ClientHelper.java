@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.client;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IDayTimeReader;
@@ -32,9 +33,21 @@ public class ClientHelper {
 
 		ISkyRenderer renderer =  properties.getSkyRenderer();
 
-		
+
 		if(renderer == null)
 		{
+
+			if(properties.getId().equals(new ResourceLocation("minecraft:overworld")))
+			{
+
+				if(!ARConfiguration.getCurrentConfig().overworldSkyOverride.get())
+				{
+					properties.setSkyRenderer(null);
+					return true;
+				}
+				properties.setSkyRenderer(new RenderPlanetarySky());
+			}
+			else
 			if(properties.isStation())
 			{
 				
