@@ -457,8 +457,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return true if it can be traveled to, in general if it has a surface
 	 */
 	public boolean canTravelTo(ResourceLocation dimId){
-		
-		return ZUtils.isWorldRegistered(dimId) && getDimensionProperties(dimId).hasSurface();
+		return isDimensionCreated(dimId) && getDimensionProperties(dimId).hasSurface();
 	}
 	
 	/**
