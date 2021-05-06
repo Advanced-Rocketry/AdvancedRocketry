@@ -1,5 +1,8 @@
 package zmaster587.advancedRocketry.tile;
 
+import javax.annotation.Nonnull;
+
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -92,26 +95,27 @@ public class TileFluidTank extends TileFluidHatch {
 	}
 
 	@Override
+	@Nonnull
 	public FluidStack drain(int maxDrain, FluidAction doDrain) {
 		IFluidHandler handler = this.getFluidTankInDirection(Direction.UP);
 
 		FluidStack stack = null;
-		if(handler != null && handler.getFluidInTank(0) != null && 
+		if(handler != null && !handler.getFluidInTank(0).isEmpty() && 
 				fluidTank.getFluid() != null && fluidTank.getFluid().getFluid() ==
 				handler.getFluidInTank(0).getFluid()) {
 
 			stack = handler.drain(maxDrain, doDrain);
 		}
-		if(stack != null)
+		if(!stack.isEmpty())
 			return stack;
 
 		FluidStack stack2 = super.drain(maxDrain - (stack != null ? stack.getAmount() : 0), doDrain);
 
-		if(stack != null && stack2 != null)
+		if(!stack.isEmpty() && !stack2.isEmpty())
 			stack2.setAmount(stack2.getAmount() + stack.getAmount());
 
 		
-		if(stack2 != null && doDrain.execute()) {
+		if(!stack2.isEmpty() && doDrain.execute()) {
 			fluidChanged = true;
 		}
 		checkForUpdate();
