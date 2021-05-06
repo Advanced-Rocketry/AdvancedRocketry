@@ -133,7 +133,9 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		liquidTiles = new ArrayList<TileEntity>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
-		this.chunk = new Chunk((World)world, new ChunkPos(0, 0), new BiomeContainer(null, new ChunkPos(0, 0), new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getLocation()))));
+		ObjectIntIdentityMap<Biome> registry = new ObjectIntIdentityMap<>(1);
+		registry.add(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getRegistryName()));
+		this.chunk = new Chunk((World)world, new ChunkPos(0, 0), new BiomeContainer(registry, new ChunkPos(0, 0), new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getLocation()))));
 		// Hacky, quick workaround, I need a break
 		world.setChunk(chunk);
 	}
