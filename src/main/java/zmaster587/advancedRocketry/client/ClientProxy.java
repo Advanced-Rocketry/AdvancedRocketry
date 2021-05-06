@@ -227,19 +227,19 @@ public class ClientProxy extends CommonProxy {
 	public void spawnParticle(String particle, World world, double x, double y, double z, double motionX, double motionY, double motionZ) {
 		//WTF how is == working?  Should be .equals
 		if(particle == "rocketFlame") {
-			world.addParticle(AdvancedRocketryParticleTypes.rocketFx.get(), x, y, z, motionX, motionY, motionZ);
+			world.addParticle(AdvancedRocketryParticleTypes.rocketFx, x, y, z, motionX, motionY, motionZ);
 		}
 		else if(particle == "smallRocketFlame") {
-			world.addParticle(AdvancedRocketryParticleTypes.rocketFx.get(), x, y, z, motionX, motionY, motionZ);
+			world.addParticle(AdvancedRocketryParticleTypes.rocketFx, x, y, z, motionX, motionY, motionZ);
 		}
 		else if(particle == "rocketSmoke") {
-			world.addParticle(AdvancedRocketryParticleTypes.trailFx.get(), x, y, z, motionX, motionY, motionZ);
+			world.addParticle(AdvancedRocketryParticleTypes.trailFx, x, y, z, motionX, motionY, motionZ);
 		}
 		else if(particle == "rocketSmokeInverse") {
-			world.addParticle(AdvancedRocketryParticleTypes.inverseTrailFx.get(), x, y, z, motionX, motionY, motionZ);
+			world.addParticle(AdvancedRocketryParticleTypes.inverseTrailFx, x, y, z, motionX, motionY, motionZ);
 		}
 		else if(particle == "arc") {
-			world.addParticle(AdvancedRocketryParticleTypes.fxElectricArc.get(), x, y, z, motionX, 0, 0);
+			world.addParticle(AdvancedRocketryParticleTypes.fxElectricArc, x, y, z, motionX, 0, 0);
 		}
 		else if(particle == "smallLazer") {
 			//world.addParticle(AdvancedRocketryParticleTypes.fxElectricArc, x, y, z, motionX, 0, 0);
@@ -251,13 +251,13 @@ public class ClientProxy extends CommonProxy {
 			Minecraft.getInstance().particles.addEffect(fx);
 		}
 		else if(particle.equals("gravityEffect")) {
-			world.addParticle(AdvancedRocketryParticleTypes.fxGravityEffect.get(), x, y, z, motionX, motionY, motionZ);
+			world.addParticle(AdvancedRocketryParticleTypes.fxGravityEffect, x, y, z, motionX, motionY, motionZ);
 		}
 		else if(particle.equals("oxygencloudFx")) {
-			world.addParticle(AdvancedRocketryParticleTypes.oxygenCloudFx.get(), x, y, z, motionX, motionY, motionZ);
+			world.addParticle(AdvancedRocketryParticleTypes.oxygenCloudFx, x, y, z, motionX, motionY, motionZ);
 		}
 		else if(particle.equals("oxygentraceFx")) {
-			world.addParticle(AdvancedRocketryParticleTypes.oxygenlTraceFx.get(), x, y, z, motionX, motionY, motionZ);
+			world.addParticle(AdvancedRocketryParticleTypes.oxygenTraceFx, x, y, z, motionX, motionY, motionZ);
 		}
 		//else
 		//	ForgeRegistries.PARTICLE_TYPES.getValue(ResourceLocation.tryCreate(particle));

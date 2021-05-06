@@ -30,48 +30,70 @@ public class AdvancedRocketryParticleTypes {
 		PARTICLE_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 	}
 	
-	public static RegistryObject<BasicParticleType> fxElectricArc = PARTICLE_TYPES.register("electricarc", () -> new BasicParticleType(true));
-	public static RegistryObject<BasicParticleType> fxGravityEffect = PARTICLE_TYPES.register("gravityeffect", () -> new BasicParticleType(true));
-	//public static RegistryObject<BasicParticleType> fxLaser = PARTICLE_TYPES.register("fxlaser", () -> new BasicParticleType(true));
-	//public static RegistryObject<BasicParticleType> fxLaserHeat = PARTICLE_TYPES.register("fxlaserheat", () -> new BasicParticleType(true));
-	//public static RegistryObject<BasicParticleType> fxLaserSpark = PARTICLE_TYPES.register("fxlaserspark", () -> new BasicParticleType(true));
-	public static RegistryObject<BasicParticleType> inverseTrailFluid = PARTICLE_TYPES.register("inversetrailfluid", () -> new BasicParticleType(true));
-	public static RegistryObject<BasicParticleType> inverseTrailFx = PARTICLE_TYPES.register("inversetrailfx", () -> new BasicParticleType(true));
-	public static RegistryObject<BasicParticleType> oxygenCloudFx = PARTICLE_TYPES.register("oxygencloudfx", () -> new BasicParticleType(true));
-	public static RegistryObject<BasicParticleType> oxygenlTraceFx = PARTICLE_TYPES.register("oxygentracefx", () -> new BasicParticleType(true));
-	public static RegistryObject<BasicParticleType> rocketFx = PARTICLE_TYPES.register("rocketfx", () -> new BasicParticleType(true));
-	public static RegistryObject<BasicParticleType> trailFx = PARTICLE_TYPES.register("trailfx", () -> new BasicParticleType(true));
+	public static BasicParticleType fxElectricArc;
+	public static BasicParticleType fxGravityEffect;
+	//public static RegistryObject<BasicParticleType> fxLaser;
+	//public static RegistryObject<BasicParticleType> fxLaserHeat;
+	//public static RegistryObject<BasicParticleType> fxLaserSpark;
+	public static BasicParticleType inverseTrailFluid;
+	public static BasicParticleType inverseTrailFx;
+	public static BasicParticleType oxygenCloudFx;
+	public static BasicParticleType oxygenTraceFx;
+	public static BasicParticleType rocketFx;
+	public static BasicParticleType trailFx;
 
 	public static void registerParticles(RegistryEvent.Register<ParticleType<?>> evt) {
-		/*evt.getRegistry().registerAll(
-				fxElectricArc.setRegistryName("electricarc"),
-				fxGravityEffect.setRegistryName("gravityeffect"),
-				fxLaser.setRegistryName("fxlaser"), 
-				fxLaserHeat.setRegistryName("fxlaserheat"),
-				fxLaserSpark.setRegistryName("fxlaserspark"),
-				inverseTrailFluid.setRegistryName("inversetrailfluid"),
-				inverseTrailFx.setRegistryName("inversetrailfx"),
-				oxygenCloudFx.setRegistryName("oxygencloudfx"),
-				oxygenlTraceFx.setRegistryName("oxygentracefx"),
-				rocketFx.setRegistryName("rocketfx"),
-				trailFx.setRegistryName("trailfx")
-				);*/
+		fxElectricArc = new BasicParticleType(true);
+		fxElectricArc.setRegistryName("advancedrocketry:electricarc");
+		
+		
+		fxGravityEffect = new BasicParticleType(true);
+		fxGravityEffect.setRegistryName("advancedrocketry:gravityeffect");
+		
+		inverseTrailFluid =  new BasicParticleType(true);
+		inverseTrailFluid.setRegistryName("advancedrocketry:inversetrailfluid");
+		
+		inverseTrailFx = new BasicParticleType(true);
+		inverseTrailFx.setRegistryName("advancedrocketry:inversetrailfx");
+		
+		oxygenCloudFx = new BasicParticleType(true);
+		oxygenCloudFx.setRegistryName("advancedrocketry:oxygencloudfx");
+		
+		oxygenTraceFx = new BasicParticleType(true);
+		oxygenTraceFx.setRegistryName("advancedrocketry:oxygentracefx");
+		
+		rocketFx = new BasicParticleType(true);
+		rocketFx.setRegistryName("advancedrocketry:rocketfx");
+		
+		
+		trailFx = new BasicParticleType(true);
+		trailFx.setRegistryName("advancedrocketry:trailfx");
+		
+		evt.getRegistry().registerAll(
+				fxElectricArc, 
+				fxGravityEffect,
+				inverseTrailFluid,
+				inverseTrailFx,
+				oxygenCloudFx,
+				oxygenTraceFx,
+				rocketFx,
+				trailFx);
 	}
 	
 	public static void registerParticles(ParticleFactoryRegisterEvent evt)
 	{
 		
-		Minecraft.getInstance().particles.registerFactory(fxElectricArc.get(), FxElectricArc.Factory::new);
-		Minecraft.getInstance().particles.registerFactory(fxGravityEffect.get(), FxGravityEffect.Factory::new);
-		//Minecraft.getInstance().particles.registerFactory(fxLaser.get(), FxLaser.Factory::new);
-		//Minecraft.getInstance().particles.registerFactory(fxLaserHeat.get(), FxLaserHeat.Factory::new);
-		//Minecraft.getInstance().particles.registerFactory(fxLaserSpark.get(), FxLaserSpark.Factory::new);
-		Minecraft.getInstance().particles.registerFactory(inverseTrailFluid.get(), InverseTrailFluid.Factory::new);
-		Minecraft.getInstance().particles.registerFactory(inverseTrailFx.get(), InverseTrailFx.Factory::new);
-		Minecraft.getInstance().particles.registerFactory(oxygenCloudFx.get(), OxygenCloudFX.Factory::new);
-		Minecraft.getInstance().particles.registerFactory(oxygenlTraceFx.get(), OxygenTraceFX.Factory::new);
-		Minecraft.getInstance().particles.registerFactory(rocketFx.get(), RocketFx.Factory::new);
-		Minecraft.getInstance().particles.registerFactory(trailFx.get(), TrailFx.Factory::new);
+		Minecraft.getInstance().particles.registerFactory(fxElectricArc, FxElectricArc.Factory::new);
+		Minecraft.getInstance().particles.registerFactory(fxGravityEffect, FxGravityEffect.Factory::new);
+		//Minecraft.getInstance().particles.registerFactory(fxLaser, FxLaser.Factory::new);
+		//Minecraft.getInstance().particles.registerFactory(fxLaserHeat, FxLaserHeat.Factory::new);
+		//Minecraft.getInstance().particles.registerFactory(fxLaserSpark, FxLaserSpark.Factory::new);
+		Minecraft.getInstance().particles.registerFactory(inverseTrailFluid, InverseTrailFluid.Factory::new);
+		Minecraft.getInstance().particles.registerFactory(inverseTrailFx, InverseTrailFx.Factory::new);
+		Minecraft.getInstance().particles.registerFactory(oxygenCloudFx, OxygenCloudFX.Factory::new);
+		Minecraft.getInstance().particles.registerFactory(oxygenTraceFx, OxygenTraceFX.Factory::new);
+		Minecraft.getInstance().particles.registerFactory(rocketFx, RocketFx.Factory::new);
+		Minecraft.getInstance().particles.registerFactory(trailFx, TrailFx.Factory::new);
 		
 
 	}
