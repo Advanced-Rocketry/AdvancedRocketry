@@ -81,6 +81,7 @@ public class DimensionManager implements IGalaxy {
 	public static final String datapackPath = "datapacks";
 	private boolean hasBeenInitiallized = false;
 	public static String prevBuild;
+	private static boolean firstSave = true; // First time the world is saved?
 
 	//Stat tracking
 	public static boolean hasReachedMoon;
@@ -862,13 +863,16 @@ public class DimensionManager implements IGalaxy {
 			}
 
 
-			
-			// Save dimension to datapacks
-			for(ResourceLocation location : getRegisteredDimensions())
+			if(firstSave)
 			{
-				DimensionProperties properties = getDimensionProperties(location);
-				if(properties.isNativeDimension)
-				writeDimAsJSON(properties);
+				firstSave = false;
+				// Save dimension to datapacks
+				for(ResourceLocation location : getRegisteredDimensions())
+				{
+					DimensionProperties properties = getDimensionProperties(location);
+					if(properties.isNativeDimension)
+					writeDimAsJSON(properties);
+				}
 			}
 
 		} catch (IOException e) {
