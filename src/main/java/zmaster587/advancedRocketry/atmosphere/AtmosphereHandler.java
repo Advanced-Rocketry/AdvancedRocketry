@@ -218,7 +218,7 @@ public class AtmosphereHandler {
 			}
 			//Gasses should automatically vaporize and dissipate
 			if (handler.getAtmosphereType(bpos) == AtmosphereType.VACUUM) {
-				 if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.WATER && !(world.getBlockState(bpos).getBlock() instanceof BlockLiquid)) {
+				 if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.WATER && world.getBlockState(bpos).getBlock() instanceof IFluidBlock) {
 					 IFluidBlock fluidblock = (IFluidBlock)world.getBlockState(bpos).getBlock();
 					 if (fluidblock.getFluid().isGaseous())
 					      world.setBlockToAir(bpos);
