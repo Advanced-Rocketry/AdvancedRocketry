@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:blocks/iridium"
+      "tag": "forge:storage_blocks/iridium"
     }
   ],
   "result": {
