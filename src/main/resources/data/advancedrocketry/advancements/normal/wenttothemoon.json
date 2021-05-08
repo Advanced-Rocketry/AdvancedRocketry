@@ -14,7 +14,7 @@
     "parent": "advancedrocketry:normal/moonlanding",
     "criteria": {
         "wenttothemoon": {
-            "trigger": "wenttothemoon"
+            "trigger": "advancedrocketry:wenttothemoon"
         }
     }
 } 

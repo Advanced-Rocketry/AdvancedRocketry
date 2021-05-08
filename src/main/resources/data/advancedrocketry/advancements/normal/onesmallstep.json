@@ -14,7 +14,7 @@
     "parent": "advancedrocketry:normal/moonlanding",
     "criteria": {
         "onesmallstep": {
-            "trigger": "onesmallstep"
+            "trigger": "advancedrocketry:onesmallstep"
         }
     }
 }

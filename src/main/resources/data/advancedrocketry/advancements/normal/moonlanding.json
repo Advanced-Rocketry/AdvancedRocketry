@@ -13,7 +13,7 @@
     "parent": "advancedrocketry:normal/root",
     "criteria": {
         "moonlanding": {
-            "trigger": "moonlanding"
+            "trigger": "advancedrocketry:moonlanding"
         }
     }
 }
