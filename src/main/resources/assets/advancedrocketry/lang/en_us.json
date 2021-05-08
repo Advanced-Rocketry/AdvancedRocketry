@@ -229,7 +229,7 @@
     "container.monitoringstation": "Monitoring Station",
     "container.satellitemonitor": "Satellite Terminal",
 
-    "enchantment.spacebreathing": "Airtight Seal",
+    "enchantment.advancedrocketry.spacebreathing": "Airtight Seal",
 
     "data.undefined": "Some Random Data",
     "data.distance": "Distance",

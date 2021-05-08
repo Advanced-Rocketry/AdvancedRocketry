@@ -7,7 +7,7 @@
     {
         "x":
         {
-            "tag": "minecraft:wool",
+            "tag": "minecraft:wool"
         },
         "s": {
             "tag": "forge:plates/steel"
