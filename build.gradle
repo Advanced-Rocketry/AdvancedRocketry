@@ -1,17 +1,15 @@
 buildscript {
     repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        jcenter()
         mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
         maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
     }
 }
 
@@ -22,7 +20,9 @@ plugins {
   id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.64"
 }
 apply plugin: 'java'
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
 group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AdvancedRocketry"
@@ -37,19 +37,21 @@ jar {
 }
 
 apply from: "gradle/scripts/getbuildnumber.gradle"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 minecraft {
-    version = "1.12.2-14.23.4.2739"
-    runDir = "run"
-    mappings = "snapshot_20170624"
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-    replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
-    replace "@MAJOR@", version_major
-    replace "@MINOR@", version_minor
-    replace "@REVIS@", version_revis
-    replace "@BUILD@", project.getBuildNumber()
+    //runDir = "run"
+    mappings channel: 'snapshot', version: '20171003-1.12'
     
-    replace "%LIBVULPESVERSION%", project.libVulpesVersion
+    // replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
+    // replace "@MAJOR@", version_major
+    // replace "@MINOR@", version_minor
+    // replace "@REVIS@", version_revis
+    // replace "@BUILD@", project.getBuildNumber()
+    
+    // replace "%LIBVULPESVERSION%", project.libVulpesVersion
 }
 
 apply from: "gradle/scripts/jars.gradle"
@@ -60,14 +62,14 @@ processResources
 {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+    inputs.property "mcversion", "1.12.2"
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
                 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version':project.version, 'mcversion':"1.12.2"
     }
         
     // copy everything else, thats not the mcmod.info
@@ -105,12 +107,12 @@ curseforge{
     changelog = file('changelog.html')
     changelogType = 'html'
     releaseType = "beta"
-    addGameVersion minecraft.version
+    addGameVersion "1.12.2"
     mainArtifact(jar) {
-      displayName = "AdvancedRocketry ${project.version} build " + project.getBuildNumber() +  " for " + minecraft.version
+      displayName = "AdvancedRocketry ${project.version} build " + project.getBuildNumber() +  " for 1.12.2" 
     }
     addArtifact (deobfJar){
-    	 displayName = "AdvancedRocketry ${project.version}-deobf build " + project.getBuildNumber() + " for " + minecraft.version
+    	 displayName = "AdvancedRocketry ${project.version}-deobf build " + project.getBuildNumber() + " for 1.12.2" 
     }
    }
 }
