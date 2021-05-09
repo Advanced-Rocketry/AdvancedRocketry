@@ -43,7 +43,7 @@ targetCompatibility = 1.8
 
 minecraft {
     //runDir = "run"
-    mappings channel: 'snapshot', version: '20171003-1.12'
+    mappings channel: 'snapshot', version: '20170624-1.12'
     
     // replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
     // replace "@MAJOR@", version_major
