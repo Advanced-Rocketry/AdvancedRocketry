@@ -6,8 +6,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenBase;
+import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -37,7 +39,7 @@ public class MapGenCrater extends MapGenBase {
 				.map(itemStack-> new BlockMeta(Block.getBlockFromItem(itemStack.getItem()),itemStack.getItemDamage()).getBlockState())
 				.collect(Collectors.toList());
 		
-		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk && rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk) {
+		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk && rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk && shouldCraterSpawn(DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()), world.getBiome(new BlockPos(chunkX * 16, 0, chunkZ * 16)))) {
 
 			int radius = rand.nextInt(56) + 8; //64; 8 -> 64
 
@@ -117,5 +119,15 @@ public class MapGenCrater extends MapGenBase {
 		} else {
 			return world.getBiome(new BlockPos(chunkX * 16, 0, chunkZ * 16)).topBlock;
 		}
+	}
+
+	private boolean shouldCraterSpawn(DimensionProperties properties, Biome biome) {
+		if (properties.getCraterBiomeWeights() == null) return true;
+		for (BiomeManager.BiomeEntry biomeEntry : properties.getCraterBiomeWeights()) {
+			System.out.println("portato");
+			if (biomeEntry.biome.equals(biome) && biomeEntry.itemWeight > rand.nextInt(99))
+				return true;
+		}
+		return false;
 	}
 }

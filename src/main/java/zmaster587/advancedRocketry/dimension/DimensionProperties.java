@@ -39,6 +39,7 @@ import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.util.SpacePosition;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
+import zmaster587.advancedRocketry.world.biome.BiomeGenWatermelon;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
@@ -253,6 +254,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	//public ExtendedBiomeProperties biomeProperties;
 	private LinkedList<BiomeEntry> allowedBiomes;
 	private LinkedList<BiomeEntry> terraformedBiomes;
+	private LinkedList<BiomeEntry> craterBiomeWeights;
 	private boolean isRegistered = false;
 	private boolean isTerraformed = false;
 	public boolean hasRings = false;
@@ -305,6 +307,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		allowedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
 		terraformedBiomes = new LinkedList<BiomeManager.BiomeEntry>();
+		craterBiomeWeights = new LinkedList<BiomeManager.BiomeEntry>();
 		satellites = new HashMap<>();
 		requiredArtifacts = new LinkedList<ItemStack>();
 		tickingSatellites = new HashMap<Long,SatelliteBase>();
@@ -1145,6 +1148,35 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 
 	/**
+	 * Adds a biome and weight to the list for craters
+	 * @param biome biome to be added as viable
+	 * @param frequency frequency, with 100 as max (and default), for craters to spawn in this biome
+	 */
+	public void addCraterBiomeWeight(Biome biome, int frequency) {
+		ArrayList<BiomeEntry> biomes = new ArrayList<BiomeEntry>();
+		biomes.add(new BiomeEntry(biome, Math.min(Math.max(0, frequency), 100)));
+		craterBiomeWeights.addAll(biomes);
+	}
+
+	/**
+	 * Gets the list of crater frequency biomes
+	 * @return list of crater biomes + frequency in BiomeEntry format (0-100 weight)
+	 */
+	public List<BiomeEntry> getCraterBiomeWeights() {
+		return craterBiomeWeights;
+	}
+
+	/**
+	 * Adds a biome to the list of biomes allowed to spawn on this planet
+	 * @param biome biome to be added as viable
+	 */
+	public void addBiomeWeighted(Biome biome, int weight) {
+		ArrayList<BiomeEntry> biomes = new ArrayList<BiomeEntry>();
+		biomes.add(new BiomeEntry(biome, weight));
+		allowedBiomes.addAll(biomes);
+	}
+	
+	/**
 	 * Adds a biome to the list of biomes allowed to spawn on this planet
 	 * @param biome biome to be added as viable
 	 */
@@ -1421,14 +1453,35 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 			allowedBiomes.clear();
 			int biomeIds[] = nbt.getIntArray("biomes");
-			List<Biome> biomesList = new ArrayList<Biome>();
+			int biomeWeights[] = nbt.getIntArray("weights");
+			//Old handling
+			if (biomeWeights == null || biomeWeights.length == 0) {
+				biomeWeights = new int[biomeIds.length];
+				for (int i = 0; i < biomeWeights.length; i++) {
+					biomeWeights[i] = 30;
+				}
+			}
+			List<BiomeEntry> biomesList = new ArrayList<BiomeEntry>();
 
 
 			for(int i = 0; i < biomeIds.length; i++) {
-				biomesList.add(AdvancedRocketryBiomes.instance.getBiomeById(biomeIds[i]));
+				biomesList.add(new BiomeEntry(AdvancedRocketryBiomes.instance.getBiomeById(biomeIds[i]), biomeWeights[i]));
 			}
 
-			allowedBiomes.addAll(getBiomesEntries(biomesList));
+			allowedBiomes.addAll(biomesList);
+		}
+
+		if(nbt.hasKey("craterBiomes")) {
+
+			craterBiomeWeights.clear();
+			int biomeIds[] = nbt.getIntArray("craterBiomes");
+			int biomeWeights[] = nbt.getIntArray("craterWeights");
+			List<BiomeEntry> biomesList = new ArrayList<BiomeEntry>();
+			for(int i = 0; i < biomeIds.length; i++) {
+				biomesList.add(new BiomeEntry(AdvancedRocketryBiomes.instance.getBiomeById(biomeIds[i]), biomeWeights[i]));
+			}
+
+			craterBiomeWeights.addAll(biomesList);
 		}
 
 		if(nbt.hasKey("laserDrillOres")) {
@@ -1623,10 +1676,24 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		if(!allowedBiomes.isEmpty()) {
 			int biomeId[] = new int[allowedBiomes.size()];
+			int weights[] = new int[allowedBiomes.size()];
 			for(int i = 0; i < allowedBiomes.size(); i++) {
 				biomeId[i] = Biome.getIdForBiome(allowedBiomes.get(i).biome);
+				weights[i] = allowedBiomes.get(i).itemWeight;
 			}
 			nbt.setIntArray("biomes", biomeId);
+			nbt.setIntArray("weights", weights);
+		}
+
+		if(!craterBiomeWeights.isEmpty()) {
+			int biomeId[] = new int[craterBiomeWeights.size()];
+			int weights[] = new int[craterBiomeWeights.size()];
+			for(int i = 0; i < craterBiomeWeights.size(); i++) {
+				biomeId[i] = Biome.getIdForBiome(craterBiomeWeights.get(i).biome);
+				weights[i] = craterBiomeWeights.get(i).itemWeight;
+			}
+			nbt.setIntArray("craterBiomes", biomeId);
+			nbt.setIntArray("craterWeights", weights);
 		}
 
 		if(!laserDrillOres.isEmpty()) {
