@@ -465,7 +465,7 @@
     "msg.sealdetector.notfullblock": "Air will pass around this block.advancedrocketry.",
     "msg.sealdetector.fluid": "Air will bubble through this block.advancedrocketry.",
     "msg.sealdetector.other": "Air will leak through this block.advancedrocketry.",
-    "msg.stationchip.sation": "Station",
+    "msg.stationchip.station": "Station",
     "msg.entity.rocket.descend.1": "Press Space to descend!",
     "msg.entity.rocket.descend.2": "Auto descend in",
     "msg.entity.rocket.ascend.1": "Press Space to take off!",
