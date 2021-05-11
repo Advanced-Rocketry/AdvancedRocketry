@@ -521,7 +521,7 @@ public class RocketEventHandler extends Screen {
 
 	@SubscribeEvent
 	public void mouseInputEvent(MouseInputEvent event) {
-		if(!ARConfiguration.getCurrentConfig().lockUI.get() && Minecraft.getInstance().mouseHelper.isMouseGrabbed()) {
+		if(!ARConfiguration.getCurrentConfig().lockUI.get() && getMinecraft() != null && Minecraft.getInstance().mouseHelper.isMouseGrabbed()) {
 
 			if(event.getButton() == GLFW.GLFW_MOUSE_BUTTON_2) {
 				int i = getMinecraft().getMainWindow().getScaledWidth();

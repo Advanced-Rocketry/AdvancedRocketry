@@ -17,10 +17,13 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITagCollectionSupplier;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.ITickList;
 import net.minecraft.world.World;
@@ -57,11 +60,11 @@ public class WorldDummy extends World  {
 	}
 
 	public WorldDummy(IProfiler p_i45368_5_, StorageChunk storage) {
-		super(null, null, new DummyDimensionType(), () -> AdvancedRocketry.proxy.getProfiler(), false, false, 0);
+		super(null, RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation("advancedrocketry:dummyworld")), new DummyDimensionType(), () -> AdvancedRocketry.proxy.getProfiler(), false, false, 0);
 		this.storage = storage;
 		cnkprovider = new DummyChunkProvider(this);
 	}
-
+	
 	public void setChunk(Chunk chunk)
 	{
 		this.chunk = chunk;
