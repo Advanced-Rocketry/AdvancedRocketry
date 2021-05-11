@@ -22,9 +22,11 @@ import java.util.stream.Collectors;
 public class MapGenCrater extends MapGenBase {
     
 	int chancePerChunk;
+	int radiusModifier;
 
-	public MapGenCrater(int chancePerChunk) {
+	public MapGenCrater(int chancePerChunk, int radiusModifier) {
 		this.chancePerChunk = chancePerChunk;
+		this.radiusModifier = radiusModifier;
 	}
 	
 	
@@ -41,9 +43,11 @@ public class MapGenCrater extends MapGenBase {
 		
 		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk && rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk && shouldCraterSpawn(DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()), world.getBiome(new BlockPos(chunkX * 16, 0, chunkZ * 16)))) {
 
-			int radius = rand.nextInt(56) + 8; //64; 8 -> 64
+			//Random stuff
+			int baseRadius = rand.nextInt(radiusModifier) + radiusModifier/7;
+			int[] sinCoefficients = {7, 3, 5, 2, 1};
 
-			int depth = radius*radius;
+			int depth = baseRadius*baseRadius;
 			
 			int xCoord = -chunkX + p_180701_4_;
 			int zCoord =  -chunkZ + p_180701_5_;
@@ -74,32 +78,50 @@ public class MapGenCrater extends MapGenBase {
 							chunkPrimerIn.setBlockState(x, y, z, fillBlock);
 						}
 						if (!isCraterIgnoredBlock(chunkPrimerIn.getBlockState(x, y, z).getBlock())) {
-							int count = (depth - (((xCoord * 16) + x) * ((xCoord * 16) + x) + ((zCoord * 16) + z) * ((zCoord * 16) + z))) / (radius * 2);
+							//Get us some funky radii up in here
+							int radius = getRadius(baseRadius, (xCoord * 16) + x, (zCoord * 16) + z, 1+ (baseRadius % 5), sinCoefficients);
+
+							//Standard blockRadius stuff
+							int blockRadius = (depth - (((xCoord * 16) + x) * ((xCoord * 16) + x) + ((zCoord * 16) + z) * ((zCoord * 16) + z))) / (radius * 2);
 
 							//Places filler blocks to excavate the crater
-							for (int dist = 0; dist < count; dist++) {
+							for (int dist = 0; dist < blockRadius; dist++) {
 								if (y - dist > 2) {
 									if (y-dist <= fluidMaxY) {
-										chunkPrimerIn.setBlockState(x, y - dist, z, fillBlock);
+										chunkPrimerIn.setBlockState(x, y - Math.min(15, dist), z, fillBlock);
 									} else {
-										chunkPrimerIn.setBlockState(x, y - dist, z, Blocks.AIR.getDefaultState());
-									}
-								}
-							}
-
-							//Places blocks to form the surface of the bowl
-							int ridgeSize = 12;
-							if (count <= 0 && count > -2 * ridgeSize) {
-								for (int dist = 0; dist < ((ridgeSize * ridgeSize) - (count + ridgeSize) * (count + ridgeSize)) / (ridgeSize * 2) + 1; dist++) {
-									if (y + dist < 255) {
-										chunkPrimerIn.setBlockState(x, y + dist, z, this.getBlockToPlace(world,chunkX, chunkZ,ores));
+										chunkPrimerIn.setBlockState(x, y - Math.min(15, dist), z, Blocks.AIR.getDefaultState());
 									}
 								}
 							}
 
 							//Places blocks to form the ridges
-							if (count > 1 && (y - count > 2))
-								chunkPrimerIn.setBlockState(x, y - count, z, this.getBlockToPlace(world,chunkX, chunkZ,ores));
+							double ridgeSize = Math.max(1, (12 * (radius)/64.0));
+							if (blockRadius <= radius/4 && blockRadius > -3 * radius) {
+								//The graph of this function and the old one can be found here https://www.desmos.com/calculator/x02rgy2wlf
+								for (int dist = -1; dist < 9 * ridgeSize * ((1 - blockRadius)/(0.8 * radius + (blockRadius - 1) * (blockRadius - 1))) - 1.06; dist++) {
+									//Place the bank thrown up by the impact, and have some of the farthest be dispersed
+									if (y + dist < 255 && blockRadius > -0.875 * radius)
+										chunkPrimerIn.setBlockState(x, y + dist, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
+									else if (y + dist < 255 && blockRadius > -1.125 * radius && rand.nextInt(Math.abs(blockRadius/2) + 1) == 0)
+										chunkPrimerIn.setBlockState(x, y + dist, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
+
+									//Ejecta blocks on top, then ejecta blocks below farther out
+									if (rand.nextInt(Math.abs(blockRadius) + 1) == 0) {
+										if (blockRadius < -0.375 * radius && blockRadius > -1.5 * radius)
+											chunkPrimerIn.setBlockState(x, y + dist + 1, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
+										else if (blockRadius < -1.5 * radius)
+											chunkPrimerIn.setBlockState(x, y + dist + 1+ rand.nextInt(2), z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
+									}
+								}
+							}
+
+							//Places blocks to form the surface of the bowl
+							if (blockRadius >= 0 && (y - blockRadius > 0)) {
+								//Two blocks to remove wierd stone
+								chunkPrimerIn.setBlockState(x, y - Math.min(16, blockRadius), z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
+								chunkPrimerIn.setBlockState(x, y - 1 - Math.min(16, blockRadius), z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
+							}
 							break;
 						}
 					}
@@ -121,13 +143,30 @@ public class MapGenCrater extends MapGenBase {
 		}
 	}
 
+	//Check biome frequency
 	private boolean shouldCraterSpawn(DimensionProperties properties, Biome biome) {
-		if (properties.getCraterBiomeWeights() == null) return true;
+		if (properties.getCraterBiomeWeights().isEmpty()) return true;
 		for (BiomeManager.BiomeEntry biomeEntry : properties.getCraterBiomeWeights()) {
-			System.out.println("portato");
 			if (biomeEntry.biome.equals(biome) && biomeEntry.itemWeight > rand.nextInt(99))
 				return true;
 		}
 		return false;
+	}
+
+	//Very fun function for fancy radius
+	//Int[] MUST be the same size as max bumps!
+	private int getRadius(int base, int x, int z, int bumps, int[] random) {
+		//We need to start this out with polar coordinates
+		double radians = Math.atan2(x, z);
+
+		//Then we want to add some sin-function bumps to it, as determined by the bumps
+		//They increase theta each time because then we can get different-placed perturbations
+		//An example graph for this is here: https://www.desmos.com/calculator/2dqaekywth
+		int extras = 0;
+		for (int i = 2; i < Math.min(5, bumps) + 2; i++){
+			extras += random[i-2] * base * Math.sin(i * radians) * 0.02;
+		}
+
+		return base + extras;
 	}
 }

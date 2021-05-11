@@ -77,6 +77,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 
 	private MapGenCrater craterGenerator;
+	private MapGenCrater craterGeneratorLarge;
 	private MapGenGeode geodeGenerator;
 	private MapGenVolcano volcanoGenerator;
 	private MapGenSwampTree swampTreeGenerator;
@@ -163,9 +164,14 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 
 		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters())
-			craterGenerator = new MapGenCrater( (int)((10 +  (26*(1-atmDensity)) )*dimProps.getCraterMultiplier()));
-		else 
+			craterGenerator = new MapGenCrater( (int)((10 +  (26*(1-atmDensity)) )*dimProps.getCraterMultiplier()), 56);
+		else
 			craterGenerator = null;
+
+		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters() && atmDensity < 0.02)
+			craterGeneratorLarge = new MapGenCrater( (int)(400 + 200 * atmDensity), 384);
+		else
+			craterGeneratorLarge = null;
 
 		if(dimProps.canGenerateGeodes() && ARConfiguration.getCurrentConfig().generateGeodes) {
 			geodeGenerator = new MapGenGeode((int)(800 * dimProps.getGeodeMultiplier()));
@@ -292,6 +298,8 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 		if(this.craterGenerator != null)
 			this.craterGenerator.generate(this.worldObj, x, z, chunkprimer);
+		if(this.craterGeneratorLarge != null)
+			this.craterGeneratorLarge.generate(this.worldObj, x, z, chunkprimer);
 		
 		if(this.volcanoGenerator != null)
 			this.volcanoGenerator.generate(this.worldObj, x, z, chunkprimer);

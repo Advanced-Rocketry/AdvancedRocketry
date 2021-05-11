@@ -991,13 +991,13 @@ public class XMLPlanetLoader {
 		nodePlanet.appendChild(createTextNode(doc, GENERATESTRUCTURES, properties.canGenerateStructures()));
 		nodePlanet.appendChild(createTextNode(doc, GENERATEGEODES, properties.canGenerateGeodes()));
 		
-		if(properties.canGenerateCraters() && properties.getCraterMultiplier() == 1)
+		if(properties.canGenerateCraters() && !(properties.getCraterMultiplier() == 1))
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_CRATER_MULTIPLIER, properties.getCraterMultiplier()));
 		
-		if(properties.canGenerateVolcanos() && properties.getVolcanoMultiplier() == 1)
+		if(properties.canGenerateVolcanos() && !(properties.getVolcanoMultiplier() == 1))
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_VOLCANO_MULTIPLIER, properties.getVolcanoMultiplier()));
 		
-		if(properties.canGenerateGeodes() && properties.getGeodeMultiplier() == 1)
+		if(properties.canGenerateGeodes() && !(properties.getGeodeMultiplier() == 1))
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_GEODE_MULTIPLIER, properties.getGeodeMultiplier()));
 		
 
