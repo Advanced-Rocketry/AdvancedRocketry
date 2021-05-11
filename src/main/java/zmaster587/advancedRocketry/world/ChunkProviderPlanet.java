@@ -5,7 +5,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.IProgressUpdate;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -24,7 +23,6 @@ import net.minecraftforge.event.terraingen.TerrainGen;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.util.OreGenProperties.OreEntry;
@@ -76,10 +74,9 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	protected boolean habitable = false;
 
 
+	private MapGenCraterSmall craterGeneratorSmall;
 	private MapGenCrater craterGenerator;
-	private MapGenCrater craterGeneratorLarge;
-	private MapGenCrater craterGeneratorHuge;
-	private MapGenCraterHuge craterGeneratorEnormous;
+	private MapGenCraterHuge craterGeneratorHuge;
 	private MapGenGeode geodeGenerator;
 	private MapGenVolcano volcanoGenerator;
 	private MapGenSwampTree swampTreeGenerator;
@@ -166,24 +163,19 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 
 		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters())
-			craterGenerator = new MapGenCrater( (int)((300 +  (150*(1-atmDensity)) )*dimProps.getCraterMultiplier()), 8);
+			craterGeneratorSmall = new MapGenCraterSmall( (int)((16 +  (8*(1-atmDensity)) )*dimProps.getCraterMultiplier()));
+		else
+			craterGeneratorSmall = null;
+
+		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters())
+			craterGenerator = new MapGenCrater( (int)((250 +  (150*(1-atmDensity)) )*dimProps.getCraterMultiplier()), atmDensity < 0.05);
 		else
 			craterGenerator = null;
 
-		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters() && atmDensity < 0.15)
-			craterGeneratorLarge = new MapGenCrater( (int)((3500 + (40000 * atmDensity)) * dimProps.getCraterMultiplier()), 17);
-		else
-			craterGeneratorLarge = null;
-
-		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters() && atmDensity < 0.05)
-			craterGeneratorHuge = new MapGenCrater( (int)((10700 + (120000 * atmDensity)) * dimProps.getCraterMultiplier()), 36);
+		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters() && atmDensity == 0)
+			craterGeneratorHuge = new MapGenCraterHuge((int)(180 * dimProps.getCraterMultiplier()), 17);
 		else
 			craterGeneratorHuge = null;
-
-		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters() && atmDensity == 0)
-			craterGeneratorEnormous = new MapGenCraterHuge((int)(37000 * dimProps.getCraterMultiplier()), 17);
-		else
-			craterGeneratorEnormous = null;
 
 		if(dimProps.canGenerateGeodes() && ARConfiguration.getCurrentConfig().generateGeodes) {
 			geodeGenerator = new MapGenGeode((int)(800 * dimProps.getGeodeMultiplier()));
@@ -308,14 +300,14 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 			this.ravineGenerator.generate(this.worldObj, x, z, chunkprimer);
 		}
 
+		if(this.craterGeneratorSmall != null)
+			this.craterGeneratorSmall.generate(this.worldObj, x, z, chunkprimer);
+
 		if(this.craterGenerator != null)
 			this.craterGenerator.generate(this.worldObj, x, z, chunkprimer);
-		if(this.craterGeneratorLarge != null)
-			this.craterGeneratorLarge.generate(this.worldObj, x, z, chunkprimer);
+
 		if(this.craterGeneratorHuge != null)
 			this.craterGeneratorHuge.generate(this.worldObj, x, z, chunkprimer);
-		if(this.craterGeneratorEnormous != null)
-			this.craterGeneratorEnormous.generate(this.worldObj, x, z, chunkprimer);
 		
 		if(this.volcanoGenerator != null)
 			this.volcanoGenerator.generate(this.worldObj, x, z, chunkprimer);

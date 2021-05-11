@@ -41,7 +41,7 @@ public class MapGenCraterHuge extends MapGenBase {
 				.map(itemStack-> new BlockMeta(Block.getBlockFromItem(itemStack.getItem()),itemStack.getItemDamage()).getBlockState())
 				.collect(Collectors.toList());
 		
-		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk || rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk && shouldCraterSpawn(DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()), world.getBiome(new BlockPos(chunkX * 16, 0, chunkZ * 16)))) {
+		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk && rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk && shouldCraterSpawn(DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()), world.getBiome(new BlockPos(chunkX * 16, 0, chunkZ * 16)))) {
 
 			//Random stuff
 			int baseRadius = rand.nextInt(radiusModifier) + (5 * radiusModifier) + 3;
@@ -88,9 +88,9 @@ public class MapGenCraterHuge extends MapGenBase {
 							for (int dist = 0; dist < blockRadius; dist++) {
 								if (y - dist > 2) {
 									if (y-dist <= fluidMaxY) {
-										chunkPrimerIn.setBlockState(x, y - Math.min(15, dist), z, fillBlock);
+										chunkPrimerIn.setBlockState(x, y - Math.min(19, dist), z, fillBlock);
 									} else {
-										chunkPrimerIn.setBlockState(x, y - Math.min(15, dist), z, Blocks.AIR.getDefaultState());
+										chunkPrimerIn.setBlockState(x, y - Math.min(19, dist), z, Blocks.AIR.getDefaultState());
 									}
 								}
 							}
@@ -110,8 +110,8 @@ public class MapGenCraterHuge extends MapGenBase {
 							//Places blocks to form the surface of the bowl
 							if (blockRadius >= 0 && (y - blockRadius > 0)) {
 								//Two blocks to remove wierd stone
-								chunkPrimerIn.setBlockState(x, y - Math.min(16, blockRadius), z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
-								chunkPrimerIn.setBlockState(x, y - 1 - Math.min(16, blockRadius), z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
+								chunkPrimerIn.setBlockState(x, y - Math.min(20, blockRadius), z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
+								chunkPrimerIn.setBlockState(x, y - 1 - Math.min(20, blockRadius), z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
 							}
 							break;
 						}
