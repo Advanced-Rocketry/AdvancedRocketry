@@ -78,6 +78,8 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 	private MapGenCrater craterGenerator;
 	private MapGenCrater craterGeneratorLarge;
+	private MapGenCrater craterGeneratorHuge;
+	private MapGenCraterHuge craterGeneratorEnormous;
 	private MapGenGeode geodeGenerator;
 	private MapGenVolcano volcanoGenerator;
 	private MapGenSwampTree swampTreeGenerator;
@@ -164,14 +166,24 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 
 		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters())
-			craterGenerator = new MapGenCrater( (int)((10 +  (26*(1-atmDensity)) )*dimProps.getCraterMultiplier()), 56);
+			craterGenerator = new MapGenCrater( (int)((300 +  (150*(1-atmDensity)) )*dimProps.getCraterMultiplier()), 8);
 		else
 			craterGenerator = null;
 
-		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters() && atmDensity < 0.02)
-			craterGeneratorLarge = new MapGenCrater( (int)(400 + 200 * atmDensity), 384);
+		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters() && atmDensity < 0.15)
+			craterGeneratorLarge = new MapGenCrater( (int)((3500 + (40000 * atmDensity)) * dimProps.getCraterMultiplier()), 17);
 		else
 			craterGeneratorLarge = null;
+
+		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters() && atmDensity < 0.05)
+			craterGeneratorHuge = new MapGenCrater( (int)((10700 + (120000 * atmDensity)) * dimProps.getCraterMultiplier()), 36);
+		else
+			craterGeneratorHuge = null;
+
+		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters() && atmDensity == 0)
+			craterGeneratorEnormous = new MapGenCraterHuge((int)(37000 * dimProps.getCraterMultiplier()), 17);
+		else
+			craterGeneratorEnormous = null;
 
 		if(dimProps.canGenerateGeodes() && ARConfiguration.getCurrentConfig().generateGeodes) {
 			geodeGenerator = new MapGenGeode((int)(800 * dimProps.getGeodeMultiplier()));
@@ -300,6 +312,10 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 			this.craterGenerator.generate(this.worldObj, x, z, chunkprimer);
 		if(this.craterGeneratorLarge != null)
 			this.craterGeneratorLarge.generate(this.worldObj, x, z, chunkprimer);
+		if(this.craterGeneratorHuge != null)
+			this.craterGeneratorHuge.generate(this.worldObj, x, z, chunkprimer);
+		if(this.craterGeneratorEnormous != null)
+			this.craterGeneratorEnormous.generate(this.worldObj, x, z, chunkprimer);
 		
 		if(this.volcanoGenerator != null)
 			this.volcanoGenerator.generate(this.worldObj, x, z, chunkprimer);

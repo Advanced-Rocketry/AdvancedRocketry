@@ -19,16 +19,16 @@ import zmaster587.libVulpes.block.BlockMeta;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MapGenCrater extends MapGenBase {
-    
+public class MapGenCraterHuge extends MapGenBase {
+
 	int chancePerChunk;
 	int radiusModifier;
 
-	public MapGenCrater(int chancePerChunk, int radiusModifier) {
+	public MapGenCraterHuge(int chancePerChunk, int radiusModifier) {
 		this.chancePerChunk = chancePerChunk;
 		this.radiusModifier = radiusModifier;
 	}
-	
+
 	
 	@Override
 	protected void recursiveGenerate(World world, int chunkX, int chunkZ, int p_180701_4_, int p_180701_5_, ChunkPrimer chunkPrimerIn) {
@@ -44,7 +44,7 @@ public class MapGenCrater extends MapGenBase {
 		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk || rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk && shouldCraterSpawn(DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()), world.getBiome(new BlockPos(chunkX * 16, 0, chunkZ * 16)))) {
 
 			//Random stuff
-			int baseRadius = rand.nextInt((int)(1.125 * radiusModifier)) + radiusModifier + 4;
+			int baseRadius = rand.nextInt(radiusModifier) + (5 * radiusModifier) + 3;
 			int[] sinCoefficients = {rand.nextInt(10) + 1, rand.nextInt(10) + 1, rand.nextInt(10) + 1, rand.nextInt(10) + 1, rand.nextInt(10) + 1};
 
 			int depth = baseRadius*baseRadius;
@@ -96,23 +96,14 @@ public class MapGenCrater extends MapGenBase {
 							}
 
 							//Places blocks to form the ridges
-							double ridgeSize = Math.max(1, (12 * (radius)/64.0));
+							double ridgeSize = Math.max(1, (12 * (radius)/256.0));
 							if (blockRadius <= radius/4 && blockRadius > -3 * radius) {
-								//The graph of this function and the old one can be found here https://www.desmos.com/calculator/x02rgy2wlf
-								for (int dist = -1; dist < 9 * ridgeSize * ((1 - blockRadius)/(0.8 * radius + (blockRadius - 1) * (blockRadius - 1))) - 1.06; dist++) {
+								//The graph of this function and the old one can be found here https://www.desmos.com/calculator/srntce2xii
+								//Yes, it's a crappy graph. We're trying to get huge craters in
+								for (int dist = -1; dist < ((ridgeSize * ridgeSize) - (blockRadius + ridgeSize) * (blockRadius + ridgeSize)) / ridgeSize + 1; dist++) {
 									//Place the bank thrown up by the impact, and have some of the farthest be dispersed
-									if (y + dist < 255 && blockRadius > -0.875 * radius)
+									if (y + dist < 255)
 										chunkPrimerIn.setBlockState(x, y + dist, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
-									else if (y + dist < 255 && blockRadius > -1.125 * radius && rand.nextInt(Math.abs(blockRadius/(radius > 48 ? 4 : 2)) + 1) == 0)
-										chunkPrimerIn.setBlockState(x, y + dist, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
-
-									//Ejecta blocks on top, then ejecta blocks below farther out
-									if (rand.nextInt(Math.abs(blockRadius) + 1) == 0) {
-										if (blockRadius < -0.375 * radius && blockRadius > -1.5 * radius)
-											chunkPrimerIn.setBlockState(x, y + dist + 1, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
-										else if (blockRadius < -1.5 * radius)
-											chunkPrimerIn.setBlockState(x, y + dist + 1+ rand.nextInt(2), z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
-									}
 								}
 							}
 
