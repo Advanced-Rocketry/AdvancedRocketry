@@ -13,7 +13,7 @@
     "parent": "advancedrocketry:normal/warp",
     "criteria": {
         "givingitallshesgot": {
-            "trigger": "givingitallshesgot"
+            "trigger": "advancedrocketry:givingitallshesgot"
         }
     }
 }
