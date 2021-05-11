@@ -79,6 +79,7 @@ public class XMLPlanetLoader {
 	private static final String ELEMENT_ATMDENSITY = "atmosphereDensity";
 	private static final String ELEMENT_SEALEVEL = "seaLevel";
 	private static final String ELEMENT_GENTYPE = "genType";
+	private static final String ELEMENT_RIVER_OVERRIDE = "forceRiverGeneration";
 	private static final String ELEMENT_OREGEN = "oreGen";
 	private static final String ELEMENT_LASER_DRILL_ORES = "laserDrillOres";
 	private static final String ELEMENT_GEODE_ORES = "geodeOres";
@@ -296,12 +297,8 @@ public class XMLPlanetLoader {
 					AdvancedRocketry.logger.warn("Invalid sky color specified"); //TODO: more detailed error msg
 				}
 			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_HASOXYGEN)) {
-
-				String text = planetPropertyNode.getTextContent();
-				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("false"))
-					properties.hasOxygen = false;
-			}
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_HASOXYGEN))
+				properties.hasOxygen = Boolean.parseBoolean(planetPropertyNode.getTextContent());
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_ATMDENSITY)) {
 
 				try {
@@ -357,6 +354,8 @@ public class XMLPlanetLoader {
 					AdvancedRocketry.logger.warn("Invalid sealeve specified"); //TODO: more detailed error msg
 				}
 			}
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_RIVER_OVERRIDE))
+				properties.hasRivers = Boolean.parseBoolean(planetPropertyNode.getTextContent());
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_BIOMEIDS)) {
 
 				String[] biomeList = planetPropertyNode.getTextContent().split(",");
@@ -956,12 +955,12 @@ public class XMLPlanetLoader {
 		}
 
 		if(!properties.hasOxygen)
-		{
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_HASOXYGEN, "false"));
-		}
 
-		if(properties.isGasGiant())
-		{
+		if(properties.hasRivers)
+			nodePlanet.appendChild(createTextNode(doc, ELEMENT_RIVER_OVERRIDE, "true"));
+
+		if(properties.isGasGiant()) {
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_GASGIANT, "true"));
 			
 			if(!properties.getHarvestableGasses().isEmpty())

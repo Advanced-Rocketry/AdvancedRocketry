@@ -257,7 +257,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private LinkedList<BiomeEntry> craterBiomeWeights;
 	private boolean isRegistered = false;
 	private boolean isTerraformed = false;
-	public boolean hasRings = false;
+	public boolean hasRings;
+	public boolean hasRivers;
 	public List<ItemStack> requiredArtifacts;
 
 	//Planet Heirachy
@@ -319,6 +320,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		canGenerateGeodes = false;
 		canGenerateStructures = false;
 		canGenerateVolcanos = false;
+		hasRivers = false;
 		craterFrequencyMultiplier = 1f;
 		volcanoFrequencyMultiplier = 1f;
 		geodeFrequencyMultiplier = 1f;
@@ -1025,7 +1027,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @return true if this dimension is allowed to have rivers
 	 */
 	public boolean hasRivers() {
-		return AtmosphereTypes.getAtmosphereTypeFromValue(originalAtmosphereDensity).compareTo(AtmosphereTypes.LOW) <= 0 && Temps.getTempFromValue(getAverageTemp()).isInRange(Temps.COLD, Temps.HOT);
+		return hasRivers || (AtmosphereTypes.getAtmosphereTypeFromValue(originalAtmosphereDensity).compareTo(AtmosphereTypes.LOW) <= 0 && Temps.getTempFromValue(getAverageTemp()).isInRange(Temps.COLD, Temps.HOT));
 	}
 
 
@@ -1544,6 +1546,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		canGenerateGeodes = nbt.getBoolean("canGenerateGeodes");
 		canGenerateStructures = nbt.getBoolean("canGenerateStructures");
 		canGenerateVolcanos = nbt.getBoolean("canGenerateVolcanos");
+		hasRivers = nbt.getBoolean("hasRivers");
 		geodeFrequencyMultiplier = nbt.getFloat("geodeFrequencyMultiplier");
 		craterFrequencyMultiplier = nbt.getFloat("craterFrequencyMultiplier");
 		volcanoFrequencyMultiplier = nbt.getFloat("volcanoFrequencyMultiplier");
@@ -1751,6 +1754,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setBoolean("canGenerateGeodes", canGenerateGeodes);
 		nbt.setBoolean("canGenerateStructures", canGenerateStructures);
 		nbt.setBoolean("canGenerateVolcanos", canGenerateVolcanos);
+		nbt.setBoolean("hasRivers", hasRivers);
 		nbt.setFloat("geodeFrequencyMultiplier", geodeFrequencyMultiplier);
 		nbt.setFloat("craterFrequencyMultiplier", craterFrequencyMultiplier);
 		nbt.setFloat("volcanoFrequencyMultiplier", volcanoFrequencyMultiplier);
