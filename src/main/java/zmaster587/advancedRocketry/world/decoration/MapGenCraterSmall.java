@@ -81,11 +81,11 @@ public class MapGenCraterSmall extends MapGenBase {
 							//Get us some funky radii up in here
 							int radius = getRadius(baseRadius, (xCoord * 16) + x, (zCoord * 16) + z, numBulges, sinCoefficients);
 
-							//Standard inverseHalfRadius stuff
-							int inverseHalfRadius = (baseRadius*baseRadius - (((xCoord * 16) + x) * ((xCoord * 16) + x) + ((zCoord * 16) + z) * ((zCoord * 16) + z))) / (radius * 2);
+							//Standard inversePartialSquareRadius stuff
+							int inversePartialSquareRadius = (baseRadius*baseRadius - (((xCoord * 16) + x) * ((xCoord * 16) + x) + ((zCoord * 16) + z) * ((zCoord * 16) + z))) / (radius * 2);
 
 							//Places filler blocks to excavate the crater
-							for (int dist = 0; dist < inverseHalfRadius; dist++) {
+							for (int dist = 0; dist < inversePartialSquareRadius; dist++) {
 								if (y - dist > 2) {
 									chunkPrimerIn.setBlockState(x, y - dist, z, (y-dist <= fluidMaxY) ? fillBlock : Blocks.AIR.getDefaultState());
 								}
@@ -94,23 +94,23 @@ public class MapGenCraterSmall extends MapGenBase {
 							//Places blocks to form the ridges
 							if (baseRadius > 6) {
 								double ridgeSize = Math.max(1, (12 * (radius) / 64.0));
-								if (inverseHalfRadius <= radius / 4 && inverseHalfRadius > -3 * radius) {
+								if (inversePartialSquareRadius <= radius / 4 && inversePartialSquareRadius > -3 * radius) {
 									//The graph of this function and the old one can be found here https://www.desmos.com/calculator/x02rgy2wlf
-									for (int dist = -1; dist < 9 * ridgeSize * ((1 - inverseHalfRadius) / (0.8 * radius + (inverseHalfRadius - 1) * (inverseHalfRadius - 1))) - 1.06; dist++) {
+									for (int dist = -1; dist < 9 * ridgeSize * ((1 - inversePartialSquareRadius) / (0.8 * radius + (inversePartialSquareRadius - 1) * (inversePartialSquareRadius - 1))) - 1.06; dist++) {
 										//Place the bank thrown up by the impact, and have some of the farthest be dispersed
-										if (y + dist < 255 && inverseHalfRadius > -0.875 * radius)
+										if (y + dist < 255 && inversePartialSquareRadius > -0.875 * radius)
 											chunkPrimerIn.setBlockState(x, y + dist, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
-										else if (y + dist < 255 && inverseHalfRadius > -1.125 * radius && rand.nextInt(Math.abs(inverseHalfRadius / (radius > 48 ? 4 : 2)) + 1) == 0)
+										else if (y + dist < 255 && inversePartialSquareRadius > -1.125 * radius && rand.nextInt(Math.abs(inversePartialSquareRadius / (radius > 48 ? 4 : 2)) + 1) == 0)
 											chunkPrimerIn.setBlockState(x, y + dist, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
 									}
 								}
 							}
 
 							//Places blocks to form the surface of the bowl
-							if (inverseHalfRadius >= 0 && (y - inverseHalfRadius > 0)) {
+							if (inversePartialSquareRadius >= 0 && (y - inversePartialSquareRadius > 0)) {
 								//Two blocks to remove wierd stone
-								chunkPrimerIn.setBlockState(x, y - inverseHalfRadius, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
-								chunkPrimerIn.setBlockState(x, y - 1 - inverseHalfRadius, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
+								chunkPrimerIn.setBlockState(x, y - inversePartialSquareRadius, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
+								chunkPrimerIn.setBlockState(x, y - 1 - inversePartialSquareRadius, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
 							}
 							break;
 						}

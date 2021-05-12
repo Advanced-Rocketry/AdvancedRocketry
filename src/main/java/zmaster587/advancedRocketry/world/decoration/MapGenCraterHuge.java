@@ -57,7 +57,6 @@ public class MapGenCraterHuge extends MapGenBase {
 				.map(s->OreDictionary.getOres(s).get(0))
 				.map(itemStack-> new BlockMeta(Block.getBlockFromItem(itemStack.getItem()),itemStack.getItemDamage()).getBlockState())
 				.collect(Collectors.toList());
-		ores.add(Blocks.EMERALD_BLOCK.getDefaultState());
 
 		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk && rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk && shouldCraterSpawn(DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()), world.getBiome(new BlockPos(chunkX * 16, 0, chunkZ * 16)))) {
 

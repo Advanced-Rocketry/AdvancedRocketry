@@ -168,7 +168,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 			craterGeneratorSmall = null;
 
 		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters())
-			craterGenerator = new MapGenCrater( (int)((250 + (150*(1-atmDensity)) )*dimProps.getCraterMultiplier()), atmDensity < 0.05);
+			craterGenerator = new MapGenCrater( (int)((250 + (175*(1-atmDensity)) )*dimProps.getCraterMultiplier()), atmDensity < 0.05);
 		else
 			craterGenerator = null;
 
