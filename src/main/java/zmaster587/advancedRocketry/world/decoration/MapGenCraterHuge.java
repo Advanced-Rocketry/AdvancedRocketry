@@ -64,8 +64,9 @@ public class MapGenCraterHuge extends MapGenBase {
 			int[] sinCoefficients = {rand.nextInt(10) + 1, rand.nextInt(10) + 1, rand.nextInt(10) + 1, rand.nextInt(10) + 1, rand.nextInt(10) + 1};
 			//Radius determination, with heavy weight towards smaller craters
 			int baseRadius = getBaseRadius(rand.nextInt(400));
-			//Perturbation # calculation
+			//Perturbation # calculation && center spire boolean
 			int numBulges = rand.nextInt(5) + 1;
+			boolean spire = rand.nextInt(4) == 0;
 
 			//Turn the coordinates from chunk stuff into their actual values
 			int xCoord = -chunkX + p_180701_4_;
@@ -103,7 +104,7 @@ public class MapGenCraterHuge extends MapGenBase {
 							//Standard inversePartialSquareRadius & blockRadius stuff
 							int distancesSquared = ((xCoord * 16) + x) * ((xCoord * 16) + x) + ((zCoord * 16) + z) * ((zCoord * 16) + z);
 							int blockRadius = (int)Math.sqrt(distancesSquared);
-							int inversePartialSquareRadius = (radius*radius - distancesSquared) / (radius * 4);
+							int inversePartialSquareRadius = (int)((radius*radius - distancesSquared) / (baseRadius * ((baseRadius > 256) ? 4 : (baseRadius > 128) ? 3 : 2.25)));
 							int inverseRadius = radius - blockRadius;
 
 							//Places filler blocks to excavate the crater
@@ -119,16 +120,16 @@ public class MapGenCraterHuge extends MapGenBase {
 								//The graph of this function and the old one can be found here https://www.desmos.com/calculator/x02rgy2wlf
 								for (int dist = -1; dist < 9 * ridgeSize * ((1 - inverseRadius)/(0.8 * radius + (inverseRadius - 1) * (inverseRadius - 1))) - 1.06; dist++) {
 									//Place the bank thrown up by the impact, and have some of the farthest be dispersed
-									if (y + dist < 255 && inverseRadius > -0.5 * radius)
+									if (y + dist < 255 && inverseRadius > -0.75 * radius)
 										chunkPrimerIn.setBlockState(x, y + dist, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
-									else if (y + dist < 255 && inverseRadius >= -0.625 * radius  && !(rand.nextInt(inverseRadius + (int)(radius * 0.625) + 1) == 0))
+									else if (y + dist < 255 && inverseRadius >= -0.875 * radius  && !(rand.nextInt(inverseRadius + (int)(radius * 0.875) + 1) == 0))
 										chunkPrimerIn.setBlockState(x, y + dist, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
-									else if (y + dist < 255 && inverseRadius < -0.625 * radius  && rand.nextInt(Math.abs(inverseRadius + (int)(radius * 0.625)) + 1) == 0)
+									else if (y + dist < 255 && inverseRadius < -0.875 * radius  && rand.nextInt(Math.abs(inverseRadius + (int)(radius * 0.875)) + 1) == 0)
 										chunkPrimerIn.setBlockState(x, y + dist, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
 
 									//Ejecta blocks on top, then ejecta blocks below farther out
 									if (rand.nextInt(Math.abs(inverseRadius) + 1) == 0) {
-										if (inverseRadius < -0.25 * radius && inverseRadius > -1.5 * radius)
+										if (inverseRadius < -0.375 * radius && inverseRadius > -1.5 * radius)
 											chunkPrimerIn.setBlockState(x, y + dist + 1, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
 										else if (inverseRadius < -1.5 * radius)
 											chunkPrimerIn.setBlockState(x, y + dist + 1+ rand.nextInt(2), z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
@@ -145,8 +146,8 @@ public class MapGenCraterHuge extends MapGenBase {
 
 							//Place spire in the center of the bowl
 							//An example of this graph is https://www.desmos.com/calculator/nn5xmzyu6i
-							if (blockRadius < 0.1 * radius) {
-								for (int dist = 0; dist < (-0.015625 * blockRadius * blockRadius) + radius/16; dist++) {
+							if (blockRadius < 0.25 * radius && spire) {
+								for (int dist = 0; dist < Math.pow(Math.abs(-(radius/16.0) + blockRadius/4.0), 1.25); dist++) {
 									chunkPrimerIn.setBlockState(x, y + Math.min(dist, 16) - 27, z, this.getBlockToPlaceRich(world, chunkX, chunkZ, ores));
 								}
 
@@ -215,7 +216,7 @@ public class MapGenCraterHuge extends MapGenBase {
 
 		//Then we want to add some sin-function bumps to it, as determined by the bumps
 		//They increase theta each time because then we can get different-placed perturbations
-		//An example graph for this is here: https://www.desmos.com/calculator/z4dsa5k1qv
+		//An example graph for this is here: https://www.desmos.com/calculator/5ojoqscuxv
 		int extras = 0;
 		for (int i = 2; i < Math.min(5, bumps) + 2; i++){
 			extras += random[i-2] * base * Math.sin(i * radians) * 0.0075;

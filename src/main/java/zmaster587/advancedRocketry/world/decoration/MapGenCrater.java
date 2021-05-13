@@ -201,7 +201,7 @@ public class MapGenCrater extends MapGenBase {
 
 		//Then we want to add some sin-function bumps to it, as determined by the bumps
 		//They increase theta each time because then we can get different-placed perturbations
-		//An example graph for this is here: https://www.desmos.com/calculator/2dqaekywth
+		//An example graph for this is here: https://www.desmos.com/calculator/5ojoqscuxv
 		int extras = 0;
 		for (int i = 2; i < Math.min(5, bumps) + 2; i++){
 			extras += random[i-2] * base * Math.sin(i * radians) * 0.0075;
