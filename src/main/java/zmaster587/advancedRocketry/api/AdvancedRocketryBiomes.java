@@ -404,7 +404,7 @@ public class AdvancedRocketryBiomes {
 		evt.getRegistry().registerAll(
 				moonBiome.setRegistryName("advancedrocketry:moon"),
 				hotDryBiome.setRegistryName("advancedrocketry:hotdry"),
-				/*alienForest.setRegistryName("alien_forest"),*/
+				/*alienForest.setRegistryName("advancedrocketry:alien_forest"),*/
 				spaceBiome.setRegistryName("space"),
 				stormLandsBiome.setRegistryName("advancedrocketry:stormland"),
 				crystalChasms.setRegistryName("advancedrocketry:crystal_chasm"),
