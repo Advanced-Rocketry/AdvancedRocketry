@@ -32,7 +32,7 @@ public class RecipeHandler {
 		
 		for(Class<?>  clazz : machineList)
 			try {
-				if(clazz.isAssignableFrom(TileMultiblockMachine.class))
+				if(TileMultiblockMachine.class.isAssignableFrom(clazz))
 				((TileMultiblockMachine)clazz.newInstance()).registerRecipes();
 			} catch (InstantiationException e) {
 				e.printStackTrace();

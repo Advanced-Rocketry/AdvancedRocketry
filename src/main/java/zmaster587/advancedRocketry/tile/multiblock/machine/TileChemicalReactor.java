@@ -78,7 +78,6 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 					//}
 				}
 			}
-				
 			}
 		}
 
@@ -153,9 +152,9 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 					enchanted.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
 	
 					if(((ArmorItem)item).getEquipmentSlot() == EquipmentSlotType.CHEST)
-						RecipesMachine.getInstance().addRecipe(key, RecipeChemicalReactor.INSTANCE, TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1), new ItemStack(Items.DIAMOND), new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack(new ResourceLocation("forge","sheetTitaniumAluminide"), 4), new ItemStack(AdvancedRocketryItems.itemHighPressureTank, 1));
+						RecipesMachine.getInstance().addRecipe(key, RecipeChemicalReactor.INSTANCE, TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1), new ItemStack(Items.DIAMOND), new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack(new ResourceLocation("forge","sheets/titaniumaluminide"), 4), new ItemStack(AdvancedRocketryItems.itemPressureTankSuperHigh, 1));
 					else
-						RecipesMachine.getInstance().addRecipe(key, RecipeChemicalReactor.INSTANCE, TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1), new ItemStack(Items.DIAMOND), new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack(new ResourceLocation("forge","sheetTitaniumAluminide"), 4));
+						RecipesMachine.getInstance().addRecipe(key, RecipeChemicalReactor.INSTANCE, TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1), new ItemStack(Items.DIAMOND), new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack(new ResourceLocation("forge","sheets/titaniumaluminide"), 4));
 	
 				}
 			}
