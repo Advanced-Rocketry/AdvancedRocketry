@@ -442,8 +442,6 @@ public class AdvancedRocketry {
 	@SubscribeEvent
 	public void postInit(FMLLoadCompleteEvent event)
 	{
-		//Biomes --------------------------------------------------------------------------------------
-		registerRecipes();
 		AtmosphereType.registerAtmosphere();
 		OreGen.injectOreGen();
 		List<? extends CharSequence> biomeBlackList = ARConfiguration.getCurrentConfig().biomeBlackList.get();
@@ -618,6 +616,7 @@ public class AdvancedRocketry {
 
 	
 	public void serverStarting(FMLServerAboutToStartEvent event) {
+		registerRecipes();
 		//Open ore files
 
 		
