@@ -402,18 +402,18 @@ public class AdvancedRocketryBiomes {
 		volcanicBarren = new Biome.Builder().category(Category.NONE).precipitation(RainType.NONE).downfall(0.0f).depth(0f).scale(0.09f).temperature(1.0f).withGenerationSettings(genVolcanicBasaltBarren).setEffects(noAmbience).withMobSpawnSettings(noMobs).build();
 
 		evt.getRegistry().registerAll(
-				moonBiome.setRegistryName("moon"),
-				hotDryBiome.setRegistryName("hotdry"),
+				moonBiome.setRegistryName("advancedrocketry:moon"),
+				hotDryBiome.setRegistryName("advancedrocketry:hotdry"),
 				/*alienForest.setRegistryName("alien_forest"),*/
 				spaceBiome.setRegistryName("space"),
-				stormLandsBiome.setRegistryName("stormland"),
-				crystalChasms.setRegistryName("crystal_chasm"),
-				swampDeepBiome.setRegistryName("deepswamp"),
-				marsh.setRegistryName("marsh"),
-				oceanSpires.setRegistryName("oceanspires"),
-				moonBiomeDark.setRegistryName("moon_dark"),
-				volcanic.setRegistryName("volcanic"),
-				volcanicBarren.setRegistryName("volcanic_barren")
+				stormLandsBiome.setRegistryName("advancedrocketry:stormland"),
+				crystalChasms.setRegistryName("advancedrocketry:crystal_chasm"),
+				swampDeepBiome.setRegistryName("advancedrocketry:deepswamp"),
+				marsh.setRegistryName("advancedrocketry:marsh"),
+				oceanSpires.setRegistryName("advancedrocketry:oceanspires"),
+				moonBiomeDark.setRegistryName("advancedrocketry:moon_dark"),
+				volcanic.setRegistryName("advancedrocketry:volcanic"),
+				volcanicBarren.setRegistryName("advancedrocketry:volcanic_barren")
 				);
 	}
 
