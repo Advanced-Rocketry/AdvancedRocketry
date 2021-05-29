@@ -1,7 +1,7 @@
 {
     "display": {
         "icon": {
-            "item": "libvulpes:holoprojector"
+            "item": "libvulpes:holo_projector"
         },
         "title": {
             "translate": "achievement.holographic"
