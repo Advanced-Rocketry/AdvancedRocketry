@@ -24,7 +24,7 @@ apply plugin: 'java'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "AdvancedRocketry"
+archivesBaseName = project.archivebase
 sourceCompatibility = 8
 targetCompatibility = 8
 
@@ -43,9 +43,9 @@ minecraft {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
     replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
-    replace "@MAJOR@", version_major
-    replace "@MINOR@", version_minor
-    replace "@REVIS@", version_revis
+    replace "@MAJOR@", project.version_major
+    replace "@MINOR@", project.version_minor
+    replace "@REVIS@", project.version_revis
     replace "@BUILD@", project.getBuildNumber()
     
     replace "%LIBVULPESVERSION%", project.libVulpesVersion

@@ -149,7 +149,7 @@ public class AdvancedRocketry {
 	@SidedProxy(clientSide="zmaster587.advancedRocketry.client.ClientProxy", serverSide="zmaster587.advancedRocketry.common.CommonProxy")
 	public static CommonProxy proxy;
 
-	public final static String version = "@MAJOR@.@MINOR@.@REVIS@@BUILD@";
+	public final static String version = "@MAJOR@.@MINOR@.@REVIS@.@BUILD@";
 
 	@Instance(value = Constants.modId)
 	public static AdvancedRocketry instance;
