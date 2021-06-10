@@ -2270,12 +2270,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			modules.add(new ModuleButton(180, 114, 1, LibVulpes.proxy.getLocalizedString("msg.entity.rocket.seldst"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, 64,20));
 			//modules.add(new ModuleText(180, 114, "Inventories", 0x404040));
-		}
-		else {
-			ItemStack slot0 = storage.getGuidanceComputer().getStackInSlot(0);
+		} else {
+			ItemStack slot0 = storage.getGuidanceComputer() != null ? storage.getGuidanceComputer().getStackInSlot(0) : ItemStack.EMPTY;
 			int uuid;
 			//Station location select
-			if( slot0 != null && slot0.getItem() instanceof ItemStationChip && (uuid = ItemStationChip.getUUID(slot0)) != 0) {
+			if( slot0 != ItemStack.EMPTY && slot0.getItem() instanceof ItemStationChip && (uuid = ItemStationChip.getUUID(slot0)) != 0) {
 				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStation(uuid);
 
 				modules.add(new ModuleStellarBackground(0, 0, zmaster587.libVulpes.inventory.TextureResources.starryBG));
