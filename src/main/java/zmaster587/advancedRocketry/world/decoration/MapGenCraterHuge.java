@@ -94,7 +94,7 @@ public class MapGenCraterHuge extends MapGenBase {
 			for(int x = 15; x >= 0; x--) {
 				for(int z = 15; z >= 0; z--) {
 					for (int y = 254; y >= 0; y--) {
-						if (y <= fluidMaxY && fillBlock != Blocks.AIR && chunkPrimerIn.getBlockState(x, y, z).getBlock() == Blocks.AIR) {
+						if (y <= fluidMaxY && fillBlock.getBlock() != Blocks.AIR && chunkPrimerIn.getBlockState(x, y, z).getBlock() == Blocks.AIR) {
 							chunkPrimerIn.setBlockState(x, y, z, fillBlock);
 						}
 						if (!isCraterIgnoredBlock(chunkPrimerIn.getBlockState(x, y, z).getBlock())) {

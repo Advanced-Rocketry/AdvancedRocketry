@@ -25,9 +25,27 @@ public class MapGenCraterSmall extends MapGenBase {
 
 	public MapGenCraterSmall(int chancePerChunk) {
 		this.chancePerChunk = chancePerChunk;
+		this.range = 2;
 	}
-	
-	
+
+	@Override
+	public void generate(World worldIn, int x, int z, ChunkPrimer primer) {
+		int i = this.range;
+		this.world = worldIn;
+		this.rand.setSeed(worldIn.getSeed());
+		long j = this.rand.nextLong();
+		long k = this.rand.nextLong();
+
+		for (int l = x - i; l <= x + i; ++l) {
+			for (int i1 = z - i; i1 <= z + i; ++i1) {
+				long j1 = (long)l * j;
+				long k1 = (long)i1 * k;
+				this.rand.setSeed(j1 ^ k1 ^ worldIn.getSeed());
+				this.recursiveGenerate(worldIn, l, i1, x, z, primer);
+			}
+		}
+	}
+
 	@Override
 	protected void recursiveGenerate(World world, int chunkX, int chunkZ, int p_180701_4_, int p_180701_5_, ChunkPrimer chunkPrimerIn) {
 
@@ -74,7 +92,7 @@ public class MapGenCraterSmall extends MapGenBase {
 			for(int x = 15; x >= 0; x--) {
 				for(int z = 15; z >= 0; z--) {
 					for (int y = 254; y >= 0; y--) {
-						if (y <= fluidMaxY && fillBlock != Blocks.AIR && chunkPrimerIn.getBlockState(x, y, z).getBlock() == Blocks.AIR) {
+						if (y <= fluidMaxY && fillBlock.getBlock() != Blocks.AIR && chunkPrimerIn.getBlockState(x, y, z).getBlock() == Blocks.AIR) {
 							chunkPrimerIn.setBlockState(x, y, z, fillBlock);
 						}
 						if (!isCraterIgnoredBlock(chunkPrimerIn.getBlockState(x, y, z).getBlock())) {
