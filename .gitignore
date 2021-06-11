@@ -15,6 +15,7 @@ out
 
 # gradle
 build
+output
 .gradle
 
 # other
