@@ -18,12 +18,14 @@ public class PlanetaryTravelHelper {
 			for (int moonDimID : launchworldProperties.getParentProperties().getChildPlanets()) {
 				if (destinationDimensionID == moonDimID) {
 					isPlanetMoonSystem = true;
+					break;
 				}
 			}
 		} else {
 			for (int moonDimID : launchworldProperties.getChildPlanets()) {
 				if (destinationDimensionID == moonDimID) {
 					isPlanetMoonSystem = true;
+					break;
 				}
 			}
 		}

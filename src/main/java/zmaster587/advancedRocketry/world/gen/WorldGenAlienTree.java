@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class WorldGenAlienTree extends WorldGenAbstractTree {
@@ -27,7 +28,7 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 	}
 
 	@Override
-	public boolean generate(World world, Random random, BlockPos pos) {
+	public boolean generate(@Nonnull World world, Random random, BlockPos pos) {
 		int treeHeight = random.nextInt(10) + 20;
 		boolean flag = true;
 
@@ -228,7 +229,7 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 			int newY = l >= branchLength/2 ? y + 2 : y;
 			int newZ = z + (dirZ*l);
 
-			flag = flag && this.replaceBlockWithWood(world, newX, newY, newZ, direction);
+			flag =         this.replaceBlockWithWood(world, newX, newY, newZ, direction);
 			flag = flag && this.replaceBlockWithWood(world, newX, newY - 1, newZ, direction);
 			flag = flag && this.replaceBlockWithWood(world, newX + dirZ, newY, newZ + dirX, direction);
 			flag = flag && this.replaceBlockWithWood(world, newX + dirZ, newY - 1, newZ + dirX, direction);

@@ -31,6 +31,7 @@ import zmaster587.libVulpes.util.IAdjBlockUpdate;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -91,8 +92,8 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	}
 
 	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
+							   EntityPlayer player, World world) {
 
 		ItemLinker.setMasterCoords(item, getPos());
 
@@ -102,7 +103,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	}
 
 	@Override
-	public boolean onLinkComplete(ItemStack item, TileEntity entity,
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("msg.linker.error.firstMachine"));
@@ -210,7 +211,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 
-		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
+		LinkedList<ModuleBase> modules = new LinkedList<>();
 
 		modules.add(new ModuleButton(20, 40, 0, "Launch!", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
 		modules.add(new ModuleProgress(98, 4, 0, new IndicatorBarImage(2, 7, 12, 81, 17, 0, 6, 6, 1, 0, EnumFacing.UP, TextureResources.rocketHud), this));
@@ -361,8 +362,8 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	}
 
 	@Override
-	public boolean linkMission(IMission misson) {
-		this.mission = misson;
+	public boolean linkMission(IMission mission) {
+		this.mission = mission;
 		PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), world.provider.getDimension(), getPos(), 16);
 		return true;
 	}

@@ -22,8 +22,8 @@ public class BlockBreakEvent extends Event {
 			super(x,y,z);
 		}
 		
-		public int getX() {return posX;};
-		public int getY() {return posY;};
-		public int getZ() {return posZ;};
+		public int getX() {return posX;}
+		public int getY() {return posY;}
+		public int getZ() {return posZ;}
 	}
 }

@@ -59,7 +59,7 @@ public class StatsRocket {
 
 
 	HashedBlockPosition pilotSeatPos;
-	private final List<HashedBlockPosition> passengerSeats = new ArrayList<HashedBlockPosition>();
+	private final List<HashedBlockPosition> passengerSeats = new ArrayList<>();
 	private List<Vector3F<Float>> engineLoc;
 
 	private static final String TAGNAME = "rocketStats";
@@ -83,8 +83,8 @@ public class StatsRocket {
 		injectionBurnLenghtMult = 1;
 		pilotSeatPos = new HashedBlockPosition(0,0,0);
 		pilotSeatPos.x = INVALID_SEAT;
-		engineLoc = new ArrayList<Vector3F<Float>>();
-		statTags = new HashMap<String, Object>();
+		engineLoc = new ArrayList<>();
+		statTags = new HashMap<>();
 	}
 
 	/*public StatsRocket(int thrust, int weight, int fuelRate, int fuel) {
@@ -144,7 +144,7 @@ public class StatsRocket {
 	 */
 	public void addEngineLocation(float x, float y, float z) {
 		//We want to be in the center of the block
-		engineLoc.add(new Vector3F<Float>(x , y, z));
+		engineLoc.add(new Vector3F<>(x, y, z));
 	}
 
 	/**
@@ -175,8 +175,8 @@ public class StatsRocket {
 
 		stat.pilotSeatPos = new HashedBlockPosition(this.pilotSeatPos.x, this.pilotSeatPos.y, this.pilotSeatPos.z);
 		stat.passengerSeats.addAll(passengerSeats);
-		stat.engineLoc = new ArrayList<Vector3F<Float>>(engineLoc);
-		stat.statTags = new HashMap<String, Object>(statTags);
+		stat.engineLoc = new ArrayList<>(engineLoc);
+		stat.statTags = new HashMap<>(statTags);
 		return stat;
 	}
 
@@ -479,11 +479,11 @@ public class StatsRocket {
 	}
 
 	public void setStatTag(String str, float value) {
-		statTags.put(str, new Float(value));
+		statTags.put(str, value);
 	}
 
 	public void setStatTag(String str, int value) {
-		statTags.put(str, new Integer(value));
+		statTags.put(str, value);
 	}
 
 	/**

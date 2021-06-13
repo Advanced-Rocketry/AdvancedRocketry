@@ -16,7 +16,7 @@ public class CompatibilityMgr {
 	public static void getLoadedMods() {
 		thermalExpansion = Loader.isModLoaded("ThermalExpansion");
 		gregtechLoaded = Loader.isModLoaded("gregtech_addon");
-	};
+	}
 	
 	public static void initCompatRecipies() {
 		if(gregtechLoaded) {

@@ -48,6 +48,7 @@ import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
 import java.nio.IntBuffer;
 import java.util.List;
 import java.util.Random;
@@ -242,9 +243,9 @@ public class RocketEventHandler extends Gui {
 						int randB = ( randomMax - random.nextInt(randomMax) /2 ) << 16;
 
 
-						int color = (int)( MathHelper.clamp((int) ( (total[0] & 0xFF) + randR ),0, 0xFF ) |
-								MathHelper.clamp((int)(total[0] & 0xFF00) + randG, 0x0100, 0xFF00)  | 
-								MathHelper.clamp( (int)(( total[0] & 0xFF0000) + randB), 0x010000, 0xFF0000) );
+						int color = MathHelper.clamp((int) ( (total[0] & 0xFF) + randR ),0, 0xFF ) |
+								MathHelper.clamp((int)(total[0] & 0xFF00) + randG, 0x0100, 0xFF00)  |
+								MathHelper.clamp( (int)(( total[0] & 0xFF0000) + randB), 0x010000, 0xFF0000);
 
 						outerBoundsTable.put(i, color | 0xff000000);
 					}
@@ -366,7 +367,7 @@ public class RocketEventHandler extends Gui {
 				this.drawTexturedModalRect(3, 94 + (int)(69*(0.5 - (MathHelper.clamp((float) (rocket.motionY), -1f, 1f)/2f))), 17, 0, 6, 6); //94 to 161
 
 				//Draw fuel indicator
-				int size = 0;
+				int size;
 				if (rocket.getFuelCapacityMonopropellant() > 0) {
 					size = (int) (68 * (rocket.getFuelAmountMonopropellant() / (float) rocket.getFuelCapacityMonopropellant()));
 				} else {
@@ -428,7 +429,7 @@ public class RocketEventHandler extends Gui {
 			}
 
 			//Draw module icons
-			if(!(Minecraft.getMinecraft().player.capabilities.isCreativeMode || Minecraft.getMinecraft().player.isSpectator()) && Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD) != null && Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof IModularArmor) {
+			if(!(Minecraft.getMinecraft().player.capabilities.isCreativeMode || Minecraft.getMinecraft().player.isSpectator()) && !Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty() && Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof IModularArmor) {
 				for(EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
 					renderModuleSlots(Minecraft.getMinecraft().player.getItemStackFromSlot(slot), 4-slot.getIndex(), event);
 				}
@@ -524,7 +525,7 @@ public class RocketEventHandler extends Gui {
 		}
 	}
 
-	private void renderModuleSlots(ItemStack armorStack, int slot, RenderGameOverlayEvent event) {
+	private void renderModuleSlots(@Nonnull ItemStack armorStack, int slot, RenderGameOverlayEvent event) {
 		int index = 1;
 		float color = 0.85f + 0.15F*MathHelper.sin( 2f*(float)Math.PI*((Minecraft.getMinecraft().world.getTotalWorldTime()) % 60)/60f );
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
@@ -534,7 +535,7 @@ public class RocketEventHandler extends Gui {
 		float alpha = 0.6f;
 
 
-		if( armorStack != null ) {
+		if( !armorStack.isEmpty() ) {
 
 			boolean modularArmorFlag = armorStack.getItem() instanceof IModularArmor;
 
@@ -658,33 +659,31 @@ public class RocketEventHandler extends Gui {
 		}
 
 		public void setRenderX(int x, double scaleX) {
-			double i = scaleX;
-			if(x < i/3) {
+			if(x < scaleX /3) {
 				modeX = -1;
 				this.setRawX(x); 
 			}
-			else if(x > i*2/3) {
-				this.setRawX((int) (i - x));
+			else if(x > scaleX *2/3) {
+				this.setRawX((int) (scaleX - x));
 				modeX = 1;
 			}
 			else {
-				this.setRawX((int)(i/2 - x));
+				this.setRawX((int)(scaleX /2 - x));
 				modeX = 0;
 			}
 		}
 
 		public void setRenderY(int y, double scaleY) {
-			double i = scaleY;
-			if(y < i/3) {
+			if(y < scaleY /3) {
 				modeY = -1;
 				this.setRawY(y); 
 			}
-			else if(y > i*2/3) {
-				this.setRawY((int) (i - y));
+			else if(y > scaleY *2/3) {
+				this.setRawY((int) (scaleY - y));
 				modeY = 1;
 			}
 			else {
-				this.setRawY((int)(i/2 - y));
+				this.setRawY((int)(scaleY /2 - y));
 				modeY = 0;
 			}
 		}

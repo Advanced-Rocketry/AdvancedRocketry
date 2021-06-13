@@ -28,7 +28,7 @@ public class OxygenTraceFX extends Particle {
         this.particleGreen = .7F + chroma;
         this.particleBlue = .9f;
         this.setSize(0.001F, 0.001F);
-        this.particleScale = (float)(this.rand.nextFloat() * 0.6F + 6F);
+        this.particleScale = this.rand.nextFloat() * 0.6F + 6F;
         this.motionX = motx;
         this.motionY = moty;
         this.motionZ = motz;
@@ -62,10 +62,10 @@ public class OxygenTraceFX extends Particle {
         worldRendererIn.finishDrawing();
         worldRendererIn.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
         
-		worldRendererIn.pos((double)(f11 - rotationX * f10 - rotationXY * f10), (double)(f12 - rotationZ * f10), (double)(f13 - rotationYZ * f10 - rotationXZ * f10)).tex(1, 1).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		worldRendererIn.pos((double)(f11 - rotationX * f10 + rotationXY * f10), (double)(f12 + rotationZ * f10), (double)(f13 - rotationYZ * f10 + rotationXZ * f10)).tex(1, 0).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		worldRendererIn.pos((double)(f11 + rotationX * f10 + rotationXY * f10), (double)(f12 + rotationZ * f10), (double)(f13 + rotationYZ * f10 + rotationXZ * f10)).tex(0, 0).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		worldRendererIn.pos((double)(f11 + rotationX * f10 - rotationXY * f10), (double)(f12 - rotationZ * f10), (double)(f13 + rotationYZ * f10 - rotationXZ * f10)).tex(0, 1).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+		worldRendererIn.pos(f11 - rotationX * f10 - rotationXY * f10, f12 - rotationZ * f10, f13 - rotationYZ * f10 - rotationXZ * f10).tex(1, 1).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+		worldRendererIn.pos(f11 - rotationX * f10 + rotationXY * f10, f12 + rotationZ * f10, f13 - rotationYZ * f10 + rotationXZ * f10).tex(1, 0).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+		worldRendererIn.pos(f11 + rotationX * f10 + rotationXY * f10, f12 + rotationZ * f10, f13 + rotationYZ * f10 + rotationXZ * f10).tex(0, 0).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+		worldRendererIn.pos(f11 + rotationX * f10 - rotationXY * f10, f12 - rotationZ * f10, f13 + rotationYZ * f10 - rotationXZ * f10).tex(0, 1).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
 		Tessellator.getInstance().draw();
 		worldRendererIn.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 	}

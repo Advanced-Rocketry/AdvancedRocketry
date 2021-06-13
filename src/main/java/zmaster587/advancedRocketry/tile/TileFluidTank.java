@@ -11,6 +11,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 
+import javax.annotation.Nonnull;
+
 public class TileFluidTank extends TileFluidHatch {
 
 	private long lastUpdateTime;
@@ -94,29 +96,25 @@ public class TileFluidTank extends TileFluidHatch {
 	public FluidStack drain(int maxDrain, boolean doDrain) {
 		IFluidHandler handler = this.getFluidTankInDirection(EnumFacing.UP);
 
-		FluidStack stack = null;
+		FluidStack fStack = null;
 		if(handler != null && handler.getTankProperties()[0].getContents() != null && 
 				fluidTank.getFluid() != null && fluidTank.getFluid().getFluid() ==
 				handler.getTankProperties()[0].getContents().getFluid()) {
 
-			stack = handler.drain(maxDrain, doDrain);
+			fStack = handler.drain(maxDrain, doDrain);
 		}
-		if(stack != null)
-			return stack;
+		if(fStack != null)
+			return fStack;
 
-		FluidStack stack2 = super.drain(maxDrain - (stack != null ? stack.amount : 0), doDrain);
+		FluidStack fStack2 = super.drain(maxDrain, doDrain);
 
-		if(stack != null && stack2 != null)
-			stack2.amount += stack.amount;
-
-		
-		if(stack2 != null && doDrain) {
+		if(fStack2 != null && doDrain) {
 			fluidChanged = true;
 		}
 		checkForUpdate();
 		
 		
-		return stack2;
+		return fStack2;
 	}
 
 	@Override
@@ -137,11 +135,11 @@ public class TileFluidTank extends TileFluidHatch {
 		return null;
 	}
 	
-	private boolean canFill(FluidStack stack)
+	private boolean canFill(FluidStack fStack)
 	{
-		FluidStack stack2 = fluidTank.getFluid();
+		FluidStack fStack2 = fluidTank.getFluid();
 		
-		return stack2 == null || (stack2.getFluid() == stack.getFluid());
+		return fStack2 == null || (fStack2.getFluid() == fStack.getFluid());
 	}
 
 	@Override
@@ -158,7 +156,7 @@ public class TileFluidTank extends TileFluidHatch {
 	}
 
 	@Override
-	protected boolean useBucket(int slot, ItemStack stack) {
+	protected boolean useBucket(int slot, @Nonnull ItemStack stack) {
 		boolean bucketUsed = super.useBucket(slot, stack);
 
 		if(bucketUsed) {

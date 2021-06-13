@@ -3,10 +3,8 @@ package zmaster587.advancedRocketry.client.render;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.chunk.ChunkCompileTaskGenerator;
 import net.minecraft.client.renderer.chunk.IRenderChunkFactory;
 import net.minecraft.client.renderer.chunk.ListChunkFactory;
-import net.minecraft.client.renderer.chunk.RenderChunk;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -18,7 +16,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
@@ -32,6 +29,9 @@ import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class RendererRocket extends Render implements IRenderFactory<EntityRocket> {
 
 	private static BlockRendererDispatcher renderBlocks = Minecraft.getMinecraft().getBlockRendererDispatcher();
@@ -40,7 +40,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 	Class tileEntityBlockChiseled;
 	Method getState;
 
-	public RendererRocket(RenderManager manager) {
+	public RendererRocket(@Nonnull RenderManager manager) {
 		super(manager);
 
 		try {
@@ -48,11 +48,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 			getState = tileEntityBlockChiseled.getMethod("getRenderState", IBlockAccess.class);
 			AdvancedRocketry.logger.info("Chisel and bits support HAS BEEN loaded");
 		}
-		catch(ClassNotFoundException e) {
-			AdvancedRocketry.logger.info("Chisel and bits support NOT loaded");
-		}
-		catch(NoSuchMethodException e)
-		{
+		catch(ClassNotFoundException | NoSuchMethodException e) {
 			AdvancedRocketry.logger.info("Chisel and bits support NOT loaded");
 		}
 	}
@@ -60,7 +56,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 
 	//TODO: possibly optimize with GL lists
 	@Override
-	public void doRender(Entity entity, double x,
+	public void doRender(@Nonnull Entity entity, double x,
 			double y, double z, float f1,
 			float f2) {
 
@@ -168,7 +164,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 		GL11.glTranslatef((float)x, (float)y + halfy, (float)z);
 		GL11.glRotatef(((EntityRocket)entity).getRCSRotateProgress()*0.9f, 1f, 0f, 0f);
 		GL11.glRotatef(((EntityRocket)entity).rotationYaw, 0f, 0f, 1f);
-		GL11.glTranslatef((float)- halfx, (float)0 - halfy, (float)- halfz);
+		GL11.glTranslatef(- halfx, (float)0 - halfy, - halfz);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GL11.glCallList(storage.world.displayListIndex);
 
@@ -176,7 +172,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 
 		//Render tile entities if applicable
 		for(TileEntity tile : storage.getTileEntityList()) {
-			TileEntitySpecialRenderer renderer = (TileEntitySpecialRenderer)TileEntityRendererDispatcher.instance.renderers.get(tile.getClass());
+			TileEntitySpecialRenderer renderer = TileEntityRendererDispatcher.instance.renderers.get(tile.getClass());
 			if(renderer != null ) {
 
 				if(tileEntityBlockChiseled == null || !tileEntityBlockChiseled.isInstance(tile))
@@ -192,7 +188,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 		{
 			TileEntityRendererDispatcher.instance.preDrawBatch();
 			for(TileEntity tile : storage.getTileEntityList()) {
-				TileEntitySpecialRenderer renderer = (TileEntitySpecialRenderer)TileEntityRendererDispatcher.instance.renderers.get(tile.getClass());
+				TileEntitySpecialRenderer renderer = TileEntityRendererDispatcher.instance.renderers.get(tile.getClass());
 				if(renderer != null ) {
 
 					if(tileEntityBlockChiseled.isInstance(tile) && getState != null)
@@ -204,13 +200,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 							GL11.glTranslated(TileEntityRendererDispatcher.staticPlayerX, TileEntityRendererDispatcher.staticPlayerY, TileEntityRendererDispatcher.staticPlayerZ);
 							TileEntityRendererDispatcher.instance.render(tile, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), f1);
 							GL11.glPopMatrix();
-						} catch (IllegalAccessException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IllegalArgumentException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (InvocationTargetException e) {
+						} catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
@@ -236,7 +226,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 	}
 
 	@Override
-	protected ResourceLocation getEntityTexture(Entity p_110775_1_) {
+	protected ResourceLocation getEntityTexture(@Nullable Entity p_110775_1_) {
 		return null;
 	}
 

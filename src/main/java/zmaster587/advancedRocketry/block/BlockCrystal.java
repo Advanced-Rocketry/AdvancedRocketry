@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -20,6 +19,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.libVulpes.block.INamedMetaBlock;
 
+import javax.annotation.Nonnull;
+
 public class BlockCrystal extends Block implements INamedMetaBlock {
 	
 	public final static PropertyEnum<EnumCrystal> CRYSTALPROPERTY = PropertyEnum.create("type", EnumCrystal.class);
@@ -33,13 +34,15 @@ public class BlockCrystal extends Block implements INamedMetaBlock {
     }
 	
     @Override
+    @Nonnull
     public IBlockState getStateFromMeta(int meta) {
     	return this.getDefaultState().withProperty(CRYSTALPROPERTY, EnumCrystal.values()[meta]);
     }
-    
+
+    @Nonnull
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, new IProperty[] {CRYSTALPROPERTY});
+        return new BlockStateContainer(this, CRYSTALPROPERTY);
     }
     
     @Override
@@ -54,11 +57,12 @@ public class BlockCrystal extends Block implements INamedMetaBlock {
     }
     @Override
 	public String getUnlocalizedName(int itemDamage) {
-		return  "tile." + names[itemDamage];
+		return  "tile." + EnumCrystal.values()[itemDamage];
 	}
     
     
     @SideOnly(Side.CLIENT)
+    @Nonnull
     public BlockRenderLayer getBlockLayer()
     {
         return BlockRenderLayer.TRANSLUCENT;
@@ -67,7 +71,7 @@ public class BlockCrystal extends Block implements INamedMetaBlock {
 	@Override
 	public void getSubBlocks(CreativeTabs tab,
 			NonNullList<ItemStack> list) {
-		for(int i = 0; i < colors.length; i++) {
+		for(int i = 0; i < numMetas; i++) {
 			list.add(new ItemStack(this, 1, i));
 		}
 	}
@@ -82,17 +86,14 @@ public class BlockCrystal extends Block implements INamedMetaBlock {
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockState blockState,
 			IBlockAccess world, BlockPos pos, EnumFacing side) {
+
+        IBlockState blockState2 = world.getBlockState(pos.offset(side/*.getOpposite()*/));
        
-        EnumFacing dir = side;//side.getOpposite();
-        IBlockState blockState2 = world.getBlockState(pos.offset(dir));
-       
-        return  blockState.equals(blockState2) ? false : super.shouldSideBeRendered(blockState, world, pos, side);
+        return !blockState.equals(blockState2) && super.shouldSideBeRendered(blockState, world, pos, side);
    
 	}
-    
-	private static final int colors[] =  {0xb23fff, 0x3333ff, 0x00ff00, 0xff3434, 0xffff34, 0xff9400};
-	private static final String names[] =  {"amethyst", "sapphire", "emerald", "ruby", "citrine", "wulfentite"};
-	public static final int numMetas = colors.length;
+	
+	public static final int numMetas = EnumCrystal.values().length;
 	
     public enum EnumCrystal implements IStringSerializable
     {
@@ -108,7 +109,7 @@ public class BlockCrystal extends Block implements INamedMetaBlock {
         private final MapColor mapColor;
         private final int color;
 
-        private EnumCrystal(int meta, int color, String name, MapColor mapColorIn)
+        EnumCrystal(int meta, int color, String name, MapColor mapColorIn)
         {
         	this.color = color;
             this.meta = meta;
@@ -140,6 +141,7 @@ public class BlockCrystal extends Block implements INamedMetaBlock {
             return this.name;
         }
 
+        @Nonnull
         public String getName()
         {
             return this.name;

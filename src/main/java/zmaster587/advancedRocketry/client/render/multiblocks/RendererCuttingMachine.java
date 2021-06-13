@@ -17,7 +17,7 @@ import java.util.List;
 
 public class RendererCuttingMachine extends TileEntitySpecialRenderer {
 
-	WavefrontObject model;
+	private WavefrontObject model;
 
 	public final static ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/cuttingMachine.png");
 
@@ -60,9 +60,9 @@ public class RendererCuttingMachine extends TileEntitySpecialRenderer {
 
 			List<ItemStack> inputList = multiBlockTile.getInputs();
 			if(inputList != null && !inputList.isEmpty() && progress < 0.65) {
-				ItemStack inputStack = null;
+				ItemStack inputStack = ItemStack.EMPTY;
 				for (ItemStack stack: inputList) {
-					if (stack != null && inputStack == null)
+					if (!stack.isEmpty() && inputStack.isEmpty())
 						inputStack = stack;
 				}
 

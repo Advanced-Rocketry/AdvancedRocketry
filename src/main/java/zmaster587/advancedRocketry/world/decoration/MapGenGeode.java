@@ -66,7 +66,7 @@ public class MapGenGeode extends MapGenBase {
 
 			BlockPos pos = new BlockPos(chunkX*16, 0, chunkZ*16);
 
-			int avgY = (int) 64;
+			int avgY = 64;
 
 			for(int x = 15; x >= 0; x--) {
 				for(int z = 15; z >= 0; z--) {

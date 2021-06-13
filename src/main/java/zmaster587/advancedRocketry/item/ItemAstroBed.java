@@ -56,7 +56,7 @@ public class ItemAstroBed extends Item {
 
 				if (flag2 && flag3 && worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos.down(), EnumFacing.UP) && worldIn.getBlockState(blockpos.down()).isSideSolid(worldIn, blockpos.down(), EnumFacing.UP))
 				{
-					IBlockState iblockstate1 = AdvancedRocketryBlocks.blockAstroBed.getDefaultState().withProperty(BlockBed.OCCUPIED, Boolean.valueOf(false)).withProperty(BlockBed.FACING, enumfacing).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
+					IBlockState iblockstate1 = AdvancedRocketryBlocks.blockAstroBed.getDefaultState().withProperty(BlockBed.OCCUPIED, Boolean.FALSE).withProperty(BlockBed.FACING, enumfacing).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
 
 					if (worldIn.setBlockState(pos, iblockstate1, 11))
 					{
@@ -65,7 +65,7 @@ public class ItemAstroBed extends Item {
 					}
 
 					SoundType soundtype = iblockstate1.getBlock().getSoundType();
-					worldIn.playSound((EntityPlayer)null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+					worldIn.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 					stack.setCount(stack.getCount() - 1);
 					return EnumActionResult.SUCCESS;
 				}

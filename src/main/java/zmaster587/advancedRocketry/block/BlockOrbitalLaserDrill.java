@@ -16,7 +16,7 @@ import java.util.Random;
 public class BlockOrbitalLaserDrill extends BlockMultiblockMachine {
 
 	public BlockOrbitalLaserDrill() {
-		super(TileOrbitalLaserDrill.class, (int)GuiHandler.guiId.MODULAR.ordinal());
+		super(TileOrbitalLaserDrill.class, GuiHandler.guiId.MODULAR.ordinal());
 		setTickRandomly(true).setUnlocalizedName("spaceLaser");
 	}
 

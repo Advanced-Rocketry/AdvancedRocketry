@@ -16,6 +16,8 @@ import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.item.ItemSatellite;
 import zmaster587.libVulpes.util.UniversalBattery;
 
+import javax.annotation.Nonnull;
+
 public abstract class SatelliteBase {
 	
 	protected SatelliteProperties satelliteProperties;
@@ -39,7 +41,7 @@ public abstract class SatelliteBase {
 
 	}
 	
-	public boolean acceptsItemInConstruction(ItemStack item) {
+	public boolean acceptsItemInConstruction(@Nonnull ItemStack item) {
 		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
 		return SatelliteProperties.Property.MAIN.isOfType(flag) || SatelliteProperties.Property.POWER_GEN.isOfType(flag) || SatelliteProperties.Property.BATTERY.isOfType(flag);
 	}
@@ -58,7 +60,9 @@ public abstract class SatelliteBase {
 	
 	/**
 	 * Actually does something with the satellite.  Normally called when the player rightclicks the master block
-	 * @param Player interacting with the satellite
+	 * @param player interacting with the satellite
+	 * @param world
+	 * @param pos
 	 * @return whether the player has successfully interacted with the satellite
 	 */
 	public abstract boolean performAction(EntityPlayer player, World world, BlockPos pos);
@@ -79,7 +83,8 @@ public abstract class SatelliteBase {
 	/**
 	 * @return an item that can be used to control the satellite, normally a satellite ID chip but can be something else
 	 */
-	public ItemStack getContollerItemStack(ItemStack satIdChip, SatelliteProperties properties) {
+	@Nonnull
+	public ItemStack getControllerItemStack(@Nonnull ItemStack satIdChip, SatelliteProperties properties) {
 		ISatelliteIdItem idChipItem = (ISatelliteIdItem)satIdChip.getItem();
 		idChipItem.setSatellite(satIdChip, properties);
 		return satIdChip;
@@ -89,7 +94,7 @@ public abstract class SatelliteBase {
 	 * @param stack stack to check (can be null)
 	 * @return true if the item stack is a valid controller for the satellite
 	 */
-	public boolean isAcceptableControllerItemStack(ItemStack stack) {
+	public boolean isAcceptableControllerItemStack(@Nonnull ItemStack stack) {
 		return !stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemSatelliteIdChip;
 	}
 	
@@ -144,14 +149,15 @@ public abstract class SatelliteBase {
 	}
 	
 	/**
-	 * @param satelliteProperties satelliteProperties to assign to this satellite
+	 * @param stack satelliteProperties to assign to this satellite
 	 */
-	public void setProperties(ItemStack stack) {
+	public void setProperties(@Nonnull ItemStack stack) {
 		this.satelliteProperties = ((ItemSatellite)stack.getItem()).getSatellite(stack);
 		this.battery.setMaxEnergyStored(satelliteProperties.getPowerStorage());
 		this.satellite = stack;
 	}
-	
+
+	@Nonnull
 	public ItemStack getItemStackFromSatellite() {
 		return satellite;
 	}

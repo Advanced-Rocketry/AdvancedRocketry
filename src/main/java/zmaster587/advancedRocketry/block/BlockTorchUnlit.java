@@ -17,6 +17,10 @@ import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.ParametersAreNullableByDefault;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,15 +33,19 @@ public class BlockTorchUnlit extends BlockTorch {
 	}
 
 	@Override
-	public ItemStack getPickBlock(IBlockState state, RayTraceResult target,
-			World world, BlockPos pos, EntityPlayer player) {
+	@Nonnull
+	@ParametersAreNonnullByDefault
+	public ItemStack getPickBlock(IBlockState state, @Nullable RayTraceResult target,
+			World world, BlockPos pos, @Nullable EntityPlayer player) {
 		return ARConfiguration.getCurrentConfig().dropExTorches ? super.getPickBlock(state, target, world, pos, player) : new ItemStack(Blocks.TORCH);
 	}
 
 	@Override
+	@Nonnull
+	@ParametersAreNullableByDefault
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
 			IBlockState state, int fortune) {
-		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+		ArrayList<ItemStack> ret = new ArrayList<>();
 
 		
 		ret.add(new ItemStack(ARConfiguration.getCurrentConfig().dropExTorches ? AdvancedRocketryBlocks.blockUnlitTorch : Blocks.TORCH));
@@ -50,9 +58,9 @@ public class BlockTorchUnlit extends BlockTorch {
 			IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
 			float hitZ) {
 
-		if(player.getHeldItem(EnumHand.MAIN_HAND) != null) {
+		if(!player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()) {
 			Item item = player.getHeldItem(EnumHand.MAIN_HAND).getItem();
-			if(!world.isRemote && item != null && AtmosphereHandler.getOxygenHandler(world.provider.getDimension()).getAtmosphereType(pos).allowsCombustion() && (item == Item.getItemFromBlock(Blocks.TORCH) || 
+			if(!world.isRemote && !item.equals(Items.AIR) && AtmosphereHandler.getOxygenHandler(world.provider.getDimension()).getAtmosphereType(pos).allowsCombustion() && (item == Item.getItemFromBlock(Blocks.TORCH) ||
 					item == Items.FLINT_AND_STEEL || 
 					item == Items.FIRE_CHARGE)) {
 

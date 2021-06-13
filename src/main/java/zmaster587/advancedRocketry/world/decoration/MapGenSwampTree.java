@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.world.decoration;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.state.IBlockState;
@@ -9,7 +8,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenBase;
-import net.minecraftforge.common.BiomeDictionary;
 import zmaster587.advancedRocketry.world.biome.BiomeGenDeepSwamp;
 
 import java.util.HashMap;
@@ -26,8 +24,8 @@ public class MapGenSwampTree extends MapGenBase {
 
 	public MapGenSwampTree(int chancePerChunk) {
 		super();
-		cachedCanopy = new HashMap<BlockPos, IBlockState>();
-		cachedRoots = new HashMap<BlockPos, IBlockState>();
+		cachedCanopy = new HashMap<>();
+		cachedRoots = new HashMap<>();
 		this.chancePerChunk = chancePerChunk;
 		buildCanopy();
 		buildRoots();
@@ -159,12 +157,13 @@ public class MapGenSwampTree extends MapGenBase {
 					int xx = (int) (xzRadius*Math.cos(Yangle));
 					int zz = (int) (xzRadius*Math.sin(Yangle));
 
-					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-					setBlock( new BlockPos(x + 3 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-					setBlock( new BlockPos(x + 1 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
+					final int p_i46030_2_ = y + treeHeight + yy - yOffset + 2;
+					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
+					setBlock( new BlockPos(x + 3 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
+					setBlock( new BlockPos(x + 1 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
 					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +3, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset + 1), Blocks.LOG.getDefaultState(), blocks);
-					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +2, z + zz- zOffset - 1), Blocks.LOG.getDefaultState(), blocks);
+					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset + 1), Blocks.LOG.getDefaultState(), blocks);
+					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset - 1), Blocks.LOG.getDefaultState(), blocks);
 
 				}
 
@@ -194,12 +193,13 @@ public class MapGenSwampTree extends MapGenBase {
 						xx=xxx;
 						zz=zzz;
 
-						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-						setBlock( new BlockPos(x + 3 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-						setBlock( new BlockPos(x + 1 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
+						final int p_i46030_2_ = y + treeHeight + yy - yyy - yOffset + 2;
+						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
+						setBlock( new BlockPos(x + 3 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
+						setBlock( new BlockPos(x + 1 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
 						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +3, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
-						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset + 1), Blocks.LOG.getDefaultState(), blocks);
-						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset - 1), Blocks.LOG.getDefaultState(), blocks);
+						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset + 1), Blocks.LOG.getDefaultState(), blocks);
+						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset - 1), Blocks.LOG.getDefaultState(), blocks);
 					}
 				}
 

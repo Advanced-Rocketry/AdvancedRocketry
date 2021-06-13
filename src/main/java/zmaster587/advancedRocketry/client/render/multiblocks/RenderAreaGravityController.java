@@ -77,7 +77,7 @@ public class RenderAreaGravityController extends TileEntitySpecialRenderer {
 		
 		GL11.glRotated(multiBlockTile.getArmRotation(), 0, 1, 0);
 		for(int i = 0; i < maxSize; i++) {
-			GL11.glRotated(360/maxSize, 0, 1, 0);
+			GL11.glRotated(360d / maxSize, 0, 1, 0);
 			model.renderOnly("Arm");
 		}
 		GL11.glEnable(GL11.GL_LIGHTING);

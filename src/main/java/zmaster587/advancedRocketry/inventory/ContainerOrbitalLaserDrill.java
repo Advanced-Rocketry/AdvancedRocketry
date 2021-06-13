@@ -10,12 +10,14 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill.TileOrbitalLaserDrill;
 import zmaster587.libVulpes.gui.SlotSingleItem;
 
+import javax.annotation.Nonnull;
+
 public class ContainerOrbitalLaserDrill extends Container {
 
-	TileOrbitalLaserDrill laserTile;
-	boolean finished, jammed;
-	int prevEnergy = 0, prevLaserX = 0, prevLaserZ = 0, buildingX, buildingZ;
-	TileOrbitalLaserDrill.MODE currMode;
+	private TileOrbitalLaserDrill laserTile;
+	private boolean finished, jammed;
+	private int prevEnergy = 0, prevLaserX = 0, prevLaserZ = 0, buildingX, buildingZ;
+	private TileOrbitalLaserDrill.MODE currMode;
 
 	ContainerOrbitalLaserDrill(InventoryPlayer inventoryPlayer, TileOrbitalLaserDrill tile) {
 		super();
@@ -45,9 +47,8 @@ public class ContainerOrbitalLaserDrill extends Container {
 		super.detectAndSendChanges();
 		if(laserTile.getBatteries().getUniversalEnergyStored() != prevEnergy) {
 			prevEnergy = laserTile.getBatteries().getUniversalEnergyStored() ;
-			for (int j = 0; j < this.listeners.size(); ++j)
-			{
-				((IContainerListener)this.listeners.get(j)).sendWindowProperty(this, 0, prevEnergy/100);
+			for (IContainerListener listener : this.listeners) {
+				listener.sendWindowProperty(this, 0, prevEnergy / 100);
 			}
 		}
 
@@ -55,41 +56,41 @@ public class ContainerOrbitalLaserDrill extends Container {
 			prevLaserX = laserTile.laserX;
 
 
-			for(int i = 0; i < this.listeners.size(); i++) {
-				((IContainerListener)this.listeners.get(i)).sendWindowProperty(this, 1, prevLaserX & 65535);
+			for (IContainerListener listener : this.listeners) {
+				listener.sendWindowProperty(this, 1, prevLaserX & 65535);
 
 				int j = prevLaserX >>> 16;
-			//if(j != 0)
-			((IContainerListener)this.listeners.get(i)).sendWindowProperty(this, 2, j);
+				//if(j != 0)
+				listener.sendWindowProperty(this, 2, j);
 			}
 		}
 
 		if(laserTile.laserZ != prevLaserZ) {
 			prevLaserZ = laserTile.laserZ;
 
-			for(int i = 0; i < this.listeners.size(); i++) {
-				((IContainerListener)this.listeners.get(i)).sendWindowProperty(this, 3, prevLaserZ & 65535);
+			for (IContainerListener listener : this.listeners) {
+				listener.sendWindowProperty(this, 3, prevLaserZ & 65535);
 
 				int j = prevLaserZ >>> 16;
-			//if(j != 0)
-			((IContainerListener)this.listeners.get(i)).sendWindowProperty(this, 4, j);
+				//if(j != 0)
+				listener.sendWindowProperty(this, 4, j);
 			}
 		}
 		if(currMode.compareTo(laserTile.getMode()) != 0) {
-			for(int i = 0; i < this.listeners.size(); i++) {
-				((IContainerListener)this.listeners.get(i)).sendWindowProperty(this, 5, laserTile.getMode().ordinal());
+			for (IContainerListener listener : this.listeners) {
+				listener.sendWindowProperty(this, 5, laserTile.getMode().ordinal());
 			}
 		}
 		if(jammed != laserTile.isJammed()) {
 			jammed = laserTile.isJammed();
-			for(int i = 0; i < this.listeners.size(); i++) {
-				((IContainerListener)this.listeners.get(i)).sendWindowProperty(this, 6, laserTile.isJammed() ? 1 : 0);
+			for (IContainerListener listener : this.listeners) {
+				listener.sendWindowProperty(this, 6, laserTile.isJammed() ? 1 : 0);
 			}
 		}
 		if(finished != laserTile.isFinished()) {
 			finished = laserTile.isFinished();
-			for(int i = 0; i < this.listeners.size(); i++) {
-				((IContainerListener)this.listeners.get(i)).sendWindowProperty(this, 7, laserTile.isFinished() ? 1 : 0);
+			for (IContainerListener listener : this.listeners) {
+				listener.sendWindowProperty(this, 7, laserTile.isFinished() ? 1 : 0);
 			}
 		}
 	}
@@ -116,19 +117,20 @@ public class ContainerOrbitalLaserDrill extends Container {
 			buildingZ = 0;
 		}
 		else if(id == 5) {
-			laserTile.setMode(currMode.values()[value]);
+			laserTile.setMode(TileOrbitalLaserDrill.MODE.values()[value]);
 		}
 		else if(id == 6)
-			laserTile.setJammed(value == 1 ? true : false);
+			laserTile.setJammed(value == 1);
 		else if(id == 7)
-			laserTile.setFinished(value == 1 ? true : false);
+			laserTile.setFinished(value == 1);
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack transferStackInSlot(EntityPlayer player, int slot)
 	{
-		ItemStack stack = null;
-		Slot slotObject = (Slot) inventorySlots.get(slot);
+		ItemStack stack = ItemStack.EMPTY;
+		Slot slotObject = inventorySlots.get(slot);
 		//null checks and checks if the item can be stacked (maxStackSize > 1)
 		if (slotObject != null && slotObject.getHasStack()) {
 
@@ -138,23 +140,23 @@ public class ContainerOrbitalLaserDrill extends Container {
 			//merges the item into player inventory since its in the tileEntity
 			if (slot == 0) {
 				if (!this.mergeItemStack(stackInSlot, 1, 35, true)) {
-					return null;
+					return ItemStack.EMPTY;
 				}
 			}
 			//placing it into the tileEntity is possible since its in the player inventory
 			//check to make sure it's valid for the slot
 			else if (!laserTile.isItemValidForSlot(0, stack) || !this.mergeItemStack(stackInSlot, 0, 1, false)) {
-				return null;
+				return ItemStack.EMPTY;
 			}
 
 			if (stackInSlot.getCount() == 0) {
-				slotObject.putStack(null);
+				slotObject.putStack(ItemStack.EMPTY);
 			} else {
 				slotObject.onSlotChanged();
 			}
 
 			if (stackInSlot.getCount() == stack.getCount()) {
-				return null;
+				return ItemStack.EMPTY;
 			}
 			slotObject.onTake(player, stackInSlot);
 		}
@@ -164,7 +166,7 @@ public class ContainerOrbitalLaserDrill extends Container {
 
 
 	@Override
-	public boolean canInteractWith(EntityPlayer entityplayer) {
+	public boolean canInteractWith(@Nonnull EntityPlayer entityplayer) {
 		return laserTile.isUsableByPlayer(entityplayer);
 	}
 }

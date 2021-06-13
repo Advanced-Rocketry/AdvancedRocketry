@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.world.biome;
 
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 

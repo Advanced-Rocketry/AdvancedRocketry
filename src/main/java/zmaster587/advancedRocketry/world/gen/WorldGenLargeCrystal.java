@@ -9,17 +9,18 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.block.BlockCrystal;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class WorldGenLargeCrystal extends WorldGenerator {
 
-	IBlockState block;
+	private IBlockState block;
 	public WorldGenLargeCrystal() {
 		this.block = AdvancedRocketryBlocks.blockCrystal.getDefaultState();
 	}
 
 	@Override
-	public boolean generate(World world, Random rand, BlockPos pos) {
+	public boolean generate(World world, Random rand, @Nonnull BlockPos pos) {
 
 		IBlockState state = world.getBiome(pos).fillerBlock;
 		Block fillerBlock = state.getBlock();
@@ -40,7 +41,8 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 		int x = pos.getX();
 		int z = pos.getZ();
 
-		currentEdgeRadius = (int)((SHAPE*(edgeRadius * height )) + ((1f-SHAPE)*edgeRadius));
+		final int startingCurrentEdgeRadius = (int)((SHAPE*(edgeRadius * height )) + ((1f-SHAPE)*edgeRadius));
+		currentEdgeRadius = startingCurrentEdgeRadius;
 
 		//Make the base of the crystal
 		//Generate the top trapezoid
@@ -108,7 +110,7 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 		}
 
 		
-		currentEdgeRadius = (int)((SHAPE*(edgeRadius * height )) + ((1f-SHAPE)*edgeRadius));
+		currentEdgeRadius = startingCurrentEdgeRadius;
 		//Make some rand noise in the base
 		//Generate the top trapezoid
 		for(int zOff = -numDiag - currentEdgeRadius/2; zOff <= -currentEdgeRadius/2; zOff++) {

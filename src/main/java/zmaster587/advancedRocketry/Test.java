@@ -12,7 +12,7 @@ public class Test {
 	public static void main(String[] args) {
 
 		for(int x = 2048; x < 2048+1024; x++) {
-			int y = (int) Math.round((x)/(2f*ARConfiguration.getCurrentConfig().stationSize));
+			int y = Math.round((x)/(2f*ARConfiguration.getCurrentConfig().stationSize));
 			
 			if(y != 1) {
 				System.out.println("x: " + y);
@@ -92,7 +92,7 @@ public class Test {
 		testeroid.probability = 1f;
 		testeroid.richness = 0.2f;
 		testeroid.richnessVariability = .5f;
-		testeroid.itemStacks = new LinkedList<ItemStack>();
+		testeroid.itemStacks = new LinkedList<>();
 		
 		testeroid.itemStacks.add(new ItemStack(Blocks.IRON_ORE));
 		testeroid.itemStacks.add(new ItemStack(Blocks.GOLD_ORE));
@@ -100,12 +100,12 @@ public class Test {
 		testeroid.itemStacks.add(new ItemStack(Blocks.DIAMOND_ORE));
 		testeroid.itemStacks.add(new ItemStack(Blocks.REDSTONE_ORE));
 		
-		testeroid.stackProbabilites = new LinkedList<Float>();
-		testeroid.stackProbabilites.add(15f);
-		testeroid.stackProbabilites.add(10f);
-		testeroid.stackProbabilites.add(10f);
-		testeroid.stackProbabilites.add(1f);
-		testeroid.stackProbabilites.add(6f);
+		testeroid.stackProbabilities = new LinkedList<>();
+		testeroid.stackProbabilities.add(15f);
+		testeroid.stackProbabilities.add(10f);
+		testeroid.stackProbabilities.add(10f);
+		testeroid.stackProbabilities.add(1f);
+		testeroid.stackProbabilities.add(6f);
 		
 		ARConfiguration.getCurrentConfig().asteroidTypes.put("Test", testeroid);
 	}

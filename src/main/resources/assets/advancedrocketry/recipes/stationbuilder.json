@@ -2,7 +2,7 @@
     "type": "minecraft:crafting_shaped",
     "pattern":
     [
-	"gdg",
+	"udg",
 	"dsd",
 	"ada"
     ],
@@ -13,21 +13,21 @@
             "item": "advancedrocketry:ic",
             "data": 2
         },
-	"g":
+        "u":
         {
             "item": "advancedrocketry:misc",
             "data": 0
         },
-	"s":
+        "s":
         {
             "item": "advancedrocketry:rocketbuilder"
         },
-	"d":
+        "d":
         {
 	    "type": "forge:ore_dict",
             "ore": "dustDilithium"
         },
-	"g":
+        "g":
         {
 	    "type": "forge:ore_dict",
             "ore": "gearTitanium"

@@ -2,7 +2,6 @@ package zmaster587.advancedRocketry.block.plant;
 
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPlanks.EnumType;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -19,6 +18,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Random;
 
@@ -31,8 +32,9 @@ public class BlockLightwoodLeaves extends BlockLeaves {
 	}
 	
 	@Override
+    @Nonnull
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[]{DECAYABLE, CHECK_DECAY});
+		return new BlockStateContainer(this, DECAYABLE, CHECK_DECAY);
 	}
 	
 	@Override
@@ -41,6 +43,7 @@ public class BlockLightwoodLeaves extends BlockLeaves {
 	}
 	
 	@Override
+    @Nonnull
 	public IBlockState getStateFromMeta(int meta) {
 		return this.getDefaultState().withProperty(DECAYABLE, (meta & 1) == 1).withProperty(CHECK_DECAY, (meta & 2) == 2);
 	}
@@ -83,7 +86,7 @@ public class BlockLightwoodLeaves extends BlockLeaves {
     	list.add(new ItemStack(item, 1,0));
     }
     
-	
+	@Nonnull
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return Item.getItemFromBlock(AdvancedRocketryBlocks.blockLightwoodSapling);
@@ -91,12 +94,13 @@ public class BlockLightwoodLeaves extends BlockLeaves {
 
 
 	@Override
-	public NonNullList<ItemStack> onSheared(ItemStack item, IBlockAccess world,
-			BlockPos pos, int fortune) {
+    @Nonnull
+	public NonNullList<ItemStack> onSheared(@Nonnull ItemStack item, IBlockAccess world, BlockPos pos, int fortune) {
 		return NonNullList.withSize(1, new ItemStack(this, 1, 0));
 	}
 
 	@Override
+    @Nonnull
 	public EnumType getWoodType(int meta) {
 		return EnumType.OAK;
 	}
@@ -110,6 +114,7 @@ public class BlockLightwoodLeaves extends BlockLeaves {
 
     @Override
     @SideOnly(Side.CLIENT)
+    @Nonnull
     public BlockRenderLayer getBlockLayer()
     {
         return Blocks.LEAVES.getBlockLayer();
@@ -117,6 +122,7 @@ public class BlockLightwoodLeaves extends BlockLeaves {
 
     @Override
     @SideOnly(Side.CLIENT)
+    @ParametersAreNonnullByDefault
     public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
     {
         return Blocks.LEAVES.shouldSideBeRendered(blockState, blockAccess, pos, side);

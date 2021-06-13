@@ -19,6 +19,8 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.entity.EntityHoverCraft;
 import zmaster587.libVulpes.LibVulpes;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class ItemHovercraft extends Item {
@@ -36,6 +38,8 @@ public class ItemHovercraft extends Item {
     /**
      * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
      */
+    @ParametersAreNonnullByDefault
+    @Nonnull
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
@@ -58,7 +62,7 @@ public class ItemHovercraft extends Item {
 
         if (raytraceresult == null)
         {
-            return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
+            return new ActionResult<>(EnumActionResult.PASS, itemstack);
         }
         else
         {
@@ -66,16 +70,11 @@ public class ItemHovercraft extends Item {
             boolean flag = false;
             List<Entity> list = worldIn.getEntitiesWithinAABBExcludingEntity(playerIn, playerIn.getEntityBoundingBox().expand(vec3d2.x * 5.0D, vec3d2.y * 5.0D, vec3d2.z * 5.0D).grow(1.0D));
 
-            for (int i = 0; i < list.size(); ++i)
-            {
-                Entity entity = list.get(i);
+            for (Entity entity : list) {
+                if (entity.canBeCollidedWith()) {
+                    AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(entity.getCollisionBorderSize());
 
-                if (entity.canBeCollidedWith())
-                {
-                    AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow((double)entity.getCollisionBorderSize());
-
-                    if (axisalignedbb.contains(vec3d))
-                    {
+                    if (axisalignedbb.contains(vec3d)) {
                         flag = true;
                     }
                 }
@@ -83,11 +82,11 @@ public class ItemHovercraft extends Item {
 
             if (flag)
             {
-                return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
+                return new ActionResult<>(EnumActionResult.PASS, itemstack);
             }
             else if (raytraceresult.typeOfHit != RayTraceResult.Type.BLOCK)
             {
-                return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
+                return new ActionResult<>(EnumActionResult.PASS, itemstack);
             }
             else
             {
@@ -98,7 +97,7 @@ public class ItemHovercraft extends Item {
 
                 if (!worldIn.getCollisionBoxes(entityboat, entityboat.getEntityBoundingBox().grow(-0.1D)).isEmpty())
                 {
-                    return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
+                    return new ActionResult<>(EnumActionResult.FAIL, itemstack);
                 }
                 else
                 {
@@ -113,14 +112,14 @@ public class ItemHovercraft extends Item {
                     }
 
                     playerIn.addStat(StatList.getObjectUseStats(this));
-                    return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
+                    return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
                 }
             }
         }
     }
     
     @Override
-    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(@Nonnull ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
     	tooltip.add(LibVulpes.proxy.getLocalizedString("item.hovercraft.tooltip"));
     }
 }

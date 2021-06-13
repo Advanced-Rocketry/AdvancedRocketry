@@ -115,9 +115,9 @@ public class WorldProviderSpace extends WorldProviderPlanet {
 	
 	@Override
 	public DimensionProperties getDimensionProperties(BlockPos pos) {
-		ISpaceObject object = getSpaceObject(pos);
-		if(object != null)
-			return (DimensionProperties)object.getProperties();
+		ISpaceObject spaceObject = getSpaceObject(pos);
+		if(spaceObject != null)
+			return (DimensionProperties)spaceObject.getProperties();
 		return DimensionManager.defaultSpaceDimensionProperties;
 	}
 }

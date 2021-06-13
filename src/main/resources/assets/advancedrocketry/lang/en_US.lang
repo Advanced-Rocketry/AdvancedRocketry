@@ -87,7 +87,6 @@ tile.sapphire.name=Blue Crystal Block
 tile.citrine.name=Yellow Crystal Block
 tile.wulfentite.name=Orange Crystal Block
 tile.amethyst.name=Violet Crystal Block
-tile.orientationControl.name=Orientation Controller
 tile.gravityControl.name=Station Gravity Controller
 tile.drill.name=Drill
 tile.dataPipe.name=Data Cable(Deprecated)
@@ -281,7 +280,6 @@ enchantment.advancedrocketry.spacebreathing.desc=Allows the piece of armor to fo
 machine.tooltip.smallplatepress=Requires obsidian two blocks below to function
 
 msg.crystalliser.gravityTooHigh=Gravity is not low enough!
-msg.crystalliser.gravityTooHigh=Gravity is not low enough!
 msg.observetory.scan.tooltip=Scans for new asteroids, consumes 100 distance data
 msg.observetory.scan.button=Scan!
 msg.observetory.text.asteroids=Asteroids
@@ -466,7 +464,6 @@ msg.entity.rocket.rcs=RCS Mode
 msg.entity.rocket.none=None Selected
 msg.wirelessTransciever.extract=extract
 
-msg.entityDeployedRocket.notGasGiant=No Gas Here
 msg.powerunit.rfpertick=RF/t
 msg.linker.error.firstMachine=This must be the first machine to link!
 msg.linker.program=Coordinates programmed into Linker

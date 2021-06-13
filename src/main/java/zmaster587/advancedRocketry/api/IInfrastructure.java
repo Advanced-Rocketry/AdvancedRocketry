@@ -11,41 +11,40 @@ public interface IInfrastructure {
 	/**
 	 * Called when the rocket unlinks the object
 	 */
-	public void unlinkRocket();
+	void unlinkRocket();
 	
 	/**
 	 * @return true if the object is to be automatically unlinked by the rocket when launched
 	 */
-	public boolean disconnectOnLiftOff();
+	boolean disconnectOnLiftOff();
 	
 	/**
 	 * Called when the rocket attempts to link to the block
 	 * @param rocket Rocket Requesting the link
 	 * @return true if the infrastructure should be allowed to link
 	 */
-	public boolean linkRocket(EntityRocketBase rocket);
+	boolean linkRocket(EntityRocketBase rocket);
 	
 	/**
 	 * Called when a mission attempts to link to the block
-	 * @param misson
+	 * @param mission
 	 * @return
 	 */
-	public boolean linkMission(IMission misson);
+	boolean linkMission(IMission mission);
 	
 	/**
 	 * Called when mission is to be unlinked from the tile
-	 * @param misson
 	 * @return
 	 */
-	public void unlinkMission();
+	void unlinkMission();
 	
 	/**
 	 * @return maximum link distance in block for the tile
 	 */
-	public int getMaxLinkDistance();
+	int getMaxLinkDistance();
 	
 	/**
 	 * @return true if a connection can be rendered to the infrastructure
 	 */
-	public boolean canRenderConnection();
+	boolean canRenderConnection();
 }

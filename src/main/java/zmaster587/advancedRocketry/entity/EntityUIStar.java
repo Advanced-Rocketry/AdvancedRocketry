@@ -13,11 +13,11 @@ import zmaster587.advancedRocketry.tile.station.TileHolographicPlanetSelector;
 
 public class EntityUIStar extends EntityUIPlanet {
 	
-	StellarBody star;
-	int subStar = -1;
+	private StellarBody star;
+	private int subStar;
 	public final static int starIDoffset = 10000;
 
-	protected static final DataParameter<Integer> subStarData =  EntityDataManager.<Integer>createKey(EntityUIStar.class, DataSerializers.VARINT);
+	protected static final DataParameter<Integer> subStarData =  EntityDataManager.createKey(EntityUIStar.class, DataSerializers.VARINT);
 	
 	public EntityUIStar(World worldIn, StellarBody properties, TileHolographicPlanetSelector tile, double x, double y, double z) {
 		this(worldIn);

@@ -63,7 +63,7 @@ public class MissionGasCollection extends MissionResourceCollection {
 		rocket.setFuelAmountMonoproellant(0);
 		rocket.setFuelAmountBipropellant(0);
 		rocket.setFuelAmountOxidizer(0);
-		rocket.readMissionPersistantNBT(missionPersistantNBT);
+		rocket.readMissionPersistentNBT(missionPersistantNBT);
 
 		EnumFacing dir = rocket.forwardDirection;
 		rocket.forceSpawn = true;

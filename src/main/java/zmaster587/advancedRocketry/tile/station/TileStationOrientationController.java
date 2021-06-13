@@ -41,7 +41,7 @@ public class TileStationOrientationController extends TileEntity implements ITic
 
 	@Override
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		modules.add(moduleAngularVelocity);
 		//modules.add(numThrusters);
 		//modules.add(maxAngularAcceleration);
@@ -50,8 +50,8 @@ public class TileStationOrientationController extends TileEntity implements ITic
 		modules.add(new ModuleText(10, 54, "X:", 0x202020));
 		modules.add(new ModuleText(10, 69, "Y:", 0x202020)); //AYYYY
 		
-		modules.add(new ModuleSlider(24, 50, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
-		modules.add(new ModuleSlider(24, 65, 1, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
+		modules.add(new ModuleSlider(24, 50, 0, TextureResources.doubleWarningSideBarIndicator, this));
+		modules.add(new ModuleSlider(24, 65, 1, TextureResources.doubleWarningSideBarIndicator, this));
 		//modules.add(new ModuleSlider(24, 35, 2, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
 
 		updateText();
@@ -60,14 +60,14 @@ public class TileStationOrientationController extends TileEntity implements ITic
 
 	private void updateText() {
 		if(world.isRemote) {
-			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(object != null) {
-				moduleAngularVelocity.setText(String.format("%s%.1f %.1f %.1f", LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.alt"), 72000D*object.getDeltaRotation(EnumFacing.EAST), 72000D*object.getDeltaRotation(EnumFacing.UP), 7200D*object.getDeltaRotation(EnumFacing.NORTH)));
-				//maxAngularAcceleration.setText(String.format("Maximum Angular Acceleration: %.1f", 7200D*object.getMaxRotationalAcceleration()));
+			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+			if(spaceObject != null) {
+				moduleAngularVelocity.setText(String.format("%s%.1f %.1f %.1f", LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.alt"), 72000D*spaceObject.getDeltaRotation(EnumFacing.EAST), 72000D*spaceObject.getDeltaRotation(EnumFacing.UP), 7200D*spaceObject.getDeltaRotation(EnumFacing.NORTH)));
+				//maxAngularAcceleration.setText(String.format("Maximum Angular Acceleration: %.1f", 7200D*spaceObject.getMaxRotationalAcceleration()));
 			}
 
 			//numThrusters.setText("Number Of Thrusters: 0");
-			int[] targetRotationsPerHour = ((SpaceStationObject) object).targetRotationsPerHour;
+			int[] targetRotationsPerHour = ((SpaceStationObject) spaceObject).targetRotationsPerHour;
 			targetRotations.setText(String.format("%s%d %d %d", LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.tgtalt"), targetRotationsPerHour[0], targetRotationsPerHour[1], targetRotationsPerHour[2]));
 		}
 	}
@@ -77,13 +77,13 @@ public class TileStationOrientationController extends TileEntity implements ITic
 
 		if(this.world.provider instanceof WorldProviderSpace) {
 			if(!world.isRemote) {
-				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 				boolean update = false;
 
-				if(object != null) {
+				if(spaceObject != null) {
 
 					EnumFacing dirs[] = { EnumFacing.EAST, EnumFacing.UP, EnumFacing.NORTH };
-					int[] targetRotationsPerHour = ((SpaceStationObject) object).targetRotationsPerHour;
+					int[] targetRotationsPerHour = ((SpaceStationObject) spaceObject).targetRotationsPerHour;
 					for (int i = 0; i < 3; i++) {
 						setProgress(i, targetRotationsPerHour[i] + (getTotalProgress(i)/2));
 					}
@@ -92,8 +92,8 @@ public class TileStationOrientationController extends TileEntity implements ITic
 					for(int i = 0; i < 3; i++) {
 
 						double targetAngularVelocity = targetRotationsPerHour[i]/72000D;
-						double angVel = object.getDeltaRotation(dirs[i]);
-						double acc = object.getMaxRotationalAcceleration();
+						double angVel = spaceObject.getDeltaRotation(dirs[i]);
+						double acc = spaceObject.getMaxRotationalAcceleration();
 
 						double difference = targetAngularVelocity - angVel;
 
@@ -106,14 +106,14 @@ public class TileStationOrientationController extends TileEntity implements ITic
 								finalVel = angVel + Math.min(difference, acc);
 							}
 
-							object.setDeltaRotation(finalVel, dirs[i]);
+							spaceObject.setDeltaRotation(finalVel, dirs[i]);
 							update = true;
 						}
 					}
 					
 					if(!world.isRemote && update) {
-						//PacketHandler.sendToNearby(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
-						PacketHandler.sendToAll(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE));
+						//PacketHandler.sendToNearby(new PacketStationUpdate(spaceObject, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
+						PacketHandler.sendToAll(new PacketStationUpdate(spaceObject, PacketStationUpdate.Type.ROTANGLE_UPDATE));
 					}
 				}
 				else

@@ -35,9 +35,9 @@ public class BuildRocketTest extends BaseTest {
 	 * Check for same position
 	 */
 
-	BlockPos rocketBuilderPos;
-	int originalWorldId;
-	BlockPos originalPos;
+	private BlockPos rocketBuilderPos;
+	private int originalWorldId;
+	private BlockPos originalPos;
 	
 	BuildRocketTest()
 	{
@@ -212,10 +212,8 @@ public class BuildRocketTest extends BaseTest {
 	}
 	
 	public EntityRocket findRocketOnPad(World world)
-	{	
-		EntityRocket rocket = finishBuildingRocket(world);
-		
-		return rocket;
+	{
+		return finishBuildingRocket(world);
 	}
 	
 	public EntityRocket finishBuildingRocket(World world)

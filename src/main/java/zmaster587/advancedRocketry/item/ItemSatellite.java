@@ -12,12 +12,13 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemSatellite extends ItemIdWithName {
 
 	@Deprecated
-	public SatelliteProperties getSatellite(ItemStack stack) {
+	public SatelliteProperties getSatellite(@Nonnull ItemStack stack) {
 
 		//return getSatelliteProperties(stack);
 		if(stack.hasTagCompound()) {
@@ -32,7 +33,7 @@ public class ItemSatellite extends ItemIdWithName {
 		return null;
 	}
 
-	public EmbeddedInventory readInvFromNBT(ItemStack stackIn) {
+	public EmbeddedInventory readInvFromNBT(@Nonnull ItemStack stackIn) {
 		EmbeddedInventory inv = new EmbeddedInventory(7);
 		if(!stackIn.hasTagCompound() || !stackIn.getTagCompound().hasKey("inv"))
 			return inv;
@@ -41,7 +42,7 @@ public class ItemSatellite extends ItemIdWithName {
 		return inv;
 	}
 
-	public void writeInvToNBT(ItemStack stackIn, EmbeddedInventory inv) {
+	public void writeInvToNBT(@Nonnull ItemStack stackIn, EmbeddedInventory inv) {
 		NBTTagCompound nbt = new NBTTagCompound();
 		if(!stackIn.hasTagCompound())
 			stackIn.setTagCompound(nbt);
@@ -53,7 +54,7 @@ public class ItemSatellite extends ItemIdWithName {
 		nbt.setTag("inv", tag);
 	}
 
-	public void setSatellite(ItemStack stack, SatelliteProperties properties) {
+	public void setSatellite(@Nonnull ItemStack stack, SatelliteProperties properties) {
 
 		SatelliteBase testSatellite = SatelliteRegistry.getSatellite(properties.getSatelliteType());
 		if(testSatellite != null) {
@@ -77,8 +78,7 @@ public class ItemSatellite extends ItemIdWithName {
 
 
 	@Override
-	public void addInformation(ItemStack stack, World player, List list,
-            ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
 
 		SatelliteProperties properties = getSatellite(stack);
 

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class GroupObject
 {
     public String name;
-    public ArrayList<Face> faces = new ArrayList<Face>();
+    public ArrayList<Face> faces = new ArrayList<>();
     public int glDrawingMode;
     public VertexFormat drawMode;
 

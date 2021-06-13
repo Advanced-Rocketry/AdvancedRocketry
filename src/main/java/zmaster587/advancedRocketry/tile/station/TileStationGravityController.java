@@ -26,9 +26,9 @@ import java.util.List;
 
 public class TileStationGravityController extends TileEntity implements IModularInventory, ITickable, INetworkMachine, ISliderBar {
 
-	int progress;
-	
-	public static int minGravity = 10;
+	private int progress;
+
+	private static int minGravity = 10;
 
 	private ModuleText moduleGrav, maxGravBuildSpeed, targetGrav;
 
@@ -41,15 +41,19 @@ public class TileStationGravityController extends TileEntity implements IModular
 		minGravity = ARConfiguration.getCurrentConfig().allowZeroGSpacestations ? 0 : 10;
 	}
 
+	public static int getMinGravity() {
+		return minGravity;
+	}
+
 	@Override
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		modules.add(moduleGrav);
 		//modules.add(numThrusters);
 		modules.add(maxGravBuildSpeed);
 
 		modules.add(targetGrav);
-		modules.add(new ModuleSlider(6, 60, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
+		modules.add(new ModuleSlider(6, 60, 0, TextureResources.doubleWarningSideBarIndicator, this));
 
 		updateText();
 		return modules;
@@ -59,8 +63,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbt = writeToNBT(new NBTTagCompound());
 
-		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, nbt);
-		return packet;
+		return new SPacketUpdateTileEntity(pos, 0, nbt);
 	}
 
 	@Override
@@ -71,15 +74,15 @@ public class TileStationGravityController extends TileEntity implements IModular
 	
 	private void updateText() {
 		if(world.isRemote) {
-			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(object != null) {
-				moduleGrav.setText(String.format("%s%.2f", LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.alt"), object.getProperties().getGravitationalMultiplier()));
-				maxGravBuildSpeed.setText(String.format("%s%.1f",LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.maxaltrate"), 7200D*object.getMaxRotationalAcceleration()));
+			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+			if(spaceObject != null) {
+				moduleGrav.setText(String.format("%s%.2f", LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.alt"), spaceObject.getProperties().getGravitationalMultiplier()));
+				maxGravBuildSpeed.setText(String.format("%s%.1f",LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.maxaltrate"), 7200D*spaceObject.getMaxRotationalAcceleration()));
 			}
 
 			//numThrusters.setText("Number Of Thrusters: 0");
 
-			targetGrav.setText(String.format("%s%d", LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.tgtalt"), ((SpaceStationObject) object).targetGravity));
+			targetGrav.setText(String.format("%s%d", LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.tgtalt"), ((SpaceStationObject) spaceObject).targetGravity));
 		}
 	}
 
@@ -89,14 +92,14 @@ public class TileStationGravityController extends TileEntity implements IModular
 		if(this.world.provider instanceof WorldProviderSpace) {
 
 			if(!world.isRemote) {
-				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
-				if(object != null) {
-					progress = ((SpaceStationObject) object).targetGravity - minGravity;
+				if(spaceObject != null) {
+					progress = ((SpaceStationObject) spaceObject).targetGravity - minGravity;
 
-					int targetMultiplier = (ARConfiguration.getCurrentConfig().allowZeroGSpacestations) ? ((SpaceStationObject) object).targetGravity : Math.max(11, ((SpaceStationObject) object).targetGravity);
+					int targetMultiplier = (ARConfiguration.getCurrentConfig().allowZeroGSpacestations) ? ((SpaceStationObject) spaceObject).targetGravity : Math.max(11, ((SpaceStationObject) spaceObject).targetGravity);
 					double targetGravity = targetMultiplier/100D;
-					double angVel = object.getProperties().getGravitationalMultiplier();
+					double angVel = spaceObject.getProperties().getGravitationalMultiplier();
 					double acc = 0.001;
 
 					double difference = targetGravity - angVel;
@@ -110,10 +113,10 @@ public class TileStationGravityController extends TileEntity implements IModular
 							finalVel = angVel + Math.min(difference, acc);
 						}
 
-						object.getProperties().setGravitationalMultiplier((float)finalVel);
+						spaceObject.getProperties().setGravitationalMultiplier((float)finalVel);
 						if(!world.isRemote) {
-							//PacketHandler.sendToNearby(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
-							PacketHandler.sendToAll(new PacketStationUpdate(object, PacketStationUpdate.Type.DIM_PROPERTY_UPDATE));
+							//PacketHandler.sendToNearby(new PacketStationUpdate(spaceObject, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
+							PacketHandler.sendToAll(new PacketStationUpdate(spaceObject, PacketStationUpdate.Type.DIM_PROPERTY_UPDATE));
 						}
 						else
 							updateText();

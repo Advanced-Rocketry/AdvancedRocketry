@@ -10,8 +10,6 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 
 public class ClassTransformer implements IClassTransformer {
 
@@ -66,7 +64,7 @@ public class ClassTransformer implements IClassTransformer {
 	private static final String FIELD_RIDINGENTITY = "net.minecraft.entity.Entity.ridingEntity";
 	private static final String FIELD_PROVIDER = CLASS_KEY_WORLD + "provider";
 
-	private static final HashMap<String, SimpleEntry<String, String>> entryMap = new HashMap<String, SimpleEntry<String, String>>();
+	private static final HashMap<String, SimpleEntry<String, String>> entryMap = new HashMap<>();
 
 
 
@@ -91,29 +89,29 @@ public class ClassTransformer implements IClassTransformer {
 		obf = !(boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment");
 		//TODO: obf names
 		//entryMap.put(CLASS_KEY_ENTITYRENDERER, new SimpleEntry<String, String>("net/minecraft/client/renderer/EntityRenderer", "blt"));
-		entryMap.put(CLASS_KEY_ENTITYLIVEINGBASE, new SimpleEntry<String, String>("net/minecraft/entity/EntityLivingBase", "vp"));
+		entryMap.put(CLASS_KEY_ENTITYLIVEINGBASE, new SimpleEntry<>("net/minecraft/entity/EntityLivingBase", "vp"));
 		//entryMap.put(CLASS_KEY_ENTITYLIVINGRENDERER, new SimpleEntry<String, String>("net/minecraft/client/renderer/entity/RendererLivingEntity", ""));
-		entryMap.put(CLASS_KEY_ENTITY, new SimpleEntry<String, String>("net/minecraft/entity/Entity","vg"));
-		entryMap.put(CLASS_KEY_ENTITY_FALLING_BLOCK, new SimpleEntry<String, String>("net/minecraft/entity/item/EntityFallingBlock","ack"));
-		entryMap.put(CLASS_KEY_ENTITY_MINECART, new SimpleEntry<String, String>("net/minecraft/entity/item/EntityMinecart","afe"));
-		entryMap.put(CLASS_KEY_ENTITY_TNT, new SimpleEntry<String, String>("net/minecraft/entity/item/EntityTNTPrimed","acm"));
+		entryMap.put(CLASS_KEY_ENTITY, new SimpleEntry<>("net/minecraft/entity/Entity", "vg"));
+		entryMap.put(CLASS_KEY_ENTITY_FALLING_BLOCK, new SimpleEntry<>("net/minecraft/entity/item/EntityFallingBlock", "ack"));
+		entryMap.put(CLASS_KEY_ENTITY_MINECART, new SimpleEntry<>("net/minecraft/entity/item/EntityMinecart", "afe"));
+		entryMap.put(CLASS_KEY_ENTITY_TNT, new SimpleEntry<>("net/minecraft/entity/item/EntityTNTPrimed", "acm"));
 		//entryMap.put(CLASS_KEY_ENTITY_PLAYER_SP, new SimpleEntry<String, String>("net/minecraft/client/entity/EntityPlayerSP",""));
-		entryMap.put(CLASS_KEY_ENTITY_PLAYER_MP, new SimpleEntry<String, String>("net/minecraft/entity/player/EntityPlayerMP","oq"));
-		entryMap.put(CLASS_KEY_ENTITY_PLAYER, new SimpleEntry<String, String>("net/minecraft/entity/player/EntityPlayer","aed"));
-		entryMap.put(CLASS_KEY_ENTITY_ITEM, new SimpleEntry<String, String>("net/minecraft/entity/item/EntityItem","acl"));
+		entryMap.put(CLASS_KEY_ENTITY_PLAYER_MP, new SimpleEntry<>("net/minecraft/entity/player/EntityPlayerMP", "oq"));
+		entryMap.put(CLASS_KEY_ENTITY_PLAYER, new SimpleEntry<>("net/minecraft/entity/player/EntityPlayer", "aed"));
+		entryMap.put(CLASS_KEY_ENTITY_ITEM, new SimpleEntry<>("net/minecraft/entity/item/EntityItem", "acl"));
 		//entryMap.put(CLASS_KEY_NETHANDLERPLAYSERVER, new SimpleEntry<String, String>("net/minecraft/network/NetHandlerPlayServer",""));
 		//entryMap.put(CLASS_KEY_C03PACKETPLAYER, new SimpleEntry<String, String>("net/minecraft/network/play/client/C03PacketPlayer",""));
-		entryMap.put(CLASS_KEY_WORLD, new SimpleEntry<String, String>("net/minecraft/world/World","amu"));
-		entryMap.put(CLASS_KEY_BLOCK, new SimpleEntry<String, String>("net/minecraft/block/Block","aow"));
-		entryMap.put(CLASS_KEY_BLOCKPOS, new SimpleEntry<String, String>("net/minecraft/util/math/BlockPos","et"));
-		entryMap.put(CLASS_KEY_IBLOCKSTATE, new SimpleEntry<String, String>("net/minecraft/block/state/IBlockState","awt"));
-		entryMap.put(CLASS_KEY_RENDER_GLOBAL, new SimpleEntry<String, String>("net/minecraft/client/renderer/RenderGlobal","buy"));
-		entryMap.put(CLASS_KEY_ICAMERA, new SimpleEntry<String, String>("net/minecraft/client/renderer/culling/ICamera","bxy"));
-		entryMap.put(CLASS_KEY_BLOCK_BED, new SimpleEntry<String, String>("net/minecraft/block/BlockBed","aou"));
-		entryMap.put(CLASS_KEY_WORLDPROVIDER, new SimpleEntry<String, String>("net/minecraft/world/WorldProvider","aym"));
-		entryMap.put(CLASS_KEY_ENUMHAND, new SimpleEntry<String, String>("net/minecraft/util/EnumHand","ub"));
-		entryMap.put(CLASS_KEY_ITEMSTACK, new SimpleEntry<String, String>("net/minecraft/item/ItemStack","aip"));
-		entryMap.put(CLASS_KEY_ENUMFACING, new SimpleEntry<String, String>("net/minecraft/util/EnumFacing","fa"));
+		entryMap.put(CLASS_KEY_WORLD, new SimpleEntry<>("net/minecraft/world/World", "amu"));
+		entryMap.put(CLASS_KEY_BLOCK, new SimpleEntry<>("net/minecraft/block/Block", "aow"));
+		entryMap.put(CLASS_KEY_BLOCKPOS, new SimpleEntry<>("net/minecraft/util/math/BlockPos", "et"));
+		entryMap.put(CLASS_KEY_IBLOCKSTATE, new SimpleEntry<>("net/minecraft/block/state/IBlockState", "awt"));
+		entryMap.put(CLASS_KEY_RENDER_GLOBAL, new SimpleEntry<>("net/minecraft/client/renderer/RenderGlobal", "buy"));
+		entryMap.put(CLASS_KEY_ICAMERA, new SimpleEntry<>("net/minecraft/client/renderer/culling/ICamera", "bxy"));
+		entryMap.put(CLASS_KEY_BLOCK_BED, new SimpleEntry<>("net/minecraft/block/BlockBed", "aou"));
+		entryMap.put(CLASS_KEY_WORLDPROVIDER, new SimpleEntry<>("net/minecraft/world/WorldProvider", "aym"));
+		entryMap.put(CLASS_KEY_ENUMHAND, new SimpleEntry<>("net/minecraft/util/EnumHand", "ub"));
+		entryMap.put(CLASS_KEY_ITEMSTACK, new SimpleEntry<>("net/minecraft/item/ItemStack", "aip"));
+		entryMap.put(CLASS_KEY_ENUMFACING, new SimpleEntry<>("net/minecraft/util/EnumFacing", "fa"));
 
 
 		//entryMap.put(METHOD_KEY_PROCESSPLAYER, new SimpleEntry<String, String>("processPlayer",""));
@@ -124,13 +122,13 @@ public class ClassTransformer implements IClassTransformer {
 		//entryMap.put(METHOD_KEY_TRAVEL, new SimpleEntry<String, String>("travel","g"));
 		//entryMap.put(METHOD_KEY_MOVEFLYING, new SimpleEntry<String, String>("moveFlying",""));
 		//entryMap.put(METHOD_KEY_ONLIVINGUPDATE, new SimpleEntry<String, String>("onLivingUpdate","e"));
-		entryMap.put(METHOD_KEY_ONUPDATE, new SimpleEntry<String, String>("onUpdate","B_"));
+		entryMap.put(METHOD_KEY_ONUPDATE, new SimpleEntry<>("onUpdate", "B_"));
 		//entryMap.put(METHOD_KEY_MOUNTENTITY, new SimpleEntry<String, String>("mountEntity", "a"));
 		//entryMap.put(METHOD_KEY_JUMP, new SimpleEntry<String, String>("jump",""));
-		entryMap.put(METHOD_KEY_SETBLOCKSTATE, new SimpleEntry<String, String>("setBlockState", "a"));
+		entryMap.put(METHOD_KEY_SETBLOCKSTATE, new SimpleEntry<>("setBlockState", "a"));
 		//entryMap.put(METHOD_KEY_SETBLOCKMETADATAWITHNOTIFY, new SimpleEntry<String, String>("setBlockMetadataWithNotify", "a"));
-		entryMap.put(METHOD_KEY_SETUPTERRAIN, new SimpleEntry<String, String>("setupTerrain", "a"));
-		entryMap.put(METHOD_KEY_ONBLOCKACTIVATED, new SimpleEntry<String, String>("onBlockActivated", "a"));
+		entryMap.put(METHOD_KEY_SETUPTERRAIN, new SimpleEntry<>("setupTerrain", "a"));
+		entryMap.put(METHOD_KEY_ONBLOCKACTIVATED, new SimpleEntry<>("onBlockActivated", "a"));
 
 		//entryMap.put(FIELD_YAW, new SimpleEntry<String, String>("rotationYaw", "blt"));
 		//entryMap.put(FIELD_PITCH, new SimpleEntry <String, String>("rotationPitch", "blt"));
@@ -139,7 +137,7 @@ public class ClassTransformer implements IClassTransformer {
 		//entryMap.put(FIELD_PLAYERENTITY, new SimpleEntry<String, String>("playerEntity", ""));
 		//entryMap.put(FIELD_HASMOVED, new SimpleEntry<String, String>("hasMoved", ""));
 		//entryMap.put(FIELD_RIDINGENTITY, new SimpleEntry<String,String>("ridingEntity", "m"));
-		entryMap.put(FIELD_PROVIDER, new SimpleEntry<String,String>("provider", "s"));
+		entryMap.put(FIELD_PROVIDER, new SimpleEntry<>("provider", "s"));
 	}
 
 	@Override
@@ -595,7 +593,7 @@ public class ClassTransformer implements IClassTransformer {
 
 				int ifnull = 3;
 				int aload = 3;
-				int indexPos1 = 0;;
+				int indexPos1 = 0;
 
 				for(int i = setupTerrain.instructions.size() - 1; i >= 0; i--) {
 					AbstractInsnNode ain = setupTerrain.instructions.get(i);

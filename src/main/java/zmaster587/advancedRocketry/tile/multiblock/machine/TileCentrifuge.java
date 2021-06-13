@@ -69,7 +69,7 @@ public class TileCentrifuge extends TileMultiblockMachine {
 		@Override
 		public void registerRecipes() {
             // Nuggets for centrifuge
-            List<RecipesMachine.ChanceItemStack> nuggetList = new LinkedList<RecipesMachine.ChanceItemStack>();
+            List<RecipesMachine.ChanceItemStack> nuggetList = new LinkedList<>();
             
             for(String entry : ARConfiguration.getCurrentConfig().lavaCentrifugeOutputs)
             {
@@ -99,12 +99,12 @@ public class TileCentrifuge extends TileMultiblockMachine {
             	}
             }
             
-            List<List<ItemStack>> inputItems = new LinkedList<List<ItemStack>>();
-            List<FluidStack> inputFluid = new LinkedList<FluidStack>();
+            List<List<ItemStack>> inputItems = new LinkedList<>();
+            List<FluidStack> inputFluid = new LinkedList<>();
             inputFluid.add(new FluidStack(AdvancedRocketryFluids.fluidEnrichedLava, 1000));
-			List<ChanceFluidStack> outputFluid = new LinkedList<ChanceFluidStack>();
+			List<ChanceFluidStack> outputFluid = new LinkedList<>();
 			outputFluid.add(new ChanceFluidStack(new FluidStack(FluidRegistry.getFluid("lava"), 1000), 1.0f));
-            RecipesMachine.Recipe rec =  new RecipesMachine.Recipe(nuggetList, inputItems, outputFluid,inputFluid, 200, 10, new HashMap<Integer, String>());
+            RecipesMachine.Recipe rec =  new RecipesMachine.Recipe(nuggetList, inputItems, outputFluid,inputFluid, 200, 10, new HashMap<>());
             rec.setMaxOutputSize(4);
             RecipesMachine.getInstance().getRecipes(TileCentrifuge.class).add(rec);
 		}

@@ -3,7 +3,6 @@ package zmaster587.advancedRocketry.client;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 
 public class SoundRocketEngine extends MovingSound {

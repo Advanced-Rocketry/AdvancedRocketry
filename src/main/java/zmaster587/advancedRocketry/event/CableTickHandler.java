@@ -87,7 +87,7 @@ public class CableTickHandler {
 				}
 				if(pipecount == 0) //lastInNetwork
 					((TilePipe)homeTile).getNetworkHandler().removeNetworkByID(((TilePipe)homeTile).getNetworkID());
-				((TilePipe)homeTile).markDirty();
+				homeTile.markDirty();
 			}
 			else if(homeTile != null) {
 				for(EnumFacing dir : EnumFacing.VALUES) {

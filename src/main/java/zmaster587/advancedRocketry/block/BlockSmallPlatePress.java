@@ -8,8 +8,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,6 +23,8 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class BlockSmallPlatePress extends BlockPistonBase {
@@ -45,12 +47,12 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos,
 			EnumFacing facing, float hitX, float hitY, float hitZ, int meta,
 			EntityLivingBase placer) {
-		return this.getDefaultState().withProperty(FACING, EnumFacing.DOWN).withProperty(EXTENDED, Boolean.valueOf(false));
+		return this.getDefaultState().withProperty(FACING, EnumFacing.DOWN).withProperty(EXTENDED, Boolean.FALSE);
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
-			EntityLivingBase placer, ItemStack stack) {
+			EntityLivingBase placer, @Nonnull ItemStack stack) {
 		if (!world.isRemote)
 		{
 			this.checkForMove(world, pos, state);
@@ -93,7 +95,7 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 		boolean flag = this.shouldBeExtended(worldIn, pos, enumfacing);
 
 		ItemStack stack;
-		if (flag && (stack = getRecipe(worldIn, pos, state)) != null && !((Boolean)state.getValue(EXTENDED)).booleanValue())
+		if (flag && !(stack = getRecipe(worldIn, pos, state)).isEmpty() && !state.getValue(EXTENDED))
 		{
 			worldIn.setBlockToAir(pos.down());
 
@@ -104,40 +106,41 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 				worldIn.addBlockEvent(pos, this, 0, enumfacing.getIndex());
 			}
 		}
-		else if (!flag && ((Boolean)state.getValue(EXTENDED)).booleanValue())
+		else if (!flag && state.getValue(EXTENDED))
 		{
 			worldIn.addBlockEvent(pos, this, 1, enumfacing.getIndex());
 		}
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public void neighborChanged(IBlockState state, World world, BlockPos pos,
 			Block blockIn, BlockPos fromPos) {
-		if (!((World)world).isRemote)
+		if (!world.isRemote)
 		{
 			this.checkForMove(world, pos, state);
 		}
 	}
 
-
+	@Nonnull
 	private ItemStack getRecipe(World world, BlockPos pos, IBlockState state) {
 		if(world.isAirBlock(pos.add(0, -1, 0)))
-			return null;
+			return ItemStack.EMPTY;
 
 		IBlockState state2 = world.getBlockState(pos.add(0, -1, 0));
 		Block block = state2.getBlock();
 		
 		Item item = Item.getItemFromBlock(block);
-		if(item == null)
-			return null;
+		if(item.equals(Items.AIR))
+			return ItemStack.EMPTY;
 		
 		ItemStack stackInWorld = new ItemStack(item,1, block.getMetaFromState(state2));
 
 		List<IRecipe> recipes = RecipesMachine.getInstance().getRecipes(this.getClass());
-		ItemStack stack = null;
+		ItemStack stack = ItemStack.EMPTY;
 
 		for(IRecipe recipe : recipes) {
-			for(ItemStack stack2 : recipe.getIngredients().get(0))
+			for(@Nonnull ItemStack stack2 : recipe.getIngredients().get(0))
 				if(stack2.isItemEqual(stackInWorld)) {
 					stack = recipe.getOutput().get(0);
 					break;
@@ -148,7 +151,7 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 		if(world.getBlockState(pos.add(0,-2,0)).getBlock() == Blocks.OBSIDIAN)
 			return stack;
 
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	private boolean doMove(World worldIn, BlockPos pos, EnumFacing direction, boolean extending)
@@ -167,12 +170,10 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 		else
 		{
 			List<BlockPos> list = blockpistonstructurehelper.getBlocksToMove();
-			List<IBlockState> list1 = Lists.<IBlockState>newArrayList();
+			List<IBlockState> list1 = Lists.newArrayList();
 
-			for (int i = 0; i < list.size(); ++i)
-			{
-				BlockPos blockpos = (BlockPos)list.get(i);
-				list1.add(worldIn.getBlockState(blockpos).getActualState(worldIn, blockpos));
+			for (BlockPos blockPos : list) {
+				list1.add(worldIn.getBlockState(blockPos).getActualState(worldIn, blockPos));
 			}
 
 			List<BlockPos> list2 = blockpistonstructurehelper.getBlocksToDestroy();
@@ -182,7 +183,7 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 
 			for (int j = list2.size() - 1; j >= 0; --j)
 			{
-				BlockPos blockpos1 = (BlockPos)list2.get(j);
+				BlockPos blockpos1 = list2.get(j);
 				IBlockState iblockstate = worldIn.getBlockState(blockpos1);
 				// Forge: With our change to how snowballs are dropped this needs to disallow to mimic vanilla behavior.
 				float chance = iblockstate.getBlock() instanceof BlockSnow ? -1.0f : 1.0f;
@@ -194,12 +195,12 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 
 			for (int l = list.size() - 1; l >= 0; --l)
 			{
-				BlockPos blockpos3 = (BlockPos)list.get(l);
+				BlockPos blockpos3 = list.get(l);
 				IBlockState iblockstate2 = worldIn.getBlockState(blockpos3);
 				worldIn.setBlockState(blockpos3, Blocks.AIR.getDefaultState(), 2);
 				blockpos3 = blockpos3.offset(enumfacing);
 				worldIn.setBlockState(blockpos3, Blocks.PISTON_EXTENSION.getDefaultState().withProperty(FACING, direction), 4);
-				worldIn.setTileEntity(blockpos3, BlockPistonMoving.createTilePiston((IBlockState)list1.get(l), direction, extending, false));
+				worldIn.setTileEntity(blockpos3, BlockPistonMoving.createTilePiston(list1.get(l), direction, extending, false));
 				--k;
 				aiblockstate[k] = iblockstate2;
 			}
@@ -217,12 +218,12 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 
 			for (int i1 = list2.size() - 1; i1 >= 0; --i1)
 			{
-				worldIn.notifyNeighborsOfStateChange((BlockPos)list2.get(i1), aiblockstate[k++].getBlock(), true);
+				worldIn.notifyNeighborsOfStateChange(list2.get(i1), aiblockstate[k++].getBlock(), true);
 			}
 
 			for (int j1 = list.size() - 1; j1 >= 0; --j1)
 			{
-				worldIn.notifyNeighborsOfStateChange((BlockPos)list.get(j1), aiblockstate[k++].getBlock(), true);
+				worldIn.notifyNeighborsOfStateChange(list.get(j1), aiblockstate[k++].getBlock(), true);
 			}
 
 			if (extending)
@@ -235,7 +236,7 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 		}
 	}
 
-	public boolean eventReceived(IBlockState state, World worldIn, BlockPos pos, int id, int param)
+	public boolean eventReceived(IBlockState state, World worldIn, @Nonnull BlockPos pos, int id, int param)
 	{
 		EnumFacing enumfacing = EnumFacing.DOWN;
 
@@ -245,7 +246,7 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 
 			if (flag && id == 1)
 			{
-				worldIn.setBlockState(pos, state.withProperty(EXTENDED, Boolean.valueOf(true)), 2);
+				worldIn.setBlockState(pos, state.withProperty(EXTENDED, Boolean.TRUE), 2);
 				return false;
 			}
 
@@ -262,8 +263,8 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 				return false;
 			}
 
-			worldIn.setBlockState(pos, state.withProperty(EXTENDED, Boolean.valueOf(true)), 2);
-			worldIn.playSound((EntityPlayer)null, pos, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.5F, worldIn.rand.nextFloat() * 0.25F + 0.6F);
+			worldIn.setBlockState(pos, state.withProperty(EXTENDED, Boolean.TRUE), 2);
+			worldIn.playSound(null, pos, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.5F, worldIn.rand.nextFloat() * 0.25F + 0.6F);
 		}
 		else if (id == 1)
 		{
@@ -272,14 +273,14 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 			worldIn.setTileEntity(pos, BlockPistonMoving.createTilePiston(this.getStateFromMeta(param), enumfacing, false, true));
 
 
-			worldIn.playSound((EntityPlayer)null, pos, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.5F, worldIn.rand.nextFloat() * 0.15F + 0.6F);
+			worldIn.playSound(null, pos, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.5F, worldIn.rand.nextFloat() * 0.15F + 0.6F);
 		}
 
 		return true;
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 		super.addInformation(stack, player, tooltip, advanced);
 		tooltip.add(ChatFormatting.DARK_GRAY + "" + ChatFormatting.ITALIC + LibVulpes.proxy.getLocalizedString("machine.tooltip.smallplatepress"));
 	}

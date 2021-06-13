@@ -7,6 +7,8 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import zmaster587.advancedRocketry.client.model.ModelRocket;
 
+import javax.annotation.Nonnull;
+
 public class ModelLoader implements ICustomModelLoader
 {
 	public final String SMART_MODEL_RESOURCE_LOCATION = "models/";
@@ -20,6 +22,7 @@ public class ModelLoader implements ICustomModelLoader
 
 	// When called for our Block3DWeb's ModelResourceLocation, return our WebModel.
 	@Override
+	@Nonnull
 	public IModel loadModel(ResourceLocation resourceLocation) {
 		String resourcePath = resourceLocation.getResourcePath();
 		/*if (!resourcePath.startsWith(SMART_MODEL_RESOURCE_LOCATION)) {
@@ -40,7 +43,7 @@ public class ModelLoader implements ICustomModelLoader
 
 	// don't need it for this example; you might.  We have to implement it anyway.
 	@Override
-	public void onResourceManagerReload(IResourceManager resourceManager) {
+	public void onResourceManagerReload(@Nonnull IResourceManager resourceManager) {
 		this.resourceManager = resourceManager;
 	}
 

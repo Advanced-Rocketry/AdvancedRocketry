@@ -1,7 +1,6 @@
 package zmaster587.advancedRocketry.integration.jei;
 
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -29,7 +28,7 @@ public class MachineRecipe implements IRecipeWrapper {
 		//TODO: multiple outputs
 		if(rec instanceof Recipe)
 		{
-			resultChance = new ArrayList<ChanceItemStack>(((Recipe)rec).getChanceOutputs());
+			resultChance = new ArrayList<>(((Recipe) rec).getChanceOutputs());
 			result = new ArrayList<>();
 			
 			int i = -1;

@@ -10,43 +10,43 @@ public interface ISpaceObject {
 	/**
 	 * @return id of the space object (NOT the DIMID)
 	 */
-	public int getId();
+	int getId();
 	
-	public float getOrbitalDistance();
+	float getOrbitalDistance();
 	
-	public void setOrbitalDistance(float finalVel);
+	void setOrbitalDistance(float finalVel);
 	
 	/**
 	 * @return dimension properties of the object
 	 */
-	public IDimensionProperties getProperties();
+	IDimensionProperties getProperties();
 	
 	/**
 	 * @return the DIMID of the planet the object is currently orbiting, Constants.INVALID_PLANET if none
 	 */
-	public int getOrbitingPlanetId();
+	int getOrbitingPlanetId();
 
 	/**
 	 * @return if the object is anchored in place by anything
 	 */
-	public boolean isAnchored();
+	boolean isAnchored();
 
 	/**
 	 * Sets if the object is anchored or not
 	 */
-	public void setIsAnchored(boolean anchored);
+	void setIsAnchored(boolean anchored);
 	
 	/**
 	 * @param id the space object id of this object (NOT DIMID)
 	 */
-	public void setId(int id);
+	void setId(int id);
 	
 	/**
 	 * Sets the coords of the space object on the graph
 	 * @param posX
 	 * @param posY
 	 */
-	public void setPos(int posX, int posY);
+	void setPos(int posX, int posY);
 	
 	/**
 	 * Sets the spawn location for the space object
@@ -54,55 +54,55 @@ public interface ISpaceObject {
 	 * @param y
 	 * @param z
 	 */
-	public void setSpawnLocation(int x, int y, int z);
+	void setSpawnLocation(int x, int y, int z);
 	
 	/**
 	 * Sets the orbiting planet for the space object but does NOT register it with the planet
 	 * @param id
 	 */
-	public void setOrbitingBody(int id);
+	void setOrbitingBody(int id);
 	
 	/**
 	 * @return the spawn location of the object
 	 */
-	public HashedBlockPosition getSpawnLocation();
+	HashedBlockPosition getSpawnLocation();
 	
 	/**
 	 * True if the spawn location for this space object is not the default one assigned to it
 	 * @return
 	 */
-	public boolean hasCustomSpawnLocation();
+	boolean hasCustomSpawnLocation();
 	
 	/**
 	 * When the space stations are first created they are 'unpacked' from the storage chunk they reside in
 	 * @param chunk
 	 */
-	public void onModuleUnpack(IStorageChunk chunk);
+	void onModuleUnpack(IStorageChunk chunk);
 	
-	public void writeToNbt(NBTTagCompound nbt);
+	void writeToNbt(NBTTagCompound nbt);
 	
-	public void readFromNbt(NBTTagCompound nbt);
+	void readFromNbt(NBTTagCompound nbt);
 	
-	public double getRotation(EnumFacing dir);
-	public double getDeltaRotation(EnumFacing dir);
+	double getRotation(EnumFacing dir);
+	double getDeltaRotation(EnumFacing dir);
 	
-	public void setRotation(double rotation, EnumFacing dir);
+	void setRotation(double rotation, EnumFacing dir);
 	
-	public double getMaxRotationalAcceleration();
+	double getMaxRotationalAcceleration();
 	
-	public void setDeltaRotation(double rotation, EnumFacing dir);
+	void setDeltaRotation(double rotation, EnumFacing dir);
 
-	public double getInsolationMultiplier();
+	double getInsolationMultiplier();
 
 	/**
 	 * @return true if there is an empty pad to land on
 	 */
-	public boolean hasFreeLandingPad();
+	boolean hasFreeLandingPad();
 	
 	/**
 	 * @return next viable place to land
 	 */
-	public HashedBlockPosition getNextLandingPad(boolean commit);
+	HashedBlockPosition getNextLandingPad(boolean commit);
 	
 	/**
 	 * Adds a landing pad to the station
@@ -110,33 +110,33 @@ public interface ISpaceObject {
 	 * @param z
 	 * @param name the name of the landing pad
 	 */
-	public void addLandingPad(int x, int z, String name);
+	void addLandingPad(int x, int z, String name);
 	
 	/**
 	 * Removes an existing landing pad from the station
 	 * @param x
 	 * @param z
 	 */
-	public void removeLandingPad(int x, int z);
+	void removeLandingPad(int x, int z);
 
 	/**
-	 * @param x
-	 * @param z
+	 * @param posX
+	 * @param posZ
 	 * @param full true if the pad is avalible to use
 	 */
-	public void setPadStatus(int posX, int posZ, boolean full);
+	void setPadStatus(int posX, int posZ, boolean full);
 	
 	/**
 	 * Called when a time is given between dim transitions (warpships mostly)
 	 * @param time time in ticks
 	 */
-	public void beginTransition(long time);
+	void beginTransition(long time);
 	
 	/**
 	 * Returns total world time for when the transition is due to complete
 	 * @return
 	 */
-	public long getTransitionTime();
+	long getTransitionTime();
 
 	/**
 	 * Set the destination dim id if a jump were to be made
@@ -154,16 +154,16 @@ public interface ISpaceObject {
 	 * Set the properties of the dimension
 	 * @param properties
 	 */
-	public void setProperties(IDimensionProperties properties);
+	void setProperties(IDimensionProperties properties);
 	
 	/**
 	 * Called when a check for a cleanup is performed on objects registered as temporary
 	 * @return worldtime expiration is to occur
 	 */
-	public long getExpireTime();
+	long getExpireTime();
 
 	/**
 	 * @return
 	 */
-	public EnumFacing getForwardDirection();
+	EnumFacing getForwardDirection();
 }

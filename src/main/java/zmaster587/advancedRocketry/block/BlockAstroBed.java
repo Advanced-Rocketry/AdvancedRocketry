@@ -35,7 +35,7 @@ public class BlockAstroBed extends BlockBed {
         {
             if (state.getValue(PART) != BlockBed.EnumPartType.HEAD)
             {
-                pos = pos.offset((EnumFacing)state.getValue(FACING));
+                pos = pos.offset(state.getValue(FACING));
                 state = worldIn.getBlockState(pos);
 
                 if (state.getBlock() != this)
@@ -46,17 +46,17 @@ public class BlockAstroBed extends BlockBed {
 
             if (worldIn.provider instanceof WorldProviderPlanet)
             {
-                if (((Boolean)state.getValue(OCCUPIED)).booleanValue())
+                if (state.getValue(OCCUPIED))
                 {
                     EntityPlayer entityplayer = this.getPlayerInBed(worldIn, pos);
 
                     if (entityplayer != null)
                     {
-                        playerIn.sendMessage(new TextComponentTranslation("tile.bed.occupied", new Object[0]));
+                        playerIn.sendMessage(new TextComponentTranslation("tile.bed.occupied"));
                         return true;
                     }
 
-                    state = state.withProperty(OCCUPIED, Boolean.valueOf(false));
+                    state = state.withProperty(OCCUPIED, Boolean.FALSE);
                     worldIn.setBlockState(pos, state, 4);
                 }
 
@@ -64,7 +64,7 @@ public class BlockAstroBed extends BlockBed {
 
                 if (entityplayer$sleepresult == EntityPlayer.SleepResult.OK)
                 {
-                    state = state.withProperty(OCCUPIED, Boolean.valueOf(true));
+                    state = state.withProperty(OCCUPIED, Boolean.TRUE);
                     worldIn.setBlockState(pos, state, 4);
                     return true;
                 }
@@ -72,11 +72,11 @@ public class BlockAstroBed extends BlockBed {
                 {
                     if (entityplayer$sleepresult == EntityPlayer.SleepResult.NOT_POSSIBLE_NOW)
                     {
-                        playerIn.sendMessage(new TextComponentTranslation("tile.bed.noSleep", new Object[0]));
+                        playerIn.sendMessage(new TextComponentTranslation("tile.bed.noSleep"));
                     }
                     else if (entityplayer$sleepresult == EntityPlayer.SleepResult.NOT_SAFE)
                     {
-                        playerIn.sendMessage(new TextComponentTranslation("tile.bed.notSafe", new Object[0]));
+                        playerIn.sendMessage(new TextComponentTranslation("tile.bed.notSafe"));
                     }
 
                     return true;

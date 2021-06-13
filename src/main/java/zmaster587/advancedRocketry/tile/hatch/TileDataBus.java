@@ -18,6 +18,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 
 		ItemStack itemStack = inventory.getStackInSlot(0);
 
-		if(itemStack != null && itemStack.getItem() instanceof ItemData) {
+		if(itemStack != ItemStack.EMPTY && itemStack.getItem() instanceof ItemData) {
 			ItemData itemData = (ItemData)itemStack.getItem();
 			itemData.removeData(itemStack, this.data.addData(itemData.getData(itemStack), itemData.getDataType(itemStack), true), DataStorage.DataType.UNDEFINED);
 
@@ -69,7 +70,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	public void storeData(int id) {
 		ItemStack itemStack = inventory.getStackInSlot(0);
 
-		if(itemStack != null && itemStack.getItem() instanceof ItemData && inventory.getStackInSlot(1) == ItemStack.EMPTY) {
+		if(!itemStack.isEmpty() && itemStack.getItem() instanceof ItemData && inventory.getStackInSlot(1) == ItemStack.EMPTY) {
 			ItemData itemData = (ItemData)itemStack.getItem();
 			this.data.removeData(itemData.addData(itemStack, this.data.getData(), this.data.getDataType()), true);
 
@@ -117,7 +118,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
+		LinkedList<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModuleAutoData(40, 20, 0, 1, this, this, data));
 		return modules;
 	}
@@ -135,7 +136,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 		ItemStack itemStack = inventory.getStackInSlot(0);
 
@@ -153,12 +154,12 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
+	public boolean canExtractItem(int index, @Nonnull ItemStack stack, EnumFacing direction) {
 		return index == 1;
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
+	public boolean canInsertItem(int index, @Nonnull ItemStack itemStackIn, EnumFacing direction) {
 		return index == 0 && isItemValidForSlot(index, itemStackIn);
 	}
 

@@ -37,13 +37,13 @@ public class AstronomicalBodyHelper {
 		double averageWithoutAtmosphere = starSurfaceTemperature * Math.pow(starRadius/(2* planetaryOrbitalRadius), 0.5) * Math.pow((1f-0.3f), 0.25);
 		//Slightly kludgey solution that works out mostly for Venus and well for Earth, without being overly complex
 		//Output is in Kelvin
-		return (int)(averageWithoutAtmosphere * Math.max(1, (1.125d * Math.pow((atmPressure/100), 0.25))));
+		return (int)(averageWithoutAtmosphere * Math.max(1, (1.125d * Math.pow((atmPressure/100d), 0.25))));
 	}
 	public static double getStellarBrightness(StellarBody star, int orbitalDistance) {
 		//Normal stars are 1.0 times this value, black holes with accretion discs emit less and so modify it
 		float lightMultiplier = 1.0f;
 		//Make all values ratios of Earth normal to get ratio compared to Earth
-		float normalizedStarTemperature = star.getTemperature()/100;
+		float normalizedStarTemperature = star.getTemperature()/100f;
 		float planetaryOrbitalRadius = orbitalDistance/100f;
 		//Check to see if the star is a black hole
 		boolean blackHole = star.isBlackHole();

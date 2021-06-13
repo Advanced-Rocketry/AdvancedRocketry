@@ -15,6 +15,7 @@ import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.IconResource;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 	}
 
 	@Override
-	public boolean isItemValidForSlot(ItemStack stack, int slot) {
+	public boolean isItemValidForSlot(@Nonnull ItemStack stack, int slot) {
 		if(slot >= 2)
 			return true;
 
@@ -35,7 +36,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 	}
 
 	@Override
-	public boolean canBeExternallyModified(ItemStack armor, int slot) {
+	public boolean canBeExternallyModified(@Nonnull ItemStack armor, int slot) {
 		return slot >= 2;
 	}
 
@@ -52,7 +53,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 	 * @return the amount of air in the stack
 	 */
 	@Override
-	public int getAirRemaining(ItemStack stack) {
+	public int getAirRemaining(@Nonnull ItemStack stack) {
 
 		List<ItemStack> list = getComponents(stack);
 
@@ -83,7 +84,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 	 * @param amt amount of air to set the suit to
 	 */
 	@Override
-	public void setAirRemaining(ItemStack stack, int amt) {
+	public void setAirRemaining(@Nonnull ItemStack stack, int amt) {
 		/*NBTTagCompound nbt;
 		if(stack.hasTagCompound()) {
 			nbt = stack.getTagCompound();
@@ -102,12 +103,12 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 	 * @return The amount of air extracted from the suit
 	 */
 	@Override
-	public int decrementAir(ItemStack stack, int amt) {
+	public int decrementAir(@Nonnull ItemStack stack, int amt) {
 
 		if(stack.hasTagCompound()) {
 			EmbeddedInventory inv = new EmbeddedInventory(getNumSlots(stack));
 			inv.readFromNBT(stack.getTagCompound());
-			List<ItemStack> list = new LinkedList<ItemStack>();
+			List<ItemStack> list = new LinkedList<>();
 
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				if(!inv.getStackInSlot(i).isEmpty())
@@ -160,12 +161,12 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 	 * @return The amount of air inserted into the suit
 	 */
 	@Override
-	public int increment(ItemStack stack, int amt) {
+	public int increment(@Nonnull ItemStack stack, int amt) {
 
 		if(stack.hasTagCompound()) {
 			EmbeddedInventory inv = new EmbeddedInventory(getNumSlots(stack));
 			inv.readFromNBT(stack.getTagCompound());
-			List<ItemStack> list = new LinkedList<ItemStack>();
+			List<ItemStack> list = new LinkedList<>();
 
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				if(!inv.getStackInSlot(i).isEmpty()) {
@@ -225,12 +226,12 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 	 * @return the maximum amount of air allowed in this suit
 	 */
 	@Override
-	public int getMaxAir(ItemStack stack) {
+	public int getMaxAir(@Nonnull ItemStack stack) {
 
 		if(stack.hasTagCompound()) {
 			EmbeddedInventory inv = new EmbeddedInventory(getNumSlots(stack));
 			inv.readFromNBT(stack.getTagCompound());
-			List<ItemStack> list = new LinkedList<ItemStack>();
+			List<ItemStack> list = new LinkedList<>();
 
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				if(!inv.getStackInSlot(i).isEmpty()) {
@@ -267,7 +268,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 	}
 	
 	@Override
-	public boolean protectsFromSubstance(IAtmosphere atmosphere, ItemStack stack, boolean commitProtection) {
+	public boolean protectsFromSubstance(@Nonnull IAtmosphere atmosphere, @Nonnull ItemStack stack, boolean commitProtection) {
 		
 		if(!super.protectsFromSubstance(atmosphere, stack, commitProtection))
 			return false;
