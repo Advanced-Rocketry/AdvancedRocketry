@@ -155,7 +155,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		nbt.setByte("redstoneState", (byte) state.ordinal());
 		if(mission != null) {
 			nbt.setLong("missionID", mission.getMissionId());
-			nbt.setInteger("missionDimId", mission.getOriginatingDimention());
+			nbt.setInteger("missionDimId", mission.getOriginatingDimension());
 		}
 		return nbt;
 	}

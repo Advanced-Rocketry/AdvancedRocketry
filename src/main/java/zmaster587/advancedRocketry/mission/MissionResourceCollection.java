@@ -179,7 +179,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 	}
 
 	@Override
-	public int getOriginatingDimention() {
+	public int getOriginatingDimension() {
 		return worldId;
 	}
 

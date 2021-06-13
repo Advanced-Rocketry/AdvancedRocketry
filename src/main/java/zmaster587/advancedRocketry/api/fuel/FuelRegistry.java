@@ -20,17 +20,17 @@ public class FuelRegistry {
 		IMPULSE;	//Used in interplanetary missions
 		
 		//Stores a fuel entry for each type of fuel
-		final HashSet<fuelEntry> fuels;
+		final HashSet<FuelEntry> fuels;
 		
 		private FuelType() {
-			fuels = new HashSet<FuelRegistry.fuelEntry>();
+			fuels = new HashSet<FuelEntry>();
 		}
 		
 		/**
 		 * @param entry fuelEntry to add
 		 * @return true if successfully added, false if already exists
 		 */
-		public boolean addFuel(fuelEntry entry) {
+		public boolean addFuel(FuelEntry entry) {
 			entry.type = this;
 			return !fuels.add(entry);
 		}
@@ -57,7 +57,7 @@ public class FuelRegistry {
 		 * @return true if the passed Itemstack or fluidstack is a fuel
 		 */
 		private boolean isFuel(Object obj) {
-				Iterator<fuelEntry> currFuel = fuels.iterator();
+				Iterator<FuelEntry> currFuel = fuels.iterator();
 				
 				while(currFuel.hasNext()) {
 					if(currFuel.next().fuel == obj)
@@ -68,12 +68,12 @@ public class FuelRegistry {
 		
 		//Returns the fuel if it exists otherwise null (Helper)
 
-		public fuelEntry getFuel(ItemStack stack) {
+		public FuelEntry getFuel(ItemStack stack) {
 			return getFuel((Object)stack);
 		}
 		
 		//Returns the fuel if it exists otherwise null (Helper)
-		public fuelEntry getFuel(Fluid fluid) {
+		public FuelEntry getFuel(Fluid fluid) {
 			return getFuel((Object)fluid);
 		}
 		
@@ -81,11 +81,11 @@ public class FuelRegistry {
 		 * @param stack
 		 * @return Fuel entry for the itemStack if it exists, null otherwise
 		 */
-		private fuelEntry getFuel(Object obj) {
-			Iterator<fuelEntry> currFuel = fuels.iterator();
+		private FuelEntry getFuel(Object obj) {
+			Iterator<FuelEntry> currFuel = fuels.iterator();
 			
 			while(currFuel.hasNext()) {
-				fuelEntry entry;
+				FuelEntry entry;
 
 				if((entry = currFuel.next()).fuelMatches(obj))
 					return entry;
@@ -96,7 +96,7 @@ public class FuelRegistry {
 	
 	
 	
-	private class fuelEntry {
+	private class FuelEntry {
 		
 		//Fuel: itemstack or liquid
 		private Object fuel;
@@ -110,7 +110,7 @@ public class FuelRegistry {
 		 * @param fuel ItemStack or fluid to register as fuel
 		 * @param multiplier how many fuel points one unit of this object is worth
 		 */
-		public fuelEntry(Object fuel, float multiplier) {
+		public FuelEntry(Object fuel, float multiplier) {
 			this.fuel = fuel;
 			this.multiplier = multiplier;
 		}
@@ -138,8 +138,8 @@ public class FuelRegistry {
 		@Override
 		public boolean equals(Object obj) {
 			if(obj != null) {
-				if(obj instanceof fuelEntry) {
-					fuelEntry cmp = ((fuelEntry)obj);
+				if(obj instanceof FuelEntry) {
+					FuelEntry cmp = ((FuelEntry)obj);
 					return fuelMatches(cmp.fuel) && cmp.type == cmp.type;
 				}
 				return super.equals(obj);
@@ -154,7 +154,7 @@ public class FuelRegistry {
 	 * @return true if successfully added to the registry, false if it already exists
 	 */
 	public boolean registerFuel(FuelType type ,Fluid fluid, float multiplier) {
-		fuelEntry entry = new fuelEntry(fluid, multiplier);
+		FuelEntry entry = new FuelEntry(fluid, multiplier);
 		
 		return type.addFuel(entry);
 	}
@@ -167,7 +167,7 @@ public class FuelRegistry {
 	 * @return true if successfully added to the registry, false if it already exists
 	 */
 	public boolean registerFuel(FuelType type, ItemStack item, float multiplier) {
-		fuelEntry entry = new fuelEntry(item, multiplier);
+		FuelEntry entry = new FuelEntry(item, multiplier);
 		return type.addFuel(entry);
 	}
 	
@@ -212,7 +212,7 @@ public class FuelRegistry {
 	}
 	
 	private float getMultiplier(FuelType type, Object obj) {
-		fuelEntry fuel = type.getFuel(obj);
+		FuelEntry fuel = type.getFuel(obj);
 		
 		if(fuel == null)
 			return 0f;

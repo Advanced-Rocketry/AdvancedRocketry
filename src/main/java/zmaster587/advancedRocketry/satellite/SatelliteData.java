@@ -128,7 +128,7 @@ public abstract class SatelliteData extends SatelliteBase {
 	}
 
 	@Override
-	public void onChangeRecieved(int slot, int value) {
+	public void onChangeReceived(int slot, int value) {
 		lastActionTime = ( lastActionTime & ( ~(0xffffl << (slot*16) ) ) ) | ( ( long )value << (slot*16) );
 	}
 

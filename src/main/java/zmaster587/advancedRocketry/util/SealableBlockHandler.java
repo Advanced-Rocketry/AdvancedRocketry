@@ -131,7 +131,7 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 		}
 	}
 	
-	public List<Block> getOverridenSealableBlocks()
+	public List<Block> getOverriddenSealableBlocks()
 	{
 		return blockAllowList;
 	}

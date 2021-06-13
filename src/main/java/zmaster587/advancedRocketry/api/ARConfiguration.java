@@ -369,7 +369,7 @@ public class ARConfiguration {
 		return currentConfig;
 	}
 
-	public static void loadConfigFromServer(ARConfiguration config) throws Exception
+	public static void loadConfigFromServer(ARConfiguration config) throws IllegalStateException
 	{
 		if(usingServerConfig)
 			throw new IllegalStateException("Cannot load server config when already using server config!");
@@ -408,7 +408,7 @@ public class ARConfiguration {
 
 	public void addSealedBlock(Block newblock) {
 		SealableBlockHandler.INSTANCE.addSealableBlock(newblock);
-		List<Block> blockList = SealableBlockHandler.INSTANCE.getOverridenSealableBlocks();
+		List<Block> blockList = SealableBlockHandler.INSTANCE.getOverriddenSealableBlocks();
 		String[] blocks = new String[blockList.size()];
 		int index = 0;
 		for( Block block : blockList)
