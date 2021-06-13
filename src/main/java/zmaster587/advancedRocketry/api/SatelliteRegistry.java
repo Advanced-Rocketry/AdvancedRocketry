@@ -5,23 +5,24 @@ import net.minecraft.nbt.NBTTagCompound;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 public class SatelliteRegistry {
-	static HashMap<String, Class<? extends SatelliteBase>> registry = new HashMap<String, Class<? extends SatelliteBase>>();
+	static HashMap<String, Class<? extends SatelliteBase>> registry = new HashMap<>();
 
-	static HashMap<ItemStack, SatelliteProperties> itemPropertiesRegistry = new HashMap<ItemStack, SatelliteProperties>();
+	static HashMap<ItemStack, SatelliteProperties> itemPropertiesRegistry = new HashMap<>();
 
 	/**
 	 * Registers an itemStack with a satellite property, this is used in the Satellite Builder to determine the effect of a component
 	 * @param stack stack to register, stacksize insensitive
 	 * @param properties Satellite Properties to register the ItemStack with
 	 */
-	public static void registerSatelliteProperty(ItemStack stack, SatelliteProperties properties) {
-		if(stack == null) {
-			Logger.getLogger(Constants.modId).warning("null satellite property being registered!");
+	public static void registerSatelliteProperty(@Nonnull ItemStack stack, SatelliteProperties properties) {
+		if(stack.isEmpty()) {
+			Logger.getLogger(Constants.modId).warning("Empty satellite property being registered!");
 		}
 		else if(!itemPropertiesRegistry.containsKey(stack))
 			itemPropertiesRegistry.put(stack, properties);
@@ -30,10 +31,10 @@ public class SatelliteRegistry {
 	}
 
 	/**
-	 * @param stack ItemStack to get the SatelliteProperties of, stacksize insensative 
+	 * @param stack ItemStack to get the SatelliteProperties of, stacksize insensitive
 	 * @return the registered SatelliteProperties of the stack, or null if not registered
 	 */
-	public static SatelliteProperties getSatelliteProperty(ItemStack stack) {
+	public static SatelliteProperties getSatelliteProperty(@Nonnull ItemStack stack) {
 		
 		for(ItemStack keyStack : itemPropertiesRegistry.keySet()) {
 			if(keyStack.getItem() == stack.getItem() && ( !keyStack.getHasSubtypes() || keyStack.getItemDamage() == stack.getItemDamage()) ) {

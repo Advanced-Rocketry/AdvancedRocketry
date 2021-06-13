@@ -17,6 +17,9 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import zmaster587.advancedRocketry.tile.TileFluidTank;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class ItemBlockFluidTank extends ItemBlock {
@@ -26,9 +29,9 @@ public class ItemBlockFluidTank extends ItemBlock {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, World player,
-			List list, ITooltipFlag bool) {
-		super.addInformation(stack, player, list, bool);
+	@ParametersAreNonnullByDefault
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag bool) {
+		super.addInformation(stack, world, list, bool);
 
 		FluidStack fluidStack = getFluid(stack);
 
@@ -41,15 +44,13 @@ public class ItemBlockFluidTank extends ItemBlock {
 	}
 
 	@Override
-	public boolean placeBlockAt(ItemStack stack, EntityPlayer player,
-			World world, BlockPos pos, EnumFacing side, float hitX, float hitY,
-			float hitZ, IBlockState newState) {
-		super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ,
-				newState);
+	@ParametersAreNonnullByDefault
+	public boolean placeBlockAt(@Nonnull ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
+		super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState);
 		
 		TileEntity tile = world.getTileEntity(pos);
 		
-		if(tile != null && tile instanceof TileFluidTank) {
+		if(tile instanceof TileFluidTank) {
 			IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN);
 			ItemStack stack2 = stack.copy();
 			stack2.setCount(1);
@@ -59,7 +60,7 @@ public class ItemBlockFluidTank extends ItemBlock {
 		return true;
 	}
 	
-	public void fill(ItemStack stack, FluidStack fluid) {
+	public void fill(@Nonnull ItemStack stack, FluidStack fluid) {
 		
 		NBTTagCompound nbt;
 		FluidTank tank = new FluidTank(640000);
@@ -76,7 +77,7 @@ public class ItemBlockFluidTank extends ItemBlock {
 		stack.setTagCompound(nbt);
 	}
 	
-	public FluidStack drain(ItemStack stack, int amt) {
+	public FluidStack drain(@Nonnull ItemStack stack, int amt) {
 		NBTTagCompound nbt;
 		FluidTank tank = new FluidTank(640000);
 		if(stack.hasTagCompound()) {
@@ -94,7 +95,7 @@ public class ItemBlockFluidTank extends ItemBlock {
 		return stack2;
 	}
 	
-	public FluidStack getFluid(ItemStack stack) {
+	public FluidStack getFluid(@Nonnull ItemStack stack) {
 		NBTTagCompound nbt;
 		FluidTank tank = new FluidTank(640000);
 		if(stack.hasTagCompound()) {

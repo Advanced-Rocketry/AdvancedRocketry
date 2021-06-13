@@ -6,7 +6,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -27,6 +26,10 @@ import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.FluidUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.ParametersAreNullableByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,24 +60,27 @@ public class BlockPressurizedFluidTank extends Block {
 	}
 
 	@Override
+	@ParametersAreNullableByDefault
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileFluidTank((int) (64000 * ARConfiguration.getCurrentConfig().blockTankCapacity));
 	}
 	
 	@Override
+	@Nonnull
+	@ParametersAreNullableByDefault
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
 			IBlockState state, int fortune) {
-		return new LinkedList<ItemStack>();
+		return new LinkedList<>();
 	}
 	
 	@Override
-	public void harvestBlock(World world, EntityPlayer player, BlockPos pos,
-			IBlockState state, TileEntity te, ItemStack stack) {
-		
+	@ParametersAreNonnullByDefault
+	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @Nonnull ItemStack stack) {
+
 		TileEntity tile = te;//world.getTileEntity(pos);
 
-		if(tile != null && tile instanceof TileFluidTank) {
-			IFluidHandler fluid = ((TileFluidTank)tile).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN);
+		if(tile instanceof TileFluidTank) {
+			IFluidHandler fluid = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN);
 
 
 			ItemStack itemstack = new ItemStack(AdvancedRocketryBlocks.blockPressureTank);
@@ -89,15 +95,15 @@ public class BlockPressurizedFluidTank extends Block {
 			float f2 = world.rand.nextFloat() * 0.8F + 0.1F;
 
 			itemstack.setCount(1);
-			entityitem = new EntityItem(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(itemstack.getItem(), 1, 0));
+			entityitem = new EntityItem(world, (float)pos.getX() + f, (float)pos.getY() + f1, (float)pos.getZ() + f2, new ItemStack(itemstack.getItem(), 1, 0));
 			float f3 = 0.05F;
-			entityitem.motionX = (double)((float)world.rand.nextGaussian() * f3);
-			entityitem.motionY = (double)((float)world.rand.nextGaussian() * f3 + 0.2F);
-			entityitem.motionZ = (double)((float)world.rand.nextGaussian() * f3);
+			entityitem.motionX = (float)world.rand.nextGaussian() * f3;
+			entityitem.motionY = (float)world.rand.nextGaussian() * f3 + 0.2F;
+			entityitem.motionZ = (float)world.rand.nextGaussian() * f3;
 
 			if (itemstack.hasTagCompound())
 			{
-				entityitem.getItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
+				entityitem.getItem().setTagCompound(itemstack.getTagCompound().copy());
 			}
 			world.spawnEntity(entityitem);
 		}
@@ -106,6 +112,7 @@ public class BlockPressurizedFluidTank extends Block {
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean shouldSideBeRendered(IBlockState blockState,
 			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		
@@ -118,6 +125,7 @@ public class BlockPressurizedFluidTank extends Block {
 	}
 	
 	@Override
+	@Nonnull
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source,
 			BlockPos pos) {
 		return bb;
@@ -137,6 +145,7 @@ public class BlockPressurizedFluidTank extends Block {
 	}
 	
 	@Override
+	@Nonnull
 	public BlockRenderLayer getBlockLayer() {
 		return BlockRenderLayer.CUTOUT;
 	}

@@ -37,13 +37,15 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.MultiInventory;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
 
 public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISidedInventory, IGuiCallback, IButtonInventory {
 
-	ItemStack lens;
+	private ItemStack lens;
 	private final AbstractDrill drill;
 	protected boolean isRunning, finished, isJammed;
 	private int radius, xCenter, yCenter, numSteps;
@@ -52,7 +54,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	private static final int POWER_PER_OPERATION =(int)( 10000 * ARConfiguration.getCurrentConfig().spaceLaserPowerMult);
 	private ModuleTextBox locationX, locationZ;
 	private ModuleText updateText;
-	MultiInventory inv;
+	private MultiInventory inv;
 	
 	Object[][][] structure = new Object[][][]{
 			{
@@ -99,7 +101,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 
 	private MODE mode;
 
-	Ticket ticket;
+	private Ticket ticket;
 
 	public TileOrbitalLaserDrill() {
 		super();
@@ -135,6 +137,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	//Required so we see the laser
 	@SideOnly(Side.CLIENT)
 	@Override
+	@Nonnull
 	public AxisAlignedBB getRenderBoundingBox() {
 		return new AxisAlignedBB(this.pos.getX() -5, this.pos.getY() - 1000, this.pos.getZ() - 5, this.pos.getX() + 5, this.pos.getY() +50, this.pos.getZ() + 5);
 	}
@@ -265,7 +268,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	@Override
 	public void update() {
 		
-		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
+		//Freaky janky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0 && !world.isRemote) {
 			if(isComplete())
 				canRender = completeStructure = completeStructure(world.getBlockState(pos));
@@ -518,6 +521,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int i) {
 		if(i == 0)
 			return lens;
@@ -528,6 +532,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int i, int j) {
 		ItemStack ret;
 
@@ -540,7 +545,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	}
 
 	@Override
-	public void setInventorySlotContents(int i, ItemStack itemstack) {
+	public void setInventorySlotContents(int i, @Nonnull ItemStack itemstack) {
 
 		//TODO: add gregcipies
 		if(i == 0)
@@ -555,6 +560,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	}
 
 	@Override
+	@Nonnull
 	public String getName() {
 		return LibVulpes.proxy.getLocalizedString("tile.spaceLaser.name");
 	}
@@ -587,23 +593,24 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	}
 
 	@Override
+	@Nonnull
 	public int[] getSlotsForFace(EnumFacing side) {
 		return new int[] {};
 	}
 
 	
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
+	public boolean canInsertItem(int index, @Nonnull ItemStack itemStackIn, @Nullable EnumFacing direction) {
 		return false;
 	}
 	
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
+	public boolean canExtractItem(int index, @Nonnull ItemStack stack, @Nullable EnumFacing direction) {
 		return false;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+	public boolean isItemValidForSlot(int i, @Nonnull ItemStack itemstack) {
 		if(i == 0)
 			return AdvancedRocketryItems.itemLens == itemstack.getItem();
 
@@ -723,6 +730,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		return ItemStack.EMPTY;
 	}

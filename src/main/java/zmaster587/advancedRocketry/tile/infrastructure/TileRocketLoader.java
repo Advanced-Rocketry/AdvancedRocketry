@@ -34,6 +34,7 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TileRocketLoader extends TileInventoryHatch implements IInfrastructure, ITickable,  IButtonInventory, INetworkMachine, IGuiCallback  {
@@ -53,7 +54,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 		inputRedstoneControl = new ModuleRedstoneOutputButton(174, 32, 1, "", this, LibVulpes.proxy.getLocalizedString("msg.rocketLoader.allowLoading"));
 		inputstate = RedstoneState.OFF;
 		inputRedstoneControl.setRedstoneState(inputstate);
-		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, new String[] {LibVulpes.proxy.getLocalizedString("msg.rocketLoader.none"), LibVulpes.proxy.getLocalizedString("msg.rocketLoader.allowredstoneoutput"), LibVulpes.proxy.getLocalizedString("msg.rocketLoader.allowredstoneinput")});
+		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, LibVulpes.proxy.getLocalizedString("msg.rocketLoader.none"), LibVulpes.proxy.getLocalizedString("msg.rocketLoader.allowredstoneoutput"), LibVulpes.proxy.getLocalizedString("msg.rocketLoader.allowredstoneinput"));
 	}
 
 	public TileRocketLoader(int size) {
@@ -71,7 +72,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 		inputRedstoneControl = new ModuleRedstoneOutputButton(174, 32, 1, "", this, LibVulpes.proxy.getLocalizedString("msg.rocketLoader.allowLoading"));
 		inputstate = RedstoneState.OFF;
 		inputRedstoneControl.setRedstoneState(inputstate);
-		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, new String[] {LibVulpes.proxy.getLocalizedString("msg.rocketLoader.none"), LibVulpes.proxy.getLocalizedString("msg.rocketLoader.allowredstoneoutput"), LibVulpes.proxy.getLocalizedString("msg.rocketLoader.allowredstoneinput")});
+		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, LibVulpes.proxy.getLocalizedString("msg.rocketLoader.none"), LibVulpes.proxy.getLocalizedString("msg.rocketLoader.allowredstoneoutput"), LibVulpes.proxy.getLocalizedString("msg.rocketLoader.allowredstoneinput"));
 
 	}
 
@@ -231,8 +232,8 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 	}
 
 	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
+							   EntityPlayer player, World world) {
 
 		ItemLinker.setMasterCoords(item, this.pos);
 
@@ -247,7 +248,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 	}
 
 	@Override
-	public boolean onLinkComplete(ItemStack item, TileEntity entity,
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("msg.linker.error.firstMachine"));
@@ -284,7 +285,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 	}
 
 	@Override
-	public boolean linkMission(IMission misson) {
+	public boolean linkMission(IMission mission) {
 		return false;
 	}
 

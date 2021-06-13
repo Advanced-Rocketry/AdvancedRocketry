@@ -24,6 +24,7 @@ import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 
+import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -103,8 +104,8 @@ public class XMLPlanetLoader {
 	int starId;
 	int offset;
 
-	HashMap<StellarBody, Integer> maxPlanetNumber = new HashMap<StellarBody, Integer>();
-	HashMap<StellarBody, Integer> maxGasPlanetNumber = new HashMap<StellarBody, Integer>();
+	HashMap<StellarBody, Integer> maxPlanetNumber = new HashMap<>();
+	HashMap<StellarBody, Integer> maxGasPlanetNumber = new HashMap<>();
 
 	public boolean loadFile(File xmlFile) throws IOException {
 		DocumentBuilder docBuilder;
@@ -223,12 +224,12 @@ public class XMLPlanetLoader {
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GAS)) {
-				Fluid f = FluidRegistry.getFluid(planetPropertyNode.getTextContent());
+				Fluid fluid = FluidRegistry.getFluid(planetPropertyNode.getTextContent());
 
-				if(f == null)
+				if(fluid == null)
 					AdvancedRocketry.logger.warn( "\"" + planetPropertyNode.getTextContent() + "\" is not a valid fluid"); //TODO: more detailed error msg
 				else {
-					properties.getHarvestableGasses().add(f);
+					properties.getHarvestableGasses().add(fluid);
 				}
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_OCEANBLOCK)) {
@@ -469,7 +470,7 @@ public class XMLPlanetLoader {
 					groupMax = groupMin;
 				}
 
-				Class clazz = (Class) EntityList.getClass(new ResourceLocation(planetPropertyNode.getTextContent()));
+				Class clazz = EntityList.getClass(new ResourceLocation(planetPropertyNode.getTextContent()));
 
 				//If not using string name maybe it's a class name?
 				if(clazz == null) {
@@ -1091,6 +1092,7 @@ public class XMLPlanetLoader {
 
 	}
 
+	@Nonnull
 	public static ItemStack getStack(String text) {
 		String[] splitStr = text.split(" ");
 		int meta = 0;
@@ -1109,7 +1111,7 @@ public class XMLPlanetLoader {
 			}
 		}
 
-		ItemStack stack = null;
+		ItemStack stack = ItemStack.EMPTY;
 		Block block = Block.getBlockFromName(splitStr[0]);
 		if(block == null) {
 			Item item = Item.getByNameOrId(splitStr[0]);

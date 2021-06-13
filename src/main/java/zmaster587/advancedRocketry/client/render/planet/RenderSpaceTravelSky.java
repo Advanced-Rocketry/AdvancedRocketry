@@ -12,28 +12,19 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.IRenderHandler;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
 
-import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
-import zmaster587.advancedRocketry.client.render.entity.RenderPlanetUIEntity;
-import zmaster587.advancedRocketry.client.render.multiblocks.RendererWarpCore;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.entity.EntityRocket;
-import zmaster587.advancedRocketry.entity.EntityUIPlanet;
-import zmaster587.advancedRocketry.entity.EntityUIStar;
 import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
@@ -74,7 +65,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 	//Mostly vanilla code
 	//TODO: make usable on other planets
 	public RenderSpaceTravelSky() {
-		axis = new Vector3F<Float>(1f, 0f, 0f);
+		axis = new Vector3F<>(1f, 0f, 0f);
 
 		this.starGLCallList = GLAllocation.generateDisplayLists(3);
 		GL11.glPushMatrix();
@@ -96,10 +87,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 			for (k = -b2 * i; k <= b2 * i; k += b2)
 			{
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-				buffer.pos((double)(j + 0), (double)f, (double)(k + 0)).endVertex();
-				buffer.pos((double)(j + b2), (double)f, (double)(k + 0)).endVertex();
-				buffer.pos((double)(j + b2), (double)f, (double)(k + b2)).endVertex();
-				buffer.pos((double)(j + 0), (double)f, (double)(k + b2)).endVertex();
+				buffer.pos(j    , f, k     ).endVertex();
+				buffer.pos(j + b2, f, k     ).endVertex();
+				buffer.pos(j + b2, f, k + b2).endVertex();
+				buffer.pos(j    , f, k + b2).endVertex();
 				Tessellator.getInstance().draw();
 			}
 		}
@@ -114,10 +105,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 		{
 			for (k = -b2 * i; k <= b2 * i; k += b2)
 			{
-				buffer.pos((double)(j + 0), (double)f, (double)(k + 0)).endVertex();
-				buffer.pos((double)(j + b2), (double)f, (double)(k + 0)).endVertex();
-				buffer.pos((double)(j + b2), (double)f, (double)(k + b2)).endVertex();
-				buffer.pos((double)(j + 0), (double)f, (double)(k + b2)).endVertex();
+				buffer.pos((j     ), f, (k     )).endVertex();
+				buffer.pos((j + b2), f, (k     )).endVertex();
+				buffer.pos((j + b2), f, (k + b2)).endVertex();
+				buffer.pos((j     ), f, (k + b2)).endVertex();
 			}
 		}
 
@@ -227,8 +218,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 
 	public void renderStar(StellarBody entity, SpacePosition position, SpacePosition playerSpacePosition) {
 
-		StellarBody body = entity;
-		if(body == null)
+		if(entity == null)
 			return;
 
 		if(entity.isBlackHole())
@@ -281,10 +271,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 				GlStateManager.color((float)1, (float).5 , (float).4 ,1f);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 				f10 = sunSize*40f;
-				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
-				buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
 				Tessellator.getInstance().draw();
 				GL11.glPopMatrix();
 
@@ -298,10 +288,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 				f10 = sunSize*30f;
 				//multiplier = 2;
-				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
-				buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
 				Tessellator.getInstance().draw();
 				GL11.glPopMatrix();
 
@@ -315,10 +305,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 				f10 = sunSize*15f;
 				//multiplier = 2;
-				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
-				buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
 				Tessellator.getInstance().draw();
 				GL11.glPopMatrix();
 			}
@@ -352,7 +342,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
 			//GlStateManager.color((float)1, (float).5 , (float).4 ,1f);
 
-			GlStateManager.color(body.getColor()[0], body.getColor()[1], body.getColor()[2]);
+			GlStateManager.color(entity.getColor()[0], entity.getColor()[1], entity.getColor()[2]);
 
 			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.0f);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -399,10 +389,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 
 		for (int i = 0; i < 2000; ++i)
 		{
-			double d0 = (double)(random.nextFloat() * 2.0F - 1.0F);
-			double d1 = (double)(random.nextFloat() * 2.0F - 1.0F);
-			double d2 = (double)(random.nextFloat() * 2.0F - 1.0F);
-			double d3 = (double)(0.15F + random.nextFloat() * 0.1F);
+			double d0 = random.nextFloat() * 2.0F - 1.0F;
+			double d1 = random.nextFloat() * 2.0F - 1.0F;
+			double d2 = random.nextFloat() * 2.0F - 1.0F;
+			double d3 = 0.15F + random.nextFloat() * 0.1F;
 			double d4 = d0 * d0 + d1 * d1 + d2 * d2;
 
 			if (d4 < 1.0D && d4 > 0.01D)
@@ -466,7 +456,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 			renderPlanet(playerPosition.world, newSpacePos, playerPosition, sizeScale);
 
 			//render subplanets
-			List<IDimensionProperties> subPlanets = new LinkedList<IDimensionProperties>();
+			List<IDimensionProperties> subPlanets = new LinkedList<>();
 			getAllPlanets(subPlanets, playerPosition.world);
 
 			for(IDimensionProperties subproperty : subPlanets)
@@ -543,10 +533,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 				double distance = getDistance(playerPosition, spacePos);
 
 				sizeScale = property.isMoon() ? sizeScale*0.2f : sizeScale;
-				//sizeScale*=100/(distance*distance);
+				//sizeScale *= 100f/(distance*distance);
 
 				renderPlanet(property, spacePos, playerPosition, sizeScale);
-				List<IDimensionProperties> subPlanets = new LinkedList<IDimensionProperties>();
+				List<IDimensionProperties> subPlanets = new LinkedList<>();
 				getAllPlanets(subPlanets, property);
 
 				for(IDimensionProperties subproperty : subPlanets)
@@ -554,7 +544,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 					SpacePosition subPlanetPos = subproperty.getSpacePosition();
 					sizeScale = subproperty.getRenderSizeSolarView();
 
-					//sizeScale*=10/(distance*distance);
+					//sizeScale*=10f/(distance*distance);
 
 					subPlanetPos.x = subPlanetPos.x/10f + spacePos.x;
 					subPlanetPos.y = subPlanetPos.y/10f + spacePos.y;
@@ -576,19 +566,17 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 
 
 			if(subStars != null && !subStars.isEmpty()) {
-				float phaseInc = 360/subStars.size();
+				float phaseInc = 360f / subStars.size();
 				double phase = 0;
 				for(StellarBody subStar : subStars) {
-					float solarOrbitalDistance = 40*subStar.getStarSeparation();
-
-					SpacePosition subStarSpacePosition = new SpacePosition();
+					float solarOrbitalDistance = 40 * subStar.getStarSeparation();
 
 					//Radius to put the player
 					double radius = solarOrbitalDistance;
 					double theta = phase;
 					phase += phaseInc;
 
-					subStarSpacePosition = mainStarPos.getFromSpherical(radius, theta);
+					SpacePosition subStarSpacePosition = mainStarPos.getFromSpherical(radius, theta);
 
 					renderStar(subStar, subStarSpacePosition, playerPosition);
 				}
@@ -651,11 +639,11 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 		float rotationXZ = ActiveRenderInfo.getRotationXY();
 
 
-		Vec3d[] avec3d = new Vec3d[] {new Vec3d((double)(-rotationX * f4 - rotationXY * f4), (double)(-rotationZ * f4), (double)(-rotationYZ * f4 - rotationXZ * f4)), new Vec3d((double)(-rotationX * f4 + rotationXY * f4), (double)(rotationZ * f4), (double)(-rotationYZ * f4 + rotationXZ * f4)), new Vec3d((double)(rotationX * f4 + rotationXY * f4), (double)(rotationZ * f4), (double)(rotationYZ * f4 + rotationXZ * f4)), new Vec3d((double)(rotationX * f4 - rotationXY * f4), (double)(-rotationZ * f4), (double)(rotationYZ * f4 - rotationXZ * f4))};
-		buffer.pos((double)f5 + avec3d[0].x, (double)f6 + avec3d[0].y, (double)f7 + avec3d[0].z).tex((double)f1, (double)f3).endVertex();
-		buffer.pos((double)f5 + avec3d[1].x, (double)f6 + avec3d[1].y, (double)f7 + avec3d[1].z).tex((double)f1, (double)f2).endVertex();
-		buffer.pos((double)f5 + avec3d[2].x, (double)f6 + avec3d[2].y, (double)f7 + avec3d[2].z).tex((double)f, (double)f2).endVertex();
-		buffer.pos((double)f5 + avec3d[3].x, (double)f6 + avec3d[3].y, (double)f7 + avec3d[3].z).tex((double)f, (double)f3).endVertex();
+		Vec3d[] avec3d = new Vec3d[] {new Vec3d(-rotationX * f4 - rotationXY * f4, -rotationZ * f4, -rotationYZ * f4 - rotationXZ * f4), new Vec3d(-rotationX * f4 + rotationXY * f4, rotationZ * f4, -rotationYZ * f4 + rotationXZ * f4), new Vec3d(rotationX * f4 + rotationXY * f4, rotationZ * f4, rotationYZ * f4 + rotationXZ * f4), new Vec3d(rotationX * f4 - rotationXY * f4, -rotationZ * f4, rotationYZ * f4 - rotationXZ * f4)};
+		buffer.pos((double)f5 + avec3d[0].x, (double)f6 + avec3d[0].y, (double)f7 + avec3d[0].z).tex(f1, f3).endVertex();
+		buffer.pos((double)f5 + avec3d[1].x, (double)f6 + avec3d[1].y, (double)f7 + avec3d[1].z).tex(f1, f2).endVertex();
+		buffer.pos((double)f5 + avec3d[2].x, (double)f6 + avec3d[2].y, (double)f7 + avec3d[2].z).tex(f, f2).endVertex();
+		buffer.pos((double)f5 + avec3d[3].x, (double)f6 + avec3d[3].y, (double)f7 + avec3d[3].z).tex(f, f3).endVertex();
 	}
 
 	private void setupSpaceCam(float partialTicks)
@@ -680,7 +668,7 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
 		//Get player position first
 		setupSpaceCam(partialTicks);
-		SpacePosition spacePosition = null;
+		SpacePosition spacePosition;
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		if(player == null)
 			return;
@@ -853,19 +841,19 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 				Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.planetRings);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-				buffer.pos(-ringSize, zLevel-0.01f, ringSize).tex((double)f16, (double)f17).endVertex();
-				buffer.pos(ringSize, zLevel-0.01f, ringSize).tex((double)f14, (double)f17).endVertex();
-				buffer.pos(ringSize, zLevel-0.01f, -ringSize).tex((double)f14, (double)f15).endVertex();
-				buffer.pos(-ringSize, zLevel-0.01f, -ringSize).tex((double)f16, (double)f15).endVertex();
+				buffer.pos(-ringSize, zLevel-0.01f, ringSize).tex(f16, f17).endVertex();
+				buffer.pos(ringSize, zLevel-0.01f, ringSize).tex(f14, f17).endVertex();
+				buffer.pos(ringSize, zLevel-0.01f, -ringSize).tex(f14, f15).endVertex();
+				buffer.pos(-ringSize, zLevel-0.01f, -ringSize).tex(f16, f15).endVertex();
 				Tessellator.getInstance().draw();
 
 				GlStateManager.color(0f, 0f, 0f, alphaMultiplier);
 				Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.planetRingShadow);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-				buffer.pos(-ringSize, zLevel-0.01f, ringSize).tex((double)f16, (double)f17).endVertex();
-				buffer.pos(ringSize, zLevel-0.01f, ringSize).tex((double)f14, (double)f17).endVertex();
-				buffer.pos(ringSize, zLevel-0.01f, -ringSize).tex((double)f14, (double)f15).endVertex();
-				buffer.pos(-ringSize, zLevel-0.01f, -ringSize).tex((double)f16, (double)f15).endVertex();
+				buffer.pos(-ringSize, zLevel-0.01f, ringSize).tex(f16, f17).endVertex();
+				buffer.pos(ringSize, zLevel-0.01f, ringSize).tex(f14, f17).endVertex();
+				buffer.pos(ringSize, zLevel-0.01f, -ringSize).tex(f14, f15).endVertex();
+				buffer.pos(-ringSize, zLevel-0.01f, -ringSize).tex(f16, f15).endVertex();
 				Tessellator.getInstance().draw();
 			}
 
@@ -874,10 +862,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.atmGlow);
 
 			GlStateManager.color(1f, 1f, 1f, alphaMultiplier);
-			buffer.pos(-f10, zLevel+0.01f, f10).tex((double)f16, (double)f17).endVertex();
-			buffer.pos(f10, zLevel+0.01f, f10).tex((double)f14, (double)f17).endVertex();
-			buffer.pos(f10, zLevel+0.01f, -f10).tex((double)f14, (double)f15).endVertex();
-			buffer.pos(-f10, zLevel+0.01f, -f10).tex((double)f16, (double)f15).endVertex();
+			buffer.pos(-f10, zLevel+0.01f, f10).tex(f16, f17).endVertex();
+			buffer.pos(f10, zLevel+0.01f, f10).tex(f14, f17).endVertex();
+			buffer.pos(f10, zLevel+0.01f, -f10).tex(f14, f15).endVertex();
+			buffer.pos(-f10, zLevel+0.01f, -f10).tex(f16, f15).endVertex();
 			Tessellator.getInstance().draw();
 			GL11.glPopMatrix();
 		}
@@ -891,10 +879,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
 		GlStateManager.color(1f, 1f, 1f, alphaMultiplier);
-		buffer.pos(-f10, zLevel, f10).tex((double)f16, (double)f17).endVertex();
-		buffer.pos(f10, zLevel, f10).tex((double)f14, (double)f17).endVertex();
-		buffer.pos(f10, zLevel, -f10).tex((double)f14, (double)f15).endVertex();
-		buffer.pos(-f10, zLevel, -f10).tex((double)f16, (double)f15).endVertex();
+		buffer.pos(-f10, zLevel, f10).tex(f16, f17).endVertex();
+		buffer.pos(f10, zLevel, f10).tex(f14, f17).endVertex();
+		buffer.pos(f10, zLevel, -f10).tex(f14, f15).endVertex();
+		buffer.pos(-f10, zLevel, -f10).tex(f16, f15).endVertex();
 		Tessellator.getInstance().draw();
 		//buffer.finishDrawing();
 
@@ -908,10 +896,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.getAtmosphereResource());
 				GlStateManager.color(skyColor[0], skyColor[1], skyColor[2], alphaMultiplier);
-				buffer.pos(-f10, zLevel, f10).tex((double)f16, (double)f17).endVertex();
-				buffer.pos(f10, zLevel, f10).tex((double)f14, (double)f17).endVertex();
-				buffer.pos(f10, zLevel, -f10).tex((double)f14, (double)f15).endVertex();
-				buffer.pos(-f10, zLevel, -f10).tex((double)f16, (double)f15).endVertex();
+				buffer.pos(-f10, zLevel, f10).tex(f16, f17).endVertex();
+				buffer.pos(f10, zLevel, f10).tex(f14, f17).endVertex();
+				buffer.pos(f10, zLevel, -f10).tex(f14, f15).endVertex();
+				buffer.pos(-f10, zLevel, -f10).tex(f16, f15).endVertex();
 				Tessellator.getInstance().draw();
 				//buffer.finishDrawing();
 
@@ -925,10 +913,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.getShadowResource());
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GlStateManager.color(1f, 1f, 1f, alphaMultiplier);
-			buffer.pos(-f10, zLevel-0.01f, f10).tex((double)f16, (double)f17).endVertex();
-			buffer.pos(f10, zLevel-0.01f, f10).tex((double)f14, (double)f17).endVertex();
-			buffer.pos(f10, zLevel-0.01f, -f10).tex((double)f14, (double)f15).endVertex();
-			buffer.pos(-f10, zLevel-0.01f, -f10).tex((double)f16, (double)f15).endVertex();
+			buffer.pos(-f10, zLevel-0.01f, f10).tex(f16, f17).endVertex();
+			buffer.pos(f10, zLevel-0.01f, f10).tex(f14, f17).endVertex();
+			buffer.pos(f10, zLevel-0.01f, -f10).tex(f14, f15).endVertex();
+			buffer.pos(-f10, zLevel-0.01f, -f10).tex(f16, f15).endVertex();
 			Tessellator.getInstance().draw();
 		}
 
@@ -959,10 +947,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 			float f10 = sunSize*5f*(202-solarOrbitalDistance)/100f;
 			//multiplier = 2;
-			buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
-			buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
-			buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
-			buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+			buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+			buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+			buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+			buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
 			Tessellator.getInstance().draw();
 			GL11.glPopMatrix();
 
@@ -981,10 +969,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 				GlStateManager.color((float)1, (float).5 , (float).4 ,1f);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 				f10 = sunSize*40f*(202-solarOrbitalDistance)/100f;
-				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
-				buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
 				Tessellator.getInstance().draw();
 				GL11.glPopMatrix();
 
@@ -998,10 +986,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 				f10 = sunSize*30f*(202-solarOrbitalDistance)/100f;
 				//multiplier = 2;
-				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
-				buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
 				Tessellator.getInstance().draw();
 				GL11.glPopMatrix();
 
@@ -1015,10 +1003,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 				f10 = sunSize*15f*(202-solarOrbitalDistance)/100f;
 				//multiplier = 2;
-				buffer.pos((double)(-f10), 0.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
-				buffer.pos((double)f10, 0.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
-				buffer.pos((double)(-f10), 0.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
 				Tessellator.getInstance().draw();
 				GL11.glPopMatrix();
 			}
@@ -1035,10 +1023,10 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 			float f10 = sunSize*30f*(202-solarOrbitalDistance)/100f;
 			//multiplier = 2;
-			buffer.pos((double)(-f10), 100.0D, (double)(-f10)).tex(0.0D, 0.0D).endVertex();
-			buffer.pos((double)f10, 100.0D, (double)(-f10)).tex(1.0D, 0.0D).endVertex();
-			buffer.pos((double)f10, 100.0D, (double)f10).tex(1.0D, 1.0D).endVertex();
-			buffer.pos((double)(-f10), 100.0D, (double)f10).tex(0.0D, 1.0D).endVertex();
+			buffer.pos(-f10, 100.0D, -f10).tex(0.0D, 0.0D).endVertex();
+			buffer.pos(f10, 100.0D, -f10).tex(1.0D, 0.0D).endVertex();
+			buffer.pos(f10, 100.0D, f10).tex(1.0D, 1.0D).endVertex();
+			buffer.pos(-f10, 100.0D, f10).tex(0.0D, 1.0D).endVertex();
 			Tessellator.getInstance().draw();
 		}
 	}

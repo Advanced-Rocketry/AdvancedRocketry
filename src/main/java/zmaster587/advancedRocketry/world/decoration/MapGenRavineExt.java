@@ -24,11 +24,10 @@ public class MapGenRavineExt extends MapGenRavine {
 	
     private boolean isExceptionBiome(net.minecraft.world.biome.Biome biome)
     {
-        if (biome == net.minecraft.init.Biomes.BEACH) return true;
-        if (biome == net.minecraft.init.Biomes.DESERT) return true;
-        if (biome == net.minecraft.init.Biomes.MUSHROOM_ISLAND) return true;
-        if (biome == net.minecraft.init.Biomes.MUSHROOM_ISLAND_SHORE) return true;
-        return false;
+        return biome == net.minecraft.init.Biomes.BEACH ||
+        biome == net.minecraft.init.Biomes.DESERT ||
+        biome == net.minecraft.init.Biomes.MUSHROOM_ISLAND ||
+        biome == net.minecraft.init.Biomes.MUSHROOM_ISLAND_SHORE;
     }
     
     protected void digBlock(ChunkPrimer data, int x, int y, int z, int chunkX, int chunkZ, boolean foundTop)

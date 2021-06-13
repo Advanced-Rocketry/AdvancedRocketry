@@ -15,7 +15,7 @@ import java.util.Map.Entry;
 
 public class IngameTestOrchestrator {
 	
-	static final Map<Long, PlayerMapping> eventScheduler = new HashMap<Long, PlayerMapping>();
+	static final Map<Long, PlayerMapping> eventScheduler = new HashMap<>();
 	public static String name;
 	public static boolean registered = false;
 	public static IngameTestOrchestrator instance = new IngameTestOrchestrator();

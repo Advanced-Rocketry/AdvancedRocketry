@@ -2,7 +2,6 @@ package zmaster587.advancedRocketry.api.dimension.solar;
 
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class Planet {
@@ -63,10 +62,8 @@ public class Planet {
 	 * If a satellite is registered to tick, then it is ticked in this method
 	 */
 	public void tick() {
-		Iterator<SatelliteBase> iterator = tickingSatellites.iterator();
-		
-		while(iterator.hasNext()) {
-			SatelliteBase satellite = iterator.next();
+
+		for (SatelliteBase satellite : tickingSatellites) {
 			satellite.tickEntity();
 		}
 	}

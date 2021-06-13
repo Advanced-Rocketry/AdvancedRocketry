@@ -6,6 +6,8 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class EnchantmentSpaceBreathing extends Enchantment {
 
 	public EnchantmentSpaceBreathing() {
@@ -14,13 +16,13 @@ public class EnchantmentSpaceBreathing extends Enchantment {
 	}
 	
 	@Override
-	public boolean canApplyAtEnchantingTable(ItemStack stack) {
+	public boolean canApplyAtEnchantingTable(@Nonnull ItemStack stack) {
 		return false;
 	}
 
 	@Override
-	public boolean canApply(ItemStack stack) {
-		return stack != null && stack.getItem() instanceof ItemArmor;
+	public boolean canApply(@Nonnull ItemStack stack) {
+		return !stack.isEmpty() && stack.getItem() instanceof ItemArmor;
 	}
 	
 	@Override

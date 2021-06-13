@@ -27,7 +27,7 @@ public class LiquidNetwork extends CableNetwork {
 
 		int id = random.nextInt();
 
-		while(usedIds.contains(id)){ id = random.nextInt(); };
+		while(usedIds.contains(id)){ id = random.nextInt(); }
 
 		LiquidNetwork net = new LiquidNetwork();
 
@@ -54,8 +54,8 @@ public class LiquidNetwork extends CableNetwork {
 		while(sinkItr.hasNext()) {
 
 			//Get tile and key
-			Entry<TileEntity,EnumFacing> obj = (Entry<TileEntity, EnumFacing>)sinkItr.next();
-			IFluidHandler fluidHandleSink = (IFluidHandler)obj.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
+			Entry<TileEntity,EnumFacing> obj = sinkItr.next();
+			IFluidHandler fluidHandleSink = obj.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
 			EnumFacing dir = obj.getValue();
 
 			Iterator<Entry<TileEntity,EnumFacing>> sourceItr = sources.iterator();
@@ -80,8 +80,8 @@ public class LiquidNetwork extends CableNetwork {
 			if(fluid == null) {
 				out:
 					while(sourceItr.hasNext()) {
-						Entry<TileEntity,EnumFacing> objSource = (Entry<TileEntity, EnumFacing>)sourceItr.next();
-						IFluidHandler fluidHandleSource = (IFluidHandler)objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
+						Entry<TileEntity,EnumFacing> objSource = sourceItr.next();
+						IFluidHandler fluidHandleSource = objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
 
 						if(fluidHandleSource == null) {
 							sourceItr.remove();
@@ -111,8 +111,8 @@ public class LiquidNetwork extends CableNetwork {
 				int maxFill = Math.min(fluidHandleSink.fill(new FluidStack(fluid, amount), false), amount);
 				int actualFill = 0;
 				while(sourceItr.hasNext()) {
-					Entry<TileEntity,EnumFacing> objSource = (Entry<TileEntity, EnumFacing>)sourceItr.next();
-					IFluidHandler fluidHandleSource = (IFluidHandler)objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
+					Entry<TileEntity,EnumFacing> objSource = sourceItr.next();
+					IFluidHandler fluidHandleSource = objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
 					
 					FluidStack fluid2;
 					if((fluid2 = fluidHandleSource.drain(maxFill, false)) != null) {

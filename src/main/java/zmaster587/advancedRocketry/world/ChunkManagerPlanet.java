@@ -17,8 +17,8 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.world.type.WorldTypePlanetGen;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -58,9 +58,9 @@ public class ChunkManagerPlanet extends BiomeProvider {
 	}
 
 
-	public ChunkManagerPlanet(World world, String str, List biomes)
+	public ChunkManagerPlanet(World world, String str, List<BiomeEntry> biomes)
 	{
-		this(world.getSeed(), (WorldTypePlanetGen)AdvancedRocketry.planetWorldType, str, DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()));
+		this(world.getSeed(), AdvancedRocketry.planetWorldType, str, DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()));
 		//Note: world MUST BE REGISTERED WITH THE DIMENSION MANAGER
 		//This is a mess!
 		this.biomes = biomes;
@@ -146,7 +146,7 @@ public class ChunkManagerPlanet extends BiomeProvider {
 
 		for (int k = 0; k < i; ++k)
 		{
-			genlayerhills = new GenLayerZoom((long)(1000 + k), genlayerhills);
+			genlayerhills = new GenLayerZoom(1000 + k, genlayerhills);
 
 			if (k == 0)
 			{
@@ -196,14 +196,15 @@ public class ChunkManagerPlanet extends BiomeProvider {
 		}
 	}
 
-	public Biome[] getBiomesForGeneration(Biome[] biomes, int x, int z, int width, int height)
+	@Nonnull
+	public Biome[] getBiomesForGeneration(@Nonnull Biome[] biomes, int x, int z, int width, int height)
 	{
 		GenLayerBiomePlanet.setupBiomesForUse(this.biomes);
 		//return super.getBiomesForGeneration(p_76937_1_, p_76937_2_, p_76937_3_, p_76937_4_, p_76937_5_);
 
 		IntCache.resetIntCache();
 
-		if (biomes == null || biomes.length < width * height)
+		if (biomes.length < width * height)
 		{
 			biomes = new Biome[width * height];
 		}
@@ -223,11 +224,11 @@ public class ChunkManagerPlanet extends BiomeProvider {
 		{
 			CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Invalid Biome id");
 			CrashReportCategory crashreportcategory = crashreport.makeCategory("RawBiomeBlock");
-			crashreportcategory.addCrashSection("biomes[] size", Integer.valueOf(biomes.length));
-			crashreportcategory.addCrashSection("x", Integer.valueOf(x));
-			crashreportcategory.addCrashSection("z", Integer.valueOf(z));
-			crashreportcategory.addCrashSection("w", Integer.valueOf(width));
-			crashreportcategory.addCrashSection("h", Integer.valueOf(height));
+			crashreportcategory.addCrashSection("biomes[] size", biomes.length);
+			crashreportcategory.addCrashSection("x", x);
+			crashreportcategory.addCrashSection("z", z);
+			crashreportcategory.addCrashSection("w", width);
+			crashreportcategory.addCrashSection("h", height);
 			throw new ReportedException(crashreport);
 		}
 	}
@@ -252,6 +253,7 @@ public class ChunkManagerPlanet extends BiomeProvider {
 	 * don't check biomeCache to avoid infinite loop in BiomeCacheBlock)
 	 */
 	@Override
+	@Nonnull
 	public Biome[] getBiomes(@Nullable Biome[] listToReuse, int x, int z, int width, int length, boolean cacheFlag) {
 
 		GenLayerBiomePlanet.setupBiomesForUse(biomes);

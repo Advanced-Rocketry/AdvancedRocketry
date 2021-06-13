@@ -1,12 +1,8 @@
 package zmaster587.advancedRocketry.network;
 
-import java.util.LinkedList;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.util.SpacePosition;
 import zmaster587.libVulpes.network.BasePacket;
 

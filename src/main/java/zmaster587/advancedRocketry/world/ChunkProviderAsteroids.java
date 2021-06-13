@@ -129,13 +129,13 @@ public class ChunkProviderAsteroids extends ChunkProviderPlanet {
                 for (int l1 = 0; l1 < 16; ++l1)
                 {
                     double d0 = 0.125D;
-                    double d1 = this.buffer[((j1 + 0) * 5 + k1 + 0) * 17 + l1 + 0];
-                    double d2 = this.buffer[((j1 + 0) * 5 + k1 + 1) * 17 + l1 + 0];
-                    double d3 = this.buffer[((j1 + 1) * 5 + k1 + 0) * 17 + l1 + 0];
-                    double d4 = this.buffer[((j1 + 1) * 5 + k1 + 1) * 17 + l1 + 0];
-                    double d5 = (this.buffer[((j1 + 0) * 5 + k1 + 0) * 17 + l1 + 1] - d1) * d0;
-                    double d6 = (this.buffer[((j1 + 0) * 5 + k1 + 1) * 17 + l1 + 1] - d2) * d0;
-                    double d7 = (this.buffer[((j1 + 1) * 5 + k1 + 0) * 17 + l1 + 1] - d3) * d0;
+                    double d1 =  this.buffer[((j1    ) * 5 + k1    ) * 17 + l1    ];
+                    double d2 =  this.buffer[((j1    ) * 5 + k1 + 1) * 17 + l1    ];
+                    double d3 =  this.buffer[((j1 + 1) * 5 + k1    ) * 17 + l1    ];
+                    double d4 =  this.buffer[((j1 + 1) * 5 + k1 + 1) * 17 + l1    ];
+                    double d5 = (this.buffer[((j1    ) * 5 + k1    ) * 17 + l1 + 1] - d1) * d0;
+                    double d6 = (this.buffer[((j1    ) * 5 + k1 + 1) * 17 + l1 + 1] - d2) * d0;
+                    double d7 = (this.buffer[((j1 + 1) * 5 + k1    ) * 17 + l1 + 1] - d3) * d0;
                     double d8 = (this.buffer[((j1 + 1) * 5 + k1 + 1) * 17 + l1 + 1] - d4) * d0;
 
                     for (int i2 = 0; i2 < 8; ++i2)
@@ -236,7 +236,7 @@ public class ChunkProviderAsteroids extends ChunkProviderPlanet {
 
                     if (j1 > p_185963_6_ / 2 - k1)
                     {
-                        double d6 = (double)((float)(j1 - (p_185963_6_ / 2 - k1)) / 64.0F);
+                        double d6 = (float)(j1 - (p_185963_6_ / 2 - k1)) / 64.0F;
                         d6 = MathHelper.clamp(d6, 0.0D, 1.0D);
                         d4 = d4 * (1.0D - d6) + -3000.0D * d6;
                     }
@@ -245,7 +245,7 @@ public class ChunkProviderAsteroids extends ChunkProviderPlanet {
 
                     if (j1 < k1)
                     {
-                        double d7 = (double)((float)(k1 - j1) / ((float)k1 - 1.0F));
+                        double d7 = (float)(k1 - j1) / ((float)k1 - 1.0F);
                         d4 = d4 * (1.0D - d7) + -30.0D * d7;
                     }
 
@@ -278,8 +278,8 @@ public class ChunkProviderAsteroids extends ChunkProviderPlanet {
         {
             for (int j = -12; j <= 12; ++j)
             {
-                long k = (long)(p_185960_1_ + i);
-                long l = (long)(p_185960_2_ + j);
+                long k = p_185960_1_ + i;
+                long l = p_185960_2_ + j;
 
                 if (this.islandNoise.getValue((double)k, (double)l) < -0.9399999761581421D)
                 {
@@ -327,7 +327,7 @@ public class ChunkProviderAsteroids extends ChunkProviderPlanet {
 		}
 		
 		Chunk chunk = new Chunk(this.world, chunkprimer, x, z);
-		Biome[] abiome = this.world.getBiomeProvider().getBiomes((Biome[])null, x * 16, z * 16, 16, 16);
+		Biome[] abiome = this.world.getBiomeProvider().getBiomes(null, x * 16, z * 16, 16, 16);
 		byte[] abyte = chunk.getBiomeArray();
 
 		for (int i = 0; i < abyte.length; ++i)

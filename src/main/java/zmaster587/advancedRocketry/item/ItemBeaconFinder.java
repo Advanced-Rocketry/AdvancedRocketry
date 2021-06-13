@@ -26,40 +26,41 @@ import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemBeaconFinder extends Item implements IArmorComponent {
 
 	@Override
-	public void onTick(World world, EntityPlayer player, ItemStack armorStack,
-			IInventory modules, ItemStack componentStack) {
+	public void onTick(World world, EntityPlayer player, @Nonnull ItemStack armorStack,
+			IInventory modules, @Nonnull ItemStack componentStack) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public boolean onComponentAdded(World world, ItemStack armorStack) {
+	public boolean onComponentAdded(World world, @Nonnull ItemStack armorStack) {
 		return true;
 	}
 
 	@Override
-	public void onComponentRemoved(World world, ItemStack armorStack) {
+	public void onComponentRemoved(World world, @Nonnull ItemStack armorStack) {
 	}
 
 	@Override
-	public void onArmorDamaged(EntityLivingBase entity, ItemStack armorStack,
-			ItemStack componentStack, DamageSource source, int damage) {
+	public void onArmorDamaged(EntityLivingBase entity, @Nonnull ItemStack armorStack,
+							   @Nonnull ItemStack componentStack, DamageSource source, int damage) {
 	}
 
 	@Override
-	public boolean isAllowedInSlot(ItemStack componentStack,
+	public boolean isAllowedInSlot(@Nonnull ItemStack componentStack,
 			EntityEquipmentSlot armorType) {
 		return armorType == EntityEquipmentSlot.HEAD;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void renderScreen(ItemStack componentStack, List<ItemStack> modules,
+	public void renderScreen(@Nonnull ItemStack componentStack, List<ItemStack> modules,
 			RenderGameOverlayEvent event, Gui gui) {
 		
 		int dimid = Minecraft.getMinecraft().world.provider.getDimension();
@@ -75,7 +76,7 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 				double angle = MathHelper.wrapDegrees(MathHelper.atan2(deltaZ, deltaX)*180/Math.PI + 90 - Minecraft.getMinecraft().player.rotationYawHead);
 				
 				//GL11.glTranslatef(pos.x, pos.y, pos.z);
-				GL11.glTranslated((event.getResolution().getScaledWidth_double()*angle/180f) + event.getResolution().getScaledWidth()/2,0,5);
+				GL11.glTranslated((event.getResolution().getScaledWidth_double()*angle/180f) + event.getResolution().getScaledWidth()/2f,0,5);
 				//GL11.glDepthMask(false);
 				//GL11.glDisable(GL11.GL_TEXTURE_2D);
 				Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.buttonDown[0]);
@@ -99,7 +100,7 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public ResourceIcon getComponentIcon(ItemStack armorStack) {
+	public ResourceIcon getComponentIcon(@Nonnull ItemStack armorStack) {
 		return null;
 	}
 

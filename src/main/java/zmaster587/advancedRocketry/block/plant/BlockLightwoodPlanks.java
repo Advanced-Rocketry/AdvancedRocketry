@@ -3,7 +3,6 @@ package zmaster587.advancedRocketry.block.plant;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -18,7 +17,7 @@ import java.util.List;
 
 public class BlockLightwoodPlanks extends Block  {
 	
-	public static final PropertyEnum<BlockLightwoodPlanks.EnumType> VARIANT = PropertyEnum.<BlockLightwoodPlanks.EnumType>create("variant", BlockLightwoodPlanks.EnumType.class);
+	public static final PropertyEnum<BlockLightwoodPlanks.EnumType> VARIANT = PropertyEnum.create("variant", BlockLightwoodPlanks.EnumType.class);
 	
     public BlockLightwoodPlanks()
     {
@@ -33,7 +32,7 @@ public class BlockLightwoodPlanks extends Block  {
      */
     public int damageDropped(IBlockState state)
     {
-        return ((BlockLightwoodPlanks.EnumType)state.getValue(VARIANT)).getMetadata();
+        return state.getValue(VARIANT).getMetadata();
     }
 
     /**
@@ -61,7 +60,7 @@ public class BlockLightwoodPlanks extends Block  {
      */
     public MapColor getMapColor(IBlockState state)
     {
-        return ((BlockLightwoodPlanks.EnumType)state.getValue(VARIANT)).getMapColor();
+        return state.getValue(VARIANT).getMapColor();
     }
 
     /**
@@ -69,15 +68,15 @@ public class BlockLightwoodPlanks extends Block  {
      */
     public int getMetaFromState(IBlockState state)
     {
-        return ((BlockLightwoodPlanks.EnumType)state.getValue(VARIANT)).getMetadata();
+        return state.getValue(VARIANT).getMetadata();
     }
 
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, new IProperty[] {VARIANT});
+        return new BlockStateContainer(this, VARIANT);
     }
 
-    public static enum EnumType implements IStringSerializable
+    public enum EnumType implements IStringSerializable
     {
         ALIEN(0, "alien", MapColor.LAPIS);
 
@@ -88,12 +87,12 @@ public class BlockLightwoodPlanks extends Block  {
         /** The color that represents this entry on a map. */
         private final MapColor mapColor;
 
-        private EnumType(int metaIn, String nameIn, MapColor mapColorIn)
+        EnumType(int metaIn, String nameIn, MapColor mapColorIn)
         {
             this(metaIn, nameIn, nameIn, mapColorIn);
         }
 
-        private EnumType(int metaIn, String nameIn, String unlocalizedNameIn, MapColor mapColorIn)
+        EnumType(int metaIn, String nameIn, String unlocalizedNameIn, MapColor mapColorIn)
         {
             this.meta = metaIn;
             this.name = nameIn;

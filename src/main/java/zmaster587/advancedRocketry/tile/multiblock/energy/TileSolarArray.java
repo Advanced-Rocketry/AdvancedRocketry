@@ -141,7 +141,7 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 				//Slight adjustment to make Earth 0.9995 into a 1.0
 				energyRecieved = (int) (numPanels * 1.0005d * 2 * insolationPowerMultiplier);
 			}
-			powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().solarGeneratorMult);
+			powerMadeLastTick = energyRecieved*ARConfiguration.getCurrentConfig().solarGeneratorMult;
 
 			if(powerMadeLastTick != prevPowerMadeLastTick) {
 				prevPowerMadeLastTick = powerMadeLastTick;

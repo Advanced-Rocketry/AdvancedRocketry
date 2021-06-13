@@ -47,7 +47,6 @@ public class AdvancedRocketryItems {
 	public static Item itemUpgrade;
 	public static Item itemAtmAnalyser;
 	public static Item itemBiomeChanger;
-	public static Item itemAstroBed;
 	public static Item itemBasicLaserGun;
 	public static Item itemSpaceElevatorChip;
 	public static Item itemBeaconFinder;

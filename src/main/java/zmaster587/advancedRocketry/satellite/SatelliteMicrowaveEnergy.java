@@ -11,6 +11,8 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IUniversalEnergyTransmitter;
 
+import javax.annotation.Nonnull;
+
 public class SatelliteMicrowaveEnergy extends SatelliteBase implements IUniversalEnergyTransmitter {
 
 	byte teir;
@@ -20,7 +22,7 @@ public class SatelliteMicrowaveEnergy extends SatelliteBase implements IUniversa
 	}
 
 	@Override
-	public void setProperties(ItemStack satelliteProperties) {
+	public void setProperties(@Nonnull ItemStack satelliteProperties) {
 		super.setProperties(satelliteProperties);
 	}
 	

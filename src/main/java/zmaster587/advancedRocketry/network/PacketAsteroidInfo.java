@@ -39,11 +39,11 @@ public class PacketAsteroidInfo extends BasePacket {
 		packetBuffer.writeFloat(asteroid.probability);				//probability of the asteroid spawning
 		packetBuffer.writeFloat(asteroid.timeMultiplier);
 		
-		packetBuffer.writeInt(asteroid.stackProbabilites.size());
-		for(int i = 0; i < asteroid.stackProbabilites.size(); i++)
+		packetBuffer.writeInt(asteroid.stackProbabilities.size());
+		for(int i = 0; i < asteroid.stackProbabilities.size(); i++)
 		{
 			packetBuffer.writeItemStack(asteroid.itemStacks.get(i));
-			packetBuffer.writeFloat(asteroid.stackProbabilites.get(i));
+			packetBuffer.writeFloat(asteroid.stackProbabilities.get(i));
 		}
 	}
 
@@ -66,7 +66,7 @@ public class PacketAsteroidInfo extends BasePacket {
 		{
 			try {
 				asteroid.itemStacks.add(packetBuffer.readItemStack());
-				asteroid.stackProbabilites.add(packetBuffer.readFloat());
+				asteroid.stackProbabilities.add(packetBuffer.readFloat());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

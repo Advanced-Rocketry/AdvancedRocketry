@@ -11,15 +11,18 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class EntityItemAbducted extends Entity {
 
-	private static final DataParameter<ItemStack> ITEM = EntityDataManager.<ItemStack>createKey(EntityItem.class, DataSerializers.ITEM_STACK);
-	public int lifespan = 6000;
-	public int age = 0;
-	EntityItem itemEntity;
+	private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityItem.class, DataSerializers.ITEM_STACK);
+
+    private int lifespan = 6000;
+	private int age = 0;
+	private EntityItem itemEntity;
 	
 	public EntityItemAbducted(World par1World, double par2, double par4,
-			double par6, ItemStack par8ItemStack) {
+			double par6, @Nonnull ItemStack par8ItemStack) {
 		super(par1World);
 		
 		this.setEntityItemStack(par8ItemStack);
@@ -40,6 +43,14 @@ public class EntityItemAbducted extends Entity {
 		this.motionY = 2;
 		this.motionZ = 0;
 	}
+
+    public int getLifespan() {
+        return lifespan;
+    }
+
+    public int getAge() {
+        return age;
+    }
 	
     protected void entityInit()
     {
@@ -50,7 +61,7 @@ public class EntityItemAbducted extends Entity {
 	public void onUpdate() {
 		ItemStack stack = this.getDataManager().get(ITEM);
 		
-        if (this.getEntityItem() == null)
+        if (this.getEntityItem().isEmpty())
         {
             this.setDead();
         }
@@ -69,7 +80,7 @@ public class EntityItemAbducted extends Entity {
         	this.setDead();
         }
 
-        if (stack != null && stack.getCount() <= 0)
+        if (!stack.isEmpty() && stack.getCount() <= 0)
         {
             this.setDead();
         }
@@ -79,11 +90,12 @@ public class EntityItemAbducted extends Entity {
      * Returns the ItemStack corresponding to the Entity (Note: if no item exists, will log an error but still return an
      * ItemStack containing Block.stone)
      */
+    @Nonnull
     public ItemStack getEntityItem()
     {
-        ItemStack itemstack = (ItemStack)(this.getDataManager().get(ITEM));
+        ItemStack itemstack = this.getDataManager().get(ITEM);
 
-        if (itemstack == null)
+        if (itemstack.isEmpty())
         {
             return new ItemStack(Blocks.STONE);
         }
@@ -96,7 +108,7 @@ public class EntityItemAbducted extends Entity {
     /**
      * Sets the ItemStack for this entity
      */
-    public void setEntityItemStack( ItemStack stack)
+    public void setEntityItemStack(@Nonnull ItemStack stack)
     {
         this.getDataManager().set(ITEM, stack);
         this.getDataManager().setDirty(ITEM);
@@ -111,7 +123,7 @@ public class EntityItemAbducted extends Entity {
         p_70014_1_.setInteger("Lifespan", lifespan);
 
 
-        if (this.getEntityItem() != null)
+        if (!this.getEntityItem().isEmpty())
         {
             p_70014_1_.setTag("Item", this.getEntityItem().writeToNBT(new NBTTagCompound()));
         }
@@ -128,9 +140,9 @@ public class EntityItemAbducted extends Entity {
         NBTTagCompound nbttagcompound1 = p_70037_1_.getCompoundTag("Item");
         this.setEntityItemStack(new ItemStack(nbttagcompound1));
 
-        ItemStack item = (ItemStack)(this.getDataManager().get(ITEM));
+        ItemStack stack = this.getDataManager().get(ITEM);
 
-        if (item == null || item.getCount() <= 0)
+        if (stack.isEmpty() || stack.getCount() <= 0)
         {
             this.setDead();
         }

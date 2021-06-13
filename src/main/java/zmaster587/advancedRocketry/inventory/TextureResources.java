@@ -81,5 +81,5 @@ public class TextureResources {
 	public static final ProgressBarImage terraformProgressBar = new ProgressBarImage(16, 109, 106, 30, 16, 138, 106, 30, EnumFacing.EAST, TextureResources.progressBars);
 
 	
-	public static final Map<String, ResourceLocation> planetResources = new HashMap<String, ResourceLocation>();
+	public static final Map<String, ResourceLocation> planetResources = new HashMap<>();
 }

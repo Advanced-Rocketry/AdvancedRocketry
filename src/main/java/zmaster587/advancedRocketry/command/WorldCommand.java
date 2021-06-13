@@ -41,6 +41,9 @@ import zmaster587.advancedRocketry.world.util.TeleporterNoPortalSeekBlock;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -53,25 +56,28 @@ public class WorldCommand implements ICommand {
 
 
 
-	private List aliases;
+	private List<String> aliases;
 	public WorldCommand() {
-		aliases = new ArrayList<String>();
+		aliases = new ArrayList<>();
 		aliases.add("advancedRocketry");
 		aliases.add("advRocketry");
 	}
 
 	@Override
+	@Nonnull
 	public String getName() {
 		return "advancedRocketry";
 	}
 
 	@Override
-	public String getUsage(ICommandSender sender) {
+	@Nonnull
+	public String getUsage(@Nullable ICommandSender sender) {
 		return "advancedRocketry help";
 	}
 
 	@Override
-	public List getAliases() {
+	@Nonnull
+	public List<String> getAliases() {
 		return aliases;
 	}
 
@@ -138,7 +144,7 @@ public class WorldCommand implements ICommand {
 	
 	private void commandGiveStation(ICommandSender sender, String cmdstring[])
 	{
-		if(cmdstring.length < 2 || (cmdstring.length >= 2 && cmdstring[1].equalsIgnoreCase("help")))
+		if(cmdstring.length < 2 || cmdstring[1].equalsIgnoreCase("help"))
 		{
 			sender.sendMessage(new TextComponentString(aliases.get(0) + " " + cmdstring[0] +  " - Gives the player playerName (if supplied) a spacestation with ID stationID"));
 			sender.sendMessage(new TextComponentString("Usage: /advRocketry " + cmdstring[0] + " <stationId> [PlayerName]"));
@@ -156,7 +162,7 @@ public class WorldCommand implements ICommand {
 		else if(sender.getCommandSenderEntity() != null)
 			player = ((EntityPlayer)sender);
 	
-		if(cmdstring.length >= 2 && player != null) {
+		if(player != null) {
 			int stationId = Integer.parseInt(cmdstring[1]);
 			ItemStack stack = new ItemStack(AdvancedRocketryItems.itemSpaceStationChip);
 			ItemStationChip.setUUID(stack, stationId);
@@ -175,33 +181,31 @@ public class WorldCommand implements ICommand {
 		if(sender.getCommandSenderEntity() != null ) {
 			stack = ((EntityPlayer)sender.getCommandSenderEntity()).getHeldItem(EnumHand.MAIN_HAND);
 
-			if(cmdstring.length < 2 || (cmdstring.length >= 2 && cmdstring[1].equalsIgnoreCase("help"))) {
+			if(cmdstring[1].equalsIgnoreCase("help")) {
 				sender.sendMessage(new TextComponentString(aliases.get(0) + " " + cmdstring[0] + " [datatype] [amountFill]\n"));
 				sender.sendMessage(new TextComponentString("Fills the amount of the data type specifies into the chip being held."));
 				sender.sendMessage(new TextComponentString("If the datatype is not specified then command fills all datatypes, if no amountFill is specified completely fills the chip"));
 				return;
 			}
 
-			if(stack != null && stack.getItem() instanceof ItemData) {
+			if(!stack.isEmpty() && stack.getItem() instanceof ItemData) {
 				ItemData item = (ItemData) stack.getItem();
 				int dataAmount = item.getMaxData(stack.getItemDamage());
-				DataType dataType = null;
+				DataType dataType;
 
-				if(cmdstring.length >= 2) {
-					try {
-						dataType = DataType.valueOf(cmdstring[1].toUpperCase(Locale.ENGLISH));
-					} catch (IllegalArgumentException e) {
-						sender.sendMessage(new TextComponentString("Did you mean: /advRocketry" + cmdstring[0] + " [datatype] [amountFill]"));
-						sender.sendMessage(new TextComponentString("Not a valid datatype"));
-						String value = "";
-						for(DataType data : DataType.values())
-							if(!data.name().equals("UNDEFINED"))
-								value += data.name().toLowerCase() + ", ";
+				try {
+					dataType = DataType.valueOf(cmdstring[1].toUpperCase(Locale.ENGLISH));
+				} catch (IllegalArgumentException e) {
+					sender.sendMessage(new TextComponentString("Did you mean: /advRocketry" + cmdstring[0] + " [datatype] [amountFill]"));
+					sender.sendMessage(new TextComponentString("Not a valid datatype"));
+					StringBuilder value = new StringBuilder();
+					for(DataType data : DataType.values())
+						if(!data.name().equals("UNDEFINED"))
+							value.append(data.name().toLowerCase()).append(", ");
 
-						sender.sendMessage(new TextComponentString("Try " + value));
+					sender.sendMessage(new TextComponentString("Try " + value));
 
-						return;
-					}
+					return;
 				}
 				if(cmdstring.length >= 3)
 					try {
@@ -212,34 +216,26 @@ public class WorldCommand implements ICommand {
 						return;
 					}
 
-				if(dataType != null)
-					item.setData(stack, dataAmount, dataType);
-				else
-				{
-					for(DataType type : DataType.values())
-						item.setData(stack, dataAmount, type);
-				}
+				item.setData(stack, dataAmount, dataType);
 				sender.sendMessage(new TextComponentString("Data filled!"));
 			}
-			else if(stack != null && stack.getItem() instanceof ItemMultiData) {
+			else if(!stack.isEmpty() && stack.getItem() instanceof ItemMultiData) {
 				ItemMultiData item = (ItemMultiData) stack.getItem();
 				int dataAmount = item.getMaxData(stack);
-				DataType dataType = null;
+				DataType dataType;
 
-				if(cmdstring.length >= 2) {
-					try {
-						dataType = DataType.valueOf(cmdstring[1].toUpperCase(Locale.ENGLISH));
-					} catch (IllegalArgumentException e) {
-						sender.sendMessage(new TextComponentString("Did you mean: /advRocketry" + cmdstring[0] + " [datatype] [amountFill]"));
-						sender.sendMessage(new TextComponentString("Not a valid datatype"));
-						String value = "";
-						for(DataType data : DataType.values())
-							if(!data.name().equals("UNDEFINED"))
-								value += data.name().toLowerCase() + ", ";
+				try {
+					dataType = DataType.valueOf(cmdstring[1].toUpperCase(Locale.ENGLISH));
+				} catch (IllegalArgumentException e) {
+					sender.sendMessage(new TextComponentString("Did you mean: /advRocketry" + cmdstring[0] + " [datatype] [amountFill]"));
+					sender.sendMessage(new TextComponentString("Not a valid datatype"));
+					StringBuilder value = new StringBuilder();
+					for(DataType data : DataType.values())
+						if(!data.name().equals("UNDEFINED"))
+							value.append(data.name().toLowerCase()).append(", ");
 
-						sender.sendMessage(new TextComponentString("Try " + value));
-						return;
-					}
+					sender.sendMessage(new TextComponentString("Try " + value));
+					return;
 				}
 				if(cmdstring.length >= 3)
 					try {
@@ -250,13 +246,7 @@ public class WorldCommand implements ICommand {
 						return;
 					}
 
-				if(dataType != null)
-					item.setData(stack, dataAmount, dataType);
-				else
-				{
-					for(DataType type : DataType.values())
-						item.setData(stack, dataAmount, type);
-				}
+				item.setData(stack, dataAmount, dataType);
 
 				sender.sendMessage(new TextComponentString("Data filled!"));
 			}
@@ -300,7 +290,7 @@ public class WorldCommand implements ICommand {
 				return;
 			}
 			if(sender instanceof Entity) {
-				Entity player = null;
+				Entity player;
 				if(cmdstring.length > 2)
 					player = sender.getServer().getPlayerList().getPlayerByUsername(cmdstring[2]);
 				else
@@ -333,7 +323,7 @@ public class WorldCommand implements ICommand {
 	{
 		EntityPlayer player;
 		if(sender instanceof Entity && (player = sender.getEntityWorld().getPlayerEntityByName(sender.getName())) != null) {
-			if(cmdstring.length < 2 || (cmdstring.length >= 2 && cmdstring[1].equalsIgnoreCase("help"))) {
+			if(cmdstring.length < 2 || cmdstring[1].equalsIgnoreCase("help")) {
 				sender.sendMessage(new TextComponentString(cmdstring[0] + " <dimId> - teleports the player to the supplied dimension"));
 				sender.sendMessage(new TextComponentString(cmdstring[0] + " station <station ID> - teleports the player to the supplied station"));
 				return;
@@ -348,7 +338,7 @@ public class WorldCommand implements ICommand {
 						if(net.minecraftforge.common.DimensionManager.getWorld(dim) == null) {
 							net.minecraftforge.common.DimensionManager.initDimension(dim);
 						}
-						player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortalSeekBlock((WorldServer) net.minecraftforge.common.DimensionManager.getWorld(dim)));
+						player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortalSeekBlock(net.minecraftforge.common.DimensionManager.getWorld(dim)));
 					}
 					else
 						sender.sendMessage(new TextComponentString("Dimension does not exist"));
@@ -356,12 +346,12 @@ public class WorldCommand implements ICommand {
 				else if(cmdstring[1].equalsIgnoreCase("station")) {
 					dim = ARConfiguration.getCurrentConfig().spaceDimId;
 					int stationId = Integer.parseInt(cmdstring[2]);
-					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(stationId);
+					ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStation(stationId);
 
-					if(object != null) {
+					if(spaceObject != null) {
 						if(player.world.provider.getDimension() != ARConfiguration.getCurrentConfig().spaceDimId)
 							player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player,  dim , new TeleporterNoPortal((WorldServer)player.world));
-						HashedBlockPosition vec = object.getSpawnLocation();
+						HashedBlockPosition vec = spaceObject.getSpawnLocation();
 						player.setPositionAndUpdate(vec.x, vec.y, vec.z);
 					}
 					else {
@@ -459,7 +449,7 @@ public class WorldCommand implements ICommand {
 						//If the world still has players abort and list players
 						sender.sendMessage(new TextComponentString("World still has players:"));
 
-						for(EntityPlayer player : (List<EntityPlayer>)net.minecraftforge.common.DimensionManager.getWorld(deletedDimId).playerEntities) {
+						for(EntityPlayer player : net.minecraftforge.common.DimensionManager.getWorld(deletedDimId).playerEntities) {
 							sender.sendMessage(player.getDisplayName());
 						}
 
@@ -628,10 +618,10 @@ public class WorldCommand implements ICommand {
 						if(cmdstring.length - 3 - commandOffset == var.length) {
 
 							//Make sure we catch if some invalid arg is entered
-							String outString = "";
+							StringBuilder outString = new StringBuilder();
 							for(int i = 0; i < var.length; i++) {
 								var[i] = Float.parseFloat(cmdstring[3+i + commandOffset]);
-								outString = outString + cmdstring[3+i + commandOffset] + " ";
+								outString.append(cmdstring[3 + i + commandOffset]).append(" ");
 							}
 
 							field.set(properties, var);
@@ -645,10 +635,10 @@ public class WorldCommand implements ICommand {
 						if(cmdstring.length - 3 - commandOffset == var.length) {
 
 							//Make sure we catch if some invalid arg is entered
-							String outString = "";
+							StringBuilder outString = new StringBuilder();
 							for(int i = 0; i < var.length; i++) {
 								var[i] = Integer.parseInt(cmdstring[3+i + commandOffset]);
-								outString = outString + cmdstring[3+i + commandOffset] + " ";
+								outString.append(cmdstring[3 + i + commandOffset]).append(" ");
 							}
 
 							field.set(properties, var);
@@ -671,12 +661,10 @@ public class WorldCommand implements ICommand {
 				}
 				
 				PacketHandler.sendToAll(new PacketDimInfo(dimId, properties));
-				return;
 			}
 		} catch (NumberFormatException e) {
 			sender.sendMessage(new TextComponentString("Invalid Argument for parameter " + cmdstring[2 + commandOffset]));
 		} catch (Exception e) {
-
 			e.printStackTrace();
 		}
 	}
@@ -799,7 +787,7 @@ public class WorldCommand implements ICommand {
 			
 			writer.append("ID\tResource name\n");
 			for(ResourceLocation resource : Biome.REGISTRY.getKeys()) {
-				writer.append(Biome.getIdForBiome(Biome.REGISTRY.getObject(resource)) + "\t" + resource.toString() + "\n");
+				writer.append(String.valueOf(Biome.getIdForBiome(Biome.REGISTRY.getObject(resource)))).append("\t").append(resource.toString()).append("\n");
 			}
 			
 			writer.close();
@@ -914,12 +902,12 @@ public class WorldCommand implements ICommand {
 	}
 	
 	@Override
-	public void execute(MinecraftServer server, ICommandSender sender,
-			String[] string) throws CommandException {
+	@ParametersAreNonnullByDefault
+	public void execute(MinecraftServer server, ICommandSender sender, String[] string) throws CommandException {
 
 		//advRocketry planet set <var value>
 		int opLevel = 2;
-		if(string.length == 0 || (string.length >= 1 && string[0].equalsIgnoreCase("help"))) {
+		if(string.length == 0 || string[0].equalsIgnoreCase("help")) {
 			sender.sendMessage(new TextComponentString("Subcommands:"));
 			sender.sendMessage(new TextComponentString("planet"));
 			sender.sendMessage(new TextComponentString("filldata"));
@@ -985,15 +973,17 @@ public class WorldCommand implements ICommand {
 	}
 
 	@Override
-	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+	public boolean checkPermission(@Nonnull MinecraftServer server, ICommandSender sender) {
 		return sender.canUseCommand(2, getName());
 
 	}
 
 	@Override
+	@Nonnull
+	@ParametersAreNonnullByDefault
 	public List<String> getTabCompletions(MinecraftServer server,
-			ICommandSender sender, String[] string, BlockPos targetPos) {
-		ArrayList<String> list = new ArrayList<String>();
+			ICommandSender sender, String[] string, @Nullable BlockPos targetPos) {
+		ArrayList<String> list = new ArrayList<>();
 
 		if(string.length == 1) {
 			list.add("beginTest");
@@ -1009,7 +999,7 @@ public class WorldCommand implements ICommand {
 			list.add("addTorch");
 			list.add("addSolidBlockOverride");
 		} else if(string.length == 2) {
-			ArrayList<String> list2 = new ArrayList<String>();
+			ArrayList<String> list2 = new ArrayList<>();
 			list2.add("get");
 			list2.add("set");
 			list2.add("list");
@@ -1038,7 +1028,7 @@ public class WorldCommand implements ICommand {
 	}
 
 	@Override
-	public boolean isUsernameIndex(String[] string, int number) {
+	public boolean isUsernameIndex(@Nonnull String[] string, int number) {
 		return number == 1 && string[0].equalsIgnoreCase("fetch");
 	}
 	@Override

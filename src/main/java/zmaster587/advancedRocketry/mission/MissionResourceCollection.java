@@ -37,13 +37,13 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 	protected LinkedList<HashedBlockPosition> infrastructureCoords;
 
 	public MissionResourceCollection(){
-		infrastructureCoords = new LinkedList<HashedBlockPosition>();
+		infrastructureCoords = new LinkedList<>();
 	}
 
 	public MissionResourceCollection(long duration, EntityRocket entity, LinkedList<IInfrastructure> infrastructureCoords) {
 		super();
 		missionPersistantNBT = new NBTTagCompound();
-		entity.writeMissionPersistantNBT(missionPersistantNBT);
+		entity.writeMissionPersistentNBT(missionPersistantNBT);
 		
 		satelliteProperties.setId(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getNextSatelliteId());
 
@@ -57,7 +57,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 		z = entity.posZ;
 		worldId = entity.world.provider.getDimension();
 
-		this.infrastructureCoords = new LinkedList<HashedBlockPosition>();
+		this.infrastructureCoords = new LinkedList<>();
 
 		for(IInfrastructure tile : infrastructureCoords)
 			this.infrastructureCoords.add(new HashedBlockPosition(((TileEntity)tile).getPos()));
@@ -132,12 +132,9 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 		nbt.setInteger("launchDim", launchDimension);
 
 		NBTTagList itemList = new NBTTagList();
-		for(int i = 0; i < infrastructureCoords.size(); i++)
-		{
-			HashedBlockPosition inf = infrastructureCoords.get(i);
-
+		for (HashedBlockPosition inf : infrastructureCoords) {
 			NBTTagCompound tag = new NBTTagCompound();
-			tag.setIntArray("loc", new int[] {inf.x, inf.y, inf.z});
+			tag.setIntArray("loc", new int[]{inf.x, inf.y, inf.z});
 			itemList.appendTag(tag);
 
 		}

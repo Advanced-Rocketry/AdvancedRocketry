@@ -55,7 +55,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	int powerMadeLastTick, prevPowerMadeLastTick;
 	ModuleText textModule;
 	public TileMicrowaveReciever() {
-		connectedSatellites = new LinkedList<Long>();
+		connectedSatellites = new LinkedList<>();
 		initialCheck = false;
 		insolationPowerMultiplier = 0;
 		textModule = new ModuleText(40, 20, LibVulpes.proxy.getLocalizedString("msg.microwaverec.notgenerating"), 0x2b2b2b);
@@ -109,12 +109,12 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	public void onInventoryUpdated() {
 		super.onInventoryUpdated();
 
-		List list = new LinkedList<Long>();
+		List<Long> list = new LinkedList<>();
 
 		for(IInventory inv : itemInPorts) {
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				ItemStack stack = inv.getStackInSlot(i);
-				if(stack != null && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
+				if(stack.isEmpty() && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
 					ItemSatelliteIdentificationChip item = (ItemSatelliteIdentificationChip)stack.getItem();
 					list.add(item.getSatelliteId(stack));
 				}
@@ -166,7 +166,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 					if(pos2.getY() > this.getPos().getY()) {
 						if(!world.isAirBlock(pos2.add(0,1,0))) {
 							world.setBlockToAir(pos2);
-							world.playSound((double)pos2.getX(), (double)pos2.getY(), (double)pos2.getZ(), new SoundEvent(new ResourceLocation("fire.fire")), SoundCategory.BLOCKS, 1f, 3f, false);
+							world.playSound(pos2.getX(), pos2.getY(), pos2.getZ(), new SoundEvent(new ResourceLocation("fire.fire")), SoundCategory.BLOCKS, 1f, 3f, false);
 						}
 					}
 				}
@@ -174,23 +174,23 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 		}
 
 		DimensionProperties properties;
-		int dimid = world.provider.getDimension();
+		int dimId = world.provider.getDimension();
         SpaceStationObject spaceStation = (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos);
-		if(!world.isRemote && (DimensionManager.getInstance().isDimensionCreated(dimid) || world.provider.getDimension() == 0)) {
+		if(!world.isRemote && (DimensionManager.getInstance().isDimensionCreated(dimId) || world.provider.getDimension() == 0)) {
 			//This way we check to see if it's on a station, and if so, if it has any satellites in orbit around the planet the station is around to pull from
-			properties = (spaceStation != null) ? spaceStation.getOrbitingPlanet() : DimensionManager.getInstance().getDimensionProperties(dimid);
-			int energyRecieved = 0;
+			properties = (spaceStation != null) ? spaceStation.getOrbitingPlanet() : DimensionManager.getInstance().getDimensionProperties(dimId);
+			int energyReceived = 0;
 			if(enabled) {
 				for(long lng : connectedSatellites) {
 					SatelliteBase satellite =  properties.getSatellite(lng);
 
 					if(satellite instanceof IUniversalEnergyTransmitter) {
-						energyRecieved += ((IUniversalEnergyTransmitter)satellite).transmitEnergy(EnumFacing.UP, false);
+						energyReceived += ((IUniversalEnergyTransmitter)satellite).transmitEnergy(EnumFacing.UP, false);
 					}
 				}
 
 				//Multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency, and by insolation mult for solar stuff
-				energyRecieved *= 2 * insolationPowerMultiplier;
+				energyReceived *= 2 * insolationPowerMultiplier;
 			}
 
 			if(powerMadeLastTick != prevPowerMadeLastTick) {

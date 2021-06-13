@@ -1,7 +1,3 @@
-/**
- * Yeah, i know, this is litterally a copy of the item renderer, other option was asm the class responsible for render distance
- */
-
 package zmaster587.advancedRocketry.client.render.entity;
 
 import net.minecraft.client.Minecraft;
@@ -16,8 +12,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
+/**
+ * Yeah, i know, this is literally a copy of the item renderer, other option was asm the class responsible for render distance
+ */
 @SideOnly(Side.CLIENT)
 public class RendererItem extends Render<EntityItemAbducted> implements IRenderFactory<EntityItemAbducted>
 {
@@ -50,7 +50,7 @@ public class RendererItem extends Render<EntityItemAbducted> implements IRenderF
     }
 
 	@Override
-	protected ResourceLocation getEntityTexture(EntityItemAbducted entity) {
+	protected ResourceLocation getEntityTexture(@Nullable EntityItemAbducted entity) {
 		return TextureMap.LOCATION_BLOCKS_TEXTURE;
 	}
 

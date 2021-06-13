@@ -9,6 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class ContainerOreMappingSatellite extends Container {
 
 
@@ -25,6 +28,7 @@ public class ContainerOreMappingSatellite extends Container {
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack slotClick(int slot, int dragType, ClickType clickTypeIn,
 			EntityPlayer player) {
 		//Check if slot exists
@@ -51,16 +55,17 @@ public class ContainerOreMappingSatellite extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer p_75145_1_) {
+	public boolean canInteractWith(@Nullable EntityPlayer p_75145_1_) {
 		return true;
 	}
 
 	//int slot.. slot being taken from
 	@Override
+	@Nonnull
 	public ItemStack transferStackInSlot(EntityPlayer player, int p_82846_2_)
 	{
-		ItemStack itemstack = null;
-		Slot slot = (Slot)this.inventorySlots.get(p_82846_2_);
+		ItemStack itemstack = ItemStack.EMPTY;
+		Slot slot = this.inventorySlots.get(p_82846_2_);
 
 		if (slot != null && slot.getHasStack())
 		{
@@ -70,18 +75,18 @@ public class ContainerOreMappingSatellite extends Container {
 			//merges the item into player inventory since its in the tileEntity
 			if (p_82846_2_ <= 1) {
 				if (!this.mergeItemStack(stackInSlot, 0, 35, true)) {
-					return null;
+					return ItemStack.EMPTY;
 				}
 			}
 			//places it into the tileEntity is possible since its in the player inventory
 			else if (!this.mergeItemStack(stackInSlot, 0, 0, false)) {
-				return null;
+				return ItemStack.EMPTY;
 			}
 
 
 			if (stackInSlot.getCount() == 0)
 			{
-				slot.putStack((ItemStack)null);
+				slot.putStack(ItemStack.EMPTY);
 			}
 			else
 			{

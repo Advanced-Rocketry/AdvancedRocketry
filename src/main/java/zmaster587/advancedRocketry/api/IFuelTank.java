@@ -12,11 +12,9 @@ public interface IFuelTank {
 	//Returns 
 	/**
 	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param meta
+	 * @param pos
+	 * @param state
 	 * @return the capacity for the container
 	 */
-	public int getMaxFill(World world, BlockPos pos , IBlockState state);
+	int getMaxFill(World world, BlockPos pos, IBlockState state);
 }

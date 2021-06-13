@@ -35,6 +35,8 @@ import codechicken.nei.recipe.ShapedRecipeHandler;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import codechicken.nei.recipe.TemplateRecipeHandler.RecipeTransferRect;
 
+import javax.annotation.Nonnull;
+
 public abstract class TemplateNEI extends TemplateRecipeHandler {
 
 
@@ -100,13 +102,13 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 	}
 
 	/*@Override
-	    public List<Class<? extends GuiContainer>> getRecipeTransferRectGuis() {
-	    	List list= new LinkedList();
-	    	list.add(GuiModular.class);
-	    	return list;
-	    }* /
+    public List<Class<? extends GuiContainer>> getRecipeTransferRectGuis() {
+        List list= new LinkedList();
+        list.add(GuiModular.class);
+        return list;
+    }* /
 
-	public void loadCraftingRecipes(ItemStack result) {
+	public void loadCraftingRecipes(@Nonnull ItemStack result) {
 		super.loadCraftingRecipes(result);
 		
 		for(IRecipe i : RecipesMachine.getInstance().getRecipes(getMachine())) {
@@ -156,7 +158,7 @@ public abstract class TemplateNEI extends TemplateRecipeHandler {
 	}
 
 	@Override
-	public void loadUsageRecipes(ItemStack ingredient) {
+	public void loadUsageRecipes(@Nonnull ItemStack ingredient) {
 		for(IRecipe irecipe : RecipesMachine.getInstance().getRecipes(getMachine())) {
 			CachedMachineRecipe recipe = new CachedMachineRecipe((((Recipe)irecipe).getRecipeAsAllItemsOnly()));
 			boolean match = false;

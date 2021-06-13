@@ -65,6 +65,6 @@ public class StationLandingLocation {
 	
 	@Override
 	public String toString() {
-		return name == null || name == "" || name.isEmpty() ? pos.toString() : name;
+		return name == null || name.isEmpty() ? pos.toString() : name;
 	}
 }

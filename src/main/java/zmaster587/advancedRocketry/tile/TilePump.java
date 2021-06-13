@@ -33,7 +33,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 	public TilePump() {
 		super(1000);
 		tank = new FluidTank(16000);
-		cache = new LinkedList<BlockPos>();
+		cache = new LinkedList<>();
 	}
 	
 	public int getPowerPerOperation() {
@@ -68,7 +68,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 				{
 					IFluidHandler cap = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite());
 					FluidStack stack = tank.getFluid().copy();
-					stack.amount = (int)Math.min(tank.getFluid().amount, 1000);
+					stack.amount = Math.min(tank.getFluid().amount, 1000);
 					//Perform the drain
 					cap.fill(tank.drain(cap.fill(stack, false), true), true);
 					
@@ -106,10 +106,10 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 					Material mat = world.getBlockState(nextPos).getMaterial();
 					if(worldBlock instanceof IFluidBlock)
 					{
-						FluidStack stack = ((IFluidBlock)worldBlock).drain(world, nextPos, true);
+						FluidStack fStack = ((IFluidBlock)worldBlock).drain(world, nextPos, true);
 
-						if(stack != null)
-							tank.fill(stack, true);
+						if(fStack != null)
+							tank.fill(fStack, true);
 						int colour = ((IFluidBlock)worldBlock).getFluid().getColor();
 						if(mat == Material.LAVA)
 							colour = 0xFFbd3718;
@@ -127,10 +127,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		if(worldBlock instanceof IFluidBlock)
 		{
 			// Can we put it into the tank?
-			if(tank.getFluid() == null || tank.getFluid().getFluid() == ((IFluidBlock)worldBlock).getFluid())
-			{
-				return true;
-			}
+			return tank.getFluid() == null || tank.getFluid().getFluid() == ((IFluidBlock) worldBlock).getFluid();
 		}
 		return false;
 	}
@@ -158,8 +155,8 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 
 	private List<BlockPos> findFluidAtOrAbove(BlockPos pos, Fluid fluid)
 	{
-		Queue<BlockPos> queue = new LinkedList<BlockPos>();
-		Set<BlockPos> visited = new HashSet<BlockPos>();
+		Queue<BlockPos> queue = new LinkedList<>();
+		Set<BlockPos> visited = new HashSet<>();
 		queue.add(pos);
 
 		while(!queue.isEmpty())
@@ -216,8 +213,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 
 	@Override
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-		return modules;
+		return new LinkedList<>();
 	}
 
 	@Override

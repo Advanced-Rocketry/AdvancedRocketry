@@ -69,7 +69,7 @@ public class ARConfiguration {
 	public ARConfiguration(ARConfiguration config)
 	{
 		Field[] fields = ARConfiguration.class.getDeclaredFields();
-		List<Field> fieldList = new ArrayList<Field>(fields.length);
+		List<Field> fieldList = new ArrayList<>(fields.length);
 
 
 		// getDeclaredFields returns an unordered list, so we need to sort them
@@ -79,9 +79,7 @@ public class ARConfiguration {
 				fieldList.add(field);
 		}
 
-		fieldList.sort(new Comparator<Field>() {
-			public int compare(Field arg0, Field arg1) { return arg0.getName().compareTo(arg1.getName()); };
-		});
+		fieldList.sort(Comparator.comparing(Field::getName));
 		
 		
 		// do a Shallow copy
@@ -110,20 +108,16 @@ public class ARConfiguration {
 				}
 				else
 					field.set(this, field.get(config));
-			} catch (IllegalArgumentException e) {
+			} catch (IllegalArgumentException | InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} 
+			}
 		}
 	}
 
 	public void writeConfigToNetwork(PacketBuffer out)
 	{
 		Field[] fields = ARConfiguration.class.getDeclaredFields();
-		List<Field> fieldList = new ArrayList<Field>(fields.length);
+		List<Field> fieldList = new ArrayList<>(fields.length);
 
 
 		// getDeclaredFields returns an unordered list, so we need to sort them
@@ -133,9 +127,7 @@ public class ARConfiguration {
 				fieldList.add(field);
 		}
 
-		fieldList.sort(new Comparator<Field>() {
-			public int compare(Field arg0, Field arg1) { return arg0.getName().compareTo(arg1.getName()); };
-		});
+		fieldList.sort(Comparator.comparing(Field::getName));
 
 		try {
 			for(Field field : fieldList )
@@ -145,9 +137,7 @@ public class ARConfiguration {
 				out.writeInt(hash);
 				try {
 					writeDatum( out, field.getType(), field.get(this), props);
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (InvalidClassException e) {
+				} catch (IllegalArgumentException | IllegalAccessException | InvalidClassException e) {
 					e.printStackTrace();
 				}
 			}
@@ -184,11 +174,11 @@ public class ARConfiguration {
 			out.writeFloat(asteroid.probability);				//probability of the asteroid spawning
 			out.writeFloat(asteroid.timeMultiplier);
 			
-			out.writeInt(asteroid.stackProbabilites.size());
-			for(int i = 0; i < asteroid.stackProbabilites.size(); i++)
+			out.writeInt(asteroid.stackProbabilities.size());
+			for(int i = 0; i < asteroid.stackProbabilities.size(); i++)
 			{
 				out.writeItemStack(asteroid.itemStacks.get(i));
-				out.writeFloat(asteroid.stackProbabilites.get(i));
+				out.writeFloat(asteroid.stackProbabilities.get(i));
 			}
 		}
 		else if(String.class.isAssignableFrom(type))
@@ -267,7 +257,7 @@ public class ARConfiguration {
 			{
 				try {
 					asteroid.itemStacks.add(in.readItemStack());
-					asteroid.stackProbabilites.add(in.readFloat());
+					asteroid.stackProbabilities.add(in.readFloat());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -321,7 +311,7 @@ public class ARConfiguration {
 	public ARConfiguration readConfigFromNetwork(PacketBuffer in)
 	{
 		Field[] fields = ARConfiguration.class.getDeclaredFields();
-		List<Field> fieldList = new ArrayList<Field>(fields.length);
+		List<Field> fieldList = new ArrayList<>(fields.length);
 
 
 		// getDeclaredFields returns an unordered list, so we need to sort them
@@ -331,9 +321,7 @@ public class ARConfiguration {
 				fieldList.add(field);
 		}
 
-		fieldList.sort(new Comparator<Field>() {
-			public int compare(Field arg0, Field arg1) { return arg0.getName().compareTo(arg1.getName()); };
-		});
+		fieldList.sort(Comparator.comparing(Field::getName));
 
 		for(Field field : fieldList )
 		{
@@ -345,11 +333,7 @@ public class ARConfiguration {
 			try {
 				Object data = readDatum( in, field.getType(), props);
 				field.set(this, data);
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (InvalidClassException e) {
-				e.printStackTrace();
-			} catch (InstantiationException e) {
+			} catch (IllegalArgumentException | IllegalAccessException | InvalidClassException | InstantiationException e) {
 				e.printStackTrace();
 			}
 		}
@@ -450,7 +434,7 @@ public class ARConfiguration {
 
 		//Oxygen
 		arConfig.enableOxygen = config.get(OXYGEN, "EnableAtmosphericEffects", true, "If true, allows players being hurt due to lack of oxygen and allows effects from non-standard atmosphere types").getBoolean();
-		AtmosphereVacuum.damageValue = (int) config.get(OXYGEN, "vacuumDamage", 1, "Amount of damage taken every second in a vacuum").getInt();
+		AtmosphereVacuum.damageValue = config.get(OXYGEN, "vacuumDamage", 1, "Amount of damage taken every second in a vacuum").getInt();
 		arConfig.overrideGCAir = config.get(OXYGEN, "OverrideGCAir", true, "If true Galacticcraft's air will be disabled entirely requiring use of Advanced Rocketry's Oxygen system on GC planets").getBoolean();
 		arConfig.oxygenVentConsumptionMult = config.get(OXYGEN, "oxygenVentConsumptionMultiplier", 1f, "Multiplier on how much O2 an oxygen vent consumes per tick").getDouble();
 		arConfig.oxygenVentPowerMultiplier = config.get(OXYGEN, "OxygenVentPowerMultiplier", 1.0f, "Power consumption multiplier for the oxygen vent", 0, Float.MAX_VALUE).getDouble();
@@ -775,7 +759,7 @@ public class ARConfiguration {
 
 
 		for(String str : entityList) {
-			Class clazz = (Class) EntityList.getClass(new ResourceLocation(str));
+			Class clazz = EntityList.getClass(new ResourceLocation(str));
 
 			//If not using string name maybe it's a class name?
 			if(clazz == null) {
@@ -803,14 +787,12 @@ public class ARConfiguration {
 
 		//Register geodeOres
 		if(!arConfig.geodeOresBlackList) {
-			for(String str  : geodeOres)
-				arConfig.standardGeodeOres.add(str);
+			arConfig.standardGeodeOres.addAll(Arrays.asList(geodeOres));
 		}
 
 		//Register laserDrill ores
 		if(!arConfig.laserDrillOresBlackList) {
-			for(String str  : orbitalLaserOres)
-				arConfig.standardLaserDrillOres.add(str);
+			arConfig.standardLaserDrillOres.addAll(Arrays.asList(orbitalLaserOres));
 		}
 
 
@@ -1041,29 +1023,29 @@ public class ARConfiguration {
 	public float blockTankCapacity;
 
 	@ConfigProperty
-	public LinkedList<Integer> laserBlackListDims = new LinkedList<Integer>();
+	public LinkedList<Integer> laserBlackListDims = new LinkedList<>();
 
 	@ConfigProperty
-	public LinkedList<String> standardLaserDrillOres = new LinkedList<String>();
+	public LinkedList<String> standardLaserDrillOres = new LinkedList<>();
 
 	@ConfigProperty
 	public boolean laserDrillPlanet;
 
 	/** list of entities of which atmospheric effects should not be applied **/
 	@ConfigProperty
-	public LinkedList<Class> bypassEntity = new LinkedList<Class>();
+	public LinkedList<Class> bypassEntity = new LinkedList<>();
 
 	@ConfigProperty
-	public LinkedList<Block> torchBlocks = new LinkedList<Block>();
+	public LinkedList<Block> torchBlocks = new LinkedList<>();
 
 	@ConfigProperty
-	public LinkedList<Block> blackListRocketBlocks = new LinkedList<Block>();
+	public LinkedList<Block> blackListRocketBlocks = new LinkedList<>();
 
 	@ConfigProperty
-	public LinkedList<String> standardGeodeOres = new LinkedList<String>();
+	public LinkedList<String> standardGeodeOres = new LinkedList<>();
 
 	@ConfigProperty(needsSync=true, internalType=Integer.class)
-	public HashSet<Integer> initiallyKnownPlanets = new HashSet<Integer>();
+	public HashSet<Integer> initiallyKnownPlanets = new HashSet<>();
 
 	@ConfigProperty
 	public boolean geodeOresBlackList;
@@ -1075,10 +1057,10 @@ public class ARConfiguration {
 	public boolean lockUI;
 
 	@ConfigProperty(needsSync=true, keyType=String.class, valueType=AsteroidSmall.class)
-	public HashMap<String, AsteroidSmall> asteroidTypes = new HashMap<String, AsteroidSmall>();
+	public HashMap<String, AsteroidSmall> asteroidTypes = new HashMap<>();
 
 	@ConfigProperty
-	public HashMap<String, AsteroidSmall> prevAsteroidTypes = new HashMap<String, AsteroidSmall>();
+	public HashMap<String, AsteroidSmall> prevAsteroidTypes = new HashMap<>();
 
 	@ConfigProperty
 	public int oxygenVentSize;
@@ -1153,7 +1135,7 @@ public class ARConfiguration {
 	public int defaultItemTimeBlackHole;
 
 	@ConfigProperty
-	public Map<ItemStack, Integer> blackHoleGeneratorBlocks = new HashMap<ItemStack, Integer>();
+	public Map<ItemStack, Integer> blackHoleGeneratorBlocks = new HashMap<>();
 
 	@ConfigProperty
 	public String[] lavaCentrifugeOutputs;
@@ -1175,9 +1157,9 @@ public class ARConfiguration {
 	@Target(ElementType.FIELD)
 	public @interface ConfigProperty
 	{
-		public boolean needsSync() default false;
-		public Class internalType() default Object.class;
-		public Class keyType() default Object.class;
-		public Class valueType() default Object.class;
+		boolean needsSync() default false;
+		Class internalType() default Object.class;
+		Class keyType() default Object.class;
+		Class valueType() default Object.class;
 	}
 }

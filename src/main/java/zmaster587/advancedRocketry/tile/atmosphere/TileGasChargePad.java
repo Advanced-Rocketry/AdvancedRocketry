@@ -19,6 +19,8 @@ import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.IconResource;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,12 +30,13 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 	}
 
 	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
+	@Nonnull
+	public int[] getSlotsForFace(@Nullable EnumFacing side) {
 		return new int[] {};
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
 		return false;
 	}
 
@@ -87,7 +90,7 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 
 				//Check for H2 fill (possibly merge with O2 fill
 				//Fix conflict with O2 fill
-				if(this.tank.getFluid() != null && !FluidUtils.areFluidsSameType(this.tank.getFluid().getFluid(), AdvancedRocketryFluids.fluidOxygen) && stack != null && stack.getItem() instanceof IModularArmor) {
+				if(this.tank.getFluid() != null && !FluidUtils.areFluidsSameType(this.tank.getFluid().getFluid(), AdvancedRocketryFluids.fluidOxygen) && !stack.isEmpty() && stack.getItem() instanceof IModularArmor) {
 					IInventory inv = ((IModularArmor)stack.getItem()).loadModuleInventory(stack);
 
 					FluidStack fluidStack = this.drain(100, false);
@@ -128,7 +131,7 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		ArrayList<ModuleBase> modules = new ArrayList<ModuleBase>();
+		ArrayList<ModuleBase> modules = new ArrayList<>();
 
 		modules.add(new ModuleSlotArray(50, 21, this, 0, 1));
 		modules.add(new ModuleSlotArray(50, 57, this, 1, 2));
@@ -139,7 +142,7 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 		modules.add(new ModuleLiquidIndicator(32, 20, this));
 
 		//modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this, TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
-		//TODO add itemStack slots for liqiuid
+		//TODO add itemStack slots for liquid
 		return modules;
 	}
 
@@ -154,12 +157,12 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
 		while(useBucket(0, getStackInSlot(0)));
 	}
 	
-	private boolean useBucket( int slot, ItemStack stack) {
+	private boolean useBucket(int slot, @Nonnull ItemStack stack) {
 		return FluidUtils.attemptDrainContainerIInv(inventory, tank, stack, 0, 1);
 	}
 

@@ -38,13 +38,13 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 
 	@Override
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		modules.add(moduleGrav);
 		//modules.add(numThrusters);
 		modules.add(maxGravBuildSpeed);
 
 		modules.add(targetGrav);
-		modules.add(new ModuleSlider(6, 60, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
+		modules.add(new ModuleSlider(6, 60, 0, TextureResources.doubleWarningSideBarIndicator, this));
 
 		updateText();
 		return modules;
@@ -53,10 +53,9 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbt = writeToNBT(new NBTTagCompound());
-		
 
-		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, nbt);
-		return packet;
+
+		return new SPacketUpdateTileEntity(pos, 0, nbt);
 	}
 
 	@Override
@@ -67,15 +66,15 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 	
 	private void updateText() {
 		if(world.isRemote) {
-			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(object != null) {
-				moduleGrav.setText(String.format("%s %.0fKm",LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.alt"), object.getOrbitalDistance()*200 + 100 ));
-				maxGravBuildSpeed.setText(String.format("%s%.1f", LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.maxaltrate"), 7200D*object.getMaxRotationalAcceleration()));
+			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+			if(spaceObject != null) {
+				moduleGrav.setText(String.format("%s %.0fKm",LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.alt"), spaceObject.getOrbitalDistance()*200 + 100 ));
+				maxGravBuildSpeed.setText(String.format("%s%.1f", LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.maxaltrate"), 7200D*spaceObject.getMaxRotationalAcceleration()));
 			}
 
 			//numThrusters.setText("Number Of Thrusters: 0");
 
-			targetGrav.setText(String.format("%s %d", LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.tgtalt"), ((SpaceStationObject) object).targetOrbitalDistance * 200 + 100));
+			targetGrav.setText(String.format("%s %d", LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.tgtalt"), ((SpaceStationObject) spaceObject).targetOrbitalDistance * 200 + 100));
 		}
 	}
 
@@ -84,13 +83,13 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 		if(this.world.provider instanceof WorldProviderSpace) {
 
 			if(!world.isRemote) {
-				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
-				if(object != null) {
-					progress = ((SpaceStationObject) object).targetOrbitalDistance;
+				if(spaceObject != null) {
+					progress = ((SpaceStationObject) spaceObject).targetOrbitalDistance;
 
-					double targetGravity = ((SpaceStationObject) object).targetOrbitalDistance;
-					double angVel = object.getOrbitalDistance();
+					double targetGravity = ((SpaceStationObject) spaceObject).targetOrbitalDistance;
+					double angVel = spaceObject.getOrbitalDistance();
 					double acc = 0.1*(getTotalProgress(0) - angVel + 1)/(float)getTotalProgress(0);
 
 					double difference = targetGravity - angVel;
@@ -104,10 +103,10 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 							finalVel = angVel + Math.min(difference, acc);
 						}
 
-						object.setOrbitalDistance((float)finalVel);
+						spaceObject.setOrbitalDistance((float)finalVel);
 						if(!world.isRemote) {
-							//PacketHandler.sendToNearby(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
-							PacketHandler.sendToAll(new PacketStationUpdate(object, PacketStationUpdate.Type.ALTITUDE_UPDATE));
+							//PacketHandler.sendToNearby(new PacketStationUpdate(spaceObject, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
+							PacketHandler.sendToAll(new PacketStationUpdate(spaceObject, PacketStationUpdate.Type.ALTITUDE_UPDATE));
 						}
 						else
 							updateText();

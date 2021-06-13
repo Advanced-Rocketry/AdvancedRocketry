@@ -3,15 +3,12 @@ package zmaster587.advancedRocketry.tile.infrastructure;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -39,14 +36,15 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TileFuelingStation extends TileInventoriedRFConsumerTank implements IModularInventory, IMultiblock, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory {
-	EntityRocketBase linkedRocket;
-	HashedBlockPosition masterBlock;
-	ModuleRedstoneOutputButton redstoneControl;
-	RedstoneState state;
+	private EntityRocketBase linkedRocket;
+	private HashedBlockPosition masterBlock;
+	private ModuleRedstoneOutputButton redstoneControl;
+	private RedstoneState state;
 
 	public TileFuelingStation() {
 		super(1000,3, 5000);
@@ -164,7 +162,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 
 		super.setInventorySlotContents(slot, stack);
 		while(useBucket(0, getStackInSlot(0)));
@@ -172,11 +170,12 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	/**
+	 * Handles internal bucket tank interaction
 	 * @param slot integer slot to insert into
 	 * @param stack the itemstack to work fluid handling on
 	 * @return boolean on whether the fluid stack was successfully filled from or not, returns false if the stack cannot be extracted from or has no fluid left
 	 */
-	private boolean useBucket( int slot, ItemStack stack) {
+	private boolean useBucket(int slot, @Nonnull ItemStack stack) {
 		if(slot == 0 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
 			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
 			FluidStack fluidStack = fluidItem.getTankProperties()[0].getContents();
@@ -205,7 +204,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
 		if(stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
 			FluidStack fstack = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP).getTankProperties()[0].getContents();
 			return fstack != null && canFill(fstack.getFluid());
@@ -234,7 +233,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity,
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 
 		ItemLinker.setMasterCoords(item, pos);
@@ -261,7 +260,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
-	public boolean onLinkComplete(ItemStack item, TileEntity entity,
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("msg.linker.error.firstMachine"));
@@ -269,6 +268,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
+	@Nonnull
 	public int[] getSlotsForFace(EnumFacing side) {
 		if(side == EnumFacing.DOWN)
 			return  new int[]{1};
@@ -277,7 +277,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> list = new ArrayList<ModuleBase>();
+		List<ModuleBase> list = new ArrayList<>();
 
 		list.add(new ModulePower(156, 12, this));
 		list.add(new ModuleSlotArray(45, 18, this, 0, 1));
@@ -302,7 +302,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
-	public boolean linkMission(IMission misson) {
+	public boolean linkMission(IMission mission) {
 		return false;
 	}
 

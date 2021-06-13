@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.achievements;
+package zmaster587.advancedRocketry.advancements;
 
 
 import com.google.common.collect.Maps;
@@ -10,58 +10,63 @@ import net.minecraft.advancements.critereon.AbstractCriterionInstance;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 
 public class CustomTrigger implements ICriterionTrigger
 {
     private final ResourceLocation ID;
-    private final Map listeners = Maps.newHashMap();
+    private final Map<PlayerAdvancements, Listeners> listeners = Maps.newHashMap();
 
     public CustomTrigger(String parString)
     {
-  super();
-  ID = new ResourceLocation(parString);
+        super();
+        ID = new ResourceLocation(parString);
     }
     
     public CustomTrigger(ResourceLocation parRL)
     {
-     super();
-     ID = parRL;
+        super();
+        ID = parRL;
     }
     
     /* (non-Javadoc)
      * @see net.minecraft.advancements.ICriterionTrigger#getId()
      */
     @Override
- public ResourceLocation getId()
-    {
-        return ID;
-    }
+    @Nonnull
+    public ResourceLocation getId()
+        {
+            return ID;
+        }
 
     /* (non-Javadoc)
      * @see net.minecraft.advancements.ICriterionTrigger#addListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
- public void addListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener listener)
+    @ParametersAreNonnullByDefault
+    public void addListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener listener)
     {
-        CustomTrigger.Listeners tameanimaltrigger$listeners = (Listeners) this.listeners.get(playerAdvancementsIn);
+        CustomTrigger.Listeners tameAnimalTrigger$listeners = this.listeners.get(playerAdvancementsIn);
 
-        if (tameanimaltrigger$listeners == null)
+        if (tameAnimalTrigger$listeners == null)
         {
-            tameanimaltrigger$listeners = new CustomTrigger.Listeners(playerAdvancementsIn);
-            this.listeners.put(playerAdvancementsIn, tameanimaltrigger$listeners);
+            tameAnimalTrigger$listeners = new CustomTrigger.Listeners(playerAdvancementsIn);
+            this.listeners.put(playerAdvancementsIn, tameAnimalTrigger$listeners);
         }
 
-        tameanimaltrigger$listeners.add(listener);
+        tameAnimalTrigger$listeners.add(listener);
     }
 
     /* (non-Javadoc)
      * @see net.minecraft.advancements.ICriterionTrigger#removeListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
- public void removeListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener listener)
+    @ParametersAreNonnullByDefault
+    public void removeListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener listener)
     {
-        CustomTrigger.Listeners tameanimaltrigger$listeners = (Listeners) this.listeners.get(playerAdvancementsIn);
+        CustomTrigger.Listeners tameanimaltrigger$listeners = this.listeners.get(playerAdvancementsIn);
 
         if (tameanimaltrigger$listeners != null)
         {
@@ -78,7 +83,7 @@ public class CustomTrigger implements ICriterionTrigger
      * @see net.minecraft.advancements.ICriterionTrigger#removeAllListeners(net.minecraft.advancements.PlayerAdvancements)
      */
     @Override
- public void removeAllListeners(PlayerAdvancements playerAdvancementsIn)
+    public void removeAllListeners(@Nonnull PlayerAdvancements playerAdvancementsIn)
     {
         this.listeners.remove(playerAdvancementsIn);
     }
@@ -91,7 +96,8 @@ public class CustomTrigger implements ICriterionTrigger
      * @return the tame bird trigger. instance
      */
     @Override
- public CustomTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context)
+    @Nonnull
+    public CustomTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context)
     {
         return new CustomTrigger.Instance(this.getId());
     }
@@ -103,7 +109,7 @@ public class CustomTrigger implements ICriterionTrigger
      */
     public void trigger(EntityPlayerMP parPlayer)
     {
-        CustomTrigger.Listeners tameanimaltrigger$listeners = (Listeners) this.listeners.get(parPlayer.getAdvancements());
+        CustomTrigger.Listeners tameanimaltrigger$listeners = this.listeners.get(parPlayer.getAdvancements());
 
         if (tameanimaltrigger$listeners != null)
         {
@@ -136,7 +142,7 @@ public class CustomTrigger implements ICriterionTrigger
     static class Listeners
     {
         private final PlayerAdvancements playerAdvancements;
-        private final Set<ICriterionTrigger.Listener> listeners = new HashSet<ICriterionTrigger.Listener>();
+        private final Set<ICriterionTrigger.Listener> listeners = new HashSet<>();
 
         /**
          * Instantiates a new listeners.
@@ -185,7 +191,7 @@ public class CustomTrigger implements ICriterionTrigger
          */
         public void trigger(EntityPlayerMP player)
         {
-            List list = null;
+            List<Listener> list = null;
 
             for (ICriterionTrigger.Listener listener : this.listeners)
             {

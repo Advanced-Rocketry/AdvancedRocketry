@@ -65,7 +65,7 @@ public class MissionGasCollection extends MissionResourceCollection {
 		rocket.setFuelAmount(rocket.getRocketFuelType(), 0);
 		if (rocket.getRocketFuelType() == FuelRegistry.FuelType.LIQUID_BIPROPELLANT)
 			rocket.setFuelAmount(FuelRegistry.FuelType.LIQUID_OXIDIZER, 0);
-		rocket.readMissionPersistantNBT(missionPersistantNBT);
+		rocket.readMissionPersistentNBT(missionPersistantNBT);
 
 		EnumFacing dir = rocket.forwardDirection;
 		rocket.forceSpawn = true;

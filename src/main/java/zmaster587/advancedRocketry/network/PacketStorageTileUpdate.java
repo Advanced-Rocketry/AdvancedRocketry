@@ -45,11 +45,11 @@ public class PacketStorageTileUpdate extends BasePacket {
 
 	@Override
 	public void write(ByteBuf out) {
-		NBTTagCompound nbt = (NBTTagCompound)ReflectionHelper.getPrivateValue(SPacketUpdateTileEntity.class, (SPacketUpdateTileEntity)tile.getUpdatePacket(), "field_148860_e");
+		NBTTagCompound nbt = ReflectionHelper.getPrivateValue(SPacketUpdateTileEntity.class, tile.getUpdatePacket(), "field_148860_e");
 
 
-		out.writeInt(((Entity)entity).world.provider.getDimension());
-		out.writeInt(((Entity)entity).getEntityId());
+		out.writeInt(entity.world.provider.getDimension());
+		out.writeInt(entity.getEntityId());
 		out.writeInt(x);
 		out.writeInt(y);
 		out.writeInt(z);
@@ -85,7 +85,7 @@ public class PacketStorageTileUpdate extends BasePacket {
 		this.nbt = nbt;
 
 
-		if(ent != null && ent instanceof INetworkEntity) {
+		if(ent instanceof INetworkEntity) {
 			entity = (EntityRocket)ent;
 			this.chunk = entity.storage;
 		}

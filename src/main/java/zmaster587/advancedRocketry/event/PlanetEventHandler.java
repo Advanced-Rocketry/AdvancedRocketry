@@ -18,10 +18,8 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
@@ -47,7 +45,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerConnectionFro
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.achievements.ARAdvancements;
+import zmaster587.advancedRocketry.advancements.ARAdvancements;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
@@ -66,7 +64,6 @@ import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.util.BiomeHandler;
-import zmaster587.advancedRocketry.util.GravityHandler;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
@@ -86,7 +83,7 @@ public class PlanetEventHandler {
 
 	public static long time = 0;
 	private static long endTime, duration;
-	private static List<TransitionEntity> transitionMap = new LinkedList<TransitionEntity>();
+	private static List<TransitionEntity> transitionMap = new LinkedList<>();
 
 	public static void addDelayedTransition(TransitionEntity entity) {
 		transitionMap.add(entity);
@@ -94,7 +91,7 @@ public class PlanetEventHandler {
 
 	@SubscribeEvent
 	public void onCrafting(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent event) {
-		if(event.crafting != null) {
+		if(!event.crafting.isEmpty()) {
 			Item item = event.crafting.getItem();//TODO Advancments for crafting.
 			//			if(item == LibVulpesItems.itemHoloProjector) 
 			//				event.player.addStat(ARAchivements.holographic);
@@ -169,12 +166,12 @@ public class PlanetEventHandler {
 
 	@SubscribeEvent
 	public void onPickup(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent event) {
-		if(event.pickedUp != null && !event.pickedUp.getItem().isEmpty()) {
+		if(event.getOriginalEntity() != null && !event.getOriginalEntity().getItem().isEmpty()) {
 
-			//TODO pickup advancment
-			//			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.pickedUp.getEntityItem());
+			//TODO pickup advancement
+			//			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.getOriginalEntity().getEntityItem());
 			//			if(mat != null && mat.getUnlocalizedName().contains("Dilithium"))
-			//				event.player.addStat(ARAchivements.dilithiumCrystals);
+			//				event.player.addStat(ARAchievements.dilithiumCrystals);
 		}
 	}
 
@@ -200,9 +197,9 @@ public class PlanetEventHandler {
 		if(event.getEntity() instanceof EntityPlayer && event.getEntity().world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.getEntity().getPosition()) == null && !(event.getEntity().getRidingEntity() instanceof EntityRocket)) {
 			double distance = 0;
 			HashedBlockPosition teleportPosition = null;
-			for (ISpaceObject object : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
-				if (object instanceof SpaceStationObject) {
-					SpaceStationObject station = ((SpaceStationObject) object);
+			for (ISpaceObject spaceObject : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
+				if (spaceObject instanceof SpaceStationObject) {
+					SpaceStationObject station = ((SpaceStationObject) spaceObject);
 					double distanceTo = event.getEntity().getPosition().getDistance(station.getSpawnLocation().x, station.getSpawnLocation().y, station.getSpawnLocation().z);
 					if (distanceTo > distance) {
 						distance = distanceTo;
@@ -259,13 +256,13 @@ public class PlanetEventHandler {
 		if(!event.getWorld().isRemote && direction != null  && event.getEntityPlayer() != null  && AtmosphereHandler.getOxygenHandler(event.getWorld().provider.getDimension()) != null &&
 				!AtmosphereHandler.getOxygenHandler(event.getWorld().provider.getDimension()).getAtmosphereType(event.getPos().offset(direction)).allowsCombustion()) {
 
-			if(event.getEntityPlayer().getHeldItem(event.getHand()) != null) {
+			if(!event.getEntityPlayer().getHeldItem(event.getHand()).isEmpty()) {
 				if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD )
 					event.setCanceled(true);
 			}
 		}
 
-		if(!event.getWorld().isRemote && event.getItemStack() != null && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
+		if(!event.getWorld().isRemote && !event.getItemStack().isEmpty() && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
 			ARAdvancements.BEER.trigger((EntityPlayerMP) event.getEntityPlayer());
 		}
 	}
@@ -293,7 +290,7 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void tick(TickEvent.ServerTickEvent event) {
 		//Tick satellites
-		if(event.phase == event.phase.END) {
+		if(event.phase == TickEvent.Phase.END) {
 			DimensionManager.getInstance().tickDimensions();
 			time++;
 
@@ -319,7 +316,7 @@ public class PlanetEventHandler {
 
 	@SubscribeEvent
 	public void tickClient(TickEvent.ClientTickEvent event) {
-		if(event.phase == event.phase.END)
+		if(event.phase == TickEvent.Phase.END)
 			DimensionManager.getInstance().tickDimensionsClient();
 	}
 
@@ -340,8 +337,8 @@ public class PlanetEventHandler {
 			PacketHandler.sendToDispatcher(new PacketDimInfo(i, DimensionManager.getInstance().getDimensionProperties(i)), event.getManager());
 		}
 
-		for(ISpaceObject obj : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
-			PacketHandler.sendToDispatcher(new PacketSpaceStationInfo(obj.getId(), obj), event.getManager());
+		for(ISpaceObject spaceObject : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
+			PacketHandler.sendToDispatcher(new PacketSpaceStationInfo(spaceObject.getId(), spaceObject), event.getManager());
 		}
 
 		PacketHandler.sendToDispatcher(new PacketDimInfo(0, DimensionManager.getInstance().getDimensionProperties(0)), event.getManager());
@@ -547,7 +544,7 @@ public class PlanetEventHandler {
 			int atmosphere = Math.min(properties.getAtmosphereDensity(), 200);
 			ItemStack armor = Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
-			if(armor != null && armor.getItem() instanceof IModularArmor) {
+			if(!armor.isEmpty() && armor.getItem() instanceof IModularArmor) {
 				for(ItemStack i : ((IModularArmor)armor.getItem()).getComponents(armor)) {
 					if(i.isItemEqual(component)) {
 						atmosphere = Math.min(atmosphere, 100);

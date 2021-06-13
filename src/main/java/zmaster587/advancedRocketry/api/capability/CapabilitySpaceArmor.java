@@ -9,6 +9,8 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
 
+import javax.annotation.Nonnull;
+
 public class CapabilitySpaceArmor {
 
 	@CapabilityInject(IProtectiveArmor.class)
@@ -34,8 +36,7 @@ public class CapabilitySpaceArmor {
 			}, new IProtectiveArmor() {
 
 				@Override
-				public boolean protectsFromSubstance(IAtmosphere atmosphere,
-						ItemStack stack, boolean commitProtection) {
+				public boolean protectsFromSubstance(IAtmosphere atmosphere, @Nonnull ItemStack stack, boolean commitProtection) {
 					return false;
 				}
 			}.getClass());
