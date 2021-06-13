@@ -314,6 +314,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		tickingSatellites = new HashMap<Long,SatelliteBase>();
 		isNativeDimension = true;
 		hasOxygen = true;
+		peakInsolationMultiplier = -1;
+		peakInsolationMultiplierWithoutAtmosphere = -1;
 		isGasGiant = false;
 		hasRings = false;
 		canGenerateCraters = false;
@@ -826,12 +828,22 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	/**
 	 * @return the multiplier compared to Earth(1040W) for peak insolation of the body
 	 */
-	public double getPeakInsolationMultiplier() { return peakInsolationMultiplier; }
+	public double getPeakInsolationMultiplier() {
+		//Set peak insolation multiplier --  we do this here because I've had problems with it in the past in the XML loader, and people keep asking to change it
+		//Assumes that a 16 atmosphere is 16x the partial pressure but not thicker, because I don't want to deal with that and this is fairly simple right now
+		//Get what it would be relative to LEO, this gives ~0.76 for Earth at the surface
+		double insolationRelativeToLEO = AstronomicalBodyHelper.getStellarBrightness(star, getSolarOrbitalDistance()) * Math.pow(Math.E, -(0.0026899d * getAtmosphereDensity()));
+		//Multiply by Earth LEO/Earth Surface for ratio relative to Earth surface (1360/1040)
+		peakInsolationMultiplier = insolationRelativeToLEO * 1.308d;
+		return peakInsolationMultiplier;
+	}
 
 	/**
 	 * @return the multiplier compared to Earth(1040W) for peak insolation of the body, ignoring the atmosphere
 	 */
 	public double getPeakInsolationMultiplierWithoutAtmosphere() {
+		//Set peak insolation multiplier without atmosphere --  we do this here because I've had problems with it in the past in the XML loader, and people keep asking to change it
+		peakInsolationMultiplierWithoutAtmosphere = AstronomicalBodyHelper.getStellarBrightness(star, getSolarOrbitalDistance()) * 1.308d;
 		return peakInsolationMultiplierWithoutAtmosphere;
 	}
 

@@ -71,8 +71,6 @@ public class XMLPlanetLoader {
 	private static final String ELEMENT_BASEORBITTHETA = "orbitalTheta";
 	private static final String ELEMENT_PHI = "orbitalPhi";
 	private static final String ELEMENT_RETROGRADE = "retrograde";
-	private static final String PEAK_INSOLATION = "peakInsolation";
-	private static final String PEAK_INSOLATION_WITHOUT_ATMOSPHERE = "peakInsolationNoAtmosphere";
 	private static final String AVG_TEMPERATURE = "avgTemperature";
 	private static final String ELEMENT_PERIOD = "rotationalPeriod";
 	private static final String ELEMENT_HASOXYGEN = "hasOxygen";
@@ -687,15 +685,6 @@ public class XMLPlanetLoader {
 
 		//Star may not be registered at this time, use ID version instead
 		properties.setStar(star.getId());
-
-		//Set peak insolation multiplier
-		//Assumes that a 16 atmosphere is 16x the partial pressure but not thicker, because I don't want to deal with that and this is fairly simple right now
-		//Get what it would be relative to LEO, this gives ~0.76 for Earth at the surface
-		double insolationRelativeToLEO = AstronomicalBodyHelper.getStellarBrightness(star, properties.getSolarOrbitalDistance()) * Math.pow(Math.E, -(0.0026899d * properties.getAtmosphereDensity()));
-		//Multiply by Earth LEO/Earth Surface for ratio relative to Earth surface (1360/1040)
-		properties.peakInsolationMultiplier = insolationRelativeToLEO * 1.308d;
-		//Without atmosphere
-		properties.peakInsolationMultiplierWithoutAtmosphere = AstronomicalBodyHelper.getStellarBrightness(star, properties.getSolarOrbitalDistance()) * 1.308d;
 		
 		//Set temperature
 		properties.averageTemperature = AstronomicalBodyHelper.getAverageTemperature(star, properties.getSolarOrbitalDistance(), properties.getAtmosphereDensity());
@@ -980,8 +969,6 @@ public class XMLPlanetLoader {
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_BASEORBITTHETA, (int)((properties.baseOrbitTheta * 180f/Math.PI) - 180)));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_PHI, (int)(properties.orbitalPhi)));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_RETROGRADE, properties.isRetrograde));
-		nodePlanet.appendChild(createTextNode(doc, PEAK_INSOLATION, (properties.peakInsolationMultiplier)));
-		nodePlanet.appendChild(createTextNode(doc, PEAK_INSOLATION_WITHOUT_ATMOSPHERE, (properties.peakInsolationMultiplierWithoutAtmosphere)));
 		nodePlanet.appendChild(createTextNode(doc, AVG_TEMPERATURE, properties.averageTemperature));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_PERIOD, properties.rotationalPeriod));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_ATMDENSITY, properties.getAtmosphereDensity()));
