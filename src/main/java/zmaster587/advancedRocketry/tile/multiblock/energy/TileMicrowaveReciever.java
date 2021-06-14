@@ -114,7 +114,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 		for(IInventory inv : itemInPorts) {
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				ItemStack stack = inv.getStackInSlot(i);
-				if(stack.isEmpty() && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
+				if(!stack.isEmpty() && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
 					ItemSatelliteIdentificationChip item = (ItemSatelliteIdentificationChip)stack.getItem();
 					list.add(item.getSatelliteId(stack));
 				}
@@ -202,7 +202,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 			producePower(powerMadeLastTick);
 		}
 		if(world.isRemote)
-			textModule.setText(LibVulpes.proxy.getLocalizedString("msg.microwaverec.generating") + powerMadeLastTick + " " + LibVulpes.proxy.getLocalizedString("msg.powerunit.rfpertick"));
+			textModule.setText(LibVulpes.proxy.getLocalizedString("msg.microwaverec.generating") + " " + powerMadeLastTick + " " + LibVulpes.proxy.getLocalizedString("msg.powerunit.rfpertick"));
 	}
 
 	@Override
@@ -251,8 +251,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+	public void readDataFromNetwork(ByteBuf in, byte packetId, NBTTagCompound nbt) {
 		super.readDataFromNetwork(in, packetId, nbt);	
 
 		if(packetId == 1) {
@@ -261,8 +260,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt) {
 		super.useNetworkData(player, side, id, nbt);
 
 		if(id == 1) {
@@ -274,9 +272,9 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
-		int[] intArray = new int[connectedSatellites.size()*2];
+		int[] intArray = new int[connectedSatellites.size() * 2];
 
-		for( int i =0; i < connectedSatellites.size()*2; i += 2 ) {
+		for( int i = 0; i < connectedSatellites.size()*  2; i += 2 ) {
 			intArray[i] = (connectedSatellites.get(i / 2)).intValue();
 			intArray[i+1] = (int) ((connectedSatellites.get(i / 2) >>> 32));
 		}
@@ -292,8 +290,8 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 
 		int[] intArray = nbt.getIntArray("satilliteList");
 		connectedSatellites.clear();
-		for( int i =0; i < intArray.length/2; i+=2 ) {
-			connectedSatellites.add(intArray[i] | (((long)intArray[i+1]) << 32));
+		for( int i = 0; i < intArray.length/2; i += 2 ) {
+			connectedSatellites.add(intArray[i] | (((long)intArray[i + 1]) << 32));
 		}
 
 	}

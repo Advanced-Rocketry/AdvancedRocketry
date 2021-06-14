@@ -574,6 +574,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			FluidStack fluidStack;
 
 			if(heldItem.getItem() instanceof ItemLinker) {
+				isHoldingFluidItemOrLinker = true;
 				if(ItemLinker.isSet(heldItem)) {
 
 
@@ -609,7 +610,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			else if((FluidUtils.containsFluid(heldItem) && FluidUtils.getFluidForItem(heldItem) != null) && ARConfiguration.getCurrentConfig().canBeFueledByHand) {
 				fluidStack = FluidUtils.getFluidForItem(heldItem);
 				if ((canRocketFitFluid(fluidStack))) {
-					FuelType type = getRocketFuelType();
+					isHoldingFluidItemOrLinker = true;
+					FuelType type = getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT && FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid()) ? FuelType.LIQUID_OXIDIZER : getRocketFuelType();
 
 					stats.setFuelRate(type, (int) (stats.getBaseFuelRate(type) * FuelRegistry.instance.getMultiplier(type, fluidStack.getFluid())));
 					FluidTank rocketFakeTank = new FluidTank(getFuelCapacity(type) - getFuelAmount(type));
@@ -922,7 +924,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			launchCount--;
 			this.dataManager.set(LAUNCH_COUNTER, launchCount);
 			//Just before launch, damage the ground. We'll do it again on the tick that we launch
-			if (launchCount == 20 && ARConfiguration.getCurrentConfig().launchingDestroysBlocks)
+			if (launchCount == 20 && ARConfiguration.getCurrentConfig().launchingDestroysBlocks && this.getFuelCapacity(getRocketFuelType()) > 0)
 				damageGroundBelowRocket(world, (int)this.posX, (int)this.posY, (int)this.posZ, (int)Math.pow(stats.getThrust(), 0.3333));
 		}
 		
@@ -2313,7 +2315,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	@Override
 	public float getNormallizedProgress(int id) {
 		if(id == 0)
-			return (((getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT) ? getFuelAmount(FuelType.LIQUID_OXIDIZER) : 0 ) + getFuelAmount(getRocketFuelType())) / (float)(getFuelCapacity(getRocketFuelType()) + ((getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT) ? getFuelCapacity(FuelType.LIQUID_OXIDIZER) : 0 ));
+			return (getRocketFuelType() == null ? 0 : ((getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT) ? getFuelAmount(FuelType.LIQUID_OXIDIZER) : 0 ) + getFuelAmount(getRocketFuelType())) / (float)(getFuelCapacity(getRocketFuelType()) + ((getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT) ? getFuelCapacity(FuelType.LIQUID_OXIDIZER) : 0 ));
 		return 0;
 	}
 

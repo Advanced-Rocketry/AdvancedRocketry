@@ -67,7 +67,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		}
 	}
 	
-	public boolean getEquivilentPower() {
+	public boolean getEquivalentPower() {
 		if(state == RedstoneState.OFF)
 			return false;
 
@@ -80,7 +80,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 
 	@Override
 	public void onAdjacentBlockUpdated() {
-		if(!world.isRemote && getEquivilentPower() && linkedRocket != null) {
+		if(!world.isRemote && getEquivalentPower() && linkedRocket != null) {
 			linkedRocket.prepareLaunch();
 		}
 	}
@@ -91,10 +91,16 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	}
 
 	@Override
-	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
-							   EntityPlayer player, World world) {
-
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
 		ItemLinker.setMasterCoords(item, getPos());
+		if(linkedRocket != null) {
+			linkedRocket.unlinkInfrastructure(this);
+			unlinkRocket();
+		}
+		if(mission != null) {
+			mission.unlinkInfrastructure(this);
+			unlinkMission();
+		}
 
 		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("%s %s", new TextComponentTranslation("msg.monitoringStation.link"), ": " + getPos().getX() + " " + getPos().getY() + " " + getPos().getZ()));
@@ -102,8 +108,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	}
 
 	@Override
-	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
 		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("msg.linker.error.firstMachine"));
 		return false;
