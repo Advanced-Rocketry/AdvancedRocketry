@@ -345,14 +345,11 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 	}
 
 	@Override
-	public void setProgress(int id, int progress) {
-		size = progress/100f;
-
-	}
+	public void setProgress(int id, int progress) { size = progress/100f; }
 
 	@Override
 	public int getProgress(int id) {
-		return (int)(size*100);
+		return (int)(size * 100);
 	}
 
 	@Override
@@ -361,9 +358,7 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 	}
 
 	@Override
-	public void setTotalProgress(int id, int progress) {
-
-	}
+	public void setTotalProgress(int id, int progress) { }
 
 	@Override
 	public void setProgressByUser(int id, int progress) {
@@ -371,6 +366,10 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 		PacketHandler.sendToServer(new PacketMachine(this, SCALEPACKET));
 		updateText();
 	}
+
+	public int getCurrentPlanetID () {return selectedPlanet.dimension;}
+
+	public int getCurrentStarID() {return currentStar.getPlanetID();}
 
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
