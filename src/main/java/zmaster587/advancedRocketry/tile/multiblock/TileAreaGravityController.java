@@ -115,6 +115,8 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 		return currentProgress/2f;
 	}
 
+	public void setGravityMultiplier(double multiplier) {gravity = (int)(multiplier * 100);}
+
 	private void updateText() {
 		if(world.isRemote) {
 			textRadius.setText(String.format("%s%d",LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.radius"), getRadius()));

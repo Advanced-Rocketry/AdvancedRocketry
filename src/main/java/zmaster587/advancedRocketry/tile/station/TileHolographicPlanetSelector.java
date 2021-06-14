@@ -211,6 +211,45 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 		}
 	}
 
+	public void selectSystemWithoutTargeting(int id) {
+		if(id >= EntityUIStar.starIDoffset) {
+			if(stellarMode) {
+				if(selectedId != id) {
+					for(EntityUIStar entity : starEntities) {
+						if(entity.getPlanetID() + EntityUIStar.starIDoffset == id) {
+							entity.setSelected(true);
+							selectedPlanet = entity;
+						}
+						else
+							entity.setSelected(false);
+					}
+					selectedId = id;
+				}
+				else {
+					stellarMode = false;
+					currentStarBody = DimensionManager.getInstance().getStar(id - EntityUIStar.starIDoffset);
+					rebuildSystem();
+					selectedId = Constants.INVALID_PLANET;
+				}
+			}
+
+		}
+		else {
+			if (selectedPlanet != null && selectedPlanet.getPlanetID() == id) {
+				centeredEntity = selectedPlanet;
+				stellarMode = false;
+				rebuildSystem();
+			} else
+				for (EntityUIPlanet entity : entities) {
+					if (entity.getPlanetID() == id) {
+						entity.setSelected(true);
+						selectedPlanet = entity;
+					} else
+						entity.setSelected(false);
+				}
+		}
+	}
+
 	private void rebuildSystem() {
 		onTime = 0;
 		for(EntityUIPlanet entity : entities)
@@ -345,14 +384,11 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 	}
 
 	@Override
-	public void setProgress(int id, int progress) {
-		size = progress/100f;
-
-	}
+	public void setProgress(int id, int progress) { size = progress/100f; }
 
 	@Override
 	public int getProgress(int id) {
-		return (int)(size*100);
+		return (int)(size * 100);
 	}
 
 	@Override
@@ -361,9 +397,7 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 	}
 
 	@Override
-	public void setTotalProgress(int id, int progress) {
-
-	}
+	public void setTotalProgress(int id, int progress) { }
 
 	@Override
 	public void setProgressByUser(int id, int progress) {
@@ -371,6 +405,10 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 		PacketHandler.sendToServer(new PacketMachine(this, SCALEPACKET));
 		updateText();
 	}
+
+	public int getCurrentPlanetID () {return selectedPlanet.dimension;}
+
+	public int getCurrentStarID() {return currentStar.getPlanetID();}
 
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {

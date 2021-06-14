@@ -125,6 +125,42 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 		return Integer.MAX_VALUE;
 	}
 
+	public int getTravelCostToDimension(int destinationID) {
+		if(getSpaceObject() != null) {
+			DimensionProperties properties = getSpaceObject().getProperties().getParentProperties();
+
+			DimensionProperties destProperties = DimensionManager.getInstance().getDimensionProperties(destinationID);
+
+			if(properties == DimensionManager.defaultSpaceDimensionProperties)
+				return Integer.MAX_VALUE;
+
+			if(destProperties.getStar() != properties.getStar())
+				return 500;
+
+			while(destProperties.getParentProperties() != null && destProperties.isMoon())
+				destProperties = destProperties.getParentProperties();
+
+			if((destProperties.isMoon() && destProperties.getParentPlanet() == properties.getId()) || (properties.isMoon() && properties.getParentPlanet() == destProperties.getId()))
+				return 1;
+
+			while(properties.isMoon())
+				properties = properties.getParentProperties();
+
+			//TODO: actual trig
+			if(properties.getStar().getId() == destProperties.getStar().getId()) {
+				double x1 = properties.orbitalDist*MathHelper.cos((float) properties.orbitTheta);
+				double y1 = properties.orbitalDist*MathHelper.sin((float) properties.orbitTheta);
+				double x2 = destProperties.orbitalDist*MathHelper.cos((float) destProperties.orbitTheta);
+				double y2 = destProperties.orbitalDist*MathHelper.sin((float) destProperties.orbitTheta);
+
+				return Math.max((int)Math.sqrt(Math.pow((x1 - x2),2) + Math.pow((y1 - y2),2)),1);
+
+				//return Math.abs(properties.orbitalDist - destProperties.orbitalDist);
+			}
+		}
+		return Integer.MAX_VALUE;
+	}
+
 	@Override
 	public int addData(int maxAmount, DataType type, EnumFacing dir,
 			boolean commit) {
@@ -856,6 +892,24 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 		}
 		
 		return list.isEmpty();
+	}
+
+	public boolean itemListContainsRequiredArtifacts(List<ItemStack> items, DimensionProperties properties) {
+		if(properties.getRequiredArtifacts().isEmpty()) return true;
+
+		List<ItemStack> list = new LinkedList<ItemStack>(properties.getRequiredArtifacts());
+		boolean hasArtifacts = true;
+
+		for (ItemStack item : items) {
+			boolean foundArtifact = false;
+			for (ItemStack item2 : list) {
+				if(item.getItem() == item2.getItem() && item.getItemDamage() == item2.getItemDamage() && ItemStack.areItemStackTagsEqual(item, item2) && item.getCount() >= item2.getCount()) {
+	                foundArtifact = true;
+				}
+			}
+			hasArtifacts = foundArtifact;
+		}
+		return hasArtifacts;
 	}
 	
 	@Override
