@@ -1734,7 +1734,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setBoolean("isNative", isNativeDimension);
 		nbt.setBoolean("isGasGiant", isGasGiant);
 		nbt.setBoolean("hasRings", hasRings);
-		nbt.setInteger("seaLevel", sealevel);
+		nbt.setInteger("sealevel", sealevel);
 		nbt.setInteger("genType", generatorType);
 		nbt.setBoolean("canGenerateCraters", canGenerateCraters);
 		nbt.setBoolean("canGenerateGeodes", canGenerateGeodes);
