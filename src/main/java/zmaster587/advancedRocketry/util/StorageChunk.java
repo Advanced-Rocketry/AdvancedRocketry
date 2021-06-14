@@ -37,7 +37,6 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.IStorageChunk;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
-import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
@@ -53,7 +52,7 @@ import java.util.List;
 public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 	Block[][][] blocks;
-	private short metas[][][];
+	private short[][][] metas;
 	int sizeX, sizeY, sizeZ;
 	public Chunk chunk;
 
@@ -148,8 +147,6 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		int z = pos.getZ();
 		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ || blocks[x][y][z] == null)
 			return Blocks.AIR.getDefaultState();
-		if(blocks[x][y][z] != Blocks.AIR)
-			return blocks[x][y][z].getStateFromMeta(metas[x][y][z]);
 		return blocks[x][y][z].getStateFromMeta(metas[x][y][z]);
 	}
 
@@ -246,8 +243,8 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		HashedBlockPosition newerSize = remapCoord(newSizes, dir);
 		newSizes = remapCoord(newSizes, dir);
 
-		Block blocks[][][] = new Block[newSizes.x][newSizes.y][newSizes.z];
-		short metas[][][] = new short[newSizes.x][newSizes.y][newSizes.z];
+		Block[][][] blocks = new Block[newSizes.x][newSizes.y][newSizes.z];
+		short[][][] metas = new short[newSizes.x][newSizes.y][newSizes.z];
 
 		for(int y = 0; y < getSizeY(); y++) {
 			for(int z = 0; z < getSizeZ(); z++) {
@@ -278,33 +275,21 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 		switch(dir) {
 			case DOWN:
-				out.x = in.z;
-				out.y = in.y;
-				out.z = in.x;
-				break;
 			case UP:
 				out.x = in.z;
 				out.y = in.y;
 				out.z = in.x;
 				break;
 			case NORTH:
+			case SOUTH:
 				out.x = in.y;
 				out.y = (short)(in.x);
 				out.z = in.z;
 				break;
-			case SOUTH:
-				out.x = in.y;
-				out.y = (short)in.x;
-				out.z = in.z;
-				break;
 			case EAST:
-				out.x = in.x;
-				out.y = (short)(in.z);
-				out.z = in.y;
-				break;
 			case WEST:
 				out.x = in.x;
-				out.y = (short)in.z;
+				out.y = (short)(in.z);
 				out.z = in.y;
 				break;
 		}
@@ -489,9 +474,6 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 			}
 		}
 
-
-		bb = new AxisAlignedBB(actualMinX, actualMinY, actualMinZ, actualMaxX, actualMaxY, actualMaxZ);
-
 		StorageChunk ret = new StorageChunk((actualMaxX - actualMinX + 1), (actualMaxY - actualMinY + 1), (actualMaxZ - actualMinZ + 1));
 
 
@@ -644,8 +626,8 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		}
 
 		//Carpenter's block's dupe
-		for(Object entity : worldObj.getEntitiesWithinAABB(EntityItem.class, bb.grow(5, 5, 5)) ) {
-			((Entity)entity).setDead();
+		for(Entity entity : worldObj.getEntitiesWithinAABB(EntityItem.class, bb.grow(5, 5, 5)) ) {
+			entity.setDead();
 		}
 
 		return chunk;

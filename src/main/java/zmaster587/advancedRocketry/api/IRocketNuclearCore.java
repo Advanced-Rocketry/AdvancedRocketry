@@ -13,5 +13,5 @@ public interface IRocketNuclearCore {
 	 * amount of thrust per core
 	 * @return meters per tick per block
 	 */
-	public int getMaxThrust(World world, BlockPos pos);
+    int getMaxThrust(World world, BlockPos pos);
 }

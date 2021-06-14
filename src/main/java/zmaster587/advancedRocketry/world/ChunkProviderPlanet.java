@@ -71,7 +71,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	double[] depthRegion;
 	protected int heightmapOffset = 0;
 	protected float heightmapMult = 1f;
-	protected boolean habitable = false;
+	protected boolean habitable;
 
 
 	private MapGenCraterSmall craterGeneratorSmall;

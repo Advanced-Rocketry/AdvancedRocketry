@@ -64,7 +64,7 @@ public class LiquidNetwork extends CableNetwork {
 
 			if(fluidHandleSink == null) {
 				sinkItr.remove();
-				AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos().toString() + " is added as a sink but has no fluid capabilities on the side connected");
+				AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos() + " is added as a sink but has no fluid capabilities on the side connected");
 				continue;
 			}
 			
@@ -85,7 +85,7 @@ public class LiquidNetwork extends CableNetwork {
 
 						if(fluidHandleSource == null) {
 							sourceItr.remove();
-							AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos().toString() + " is added as a source but has no fluid capabilities on the side connected");
+							AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos() + " is added as a source but has no fluid capabilities on the side connected");
 							continue;
 						}
 						

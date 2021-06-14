@@ -48,19 +48,11 @@ public class RocketFx extends Particle {
 	public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn,
 			float partialTicks, float rotationX, float rotationZ,
 			float rotationYZ, float rotationXY, float rotationXZ) {
-        float f = (float)this.particleTextureIndexX / 16.0F;
-        float f1 = f + 0.0624375F;
-        float f2 = (float)this.particleTextureIndexY / 16.0F;
-        float f3 = f2 + 0.0624375F;
+        float f;
+        float f1;
+        float f2;
+        float f3;
         float f4 = 0.1F * this.particleScale;
-
-        if (this.particleTexture != null)
-        {
-            f = this.particleTexture.getMinU();
-            f1 = this.particleTexture.getMaxU();
-            f2 = this.particleTexture.getMinV();
-            f3 = this.particleTexture.getMaxV();
-        }
 
         float f5 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks - interpPosX);
         float f6 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks - interpPosY);

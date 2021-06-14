@@ -61,8 +61,8 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 	@Override
 	public boolean canPerformFunction() {
 		if(!world.isRemote) {
-			for( Object player : this.world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos, pos.add(1,2,1)))) {
-				ItemStack stack = ((EntityPlayer)player).getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+			for( EntityPlayer player : this.world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos, pos.add(1,2,1)))) {
+				ItemStack stack = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 
 				if(!stack.isEmpty()) {
 					IFillableArmor fillable = null;

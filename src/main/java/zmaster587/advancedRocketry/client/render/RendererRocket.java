@@ -163,7 +163,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)x, (float)y + halfy, (float)z);
 		GL11.glRotatef(((EntityRocket)entity).getRCSRotateProgress()*0.9f, 1f, 0f, 0f);
-		GL11.glRotatef(((EntityRocket)entity).rotationYaw, 0f, 0f, 1f);
+		GL11.glRotatef(entity.rotationYaw, 0f, 0f, 1f);
 		GL11.glTranslatef(- halfx, (float)0 - halfy, - halfz);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GL11.glCallList(storage.world.displayListIndex);

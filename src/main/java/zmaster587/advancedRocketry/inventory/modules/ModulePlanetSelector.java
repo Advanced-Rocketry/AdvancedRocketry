@@ -335,10 +335,10 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 				renderPlanetarySystem(properties, size/2, size/2, 1f,3f*properties.getPathLengthToStar());
 			}
 			else
-				renderStarSystem(DimensionManager.getInstance().getStar(currentSystem - Constants.STAR_ID_OFFSET), size/2, size/2, 1f*(float) zoom, (float)zoom*.5f);
+				renderStarSystem(DimensionManager.getInstance().getStar(currentSystem - Constants.STAR_ID_OFFSET), size/2, size/2, (float) zoom, (float)zoom*.5f);
 		}
 		else
-			renderGalaxyMap(DimensionManager.getInstance(), size/2, size/2, 1f*(float) zoom, (float)zoom*.25f);
+			renderGalaxyMap(DimensionManager.getInstance(), size/2, size/2, (float) zoom, (float)zoom*.25f);
 
 
 		int x = currentPosX - size/2, y = currentPosY - size/2;

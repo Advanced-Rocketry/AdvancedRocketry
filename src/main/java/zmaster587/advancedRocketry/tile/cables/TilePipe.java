@@ -15,7 +15,7 @@ public class TilePipe extends TileEntity {
 	private boolean initialized, destroyed;
 
 	private static boolean debug = false;
-	boolean connectedSides[];
+	boolean[] connectedSides;
 
 	public TilePipe() {
 		initialized = false;
@@ -147,23 +147,19 @@ public class TilePipe extends TileEntity {
 		//return;
 
 		if(canExtract(dir, tile) && (world.isBlockIndirectlyGettingPowered(pos) > 0 || world.getStrongPower(pos) > 0)) {
-			if(world.isRemote)
-				connectedSides[dir.ordinal()]=true;
-			else {
+			if(!world.isRemote)  {
 				getNetworkHandler().removeFromAllTypes(this, tile);
 				getNetworkHandler().addSource(this,tile,dir);
-				connectedSides[dir.ordinal()]=true;
 			}
+			connectedSides[dir.ordinal()]=true;
 		}
 
 		if(canInject(dir, tile) && world.isBlockIndirectlyGettingPowered(pos) == 0 && world.getStrongPower(pos) == 0) {
-			if(world.isRemote)
-				connectedSides[dir.ordinal()]=true;
-			else {
+			if(!world.isRemote)  {
 				getNetworkHandler().removeFromAllTypes(this, tile);
 				getNetworkHandler().addSink(this, tile,dir);
-				connectedSides[dir.ordinal()]=true;
 			}
+			connectedSides[dir.ordinal()]=true;
 		}
 	}
 

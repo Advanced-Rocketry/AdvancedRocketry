@@ -315,7 +315,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 
 		for(int i = 0; i < stationList.tagCount(); i++) {
 			NBTTagCompound tag = stationList.getCompoundTagAt(i);
-			int pos[];
+			int[] pos;
 			pos = tag.getIntArray("pos");
 			int id = tag.getInteger("id");
 			landingLoc.put(id, new HashedBlockPosition(pos[0], pos[1], pos[2]));

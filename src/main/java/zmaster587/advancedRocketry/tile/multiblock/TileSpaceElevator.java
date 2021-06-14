@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -254,7 +253,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 
 	public void summonCapsule() {
 		//Don't spawn a new capsule if one exists
-		if(getCapsuleOnLine() != null || isTetherConnected() == false)
+		if(getCapsuleOnLine() != null || !isTetherConnected())
 			return;
 
 		capsule = new EntityElevatorCapsule(world);

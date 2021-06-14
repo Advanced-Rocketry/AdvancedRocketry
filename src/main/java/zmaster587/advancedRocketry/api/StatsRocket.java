@@ -572,7 +572,7 @@ public class StatsRocket {
 		stats.setInteger("playerZPos", pilotSeatPos.z);
 
 		if(!engineLoc.isEmpty()) {
-			int locs[] = new int[engineLoc.size()*3];
+			int[] locs = new int[engineLoc.size()*3];
 
 			for(int i=0 ; (i/3) < engineLoc.size(); i+=3) {
 				Vector3F<Float> vec = engineLoc.get(i/3);
@@ -584,7 +584,7 @@ public class StatsRocket {
 		}
 
 		if(!passengerSeats.isEmpty()) {
-			int locs[] = new int[passengerSeats.size()*3];
+			int[] locs = new int[passengerSeats.size()*3];
 
 			for(int i=0 ; (i/3) < passengerSeats.size(); i+=3) {
 				HashedBlockPosition vec = passengerSeats.get(i/3);
@@ -647,13 +647,13 @@ public class StatsRocket {
 				NBTTagCompound dynStats = stats.getCompoundTag("dynStats");
 
 
-				for(Object key : dynStats.getKeySet()) {
-					Object obj = dynStats.getTag((String)key);
+				for(String key : dynStats.getKeySet()) {
+					Object obj = dynStats.getTag(key);
 
 					if(obj instanceof NBTTagFloat)
-						setStatTag((String)key, dynStats.getFloat((String)key));
+						setStatTag(key, dynStats.getFloat(key));
 					else if(obj instanceof NBTTagInt)
-						setStatTag((String)key, dynStats.getInteger((String)key));
+						setStatTag(key, dynStats.getInteger(key));
 				}
 			}
 
@@ -662,7 +662,7 @@ public class StatsRocket {
 			pilotSeatPos.z = stats.getInteger("playerZPos");
 
 			if(stats.hasKey("engineLoc")) {
-				int locations[] = stats.getIntArray("engineLoc");
+				int[] locations = stats.getIntArray("engineLoc");
 
 				for(int i=0 ; i < locations.length; i+=3) {
 
@@ -671,7 +671,7 @@ public class StatsRocket {
 			}
 
 			if(stats.hasKey("passengerSeats")) {
-				int locations[] = stats.getIntArray("passengerSeats");
+				int[] locations = stats.getIntArray("passengerSeats");
 
 				for(int i=0 ; i < locations.length; i+=3) {
 

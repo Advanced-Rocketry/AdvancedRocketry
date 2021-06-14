@@ -89,7 +89,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 		if(world != null) {
 
 			for(int i = 0; i < 10; i++) {
-				if(world.getTotalWorldTime() % 1 == 0 && !toChangeList.isEmpty()) {
+				if(!toChangeList.isEmpty()) {
 					if(battery.extractEnergy(120, true) == 120 ) {
 						HashedBlockPosition pos = toChangeList.remove(world.rand.nextInt(toChangeList.size()));
 
@@ -162,7 +162,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 		super.writeToNBT(nbt);
 		nbt.setInteger("biomeId", biomeId);
 
-		int array[] = new int[toChangeList.size()*3];
+		int[] array = new int[toChangeList.size()*3];
 		Iterator<HashedBlockPosition> itr = toChangeList.iterator();
 		for(int i = 0; i < toChangeList.size(); i+=3) {
 			HashedBlockPosition pos = itr.next();
@@ -188,7 +188,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 		super.readFromNBT(nbt);
 		biomeId = nbt.getInteger("biomeId");
 
-		int array[] = nbt.getIntArray("posList");
+		int[] array = nbt.getIntArray("posList");
 
 		toChangeList.clear();
 		for(int i = 0; i < array.length; i +=3) {

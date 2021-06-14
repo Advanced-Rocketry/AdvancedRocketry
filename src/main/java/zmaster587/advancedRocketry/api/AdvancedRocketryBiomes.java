@@ -138,9 +138,7 @@ public class AdvancedRocketryBiomes {
 	}
 
 	@Nullable
-	public static Biome getBiome(String string)
-	{
-		int id;
+	public static Biome getBiome(String string) {
 		Biome biome = Biome.REGISTRY.getObject(new ResourceLocation(string));
 		
 		//Fallback to ID

@@ -348,7 +348,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 		nbt.setByte("state", in.readByte());
 		nbt.setByte("inputstate", in.readByte());
 
-		byte bytes[] = new byte[6];
+		byte[] bytes = new byte[6];
 		for(int i = 0; i < 6; i++)
 			bytes[i] = in.readByte();
 		nbt.setByteArray("bytes", bytes);
@@ -360,7 +360,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 		state = RedstoneState.values()[nbt.getByte("state")];
 		inputstate = RedstoneState.values()[nbt.getByte("inputstate")];
 
-		byte bytes[] = nbt.getByteArray("bytes");
+		byte[] bytes = nbt.getByteArray("bytes");
 		for(int i = 0; i < 6; i++)
 			sideSelectorModule.setStateForSide(i, bytes[i]);
 

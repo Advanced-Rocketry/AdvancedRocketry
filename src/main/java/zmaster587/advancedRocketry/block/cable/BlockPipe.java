@@ -88,14 +88,7 @@ public class BlockPipe extends Block {
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos,
-			Block blockIn, BlockPos fromPos) {
-		((TilePipe)worldIn.getTileEntity(pos)).onPlaced();
-	}
-
-	@Override
-	public void onNeighborChange(IBlockAccess world, BlockPos pos,
-			BlockPos neighbor) {
+	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
 		((TilePipe)world.getTileEntity(pos)).onNeighborTileChange(neighbor);
 	}
 

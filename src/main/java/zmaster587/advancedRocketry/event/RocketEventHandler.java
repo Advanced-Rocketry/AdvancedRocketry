@@ -161,8 +161,7 @@ public class RocketEventHandler extends Gui {
 					outerBoundsTable = outerBounds.getByteBuffer();
 
 					//Get the average of each edge RGB
-					long topEdge[], bottomEdge[], leftEdge[], rightEdge[], total[];
-					total = topEdge = bottomEdge = leftEdge = rightEdge = new long[] {0,0,0};
+					long[] total = new long[]{0, 0, 0};
 
 
 					do {

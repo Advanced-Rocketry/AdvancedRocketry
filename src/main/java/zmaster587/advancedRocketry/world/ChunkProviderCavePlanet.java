@@ -275,11 +275,7 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 		this.genNetherCaves.generate(this.world, x, z, chunkprimer);
 		this.genHighCaves.generate(this.world, x, z, chunkprimer);
 		this.genRavines.generate(this.world, x, z, chunkprimer);
-		
-		if (this.generateStructures)
-		{
-		}
-		
+
 		Chunk chunk = new Chunk(this.world, chunkprimer, x, z);
 		Biome[] abiome = this.world.getBiomeProvider().getBiomes(null, x * 16, z * 16, 16, 16);
 		byte[] abyte = chunk.getBiomeArray();

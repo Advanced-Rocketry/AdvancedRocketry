@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.event;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -434,9 +433,9 @@ public class PlanetEventHandler {
 
 		IBlockState state = ActiveRenderInfo.getBlockStateAtEntityViewpoint(event.getEntity().world, event.getEntity(), (float)event.getRenderPartialTicks());
 
-		Block block = state.getBlock();
-		if(block.getMaterial(state) == Material.WATER)
+		if(state.getMaterial() == Material.WATER)
 			return;
+
 
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getEntity().dimension);
 		if(properties != null) {
@@ -526,7 +525,7 @@ public class PlanetEventHandler {
 	@SideOnly(Side.CLIENT)
 	public void fogColor(RenderFogEvent event) {
 
-		if(false || event.getFogMode() == -1) {
+		if(event.getFogMode() == -1) {
 			return;
 		}
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getEntity().dimension);

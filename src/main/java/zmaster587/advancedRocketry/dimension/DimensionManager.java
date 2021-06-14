@@ -132,7 +132,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return an Integer array of dimensions registered with this DimensionManager
 	 */
 	public Integer[] getRegisteredDimensions() {
-		Integer ret[] = new Integer[dimensionList.size()];
+		Integer[] ret = new Integer[dimensionList.size()];
 		return dimensionList.keySet().toArray(ret);
 	}
 
@@ -413,13 +413,12 @@ public class DimensionManager implements IGalaxy {
 	 */
 	public boolean registerDimNoUpdate(DimensionProperties properties, boolean registerWithForge) {
 		int dimId = properties.getId();
-		Integer dim = dimId;
 
-		if(dimensionList.containsKey(dim))
+		if(dimensionList.containsKey(dimId))
 			return false;
 
 		//Avoid registering gas giants as dimensions
-		if(registerWithForge && properties.hasSurface() && !net.minecraftforge.common.DimensionManager.isDimensionRegistered(dim)) {
+		if(registerWithForge && properties.hasSurface() && !net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId)) {
 
 			if(properties.isAsteroid())
 				net.minecraftforge.common.DimensionManager.registerDimension(dimId, AsteroidDimensionType);
@@ -787,7 +786,7 @@ public class DimensionManager implements IGalaxy {
 
 					//File cannot exist due to if check #42
 					if((dir.exists() || dir.mkdir()) && localFile.createNewFile()) {
-						char buffer[] = new char[1024];
+						char[] buffer = new char[1024];
 
 						FileReader reader = new FileReader(file);
 						FileWriter writer = new FileWriter(localFile);
@@ -1090,14 +1089,11 @@ public class DimensionManager implements IGalaxy {
 			//Silence you fool!
 			//Patch to fix JEI printing when trying to load planets too early
 			return loadedDimProps;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return loadedDimProps;
 		} catch (IOException e) {
-			//TODO: try not to obliterate planets in the future
 			e.printStackTrace();
 			return loadedDimProps;
-		}
+		}//TODO: try not to obliterate planets in the future
+
 
 		//Load SolarSystems first
 		NBTTagCompound solarSystem = nbt.getCompoundTag("starSystems");
@@ -1109,9 +1105,9 @@ public class DimensionManager implements IGalaxy {
 		hasReachedMoon = stats.getBoolean("hasReachedMoon");
 		hasReachedWarp = stats.getBoolean("hasReachedWarp");
 
-		for(Object key : solarSystem.getKeySet()) {
+		for(String key : solarSystem.getKeySet()) {
 
-			NBTTagCompound solarNBT = solarSystem.getCompoundTag((String)key);
+			NBTTagCompound solarNBT = solarSystem.getCompoundTag(key);
 			StellarBody star = new StellarBody();
 			star.readFromNBT(solarNBT);
 			starList.put(star.getId(), star);
@@ -1124,11 +1120,10 @@ public class DimensionManager implements IGalaxy {
 		NBTTagCompound dimListNbt = nbt.getCompoundTag("dimList");
 
 
-		for(Object key : dimListNbt.getKeySet()) {
-			String keyString = (String)key;
-			DimensionProperties properties = DimensionProperties.createFromNBT(Integer.parseInt(keyString) ,dimListNbt.getCompoundTag(keyString));
+		for(String key : dimListNbt.getKeySet()) {
+			DimensionProperties properties = DimensionProperties.createFromNBT(Integer.parseInt(key) ,dimListNbt.getCompoundTag(key));
 
-			int keyInt = Integer.parseInt(keyString);
+			int keyInt = Integer.parseInt(key);
 				/*if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(keyInt) && properties.isNativeDimension && !properties.isGasGiant()) {
 					if(properties.isAsteroid())
 						net.minecraftforge.common.DimensionManager.registerDimension(keyInt, AsteroidDimensionType);

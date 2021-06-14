@@ -270,7 +270,6 @@ public class ChunkManagerPlanet extends BiomeProvider {
 		{
 			Biome[] abiome = this.biomeCache.getCachedBiomes(x, z);
 			System.arraycopy(abiome, 0, listToReuse, 0, width * length);
-			return listToReuse;
 		}
 		else
 		{
@@ -281,8 +280,8 @@ public class ChunkManagerPlanet extends BiomeProvider {
 				listToReuse[i] = Biome.getBiome(aint[i], Biomes.DEFAULT);
 			}
 
-			return listToReuse;
 		}
+		return listToReuse;
 	}
 
 	@Override

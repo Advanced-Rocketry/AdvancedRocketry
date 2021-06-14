@@ -45,7 +45,7 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 
 	private static final int buttonAutoEject = 0, buttonSatellite = 1, buttonPlanet = 2, buttonStation = 3, redstoneState = 4;
 	private ModuleToggleSwitch module_autoEject, module_satellite, module_planet, module_station;
-	private boolean buttonState[];
+	private boolean[] buttonState;
 	private boolean chipEjected;
 	EntityRocket rocket;
 	ModuleRedstoneOutputButton redstoneControl;

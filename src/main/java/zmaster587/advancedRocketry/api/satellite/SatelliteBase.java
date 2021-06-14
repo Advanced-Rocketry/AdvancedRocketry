@@ -141,11 +141,10 @@ public abstract class SatelliteBase {
 	}
 	
 	public void setDimensionId(int world) {
-		int newId = world;
 		if(dimId != Constants.INVALID_PLANET) {
 			//TODO: handle dim change
 		}
-		dimId = newId;
+		dimId = world;
 	}
 	
 	/**

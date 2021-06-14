@@ -321,12 +321,8 @@ public class ChunkProviderAsteroids extends ChunkProviderPlanet {
 		this.prepareHeights(x, z, 0, chunkprimer);
 		this.prepareHeights(x + 500, z + 500, 100, chunkprimer);
 		//this.genNetherCaves.generate(this.world, x, z, chunkprimer);
-		
-		if (this.generateStructures)
-		{
-		}
-		
-		Chunk chunk = new Chunk(this.world, chunkprimer, x, z);
+
+        Chunk chunk = new Chunk(this.world, chunkprimer, x, z);
 		Biome[] abiome = this.world.getBiomeProvider().getBiomes(null, x * 16, z * 16, 16, 16);
 		byte[] abyte = chunk.getBiomeArray();
 

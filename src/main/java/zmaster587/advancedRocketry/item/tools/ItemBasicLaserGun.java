@@ -236,8 +236,7 @@ public class ItemBasicLaserGun extends Item {
 			AxisAlignedBB axisalignedbb = value.getEntityBoundingBox().grow(value.getCollisionBorderSize());
 			RayTraceResult raytraceresult = axisalignedbb.calculateIntercept(vec3d, vec3d2);
 
-			if (axisalignedbb.contains(vec3d)) {
-			} else if (raytraceresult != null) {
+			if (!axisalignedbb.contains(vec3d) && raytraceresult != null) {
 				raytraceresult.entityHit = value;
 				return raytraceresult;
 			}

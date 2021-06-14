@@ -17,7 +17,7 @@ public class EntityItemAbducted extends Entity {
 
 	private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityItem.class, DataSerializers.ITEM_STACK);
 
-    private int lifespan = 6000;
+    private int lifespan;
 	private int age = 0;
 	private EntityItem itemEntity;
 	

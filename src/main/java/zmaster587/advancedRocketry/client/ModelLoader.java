@@ -24,17 +24,15 @@ public class ModelLoader implements ICustomModelLoader
 	@Override
 	@Nonnull
 	public IModel loadModel(ResourceLocation resourceLocation) {
-		String resourcePath = resourceLocation.getResourcePath();
 		/*if (!resourcePath.startsWith(SMART_MODEL_RESOURCE_LOCATION)) {
 			assert false : "loadModel expected " + SMART_MODEL_RESOURCE_LOCATION + " but found " + resourcePath;
 		}*/
-		String modelName = resourcePath;//.substring(SMART_MODEL_RESOURCE_LOCATION.length());
 
-		if (modelName.contains("rocketmotor")) {
+        if (resourceLocation.getResourcePath().contains("rocketmotor")) {
 			return new ModelRocket();
 		} else {
 			try {
-				return ModelLoaderRegistry.getModel(new ResourceLocation(modelName));
+				return ModelLoaderRegistry.getModel(new ResourceLocation(resourceLocation.getResourcePath()));
 			} catch (Exception e) {
 				return ModelLoaderRegistry.getMissingModel();
 			}// ModelLoaderRegistry.getMissingModel();

@@ -15,7 +15,6 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.block.*;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
-import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.block.RotatableBlock;
@@ -252,10 +251,6 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 							}
 
 							TileEntity tile= world.getTileEntity(currPos);
-							if(tile instanceof TileSatelliteHatch)
-								hasSatellite = true;
-							if(tile instanceof TileGuidanceComputer)
-								hasGuidance = true;
 
 							if(tile instanceof IFluidHandler) {
 								for(IFluidTankProperties info : ((IFluidHandler)tile).getTankProperties())

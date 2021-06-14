@@ -85,10 +85,7 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 
 	public void updateRiderPosition()
 	{
-		if (!this.getPassengers().isEmpty())
-		{
-			
-		}
+		this.getPassengers();
 	}
 
 	/**

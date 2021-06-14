@@ -192,6 +192,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 				//Multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency, and by insolation mult for solar stuff
 				energyReceived *= 2 * insolationPowerMultiplier;
 			}
+			powerMadeLastTick = energyReceived;
 
 			if(powerMadeLastTick != prevPowerMadeLastTick) {
 				prevPowerMadeLastTick = powerMadeLastTick;
@@ -276,9 +277,8 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 		int[] intArray = new int[connectedSatellites.size()*2];
 
 		for( int i =0; i < connectedSatellites.size()*2; i += 2 ) {
-			connectedSatellites.get(i/2);
-			intArray[i] = (int) (connectedSatellites.get(i/2) & 0xFFFFFFFF);
-			intArray[i+1] = (int) ((connectedSatellites.get(i/2) >>> 32) & 0xFFFFFFFF);
+			intArray[i] = (connectedSatellites.get(i / 2)).intValue();
+			intArray[i+1] = (int) ((connectedSatellites.get(i / 2) >>> 32));
 		}
 
 		nbt.setIntArray("satilliteList", intArray);
@@ -290,7 +290,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		int intArray[] = nbt.getIntArray("satilliteList");
+		int[] intArray = nbt.getIntArray("satilliteList");
 		connectedSatellites.clear();
 		for( int i =0; i < intArray.length/2; i+=2 ) {
 			connectedSatellites.add(intArray[i] | (((long)intArray[i+1]) << 32));

@@ -33,7 +33,6 @@ import zmaster587.libVulpes.util.Vector3F;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.naming.directory.NoSuchAttributeException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -272,11 +271,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 				for(NBTBase tag : destList)
 				{
-					try {
-						retList.add(LandingLocation.loadFromNBT((NBTTagCompound)tag));
-					} catch (NoSuchAttributeException e) {
-						AdvancedRocketry.logger.warn("Attempting to load a Landing location for planet " + dimid + " but chip appears to have malformed data");
-					}
+					retList.add(LandingLocation.loadFromNBT((NBTTagCompound)tag));
 				}
 			}
 		}
@@ -321,12 +316,6 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		else 
 			nbt = new NBTTagCompound();
 
-		NBTTagCompound nbtEntry;
-		if(nbt.hasKey("dimid" + dimid)) 
-			nbtEntry = nbt.getCompoundTag("dimid" + dimid);
-		else
-			nbtEntry = new NBTTagCompound();
-
 		LandingLocation landingLoc = new LandingLocation("Last", x,y,z);
 
 		List<LandingLocation> landingLocList = getLandingLocations(stack, dimid);
@@ -348,7 +337,6 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		if(stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
 			if(nbt.hasKey("dimid" + dimid)) {
-				nbt = nbt.getCompoundTag("dimid" + dimid);
 				List<LandingLocation> landingLocList = getLandingLocations(stack, dimid);
 				int id = getSelectionId(stack, dimid);
 				LandingLocation loc;
@@ -456,8 +444,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			return String.format("%s: %.0f, %.0f", name, location.x, location.z);
 		}
 
-		static LandingLocation loadFromNBT(NBTTagCompound nbt) throws NoSuchAttributeException
-		{
+		static LandingLocation loadFromNBT(NBTTagCompound nbt) {
 			String name = nbt.getString("name");
 			Vector3F<Float> vec = new Vector3F<>(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"));
 

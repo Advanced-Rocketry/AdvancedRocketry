@@ -1,7 +1,6 @@
 package zmaster587.advancedRocketry.world.util;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.MinecraftException;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.storage.IChunkLoader;
 import net.minecraft.world.gen.structure.template.TemplateManager;
@@ -20,7 +19,7 @@ public class DummySaveHandler implements ISaveHandler {
 	}
 
 	@Override
-	public void checkSessionLock() throws MinecraftException {
+	public void checkSessionLock() {
 		
 	}
 

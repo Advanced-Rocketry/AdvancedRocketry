@@ -92,12 +92,10 @@ public class ModuleOreMapper extends ModuleBase {
         resetTexture();
         if(prevSlot == -1) {
             currentMapping = new Thread(mapper);
-            currentMapping.setName("Ore Scan");
-        }
-        else {
+        } else {
             //currentMapping = new Thread(new ItemMapper(inventorySlots.getSlot(prevSlot).getStack()));//TODO
-            currentMapping.setName("Ore Scan");
         }
+        currentMapping.setName("Ore Scan");
         currentMapping.start();
     }
 

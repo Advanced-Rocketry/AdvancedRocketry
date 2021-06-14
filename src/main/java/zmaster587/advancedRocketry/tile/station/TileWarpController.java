@@ -897,7 +897,7 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 	public boolean itemListContainsRequiredArtifacts(List<ItemStack> items, DimensionProperties properties) {
 		if(properties.getRequiredArtifacts().isEmpty()) return true;
 
-		List<ItemStack> list = new LinkedList<ItemStack>(properties.getRequiredArtifacts());
+		List<ItemStack> list = new LinkedList<>(properties.getRequiredArtifacts());
 		boolean hasArtifacts = true;
 
 		for (ItemStack item : items) {

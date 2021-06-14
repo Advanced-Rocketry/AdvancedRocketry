@@ -83,7 +83,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	protected AxisAlignedBB bbCache;
 	protected ErrorCodes status;
 	
-	static final Block viableBlocks[] = {AdvancedRocketryBlocks.blockLaunchpad, AdvancedRocketryBlocks.blockLandingPad};
+	static final Block[] viableBlocks = {AdvancedRocketryBlocks.blockLaunchpad, AdvancedRocketryBlocks.blockLandingPad};
 
 	private List<HashedBlockPosition> blockPos;
 
@@ -657,7 +657,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 
 		blockPos.clear();
 		if(nbt.hasKey("infrastructureLocations")) {
-			int array[] = nbt.getIntArray("infrastructureLocations");
+			int[] array = nbt.getIntArray("infrastructureLocations");
 
 			for(int counter = 0; counter < array.length; counter += 3) {
 				blockPos.add(new HashedBlockPosition(array[counter], array[counter+1], array[counter+2]));
