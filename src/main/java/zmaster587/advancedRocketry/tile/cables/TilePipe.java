@@ -14,6 +14,7 @@ public class TilePipe extends TileEntity {
 	private int networkID;
 	private boolean initialized, destroyed;
 
+	private static boolean debug = false;
 	boolean[] connectedSides;
 
 	public TilePipe() {
@@ -200,7 +201,7 @@ public class TilePipe extends TileEntity {
 					if(this.destroyed)
 						return;
 
-					boolean debug = false;
+					debug = false;
 					if(pipe.isInitialized()) {
 						if(!isInitialized()) {
 							initialize(pipe.getNetworkID());

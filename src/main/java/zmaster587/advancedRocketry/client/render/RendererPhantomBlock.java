@@ -19,11 +19,13 @@ import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 
 public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 
+	private static BlockRendererDispatcher renderBlocks = Minecraft.getMinecraft().getBlockRendererDispatcher();
+
 	@Override
 	public void render(TileEntity tile, double x,
 			double y, double z, float t, int damage, float a) {
 
-		BlockRendererDispatcher renderBlocks = Minecraft.getMinecraft().getBlockRendererDispatcher();
+		renderBlocks = Minecraft.getMinecraft().getBlockRendererDispatcher();
 		TilePlaceholder tileGhost = (TilePlaceholder)tile;
 
 		IBlockState state = tileGhost.getReplacedState();

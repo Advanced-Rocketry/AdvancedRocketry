@@ -448,7 +448,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			return String.format("%s: %.0f, %.0f", name, location.x, location.z);
 		}
 
-		static LandingLocation loadFromNBT(NBTTagCompound nbt) {
+		static LandingLocation loadFromNBT(NBTTagCompound nbt)  throws NoSuchAttributeException {
 			String name = nbt.getString("name");
 			Vector3F<Float> vec = new Vector3F<>(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"));
 

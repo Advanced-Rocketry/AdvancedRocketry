@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 public class ModelLoader implements ICustomModelLoader
 {
 	public final String SMART_MODEL_RESOURCE_LOCATION = "models/";
+	private IResourceManager resourceManager;
 
 	// return true if our Model Loader accepts this ModelResourceLocation
 	@Override
@@ -42,6 +43,7 @@ public class ModelLoader implements ICustomModelLoader
 	// don't need it for this example; you might.  We have to implement it anyway.
 	@Override
 	public void onResourceManagerReload(@Nonnull IResourceManager resourceManager) {
-    }
+        this.resourceManager = resourceManager;
+	}
 
 }

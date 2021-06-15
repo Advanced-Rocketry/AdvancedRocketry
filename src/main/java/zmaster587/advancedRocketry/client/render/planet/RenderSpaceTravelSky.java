@@ -41,6 +41,8 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 
 
 	private int starGLCallList;
+	private int glSkyList;
+	private int glSkyList2;
 	ResourceLocation currentlyBoundTex = null;
 	float celestialAngle;
 	Vector3F<Float> axis;
@@ -72,8 +74,8 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 		GL11.glEndList();
 		GL11.glPopMatrix();
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-		int glSkyList = this.starGLCallList + 1;
-		GL11.glNewList(glSkyList, GL11.GL_COMPILE);
+		this.glSkyList = this.starGLCallList + 1;
+		GL11.glNewList(this.glSkyList, GL11.GL_COMPILE);
 		byte b2 = 64;
 		int i = 256 / b2 + 2;
 		float f = 16.0F;
@@ -94,8 +96,8 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 		}
 
 		GL11.glEndList();
-		int glSkyList2 = this.starGLCallList + 2;
-		GL11.glNewList(glSkyList2, GL11.GL_COMPILE);
+		this.glSkyList2 = this.starGLCallList + 2;
+		GL11.glNewList(this.glSkyList2, GL11.GL_COMPILE);
 		f = -16.0F;
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 

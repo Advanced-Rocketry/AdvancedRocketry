@@ -19,6 +19,7 @@ public class MachineRecipe implements IRecipeWrapper {
 	
 	private List<List<ItemStack>> ingredients;
 	private ArrayList<ItemStack> result;
+	private ArrayList<ChanceItemStack> resultChance;
 	private List<FluidStack> fluidIngredients;
 	private List<FluidStack> fluidOutputs;
 	private int energy, time;
@@ -27,7 +28,7 @@ public class MachineRecipe implements IRecipeWrapper {
 	protected MachineRecipe(IRecipe rec) {
 		if(rec instanceof Recipe)
 		{
-			ArrayList<ChanceItemStack> resultChance = new ArrayList<>(((Recipe) rec).getChanceOutputs());
+			resultChance = new ArrayList<>(((Recipe) rec).getChanceOutputs());
 			result = new ArrayList<>();
 			
 			int i = -1;

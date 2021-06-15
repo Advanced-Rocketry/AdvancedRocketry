@@ -25,6 +25,7 @@ public class GuiOrbitalLaserDrill extends GuiContainer {
 	private int prevX, prevZ;
 
 	private GuiTextField xbox,ybox;
+	private GuiImageButton modeUp, modeDown;
 
 	public GuiOrbitalLaserDrill(InventoryPlayer inventoryPlayer, TileOrbitalLaserDrill tile) {
 		super(new ContainerOrbitalLaserDrill(inventoryPlayer, tile));
@@ -53,8 +54,8 @@ public class GuiOrbitalLaserDrill extends GuiContainer {
 		ybox.setCanLoseFocus(true);
 		ybox.setEnabled(true);
 
-		GuiImageButton modeDown = new GuiImageButton(0, x + 103, y + 20, 5, 8, zmaster587.libVulpes.inventory.TextureResources.buttonLeft);
-		GuiImageButton modeUp = new GuiImageButton(1, x + 157, y + 20, 5, 8, zmaster587.libVulpes.inventory.TextureResources.buttonRight);
+		modeDown = new GuiImageButton(0, x + 103, y + 20, 5, 8, zmaster587.libVulpes.inventory.TextureResources.buttonLeft);
+		modeUp = new GuiImageButton(1, x + 157, y + 20, 5, 8, zmaster587.libVulpes.inventory.TextureResources.buttonRight);
 		this.buttonList.add(modeUp);
 		this.buttonList.add(modeDown);
 		this.buttonList.add(new GuiButton(2, x + 103, y + 62, 34,20, "Reset"));

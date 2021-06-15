@@ -36,6 +36,7 @@ public class ModuleOreMapper extends ModuleBase {
     private long prevWorldTickTime;
     private int prevSlot;
     private int mouseValue;
+    private int maxZoom;
     private int scanSize = 32;
     private int radius = 1;
     private int zoomScale;
@@ -52,7 +53,7 @@ public class ModuleOreMapper extends ModuleBase {
 
         prevSlot = -1;
         if(satellite != null) {
-            int maxZoom = (int) Math.pow(2, satellite.getZoomRadius());
+            maxZoom = (int) Math.pow(2, satellite.getZoomRadius());
             zoomScale = satellite.getZoomRadius();
         }
 

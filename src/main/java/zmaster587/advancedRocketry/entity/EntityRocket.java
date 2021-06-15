@@ -96,6 +96,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	public StorageChunk storage;
 	private String errorStr;
 	private long lastErrorTime = Long.MIN_VALUE;
+	private static long ERROR_DISPLAY_TIME = 100;
 	private static int DESCENT_TIMER = 500;
 	private static int BUTTON_ID_OFFSET = 25;
 	private static final int STATION_LOC_OFFSET = 50;
@@ -275,7 +276,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	@Override
 	public String getTextOverlay() {
 
-		long ERROR_DISPLAY_TIME = 100;
+		ERROR_DISPLAY_TIME = 100;
 		if(this.world.getTotalWorldTime() < this.lastErrorTime + ERROR_DISPLAY_TIME)
 			return errorStr;
 
