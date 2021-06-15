@@ -46,6 +46,7 @@ public class XMLPlanetLoader {
 	private static final String GENERATESTRUCTURES = "generateStructures";
 	private static final String GENERATEVOLCANOS = "generateVolcanos";
 	private static final String GENERATECRATERS = "generateCraters";
+	private static final String GENERATECAVES = "generateCaves";
 	private static final String ELEMENT_GALAXY = "galaxy";
 	private static final String ELEMENT_STAR = "star";
 	private static final String ELEMENT_PLANET = "planet";
@@ -222,8 +223,7 @@ public class XMLPlanetLoader {
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid fog color specified"); //TODO: more detailed error msg
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GAS)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GAS)) {
 				Fluid fluid = FluidRegistry.getFluid(planetPropertyNode.getTextContent());
 
 				if(fluid == null)
@@ -231,8 +231,7 @@ public class XMLPlanetLoader {
 				else {
 					properties.getHarvestableGasses().add(fluid);
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_OCEANBLOCK)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_OCEANBLOCK)) {
 				String blockName = planetPropertyNode.getTextContent();
 				Block block = Block.REGISTRY.getObject(new ResourceLocation(blockName));
 
@@ -240,8 +239,7 @@ public class XMLPlanetLoader {
 					AdvancedRocketry.logger.warn("Invalid ocean block: " + blockName); //TODO: more detailed error msg
 
 				properties.setOceanBlock(block.getDefaultState());
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_FILLERBLOCK)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_FILLERBLOCK)) {
 				String blockName = planetPropertyNode.getTextContent();
 				String[] splitBlockName = blockName.split(":");
 
@@ -266,8 +264,7 @@ public class XMLPlanetLoader {
 
 					properties.setStoneBlock(block.getStateFromMeta(metaValue));
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_SKYCOLOR)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_SKYCOLOR)) {
 				String[] colors = planetPropertyNode.getTextContent().split(",");
 				try {
 
@@ -305,37 +302,32 @@ public class XMLPlanetLoader {
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid atmosphereDensity specified"); //TODO: more detailed error msg
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GRAVITY)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GRAVITY)) {
 
 				try {
 					properties.gravitationalMultiplier = Math.min(Math.max(Integer.parseInt(planetPropertyNode.getTextContent()), DimensionProperties.MIN_GRAVITY), DimensionProperties.MAX_GRAVITY)/100f;
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid gravitationalMultiplier specified"); //TODO: more detailed error msg
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_DISTANCE)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_DISTANCE)) {
 
 				try {
 					properties.orbitalDist = Math.min(Math.max(Integer.parseInt(planetPropertyNode.getTextContent()), DimensionProperties.MIN_DISTANCE), DimensionProperties.MAX_DISTANCE);
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid orbitalDist specified"); //TODO: more detailed error msg
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_BASEORBITTHETA)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_BASEORBITTHETA)) {
 
 				try {
 					properties.baseOrbitTheta = ((Integer.parseInt(planetPropertyNode.getTextContent()) + 180) % 360) * Math.PI/180f;
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid orbitalTheta specified"); //TODO: more detailed error msg
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_RETROGRADE)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_RETROGRADE)) {
 				String text = planetPropertyNode.getTextContent();
 				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true"))
 					properties.isRetrograde = true;
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_PERIOD)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_PERIOD)) {
 				try {
 					int rotationalPeriod =  Integer.parseInt(planetPropertyNode.getTextContent());
 					if(rotationalPeriod > 0)
@@ -345,8 +337,7 @@ public class XMLPlanetLoader {
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid rotational period specified"); //TODO: more detailed error msg
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_SEALEVEL)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_SEALEVEL)) {
 				try {
 					properties.setSeaLevel(Integer.parseInt(planetPropertyNode.getTextContent()));
 				} catch (NumberFormatException e) {
@@ -396,8 +387,7 @@ public class XMLPlanetLoader {
 						}
 					}
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_CRATER_BIOMEIDS)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_CRATER_BIOMEIDS)) {
 
 				String[] biomeList = planetPropertyNode.getTextContent().split(",");
 				for (String s : biomeList) {
@@ -429,8 +419,7 @@ public class XMLPlanetLoader {
 						AdvancedRocketry.logger.warn("Error adding " + frequencySplit[0] + ", it is not a biome resource location");
 					}
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_SPAWNABLE)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_SPAWNABLE)) {
 				int weight = 100;
 				int groupMin = 1, groupMax = 1;
 				String nbtString = "";
@@ -500,38 +489,32 @@ public class XMLPlanetLoader {
 						}
 						
 					properties.getSpawnListEntries().add(entry);
-				}
-				else
+				} else
 					AdvancedRocketry.logger.warn("Cannot find " + planetPropertyNode.getTextContent() + " while registering entity for planet spawn");
 
 
 
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_ARTIFACT)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_ARTIFACT)) {
 				ItemStack stack = XMLPlanetLoader.getStack(planetPropertyNode.getTextContent());
 
 				if(stack != null)
 					properties.getRequiredArtifacts().add(stack);
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_PLANET)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_PLANET)) {
 				List<DimensionProperties> childList = readPlanetFromNode(planetPropertyNode, star);
 				if(childList.size() > 0) {
 					DimensionProperties child = childList.get(0); // First entry in the list is the child planet
 					properties.addChildPlanet(child);
 					list.addAll(childList);
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_PHI)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_PHI)) {
 				try {
 					properties.orbitalPhi = (Integer.parseInt(planetPropertyNode.getTextContent()) % 360);
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid orbitalPhi specified"); //TODO: more detailed error msg
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_OREGEN)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_OREGEN)) {
 				properties.oreProperties = XMLOreLoader.loadOre(planetPropertyNode);
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_LASER_DRILL_ORES) && !properties.isGasGiant()) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_LASER_DRILL_ORES) && !properties.isGasGiant()) {
 
 				properties.laserDrillOresRaw = planetPropertyNode.getTextContent();
 
@@ -568,22 +551,19 @@ public class XMLPlanetLoader {
 						AdvancedRocketry.logger.warn(parts[0] + " is not a valid OreDictionary name or item ID");
 					}
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GEODE_ORES)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GEODE_ORES)) {
 				String[] entries = planetPropertyNode.getTextContent().split(",");
 				properties.geodeOres.addAll(Arrays.stream(entries)
 						.filter(e->OreDictionary.doesOreNameExist(e.trim()))
 						.collect(Collectors.toSet())
 				);
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_CRATER_ORES)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_CRATER_ORES)) {
 				String[] entries = planetPropertyNode.getTextContent().split(",");
 				properties.craterOres.addAll(Arrays.stream(entries)
 						.filter(e->OreDictionary.doesOreNameExist(e.trim()))
 						.collect(Collectors.toSet())
 				);
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GENTYPE)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GENTYPE)) {
 				try {
 					properties.setGenType(Integer.parseInt(planetPropertyNode.getTextContent()));
 				} catch (NumberFormatException e) {
@@ -622,61 +602,57 @@ public class XMLPlanetLoader {
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid sky color specified"); //TODO: more detailed error msg
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GASGIANT)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GASGIANT)) {
 				String text = planetPropertyNode.getTextContent();
 				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true"))
 					properties.setGasGiant(true);
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_ISKNOWN)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_ISKNOWN)) {
 				String text = planetPropertyNode.getTextContent();
 				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true")) {
 					ARConfiguration.getCurrentConfig().initiallyKnownPlanets.add(properties.getId());
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(GENERATECRATERS)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(GENERATECRATERS)) {
 				String text = planetPropertyNode.getTextContent();
 				if(text != null && !text.isEmpty()) {
 					properties.setGenerateCraters(text.equalsIgnoreCase("true"));
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_CRATER_MULTIPLIER)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_CRATER_MULTIPLIER)) {
 				try {
 					properties.setCraterMultiplier(Float.parseFloat(planetPropertyNode.getTextContent()));
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid crater multiplier specified, must be a number"); 
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_VOLCANO_MULTIPLIER)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_VOLCANO_MULTIPLIER)) {
 				try {
 					properties.setVolcanoMultiplier(Float.parseFloat(planetPropertyNode.getTextContent()));
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid volcano multiplier specified, must be a number"); 
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GEODE_MULTIPLIER)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GEODE_MULTIPLIER)) {
 				try {
 					properties.setGeodeMultiplier(Float.parseFloat(planetPropertyNode.getTextContent()));
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid geode multiplier specified, must be a number"); 
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(GENERATEGEODES)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(GENERATEGEODES)) {
 				String text = planetPropertyNode.getTextContent();
 				if(text != null && !text.isEmpty()) {
 					properties.setGenerateGeodes(text.equalsIgnoreCase("true"));
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(GENERATEVOLCANOS)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(GENERATEVOLCANOS)) {
 				String text = planetPropertyNode.getTextContent();
 				if(text != null && !text.isEmpty()) {
 					properties.setGenerateVolcanos(text.equalsIgnoreCase("true"));
 				}
-			}
-			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(GENERATESTRUCTURES)) {
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(GENERATESTRUCTURES)) {
 				String text = planetPropertyNode.getTextContent();
 				if(text != null && !text.isEmpty()) {
 					properties.setGenerateStructures(text.equalsIgnoreCase("true"));
+				}
+			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(GENERATECAVES)) {
+				String text = planetPropertyNode.getTextContent();
+				if(text != null && !text.isEmpty()) {
+					properties.setGenerateCaves(text.equalsIgnoreCase("true"));
 				}
 			}
 			
@@ -974,6 +950,7 @@ public class XMLPlanetLoader {
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_PERIOD, properties.rotationalPeriod));
 		nodePlanet.appendChild(createTextNode(doc, ELEMENT_ATMDENSITY, properties.getAtmosphereDensity()));
 		nodePlanet.appendChild(createTextNode(doc, GENERATECRATERS, properties.canGenerateCraters()));
+		nodePlanet.appendChild(createTextNode(doc, GENERATECAVES, properties.canGenerateCaves()));
 		nodePlanet.appendChild(createTextNode(doc, GENERATEVOLCANOS, properties.canGenerateVolcanos()));
 		nodePlanet.appendChild(createTextNode(doc, GENERATESTRUCTURES, properties.canGenerateStructures()));
 		nodePlanet.appendChild(createTextNode(doc, GENERATEGEODES, properties.canGenerateGeodes()));
