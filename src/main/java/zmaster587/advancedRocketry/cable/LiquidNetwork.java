@@ -16,9 +16,7 @@ import java.util.Random;
 
 public class LiquidNetwork extends CableNetwork {
 
-	private final int MAX_TRANSFER = 100;
-
-	/**
+    /**
 	 * Create a new network and get an ID
 	 * @return ID of this new network
 	 */
@@ -41,7 +39,8 @@ public class LiquidNetwork extends CableNetwork {
 	@Override
 	public void tick() {
 
-		int amount = MAX_TRANSFER;
+        int MAX_TRANSFER = 100;
+        int amount = MAX_TRANSFER;
 
 		//Return if there is nothing to do
 		if(sinks.isEmpty() || sources.isEmpty())

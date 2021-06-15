@@ -58,12 +58,7 @@ import java.util.List;
 
 public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements IButtonInventory, INetworkMachine, IDataSync, IModularInventory, IProgressBar, ILinkableTile {
 
-	private final int MAX_SIZE = 16;
-	private final int MIN_SIZE = 3;
-	private final int MAX_SIZE_Y = 64;
-	private final int MIN_SIZE_Y = 4;
 	private final int MAXSCANDELAY = 10;
-	private final int ENERGYFOROP = 100;
 	//private final int ENERGY = 100;
 
 	protected static final ResourceLocation backdrop =  new ResourceLocation("advancedrocketry","textures/gui/rocketBuilder.png");
@@ -190,6 +185,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 
 	@Override
 	public int getPowerPerOperation() {
+		int ENERGYFOROP = 100;
 		return ENERGYFOROP;
 	}
 
@@ -400,7 +396,6 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 			int totalFuelUse = bipropellantfuelUse + nuclearWorkingFluidUse + monopropellantfuelUse;
 
 			//Set status
-			//TODO: warn if seat OR satellite missing
 			if(invalidBlock)
 				status = ErrorCodes.INVALIDBLOCK;
 			else if (((fuelCapacityBipropellant > 0 && totalFuel > fuelCapacityBipropellant) || (fuelCapacityMonopropellant > 0 && totalFuel > fuelCapacityMonopropellant) || (fuelCapacityNuclearWorkingFluid > 0 && totalFuel > fuelCapacityNuclearWorkingFluid))
@@ -501,6 +496,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 			return null;
 
 		//Get min and maximum Z/X bounds
+		int MAX_SIZE = 16;
 		if(direction.getFrontOffsetX() != 0) {
 			xSize = ZUtils.getContinuousBlockLength(world, direction, currPos, MAX_SIZE, viableBlocks);
 			zMin = ZUtils.getContinuousBlockLength(world, EnumFacing.NORTH, currPos, MAX_SIZE, viableBlocks);
@@ -539,6 +535,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 
 		int maxTowerSize = 0;
 		//Check perimeter for structureBlocks and get the size
+		int MAX_SIZE_Y = 64;
 		for(int i = xMin; i <= xMax; i++) {
 			if(world.getBlockState(new BlockPos(i, yCurrent, zMin-1)).getBlock() == AdvancedRocketryBlocks.blockStructureTower) {
 				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, EnumFacing.UP, new BlockPos(i, yCurrent, zMin-1), MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower));
@@ -560,6 +557,8 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 		}
 
 		//if tower does not meet criteria then reutrn null
+		int MIN_SIZE_Y = 4;
+		int MIN_SIZE = 3;
 		if(maxTowerSize < MIN_SIZE_Y || xSize < MIN_SIZE || zSize < MIN_SIZE) {
 			return null;
 		}

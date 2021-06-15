@@ -151,7 +151,7 @@ public abstract class SatelliteBase {
 	 * @param stack satelliteProperties to assign to this satellite
 	 */
 	public void setProperties(@Nonnull ItemStack stack) {
-		this.satelliteProperties = ((ItemSatellite)stack.getItem()).getSatellite(stack);
+		this.satelliteProperties = SatelliteRegistry.getSatelliteProperty(stack);
 		this.battery.setMaxEnergyStored(satelliteProperties.getPowerStorage());
 		this.satellite = stack;
 	}

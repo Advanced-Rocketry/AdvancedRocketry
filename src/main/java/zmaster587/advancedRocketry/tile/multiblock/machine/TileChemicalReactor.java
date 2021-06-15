@@ -60,14 +60,17 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 			if(!recipe.getOutput().isEmpty()) {
 			NBTTagList list = recipe.getOutput().get(0).getEnchantmentTagList();
 
+			/*
 				for( int i = 0 ; i < list.tagCount(); i++ ) {
 					NBTTagCompound tag = (NBTTagCompound)list.get(i);
-					//if(tag.getInteger("id") == Enchantment.getEnchantmentID(AdvancedRocketryAPI.enchantmentSpaceProtection) ) {
+					if(tag.getInteger("id") == Enchantment.getEnchantmentID(AdvancedRocketryAPI.enchantmentSpaceProtection) ) {
 
 						flag = true;
 						break;
-					//}
+					}
 				}
+			 */
+				flag = true;
 
 			}
 		}

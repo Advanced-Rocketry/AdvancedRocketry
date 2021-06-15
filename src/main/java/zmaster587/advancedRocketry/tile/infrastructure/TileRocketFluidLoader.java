@@ -43,8 +43,6 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	ModuleRedstoneOutputButton inputRedstoneControl;
 	RedstoneState inputstate;
 	ModuleBlockSideSelector sideSelectorModule;
-	
-	private static int ALLOW_REDSTONEOUT = 2;
 
 	public TileRocketFluidLoader() {
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 0, "", this, LibVulpes.proxy.getLocalizedString("msg.fluidLoader.loadingState"));
@@ -93,6 +91,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 
 	protected boolean getStrongPowerForSides(World world, BlockPos pos) {
 		for(int i = 0; i < 6; i++) {
+			int ALLOW_REDSTONEOUT = 2;
 			if(sideSelectorModule.getStateForSide(i) == ALLOW_REDSTONEOUT && world.getRedstonePower(pos.offset(EnumFacing.VALUES[i]), EnumFacing.VALUES[i]) > 0)
 				return true;
 		}

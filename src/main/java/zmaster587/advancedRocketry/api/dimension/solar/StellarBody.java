@@ -274,8 +274,7 @@ public class StellarBody {
 		}
 	}
 	
-	public SpacePosition getSpacePosition()
-	{
+	public SpacePosition getSpacePosition() {
 		//TODO
 		return new SpacePosition();
 	}

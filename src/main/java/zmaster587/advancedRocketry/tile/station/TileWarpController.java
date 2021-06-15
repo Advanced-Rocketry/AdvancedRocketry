@@ -60,7 +60,7 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 	private ModuleSync sync1, sync2, sync3;
 	private ModuleText srcPlanetText, dstPlanetText, warpFuel, status, warpCapacity;
 	private int warpCost = -1;
-	private int dstPlanet, srcPlanet;
+	private int dstPlanet;
 	private ModuleTab tabModule;
 	private static final byte TAB_SWITCH = 4, STORE_DATA = 10, LOAD_DATA = 20, SEARCH = 5, PROGRAMFROMCHIP = 6;
 	private MultiData data;
@@ -672,6 +672,7 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 		if(id == 2) {
 			warpCost = value;
 		}
+		int srcPlanet;
 		if(id == 1)
 			srcPlanet = value;
 		else if (id == 0)

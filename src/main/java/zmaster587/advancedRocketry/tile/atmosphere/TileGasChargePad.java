@@ -142,7 +142,6 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 		modules.add(new ModuleLiquidIndicator(32, 20, this));
 
 		//modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this, TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
-		//TODO add itemStack slots for liquid
 		return modules;
 	}
 

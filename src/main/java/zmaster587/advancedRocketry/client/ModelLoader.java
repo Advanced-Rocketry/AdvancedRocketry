@@ -42,8 +42,6 @@ public class ModelLoader implements ICustomModelLoader
 	// don't need it for this example; you might.  We have to implement it anyway.
 	@Override
 	public void onResourceManagerReload(@Nonnull IResourceManager resourceManager) {
-		this.resourceManager = resourceManager;
-	}
+    }
 
-	private IResourceManager resourceManager;
 }

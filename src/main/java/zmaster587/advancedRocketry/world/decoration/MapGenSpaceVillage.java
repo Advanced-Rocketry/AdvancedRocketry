@@ -12,14 +12,13 @@ public class MapGenSpaceVillage extends MapGenVillage {
 
     private int size;
     private int distance;
-    private final int minTownSeparation;
     public static List<Biome> BLACKLIST_VILLAGE_SPAWN_BIOMES = Arrays.asList(Biomes.OCEAN, Biomes.DEEP_OCEAN);
 
     public MapGenSpaceVillage()
     {
     	super();
         this.distance = 32;
-        this.minTownSeparation = 8;
+        int minTownSeparation = 8;
     }
 	
     protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ)

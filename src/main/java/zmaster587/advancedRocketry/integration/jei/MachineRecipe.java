@@ -7,6 +7,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import zmaster587.libVulpes.interfaces.IRecipe;
+import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.recipe.RecipesMachine.ChanceItemStack;
 import zmaster587.libVulpes.recipe.RecipesMachine.Recipe;
 
@@ -18,25 +19,23 @@ public class MachineRecipe implements IRecipeWrapper {
 	
 	private List<List<ItemStack>> ingredients;
 	private ArrayList<ItemStack> result;
-	private ArrayList<ChanceItemStack> resultChance;
 	private List<FluidStack> fluidIngredients;
 	private List<FluidStack> fluidOutputs;
 	private int energy, time;
 
 
 	protected MachineRecipe(IRecipe rec) {
-		//TODO: multiple outputs
 		if(rec instanceof Recipe)
 		{
-			resultChance = new ArrayList<>(((Recipe) rec).getChanceOutputs());
+			ArrayList<ChanceItemStack> resultChance = new ArrayList<>(((Recipe) rec).getChanceOutputs());
 			result = new ArrayList<>();
 			
 			int i = -1;
 			float totalChance = 0;
-			for( ChanceItemStack stack : resultChance )
+			for( ChanceItemStack stack : resultChance)
 				totalChance += stack.chance;
 			
-			for( ChanceItemStack stack : resultChance )
+			for( ChanceItemStack stack : resultChance)
 			{
 				i++;
 				if(stack.chance == 0)

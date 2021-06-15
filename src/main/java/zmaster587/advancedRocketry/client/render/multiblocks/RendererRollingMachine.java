@@ -15,7 +15,6 @@ public class RendererRollingMachine extends TileEntitySpecialRenderer {
 	WavefrontObject model;
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/rollingMachine.png");
-	private static int bodyList;
 
 	public RendererRollingMachine() {
 		try {
@@ -23,6 +22,7 @@ public class RendererRollingMachine extends TileEntitySpecialRenderer {
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}
+		int bodyList;
 		GL11.glNewList(bodyList = GL11.glGenLists(1), GL11.GL_COMPILE);
 		model.renderOnly("Hull");
 		GL11.glEndList();

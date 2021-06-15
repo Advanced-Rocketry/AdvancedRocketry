@@ -96,7 +96,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	public StorageChunk storage;
 	private String errorStr;
 	private long lastErrorTime = Long.MIN_VALUE;
-	private static long ERROR_DISPLAY_TIME = 100;
 	private static int DESCENT_TIMER = 500;
 	private static int BUTTON_ID_OFFSET = 25;
 	private static final int STATION_LOC_OFFSET = 50;
@@ -276,6 +275,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	@Override
 	public String getTextOverlay() {
 
+		long ERROR_DISPLAY_TIME = 100;
 		if(this.world.getTotalWorldTime() < this.lastErrorTime + ERROR_DISPLAY_TIME)
 			return errorStr;
 
@@ -1265,7 +1265,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	public void onOrbitReached() {
 		super.onOrbitReached();
 
-		//TODO: support multiple riders and rider/satellite combo
 		long targetSatellite;
 		if(storage.getGuidanceComputer() != null && (targetSatellite = storage.getGuidanceComputer().getTargetSatellite()) != -1L) {
 			SatelliteBase sat = DimensionManager.getInstance().getSatellite(targetSatellite);
@@ -1461,7 +1460,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		}
 		else {
-			//TODO: maybe add orbit dimension
 			this.motionY = -this.motionY;
 			setInOrbit(true);
 			//If going to a station or something make sure to set coords accordingly
@@ -1617,7 +1615,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			//TODO: lock the computer
 			destinationDimId = storage.getDestinationDimId(world.provider.getDimension(), (int)this.posX, (int)this.posZ);
 
-			//TODO: make sure this doesn't break asteriod mining
 			if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (destinationDimId == Constants.INVALID_PLANET && storage.getSatelliteHatches().size() != 0))) {
 				setError(LibVulpes.proxy.getLocalizedString("error.rocket.cannotGetThere"));
 				return;

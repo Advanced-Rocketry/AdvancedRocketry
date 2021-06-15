@@ -1091,12 +1091,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			viableBiomes.add(AdvancedRocketryBiomes.moonBiomeDark);
 		}
 
-		else if(averageTemperature > Temps.TOOHOT.getTemp()) {
+		else if(Temps.getTempFromValue(averageTemperature).hotterThan(Temps.TOOHOT)) {
 			viableBiomes.add(AdvancedRocketryBiomes.hotDryBiome);
 			viableBiomes.add(AdvancedRocketryBiomes.volcanic);
 			viableBiomes.add(AdvancedRocketryBiomes.volcanicBarren);
 		}
-		else if(averageTemperature > Temps.HOT.getTemp()) {
+		else if(Temps.getTempFromValue(averageTemperature).hotterThan(Temps.HOT)) {
 
 			for (Biome biome : Biome.REGISTRY) {
 				if (biome != null && (BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.HOT) || BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.OCEAN)) && !isBiomeblackListed(biome)) {
@@ -1104,7 +1104,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				}
 			}
 		}
-		else if(averageTemperature > Temps.NORMAL.getTemp()) {
+		else if(Temps.getTempFromValue(averageTemperature).hotterThan(Temps.NORMAL)) {
 			for (Biome biome : Biome.REGISTRY) {
 				if (biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
@@ -1112,7 +1112,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			}
 			viableBiomes.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN));
 		}
-		else if(averageTemperature > Temps.COLD.getTemp()) {
+		else if(Temps.getTempFromValue(averageTemperature).hotterThan(Temps.COLD)) {
 			for (Biome biome : Biome.REGISTRY) {
 				if (biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.HOT) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
@@ -1120,7 +1120,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			}
 			viableBiomes.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN));
 		}
-		else if(averageTemperature > Temps.FRIGID.getTemp()) {
+		else if(Temps.getTempFromValue(averageTemperature).hotterThan(Temps.FRIGID)) {
 
 			for (Biome biome : Biome.REGISTRY) {
 				if (biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
@@ -1128,13 +1128,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				}
 			}
 		}
-		else {//(averageTemperature >= Temps.SNOWBALL.getTemp())
+		else {
 			for (Biome biome : Biome.REGISTRY) {
 				if (biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
 				}
 			}
-			//TODO:
 		}
 
 		int maxBiomesPerPlanet = ARConfiguration.getCurrentConfig().maxBiomesPerPlanet;

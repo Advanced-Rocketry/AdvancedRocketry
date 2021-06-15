@@ -36,7 +36,6 @@ public class RenderAsteroidSky extends IRenderHandler {
 
 	private int starGLCallList;
 	private int glSkyList;
-	private int glSkyList2;
 	private int glSkyList3;
 	ResourceLocation currentlyBoundTex = null;
 	float celestialAngle;
@@ -80,8 +79,8 @@ public class RenderAsteroidSky extends IRenderHandler {
 		}
 
 		GL11.glEndList();
-		this.glSkyList2 = this.starGLCallList + 2;
-		GL11.glNewList(this.glSkyList2, GL11.GL_COMPILE);
+		int glSkyList2 = this.starGLCallList + 2;
+		GL11.glNewList(glSkyList2, GL11.GL_COMPILE);
 		f = -16.0F;
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 

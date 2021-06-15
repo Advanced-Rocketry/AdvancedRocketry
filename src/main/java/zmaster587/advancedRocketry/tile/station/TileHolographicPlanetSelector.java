@@ -269,7 +269,7 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 		}
 
 		if(!stellarMode) {
-			List<IDimensionProperties> planetList = currentStarBody == null ? DimensionManager.getSol().getPlanets() : currentStarBody.getPlanets();
+			List<IDimensionProperties> planetList = currentStarBody == null ? DimensionManager.getInstance().getStar(0).getPlanets() : currentStarBody.getPlanets();
 			if(centeredEntity != null) {
 				planetList = new LinkedList<>();
 				planetList.add(centeredEntity.getProperties());
@@ -285,7 +285,7 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 			}
 			else {
 				if(currentStarBody == null)
-					currentStarBody = DimensionManager.getSol();
+					currentStarBody = DimensionManager.getInstance().getStar(0);
 				currentStar = new EntityUIStar(world, currentStarBody, this, this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5);
 				this.getWorld().spawnEntity(currentStar);
 

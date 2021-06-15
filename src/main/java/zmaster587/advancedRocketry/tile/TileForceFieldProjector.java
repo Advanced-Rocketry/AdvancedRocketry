@@ -12,9 +12,8 @@ import zmaster587.libVulpes.block.BlockFullyRotatable;
 public class TileForceFieldProjector extends TileEntity implements ITickable {
 
 	private short extensionRange;
-	private static short MAX_RANGE = 32;
 
-	public TileForceFieldProjector() {
+    public TileForceFieldProjector() {
 		extensionRange = 0;
 	}
 
@@ -34,7 +33,8 @@ public class TileForceFieldProjector extends TileEntity implements ITickable {
 
 		if(world.getTotalWorldTime() % 5 == 0) {
 			if(world.isBlockPowered(getPos())) {
-				if(extensionRange < MAX_RANGE) {
+                short MAX_RANGE = 32;
+                if(extensionRange < MAX_RANGE) {
 					if(extensionRange == 0)
 						extensionRange = 1;
 

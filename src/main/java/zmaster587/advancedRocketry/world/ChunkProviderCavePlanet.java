@@ -27,7 +27,6 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 	protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
 	protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
 	private final World world;
-	private final boolean generateStructures;
 	private final Random rand;
 	/** Holds the noise used to determine whether slowsand can be generated at a location */
 	private double[] slowsandNoise = new double[256];
@@ -59,7 +58,6 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 	{
 		super(worldIn, seed, p_i45637_2_, p_i46668_5_);
 		this.world = worldIn;
-		this.generateStructures = p_i45637_2_;
 		this.rand = new Random(seed);
 		this.lperlinNoise1 = new NoiseGeneratorOctaves(this.rand, 16);
 		this.lperlinNoise2 = new NoiseGeneratorOctaves(this.rand, 16);

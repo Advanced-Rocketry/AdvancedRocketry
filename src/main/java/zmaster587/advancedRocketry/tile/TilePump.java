@@ -28,7 +28,6 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 
 	private FluidTank tank;
 	private List<BlockPos> cache;
-	private final int RANGE = 64;
 
 	public TilePump() {
 		super(1000);
@@ -162,7 +161,8 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		while(!queue.isEmpty())
 		{
 			BlockPos nextElement = queue.poll();
-			if(visited.contains(nextElement) || nextElement.getDistance(pos.getX(), nextElement.getY(), pos.getZ()) > RANGE )
+			int RANGE = 64;
+			if(visited.contains(nextElement) || nextElement.getDistance(pos.getX(), nextElement.getY(), pos.getZ()) > RANGE)
 				continue;
 
 			Block worldBlock = world.getBlockState(nextElement).getBlock();

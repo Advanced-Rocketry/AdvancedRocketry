@@ -9,7 +9,6 @@ import net.minecraft.world.World;
  */
 public interface IRocketEngine {
 	/**
-	 * TODO: adjust.<br>  
 	 * amount of thrust per engine
 	 * @return meters per tick per block
 	 */

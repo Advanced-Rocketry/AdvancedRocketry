@@ -52,7 +52,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * The {@link SpaceObjectManager} is used for tasks such as managing space stations and orbiting worlds 
 	 * @return the {@link SpaceObjectManager} registered with the DimensionManager
 	 */
-	public static final SpaceObjectManager getSpaceManager() {
+	public static SpaceObjectManager getSpaceManager() {
 		return spaceObjectManager;
 	}
 

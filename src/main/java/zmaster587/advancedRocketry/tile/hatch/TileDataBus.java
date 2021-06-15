@@ -12,8 +12,6 @@ import zmaster587.advancedRocketry.inventory.modules.ModuleAutoData;
 import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
@@ -22,10 +20,8 @@ import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
-//TODO: allow dataCable connections
 public class TileDataBus extends TileInventoryHatch implements IDataInventory, INetworkMachine {
 
-	int maxData;
 	DataStorage data;
 
 	public TileDataBus() {

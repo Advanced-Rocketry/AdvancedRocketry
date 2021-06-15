@@ -665,7 +665,6 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		return satellites;
 	}
 
-	@Deprecated
 	public TileGuidanceComputer getGuidanceComputer() {
 		for (TileEntity tile : getTileEntityList()) {
 			if (tile instanceof TileGuidanceComputer) {

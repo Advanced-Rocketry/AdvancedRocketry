@@ -158,13 +158,10 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 
 		if(slot0.getItem() instanceof ItemSatelliteIdentificationChip || slot0.getItem() instanceof ItemOreScanner || slot0.getItem() instanceof ItemPlanetIdentificationChip || slot0.getItem() instanceof ItemStationChip) {
 			setInventorySlotContents(holdingSlot, getStackInSlot(chipSlot).copy());
-		}
-		else {
-			ItemSatellite satelliteItem = (ItemSatellite)slot0.getItem();
-
+		} else {
 			ItemSatelliteIdentificationChip itemIdChip = (ItemSatelliteIdentificationChip)slot1.getItem();
 
-			itemIdChip.setSatellite(slot1, satelliteItem.getSatellite(slot0));
+			itemIdChip.setSatellite(slot1, SatelliteRegistry.getSatelliteProperty(slot0));
 			setInventorySlotContents(holdingSlot, slot1);
 		}
 		decrStackSize(chipCopySlot, 1);

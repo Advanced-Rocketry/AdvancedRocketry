@@ -130,7 +130,7 @@ public class MapGenCrater extends MapGenBase {
 
 									//Ejecta blocks on top, then ejecta blocks below farther out
 									if (rand.nextInt(Math.abs(inverseRadius) + 1) == 0 && baseRadius > 40) {
-										double ejectaRadius = -(1.0 + Math.max((baseRadius - 20)/20, 0.5));
+										double ejectaRadius = -(1.0 + Math.max((baseRadius - 20)/20f, 0.5));
 										if (inverseRadius < -0.375 * radius && inverseRadius >= ejectaRadius * radius)
 											chunkPrimerIn.setBlockState(x, y + dist + 1, z, this.getBlockToPlace(world, chunkX, chunkZ, ores));
 										else if (inverseRadius < ejectaRadius * radius)

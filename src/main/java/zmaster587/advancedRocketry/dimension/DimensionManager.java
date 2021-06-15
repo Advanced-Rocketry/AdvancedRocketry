@@ -78,18 +78,12 @@ public class DimensionManager implements IGalaxy {
 
 	public static final int GASGIANT_DIMID_OFFSET = 0x100; //Offset by 256
 	private static long nextSatelliteId;
-	private static StellarBody sol;
 	public Set<Integer> knownPlanets;
 
 	//The default properties belonging to the overworld
 	public static DimensionProperties overworldProperties;
 	//the default property for any dimension created in space, normally, space over earth
 	public static DimensionProperties defaultSpaceDimensionProperties;
-
-	@Deprecated
-	public static StellarBody getSol() {
-		return getInstance().getStar(0);
-	}
 
 	public static DimensionManager getInstance() {
 		return AdvancedRocketry.proxy.getDimensionManager(); //instance;
@@ -98,7 +92,7 @@ public class DimensionManager implements IGalaxy {
 	public DimensionManager() {
 		dimensionList = new HashMap<>();
 		starList = new HashMap<>();
-		sol = new StellarBody();
+		StellarBody sol = new StellarBody();
 		sol.setTemperature(100);
 		sol.setId(0);
 		sol.setName("Sol");
@@ -372,7 +366,6 @@ public class DimensionManager implements IGalaxy {
 		properties.setGasGiant(true);
 
 		// Add all gasses for the default world
-		// TODO: add variation
 		for( FluidGasGiantGas gas : AdvancedRocketryFluids.getGasGiantGasses() ) {
 			if (((properties.gravitationalMultiplier * 100)  >= gas.getMinGravity()) && (gas.getMaxGravity() >= (properties.gravitationalMultiplier * 100)) && 0 > (Math.random() - gas.getChance())) {
 				properties.getHarvestableGasses().add(gas.getFluid());
@@ -882,14 +875,14 @@ public class DimensionManager implements IGalaxy {
 					dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiomeDark);
 
 					dimensionProperties.setParentPlanet(DimensionManager.overworldProperties);
-					dimensionProperties.setStar(DimensionManager.getSol());
+					dimensionProperties.setStar(DimensionManager.getInstance().getStar(0));
 					dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
 					dimensionProperties.initDefaultAttributes();
 
 					DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !Loader.isModLoaded("GalacticraftCore"));
 				}
 
-				generateRandomPlanets(DimensionManager.getSol(), numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
+				generateRandomPlanets(DimensionManager.getInstance().getStar(0), numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
 
 				StellarBody star = new StellarBody();
 				star.setTemperature(10);

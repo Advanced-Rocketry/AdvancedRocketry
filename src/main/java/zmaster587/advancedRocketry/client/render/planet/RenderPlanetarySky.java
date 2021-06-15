@@ -214,12 +214,11 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 			sunColor = planetaryProvider.getSunColor(mc.player.getPosition());
 			primaryStar = properties.getStar();
-			if (primaryStar != null)
-			{
+			if (primaryStar != null) {
 				sunSize = properties.getStar().getSize();
 			}
 			else
-				primaryStar = DimensionManager.getSol();
+				primaryStar = DimensionManager.getInstance().getStar(0);
 			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {
@@ -263,12 +262,11 @@ public class RenderPlanetarySky extends IRenderHandler {
 			float[] sunColorFloat = properties.getSunColor();
 			sunColor = new Vec3d(sunColorFloat[0], sunColorFloat[1], sunColorFloat[2]);//planetaryProvider.getSunColor(mc.player.getPosition());
 			primaryStar = properties.getStar();
-			if (primaryStar != null)
-			{
+			if (primaryStar != null) {
 				sunSize = properties.getStar().getSize();
 			}
 			else
-				primaryStar = DimensionManager.getSol();
+				primaryStar = DimensionManager.getInstance().getStar(0);
 			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
 				if(isWarp) {

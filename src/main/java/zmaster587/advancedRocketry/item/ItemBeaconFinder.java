@@ -32,8 +32,7 @@ import java.util.List;
 public class ItemBeaconFinder extends Item implements IArmorComponent {
 
 	@Override
-	public void onTick(World world, EntityPlayer player, @Nonnull ItemStack armorStack,
-			IInventory modules, @Nonnull ItemStack componentStack) {
+	public void onTick(World world, EntityPlayer player, @Nonnull ItemStack armorStack, IInventory modules, @Nonnull ItemStack componentStack) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -48,20 +47,17 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public void onArmorDamaged(EntityLivingBase entity, @Nonnull ItemStack armorStack,
-							   @Nonnull ItemStack componentStack, DamageSource source, int damage) {
+	public void onArmorDamaged(EntityLivingBase entity, @Nonnull ItemStack armorStack, @Nonnull ItemStack componentStack, DamageSource source, int damage) {
 	}
 
 	@Override
-	public boolean isAllowedInSlot(@Nonnull ItemStack componentStack,
-			EntityEquipmentSlot armorType) {
+	public boolean isAllowedInSlot(@Nonnull ItemStack componentStack, EntityEquipmentSlot armorType) {
 		return armorType == EntityEquipmentSlot.HEAD;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void renderScreen(@Nonnull ItemStack componentStack, List<ItemStack> modules,
-			RenderGameOverlayEvent event, Gui gui) {
+	public void renderScreen(@Nonnull ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Gui gui) {
 		
 		int dimid = Minecraft.getMinecraft().world.provider.getDimension();
 		

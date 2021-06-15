@@ -31,8 +31,7 @@ public class ChunkProviderAsteroids extends ChunkProviderPlanet {
 	protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
 	protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
 	private final World world;
-	private final boolean generateStructures;
-	private final Random rand;
+    private final Random rand;
 	/** Holds the noise used to determine whether slowsand can be generated at a location */
 	private double[] slowsandNoise = new double[256];
 	private double[] gravelNoise = new double[256];
@@ -41,36 +40,31 @@ public class ChunkProviderAsteroids extends ChunkProviderPlanet {
 	private NoiseGeneratorOctaves lperlinNoise1;
 	private NoiseGeneratorOctaves lperlinNoise2;
 	private NoiseGeneratorOctaves perlinNoise1;
-	/** Determines whether slowsand or gravel can be generated at a location */
-	private NoiseGeneratorOctaves slowsandGravelNoiseGen;
-	/** Determines whether something other than nettherack can be generated at a location */
-	private NoiseGeneratorOctaves netherrackExculsivityNoiseGen;
-	public NoiseGeneratorOctaves scaleNoise;
+    public NoiseGeneratorOctaves scaleNoise;
 	public NoiseGeneratorOctaves depthNoise;
 	public NoiseGeneratorSimplex islandNoise;
 	MapGenBase genHighCaves = new MapGenHighCaves();
 	private MapGenBase genRavines = new MapGenMassiveRavine();
-	private MapGenBase genNetherCaves = new MapGenCavesHell();
-	double[] pnr;
+    double[] pnr;
 	double[] ar;
 	double[] br;
 	double[] noiseData4;
 	double[] dr;
-	private IBlockState oceanBlock;
-	private IBlockState fillblock;
+    private IBlockState fillblock;
 
 
 	public ChunkProviderAsteroids(World worldIn, boolean p_i45637_2_, long seed, String p_i46668_5_)
 	{
 		super(worldIn, seed, p_i45637_2_, p_i46668_5_);
 		this.world = worldIn;
-		this.generateStructures = p_i45637_2_;
-		this.rand = new Random(seed);
+        this.rand = new Random(seed);
 		this.lperlinNoise1 = new NoiseGeneratorOctaves(this.rand, 16);
 		this.lperlinNoise2 = new NoiseGeneratorOctaves(this.rand, 16);
 		this.perlinNoise1 = new NoiseGeneratorOctaves(this.rand, 8);
-		this.slowsandGravelNoiseGen = new NoiseGeneratorOctaves(this.rand, 4);
-		this.netherrackExculsivityNoiseGen = new NoiseGeneratorOctaves(this.rand, 8);
+        /** Determines whether slowsand or gravel can be generated at a location */
+        NoiseGeneratorOctaves slowsandGravelNoiseGen = new NoiseGeneratorOctaves(this.rand, 4);
+        /** Determines whether something other than nettherack can be generated at a location */
+        NoiseGeneratorOctaves netherrackExculsivityNoiseGen = new NoiseGeneratorOctaves(this.rand, 8);
 		this.scaleNoise = new NoiseGeneratorOctaves(this.rand, 10);
 		this.depthNoise = new NoiseGeneratorOctaves(this.rand, 16);
 		this.islandNoise = new NoiseGeneratorSimplex(this.rand);
@@ -80,13 +74,14 @@ public class ChunkProviderAsteroids extends ChunkProviderPlanet {
 		worldIn.setSeaLevel(dimProps.getSeaLevel());
 
 		IBlockState oceanBlock = dimProps.getOceanBlock();
-		if(oceanBlock != null)
+        IBlockState oceanBlock1;
+        if(oceanBlock != null)
 		{
-			this.oceanBlock = oceanBlock;
+			oceanBlock1 = oceanBlock;
 		}
 		else
 		{
-			this.oceanBlock = Blocks.WATER.getDefaultState();
+			oceanBlock1 = Blocks.WATER.getDefaultState();
 		}
 
 		IBlockState fillBlock = dimProps.getStoneBlock();
@@ -105,11 +100,11 @@ public class ChunkProviderAsteroids extends ChunkProviderPlanet {
 		this.lperlinNoise1 = ctx.getLPerlin1();
 		this.lperlinNoise2 = ctx.getLPerlin2();
 		this.perlinNoise1 = ctx.getPerlin();
-		this.slowsandGravelNoiseGen = ctx.getPerlin2();
-		this.netherrackExculsivityNoiseGen = ctx.getPerlin3();
+		slowsandGravelNoiseGen = ctx.getPerlin2();
+		netherrackExculsivityNoiseGen = ctx.getPerlin3();
 		this.scaleNoise = ctx.getScale();
 		this.depthNoise = ctx.getDepth();
-		this.genNetherCaves = net.minecraftforge.event.terraingen.TerrainGen.getModdedMapGen(genNetherCaves, net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.NETHER_CAVE);
+        MapGenBase genNetherCaves = net.minecraftforge.event.terraingen.TerrainGen.getModdedMapGen(genNetherCaves, net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.NETHER_CAVE);
 		super.heightmapOffset = 0;
 		super.heightmapMult *= 1D;
 	}
