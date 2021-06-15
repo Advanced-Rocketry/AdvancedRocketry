@@ -16,6 +16,7 @@ import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
 
@@ -64,13 +65,14 @@ public class TileWarpCore extends TileMultiBlock {
 			attemptCompleteStructure(world.getBlockState(pos));
 		}
 		
-		if(getSpaceObject() == null || (getSpaceObject().getMaxFuelAmount() - getSpaceObject().getFuelAmount() < ARConfiguration.getCurrentConfig().fuelPointsPerDilithium))
+		if(getSpaceObject() == null || (getSpaceObject().getMaxFuelAmount() - getSpaceObject().getFuelAmount()) < ARConfiguration.getCurrentConfig().fuelPointsPerDilithium)
 			return;
 		for(IInventory inv : itemInPorts) {
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
-				ItemStack stack = inv.getStackInSlot(i);
+				ItemStack stack = inv.getStackInSlot(i).copy();
+				stack.setCount(1);
 				int amt = 0;
-				if(!stack.isEmpty() && OreDictionary.itemMatches(MaterialRegistry.getItemStackFromMaterialAndType("Dilithium", AllowedProducts.getProductByName("GEM")), stack, false)) {
+				if(!stack.isEmpty() && ZUtils.isItemInOreDict(stack, "gemDilithium")) {
 					if(!world.isRemote)
 						amt = getSpaceObject().addFuel(ARConfiguration.getCurrentConfig().fuelPointsPerDilithium);
 					inv.decrStackSize(i, amt/ARConfiguration.getCurrentConfig().fuelPointsPerDilithium);
