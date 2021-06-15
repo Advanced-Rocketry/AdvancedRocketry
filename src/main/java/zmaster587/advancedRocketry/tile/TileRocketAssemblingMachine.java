@@ -324,10 +324,10 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 								if (block instanceof BlockNuclearRocketMotor) {
 									nuclearWorkingFluidUseMax += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
 									thrustNuclearNozzleLimit += ((IRocketEngine)block).getThrust(world, currBlockPos);
-								} else if (block instanceof BlockBipropellantRocketMotor /*|| block instanceof BlockAdvancedBipropellantRocketMotor*/) {
+								} else if (block instanceof BlockBipropellantRocketMotor) {
 									bipropellantfuelUse += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
 									thrustBipropellant += ((IRocketEngine)block).getThrust(world, currBlockPos);
-								} else if (block instanceof BlockRocketMotor /*|| block instanceof BlockAdvancedRocketMotor*/) {
+								} else if (block instanceof BlockRocketMotor) {
 									monopropellantfuelUse += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
 									thrustMonopropellant += ((IRocketEngine)block).getThrust(world, currBlockPos);
 								}
