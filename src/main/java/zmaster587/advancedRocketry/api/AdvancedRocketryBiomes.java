@@ -4,6 +4,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,10 +35,10 @@ public class AdvancedRocketryBiomes {
 	public static Biome volcanicBarren;
 
 	private AdvancedRocketryBiomes() {
-		registeredBiomes = new ArrayList<Biome>();
-		registeredHighPressureBiomes = new LinkedList<Biome>();
-		blackListedBiomeIds = new ArrayList<Integer>();
-		registeredSingleBiome = new ArrayList<Biome>();
+		registeredBiomes = new ArrayList<>();
+		registeredHighPressureBiomes = new LinkedList<>();
+		blackListedBiomeIds = new ArrayList<>();
+		registeredSingleBiome = new ArrayList<>();
 	}
 
 	/**
@@ -135,18 +136,15 @@ public class AdvancedRocketryBiomes {
 
 		return Biome.getBiome(id);
 	}
-	
-	public static Biome getBiome(String string)
-	{
-		Biome biome;
-		int id = 0;
-		biome = Biome.REGISTRY.getObject(new ResourceLocation(string));
+
+	@Nullable
+	public static Biome getBiome(String string) {
+		Biome biome = Biome.REGISTRY.getObject(new ResourceLocation(string));
 		
 		//Fallback to ID
 		if( biome == null)
 		{
-			id = Integer.parseInt(string);
-			biome = Biome.getBiome(id, null);
+			biome = Biome.getBiome(Integer.parseInt(string));
 		}
 		
 		return biome;

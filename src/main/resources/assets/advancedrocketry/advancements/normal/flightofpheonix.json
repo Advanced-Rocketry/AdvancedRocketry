@@ -4,10 +4,10 @@
             "item": "advancedrocketry:warpCore"
         },
         "title": {
-            "translate": "achievement.flightOfThePhoenix"
+            "translate": "advancement.flightOfThePhoenix"
         },
         "description": {
-            "translate": "achievement.flightOfThePhoenix.desc"
+            "translate": "advancement.flightOfThePhoenix.desc"
         },
         "frame": "challenge"
     },

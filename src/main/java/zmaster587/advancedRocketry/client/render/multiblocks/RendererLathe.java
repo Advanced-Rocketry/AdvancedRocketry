@@ -17,8 +17,6 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/lathe.png");
 
-	private static int bodyList;
-
 	public RendererLathe() {
 		try {
 			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/lathe.obj"));
@@ -26,7 +24,7 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 			e.printStackTrace();
 		}
 
-		GL11.glNewList(bodyList = GL11.glGenLists(1), GL11.GL_COMPILE);
+		GL11.glNewList(GL11.glGenLists(1), GL11.GL_COMPILE);
 		model.renderOnly("Hull");
 		GL11.glEndList();
 	}
@@ -74,7 +72,7 @@ public class RendererLathe extends TileEntitySpecialRenderer {
 
 			int color;
 			//Check for rare bug when outputs is null, usually occurs if player opens machine within 1st tick
-			if(multiBlockTile.getOutputs() != null && (outputStack = multiBlockTile.getOutputs().get(0)) != null)
+			if(multiBlockTile.getOutputs() != null && !(outputStack = multiBlockTile.getOutputs().get(0)).isEmpty())
 				color = MaterialRegistry.getColorFromItemMaterial(outputStack);
 			else
 				color = 0;

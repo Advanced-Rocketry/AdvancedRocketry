@@ -21,7 +21,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
-import java.util.Iterator;
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements IModularInventory {
@@ -60,24 +60,16 @@ public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements I
 		List<List<ItemStack>> ingredients = recipe.getIngredients();
 
 		label77:
-		for(int ingredientNum = 0; ingredientNum < ingredients.size(); ++ingredientNum) {
-			List<ItemStack> ingredient = (List)ingredients.get(ingredientNum);
-			Iterator var5 = this.getItemInPorts().iterator();
-
-			while(var5.hasNext()) {
-				IInventory hatch = (IInventory)var5.next();
-
-				for(int i = 0; i < hatch.getSizeInventory(); ++i) {
+		for (List<ItemStack> ingredient : ingredients) {
+			for (IInventory hatch : this.getItemInPorts()) {
+				for (int i = 0; i < hatch.getSizeInventory(); ++i) {
 					ItemStack stackInSlot = hatch.getStackInSlot(i);
-					Iterator var9 = ingredient.iterator();
 
-					while(var9.hasNext()) {
-						ItemStack stack = (ItemStack)var9.next();
-
-						if ((stackInSlot != null && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.isItemEqual(stack) || stack.getItemDamage() == 32767 && stackInSlot.getItem() == stack.getItem())) && !isLensItem(stack)) {
+					for (ItemStack stack : ingredient) {
+						if ((!stackInSlot.isEmpty() && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.isItemEqual(stack) || stack.getItemDamage() == 32767 && stackInSlot.getItem() == stack.getItem())) && !isLensItem(stack)) {
 							hatch.decrStackSize(i, stack.getCount());
 							hatch.markDirty();
-							this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(((TileEntity)hatch).getPos()), this.world.getBlockState(((TileEntity)hatch).getPos()), 6);
+							this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(((TileEntity) hatch).getPos()), this.world.getBlockState(((TileEntity) hatch).getPos()), 6);
 							continue label77;
 						}
 					}
@@ -87,12 +79,13 @@ public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements I
 	}
 	
 	@Override
+	@Nonnull
 	public AxisAlignedBB getRenderBoundingBox() {
 		
 		return new AxisAlignedBB(pos.add(-3,-2,-3),pos.add(3,2,3));
 	}
 
-	private boolean isLensItem (ItemStack stack) {
+	private boolean isLensItem (@Nonnull ItemStack stack) {
 		int[] oreIds = OreDictionary.getOreIDs(stack);
 		for (int oreId : oreIds) {
 			if (OreDictionary.getOreName(oreId).contains("lensPrecisionLaserEtcher")) {

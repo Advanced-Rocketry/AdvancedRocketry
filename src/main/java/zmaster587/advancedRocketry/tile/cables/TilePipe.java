@@ -7,13 +7,15 @@ import net.minecraft.util.math.BlockPos;
 import zmaster587.advancedRocketry.cable.HandlerCableNetwork;
 import zmaster587.advancedRocketry.cable.NetworkRegistry;
 
+import javax.annotation.Nonnull;
+
 public class TilePipe extends TileEntity {
 
-	int networkID;
-	boolean initialized, destroyed;
+	private int networkID;
+	private boolean initialized, destroyed;
 
-	static boolean debug = false;
-	boolean connectedSides[];
+	private static boolean debug = false;
+	boolean[] connectedSides;
 
 	public TilePipe() {
 		initialized = false;
@@ -60,6 +62,7 @@ public class TilePipe extends TileEntity {
 	}
 	
 	@Override
+	@Nonnull
 	public NBTTagCompound getUpdateTag() {
 		NBTTagCompound nbt = super.getUpdateTag();
 		
@@ -77,7 +80,7 @@ public class TilePipe extends TileEntity {
 	}
 	
 	@Override
-    public void handleUpdateTag(NBTTagCompound tag)
+    public void handleUpdateTag(@Nonnull NBTTagCompound tag)
     {
         super.handleUpdateTag(tag);
         
@@ -144,23 +147,19 @@ public class TilePipe extends TileEntity {
 		//return;
 
 		if(canExtract(dir, tile) && (world.isBlockIndirectlyGettingPowered(pos) > 0 || world.getStrongPower(pos) > 0)) {
-			if(world.isRemote)
-				connectedSides[dir.ordinal()]=true;
-			else {
+			if(!world.isRemote)  {
 				getNetworkHandler().removeFromAllTypes(this, tile);
 				getNetworkHandler().addSource(this,tile,dir);
-				connectedSides[dir.ordinal()]=true;
 			}
+			connectedSides[dir.ordinal()]=true;
 		}
 
 		if(canInject(dir, tile) && world.isBlockIndirectlyGettingPowered(pos) == 0 && world.getStrongPower(pos) == 0) {
-			if(world.isRemote)
-				connectedSides[dir.ordinal()]=true;
-			else {
+			if(!world.isRemote)  {
 				getNetworkHandler().removeFromAllTypes(this, tile);
 				getNetworkHandler().addSink(this, tile,dir);
-				connectedSides[dir.ordinal()]=true;
 			}
+			connectedSides[dir.ordinal()]=true;
 		}
 	}
 
@@ -202,6 +201,7 @@ public class TilePipe extends TileEntity {
 					if(this.destroyed)
 						return;
 
+					debug = false;
 					if(pipe.isInitialized()) {
 						if(!isInitialized()) {
 							initialize(pipe.getNetworkID());

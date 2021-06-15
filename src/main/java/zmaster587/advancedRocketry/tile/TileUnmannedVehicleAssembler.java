@@ -2,7 +2,6 @@ package zmaster587.advancedRocketry.tile;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -16,14 +15,15 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.block.*;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
-import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.block.RotatableBlock;
-import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.ZUtils;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 
@@ -32,9 +32,7 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 	/**
 	 * Does not make sure the structure is complete, only gets max bounds!
 	 * @param world the world
-	 * @param x coord to evaluate from
-	 * @param y coord to evaluate from
-	 * @param z coord to evaluate from
+	 * @param pos2 coords to evaluate from
 	 * @return AxisAlignedBB bounds of structure if valid  otherwise null
 	 */
 	@Override
@@ -141,7 +139,7 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 		NBTTagCompound nbtdata = new NBTTagCompound();
 
 		rocket.writeToNBT(nbtdata);
-		PacketHandler.sendToNearby(new PacketEntity((INetworkEntity)rocket, (byte)0, nbtdata), rocket.world.provider.getDimension(), this.pos, 64);
+		PacketHandler.sendToNearby(new PacketEntity(rocket, (byte)0, nbtdata), rocket.world.provider.getDimension(), this.pos, 64);
 
 		stats.reset();
 		this.status = ErrorCodes.UNSCANNED;
@@ -225,10 +223,10 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 								if (block instanceof BlockNuclearRocketMotor) {
 									nuclearWorkingFluidUseMax += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
 									thrustNuclearNozzleLimit += ((IRocketEngine)block).getThrust(world, currPos);
-								} else if (block instanceof BlockBipropellantRocketMotor || block instanceof BlockAdvancedBipropellantRocketMotor ) {
+								} else if (block instanceof BlockBipropellantRocketMotor) {
 									bipropellantfuelUse += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
 									thrustBipropellant += ((IRocketEngine)block).getThrust(world, currPos);
-								} else if (block instanceof BlockRocketMotor || block instanceof BlockAdvancedRocketMotor ) {
+								} else if (block instanceof BlockRocketMotor) {
 									monopropellantfuelUse += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
 									thrustMonopropellant += ((IRocketEngine)block).getThrust(world, currPos);
 								}
@@ -256,10 +254,6 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 							}
 
 							TileEntity tile= world.getTileEntity(currPos);
-							if(tile instanceof TileSatelliteHatch)
-								hasSatellite = true;
-							if(tile instanceof TileGuidanceComputer)
-								hasGuidance = true;
 
 							if(tile instanceof IFluidHandler) {
 								for(IFluidTankProperties info : ((IFluidHandler)tile).getTankProperties())
@@ -300,7 +294,6 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 			int totalFuelUse = bipropellantfuelUse + nuclearWorkingFluidUse + monopropellantfuelUse;
 
 			//Set status
-			//TODO: warn if seat OR satellite missing
 			if (((fuelCapacityBipropellant > 0 && totalFuel > fuelCapacityBipropellant) || (fuelCapacityMonopropellant > 0 && totalFuel > fuelCapacityMonopropellant) || (fuelCapacityNuclearWorkingFluid > 0 && totalFuel > fuelCapacityNuclearWorkingFluid))
 				||
 				((thrustBipropellant > 0 && totalFuelUse > bipropellantfuelUse) || (thrustMonopropellant > 0 && totalFuelUse > monopropellantfuelUse) || (thrustNuclearTotalLimit > 0 && totalFuelUse > nuclearWorkingFluidUse)))
@@ -315,7 +308,7 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 	}
 
 	@Override
-	public float getNeededFuel(FuelType fuelType) {
+	public float getNeededFuel(@Nonnull FuelType fuelType) {
 		return getAcceleration(DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier()) > 0 ? stats.getFuelRate(fuelType) : 0;
 	}
 

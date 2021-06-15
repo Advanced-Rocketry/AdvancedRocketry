@@ -141,7 +141,7 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 				//Slight adjustment to make Earth 0.9995 into a 1.0
 				energyRecieved = (int) (numPanels * 1.0005d * 2 * insolationPowerMultiplier);
 			}
-			powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().solarGeneratorMult);
+			powerMadeLastTick = energyRecieved*ARConfiguration.getCurrentConfig().solarGeneratorMult;
 
 			if(powerMadeLastTick != prevPowerMadeLastTick) {
 				prevPowerMadeLastTick = powerMadeLastTick;
@@ -158,6 +158,7 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setInteger("amtPwr", powerMadeLastTick);
+		nbt.setBoolean("canRender", this.canRender);
 		writeNetworkData(nbt);
 		return new SPacketUpdateTileEntity(pos, 0, nbt);
 	}
@@ -165,8 +166,8 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		NBTTagCompound nbt = pkt.getNbtCompound();
-
 		powerMadeLastTick = nbt.getInteger("amtPwr");
+		this.canRender = nbt.getBoolean("canRender");
 		readNetworkData(nbt);
 	}
 	
@@ -175,6 +176,7 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setInteger("powerMadeLastTick", powerMadeLastTick);
 		nbt.setInteger("numPanels", numPanels);
+		nbt.setBoolean("canRender", this.canRender);
 		writeToNBT(nbt);
 		return nbt;
 	}
@@ -229,4 +231,5 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 		super.readNetworkData(nbt);
 		this.numPanels = nbt.getInteger("numPanels");
 	}
+
 }

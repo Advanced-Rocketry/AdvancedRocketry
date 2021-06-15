@@ -22,13 +22,14 @@ import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.items.ItemIngredient;
 import zmaster587.libVulpes.util.FluidUtils;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemPressureTank extends ItemIngredient implements IArmorComponent {
 
 	ResourceIcon icon;
 	
-	int capacity;
+	private int capacity;
 	public ItemPressureTank( int number, int capacity) {
 		super(number);
 		this.capacity = capacity;
@@ -36,8 +37,7 @@ public class ItemPressureTank extends ItemIngredient implements IArmorComponent 
 	}
 	
 	@Override
-	public void addInformation(ItemStack stack, World player, List list,
-            ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
 		super.addInformation(stack, player, list, bool);
 		
 		FluidStack fluidStack = FluidUtils.getFluidForItem(stack);
@@ -51,51 +51,50 @@ public class ItemPressureTank extends ItemIngredient implements IArmorComponent 
 	}
 	
 	@Override
-	public void onTick(World world, EntityPlayer player, ItemStack armorStack, IInventory inv,
-			ItemStack componentStack) {
+	public void onTick(World world, EntityPlayer player, @Nonnull ItemStack armorStack, IInventory inv,
+					   @Nonnull ItemStack componentStack) {
 		
 	}
 
 	@Override
-	public boolean onComponentAdded(World world, ItemStack armorStack) {
+	public boolean onComponentAdded(World world, @Nonnull ItemStack armorStack) {
 		return true;
 	}
 
 	@Override
-	public void onComponentRemoved(World world, ItemStack armorStack) {
+	public void onComponentRemoved(World world, @Nonnull ItemStack armorStack) {
 		
 	}
 
 	@Override
-	public void onArmorDamaged(EntityLivingBase entity, ItemStack armorStack,
-			ItemStack componentStack, DamageSource source, int damage) {
+	public void onArmorDamaged(EntityLivingBase entity, @Nonnull ItemStack armorStack,
+							   @Nonnull ItemStack componentStack, DamageSource source, int damage) {
 		
 	}
 	
-	public int getCapacity(ItemStack container) {
+	public int getCapacity(@Nonnull ItemStack container) {
 		return capacity*(int)Math.pow(2, container.getItemDamage());
 	}
 
 	@Override
-	public ResourceIcon getComponentIcon(ItemStack armorStack) {
+	public ResourceIcon getComponentIcon(@Nonnull ItemStack armorStack) {
 		return null;
 	}
 	
 	@Override
-	public boolean isAllowedInSlot(ItemStack stack, EntityEquipmentSlot slot) {
+	public boolean isAllowedInSlot(@Nonnull ItemStack stack, EntityEquipmentSlot slot) {
 		return slot == EntityEquipmentSlot.CHEST;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void renderScreen(ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Gui gui) {
+	public void renderScreen(@Nonnull ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Gui gui) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack,
-			NBTTagCompound nbt) {
+	public ICapabilityProvider initCapabilities(@Nonnull ItemStack stack, NBTTagCompound nbt) {
 		return new TankCapabilityItemStack(stack, getCapacity(stack));
 	}
 

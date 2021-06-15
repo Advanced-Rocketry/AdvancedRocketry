@@ -10,6 +10,8 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.IRocketEngine;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 
+import javax.annotation.Nonnull;
+
 public class BlockBipropellantRocketMotor extends BlockFullyRotatable implements IRocketEngine {
 
 	public BlockBipropellantRocketMotor(Material mat) {
@@ -32,7 +34,7 @@ public class BlockBipropellantRocketMotor extends BlockFullyRotatable implements
 		return 1;
 	}
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, @Nonnull ItemStack stack) {
 		
 		world.setBlockState(pos, state.withProperty(FACING, EnumFacing.DOWN));
 	}

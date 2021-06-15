@@ -49,7 +49,7 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 				double u = 256/distance;
 				double resolution = (int)u;
 
-				double yLoc[][] = new double[(int)resolution][(int)resolution];
+				double[][] yLoc = new double[(int)resolution][(int)resolution];
 
 				for(int i = 0; i < (int)resolution; i++) {
 					for(int g = 0; g < (int)resolution; g++) {

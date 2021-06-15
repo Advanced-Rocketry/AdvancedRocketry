@@ -10,6 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.block.BlockTile;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class BlockTileWithMultitooltip extends BlockTile {
@@ -20,7 +21,7 @@ public class BlockTileWithMultitooltip extends BlockTile {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 		super.addInformation(stack, player, tooltip, advanced);
 		tooltip.add(ChatFormatting.DARK_GRAY + "" + ChatFormatting.ITALIC + LibVulpes.proxy.getLocalizedString("machine.tooltip.multiblock"));
 	}

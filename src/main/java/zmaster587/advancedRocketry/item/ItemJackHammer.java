@@ -10,11 +10,13 @@ import net.minecraft.item.ItemTool;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.api.MaterialGeode;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Set;
 
 public class ItemJackHammer extends ItemTool {
 	
-	private static final Set items = Sets.newHashSet(new Block[] {Blocks.COBBLESTONE, Blocks.DOUBLE_STONE_SLAB, Blocks.STONE_SLAB, Blocks.STONE, Blocks.SANDSTONE, Blocks.MOSSY_COBBLESTONE, Blocks.IRON_ORE, Blocks.IRON_BLOCK, Blocks.COAL_ORE, Blocks.GOLD_BLOCK, Blocks.GOLD_BLOCK, Blocks.DIAMOND_ORE, Blocks.DIAMOND_BLOCK, Blocks.ICE, Blocks.NETHERRACK, Blocks.LAPIS_ORE, Blocks.LAPIS_BLOCK, Blocks.REDSTONE_ORE, Blocks.LIT_REDSTONE_ORE, Blocks.RAIL, Blocks.DETECTOR_RAIL, Blocks.GOLDEN_RAIL, Blocks.ACTIVATOR_RAIL});
+	private static final Set<Block> items = Sets.newHashSet(Blocks.COBBLESTONE, Blocks.DOUBLE_STONE_SLAB, Blocks.STONE_SLAB, Blocks.STONE, Blocks.SANDSTONE, Blocks.MOSSY_COBBLESTONE, Blocks.IRON_ORE, Blocks.IRON_BLOCK, Blocks.COAL_ORE, Blocks.GOLD_BLOCK, Blocks.GOLD_BLOCK, Blocks.DIAMOND_ORE, Blocks.DIAMOND_BLOCK, Blocks.ICE, Blocks.NETHERRACK, Blocks.LAPIS_ORE, Blocks.LAPIS_BLOCK, Blocks.REDSTONE_ORE, Blocks.LIT_REDSTONE_ORE, Blocks.RAIL, Blocks.DETECTOR_RAIL, Blocks.GOLDEN_RAIL, Blocks.ACTIVATOR_RAIL);
 	
 	public ItemJackHammer(ToolMaterial toolMaterial) {
 		super(toolMaterial, items);
@@ -23,11 +25,13 @@ public class ItemJackHammer extends ItemTool {
 	}
 	
 	@Override
-	public boolean getIsRepairable(ItemStack stackMe, ItemStack stackItem) {
+	@ParametersAreNonnullByDefault
+	public boolean getIsRepairable(@Nonnull ItemStack stackMe, ItemStack stackItem) {
 		return OreDictionary.itemMatches(OreDictionary.getOres("stickTitanium").get(0), stackItem, false);//super.getIsRepairable(p_82789_1_, p_82789_2_);
 	}
-	
-    public float getStrVsBlock(ItemStack stack, IBlockState state)
+
+	@ParametersAreNonnullByDefault
+    public float getStrVsBlock(@Nonnull ItemStack stack, IBlockState state)
     {
     	return  state.getMaterial() == Material.IRON || state.getMaterial() == Material.ROCK || state.getMaterial() == MaterialGeode.geode  ? this.efficiencyOnProperMaterial : super.getStrVsBlock(stack, state);
     	   

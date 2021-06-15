@@ -37,17 +37,13 @@ public class GravityHandler implements IGravityManager {
 			gcWorldProvider = Class.forName("micdoodle8.mods.galacticraft.api.world.IGalacticraftWorldProvider");
 			AdvancedRocketry.logger.info("GC IGalacticraftWorldProvider  found");
 			gcGetGravity = gcWorldProvider.getMethod("getGravity");
-		} catch(ClassNotFoundException e){
-			gcWorldProvider = null;
-			AdvancedRocketry.logger.info("GC IGalacticraftWorldProvider not found");
-		}
-		catch(NoSuchMethodException e){
+		} catch(ClassNotFoundException | NoSuchMethodException e){
 			gcWorldProvider = null;
 			AdvancedRocketry.logger.info("GC IGalacticraftWorldProvider not found");
 		}
 	}
 	
-	private static WeakHashMap<Entity, Double> entityMap = new WeakHashMap<Entity, Double>();
+	private static WeakHashMap<Entity, Double> entityMap = new WeakHashMap<>();
 
 	public static void applyGravity(Entity entity) {
 		if(entity.hasNoGravity()) return;
@@ -84,7 +80,6 @@ public class GravityHandler implements IGravityManager {
 					else if (entity instanceof  EntityLivingBase)
 						entity.motionY -= (gravMult * LIVING_OFFSET - LIVING_OFFSET);
 
-					return;
 				} else {
 					//GC handling
 					if (gcWorldProvider != null && gcWorldProvider.isAssignableFrom(entity.world.provider.getClass())) {

@@ -13,7 +13,7 @@ public class NBTStorableListList {
 	List<DimensionBlockPosition> pos;
 	
 	public NBTStorableListList() {
-		pos = new LinkedList<DimensionBlockPosition>();
+		pos = new LinkedList<>();
 	}
 	
 	public NBTStorableListList(List<DimensionBlockPosition> list) {

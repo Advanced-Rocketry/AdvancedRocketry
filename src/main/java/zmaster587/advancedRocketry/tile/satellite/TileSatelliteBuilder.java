@@ -21,6 +21,8 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -125,7 +127,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 			setInventorySlotContents(chassisSlot, ItemStack.EMPTY);
 
 			//Set the ID chip
-			setInventorySlotContents(chipSlot, sat.getContollerItemStack(getStackInSlot(chipSlot), properties));
+			setInventorySlotContents(chipSlot, sat.getControllerItemStack(getStackInSlot(chipSlot), properties));
 			//Move item to temporary holding slot
 			setInventorySlotContents(holdingSlot, output);
 		}
@@ -156,13 +158,10 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 
 		if(slot0.getItem() instanceof ItemSatelliteIdentificationChip || slot0.getItem() instanceof ItemOreScanner || slot0.getItem() instanceof ItemPlanetIdentificationChip || slot0.getItem() instanceof ItemStationChip) {
 			setInventorySlotContents(holdingSlot, getStackInSlot(chipSlot).copy());
-		}
-		else {
-			ItemSatellite satelliteItem = (ItemSatellite)slot0.getItem();
-
+		} else {
 			ItemSatelliteIdentificationChip itemIdChip = (ItemSatelliteIdentificationChip)slot1.getItem();
 
-			itemIdChip.setSatellite(slot1, satelliteItem.getSatellite(slot0));
+			itemIdChip.setSatellite(slot1, SatelliteRegistry.getSatelliteProperty(slot0));
 			setInventorySlotContents(holdingSlot, slot1);
 		}
 		decrStackSize(chipCopySlot, 1);
@@ -182,7 +181,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(new ModuleTexturedLimitedSlotArray(152, 10, this, 0, 1, TextureResources.functionComponent)); //Functional Piece
@@ -225,6 +224,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int slot) {
 		if(slot < outputSlot) {
 			ItemStack chassis = getStackInSlot(chassisSlot);
@@ -239,6 +239,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int slot, int amt) {
 		if(slot < outputSlot) {
 			ItemStack chassis = getStackInSlot(chassisSlot);
@@ -258,7 +259,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		if(slot < outputSlot) {
 			ItemStack chassis = getStackInSlot(chassisSlot);
 
@@ -288,17 +289,17 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {
+	public void openInventory(@Nonnull EntityPlayer player) {
 		inventory.openInventory(player);
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
+	public void closeInventory(@Nonnull EntityPlayer player) {
 		inventory.closeInventory(player);
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
 		if(slot < outputSlot) {
 			ItemStack chassis = getStackInSlot(chassisSlot);
 
@@ -327,11 +328,13 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	}
 
 	@Override
+	@Nullable
 	public String getName() {
 		return null;
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		if(index < outputSlot) {
 			ItemStack chassis = getStackInSlot(chassisSlot);

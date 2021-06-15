@@ -32,6 +32,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 
 
 	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity, EntityPlayer player, World world) {
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
 
 		ItemLinker.setMasterCoords(item, getPos());
 
@@ -74,7 +75,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	}
 
 	@Override
-	public boolean onLinkComplete(ItemStack item, TileEntity entity, EntityPlayer player, World world) {
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
 		BlockPos pos = ItemLinker.getMasterCoords(item);
 
 		TileEntity tile = world.getTileEntity(pos);
@@ -87,9 +88,9 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 				return true;
 			}
 
-			int othernetworkid = ((TileWirelessTransciever)tile).networkID;
+			int otherNetworkId = ((TileWirelessTransciever)tile).networkID;
 
-			if(networkID == -1 && othernetworkid == -1)
+			if(networkID == -1 && otherNetworkId == -1)
 			{
 				networkID = NetworkRegistry.dataNetwork.getNewNetworkID();
 				((TileWirelessTransciever)tile).networkID = networkID;
@@ -97,15 +98,15 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 			}
 			else if(networkID == -1)
 			{
-				networkID = othernetworkid;
+				networkID = otherNetworkId;
 			}
-			else if(othernetworkid == -1)
+			else if(otherNetworkId == -1)
 			{
 				((TileWirelessTransciever)tile).networkID = networkID;
 			}
 			else
 			{
-				networkID = NetworkRegistry.dataNetwork.mergeNetworks(othernetworkid, networkID);
+				networkID = NetworkRegistry.dataNetwork.mergeNetworks(otherNetworkId, networkID);
 				((TileWirelessTransciever)tile).networkID = networkID;
 			}
 			addToNetwork();
@@ -167,7 +168,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 
 	@Override
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		LinkedList list = new LinkedList<ModuleBase>();
+		LinkedList<ModuleBase> list = new LinkedList<>();
 
 		list.add(toggle);
 		list.add(toggleSwitch);
@@ -241,6 +242,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	}
 
 	@Override
+	@Nonnull
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		nbt.setBoolean("mode", extractMode);
 		nbt.setBoolean("enabled", enabled);

@@ -1,0 +1,57 @@
+project.ext { gcbuild = "261" }
+
+apply from: "https://raw.githubusercontent.com/ReadOnlyDevelopment/gradle/galacticraft/dev.gradle"
+
+repositories {
+    mavenCentral()
+    /*ivy {
+        url "https://micdoodle8.com/new-builds/"
+        layout 'pattern', {
+            artifact "[organization]/${GCBuild}/[module]-[revision].jar"
+        }
+        metadataSources {
+            artifact()
+        }
+    }*/
+    ivy {
+            name "LibVulpes"
+            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/1.12/" + project.libVulpesBuildNum +"/artifact/output/[module]-[revision].[ext]"
+        }
+    maven {
+            name = "mezz.jei"
+            url = "https://dvs1.progwml6.com/files/maven/"
+        }
+    ivy {
+            name "industrialcraft-2"
+            artifactPattern "http://jenkins.ic2.player.to/job/IC2_111/39/artifact/build/libs/[module]-[revision].[ext]"
+        }
+    /*ivy {
+            name "Tesla"
+            artifactPattern "https://addons-origin.cursecdn.com/files/2347/256/[module]-[revision].[ext]"
+        }*/
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+    /*flatDir {
+        dirs 'libs'
+    }*/
+}
+
+dependencies {
+    //minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2854' //for ForgeGradle 3
+    compileOnly name: 'industrialcraft-2', version: '2.7.39-ex111-api', ext: 'jar'
+    //compile name: 'Tesla', version: '1.11-1.3.0.51-deobf', ext: 'jar'
+    //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
+	//compileOnly name: 'LibVulpes', version: '1.12.2-' + project.libVulpesVersion  + '-deobf', ext: 'jar'
+    compileOnly name: 'LibVulpes', version: '1.12.2-' + project.libVulpesVersion  + '-' + project.libVulpesBuildNum + '-deobf', ext: 'jar'
+    
+    
+    // compile against the JEI API but do not include it at runtime
+    deobfCompile "mezz.jei:jei_${mcversion}:${jei_version}:api"
+    //compileOnly fg.deobf("mezz.jei:jei_${mcversion}:${jei_version}:api") //for ForgeGradle 3
+    // at runtime, use the full JEI jar
+    runtime "mezz.jei:jei_${mcversion}:${jei_version}"
+    //runtimeOnly fg.deobf("mezz.jei:jei_${mcversion}:${jei_version}") //for ForgeGradle 3
+}

@@ -3,7 +3,6 @@ package zmaster587.advancedRocketry.client.render.entity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -136,7 +135,7 @@ public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRen
 		BufferBuilder buf = Tessellator.getInstance().getBuffer();
 		GlStateManager.disableTexture2D();
 
-		float myTime = ((entity.world.getTotalWorldTime() & 0xF)/16f);
+		float myTime;
 
 		for(int i = 0; i < 4; i++ ) {
 			myTime = ((i*4 + entity.world.getTotalWorldTime() & 0xF)/16f);

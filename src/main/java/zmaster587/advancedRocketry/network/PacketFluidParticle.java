@@ -8,10 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.entity.fx.InverseTrailFluid;
-import zmaster587.advancedRocketry.entity.fx.OxygenCloudFX;
-import zmaster587.advancedRocketry.entity.fx.OxygenTraceFX;
 import zmaster587.libVulpes.network.BasePacket;
-import zmaster587.libVulpes.util.HashedBlockPosition;
 
 public class PacketFluidParticle extends BasePacket {
 
@@ -67,7 +64,7 @@ public class PacketFluidParticle extends BasePacket {
 		int numIterations = Minecraft.getMinecraft().gameSettings.particleSetting < 1 ? 5 : (Minecraft.getMinecraft().gameSettings.particleSetting < 2 ? 3 : 0);
 		
 		for(int i = 0; i < numIterations;i++) {
-			InverseTrailFluid fx2 = new InverseTrailFluid(thePlayer.world, fromPos.getX() + 0.1*(0.5 - Math.random()), fromPos.getY() + 0.1*(0.5 - Math.random()), fromPos.getZ() + 0.1*(0.5 - Math.random()), toPos.getX() + 0.5, toPos.getY() + 0.5, toPos.getZ() + 0.5, color, time);;
+			InverseTrailFluid fx2 = new InverseTrailFluid(thePlayer.world, fromPos.getX() + 0.1*(0.5 - Math.random()), fromPos.getY() + 0.1*(0.5 - Math.random()), fromPos.getZ() + 0.1*(0.5 - Math.random()), toPos.getX() + 0.5, toPos.getY() + 0.5, toPos.getZ() + 0.5, color, time);
 			Minecraft.getMinecraft().effectRenderer.addEffect(fx2);
 		}
 	}

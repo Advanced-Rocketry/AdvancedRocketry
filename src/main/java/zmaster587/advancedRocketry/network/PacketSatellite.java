@@ -23,7 +23,7 @@ public class PacketSatellite extends BasePacket {
 
 	public PacketSatellite() {
 		nbt = new NBTTagCompound();
-	};
+	}
 
 	public PacketSatellite(SatelliteBase machine) {
 		this();
@@ -55,7 +55,6 @@ public class PacketSatellite extends BasePacket {
 			zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()).addSatellite(satellite);
 		} catch (IOException e) {
 			e.printStackTrace();
-			return;
 		}
 	}
 

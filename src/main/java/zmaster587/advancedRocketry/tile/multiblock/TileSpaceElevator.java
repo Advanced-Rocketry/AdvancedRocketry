@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,6 +37,7 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TileSpaceElevator extends TileMultiPowerConsumer implements IModularInventory, ILinkableTile, ITickable {
@@ -82,10 +82,10 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 			boolean blockBroken, IBlockState state) {
 		super.deconstructMultiBlock(world, destroyedPos, blockBroken, state);
 		
-		Entity e = getCapsuleOnLine();
+		Entity entity = getCapsuleOnLine();
 		
-		if(e != null)
-			e.setDead();
+		if(entity != null)
+			entity.setDead();
 
 
 		World otherPlanet;
@@ -253,7 +253,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 
 	public void summonCapsule() {
 		//Don't spawn a new capsule if one exists
-		if(getCapsuleOnLine() != null || isTetherConnected() == false)
+		if(getCapsuleOnLine() != null || !isTetherConnected())
 			return;
 
 		capsule = new EntityElevatorCapsule(world);
@@ -284,8 +284,8 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 	}
 
 	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
+							   EntityPlayer player, World world) {
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, world.provider.getDimension());
 		if(dimBlockPos != null) {
@@ -298,7 +298,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 	}
 
 	@Override
-	public boolean onLinkComplete(ItemStack item, TileEntity entity,
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
 			EntityPlayer player, World myWorld) {
 
 		if(!myWorld.isRemote) {
@@ -372,7 +372,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation( 0, EnumFacing.UP);
 				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation( 0, EnumFacing.NORTH);
 			}
-			SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setIsAnchored( (dimensionBlockPosition == null) ? false : true);
+			SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setIsAnchored(dimensionBlockPosition != null);
 		}
 		dimBlockPos = dimensionBlockPosition;
 	}

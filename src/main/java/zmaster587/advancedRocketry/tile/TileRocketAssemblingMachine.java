@@ -1,16 +1,9 @@
-/*
- * Purpose: validate the rocket structure as well as give feedback to the player as to what needs to be 
- * changed to complete the rocket structure
- * Also will be used to "build" the rocket components from the placed frames, control fuel flow etc
- */
-
 package zmaster587.advancedRocketry.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -40,7 +33,6 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
-import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketEntity;
@@ -53,19 +45,25 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Purpose: validate the rocket structure as well as give feedback to the player as to what needs to be
+ * changed to complete the rocket structure
+ * Also will be used to "build" the rocket components from the placed frames, control fuel flow etc
+ **/
 public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements IButtonInventory, INetworkMachine, IDataSync, IModularInventory, IProgressBar, ILinkableTile {
 
-	private final int MAX_SIZE = 16;
-	private final int MIN_SIZE = 3;
-	private final int MAX_SIZE_Y = 64;
-	private final int MIN_SIZE_Y = 4;
-	private final int MAXSCANDELAY = 10;
-	private final int ENERGYFOROP = 100;
-	//private final int ENERGY = 100;
+	private final static int MAXSCANDELAY = 10;
+	private final static int ENERGYFOROP = 100;
+	private final static int MAX_SIZE = 16;
+	private final static int MAX_SIZE_Y = 64;
+	private final static int MIN_SIZE = 3;
+	private final static int MIN_SIZE_Y = 4;
 
 	protected static final ResourceLocation backdrop =  new ResourceLocation("advancedrocketry","textures/gui/rocketBuilder.png");
 	private static final ProgressBarImage horizontalProgressBar = new ProgressBarImage(89, 9, 81, 17, 176, 0, 80, 15, 0, 2, EnumFacing.EAST, backdrop);
@@ -84,11 +82,11 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	protected AxisAlignedBB bbCache;
 	protected ErrorCodes status;
 	
-	static final Block viableBlocks[] = {AdvancedRocketryBlocks.blockLaunchpad, AdvancedRocketryBlocks.blockLandingPad};
+	private static final Block[] viableBlocks = {AdvancedRocketryBlocks.blockLaunchpad, AdvancedRocketryBlocks.blockLandingPad};
 
 	private List<HashedBlockPosition> blockPos;
 
-	protected static enum ErrorCodes {
+	protected enum ErrorCodes {
 		SUCCESS(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.success")),
 		NOFUEL(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.nofuel")),
 		NOSEAT(LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.noseat")),
@@ -106,7 +104,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 		COMBINEDTHRUST(LibVulpes.proxy.getLocalizedString("msg.rocketbuild.combinedthrust"));
 		
 		String code;
-		private ErrorCodes(String code) {
+		ErrorCodes(String code) {
 			this.code = code;
 		}
 
@@ -116,7 +114,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	public TileRocketAssemblingMachine() {
 		super(100000);
 
-		blockPos = new LinkedList<HashedBlockPosition>();
+		blockPos = new LinkedList<>();
 
 		status = ErrorCodes.UNSCANNED;
 		stats = new StatsRocket();
@@ -166,15 +164,15 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 
 	public int getWeight()  { return stats.getWeight(); }
 
-	public int getThrust() { return (int) (stats.getThrust()); }
+	public int getThrust() { return stats.getThrust(); }
 
 	public float getNeededThrust() {return getWeight();}
 
-	public float getNeededFuel(FuelType fuelType) { return getAcceleration( getGravityMultiplier() ) > 0 ? 2*stats.getBaseFuelRate(fuelType)*MathHelper.sqrt((2*(ARConfiguration.getCurrentConfig().orbit-this.getPos().getY()))/getAcceleration(getGravityMultiplier())) : 0; }
+	public float getNeededFuel(@Nonnull FuelType fuelType) { return getAcceleration( getGravityMultiplier() ) > 0 ? 2*stats.getBaseFuelRate(fuelType)*MathHelper.sqrt((2*(ARConfiguration.getCurrentConfig().orbit-this.getPos().getY()))/getAcceleration(getGravityMultiplier())) : 0; }
 
 	public float getGravityMultiplier () { return DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier(); }
 
-	public int getFuel(FuelType fuelType) {return (int) (stats.getFuelCapacity(fuelType)*ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);}
+	public int getFuel(@Nullable FuelType fuelType) {return (int) (stats.getFuelCapacity(fuelType)*ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);}
 
 	public boolean isBuilding() { return building; }
 
@@ -320,18 +318,20 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 							numBlocks++;
 							
 							//If rocketEngine increaseThrust
+							final float x = xCurr - actualMinX - ((actualMaxX - actualMinX) / 2f);
+							final float z = zCurr - actualMinZ - ((actualMaxZ - actualMinZ) / 2f);
 							if(block instanceof IRocketEngine && (world.getBlockState(belowPos).getBlock().isAir(world.getBlockState(belowPos), world, belowPos) || world.getBlockState(belowPos).getBlock() instanceof BlockLandingPad || world.getBlockState(belowPos).getBlock() == AdvancedRocketryBlocks.blockLaunchpad )) {
 								if (block instanceof BlockNuclearRocketMotor) {
 									nuclearWorkingFluidUseMax += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
 									thrustNuclearNozzleLimit += ((IRocketEngine)block).getThrust(world, currBlockPos);
-								} else if (block instanceof BlockBipropellantRocketMotor || block instanceof BlockAdvancedBipropellantRocketMotor ) {
+								} else if (block instanceof BlockBipropellantRocketMotor) {
 									bipropellantfuelUse += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
 									thrustBipropellant += ((IRocketEngine)block).getThrust(world, currBlockPos);
-								} else if (block instanceof BlockRocketMotor || block instanceof BlockAdvancedRocketMotor ) {
+								} else if (block instanceof BlockRocketMotor) {
 									monopropellantfuelUse += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
 									thrustMonopropellant += ((IRocketEngine)block).getThrust(world, currBlockPos);
 								}
-								stats.addEngineLocation(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f), yCurr - actualMinY, zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f));
+								stats.addEngineLocation(x, yCurr - actualMinY, z);
 							}
 
 							if(block instanceof IFuelTank) {
@@ -351,7 +351,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 							}
 
 							if(block instanceof BlockSeat && world.getBlockState(abovePos).getBlock().isAir(world.getBlockState(abovePos), world, abovePos)) {
-								stats.addPassengerSeat((int)(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f)) , (int)(yCurr  -actualMinY), (int)(zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f)));
+								stats.addPassengerSeat((int) (x), yCurr - actualMinY, (int) (z));
 							}
 
 							if(block instanceof IMiningDrill) {
@@ -399,7 +399,6 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 			int totalFuelUse = bipropellantfuelUse + nuclearWorkingFluidUse + monopropellantfuelUse;
 
 			//Set status
-			//TODO: warn if seat OR satellite missing
 			if(invalidBlock)
 				status = ErrorCodes.INVALIDBLOCK;
 			else if (((fuelCapacityBipropellant > 0 && totalFuel > fuelCapacityBipropellant) || (fuelCapacityMonopropellant > 0 && totalFuel > fuelCapacityMonopropellant) || (fuelCapacityNuclearWorkingFluid > 0 && totalFuel > fuelCapacityNuclearWorkingFluid))
@@ -466,7 +465,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 		NBTTagCompound nbtdata = new NBTTagCompound();
 
 		rocket.writeToNBT(nbtdata);
-		PacketHandler.sendToNearby(new PacketEntity((INetworkEntity)rocket, (byte)0, nbtdata), rocket.world.provider.getDimension(), this.pos, 64);
+		PacketHandler.sendToNearby(new PacketEntity(rocket, (byte)0, nbtdata), rocket.world.provider.getDimension(), this.pos, 64);
 
 		stats.reset();
 		this.status = ErrorCodes.FINISHED;
@@ -481,9 +480,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	/**
 	 * Does not make sure the structure is complete, only gets max bounds!
 	 * @param world the world
-	 * @param x coord to evaluate from
-	 * @param y coord to evaluate from
-	 * @param z coord to evaluate from
+	 * @param pos coords to evaluate from
 	 * @return AxisAlignedBB bounds of structure if valid  otherwise null
 	 */
 	public AxisAlignedBB getRocketPadBounds(World world, BlockPos pos) {
@@ -574,7 +571,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 
 		boundLoop:
 			for(int xx = (int)bb.minX; xx <= (int)bb.maxX; xx++) {
-				for(int zz = (int)bb.minZ; zz <= (int)bb.maxZ && whole; zz++) {
+				for(int zz = (int)bb.minZ; zz <= (int) bb.maxZ; zz++) {
 					Block blockAtSpot = world.getBlockState(new BlockPos(xx, (int)bb.minY-1, zz)).getBlock();
 					boolean contained = false;
 					for(Block b : viableBlocks) {
@@ -658,7 +655,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 
 		blockPos.clear();
 		if(nbt.hasKey("infrastructureLocations")) {
-			int array[] = nbt.getIntArray("infrastructureLocations");
+			int[] array = nbt.getIntArray("infrastructureLocations");
 
 			for(int counter = 0; counter < array.length; counter += 3) {
 				blockPos.add(new HashedBlockPosition(array[counter], array[counter+1], array[counter+2]));
@@ -721,9 +718,8 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
 		if(id == 0) {
-			AxisAlignedBB bb = getRocketPadBounds(world, pos);
 
-			bbCache = bb;
+			bbCache = getRocketPadBounds(world, pos);
 			if(!canScan())
 				return;
 
@@ -737,9 +733,8 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 				return;
 
 			building = true;
-			AxisAlignedBB bb = getRocketPadBounds(world, pos);
 
-			bbCache = bb;
+			bbCache = getRocketPadBounds(world, pos);
 			if(!canScan())
 				return;
 
@@ -763,7 +758,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	protected void updateText() {
 		thrustText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.thrust") + ": ???") :  String.format("%s: %dkN",LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.thrust"), getThrust() * 10));
 		weightText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.weight") + ": ???")  : String.format("%s: %.2fkN", LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.weight"), (getWeight() * 10 * getGravityMultiplier()) ));
-		fuelText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.fuel") + ": ???") :  String.format("%s: %dmb/s", LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.fuel"), (int)getRocketStats().getBaseFuelRate((stats.getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT) > 0) ? FuelType.LIQUID_MONOPROPELLANT : (stats.getFuelCapacity(FuelType.NUCLEAR_WORKING_FLUID) > 0) ? FuelType.NUCLEAR_WORKING_FLUID : FuelType.LIQUID_BIPROPELLANT)));
+		fuelText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.fuel") + ": ???") :  String.format("%s: %dmb/s", LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.fuel"), getRocketStats().getBaseFuelRate((stats.getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT) > 0) ? FuelType.LIQUID_MONOPROPELLANT : (stats.getFuelCapacity(FuelType.NUCLEAR_WORKING_FLUID) > 0) ? FuelType.NUCLEAR_WORKING_FLUID : FuelType.LIQUID_BIPROPELLANT)));
 		accelerationText.setText(isScanning() ? (LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.acc") + ": ???") : String.format("%s: %.2fm/s\u00b2", LibVulpes.proxy.getLocalizedString("msg.rocketbuilder.acc"), getAcceleration(getGravityMultiplier())*20f));
 		if(!world.isRemote) { 
 			if(getRocketPadBounds(world, pos) == null)
@@ -777,7 +772,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 
 		modules.add(new ModulePower(160, 90, this));
 
@@ -894,7 +889,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	public int getData(int id) {
 		switch(id) {
 		case 0:
-			return (int)getRocketStats().getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT);
+			return getRocketStats().getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT);
 		case 1:
 			return getRocketStats().getWeight();
 		case 2:
@@ -924,13 +919,13 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	}
 
 	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
+							   EntityPlayer player, World world) {
 		return true;
 	}
 
 	@Override
-	public boolean onLinkComplete(ItemStack item, TileEntity entity,
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		TileEntity tile = world.getTileEntity(ItemLinker.getMasterCoords(item));
 
@@ -982,14 +977,14 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	}
 
 	public List<IInfrastructure> getConnectedInfrastructure() {
-		List<IInfrastructure> infrastructure = new LinkedList<IInfrastructure>();
+		List<IInfrastructure> infrastructure = new LinkedList<>();
 
 		Iterator<HashedBlockPosition> iter = blockPos.iterator();
 
 		while(iter.hasNext()) {
 			HashedBlockPosition position = iter.next();
 			TileEntity tile = world.getTileEntity(position.getBlockPos());
-			if((tile = world.getTileEntity(position.getBlockPos())) instanceof IInfrastructure) {
+			if(tile instanceof IInfrastructure) {
 				infrastructure.add((IInfrastructure)tile);
 			}
 			else

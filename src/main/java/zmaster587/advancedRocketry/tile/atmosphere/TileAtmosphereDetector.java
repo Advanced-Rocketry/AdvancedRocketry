@@ -66,8 +66,8 @@ public class TileAtmosphereDetector extends TileEntity implements ITickable, IMo
 
 	@Override
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-		List<ModuleBase> btns = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
+		List<ModuleBase> btns = new LinkedList<>();
 
 		Iterator<IAtmosphere> atmIter = AtmosphereRegister.getInstance().getAtmosphereList().iterator();
 
@@ -78,7 +78,7 @@ public class TileAtmosphereDetector extends TileEntity implements ITickable, IMo
 			i++;
 		}
 
-		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<ModuleBase>(), zmaster587.libVulpes.inventory.TextureResources.starryBG, 165, 120, 0, 500);
+		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<>(), zmaster587.libVulpes.inventory.TextureResources.starryBG, 165, 120, 0, 500);
 		modules.add(panningContainer);
 		return modules;
 	}

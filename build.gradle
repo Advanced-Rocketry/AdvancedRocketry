@@ -1,10 +1,8 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
+        jcenter()
+        maven { name = 'forge'; url = "https://files.minecraftforge.net/maven" }
         maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
@@ -16,6 +14,7 @@ buildscript {
 }
 
 
+
 plugins {
   id "com.gradle.build-scan" version "1.9"
   id "com.matthewprenger.cursegradle" version "1.1.0"
@@ -25,9 +24,12 @@ apply plugin: 'java'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "AdvancedRocketry"
-sourceCompatibility = 8
-targetCompatibility = 8
+archivesBaseName = project.archivebase
+
+sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
 
 jar {
         manifest {
@@ -41,12 +43,11 @@ minecraft {
     version = "1.12.2-14.23.4.2739"
     runDir = "run"
     mappings = "snapshot_20170624"
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    
     replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
-    replace "@MAJOR@", version_major
-    replace "@MINOR@", version_minor
-    replace "@REVIS@", version_revis
+    replace "@MAJOR@", project.version_major
+    replace "@MINOR@", project.version_minor
+    replace "@REVIS@", project.version_revis
     replace "@BUILD@", project.getBuildNumber()
     
     replace "%LIBVULPESVERSION%", project.libVulpesVersion
@@ -54,54 +55,12 @@ minecraft {
 
 apply from: "gradle/scripts/jars.gradle"
 apply from: "gradle/scripts/version.gradle"
-
-repositories {
-        maven {
-            name = "mezz.jei"
-            url = "http://dvs1.progwml6.com/files/maven"
-        }
-    ivy {
-            name "industrialcraft-2"
-            artifactPattern "http://jenkins.ic2.player.to/job/IC2_111/39/artifact/build/libs/[module]-[revision].[ext]"
-        }
-    ivy {
-            name "Tesla"
-            artifactPattern "https://addons-origin.cursecdn.com/files/2347/256/[module]-[revision].[ext]"
-        }
-    ivy {
-	    name "GalacticraftCore"
-            artifactPattern "https://micdoodle8.com/new-builds/GC-1.12/174/[module]-[revision].[ext]"
-        }
-//    ivy {
-//            name "EnderIO"
-//            artifactPattern "https://addons-origin.cursecdn.com/files/2238/375/[module]-[revision].[ext]"
-//        }
-    ivy {
-            name "LibVulpes"
-            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/1.12/" + project.libVulpesBuildNum +"/artifact/output/[module]-[revision].[ext]"
-        }
-}
-
-dependencies {
-    compile name: 'industrialcraft-2', version: '2.7.39-ex111-api', ext: 'jar'
-    //compile name: 'Tesla', version: '1.11-1.3.0.51-deobf', ext: 'jar'
-    //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
-    compile name: 'LibVulpes', version: '1.12.2-' + project.libVulpesVersion  + '-' + project.libVulpesBuildNum + '-deobf', ext: 'jar'
-    compile name: 'GalacticraftCore', version: '1.12.2-4.0.1.174', ext: 'jar'
-    
-    // compile against the JEI API
-    deobfCompile "mezz.jei:jei_1.12.2:4.8.0.110:api"
-    // at runtime, use the full JEI jar
-    runtime "mezz.jei:jei_1.12.2:4.8.0.110"
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
-}
+apply from: "gradle/scripts/deps.gradle"
 
 processResources
 {
+    includeEmptyDirs = false
+    
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
@@ -151,10 +110,10 @@ curseforge{
     releaseType = "beta"
     addGameVersion minecraft.version
     mainArtifact(jar) {
-      displayName = "AdvancedRocketry ${project.version} build " + project.getBuildNumber() +  " for " + minecraft.version
+        displayName = "AdvancedRocketry ${project.version} build " + project.getBuildNumber() +  " for " + minecraft.version
     }
     addArtifact (deobfJar){
-    	 displayName = "AdvancedRocketry ${project.version}-deobf build " + project.getBuildNumber() + " for " + minecraft.version
+        displayName = "AdvancedRocketry ${project.version}-deobf build " + project.getBuildNumber() + " for " + minecraft.version
     }
    }
 }
@@ -195,7 +154,7 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
 
 tasks.build.dependsOn makeChangelog
 
-/*buildScan {
+buildScan {
     licenseAgreementUrl = 'https://gradle.com/terms-of-service' 
     licenseAgree = 'yes'                                        
 
@@ -209,4 +168,3 @@ tasks.build.dependsOn makeChangelog
 
     tag System.getProperty('os.name')                                            
 }
-*/

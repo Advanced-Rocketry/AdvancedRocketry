@@ -7,24 +7,24 @@ public interface IMission {
 	/**
 	 * Called when the misson is complete
 	 */
-	public void onMissionComplete();
+	void onMissionComplete();
 
 	/**
 	 * @return Normallized progress of the the mission
 	 */
-	public double getProgress(World world);
+	double getProgress(World world);
 	
 	/**
 	 * @return Satellite ID of the mission
 	 */
-	public long getMissionId();
+	long getMissionId();
 	
 	/**
 	 * @return the dimension the mission originated from
 	 */
-	public int getOriginatingDimention();
+	int getOriginatingDimention();
 
-	public void unlinkInfrastructure(IInfrastructure tile);
+	void unlinkInfrastructure(IInfrastructure tile);
 
 	int getTimeRemainingInSeconds();
 }

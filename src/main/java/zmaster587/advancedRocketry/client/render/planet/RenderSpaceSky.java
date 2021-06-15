@@ -3,8 +3,6 @@ package zmaster587.advancedRocketry.client.render.planet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
@@ -43,11 +41,11 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 	public void renderPlanet2(BufferBuilder buffer, DimensionProperties properties, float size, float alphaMultiplier, double shadowAngle, boolean hasRing) {
 		//ResourceLocation icon, int locationX, int locationY, double zLevel, float planetOrbitalDistance, float alphaMultiplier, double angle, boolean hasAtmosphere, float[] atmColor, float[] ringColor, boolean isGasgiant, boolean hasRings, boolean hasDecorators) {
 
-		ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.player.getPosition());
+		ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.player.getPosition());
 
-		if(object == null)
+		if(spaceObject == null)
 			return;
-		float planetOrbitalDistance = object.getOrbitalDistance();
+		float planetOrbitalDistance = spaceObject.getOrbitalDistance();
 
 		if(properties.isStar()) {
 			if (properties.getStar().isBlackHole()) {
@@ -74,10 +72,10 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				f10 = size * 2f * AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
 				//multiplier = 2;
-				buffer.pos((double) (-f10), 0.0D, (double) (-f10)).tex(0.0D, 0.0D).endVertex();
-				buffer.pos((double) f10, 0.0D, (double) (-f10)).tex(1.0D, 0.0D).endVertex();
-				buffer.pos((double) f10, 0.0D, (double) f10).tex(1.0D, 1.0D).endVertex();
-				buffer.pos((double) (-f10), 0.0D, (double) f10).tex(0.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
 				Tessellator.getInstance().draw();
 				GL11.glPopMatrix();
 
@@ -94,10 +92,10 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 					GlStateManager.color((float) 1, (float) .5, (float) .4, 1f);
 					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 					f10 = size * 40f * AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
-					buffer.pos((double) (-f10), 0.0D, (double) (-f10)).tex(0.0D, 0.0D).endVertex();
-					buffer.pos((double) f10, 0.0D, (double) (-f10)).tex(1.0D, 0.0D).endVertex();
-					buffer.pos((double) f10, 0.0D, (double) f10).tex(1.0D, 1.0D).endVertex();
-					buffer.pos((double) (-f10), 0.0D, (double) f10).tex(0.0D, 1.0D).endVertex();
+					buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+					buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+					buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+					buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
 					Tessellator.getInstance().draw();
 					GL11.glPopMatrix();
 
@@ -111,10 +109,10 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 					f10 = size * 30f * AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
 					//multiplier = 2;
-					buffer.pos((double) (-f10), 0.0D, (double) (-f10)).tex(0.0D, 0.0D).endVertex();
-					buffer.pos((double) f10, 0.0D, (double) (-f10)).tex(1.0D, 0.0D).endVertex();
-					buffer.pos((double) f10, 0.0D, (double) f10).tex(1.0D, 1.0D).endVertex();
-					buffer.pos((double) (-f10), 0.0D, (double) f10).tex(0.0D, 1.0D).endVertex();
+					buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+					buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+					buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+					buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
 					Tessellator.getInstance().draw();
 					GL11.glPopMatrix();
 
@@ -128,10 +126,10 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 					f10 = size * 15f * AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
 					//multiplier = 2;
-					buffer.pos((double) (-f10), 0.0D, (double) (-f10)).tex(0.0D, 0.0D).endVertex();
-					buffer.pos((double) f10, 0.0D, (double) (-f10)).tex(1.0D, 0.0D).endVertex();
-					buffer.pos((double) f10, 0.0D, (double) f10).tex(1.0D, 1.0D).endVertex();
-					buffer.pos((double) (-f10), 0.0D, (double) f10).tex(0.0D, 1.0D).endVertex();
+					buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+					buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+					buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+					buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
 					Tessellator.getInstance().draw();
 					GL11.glPopMatrix();
 				}
@@ -139,14 +137,14 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 			} else {
 				mc.renderEngine.bindTexture(TextureResources.locationSunPng);
 				//Set sun color and distance
-				GlStateManager.color((float) properties.getStar().getColor()[0], (float) properties.getStar().getColor()[1], (float) properties.getStar().getColor()[2], 1);
+				GlStateManager.color(properties.getStar().getColor()[0], properties.getStar().getColor()[1], properties.getStar().getColor()[2], 1);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				float f10 = properties.getStar().getSize() * 15f * AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
 				//multiplier = 2;
-				buffer.pos((double) (-f10), 100.0D, (double) (-f10)).tex(0.0D, 0.0D).endVertex();
-				buffer.pos((double) f10, 100.0D, (double) (-f10)).tex(1.0D, 0.0D).endVertex();
-				buffer.pos((double) f10, 100.0D, (double) f10).tex(1.0D, 1.0D).endVertex();
-				buffer.pos((double) (-f10), 100.0D, (double) f10).tex(0.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 100.0D, -f10).tex(0.0D, 0.0D).endVertex();
+				buffer.pos(f10, 100.0D, -f10).tex(1.0D, 0.0D).endVertex();
+				buffer.pos(f10, 100.0D, f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 100.0D, f10).tex(0.0D, 1.0D).endVertex();
 				Tessellator.getInstance().draw();
 			}
 			return;
@@ -188,10 +186,10 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 		GlStateManager.color(1f, 1f, 1f, alphaMultiplier);
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		buffer.pos((double)(-f10), -10.0D, (double)f10).tex((double)f16, (double)f17).endVertex();
-		buffer.pos((double)f10, -10.0D, (double)f10).tex((double)f14, (double)f17).endVertex();
-		buffer.pos((double)f10, -10.0D, (double)(-f10)).tex((double)f14, (double)f15).endVertex();
-		buffer.pos((double)(-f10), -10.0D, (double)(-f10)).tex((double)f16, (double)f15).endVertex();
+		buffer.pos(-f10, -10.0D, f10).tex(f16, f17).endVertex();
+		buffer.pos(f10, -10.0D, f10).tex(f14, f17).endVertex();
+		buffer.pos(f10, -10.0D, -f10).tex(f14, f15).endVertex();
+		buffer.pos(-f10, -10.0D, -f10).tex(f16, f15).endVertex();
 
 		Tessellator.getInstance().draw();
 		GL11.glPopAttrib();
@@ -314,12 +312,12 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 	protected void rotateAroundAxis() {
 		Vector3F<Float> axis = getRotateAxis();
 		//GL11.glRotatef(90f, axis.x, axis.y, axis.z);
-		ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.player.getPosition());
-		if(obj != null) {
-			GL11.glRotated(obj.getRotation(EnumFacing.UP)*360, 0, 1, 0);
-			GL11.glRotated(obj.getRotation(EnumFacing.EAST)*360, 1, 0, 0);
+		ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.player.getPosition());
+		if(spaceObject != null) {
+			GL11.glRotated(spaceObject.getRotation(EnumFacing.UP)*360, 0, 1, 0);
+			GL11.glRotated(spaceObject.getRotation(EnumFacing.EAST)*360, 1, 0, 0);
 		}
-		//GL11.glRotated(360, obj.getRotation(EnumFacing.EAST), obj.getRotation(EnumFacing.UP), obj.getRotation(EnumFacing.NORTH));
+		//GL11.glRotated(360, spaceObject.getRotation(EnumFacing.EAST), spaceObject.getRotation(EnumFacing.UP), spaceObject.getRotation(EnumFacing.NORTH));
 
 	}
 

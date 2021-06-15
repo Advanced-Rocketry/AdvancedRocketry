@@ -66,7 +66,7 @@ public class MissionOreMining extends MissionResourceCollection {
 					if(asteroid != null) {
 
 						List<StackEntry> stacks2 = asteroid.getHarvest(((ItemAsteroidChip)stack.getItem()).getUUID(stack));
-						List<ItemStack> totalStacksList = new LinkedList<ItemStack>();
+						List<ItemStack> totalStacksList = new LinkedList<>();
 						for(StackEntry entry : stacks2) {
 
 							if(compositionData/(float)maxData >= Math.random())

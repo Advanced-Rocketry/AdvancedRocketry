@@ -10,6 +10,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 
+import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -45,13 +46,12 @@ public class XMLAsteroidLoader {
 	}
 
 	/**
-	 * Load the propery file looking for combinations of temp and pressure
-	 * @param propertyFile
+	 * Load the property file looking for combinations of temp and pressure
 	 * @return  list of singleEntry (order MUST be preserved)
 	 */
 	public List<Asteroid> loadPropertyFile() {
 		Node childNode = doc.getFirstChild().getFirstChild();
-		List<Asteroid> mapping = new LinkedList<Asteroid>();
+		List<Asteroid> mapping = new LinkedList<>();
 
 		while(childNode != null) {
 
@@ -174,7 +174,7 @@ public class XMLAsteroidLoader {
 					if(nodeStack != null && nodeChance != null)
 					{
 						ItemStack stack = getStack(nodeStack.getTextContent());
-						if(stack != null)
+						if(!stack.isEmpty())
 							asteroid.itemStacks.add(stack);
 						else {
 							AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid ore: " + nodeStack.getTextContent());
@@ -184,7 +184,7 @@ public class XMLAsteroidLoader {
 						}
 						
 						try {
-							asteroid.stackProbabilites.add(Float.parseFloat(nodeChance.getTextContent()));
+							asteroid.stackProbabilities.add(Float.parseFloat(nodeChance.getTextContent()));
 						} catch (NumberFormatException e) {
 							AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid stack probability: " + nodeChance.getTextContent());
 							//Make sure the list size syncs
@@ -208,6 +208,7 @@ public class XMLAsteroidLoader {
 		return mapping;
 	}
 
+	@Nonnull
 	public static ItemStack getStack(String text) {
 		//Backwards compat, " " used to be the delimiter
 		String[] splitStr = text.contains(";") ? text.split(";") : text.split(" ");
@@ -221,7 +222,7 @@ public class XMLAsteroidLoader {
 			} catch( NumberFormatException e) {}
 		}
 
-		ItemStack stack = null;
+		ItemStack stack = ItemStack.EMPTY;
 		Block block = Block.getBlockFromName(splitStr[0].trim());
 		if(block == null) {
 			Item item = Item.getByNameOrId(splitStr[0].trim());

@@ -51,7 +51,7 @@ public abstract class GuiProgressBarContainer extends GuiContainer {
         float f = 0.00390625F;
         float f1 = 0.00390625F;
         buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
-        RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, x, y, x + width, y + height, (u + 0) * f, (u + width) * f, (v + 0) * f1, (v + height) * f1);
+        RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, x, y, x + width, y + height, (u /*+ 0*/) * f, (u + width) * f, (v /*+ 0*/) * f1, (v + height) * f1);
         buffer.finishDrawing();
     }
 

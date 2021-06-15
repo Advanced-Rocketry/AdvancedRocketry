@@ -9,11 +9,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemIdWithName extends Item {
 	
-	public void setName(ItemStack stack, String name) {
+	public void setName(@Nonnull ItemStack stack, String name) {
 
 		if(stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
@@ -22,7 +23,7 @@ public class ItemIdWithName extends Item {
 		}
 	}
 
-	public String getName(ItemStack stack) {
+	public String getName(@Nonnull ItemStack stack) {
 		if(stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
 			return nbt.getString("name");
@@ -34,8 +35,7 @@ public class ItemIdWithName extends Item {
 	
 	@Override
     @SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World player,
-			List list, ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
 		if(stack.getItemDamage() == -1) {
 			list.add(ChatFormatting.GRAY + "Unprogrammed");
 		}

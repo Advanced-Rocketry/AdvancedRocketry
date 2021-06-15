@@ -11,6 +11,9 @@ import net.minecraftforge.common.model.IModelPart;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,26 +25,29 @@ public class ModelRocket implements IModel {
 	public static ModelResourceLocation resource = new ModelResourceLocation("advancedrocketry:rocket.obj");
 	
 	@Override
+	@Nonnull
 	public Collection<ResourceLocation> getDependencies() {
-		return new LinkedList<ResourceLocation>();
+		return new LinkedList<>();
 	}
 
 	@Override
+	@Nonnull
 	public Collection<ResourceLocation> getTextures() {
-		List<ResourceLocation> textures = new LinkedList<ResourceLocation>();
+		List<ResourceLocation> textures = new LinkedList<>();
 		textures.add(new ResourceLocation("advancedrocketry:models/combustion.png"));
 		return textures;
 	}
 
 	@Override
+	@Nullable
+	@ParametersAreNonnullByDefault
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
 		
 		IModel subComponent;
 		try {
 			subComponent = ModelLoaderRegistry.getModel(resource);
-			IBakedModel bakedModelCore = subComponent.bake(state, format, bakedTextureGetter);
-			return bakedModelCore;
+			return subComponent.bake(state, format, bakedTextureGetter);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -50,6 +56,7 @@ public class ModelRocket implements IModel {
 	}
 
 	@Override
+	@Nonnull
 	public IModelState getDefaultState() {
 		return State.myState;
 	}

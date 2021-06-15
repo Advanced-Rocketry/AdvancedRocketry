@@ -14,13 +14,13 @@ public interface IStorageChunk {
 	 * @param yCoord
 	 * @param zCoord
 	 */
-	public void pasteInWorld(World world, int xCoord, int yCoord ,int zCoord);
+	void pasteInWorld(World world, int xCoord, int yCoord, int zCoord);
 	
-	public int getSizeX();
-	public int getSizeY();
-	public int getSizeZ();
+	int getSizeX();
+	int getSizeY();
+	int getSizeZ();
 
-	public List<TileEntity> getTileEntityList();
+	List<TileEntity> getTileEntityList();
 
-	public void rotateBy(EnumFacing dir);
+	void rotateBy(EnumFacing dir);
 }

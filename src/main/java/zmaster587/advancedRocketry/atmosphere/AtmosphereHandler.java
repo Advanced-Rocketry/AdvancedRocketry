@@ -1,17 +1,13 @@
 package zmaster587.advancedRocketry.atmosphere;
 
-import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.BlockStaticLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -29,7 +25,6 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketAtmSync;
 import zmaster587.advancedRocketry.util.AtmosphereBlob;
-import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
@@ -45,11 +40,11 @@ public class AtmosphereHandler {
 
 	public static long lastSuffocationTime = Integer.MIN_VALUE;
 	private static final int MAX_BLOB_RADIUS = ((ARConfiguration.getCurrentConfig().atmosphereHandleBitMask & 1) == 1) ? 256 : ARConfiguration.getCurrentConfig().oxygenVentSize;
-	private static HashMap<Integer, AtmosphereHandler> dimensionOxygen = new HashMap<Integer, AtmosphereHandler>();
-	private static HashMap<EntityPlayer, IAtmosphere> prevAtmosphere = new HashMap<EntityPlayer, IAtmosphere>();
+	private static HashMap<Integer, AtmosphereHandler> dimensionOxygen = new HashMap<>();
+	private static HashMap<EntityPlayer, IAtmosphere> prevAtmosphere = new HashMap<>();
 
 	private HashMap<IBlobHandler,AreaBlob> blobs;
-	int dimId;
+	private int dimId;
 
 	//Stores current Atm on the CLIENT
 	public static IAtmosphere currentAtm;
@@ -84,7 +79,7 @@ public class AtmosphereHandler {
 
 	private AtmosphereHandler(int dimId) {
 		this.dimId = dimId;
-		blobs = new HashMap<IBlobHandler,AreaBlob>();
+		blobs = new HashMap<>();
 	}
 
 	@SubscribeEvent
@@ -103,7 +98,7 @@ public class AtmosphereHandler {
 				AtmosphereEvent event2 = new AtmosphereEvent.AtmosphereTickEvent(entity, atmosType);
 				MinecraftForge.EVENT_BUS.post(event2);
 				if(!event2.isCanceled() && !atmosType.isImmune(event.getEntity().getClass()))
-					atmosType.onTick((EntityLivingBase)event.getEntityLiving());
+					atmosType.onTick(event.getEntityLiving());
 			}
 		}
 	}
@@ -132,7 +127,7 @@ public class AtmosphereHandler {
 	}
 
 	/**
-	 * @return true if the dimension has an atmospherehandler Object associated with it
+	 * @return true if the dimension has an AtmosphereHandler Object associated with it
 	 */
 	public static boolean hasAtmosphereHandler(int dimId) {
 		return dimensionOxygen.containsKey(dimId);
@@ -175,28 +170,28 @@ public class AtmosphereHandler {
 			if(handler == null)
 				return; //WTF
 
-			//Block handling for what should and shoudln't exist or what should be on fire
+			//Block handling for what should and shouldn't exist or what should be on fire
 			//Things should be on fire
 			if (handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATED) {
 				if(world.getBlockState(bpos).getBlock().isLeaves(world.getBlockState(bpos), world, bpos)) {
 					world.setBlockToAir(bpos);
-				} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.CACTUS) {
+				} else if (world.getBlockState(bpos).getMaterial() == Material.CACTUS) {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
-				} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.PLANTS) {
+				} else if (world.getBlockState(bpos).getMaterial() == Material.PLANTS) {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
-				} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.VINE) {
+				} else if (world.getBlockState(bpos).getMaterial() == Material.VINE) {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
 				} else if (world.getBlockState(bpos).getBlock().isLeaves(world.getBlockState(bpos), world, bpos)) {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
-				}else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.WOOD) {
+				}else if (world.getBlockState(bpos).getMaterial() == Material.WOOD) {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
-				} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.WEB) {
+				} else if (world.getBlockState(bpos).getMaterial() == Material.WEB) {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
-				} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.CARPET) {
+				} else if (world.getBlockState(bpos).getMaterial() == Material.CARPET) {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
-				} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.CLOTH) {
+				} else if (world.getBlockState(bpos).getMaterial() == Material.CLOTH) {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
-				} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.GOURD) {
+				} else if (world.getBlockState(bpos).getMaterial() == Material.GOURD) {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
 				}
 			}
@@ -204,21 +199,21 @@ public class AtmosphereHandler {
 			else if(!handler.getAtmosphereType(bpos).allowsCombustion()) {
 					if(world.getBlockState(bpos).getBlock().isLeaves(world.getBlockState(bpos), world, bpos)) {
 						world.setBlockToAir(bpos);
-					} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.FIRE) {
+					} else if (world.getBlockState(bpos).getMaterial() == Material.FIRE) {
 						world.setBlockToAir(bpos);
-					} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.CACTUS) {
+					} else if (world.getBlockState(bpos).getMaterial() == Material.CACTUS) {
 						world.setBlockToAir(bpos);
-					} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.PLANTS && world.getBlockState(bpos).getBlock() != Blocks.DEADBUSH) {
+					} else if (world.getBlockState(bpos).getMaterial() == Material.PLANTS && world.getBlockState(bpos).getBlock() != Blocks.DEADBUSH) {
 						world.setBlockState(bpos, Blocks.DEADBUSH.getDefaultState());
-					} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.VINE) {
+					} else if (world.getBlockState(bpos).getMaterial() == Material.VINE) {
 						world.setBlockToAir(bpos);
-					} else if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.GRASS) {
+					} else if (world.getBlockState(bpos).getMaterial() == Material.GRASS) {
 						world.setBlockState(bpos, Blocks.DIRT.getDefaultState());
 					}
 			}
 			//Gasses should automatically vaporize and dissipate
 			if (handler.getAtmosphereType(bpos) == AtmosphereType.VACUUM) {
-				 if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.WATER && world.getBlockState(bpos).getBlock() instanceof IFluidBlock) {
+				 if (world.getBlockState(bpos).getMaterial() == Material.WATER && world.getBlockState(bpos).getBlock() instanceof IFluidBlock) {
 					 IFluidBlock fluidblock = (IFluidBlock)world.getBlockState(bpos).getBlock();
 					 if (fluidblock.getFluid().isGaseous())
 					      world.setBlockToAir(bpos);
@@ -226,7 +221,7 @@ public class AtmosphereHandler {
 			}
 			//Water blocks should also vaporize and disappear
 			if (handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATED || handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATEDNOO2 || handler.getAtmosphereType(bpos) == AtmosphereType.VERYHOT || handler.getAtmosphereType(bpos) == AtmosphereType.VERYHOTNOO2) {
-				if (world.getBlockState(bpos).getBlock().getMaterial(world.getBlockState(bpos)) == Material.WATER) {
+				if (world.getBlockState(bpos).getMaterial() == Material.WATER) {
 					world.setBlockToAir(bpos);
 				}
 			}
@@ -261,7 +256,7 @@ public class AtmosphereHandler {
 	 * @return List of AreaBlobs within the radius from the position
 	 */
 	protected List<AreaBlob> getBlobWithinRadius(HashedBlockPosition pos, int radius) {
-		LinkedList<AreaBlob> list = new LinkedList<AreaBlob>();
+		LinkedList<AreaBlob> list = new LinkedList<>();
 		for(AreaBlob blob : blobs.values()) {
 			if(blob.getRootPosition().getDistance(pos) - radius <= 0) {
 				list.add(blob);
@@ -283,9 +278,7 @@ public class AtmosphereHandler {
 	 * Registers a Blob with the atmosphere handler.  
 	 * Must be called before use
 	 * @param handler IBlobHander to register with
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param pos
 	 */
 	public void registerBlob(IBlobHandler handler, BlockPos pos) {
 		AreaBlob blob = blobs.get(handler);
@@ -300,9 +293,8 @@ public class AtmosphereHandler {
 	 * Registers a Blob with provided blob type
 	 * Must be called before use
 	 * @param handler IBlobHander to register with
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param pos
+	 * @param blob2
 	 */
 	public void registerBlob(IBlobHandler handler, BlockPos pos, AreaBlob blob2) {
 		AreaBlob blob = blobs.get(handler);
@@ -355,9 +347,7 @@ public class AtmosphereHandler {
 	}
 
 	/**
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param pos2
 	 * @return AtmosphereType at this location
 	 */
 	public IAtmosphere getAtmosphereType(BlockPos pos2) {
