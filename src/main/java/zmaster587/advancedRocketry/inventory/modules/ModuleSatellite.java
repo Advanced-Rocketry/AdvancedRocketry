@@ -50,7 +50,7 @@ public class ModuleSatellite extends ModuleSlotArray {
 	@Override
 	public void onChangeRecieved(int slot, int value) {
 		if(satellite != null) {
-			satellite.onChangeRecieved(slot, value);
+			satellite.onChangeReceived(slot, value);
 		}
 	}
 	

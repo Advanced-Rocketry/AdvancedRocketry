@@ -219,7 +219,7 @@ public abstract class SatelliteBase {
 		return 0;
 	}
 	
-	public void onChangeRecieved(int slot, int value) {
+	public void onChangeReceived(int slot, int value) {
 
 	}
 	

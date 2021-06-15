@@ -22,7 +22,7 @@ public interface IMission {
 	/**
 	 * @return the dimension the mission originated from
 	 */
-	int getOriginatingDimention();
+	int getOriginatingDimension();
 
 	void unlinkInfrastructure(IInfrastructure tile);
 

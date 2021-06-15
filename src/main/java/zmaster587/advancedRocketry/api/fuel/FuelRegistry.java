@@ -23,7 +23,7 @@ public class FuelRegistry {
 		//Stores a fuel entry for each type of fuel
 		final HashSet<FuelEntry> fuels;
 		
-		FuelType() {
+		private FuelType() {
 			fuels = new HashSet<>();
 		}
 		
@@ -65,7 +65,8 @@ public class FuelRegistry {
 				if (fuel.fuel == obj)
 					return true;
 			}
-				return false;
+
+			return false;
 		}
 		
 		//Returns the fuel if it exists otherwise null (Helper)

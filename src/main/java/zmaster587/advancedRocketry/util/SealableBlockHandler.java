@@ -125,7 +125,7 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 		blockBanList.remove(block);
 	}
 	
-	public List<Block> getOverridenSealableBlocks()
+	public List<Block> getOverriddenSealableBlocks()
 	{
 		return blockAllowList;
 	}

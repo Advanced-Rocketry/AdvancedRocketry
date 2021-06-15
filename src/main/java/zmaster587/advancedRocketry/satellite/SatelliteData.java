@@ -130,13 +130,13 @@ public abstract class SatelliteData extends SatelliteBase {
 	}
 
 	@Override
-	public void onChangeRecieved(int slot, int value) {
-		lastActionTime = ( lastActionTime & ( ~(0xffffL << (slot*16) ) ) ) | ( ( long )value << (slot*16) );
+	public void onChangeReceived(int slot, int value) {
+		lastActionTime = ( lastActionTime & ( ~(0xffffL << (slot * 16) ) ) ) | ( (long) value << (slot * 16) );
 	}
 
 	@Override
 	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {
-		crafter.sendWindowProperty(container, variableId, (short)(( lastActionTime >>> (localId*16) ) & 0xffff));
+		crafter.sendWindowProperty(container, variableId, (short)(( lastActionTime >>> (localId * 16) ) & 0xffff));
 
 		if(localId == 3)
 			prevLastActionTime=lastActionTime;
