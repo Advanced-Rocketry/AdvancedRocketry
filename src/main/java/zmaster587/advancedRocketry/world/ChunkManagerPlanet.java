@@ -197,31 +197,27 @@ public class ChunkManagerPlanet extends BiomeProvider {
 	}
 
 	@Nonnull
-	public Biome[] getBiomesForGeneration(@Nonnull Biome[] biomes, int x, int z, int width, int height)
+	public Biome[] getBiomesForGeneration(Biome[] biomes, int x, int z, int width, int height)
 	{
 		GenLayerBiomePlanet.setupBiomesForUse(this.biomes);
 		//return super.getBiomesForGeneration(p_76937_1_, p_76937_2_, p_76937_3_, p_76937_4_, p_76937_5_);
 
 		IntCache.resetIntCache();
 
-		if (biomes.length < width * height)
-		{
+		//This null condition WILL be true, and your IDE is LYING to you about it
+		if (biomes == null || biomes.length < width * height) {
 			biomes = new Biome[width * height];
 		}
 
 		int[] aint = this.genBiomes.getInts(x, z, width, height);
 
-		try
-		{
-			for (int i1 = 0; i1 < width * height; ++i1)
-			{
+		try {
+			for (int i1 = 0; i1 < width * height; ++i1) {
 				biomes[i1] = Biome.getBiome(aint[i1], Biomes.OCEAN);//AdvancedRocketryBiomes.instance.getBiomeById(aint[i1]);
 			}
 
 			return biomes;
-		}
-		catch (Throwable throwable)
-		{
+		} catch (Throwable throwable) {
 			CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Invalid Biome id");
 			CrashReportCategory crashreportcategory = crashreport.makeCategory("RawBiomeBlock");
 			crashreportcategory.addCrashSection("biomes[] size", biomes.length);
