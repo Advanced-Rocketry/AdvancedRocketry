@@ -271,6 +271,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private boolean canGenerateGeodes;
 	private boolean canGenerateVolcanos;
 	private boolean canGenerateStructures;
+	private boolean canGenerateCaves;
 	private boolean canDecorate; //Should the button draw shadows, etc.  Clientside
 	private boolean overrideDecoration;
 	private float craterFrequencyMultiplier;
@@ -322,6 +323,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		canGenerateGeodes = false;
 		canGenerateStructures = false;
 		canGenerateVolcanos = false;
+		canGenerateCaves = false;
 		hasRivers = false;
 		craterFrequencyMultiplier = 1f;
 		volcanoFrequencyMultiplier = 1f;
@@ -1558,6 +1560,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		canGenerateGeodes = nbt.getBoolean("canGenerateGeodes");
 		canGenerateStructures = nbt.getBoolean("canGenerateStructures");
 		canGenerateVolcanos = nbt.getBoolean("canGenerateVolcanos");
+		canGenerateCaves = nbt.getBoolean("canGenerateCaves");
 		hasRivers = nbt.getBoolean("hasRivers");
 		geodeFrequencyMultiplier = nbt.getFloat("geodeFrequencyMultiplier");
 		craterFrequencyMultiplier = nbt.getFloat("craterFrequencyMultiplier");
@@ -1766,6 +1769,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setBoolean("canGenerateGeodes", canGenerateGeodes);
 		nbt.setBoolean("canGenerateStructures", canGenerateStructures);
 		nbt.setBoolean("canGenerateVolcanos", canGenerateVolcanos);
+		nbt.setBoolean("canGenerateCaves", canGenerateCaves);
 		nbt.setBoolean("hasRivers", hasRivers);
 		nbt.setFloat("geodeFrequencyMultiplier", geodeFrequencyMultiplier);
 		nbt.setFloat("craterFrequencyMultiplier", craterFrequencyMultiplier);
@@ -1979,7 +1983,15 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public boolean canGenerateStructures() {
 		return canGenerateStructures;
 	}
-	
+
+	public void setGenerateCaves(boolean canGenerateCaves) {
+		this.canGenerateCaves = canGenerateCaves;
+	}
+
+	public boolean canGenerateCaves() {
+		return this.canGenerateCaves;
+	}
+
 	public float getRenderSizePlanetView()
 	{
 		return (isMoon() ? 8f : 10f)*Math.max(this.getGravitationalMultiplier()*this.getGravitationalMultiplier(), .5f)*100;
