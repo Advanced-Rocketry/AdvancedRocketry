@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.util;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.w3c.dom.Document;
@@ -48,9 +49,9 @@ public class XMLAsteroidLoader {
 	 * @param propertyFile
 	 * @return  list of singleEntry (order MUST be preserved)
 	 */
-	public List<AsteroidSmall> loadPropertyFile() {
+	public List<Asteroid> loadPropertyFile() {
 		Node childNode = doc.getFirstChild().getFirstChild();
-		List<AsteroidSmall> mapping = new LinkedList<AsteroidSmall>();
+		List<Asteroid> mapping = new LinkedList<Asteroid>();
 
 		while(childNode != null) {
 
@@ -59,7 +60,7 @@ public class XMLAsteroidLoader {
 				continue;
 			}
 
-			AsteroidSmall asteroid = new AsteroidSmall();
+			Asteroid asteroid = new Asteroid();
 
 			if(childNode.hasAttributes()) {
 				NamedNodeMap att = childNode.getAttributes();
@@ -143,6 +144,18 @@ public class XMLAsteroidLoader {
 				}
 				else
 					asteroid.timeMultiplier = 1f;
+
+				node = att.getNamedItem("baseStack");
+				if(node != null) {
+					ItemStack stack = getStack(node.getTextContent());
+					if(stack != null)
+						asteroid.baseStack = (stack);
+					else {
+						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid baseStack: " + node.getTextContent());
+					}
+				}
+				else
+					asteroid.baseStack = new ItemStack(Blocks.COBBLESTONE);
 			}
 			Node asteroidNode = childNode.getFirstChild();
 

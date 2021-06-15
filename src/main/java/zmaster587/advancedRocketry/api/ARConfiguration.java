@@ -19,7 +19,7 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereVacuum;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.advancedRocketry.util.AsteroidSmall;
+import zmaster587.advancedRocketry.util.Asteroid;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
 
 import java.io.IOException;
@@ -171,9 +171,9 @@ public class ARConfiguration {
 			out.writeDouble((Double)value);
 		else if(Boolean.class.isAssignableFrom(type) || type == boolean.class)
 			out.writeBoolean((Boolean)value);
-		else if(AsteroidSmall.class.isAssignableFrom(type))
+		else if(Asteroid.class.isAssignableFrom(type))
 		{
-			AsteroidSmall asteroid = (AsteroidSmall)value;
+			Asteroid asteroid = (Asteroid)value;
 			out.writeString(asteroid.ID);
 			out.writeInt(asteroid.distance);
 			out.writeInt(asteroid.mass);
@@ -248,9 +248,9 @@ public class ARConfiguration {
 		{
 			return in.readString(256);
 		}
-		else if(AsteroidSmall.class.isAssignableFrom(type))
+		else if(Asteroid.class.isAssignableFrom(type))
 		{
-			AsteroidSmall asteroid = new AsteroidSmall();
+			Asteroid asteroid = new Asteroid();
 			
 			asteroid.ID = in.readString(128);
 			asteroid.distance = in.readInt();
@@ -1074,11 +1074,11 @@ public class ARConfiguration {
 	@ConfigProperty
 	public boolean lockUI;
 
-	@ConfigProperty(needsSync=true, keyType=String.class, valueType=AsteroidSmall.class)
-	public HashMap<String, AsteroidSmall> asteroidTypes = new HashMap<String, AsteroidSmall>();
+	@ConfigProperty(needsSync=true, keyType=String.class, valueType= Asteroid.class)
+	public HashMap<String, Asteroid> asteroidTypes = new HashMap<String, Asteroid>();
 
 	@ConfigProperty
-	public HashMap<String, AsteroidSmall> prevAsteroidTypes = new HashMap<String, AsteroidSmall>();
+	public HashMap<String, Asteroid> prevAsteroidTypes = new HashMap<String, Asteroid>();
 
 	@ConfigProperty
 	public int oxygenVentSize;

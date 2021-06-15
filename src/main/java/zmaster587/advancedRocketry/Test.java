@@ -4,7 +4,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.util.AsteroidSmall;
+import zmaster587.advancedRocketry.util.Asteroid;
 
 import java.util.LinkedList;
 public class Test {
@@ -81,7 +81,7 @@ public class Test {
 		return new BlockPos(2*ARConfiguration.getCurrentConfig().stationSize*x + ARConfiguration.getCurrentConfig().stationSize/2,0,2*ARConfiguration.getCurrentConfig().stationSize*z + ARConfiguration.getCurrentConfig().stationSize/2);
 	}
 	
-	public static AsteroidSmall testeroid = new AsteroidSmall();
+	public static Asteroid testeroid = new Asteroid();
 	
 	static {
 		testeroid.distance = 10;

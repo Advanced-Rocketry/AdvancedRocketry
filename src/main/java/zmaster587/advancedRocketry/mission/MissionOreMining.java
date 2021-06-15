@@ -17,8 +17,8 @@ import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
-import zmaster587.advancedRocketry.util.AsteroidSmall;
-import zmaster587.advancedRocketry.util.AsteroidSmall.StackEntry;
+import zmaster587.advancedRocketry.util.Asteroid;
+import zmaster587.advancedRocketry.util.Asteroid.StackEntry;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
 import java.util.LinkedList;
@@ -61,7 +61,7 @@ public class MissionOreMining extends MissionResourceCollection {
 				if(distanceData/(double)maxData > Math.random()) {
 					ItemStack[] stacks;
 
-					AsteroidSmall asteroid = ARConfiguration.getCurrentConfig().asteroidTypes.get(((ItemAsteroidChip)stack.getItem()).getType(stack));
+					Asteroid asteroid = ARConfiguration.getCurrentConfig().asteroidTypes.get(((ItemAsteroidChip)stack.getItem()).getType(stack));
 
 					if(asteroid != null) {
 

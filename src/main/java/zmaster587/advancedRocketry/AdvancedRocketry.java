@@ -1164,7 +1164,7 @@ public class AdvancedRocketry {
 		XMLAsteroidLoader load = new XMLAsteroidLoader();
 		try {
 			load.loadFile(file);
-			for(AsteroidSmall asteroid : load.loadPropertyFile()) {
+			for(Asteroid asteroid : load.loadPropertyFile()) {
 				zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().asteroidTypes.put(asteroid.ID, asteroid);
 			}
 		} catch (IOException e) {

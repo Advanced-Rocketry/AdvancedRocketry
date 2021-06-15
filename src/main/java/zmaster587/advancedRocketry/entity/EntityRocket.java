@@ -1318,7 +1318,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			ItemStack stack = storage.getGuidanceComputer().getStackInSlot(0);
 
-			AsteroidSmall asteroid = ARConfiguration.getCurrentConfig().asteroidTypes.get(((ItemAsteroidChip)stack.getItem()).getType(stack));
+			Asteroid asteroid = ARConfiguration.getCurrentConfig().asteroidTypes.get(((ItemAsteroidChip)stack.getItem()).getType(stack));
 
 			if(asteroid != null) {
 				asteroidDrillingMult = asteroid.timeMultiplier;

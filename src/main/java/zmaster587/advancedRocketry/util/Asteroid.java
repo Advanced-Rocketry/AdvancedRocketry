@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class AsteroidSmall {
+public class Asteroid {
 	public String ID;
 	public int distance;					//distance from the star, impacts fuelcost
 	public int mass;						//factor of the amount of material total
@@ -18,13 +18,14 @@ public class AsteroidSmall {
 	public float richnessVariability;		//variability of richness
 	public float probability;				//probability of the asteroid spawning
 	public float timeMultiplier;
+	public ItemStack baseStack;
 	public List<Float> stackProbabilites;	//
 	public List<ItemStack> itemStacks;
 	public static Random rand = new Random();
 	private static final int precision = 1000;
 	
 	
-	public AsteroidSmall() {
+	public Asteroid() {
 		stackProbabilites = new LinkedList<Float>();
 		itemStacks = new LinkedList<ItemStack>();
 	}
@@ -54,7 +55,8 @@ public class AsteroidSmall {
 		int numOres = (int) (myMass*(richness + rand.nextFloat()*richnessVariability - richnessVariability/2f));
 		
 		StackEntry entry = new StackEntry();
-		entry.stack = new ItemStack(Blocks.COBBLESTONE, myMass - numOres);
+		baseStack.setCount( myMass - numOres);
+		entry.stack = baseStack;
 		entry.variablility = (int)(uncertainty*entry.stack.getCount());
 		entry.midpoint =  (int)(entry.variablility*rand.nextFloat() - uncertainty*entry.variablility/2f);
 		

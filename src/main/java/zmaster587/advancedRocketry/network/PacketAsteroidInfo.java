@@ -6,20 +6,20 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.util.AsteroidSmall;
+import zmaster587.advancedRocketry.util.Asteroid;
 import zmaster587.libVulpes.network.BasePacket;
 
 import java.io.IOException;
 
 public class PacketAsteroidInfo extends BasePacket {
 
-	AsteroidSmall asteroid;
+	Asteroid asteroid;
 
 	public PacketAsteroidInfo() {
-		asteroid = new AsteroidSmall();
+		asteroid = new Asteroid();
 	}
 
-	public PacketAsteroidInfo(AsteroidSmall asteroid) {
+	public PacketAsteroidInfo(Asteroid asteroid) {
 		this();
 		this.asteroid = asteroid;
 	}

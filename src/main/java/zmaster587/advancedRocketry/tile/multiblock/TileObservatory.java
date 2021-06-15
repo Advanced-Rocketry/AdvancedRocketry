@@ -23,8 +23,8 @@ import zmaster587.advancedRocketry.inventory.modules.ModuleData;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
-import zmaster587.advancedRocketry.util.AsteroidSmall;
-import zmaster587.advancedRocketry.util.AsteroidSmall.StackEntry;
+import zmaster587.advancedRocketry.util.Asteroid;
+import zmaster587.advancedRocketry.util.Asteroid.StackEntry;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -326,7 +326,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 
 			int g = 0;
-			AsteroidSmall asteroidSmol;
+			Asteroid asteroidSmol;
 			if(lastButton != -1 && lastType != null && !lastType.isEmpty() && (asteroidSmol = ARConfiguration.getCurrentConfig().asteroidTypes.get(lastType)) != null) {
 				List<StackEntry> harvestList = asteroidSmol.getHarvest(lastSeed + lastButton, Math.max(1 - ((Math.min(getDataAmt(DataType.COMPOSITION),2000)  + Math.min(getDataAmt(DataType.MASS), 2000) )/4000f), 0));
 				for(StackEntry entry : harvestList) {
@@ -347,9 +347,9 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			//Calculate Types
 			int totalAmountAllowed = 10;
 			float totalWeight = 0;
-			List<AsteroidSmall> viableTypes = new LinkedList<AsteroidSmall>();
+			List<Asteroid> viableTypes = new LinkedList<Asteroid>();
 			for(String str :  ARConfiguration.getCurrentConfig().asteroidTypes.keySet()) {
-				AsteroidSmall asteroid = ARConfiguration.getCurrentConfig().asteroidTypes.get(str);
+				Asteroid asteroid = ARConfiguration.getCurrentConfig().asteroidTypes.get(str);
 				if(asteroid.distance <= getMaxDistance()) {
 					totalWeight += asteroid.getProbability();
 					viableTypes.add(asteroid);
@@ -357,9 +357,9 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			}
 
 			//Yeah, eww
-			List<AsteroidSmall> finalList = new LinkedList<AsteroidSmall>();
+			List<Asteroid> finalList = new LinkedList<Asteroid>();
 			Random rand = new Random(lastSeed);
-			for(AsteroidSmall asteroid : viableTypes) {
+			for(Asteroid asteroid : viableTypes) {
 				for(int i = 0; i < totalAmountAllowed; i++) {
 					if(asteroid.getProbability()/totalWeight >= rand.nextFloat())
 						finalList.add(asteroid);
@@ -368,7 +368,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 
 			for(int i = 0; i < finalList.size(); i++) {
-				AsteroidSmall asteroid = finalList.get(i);
+				Asteroid asteroid = finalList.get(i);
 
 				ModuleButton button = new ModuleButton(0, i*18, LIST_OFFSET + i, asteroid.getName(), this, TextureResources.buttonAsteroid, 72, 18);
 
