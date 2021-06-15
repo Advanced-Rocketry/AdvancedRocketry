@@ -274,9 +274,9 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 
 		int[] intArray = new int[connectedSatellites.size() * 2];
 
-		for( int i = 0; i < connectedSatellites.size()*  2; i += 2 ) {
+		for( int i = 0; i < connectedSatellites.size() * 2; i += 2 ) {
 			intArray[i] = (connectedSatellites.get(i / 2)).intValue();
-			intArray[i+1] = (int) ((connectedSatellites.get(i / 2) >>> 32));
+			intArray[i + 1] = (int) ((connectedSatellites.get(i / 2) >>> 32));
 		}
 
 		nbt.setIntArray("satilliteList", intArray);
@@ -290,7 +290,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 
 		int[] intArray = nbt.getIntArray("satilliteList");
 		connectedSatellites.clear();
-		for( int i = 0; i < intArray.length/2; i += 2 ) {
+		for( int i = 0; i < intArray.length / 2; i += 2 ) {
 			connectedSatellites.add(intArray[i] | (((long)intArray[i + 1]) << 32));
 		}
 

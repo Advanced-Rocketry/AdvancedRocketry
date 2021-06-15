@@ -397,24 +397,31 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 * @param fuelType
 	 * @return the amount of fuel stored in the rocket
 	 */
-	public int getFuelAmount(FuelType fuelType) {
-		if (fuelType == FuelType.LIQUID_MONOPROPELLANT) {
-			int amount = dataManager.get(fuelLevelMonopropellant);
-			stats.setFuelAmount(FuelType.LIQUID_MONOPROPELLANT,amount);
-			return amount;
-		} else if (fuelType == FuelType.LIQUID_BIPROPELLANT) {
-			int amount = dataManager.get(fuelLevelBipropellant);
-			stats.setFuelAmount(FuelType.LIQUID_BIPROPELLANT,amount);
-			return amount;
-		} else if (fuelType == FuelType.LIQUID_OXIDIZER) {
-			int amount = dataManager.get(fuelLevelOxidizer);
-			stats.setFuelAmount(FuelType.LIQUID_OXIDIZER,amount);
-			return amount;
-		} else if (fuelType == FuelType.NUCLEAR_WORKING_FLUID) {
-			int amount = dataManager.get(fuelLevelNuclearWorkingFluid);
-			stats.setFuelAmount(FuelType.NUCLEAR_WORKING_FLUID,amount);
+	public int getFuelAmount(@Nullable FuelType fuelType) {
+		if(fuelType != null) {
+			int amount;
+
+			switch(fuelType) {
+				case LIQUID_MONOPROPELLANT:
+					amount = dataManager.get(fuelLevelMonopropellant);
+					break;
+				case LIQUID_BIPROPELLANT:
+					amount = dataManager.get(fuelLevelBipropellant);
+					break;
+				case LIQUID_OXIDIZER:
+					amount = dataManager.get(fuelLevelOxidizer);
+					break;
+				case NUCLEAR_WORKING_FLUID:
+					amount = dataManager.get(fuelLevelNuclearWorkingFluid);
+					break;
+				default:
+					return 0;
+			}
+
+			stats.setFuelAmount(fuelType, amount);
 			return amount;
 		}
+
 		return 0;
 	}
 
@@ -424,7 +431,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 * @param amount amount of fuel to add
 	 * @return the amount of fuel added
 	 */
-	public int addFuelAmount(FuelType fuelType, int amount) {
+	public int addFuelAmount(@Nonnull FuelType fuelType, int amount) {
 		int ret = stats.addFuelAmount(fuelType, amount);
 		setFuelAmount(fuelType, stats.getFuelAmount(fuelType));
 		return ret;
@@ -435,7 +442,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 * @param fuelType
 	 * @param amt sets the amount of monopropellant fuel in the rocket
 	 */
-	public void setFuelAmount(FuelType fuelType, int amt) {
+	public void setFuelAmount(@Nonnull FuelType fuelType, int amt) {
 		if (fuelType == FuelType.LIQUID_MONOPROPELLANT) {
 			dataManager.set(fuelLevelMonopropellant, amt);
 			dataManager.setDirty(fuelLevelMonopropellant);
@@ -455,13 +462,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 * @param fuelType sets the type of fuel to set a rate for
 	 * @param rate sets the rate of fuel in the rocket
 	 */
-	public void setFuelConsumptionRate(FuelType fuelType, int rate) { stats.setFuelRate(fuelType, rate); }
+	public void setFuelConsumptionRate(@Nonnull FuelType fuelType, int rate) { stats.setFuelRate(fuelType, rate); }
 
 	/**
 	 * @param fuelType is the fuel type to get
 	 * @return gets the fuel capacity of the rocket
 	 */
-	public int getFuelCapacity(FuelType fuelType) {
+	public int getFuelCapacity(@Nullable FuelType fuelType) {
 		return stats.getFuelCapacity(fuelType);
 	}
 
@@ -469,13 +476,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 * @param fuelType is the fuel type to get
 	 * @return the rate of fuel consumption for the rocket
 	 */
-	public int getFuelConsumptionRate(FuelType fuelType) {
+	public int getFuelConsumptionRate(@Nullable FuelType fuelType) {
 		return stats.getFuelRate(fuelType);
 	}
 
 	/**
 	 * @return the fuel type that this rocket uses, null if the rocket does not use any
 	 */
+	@Nullable
 	public FuelType getRocketFuelType() {
 		if (getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT) > 0)
 			return FuelType.LIQUID_MONOPROPELLANT;
@@ -576,19 +584,19 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			if(heldItem.getItem() instanceof ItemLinker) {
 				isHoldingFluidItemOrLinker = true;
+
 				if(ItemLinker.isSet(heldItem)) {
-
-
 					TileEntity tile = this.world.getTileEntity(ItemLinker.getMasterCoords(heldItem));
 
 					if(tile instanceof IInfrastructure) {
 						IInfrastructure infrastructure = (IInfrastructure)tile;
+
 						if(this.getDistance(ItemLinker.getMasterX(heldItem), this.posY, ItemLinker.getMasterZ(heldItem)) < infrastructure.getMaxLinkDistance() + Math.max(storage.getSizeX(), storage.getSizeZ())) {
 							if(!connectedInfrastructure.contains(tile)) {
-
 								linkInfrastructure(infrastructure);
+
 								if(!world.isRemote) {
-									player.sendMessage(new TextComponentString("Linked Sucessfully"));
+									player.sendMessage(new TextComponentString("Linked successfully"));
 								}
 								ItemLinker.resetPosition(heldItem);
 
@@ -605,21 +613,27 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				}
 				else if(!world.isRemote)
 					player.sendMessage(new TextComponentString("Nothing to be linked"));
-				return false;
-			}
 
+				return false;
+			} //End of if(heldItem.getItem() instanceof ItemLinker)
 			else if((FluidUtils.containsFluid(heldItem) && FluidUtils.getFluidForItem(heldItem) != null) && ARConfiguration.getCurrentConfig().canBeFueledByHand) {
 				fluidStack = FluidUtils.getFluidForItem(heldItem);
+
 				if ((canRocketFitFluid(fluidStack))) {
 					isHoldingFluidItemOrLinker = true;
-					FuelType type = getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT && FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid()) ? FuelType.LIQUID_OXIDIZER : getRocketFuelType();
+
+					FuelType type = getRocketFuelType();
+					if(type == null)
+						return false;
+
+					if (getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT && FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid()))
+						type = FuelType.LIQUID_OXIDIZER;
 
 					stats.setFuelRate(type, (int) (stats.getBaseFuelRate(type) * FuelRegistry.instance.getMultiplier(type, fluidStack.getFluid())));
 					FluidTank rocketFakeTank = new FluidTank(getFuelCapacity(type) - getFuelAmount(type));
 					FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
 					this.addFuelAmount(type, rocketFakeTank.getFluidAmount());
 				}
-				return true;
 			}
 		}
 
@@ -688,7 +702,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 * @return boolean on whether the rocket is burning any type of fuel at the current moment, including all fuel types
 	 */
 	public boolean isBurningFuel() {
-		return (((getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT ) ? getFuelAmount(getRocketFuelType()) > 0 && getFuelAmount(FuelType.LIQUID_OXIDIZER) > 0 : getFuelAmount(getRocketFuelType()) > 0)  || !ARConfiguration.getCurrentConfig().rocketRequireFuel) && ((!this.getPassengers().isEmpty() && getPassengerMovingForward() > 0) || !isInOrbit());
+		FuelType fuelType = getRocketFuelType();
+		return (((fuelType == FuelType.LIQUID_BIPROPELLANT ) ? getFuelAmount(fuelType) > 0 && getFuelAmount(FuelType.LIQUID_OXIDIZER) > 0 : getFuelAmount(fuelType) > 0)  || !ARConfiguration.getCurrentConfig().rocketRequireFuel) && ((!this.getPassengers().isEmpty() && getPassengerMovingForward() > 0) || !isInOrbit());
 	}
 
 	public float getPassengerMovingForward() {
@@ -1854,7 +1869,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	}
 
 	protected void readNetworkableNBT(NBTTagCompound nbt) {
-		//Normal function checks for the existance of the data anyway
+		//Normal function checks for the existence of the data anyway
 		readEntityFromNBT(nbt);
 	}
 
@@ -1867,9 +1882,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		setRCS(rcs_mode);
 		stats.readFromNBT(nbt);
 
-		setFuelAmount(getRocketFuelType(), stats.getFuelAmount(getRocketFuelType()));
-		if (getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT)
-			setFuelAmount(FuelType.LIQUID_OXIDIZER, stats.getFuelAmount(FuelType.LIQUID_OXIDIZER));
+		FuelType fuelType = getRocketFuelType();
+		if(fuelType != null) {
+			setFuelAmount(fuelType, stats.getFuelAmount(fuelType));
+			if (getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT)
+				setFuelAmount(FuelType.LIQUID_OXIDIZER, stats.getFuelAmount(FuelType.LIQUID_OXIDIZER));
+		}
 
 		setInFlight(isInFlight = nbt.getBoolean("flight"));
 
@@ -2312,8 +2330,19 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	@Override
 	public float getNormallizedProgress(int id) {
-		if(id == 0)
-			return (getRocketFuelType() == null ? 0 : ((getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT) ? getFuelAmount(FuelType.LIQUID_OXIDIZER) : 0 ) + getFuelAmount(getRocketFuelType())) / (float)(getFuelCapacity(getRocketFuelType()) + ((getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT) ? getFuelCapacity(FuelType.LIQUID_OXIDIZER) : 0 ));
+		FuelType fuelType = getRocketFuelType();
+		
+		if(id == 0 && fuelType != null) {
+			switch (fuelType) {
+				case LIQUID_BIPROPELLANT:
+					return (getFuelAmount(FuelType.LIQUID_OXIDIZER) / (float) getFuelCapacity(FuelType.LIQUID_OXIDIZER) +
+							getFuelAmount(fuelType)) / (float) getFuelCapacity(fuelType);
+				case LIQUID_MONOPROPELLANT:
+				case NUCLEAR_WORKING_FLUID:
+					return getFuelAmount(fuelType) / (float) getFuelCapacity(fuelType);
+			}
+		}
+
 		return 0;
 	}
 

@@ -7,6 +7,8 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -61,7 +63,7 @@ public abstract class EntityRocketBase extends Entity {
 	 * @param fuelType
 	 * @return the amount of fuel stored in the rocket
 	 */
-	public abstract int getFuelAmount(FuelRegistry.FuelType fuelType);
+	public abstract int getFuelAmount(@Nullable FuelRegistry.FuelType fuelType);
 
 	/**
 	 * Adds fuel and updates the datawatcher
@@ -69,36 +71,37 @@ public abstract class EntityRocketBase extends Entity {
 	 * @param amount amount of fuel to add
 	 * @return the amount of fuel added
 	 */
-	public abstract int addFuelAmount(FuelRegistry.FuelType fuelType, int amount);
+	public abstract int addFuelAmount(@Nonnull FuelRegistry.FuelType fuelType, int amount);
 
 	/**
 	 * Updates the data option
 	 * @param fuelType
 	 * @param amt sets the amount of monopropellant fuel in the rocket
 	 */
-	public abstract void setFuelAmount(FuelRegistry.FuelType fuelType, int amt);
+	public abstract void setFuelAmount(@Nonnull FuelRegistry.FuelType fuelType, int amt);
 
 	/**
 	 * @param fuelType sets the type of fuel to set a rate for
 	 * @param rate sets the rate of fuel in the rocket
 	 */
-	public abstract void setFuelConsumptionRate(FuelRegistry.FuelType fuelType, int rate);
+	public abstract void setFuelConsumptionRate(@Nonnull FuelRegistry.FuelType fuelType, int rate);
 
 	/**
 	 * @param fuelType is the fuel type to get
 	 * @return gets the fuel capacity of the rocket
 	 */
-	public abstract int getFuelCapacity(FuelRegistry.FuelType fuelType);
+	public abstract int getFuelCapacity(@Nullable FuelRegistry.FuelType fuelType);
 
 	/**
 	 * @param fuelType is the fuel type to get
 	 * @return the rate of fuel consumption for the rocket
 	 */
-	public abstract int getFuelConsumptionRate(FuelRegistry.FuelType fuelType);
+	public abstract int getFuelConsumptionRate(@Nullable FuelRegistry.FuelType fuelType);
 
 	/**
 	 * @return the fuel type that this rocket uses, null if the rocket does not use any
 	 */
+	@Nullable
 	public abstract FuelRegistry.FuelType getRocketFuelType();
 
 	/**

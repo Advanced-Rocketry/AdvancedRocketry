@@ -1,9 +1,3 @@
-/*
- * Purpose: validate the rocket structure as well as give feedback to the player as to what needs to be 
- * changed to complete the rocket structure
- * Also will be used to "build" the rocket components from the placed frames, control fuel flow etc
- */
-
 package zmaster587.advancedRocketry.tile;
 
 import io.netty.buffer.ByteBuf;
@@ -52,10 +46,16 @@ import zmaster587.libVulpes.util.IconResource;
 import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Purpose: validate the rocket structure as well as give feedback to the player as to what needs to be
+ * changed to complete the rocket structure
+ * Also will be used to "build" the rocket components from the placed frames, control fuel flow etc
+ **/
 public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements IButtonInventory, INetworkMachine, IDataSync, IModularInventory, IProgressBar, ILinkableTile {
 
 	private final static int MAXSCANDELAY = 10;
@@ -82,7 +82,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	protected AxisAlignedBB bbCache;
 	protected ErrorCodes status;
 	
-	static final Block[] viableBlocks = {AdvancedRocketryBlocks.blockLaunchpad, AdvancedRocketryBlocks.blockLandingPad};
+	private static final Block[] viableBlocks = {AdvancedRocketryBlocks.blockLaunchpad, AdvancedRocketryBlocks.blockLandingPad};
 
 	private List<HashedBlockPosition> blockPos;
 
@@ -168,11 +168,11 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 
 	public float getNeededThrust() {return getWeight();}
 
-	public float getNeededFuel(FuelType fuelType) { return getAcceleration( getGravityMultiplier() ) > 0 ? 2*stats.getBaseFuelRate(fuelType)*MathHelper.sqrt((2*(ARConfiguration.getCurrentConfig().orbit-this.getPos().getY()))/getAcceleration(getGravityMultiplier())) : 0; }
+	public float getNeededFuel(@Nonnull FuelType fuelType) { return getAcceleration( getGravityMultiplier() ) > 0 ? 2*stats.getBaseFuelRate(fuelType)*MathHelper.sqrt((2*(ARConfiguration.getCurrentConfig().orbit-this.getPos().getY()))/getAcceleration(getGravityMultiplier())) : 0; }
 
 	public float getGravityMultiplier () { return DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier(); }
 
-	public int getFuel(FuelType fuelType) {return (int) (stats.getFuelCapacity(fuelType)*ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);}
+	public int getFuel(@Nullable FuelType fuelType) {return (int) (stats.getFuelCapacity(fuelType)*ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);}
 
 	public boolean isBuilding() { return building; }
 

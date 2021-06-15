@@ -22,6 +22,9 @@ import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 
 	private final static int MAX_SIZE = 17, MAX_SIZE_Y = 17, MIN_SIZE = 3, MIN_SIZE_Y = 3;
@@ -305,7 +308,7 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 	}
 
 	@Override
-	public float getNeededFuel(FuelType fuelType) {
+	public float getNeededFuel(@Nonnull FuelType fuelType) {
 		return getAcceleration(DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier()) > 0 ? stats.getFuelRate(fuelType) : 0;
 	}
 

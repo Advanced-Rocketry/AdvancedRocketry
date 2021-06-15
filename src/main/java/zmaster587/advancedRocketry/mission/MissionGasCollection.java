@@ -23,7 +23,7 @@ import java.util.LinkedList;
 public class MissionGasCollection extends MissionResourceCollection {
 
 
-	Fluid gasFluid;
+	private Fluid gasFluid;
 	public MissionGasCollection() {
 		super();
 	}
@@ -62,9 +62,12 @@ public class MissionGasCollection extends MissionResourceCollection {
 		
 		EntityStationDeployedRocket rocket = new EntityStationDeployedRocket(world, rocketStorage, rocketStats, x, y, z);
 
-		rocket.setFuelAmount(rocket.getRocketFuelType(), 0);
-		if (rocket.getRocketFuelType() == FuelRegistry.FuelType.LIQUID_BIPROPELLANT)
-			rocket.setFuelAmount(FuelRegistry.FuelType.LIQUID_OXIDIZER, 0);
+		FuelRegistry.FuelType fuelType = rocket.getRocketFuelType();
+		if(fuelType != null) {
+			rocket.setFuelAmount(fuelType, 0);
+			if (fuelType == FuelRegistry.FuelType.LIQUID_BIPROPELLANT)
+				rocket.setFuelAmount(FuelRegistry.FuelType.LIQUID_OXIDIZER, 0);
+		}
 		rocket.readMissionPersistentNBT(missionPersistantNBT);
 
 		EnumFacing dir = rocket.forwardDirection;

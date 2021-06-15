@@ -8,6 +8,8 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -191,24 +193,27 @@ public class StatsRocket {
 	 * @param type type of fuel to check
 	 * @return the amount of fuel of the type currently contained in the stat
 	 */
-	public int getFuelAmount(FuelRegistry.FuelType type) {
-		switch(type) {
-		case WARP:
-			return fuelWarp;
-		case IMPULSE:
-			return fuelImpulse;
-		case ION:
-			return fuelIon;
-		case LIQUID_MONOPROPELLANT:
-			return fuelMonopropellant;
-		case LIQUID_BIPROPELLANT:
-			return fuelBipropellant;
-		case LIQUID_OXIDIZER:
-			return fuelOxidizer;
-		case NUCLEAR_WORKING_FLUID:
-			return fuelNuclearWorkingFluid;
-		}
-		return 0;
+	public int getFuelAmount(@Nullable FuelRegistry.FuelType type) {
+	    if(type != null) {
+            switch (type) {
+                case WARP:
+                    return fuelWarp;
+                case IMPULSE:
+                    return fuelImpulse;
+                case ION:
+                    return fuelIon;
+                case LIQUID_MONOPROPELLANT:
+                    return fuelMonopropellant;
+                case LIQUID_BIPROPELLANT:
+                    return fuelBipropellant;
+                case LIQUID_OXIDIZER:
+                    return fuelOxidizer;
+                case NUCLEAR_WORKING_FLUID:
+                    return fuelNuclearWorkingFluid;
+            }
+        }
+
+	    return 0;
 	}
 
 	/**
@@ -216,23 +221,26 @@ public class StatsRocket {
 	 * @param type
 	 * @return the largest amount of fuel of the type that can be stored in the stat
 	 */
-	public int getFuelCapacity(FuelRegistry.FuelType type) {
-		switch(type) {
-		case WARP:
-			return fuelCapacityWarp;
-		case IMPULSE:
-			return fuelCapacityImpulse;
-		case ION:
-			return fuelCapacityIon;
-		case LIQUID_MONOPROPELLANT:
-			return fuelCapacityMonopropellant;
-		case LIQUID_BIPROPELLANT:
-			return fuelCapacityBipropellant;
-		case LIQUID_OXIDIZER:
-			return fuelCapacityOxidizer;
-		case NUCLEAR_WORKING_FLUID:
-			return fuelCapacityNuclearWorkingFluid;
-		}
+	public int getFuelCapacity(@Nullable FuelRegistry.FuelType type) {
+	    if(type != null) {
+            switch (type) {
+                case WARP:
+                    return fuelCapacityWarp;
+                case IMPULSE:
+                    return fuelCapacityImpulse;
+                case ION:
+                    return fuelCapacityIon;
+                case LIQUID_MONOPROPELLANT:
+                    return fuelCapacityMonopropellant;
+                case LIQUID_BIPROPELLANT:
+                    return fuelCapacityBipropellant;
+                case LIQUID_OXIDIZER:
+                    return fuelCapacityOxidizer;
+                case NUCLEAR_WORKING_FLUID:
+                    return fuelCapacityNuclearWorkingFluid;
+            }
+        }
+
 		return 0;
 	}
 
@@ -240,27 +248,27 @@ public class StatsRocket {
 	 * @param type
 	 * @return the consumption rate of the fuel per tick
 	 */
-	public int getFuelRate(FuelRegistry.FuelType type) {
-
-		if(!ARConfiguration.getCurrentConfig().rocketRequireFuel)
+	public int getFuelRate(@Nullable FuelRegistry.FuelType type) {
+		if(!ARConfiguration.getCurrentConfig().rocketRequireFuel || type == null)
 			return 0;
 
 		switch(type) {
-		case WARP:
-			return fuelRateWarp;
-		case IMPULSE:
-			return fuelRateImpulse;
-		case ION:
-			return fuelRateIon;
-		case LIQUID_MONOPROPELLANT:
-			return fuelRateMonopropellant;
-		case LIQUID_BIPROPELLANT:
-			return fuelRateBipropellant;
-		case LIQUID_OXIDIZER:
-			return fuelRateOxidizer;
-		case NUCLEAR_WORKING_FLUID:
-			return fuelRateNuclearWorkingFluid;
+            case WARP:
+                return fuelRateWarp;
+            case IMPULSE:
+                return fuelRateImpulse;
+            case ION:
+                return fuelRateIon;
+            case LIQUID_MONOPROPELLANT:
+                return fuelRateMonopropellant;
+            case LIQUID_BIPROPELLANT:
+                return fuelRateBipropellant;
+            case LIQUID_OXIDIZER:
+                return fuelRateOxidizer;
+            case NUCLEAR_WORKING_FLUID:
+                return fuelRateNuclearWorkingFluid;
 		}
+
 		return 0;
 	}
 
@@ -268,9 +276,9 @@ public class StatsRocket {
 	 * @param type
 	 * @return the base engine consumption rate of the fuel per tick
 	 */
-	public int getBaseFuelRate(FuelRegistry.FuelType type) {
+	public int getBaseFuelRate(@Nullable FuelRegistry.FuelType type) {
 
-		if(!ARConfiguration.getCurrentConfig().rocketRequireFuel)
+		if(!ARConfiguration.getCurrentConfig().rocketRequireFuel || type == null)
 			return 0;
 
 		switch(type) {
@@ -297,28 +305,28 @@ public class StatsRocket {
 	 * @param type
 	 * @param amt
 	 */
-	public void setFuelAmount(FuelRegistry.FuelType type, int amt) {
+	public void setFuelAmount(@Nonnull FuelRegistry.FuelType type, int amt) {
 		switch(type) {
-		case WARP:
-			fuelWarp = amt;
-			break;
-		case IMPULSE:
-			fuelImpulse = amt;
-			break;
-		case ION:
-			fuelIon = amt;
-			break;
-		case LIQUID_MONOPROPELLANT:
-			fuelMonopropellant = amt;
-			break;
-		case LIQUID_BIPROPELLANT:
-			fuelBipropellant = amt;
-			break;
-			case LIQUID_OXIDIZER:
-			fuelOxidizer = amt;
-			break;
-		case NUCLEAR_WORKING_FLUID:
-			fuelNuclearWorkingFluid = amt;
+            case WARP:
+                fuelWarp = amt;
+                break;
+            case IMPULSE:
+                fuelImpulse = amt;
+                break;
+            case ION:
+                fuelIon = amt;
+                break;
+            case LIQUID_MONOPROPELLANT:
+                fuelMonopropellant = amt;
+                break;
+            case LIQUID_BIPROPELLANT:
+                fuelBipropellant = amt;
+                break;
+                case LIQUID_OXIDIZER:
+                fuelOxidizer = amt;
+                break;
+            case NUCLEAR_WORKING_FLUID:
+                fuelNuclearWorkingFluid = amt;
 		}
 	}
 
@@ -327,7 +335,7 @@ public class StatsRocket {
 	 * @param type
 	 * @param rate
 	 */
-	public void setFuelRate(FuelRegistry.FuelType type, int rate) {
+	public void setFuelRate(@Nonnull FuelRegistry.FuelType type, int rate) {
 		switch(type) {
 		case WARP:
 			fuelRateWarp = rate;
@@ -357,7 +365,7 @@ public class StatsRocket {
 	 * @param type
 	 * @param rate
 	 */
-	public void setBaseFuelRate(FuelRegistry.FuelType type, int rate) {
+	public void setBaseFuelRate(@Nonnull FuelRegistry.FuelType type, int rate) {
 		switch(type) {
 			case WARP:
 				fuelBaseRateWarp = rate;
@@ -387,7 +395,7 @@ public class StatsRocket {
 	 * @param type
 	 * @param amt
 	 */
-	public void setFuelCapacity(FuelRegistry.FuelType type, int amt) {
+	public void setFuelCapacity(@Nonnull FuelRegistry.FuelType type, int amt) {
 		switch(type) {
 		case WARP:
 			fuelCapacityWarp = amt;
@@ -418,7 +426,7 @@ public class StatsRocket {
 	 * @param amt amount of fuel to add
 	 * @return amount of fuel added
 	 */
-	public int addFuelAmount(FuelRegistry.FuelType type, int amt) {
+	public int addFuelAmount(@Nonnull FuelRegistry.FuelType type, int amt) {
 		//TODO: finish other ones
 		switch(type) {
 		case WARP:
