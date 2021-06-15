@@ -46,6 +46,8 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 	RedstoneState inputstate;
 	ModuleBlockSideSelector sideSelectorModule;
 
+	private final static int ALLOW_REDSTONEOUT = 2;
+
 	public TileRocketLoader() {
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 0, "", this, LibVulpes.proxy.getLocalizedString("msg.rocketLoader.loadingState"));
 		state = RedstoneState.ON;
@@ -102,7 +104,6 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 
 	protected boolean getStrongPowerForSides(World world, BlockPos pos) {
 		for(int i = 0; i < 6; i++) {
-			int ALLOW_REDSTONEOUT = 2;
 			if(sideSelectorModule.getStateForSide(i) == ALLOW_REDSTONEOUT && world.getRedstonePower(pos.offset(EnumFacing.VALUES[i]), EnumFacing.VALUES[i]) > 0)
 				return true;
 		}

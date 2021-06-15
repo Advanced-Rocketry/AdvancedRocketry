@@ -197,7 +197,7 @@ public class ChunkManagerPlanet extends BiomeProvider {
 	}
 
 	@Nonnull
-	public Biome[] getBiomesForGeneration(Biome[] biomes, int x, int z, int width, int height)
+	public Biome[] getBiomesForGeneration(@Nullable Biome[] biomes, int x, int z, int width, int height)
 	{
 		GenLayerBiomePlanet.setupBiomesForUse(this.biomes);
 		//return super.getBiomesForGeneration(p_76937_1_, p_76937_2_, p_76937_3_, p_76937_4_, p_76937_5_);

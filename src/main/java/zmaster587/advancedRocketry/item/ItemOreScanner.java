@@ -121,8 +121,9 @@ public class ItemOreScanner extends Item implements IModularInventory {
 
 	@Override
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
+		List<ModuleBase> modules = new LinkedList<>();
 		//modules.add(new ModuleOreMapper(0, 0));
-		return new LinkedList<>();
+		return modules;
 	}
 
 	@Override

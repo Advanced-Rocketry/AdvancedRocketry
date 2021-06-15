@@ -33,6 +33,7 @@ import zmaster587.libVulpes.util.Vector3F;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.naming.directory.NoSuchAttributeException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -269,9 +270,12 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 				}
 
-				for(NBTBase tag : destList)
-				{
-					retList.add(LandingLocation.loadFromNBT((NBTTagCompound)tag));
+				for(NBTBase tag : destList) {
+					try {
+						retList.add(LandingLocation.loadFromNBT((NBTTagCompound)tag));
+					} catch (NoSuchAttributeException e) {
+						AdvancedRocketry.logger.warn("Attempting to load a Landing location for planet " + dimid + " but chip appears to have malformed data");
+					}
 				}
 			}
 		}

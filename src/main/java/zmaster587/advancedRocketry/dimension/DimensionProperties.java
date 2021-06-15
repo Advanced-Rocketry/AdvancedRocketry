@@ -284,7 +284,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private HashSet<HashedBlockPosition> beaconLocations;
 	private IBlockState oceanBlock;
 	private IBlockState fillerBlock;
-	private int sealevel;
+	private int seaLevel;
 	private int generatorType;
 
 	public DimensionProperties(int id) {
@@ -330,7 +330,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		harvestableAtmosphere = new LinkedList<>();
 		spawnableEntities = new LinkedList<>();
 		beaconLocations = new HashSet<>();
-		sealevel = 63;
+		seaLevel = 63;
 		generatorType = 0;
 	}
 
@@ -393,7 +393,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		harvestableAtmosphere = new LinkedList<>();
 		spawnableEntities = new LinkedList<>();
 		beaconLocations = new HashSet<>();
-		sealevel = 63;
+		seaLevel = 63;
 		oceanBlock = null;
 		fillerBlock = null;
 		generatorType = 0;
@@ -1519,7 +1519,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		isNativeDimension = !nbt.hasKey("isNative") || nbt.getBoolean("isNative"); //Prevent world breakages when loading from old version
 		isGasGiant = nbt.getBoolean("isGasGiant");
 		hasRings = nbt.getBoolean("hasRings");
-		sealevel = nbt.getInteger("sealevel");
+		seaLevel = nbt.getInteger("sealevel");
 		generatorType = nbt.getInteger("genType");
 		canGenerateCraters = nbt.getBoolean("canGenerateCraters");
 		canGenerateGeodes = nbt.getBoolean("canGenerateGeodes");
@@ -1727,7 +1727,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setBoolean("isNative", isNativeDimension);
 		nbt.setBoolean("isGasGiant", isGasGiant);
 		nbt.setBoolean("hasRings", hasRings);
-		nbt.setInteger("sealevel", sealevel);
+		nbt.setInteger("sealevel", seaLevel);
 		nbt.setInteger("genType", generatorType);
 		nbt.setBoolean("canGenerateCraters", canGenerateCraters);
 		nbt.setBoolean("canGenerateGeodes", canGenerateGeodes);
@@ -1874,11 +1874,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 	
 	public int getSeaLevel() {
-		return sealevel;
+		return seaLevel;
 	}
 	
 	public void setSeaLevel(int sealevel) {
-		this.sealevel = MathHelper.clamp(sealevel, 0, 255);
+		this.seaLevel = MathHelper.clamp(sealevel, 0, 255);
 	}
 	
 	public void setGenType(int genType)

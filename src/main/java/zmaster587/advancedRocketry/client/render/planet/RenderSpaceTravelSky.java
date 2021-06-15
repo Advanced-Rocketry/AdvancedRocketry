@@ -562,10 +562,11 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 				double phase = 0;
 				for(StellarBody subStar : subStars) {
 
-					//Radius to put the player
+					//These are used to determine the angle of the substars from the # of them
 					double theta = phase;
 					phase += phaseInc;
 
+					//Get substar separation for placement from the orbital distance of the substars
 					SpacePosition subStarSpacePosition = mainStarPos.getFromSpherical(40 * subStar.getStarSeparation(), theta);
 
 					renderStar(subStar, subStarSpacePosition, playerPosition);
