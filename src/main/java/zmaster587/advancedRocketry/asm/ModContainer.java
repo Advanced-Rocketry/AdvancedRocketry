@@ -1,10 +1,10 @@
 package zmaster587.advancedRocketry.asm;
 
-import com.google.common.eventbus.EventBus;
 import net.minecraftforge.fml.common.DummyModContainer;
 import net.minecraftforge.fml.common.LoadController;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.ModMetadata;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -35,8 +35,7 @@ public class ModContainer extends DummyModContainer {
 		meta.screenshots = new String[0];
 		meta.logoFile = "";
 	}
-	
-	@Override
+
 	public boolean registerBus(EventBus bus, LoadController controller)
 	{
 		System.out.println("********* registerBus. OK");

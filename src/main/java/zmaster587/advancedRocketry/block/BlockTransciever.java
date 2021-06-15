@@ -9,7 +9,7 @@ import zmaster587.libVulpes.block.BlockTile;
 
 public class BlockTransciever extends BlockTile {
 
-	private static AxisAlignedBB bb[] = {new AxisAlignedBB(.25, .25, .75, .75, .75, 1),
+	private static AxisAlignedBB[] bb = {new AxisAlignedBB(.25, .25, .75, .75, .75, 1),
 		new AxisAlignedBB(.25, .25, 0, .75, .75, 0.25),
 		new AxisAlignedBB(.75, .25, .25, 1, .75, .75),
 		new AxisAlignedBB(0, .25, .25, 0.25, .75, .75)};

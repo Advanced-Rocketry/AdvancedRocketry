@@ -196,8 +196,8 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
 			player.addVelocity(0, (double)ARConfiguration.getCurrentConfig().jetPackThrust*0.1f, 0);
 			if(player.world.isRemote) {
-				double xPos = player.posX;
-				double zPos = player.posZ;
+				double xPos;
+				double zPos;
 				float playerRot = (float) ((Math.PI/180f)*(player.rotationYaw - 55));
 				xPos = player.posX + MathHelper.cos(playerRot)*.4f;
 				zPos = player.posZ + MathHelper.sin(playerRot)*.4f;
@@ -277,14 +277,12 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			}
 
 			nbt.setInteger("mode", mode);
-			flagModeSwitched(stack);
-		}
-		else {
+		} else {
 			nbt = new NBTTagCompound();
 			nbt.setInteger("mode", mode);
 			stack.setTagCompound(nbt);
-			flagModeSwitched(stack);
 		}
+		flagModeSwitched(stack);
 
 		if(mode == MODES.HOVER.ordinal())
 			setHeight(stack, (float)player.posY + player.height);

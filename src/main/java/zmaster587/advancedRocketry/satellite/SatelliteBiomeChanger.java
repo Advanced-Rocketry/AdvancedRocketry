@@ -50,7 +50,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 
 	public void addBiome(int biome) {
 		byte byteBiome = (byte)biome;
-		
+
 		if(!AdvancedRocketryBiomes.instance.getBlackListedBiomes().contains(biome))
 			discoveredBiomes.add(byteBiome);
 	}
@@ -68,7 +68,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 	@Override
 	@Nonnull
 	public ItemStack getControllerItemStack(@Nonnull ItemStack satIdChip,
-                                            SatelliteProperties properties) {
+											SatelliteProperties properties) {
 
 		ItemBiomeChanger idChipItem = (ItemBiomeChanger)satIdChip.getItem();
 		idChipItem.setSatellite(satIdChip, properties);
@@ -89,8 +89,9 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 		if(world != null) {
 
 			for(int i = 0; i < 10; i++) {
+				//TODO: Better imp
 				if(world.getTotalWorldTime() % 1 == 0 && !toChangeList.isEmpty()) {
-					if(battery.extractEnergy(120, true) == 120 ) {
+					if(battery.extractEnergy(120, false) == 120 ) {
 						HashedBlockPosition pos = toChangeList.remove(world.rand.nextInt(toChangeList.size()));
 
 						BiomeHandler.changeBiome(world, biomeId, pos.getBlockPos());
@@ -162,7 +163,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 		super.writeToNBT(nbt);
 		nbt.setInteger("biomeId", biomeId);
 
-		int array[] = new int[toChangeList.size()*3];
+		int[] array = new int[toChangeList.size()*3];
 		Iterator<HashedBlockPosition> itr = toChangeList.iterator();
 		for(int i = 0; i < toChangeList.size(); i+=3) {
 			HashedBlockPosition pos = itr.next();
@@ -188,7 +189,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 		super.readFromNBT(nbt);
 		biomeId = nbt.getInteger("biomeId");
 
-		int array[] = nbt.getIntArray("posList");
+		int[] array = nbt.getIntArray("posList");
 
 		toChangeList.clear();
 		for(int i = 0; i < array.length; i +=3) {
@@ -202,3 +203,4 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 		}
 	}
 }
+

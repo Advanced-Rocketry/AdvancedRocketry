@@ -82,7 +82,7 @@ public class OxygenTraceFX extends Particle {
         this.prevPosZ = this.posZ;
         
         //Change color and alpha over lifespan
-        this.particleAlpha = 1f*MathHelper.sin((float)Math.PI*(this.particleAge)/ (float)(this.particleMaxAge));
+        this.particleAlpha = MathHelper.sin((float) Math.PI * (this.particleAge) / (float) (this.particleMaxAge));
         this.particleScale = 0.5f*MathHelper.sin((float)Math.PI*(this.particleAge)/ (float)(this.particleMaxAge));
         
         this.motionX *= 1.01;

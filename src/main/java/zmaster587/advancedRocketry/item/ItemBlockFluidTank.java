@@ -102,8 +102,6 @@ public class ItemBlockFluidTank extends ItemBlock {
 			nbt = stack.getTagCompound();
 			tank.readFromNBT(nbt);
 		}
-		else
-			nbt = new NBTTagCompound();
 		
 		return tank.getFluid();
 	}

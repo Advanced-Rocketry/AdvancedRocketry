@@ -258,7 +258,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		infrastructureCoords.remove(new HashedBlockPosition(((TileEntity)infrastructure).getPos()));
 
 		if(!world.isRemote) {
-			int pos[] = {((TileEntity)infrastructure).getPos().getX(), ((TileEntity)infrastructure).getPos().getY(), ((TileEntity)infrastructure).getPos().getZ()};
+			int[] pos = {((TileEntity)infrastructure).getPos().getX(), ((TileEntity)infrastructure).getPos().getY(), ((TileEntity)infrastructure).getPos().getZ()};
 
 			NBTTagCompound nbt = new NBTTagCompound();
 			nbt.setIntArray("pos", pos);
@@ -276,6 +276,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	@Override
 	public String getTextOverlay() {
 
+		ERROR_DISPLAY_TIME = 100;
 		if(this.world.getTotalWorldTime() < this.lastErrorTime + ERROR_DISPLAY_TIME)
 			return errorStr;
 
@@ -571,7 +572,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		//Handle linkers and right-click with fuel
 		boolean isHoldingFluidItemOrLinker = false;
 		if(!heldItem.isEmpty()) {
-			float fuelMult;
 			FluidStack fluidStack;
 
 			if(heldItem.getItem() instanceof ItemLinker) {
@@ -609,10 +609,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 
 			else if((FluidUtils.containsFluid(heldItem) && FluidUtils.getFluidForItem(heldItem) != null) && ARConfiguration.getCurrentConfig().canBeFueledByHand) {
-				isHoldingFluidItemOrLinker = true;
 				fluidStack = FluidUtils.getFluidForItem(heldItem);
 				if ((canRocketFitFluid(fluidStack))) {
-					FuelType type = getRocketFuelType();
+					isHoldingFluidItemOrLinker = true;
+					FuelType type = getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT && FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid()) ? FuelType.LIQUID_OXIDIZER : getRocketFuelType();
 
 					stats.setFuelRate(type, (int) (stats.getBaseFuelRate(type) * FuelRegistry.instance.getMultiplier(type, fluidStack.getFluid())));
 					FluidTank rocketFakeTank = new FluidTank(getFuelCapacity(type) - getFuelAmount(type));
@@ -925,7 +925,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			launchCount--;
 			this.dataManager.set(LAUNCH_COUNTER, launchCount);
 			//Just before launch, damage the ground. We'll do it again on the tick that we launch
-			if (launchCount == 20 && ARConfiguration.getCurrentConfig().launchingDestroysBlocks)
+			if (launchCount == 20 && ARConfiguration.getCurrentConfig().launchingDestroysBlocks && this.getFuelCapacity(getRocketFuelType()) > 0)
 				damageGroundBelowRocket(world, (int)this.posX, (int)this.posY, (int)this.posZ, (int)Math.pow(stats.getThrust(), 0.3333));
 		}
 		
@@ -1266,7 +1266,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	public void onOrbitReached() {
 		super.onOrbitReached();
 
-		//TODO: support multiple riders and rider/satellite combo
 		long targetSatellite;
 		if(storage.getGuidanceComputer() != null && (targetSatellite = storage.getGuidanceComputer().getTargetSatellite()) != -1L) {
 			SatelliteBase sat = DimensionManager.getInstance().getSatellite(targetSatellite);
@@ -1462,7 +1461,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 		}
 		else {
-			//TODO: maybe add orbit dimension
 			this.motionY = -this.motionY;
 			setInOrbit(true);
 			//If going to a station or something make sure to set coords accordingly
@@ -1618,7 +1616,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			//TODO: lock the computer
 			destinationDimId = storage.getDestinationDimId(world.provider.getDimension(), (int)this.posX, (int)this.posZ);
 
-			//TODO: make sure this doesn't break asteriod mining
 			if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (destinationDimId == Constants.INVALID_PLANET && storage.getSatelliteHatches().size() != 0))) {
 				setError(LibVulpes.proxy.getLocalizedString("error.rocket.cannotGetThere"));
 				return;
@@ -1729,17 +1726,17 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			return Blocks.MAGMA.getDefaultState();
 		} else if (blockState.getBlock() == Blocks.MAGMA) {
 			return Blocks.LAVA.getDefaultState();
-		} else if (blockState.getBlock().getMaterial(blockState) == Material.GRASS) {
+		} else if (blockState.getMaterial() == Material.GRASS) {
 			return Blocks.DIRT.getDefaultState();
-		} else if (blockState.getBlock().getMaterial(blockState) == Material.GROUND && !(blockState.getBlock() instanceof BlockRegolith)) {
+		} else if (blockState.getMaterial() == Material.GROUND && !(blockState.getBlock() instanceof BlockRegolith)) {
 			return Blocks.SAND.getDefaultState();
 		} else if (blockState.getBlock() instanceof BlockSand || blockState.getBlock() instanceof BlockRegolith || ZUtils.isItemInOreDict(stack, "regolith") || ZUtils.isItemInOreDict(stack, "sandstone")) {
 			return Blocks.GLASS.getDefaultState();
-		} else if (blockState.getBlock().getMaterial(blockState) == Material.ICE || blockState.getBlock().getMaterial(blockState) == Material.PACKED_ICE || ((blockState.getBlock().getMaterial(blockState) == Material.SNOW || blockState.getBlock().getMaterial(blockState) == Material.CRAFTED_SNOW) && blockState.getBlock() != Blocks.SNOW_LAYER )) {
+		} else if (blockState.getMaterial() == Material.ICE || blockState.getMaterial() == Material.PACKED_ICE || ((blockState.getMaterial() == Material.SNOW || blockState.getMaterial() == Material.CRAFTED_SNOW) && blockState.getBlock() != Blocks.SNOW_LAYER )) {
 			return Blocks.WATER.getDefaultState();
-		} else if (blockState.getBlock().getMaterial(blockState) == Material.WATER || blockState.getBlock() == Blocks.SNOW_LAYER) {
+		} else if (blockState.getMaterial() == Material.WATER || blockState.getBlock() == Blocks.SNOW_LAYER) {
 			return Blocks.AIR.getDefaultState();
-		} else if (blockState.getBlock().getMaterial(blockState) == Material.WOOD || blockState.getBlock().getMaterial(blockState) == Material.LEAVES || blockState.getBlock().getMaterial(blockState) == Material.PLANTS || blockState.getBlock().getMaterial(blockState) == Material.GOURD || blockState.getBlock().getMaterial(blockState) == Material.WEB || blockState.getBlock().getMaterial(blockState) == Material.CLOTH || blockState.getBlock().getMaterial(blockState) == Material.CARPET || blockState.getBlock().getMaterial(blockState) == Material.CACTUS || blockState.getBlock().getMaterial(blockState) == Material.SPONGE) {
+		} else if (blockState.getMaterial() == Material.WOOD || blockState.getMaterial() == Material.LEAVES || blockState.getMaterial() == Material.PLANTS || blockState.getMaterial() == Material.GOURD || blockState.getMaterial() == Material.WEB || blockState.getMaterial() == Material.CLOTH || blockState.getMaterial() == Material.CARPET || blockState.getMaterial() == Material.CACTUS || blockState.getMaterial() == Material.SPONGE) {
 			return Blocks.FIRE.getDefaultState();
 		}
 		return blockState;
@@ -1890,7 +1887,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		if(nbt.hasKey("infrastructure")) {
 			NBTTagList tagList = nbt.getTagList("infrastructure", 10);
 			for (int i = 0; i < tagList.tagCount(); i++) {
-				int coords[] = tagList.getCompoundTagAt(i).getIntArray("loc");
+				int[] coords = tagList.getCompoundTagAt(i).getIntArray("loc");
 
 				infrastructureCoords.add(new HashedBlockPosition(coords[0], coords[1], coords[2]));
 
@@ -2104,7 +2101,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			}
 		}
 		else if(id == PacketType.DISCONNECTINFRASTRUCTURE.ordinal()) {
-			int pos[] = nbt.getIntArray("pos");
+			int[] pos = nbt.getIntArray("pos");
 
 			connectedInfrastructure.remove(new HashedBlockPosition(pos[0], pos[1], pos[2]));
 
@@ -2316,7 +2313,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	@Override
 	public float getNormallizedProgress(int id) {
 		if(id == 0)
-			return (((getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT) ? getFuelAmount(FuelType.LIQUID_OXIDIZER) : 0 ) + getFuelAmount(getRocketFuelType())) / (float)(getFuelCapacity(getRocketFuelType()) + ((getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT) ? getFuelCapacity(FuelType.LIQUID_OXIDIZER) : 0 ));
+			return (getRocketFuelType() == null ? 0 : ((getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT) ? getFuelAmount(FuelType.LIQUID_OXIDIZER) : 0 ) + getFuelAmount(getRocketFuelType())) / (float)(getFuelCapacity(getRocketFuelType()) + ((getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT) ? getFuelCapacity(FuelType.LIQUID_OXIDIZER) : 0 ));
 		return 0;
 	}
 

@@ -181,8 +181,6 @@ public class MapGenSwampTree extends MapGenBase {
 					for(zz = -1; zz < 2; zz++)
 						for(xx = -1; xx < 2; xx++)
 							setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false), blocks);
-					xx=xxx;
-					zz=zzz;
 					//Descending 
 					for(int yyy = 0; yyy < 10; yyy++) {
 
@@ -349,8 +347,6 @@ public class MapGenSwampTree extends MapGenBase {
 				for(zz = -1; zz < 2; zz++)
 					for(xx = -1; xx < 2; xx++)
 						world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2,y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false), 5);
-				xx=xxx;
-				zz=zzz;
 				//Descending 
 				for(int yyy = 0; yyy < 10; yyy++) {
 

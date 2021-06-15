@@ -185,7 +185,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 		if(colors == null)
 			return super.calcSunriseSunsetColors(p_76560_1_, p_76560_2_);
 
-		float finalColors[] = new float[4];
+		float[] finalColors = new float[4];
 
 		float f2 = 0.4F;
 		float f3 = MathHelper.cos(p_76560_1_ * (float)Math.PI * 2.0F) - 0.0F;
@@ -217,7 +217,6 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 		
 		//This is inaccurate at times, moreso for atmosphere, but I am NOT doing the required math for the realistic counterpart
 		float atmosphere = getAtmosphereDensity(new BlockPos(0,0,0));
-		Math.abs(1-atmosphere);
 		//calculateCelestialAngle(p_76563_1_, p_76563_3_)
 		float f1 = world.getCelestialAngle(partialTicks);
 		float f2 = 1.0F - (MathHelper.cos(f1 * (float)Math.PI * 2.0F) * 2.0F + 0.2F) - atmosphere/4f;

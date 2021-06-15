@@ -18,7 +18,7 @@ public class AtmosphereRegister {
 	}
 	
 	
-	public static final AtmosphereRegister getInstance() {
+	public static AtmosphereRegister getInstance() {
 		return instance;
 	}
 	

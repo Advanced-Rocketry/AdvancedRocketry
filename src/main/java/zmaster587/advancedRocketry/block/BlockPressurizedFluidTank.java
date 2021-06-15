@@ -77,10 +77,8 @@ public class BlockPressurizedFluidTank extends Block {
 	@ParametersAreNonnullByDefault
 	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @Nonnull ItemStack stack) {
 
-		TileEntity tile = te;//world.getTileEntity(pos);
-
-		if(tile instanceof TileFluidTank) {
-			IFluidHandler fluid = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN);
+		if(te instanceof TileFluidTank) {
+			IFluidHandler fluid = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN);
 
 
 			ItemStack itemstack = new ItemStack(AdvancedRocketryBlocks.blockPressureTank);

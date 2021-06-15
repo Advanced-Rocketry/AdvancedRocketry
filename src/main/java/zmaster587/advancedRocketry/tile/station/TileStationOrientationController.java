@@ -24,7 +24,7 @@ import java.util.List;
 
 public class TileStationOrientationController extends TileEntity implements ITickable, IModularInventory, INetworkMachine, ISliderBar, IButtonInventory {
 
-	int progress[];
+	int[] progress;
 
 	private ModuleText moduleAngularVelocity, numThrusters, maxAngularAcceleration, targetRotations;
 
@@ -85,7 +85,7 @@ public class TileStationOrientationController extends TileEntity implements ITic
 
 				if(spaceObject != null) {
 
-					EnumFacing dirs[] = { EnumFacing.EAST, EnumFacing.UP, EnumFacing.NORTH };
+					EnumFacing[] dirs = { EnumFacing.EAST, EnumFacing.UP, EnumFacing.NORTH };
 					int[] targetRotationsPerHour = ((SpaceStationObject) spaceObject).targetRotationsPerHour;
 					for (int i = 0; i < 3; i++) {
 						setProgress(i, targetRotationsPerHour[i] + (getTotalProgress(i)/2));

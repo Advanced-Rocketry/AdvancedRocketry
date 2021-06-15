@@ -156,7 +156,6 @@ public class ClientProxy extends CommonProxy {
 		for(int i = 0; i < BlockCrystal.numMetas; i++)
 			ModelLoader.setCustomModelResourceLocation(blockItem, i, new ModelResourceLocation("advancedrocketry:crystal", "inventory"));
 
-		//TODO fluids
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockOxygenFluid);
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockNitrogenFluid);
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockHydrogenFluid);

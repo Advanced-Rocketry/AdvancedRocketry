@@ -19,7 +19,7 @@ public class MapGenSpaceVillage extends MapGenVillage {
     {
     	super();
         this.distance = 32;
-        this.minTownSeparation = 8;
+        minTownSeparation = 8;
     }
 	
     protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ)

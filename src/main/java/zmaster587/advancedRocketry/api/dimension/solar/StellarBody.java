@@ -19,7 +19,7 @@ public class StellarBody {
 	private HashMap<Integer,IDimensionProperties> planets;
 	int numPlanets;
 	int discoveredPlanets;
-	float color[];
+	float[] color;
 	int id;
 	float size;
 	String name;
@@ -169,7 +169,7 @@ public class StellarBody {
 
 
 		//Define
-		float color[] = new float[3];
+		float[] color = new float[3];
 		float temperature = ((getTemperature() * .477f) + 10f); //0 -> 10 100 -> 57.7
 
 		//Find red
@@ -274,8 +274,7 @@ public class StellarBody {
 		}
 	}
 	
-	public SpacePosition getSpacePosition()
-	{
+	public SpacePosition getSpacePosition() {
 		//TODO
 		return new SpacePosition();
 	}

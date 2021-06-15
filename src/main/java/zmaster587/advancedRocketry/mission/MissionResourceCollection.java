@@ -165,7 +165,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 		infrastructureCoords.clear();
 
 		for (int i = 0; i < tagList.tagCount(); i++) {
-			int coords[] = tagList.getCompoundTagAt(i).getIntArray("loc");
+			int[] coords = tagList.getCompoundTagAt(i).getIntArray("loc");
 			infrastructureCoords.add(new HashedBlockPosition(coords[0], coords[1], coords[2]));
 		}
 	}

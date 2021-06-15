@@ -353,8 +353,7 @@ public class ARConfiguration {
 		return currentConfig;
 	}
 
-	public static void loadConfigFromServer(ARConfiguration config) throws Exception
-	{
+	public static void loadConfigFromServer(ARConfiguration config) {
 		if(usingServerConfig)
 			throw new IllegalStateException("Cannot load server config when already using server config!");
 
@@ -422,7 +421,7 @@ public class ARConfiguration {
 		arConfig.enableLaserDrill = config.get(Configuration.CATEGORY_GENERAL, "EnableLaserDrill", true, "Enables the laser drill machine").getBoolean();
 		arConfig.spaceLaserPowerMult = (float)config.get(Configuration.CATEGORY_GENERAL, "LaserDrillPowerMultiplier", 1d, "Power multiplier for the laser drill machine").getDouble();
 		arConfig.laserDrillPlanet = config.get(Configuration.CATEGORY_GENERAL, "laserDrillPlanet", false, "If true the orbital laser will actually mine blocks on the planet below").getBoolean();
-		String str[] = config.getStringList("spaceLaserDimIdBlackList", Configuration.CATEGORY_GENERAL, new String[] {}, "Laser drill will not mine these dimension");
+		String[] str = config.getStringList("spaceLaserDimIdBlackList", Configuration.CATEGORY_GENERAL, new String[] {}, "Laser drill will not mine these dimension");
 		arConfig.enableTerraforming = config.get(Configuration.CATEGORY_GENERAL, "EnableTerraforming", true,"Enables terraforming items and blocks").getBoolean();
 		arConfig.terraformingBlockSpeed = config.get(Configuration.CATEGORY_GENERAL, "biomeUpdateSpeed", 1, "How many blocks have the biome changed per tick.  Large numbers can slow the server down", Integer.MAX_VALUE, 1).getInt();
 		arConfig.terraformSpeed = config.get(Configuration.CATEGORY_GENERAL, "terraformMult", 1f, "Multplier for atmosphere change speed").getDouble();
@@ -570,7 +569,7 @@ public class ARConfiguration {
 		//Register fuels
 		logger.info("Start registering liquid rocket fuels");
 		for(String str : liquidMonopropellant) {
-			String splitStr[] = str.split(";");
+			String[] splitStr = str.split(";");
 			Fluid fluid = FluidRegistry.getFluid(splitStr[0]);
 			float multiplier = 1.0f;
 			if (splitStr.length > 1) {
@@ -586,7 +585,7 @@ public class ARConfiguration {
 		}
 		liquidMonopropellant = null; //clean up
 		for(String str : liquidBipropellantFuel) {
-			String splitStr[] = str.split(";");
+			String[] splitStr = str.split(";");
 			Fluid fluid = FluidRegistry.getFluid(splitStr[0]);
 			float multiplier = 1.0f;
 			if (splitStr.length > 1) {
@@ -602,7 +601,7 @@ public class ARConfiguration {
 		}
 		liquidBipropellantFuel = null; //clean up
 		for(String str : liquidBipropellantOxidizer) {
-			String splitStr[] = str.split(";");
+			String[] splitStr = str.split(";");
 			Fluid fluid = FluidRegistry.getFluid(splitStr[0]);
 			float multiplier = 1.0f;
 			if (splitStr.length > 1) {
@@ -618,7 +617,7 @@ public class ARConfiguration {
 		}
 		liquidBipropellantOxidizer = null; //clean up
 		for(String str : liquidNuclearWorkingFluid) {
-			String splitStr[] = str.split(";");
+			String[] splitStr = str.split(";");
 			Fluid fluid = FluidRegistry.getFluid(splitStr[0]);
 			float multiplier = 1.0f;
 			if (splitStr.length > 1) {
@@ -672,9 +671,9 @@ public class ARConfiguration {
 
 		logger.info("Start registering blackhole generator blocks");
 		for(String str : blackHoleGeneratorTiming) {
-			String splitStr[] = str.split(";");
+			String[] splitStr = str.split(";");
 
-			String blockString[] = splitStr[0].split(":");
+			String[] blockString = splitStr[0].split(":");
 
 			Item block = Item.REGISTRY.getObject(new ResourceLocation(blockString[0],blockString[1]));
 			int metaValue = 0;
@@ -730,7 +729,7 @@ public class ARConfiguration {
 		logger.info("Start registering Spawnable Gasses");
 		for(String str : spawnableGasses) {
 
-			String splitStr[] = str.split(";");
+			String[] splitStr = str.split(";");
 			Fluid fluid = FluidRegistry.getFluid(splitStr[0]);
 			int minGravity = 0;
 			int maxGravity = 1600;
@@ -765,7 +764,7 @@ public class ARConfiguration {
 			if(clazz == null) {
 				try {
 					clazz = Class.forName(str);
-					if(clazz != null && !Entity.class.isAssignableFrom(clazz))
+					if(!Entity.class.isAssignableFrom(clazz))
 						clazz = null;
 
 				} catch (Exception e) {

@@ -18,7 +18,7 @@ public class LiquidNetwork extends CableNetwork {
 
 	private final int MAX_TRANSFER = 100;
 
-	/**
+    /**
 	 * Create a new network and get an ID
 	 * @return ID of this new network
 	 */
@@ -41,7 +41,7 @@ public class LiquidNetwork extends CableNetwork {
 	@Override
 	public void tick() {
 
-		int amount = MAX_TRANSFER;
+        int amount = MAX_TRANSFER;
 
 		//Return if there is nothing to do
 		if(sinks.isEmpty() || sources.isEmpty())
@@ -64,7 +64,7 @@ public class LiquidNetwork extends CableNetwork {
 
 			if(fluidHandleSink == null) {
 				sinkItr.remove();
-				AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos().toString() + " is added as a sink but has no fluid capabilities on the side connected");
+				AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos() + " is added as a sink but has no fluid capabilities on the side connected");
 				continue;
 			}
 			
@@ -85,7 +85,7 @@ public class LiquidNetwork extends CableNetwork {
 
 						if(fluidHandleSource == null) {
 							sourceItr.remove();
-							AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos().toString() + " is added as a source but has no fluid capabilities on the side connected");
+							AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos() + " is added as a source but has no fluid capabilities on the side connected");
 							continue;
 						}
 						

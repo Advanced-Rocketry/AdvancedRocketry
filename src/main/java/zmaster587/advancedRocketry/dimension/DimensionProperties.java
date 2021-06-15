@@ -284,7 +284,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	private HashSet<HashedBlockPosition> beaconLocations;
 	private IBlockState oceanBlock;
 	private IBlockState fillerBlock;
-	private int sealevel;
+	private int seaLevel;
 	private int generatorType;
 
 	public DimensionProperties(int id) {
@@ -330,7 +330,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		harvestableAtmosphere = new LinkedList<>();
 		spawnableEntities = new LinkedList<>();
 		beaconLocations = new HashSet<>();
-		sealevel = 63;
+		seaLevel = 63;
 		generatorType = 0;
 	}
 
@@ -393,7 +393,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		harvestableAtmosphere = new LinkedList<>();
 		spawnableEntities = new LinkedList<>();
 		beaconLocations = new HashSet<>();
-		sealevel = 63;
+		seaLevel = 63;
 		oceanBlock = null;
 		fillerBlock = null;
 		generatorType = 0;
@@ -1091,12 +1091,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			viableBiomes.add(AdvancedRocketryBiomes.moonBiomeDark);
 		}
 
-		else if(averageTemperature > Temps.TOOHOT.getTemp()) {
+		else if(Temps.getTempFromValue(averageTemperature).hotterThan(Temps.TOOHOT)) {
 			viableBiomes.add(AdvancedRocketryBiomes.hotDryBiome);
 			viableBiomes.add(AdvancedRocketryBiomes.volcanic);
 			viableBiomes.add(AdvancedRocketryBiomes.volcanicBarren);
 		}
-		else if(averageTemperature > Temps.HOT.getTemp()) {
+		else if(Temps.getTempFromValue(averageTemperature).hotterThan(Temps.HOT)) {
 
 			for (Biome biome : Biome.REGISTRY) {
 				if (biome != null && (BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.HOT) || BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.OCEAN)) && !isBiomeblackListed(biome)) {
@@ -1104,7 +1104,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				}
 			}
 		}
-		else if(averageTemperature > Temps.NORMAL.getTemp()) {
+		else if(Temps.getTempFromValue(averageTemperature).hotterThan(Temps.NORMAL)) {
 			for (Biome biome : Biome.REGISTRY) {
 				if (biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
@@ -1112,7 +1112,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			}
 			viableBiomes.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN));
 		}
-		else if(averageTemperature > Temps.COLD.getTemp()) {
+		else if(Temps.getTempFromValue(averageTemperature).hotterThan(Temps.COLD)) {
 			for (Biome biome : Biome.REGISTRY) {
 				if (biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.HOT) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
@@ -1120,7 +1120,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			}
 			viableBiomes.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN));
 		}
-		else if(averageTemperature > Temps.FRIGID.getTemp()) {
+		else if(Temps.getTempFromValue(averageTemperature).hotterThan(Temps.FRIGID)) {
 
 			for (Biome biome : Biome.REGISTRY) {
 				if (biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
@@ -1128,13 +1128,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				}
 			}
 		}
-		else {//(averageTemperature >= Temps.SNOWBALL.getTemp())
+		else {
 			for (Biome biome : Biome.REGISTRY) {
 				if (biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
 				}
 			}
-			//TODO:
 		}
 
 		int maxBiomesPerPlanet = ARConfiguration.getCurrentConfig().maxBiomesPerPlanet;
@@ -1154,7 +1153,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @param frequency frequency, with 100 as max (and default), for craters to spawn in this biome
 	 */
 	public void addCraterBiomeWeight(Biome biome, int frequency) {
-		ArrayList<BiomeEntry> biomes = new ArrayList<BiomeEntry>();
+		ArrayList<BiomeEntry> biomes = new ArrayList<>();
 		biomes.add(new BiomeEntry(biome, Math.min(Math.max(0, frequency), 100)));
 		craterBiomeWeights.addAll(biomes);
 	}
@@ -1172,7 +1171,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @param biome biome to be added as viable
 	 */
 	public void addBiomeWeighted(Biome biome, int weight) {
-		ArrayList<BiomeEntry> biomes = new ArrayList<BiomeEntry>();
+		ArrayList<BiomeEntry> biomes = new ArrayList<>();
 		biomes.add(new BiomeEntry(biome, weight));
 		allowedBiomes.addAll(biomes);
 	}
@@ -1266,9 +1265,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	 * @param type
 	 */
 	public void removeBiomeType(BiomeDictionary.Type type) {
-
-		ArrayList<Biome> entryList = new ArrayList<>(BiomeDictionary.getBiomes(type));
-
 		for (Biome biome : Biome.REGISTRY) {
 			allowedBiomes.removeIf(biomeEntry -> BiomeDictionary.areSimilar(biomeEntry.biome, biome));
 		}
@@ -1357,7 +1353,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(nbt.hasKey("biomesTerra")) {
 
 			terraformedBiomes.clear();
-			int biomeIds[] = nbt.getIntArray("biomesTerra");
+			int[] biomeIds = nbt.getIntArray("biomesTerra");
 			List<Biome> biomesList = new ArrayList<>();
 
 
@@ -1373,11 +1369,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(nbt.hasKey("satallites")) {
 			NBTTagCompound allSatelliteNBT = nbt.getCompoundTag("satallites");
 
-			for(Object keyObject : allSatelliteNBT.getKeySet()) {
-				String key = (String)keyObject;
-				Long longKey = Long.parseLong(key);
+			for(String keyObject : allSatelliteNBT.getKeySet()) {
+				Long longKey = Long.parseLong(keyObject);
 
-				NBTTagCompound satelliteNBT = allSatelliteNBT.getCompoundTag(key);
+				NBTTagCompound satelliteNBT = allSatelliteNBT.getCompoundTag(keyObject);
 
 				if(satellites.containsKey(longKey)){
 					satellites.get(longKey).readFromNBT(satelliteNBT);
@@ -1440,14 +1435,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(nbt.hasKey("biomes")) {
 
 			allowedBiomes.clear();
-			int biomeIds[] = nbt.getIntArray("biomes");
-			int biomeWeights[] = nbt.getIntArray("weights");
+			int[] biomeIds = nbt.getIntArray("biomes");
+			int[] biomeWeights = nbt.getIntArray("weights");
 			//Old handling
 			if (biomeWeights == null || biomeWeights.length == 0) {
 				biomeWeights = new int[biomeIds.length];
-				for (int i = 0; i < biomeWeights.length; i++) {
-					biomeWeights[i] = 30;
-				}
+				Arrays.fill(biomeWeights, 30);
 			}
 			List<BiomeEntry> biomesList = new ArrayList<>();
 
@@ -1462,8 +1455,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(nbt.hasKey("craterBiomes")) {
 
 			craterBiomeWeights.clear();
-			int biomeIds[] = nbt.getIntArray("craterBiomes");
-			int biomeWeights[] = nbt.getIntArray("craterWeights");
+			int[] biomeIds = nbt.getIntArray("craterBiomes");
+			int[] biomeWeights = nbt.getIntArray("craterWeights");
 			List<BiomeEntry> biomesList = new ArrayList<>();
 			for(int i = 0; i < biomeIds.length; i++) {
 				biomesList.add(new BiomeEntry(AdvancedRocketryBiomes.instance.getBiomeById(biomeIds[i]), biomeWeights[i]));
@@ -1526,7 +1519,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		isNativeDimension = !nbt.hasKey("isNative") || nbt.getBoolean("isNative"); //Prevent world breakages when loading from old version
 		isGasGiant = nbt.getBoolean("isGasGiant");
 		hasRings = nbt.getBoolean("hasRings");
-		sealevel = nbt.getInteger("sealevel");
+		seaLevel = nbt.getInteger("sealevel");
 		generatorType = nbt.getInteger("genType");
 		canGenerateCraters = nbt.getBoolean("canGenerateCraters");
 		canGenerateGeodes = nbt.getBoolean("canGenerateGeodes");
@@ -1607,7 +1600,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		
 		
 		if(!terraformedBiomes.isEmpty()) {
-			int biomeId[] = new int[terraformedBiomes.size()];
+			int[] biomeId = new int[terraformedBiomes.size()];
 			for(int i = 0; i < terraformedBiomes.size(); i++) {
 
 				biomeId[i] = Biome.getIdForBiome(terraformedBiomes.get(i).biome);
@@ -1664,8 +1657,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 
 		if(!allowedBiomes.isEmpty()) {
-			int biomeId[] = new int[allowedBiomes.size()];
-			int weights[] = new int[allowedBiomes.size()];
+			int[] biomeId = new int[allowedBiomes.size()];
+			int[] weights = new int[allowedBiomes.size()];
 			for(int i = 0; i < allowedBiomes.size(); i++) {
 				biomeId[i] = Biome.getIdForBiome(allowedBiomes.get(i).biome);
 				weights[i] = allowedBiomes.get(i).itemWeight;
@@ -1675,8 +1668,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 
 		if(!craterBiomeWeights.isEmpty()) {
-			int biomeId[] = new int[craterBiomeWeights.size()];
-			int weights[] = new int[craterBiomeWeights.size()];
+			int[] biomeId = new int[craterBiomeWeights.size()];
+			int[] weights = new int[craterBiomeWeights.size()];
 			for(int i = 0; i < craterBiomeWeights.size(); i++) {
 				biomeId[i] = Biome.getIdForBiome(craterBiomeWeights.get(i).biome);
 				weights[i] = craterBiomeWeights.get(i).itemWeight;
@@ -1734,7 +1727,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setBoolean("isNative", isNativeDimension);
 		nbt.setBoolean("isGasGiant", isGasGiant);
 		nbt.setBoolean("hasRings", hasRings);
-		nbt.setInteger("sealevel", sealevel);
+		nbt.setInteger("sealevel", seaLevel);
 		nbt.setInteger("genType", generatorType);
 		nbt.setBoolean("canGenerateCraters", canGenerateCraters);
 		nbt.setBoolean("canGenerateGeodes", canGenerateGeodes);
@@ -1747,7 +1740,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		
 		//Hierarchy
 		if(!childPlanets.isEmpty()) {
-			Integer intList[] = new Integer[childPlanets.size()];
+			Integer[] intList = new Integer[childPlanets.size()];
 
 			NBTTagIntArray childArray = new NBTTagIntArray(ArrayUtils.toPrimitive(childPlanets.toArray(intList)));
 			nbt.setTag("childrenPlanets", childArray);
@@ -1881,11 +1874,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	}
 	
 	public int getSeaLevel() {
-		return sealevel;
+		return seaLevel;
 	}
 	
 	public void setSeaLevel(int sealevel) {
-		this.sealevel = MathHelper.clamp(sealevel, 0, 255);
+		this.seaLevel = MathHelper.clamp(sealevel, 0, 255);
 	}
 	
 	public void setGenType(int genType)

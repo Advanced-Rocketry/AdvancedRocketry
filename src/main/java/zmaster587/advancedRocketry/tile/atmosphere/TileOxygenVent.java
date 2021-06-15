@@ -384,7 +384,6 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		modules.add(redstoneControl);
 		modules.add(traceToggle);
 		//modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this, TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
-		//TODO add itemStack slots for liqiuid
 		return modules;
 	}
 	

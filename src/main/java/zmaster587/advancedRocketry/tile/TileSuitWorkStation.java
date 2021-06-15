@@ -19,7 +19,7 @@ import java.util.List;
 public class TileSuitWorkStation extends TileEntity implements IModularInventory, IInventory {
 
 	private EmbeddedInventory inventory;
-	private ModuleTexturedLimitedSlotArray slotArray[];
+	private ModuleTexturedLimitedSlotArray[] slotArray;
 
 	public TileSuitWorkStation() {
 		inventory = new EmbeddedInventory(getSizeInventory());

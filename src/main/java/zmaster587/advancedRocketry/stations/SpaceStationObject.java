@@ -50,15 +50,15 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	private long transitionEta;
 	private EnumFacing direction;
 	private boolean isAnchored = false;
-	private double rotation[];
-	private double angularVelocity[];
+	private double[] rotation;
+	private double[] angularVelocity;
 	private long lastTimeModification = 0;
 	private DimensionProperties properties;
 	public boolean hasWarpCores = false;
 
 	public int targetOrbitalDistance;
 	public int targetGravity;
-	public int targetRotationsPerHour[];
+	public int[] targetRotationsPerHour;
 
 	public SpaceStationObject() {
 		properties = (DimensionProperties) zmaster587.advancedRocketry.dimension.DimensionManager.defaultSpaceDimensionProperties.clone();
@@ -686,7 +686,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		nbt.setDouble("deltaRotationZ", angularVelocity[2]);
 
 		//Set known planets
-		int array[] = new int[knownPlanetList.size()];
+		int[] array = new int[knownPlanetList.size()];
 		int j = 0;
 		for(int i : knownPlanetList)
 			array[j++] = i;
@@ -761,7 +761,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 
 		//get known planets
 
-		int array[] = nbt.getIntArray("knownPlanets");
+		int[] array = nbt.getIntArray("knownPlanets");
 		int j = 0;
 		for(int i : array)
 			knownPlanetList.add(i);

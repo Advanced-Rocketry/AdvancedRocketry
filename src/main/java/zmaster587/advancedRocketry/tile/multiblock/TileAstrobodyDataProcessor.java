@@ -48,7 +48,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	};
 
 
-	private TileDataBus dataCables[];
+	private TileDataBus[] dataCables;
 	private boolean researchingDistance, researchingAtmosphere, researchingMass;
 	private int atmosphereProgress, distanceProgress, massProgress;
 	private static final int maxResearchTime = 20;
@@ -177,11 +177,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	@Override
 	public boolean completeStructure(IBlockState state) {
 		boolean result = super.completeStructure(state);
-		if(result) {
-			((BlockMultiblockMachine)world.getBlockState(pos).getBlock()).setBlockState(world, world.getBlockState(pos), pos, true);
-		}
-		else
-			((BlockMultiblockMachine)world.getBlockState(pos).getBlock()).setBlockState(world, world.getBlockState(pos), pos, false);
+		((BlockMultiblockMachine)world.getBlockState(pos).getBlock()).setBlockState(world, world.getBlockState(pos), pos, result);
 		return result;
 	}
 

@@ -91,21 +91,17 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 	@Override
 	public void performFunction() {
 
-		if(!world.isRemote)
-		{
+		if(!world.isRemote) {
 			//Do we have room?
 			if(tank.getCapacity() - 1000 < tank.getFluidAmount())
 				return;
 			
 			BlockPos nextPos = getNextBlockLocation();
-			if(nextPos != null)
-			{
-				if(canFitFluid(nextPos))
-				{
+			if(nextPos != null) {
+				if(canFitFluid(nextPos)) {
 					Block worldBlock = world.getBlockState(nextPos).getBlock();
 					Material mat = world.getBlockState(nextPos).getMaterial();
-					if(worldBlock instanceof IFluidBlock)
-					{
+					if(worldBlock instanceof IFluidBlock) {
 						FluidStack fStack = ((IFluidBlock)worldBlock).drain(world, nextPos, true);
 
 						if(fStack != null)
@@ -121,19 +117,16 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		}
 	}
 
-	private boolean canFitFluid(BlockPos pos)
-	{
+	private boolean canFitFluid(BlockPos pos) {
 		Block worldBlock = world.getBlockState(pos).getBlock();
-		if(worldBlock instanceof IFluidBlock)
-		{
+		if(worldBlock instanceof IFluidBlock) {
 			// Can we put it into the tank?
 			return tank.getFluid() == null || tank.getFluid().getFluid() == ((IFluidBlock) worldBlock).getFluid();
 		}
 		return false;
 	}
 
-	private BlockPos getNextBlockLocation()
-	{
+	private BlockPos getNextBlockLocation() {
 
 		if(!cache.isEmpty())
 			return cache.remove(0);
@@ -153,23 +146,19 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		return null;
 	}
 
-	private List<BlockPos> findFluidAtOrAbove(BlockPos pos, Fluid fluid)
-	{
+	private List<BlockPos> findFluidAtOrAbove(BlockPos pos, Fluid fluid) {
 		Queue<BlockPos> queue = new LinkedList<>();
 		Set<BlockPos> visited = new HashSet<>();
 		queue.add(pos);
 
-		while(!queue.isEmpty())
-		{
+		while(!queue.isEmpty()) {
 			BlockPos nextElement = queue.poll();
-			if(visited.contains(nextElement) || nextElement.getDistance(pos.getX(), nextElement.getY(), pos.getZ()) > RANGE )
+			if(visited.contains(nextElement) || nextElement.getDistance(pos.getX(), nextElement.getY(), pos.getZ()) > RANGE)
 				continue;
 
 			Block worldBlock = world.getBlockState(nextElement).getBlock();
-			if(worldBlock instanceof IFluidBlock)
-			{
-				if(fluid == null || ((IFluidBlock)worldBlock).getFluid() == fluid)
-				{
+			if(worldBlock instanceof IFluidBlock) {
+				if(fluid == null || ((IFluidBlock)worldBlock).getFluid() == fluid) {
 					//only add drainable fluids, allow chaining along flowing fluid tho
 					if(((IFluidBlock)worldBlock).canDrain(world, nextElement))
 						cache.add(0, nextElement);

@@ -74,7 +74,6 @@ public class BiomeHandler {
 			if(chunk.getBlockState(x & 15, yy - 1, z & 15) == biome.topBlock)
 				chunk.setBlockState(new BlockPos(x & 15, yy - 1, z & 15), biomeTo.topBlock);
 
-			y = (short)yy;
 		}
 
 		byte[] biomeArr = chunk.getBiomeArray();

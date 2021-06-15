@@ -92,10 +92,10 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 					GlStateManager.color((float) 1, (float) .5, (float) .4, 1f);
 					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 					f10 = size * 40f * AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
-					buffer.pos((double) (-f10), 0.0D, (double) (-f10)).tex(0.0D, 0.0D).endVertex();
-					buffer.pos((double) f10, 0.0D, (double) (-f10)).tex(1.0D, 0.0D).endVertex();
-					buffer.pos((double) f10, 0.0D, (double) f10).tex(1.0D, 1.0D).endVertex();
-					buffer.pos((double) (-f10), 0.0D, (double) f10).tex(0.0D, 1.0D).endVertex();
+					buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+					buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+					buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+					buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
 					Tessellator.getInstance().draw();
 					GL11.glPopMatrix();
 
@@ -109,10 +109,10 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 					f10 = size * 30f * AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
 					//multiplier = 2;
-					buffer.pos((double) (-f10), 0.0D, (double) (-f10)).tex(0.0D, 0.0D).endVertex();
-					buffer.pos((double) f10, 0.0D, (double) (-f10)).tex(1.0D, 0.0D).endVertex();
-					buffer.pos((double) f10, 0.0D, (double) f10).tex(1.0D, 1.0D).endVertex();
-					buffer.pos((double) (-f10), 0.0D, (double) f10).tex(0.0D, 1.0D).endVertex();
+					buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+					buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+					buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+					buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
 					Tessellator.getInstance().draw();
 					GL11.glPopMatrix();
 
@@ -126,10 +126,10 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 					f10 = size * 15f * AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
 					//multiplier = 2;
-					buffer.pos((double) (-f10), 0.0D, (double) (-f10)).tex(0.0D, 0.0D).endVertex();
-					buffer.pos((double) f10, 0.0D, (double) (-f10)).tex(1.0D, 0.0D).endVertex();
-					buffer.pos((double) f10, 0.0D, (double) f10).tex(1.0D, 1.0D).endVertex();
-					buffer.pos((double) (-f10), 0.0D, (double) f10).tex(0.0D, 1.0D).endVertex();
+					buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+					buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+					buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+					buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
 					Tessellator.getInstance().draw();
 					GL11.glPopMatrix();
 				}
@@ -137,7 +137,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 			} else {
 				mc.renderEngine.bindTexture(TextureResources.locationSunPng);
 				//Set sun color and distance
-				GlStateManager.color((float) properties.getStar().getColor()[0], (float) properties.getStar().getColor()[1], (float) properties.getStar().getColor()[2], 1);
+				GlStateManager.color(properties.getStar().getColor()[0], properties.getStar().getColor()[1], properties.getStar().getColor()[2], 1);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				float f10 = properties.getStar().getSize() * 15f * AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance);
 				//multiplier = 2;

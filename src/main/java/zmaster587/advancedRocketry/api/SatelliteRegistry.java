@@ -27,7 +27,7 @@ public class SatelliteRegistry {
 		else if(!itemPropertiesRegistry.containsKey(stack))
 			itemPropertiesRegistry.put(stack, properties);
 		else
-			Logger.getLogger(Constants.modId).warning("Duplicate satellite property being registered for " + stack.toString());
+			Logger.getLogger(Constants.modId).warning("Duplicate satellite property being registered for " + stack);
 	}
 
 	/**

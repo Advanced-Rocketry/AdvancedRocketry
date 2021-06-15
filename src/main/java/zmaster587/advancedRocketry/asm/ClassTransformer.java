@@ -588,7 +588,7 @@ public class ClassTransformer implements IClassTransformer {
 				final InsnList nodeAdd = new InsnList();
 
 				AbstractInsnNode pos1 = null;
-				AbstractInsnNode pos3 = null;
+				AbstractInsnNode pos3;
 				AbstractInsnNode pos2 = null;
 
 				int ifnull = 3;
@@ -645,7 +645,7 @@ public class ClassTransformer implements IClassTransformer {
 			if(onUpdate != null) {
 				final InsnList nodeAdd = new InsnList();
 				LabelNode label = new LabelNode();
-				AbstractInsnNode pos = null;
+				AbstractInsnNode pos;
 				AbstractInsnNode ain = null;
 				int numSpec = 1;
 				int numAload = 7;
@@ -688,7 +688,7 @@ public class ClassTransformer implements IClassTransformer {
 			if(onUpdate != null) {
 				final InsnList nodeAdd = new InsnList();
 				LabelNode label = new LabelNode();
-				AbstractInsnNode pos = null;
+				AbstractInsnNode pos;
 				AbstractInsnNode ain = null;
 				int numSpec = 1;
 				int numAload = 7;
@@ -737,7 +737,7 @@ public class ClassTransformer implements IClassTransformer {
 
 			if(onUpdate != null) {
 				final InsnList nodeAdd = new InsnList();
-				AbstractInsnNode pos = null;
+				AbstractInsnNode pos;
 				int lastReturnIndex = 0;
 				AbstractInsnNode ain;
 

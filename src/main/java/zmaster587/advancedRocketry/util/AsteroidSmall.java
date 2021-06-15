@@ -1,8 +1,6 @@
 package zmaster587.advancedRocketry.util;
 
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.LinkedList;
@@ -65,7 +63,7 @@ public class AsteroidSmall {
 			entry.midpoint += myMass - numOres;
 		entries.add(entry);
 		
-		int ores[] = new int[itemStacks.size()];
+		int[] ores = new int[itemStacks.size()];
 		
 		float normFactor = 0;
 		for(Float prob : stackProbabilities)
@@ -78,11 +76,9 @@ public class AsteroidSmall {
 			
 			float currentLocation = 0;
 			int counter = 0;
-			Item item = Items.AIR;
 			
 			for(Float prob : stackProbabilities) {
 				if(probability <= currentLocation + prob/normFactor && currentLocation <= probability) {
-					item = itemStacks.get(counter).getItem();
 					break;
 				}
 				

@@ -48,7 +48,7 @@ import java.util.Random;
 
 public class TileObservatory extends TileMultiPowerConsumer implements IModularInventory, IDataInventory, IGuiCallback {
 
-	private static final Block lens[] = { AdvancedRocketryBlocks.blockLens, Blocks.GLASS };
+	private static final Block[] lens = { AdvancedRocketryBlocks.blockLens, Blocks.GLASS };
 	
 	private static final Object[][][] structure = new Object[][][]{
 
@@ -285,11 +285,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	@Override
 	public boolean completeStructure(IBlockState state) {
 		boolean result = super.completeStructure(state);
-		if(result) {
-			((BlockMultiblockMachine)world.getBlockState(pos).getBlock()).setBlockState(world, world.getBlockState(pos), pos, true);
-		}
-		else
-			((BlockMultiblockMachine)world.getBlockState(pos).getBlock()).setBlockState(world, world.getBlockState(pos), pos, false);
+		((BlockMultiblockMachine)world.getBlockState(pos).getBlock()).setBlockState(world, world.getBlockState(pos), pos, result);
 
 
 		completionTime = observationTime;

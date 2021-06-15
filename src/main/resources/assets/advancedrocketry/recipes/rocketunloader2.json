@@ -2,13 +2,9 @@
     "type": "minecraft:crafting_shapeless",
     "ingredients":
     [
-        {
-	    "item": "libvulpes:hatch",
-	    "data": 1
-        },
 	{
-	    "item": "advancedrocketry:ic",
-	    "data": 1
+	    "item": "advancedrocketry:loader",
+	    "data": 3
         }
     ],
     "result":

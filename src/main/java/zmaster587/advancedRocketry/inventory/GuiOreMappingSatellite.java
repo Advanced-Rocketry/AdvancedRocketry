@@ -29,14 +29,14 @@ public class GuiOreMappingSatellite extends GuiContainer {
 	TileEntity masterConsole;
 	private boolean merged = false;
 	private static final int SCREEN_SIZE = 146;
-	private int maxZoom = 128;
+	private int maxZoom;
 	private static final int MAXRADIUS = 16;
 	private static final int FANCYSCANMAXSIZE = 57;
 	private int fancyScanOffset;
 	private long prevWorldTickTime;
 	private int prevSlot;
 	private int mouseValue;
-	private int scanSize = 2;
+	private int scanSize;
 	private int radius = 1;
 	private int zoomScale;
 	private int xSelected, zSelected, xCenter, zCenter, playerPosX, playerPosZ;
@@ -104,13 +104,12 @@ public class GuiOreMappingSatellite extends GuiContainer {
 		resetTexture();
 		if(prevSlot == -1) {
 			currentMapping = new Thread(mapper);
-			currentMapping.setName("Ore Scan");
 		}
 		else {
 
 			currentMapping = new Thread(new ItemMapper(inventorySlots.getSlot(prevSlot).getStack()));
-			currentMapping.setName("Ore Scan");
 		}
+		currentMapping.setName("Ore Scan");
 		currentMapping.start();
 	}
 

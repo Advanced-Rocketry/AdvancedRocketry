@@ -58,13 +58,12 @@ import java.util.List;
 
 public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements IButtonInventory, INetworkMachine, IDataSync, IModularInventory, IProgressBar, ILinkableTile {
 
-	private final int MAX_SIZE = 16;
-	private final int MIN_SIZE = 3;
-	private final int MAX_SIZE_Y = 64;
-	private final int MIN_SIZE_Y = 4;
-	private final int MAXSCANDELAY = 10;
-	private final int ENERGYFOROP = 100;
-	//private final int ENERGY = 100;
+	private final static int MAXSCANDELAY = 10;
+	private final static int ENERGYFOROP = 100;
+	private final static int MAX_SIZE = 16;
+	private final static int MAX_SIZE_Y = 64;
+	private final static int MIN_SIZE = 3;
+	private final static int MIN_SIZE_Y = 4;
 
 	protected static final ResourceLocation backdrop =  new ResourceLocation("advancedrocketry","textures/gui/rocketBuilder.png");
 	private static final ProgressBarImage horizontalProgressBar = new ProgressBarImage(89, 9, 81, 17, 176, 0, 80, 15, 0, 2, EnumFacing.EAST, backdrop);
@@ -83,7 +82,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	protected AxisAlignedBB bbCache;
 	protected ErrorCodes status;
 	
-	static final Block viableBlocks[] = {AdvancedRocketryBlocks.blockLaunchpad, AdvancedRocketryBlocks.blockLandingPad};
+	static final Block[] viableBlocks = {AdvancedRocketryBlocks.blockLaunchpad, AdvancedRocketryBlocks.blockLandingPad};
 
 	private List<HashedBlockPosition> blockPos;
 
@@ -400,7 +399,6 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 			int totalFuelUse = bipropellantfuelUse + nuclearWorkingFluidUse + monopropellantfuelUse;
 
 			//Set status
-			//TODO: warn if seat OR satellite missing
 			if(invalidBlock)
 				status = ErrorCodes.INVALIDBLOCK;
 			else if (((fuelCapacityBipropellant > 0 && totalFuel > fuelCapacityBipropellant) || (fuelCapacityMonopropellant > 0 && totalFuel > fuelCapacityMonopropellant) || (fuelCapacityNuclearWorkingFluid > 0 && totalFuel > fuelCapacityNuclearWorkingFluid))
@@ -657,7 +655,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 
 		blockPos.clear();
 		if(nbt.hasKey("infrastructureLocations")) {
-			int array[] = nbt.getIntArray("infrastructureLocations");
+			int[] array = nbt.getIntArray("infrastructureLocations");
 
 			for(int counter = 0; counter < array.length; counter += 3) {
 				blockPos.add(new HashedBlockPosition(array[counter], array[counter+1], array[counter+2]));

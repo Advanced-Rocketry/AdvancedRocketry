@@ -22,8 +22,8 @@ public class RenderLaser extends Render implements IRenderFactory<EntityLaserNod
 
 	private static final ResourceLocation flare = new ResourceLocation("advancedrocketry", "textures/entity/Flare.png");
 
-	float color[];
-	float flareColor[];
+	float[] color;
+	float[] flareColor;
 	//float flareColo
 	private double size;
 	

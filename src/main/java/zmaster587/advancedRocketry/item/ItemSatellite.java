@@ -17,22 +17,6 @@ import java.util.List;
 
 public class ItemSatellite extends ItemIdWithName {
 
-	@Deprecated
-	public SatelliteProperties getSatellite(@Nonnull ItemStack stack) {
-
-		//return getSatelliteProperties(stack);
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
-
-			//TODO: check
-			SatelliteProperties satellite = new SatelliteProperties();
-			satellite.readFromNBT(nbt);
-
-			return satellite;
-		}
-		return null;
-	}
-
 	public EmbeddedInventory readInvFromNBT(@Nonnull ItemStack stackIn) {
 		EmbeddedInventory inv = new EmbeddedInventory(7);
 		if(!stackIn.hasTagCompound() || !stackIn.getTagCompound().hasKey("inv"))
@@ -80,7 +64,7 @@ public class ItemSatellite extends ItemIdWithName {
 	@Override
 	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
 
-		SatelliteProperties properties = getSatellite(stack);
+		SatelliteProperties properties = SatelliteRegistry.getSatelliteProperty(stack);
 
 		if(properties != null) {
 			int dataStorage, powerGeneration, powerStorage;

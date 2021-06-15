@@ -270,8 +270,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 				}
 
-				for(NBTBase tag : destList)
-				{
+				for(NBTBase tag : destList) {
 					try {
 						retList.add(LandingLocation.loadFromNBT((NBTTagCompound)tag));
 					} catch (NoSuchAttributeException e) {
@@ -321,12 +320,6 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		else 
 			nbt = new NBTTagCompound();
 
-		NBTTagCompound nbtEntry;
-		if(nbt.hasKey("dimid" + dimid)) 
-			nbtEntry = nbt.getCompoundTag("dimid" + dimid);
-		else
-			nbtEntry = new NBTTagCompound();
-
 		LandingLocation landingLoc = new LandingLocation("Last", x,y,z);
 
 		List<LandingLocation> landingLocList = getLandingLocations(stack, dimid);
@@ -348,7 +341,6 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		if(stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
 			if(nbt.hasKey("dimid" + dimid)) {
-				nbt = nbt.getCompoundTag("dimid" + dimid);
 				List<LandingLocation> landingLocList = getLandingLocations(stack, dimid);
 				int id = getSelectionId(stack, dimid);
 				LandingLocation loc;
@@ -456,8 +448,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			return String.format("%s: %.0f, %.0f", name, location.x, location.z);
 		}
 
-		static LandingLocation loadFromNBT(NBTTagCompound nbt) throws NoSuchAttributeException
-		{
+		static LandingLocation loadFromNBT(NBTTagCompound nbt)  throws NoSuchAttributeException {
 			String name = nbt.getString("name");
 			Vector3F<Float> vec = new Vector3F<>(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"));
 

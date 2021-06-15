@@ -83,14 +83,6 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 
 	}
 
-	public void updateRiderPosition()
-	{
-		if (!this.getPassengers().isEmpty())
-		{
-			
-		}
-	}
-
 	/**
 	 * Returns the Y offset from the entity's position for any entity riding this one.
 	 */
