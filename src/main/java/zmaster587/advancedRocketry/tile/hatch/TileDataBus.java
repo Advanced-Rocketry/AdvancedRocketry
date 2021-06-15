@@ -55,10 +55,6 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 
 			inventory.setInventorySlotContents(1, decrStackSize(0, 1));
 		}
-
-		if(world.isRemote) {
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)-2));
-		}
 	}
 
 	@Override
@@ -75,10 +71,6 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 			this.data.removeData(itemData.addData(itemStack, this.data.getData(), this.data.getDataType()), true);
 
 			inventory.setInventorySlotContents(1, decrStackSize(0, 1));
-		}
-
-		if(world.isRemote) {
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)-1));
 		}
 	}
 
@@ -140,7 +132,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 		inventory.setInventorySlotContents(slot, stack);
 		ItemStack itemStack = inventory.getStackInSlot(0);
 
-		if(itemStack != ItemStack.EMPTY && itemStack.getItem() instanceof ItemData) {
+		if(itemStack != ItemStack.EMPTY && itemStack.getItem() instanceof ItemData  && inventory.getStackInSlot(1) == ItemStack.EMPTY) {
 			ItemData itemData = (ItemData)itemStack.getItem();
 			if(itemData.getData(itemStack) > 0 && data.getData() != data.getMaxData()) {
 				loadData(0);
@@ -177,26 +169,13 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 	
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
-
-	}
+	public void writeDataToNetwork(ByteBuf out, byte id) { }
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
-
-	}
+	public void readDataFromNetwork(ByteBuf in, byte packetId, NBTTagCompound nbt) { }
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
-
-		if(id == -1) {
-			storeData(0);
-		}
-		else if(id == -2)
-			loadData(0);
-	}
+	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt) { }
 
 	@Override
 	public int extractData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {
