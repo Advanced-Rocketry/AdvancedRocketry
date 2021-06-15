@@ -28,17 +28,17 @@ import java.util.List;
 public final class SealableBlockHandler implements IAtmosphereSealHandler
 {
 	/** List of blocks not allowed. */
-	private List<Block> blockBanList = new ArrayList();
+	private List<Block> blockBanList = new ArrayList<>();
 	/** List of blocks that are allowed regardless of properties. */
-	private List<Block> blockAllowList = new ArrayList();
+	private List<Block> blockAllowList = new ArrayList<>();
 	/** List of block materials not allowed. */
-	private List<Material> materialBanList = new ArrayList();
+	private List<Material> materialBanList = new ArrayList<>();
 	/** List of block materials that are allowed regardless of properties. */
-	private List<Material> materialAllowList = new ArrayList();
+	private List<Material> materialAllowList = new ArrayList<>();
 	
-	private HashSet<HashedBlockPosition> doorPositions = new HashSet<HashedBlockPosition>();
+	private HashSet<HashedBlockPosition> doorPositions = new HashSet<>();
 	//TODO add meta support
-	//TODO add complex logic support threw API interface
+	//TODO add complex logic support through API interface
 	//TODO add complex logic handler for integration support
 
 	/** INSTANCE */
@@ -112,10 +112,7 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 		{
 			blockBanList.add(block);
 		}
-		if (blockAllowList.contains(block))
-		{
-			blockAllowList.remove(block);
-		}
+		blockAllowList.remove(block);
 	}
 
 	@Override
@@ -125,10 +122,7 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 		{
 			blockAllowList.add(block);
 		}
-		if (blockBanList.contains(block))
-		{
-			blockBanList.remove(block);
-		}
+		blockBanList.remove(block);
 	}
 	
 	public List<Block> getOverriddenSealableBlocks()
@@ -157,12 +151,14 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 	 * have a 3D model that doesn't look a full block in size. There
 	 * is no way around this other than to make a black list check.
 	 *
-	 * @param block - block to compare
+	 * @param world
+	 * @param pos block to compare
+	 * @param state
 	 * @return true if full block
 	 */
 	public static boolean isFullBlock(IBlockAccess world, BlockPos pos, IBlockState state)
 	{
-		AxisAlignedBB bb = state.getCollisionBoundingBox((World) world, pos);
+		AxisAlignedBB bb = state.getCollisionBoundingBox(world, pos);
 		
     	if(bb == null)
     		return false;

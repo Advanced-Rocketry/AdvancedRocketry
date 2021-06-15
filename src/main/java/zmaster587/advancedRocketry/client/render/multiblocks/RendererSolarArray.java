@@ -9,7 +9,6 @@ import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.tile.multiblock.energy.TileSolarArray;
 import zmaster587.libVulpes.block.RotatableBlock;
-import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 
 public class RendererSolarArray extends TileEntitySpecialRenderer {
 

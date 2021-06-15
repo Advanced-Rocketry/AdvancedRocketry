@@ -16,7 +16,7 @@ public class AdvancedRocketryFluids {
 	public static Fluid fluidRocketFuel;
 	public static Fluid fluidNitrogen;
 	public static Fluid fluidEnrichedLava;
-	private static Set<FluidGasGiantGas> gasses = new HashSet<FluidGasGiantGas>();
+	private static Set<FluidGasGiantGas> gasses = new HashSet<>();
 	
 	// Registers a gas that can be spawned on a gas giant
 	public static void registerGasGiantGas(Fluid gas, int minGravity, int maxGravity, double chance) {

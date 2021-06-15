@@ -3,15 +3,12 @@ package zmaster587.advancedRocketry.tile.infrastructure;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -39,14 +36,15 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TileFuelingStation extends TileInventoriedRFConsumerTank implements IModularInventory, IMultiblock, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory {
-	EntityRocketBase linkedRocket;
-	HashedBlockPosition masterBlock;
-	ModuleRedstoneOutputButton redstoneControl;
-	RedstoneState state;
+	private EntityRocketBase linkedRocket;
+	private HashedBlockPosition masterBlock;
+	private ModuleRedstoneOutputButton redstoneControl;
+	private RedstoneState state;
 
 	public TileFuelingStation() {
 		super(1000,3, 5000);
@@ -72,44 +70,44 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	@Override
 	public void performFunction() {
 		if(!world.isRemote) {
-			//Lock rocket to a specific fluid so that it has only one oxidizer/bipropellant/monopropellant
-			if (tank.getFluid() != null && linkedRocket.stats.getFuelFluid() == "null") {
-				if ((FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid())  && linkedRocket.stats.getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT) > 0)|| (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid()) && linkedRocket.stats.getFuelCapacity(FuelType.LIQUID_BIPROPELLANT) > 0)) {
-					linkedRocket.stats.setFuelFluid(tank.getFluid().getFluid().getName());
+			//Lock rocket to a specific fluid so that it has only one oxidizer/bipropellant/monopropellant/etc
+			FluidStack currentFluidStack = tank.getFluid();
+			if (currentFluidStack != null) {
+				Fluid currentFluid = currentFluidStack.getFluid();
+
+				//Check to see if we should set the rocket fuel
+				if (linkedRocket.stats.getFuelFluid().equals("null")) {
+					if ((FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, currentFluid) && linkedRocket.getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT) > 0) || (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, currentFluid) && linkedRocket.getFuelCapacity(FuelType.LIQUID_BIPROPELLANT) > 0))
+						linkedRocket.stats.setFuelFluid(currentFluid.getName());
 				}
-			} else if (tank.getFluid() != null && linkedRocket.stats.getOxidizerFluid() == "null") {
-				if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid())) {
-					linkedRocket.stats.setOxidizerFluid(tank.getFluid().getFluid().getName());
+				if (linkedRocket.stats.getOxidizerFluid().equals("null")) {
+					if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, currentFluid))
+						linkedRocket.stats.setOxidizerFluid(currentFluid.getName());
 				}
+				if (linkedRocket.stats.getWorkingFluid().equals("null")) {
+					if (FuelRegistry.instance.isFuel(FuelType.NUCLEAR_WORKING_FLUID, currentFluid))
+						linkedRocket.stats.setWorkingFluid(currentFluid.getName());
+				}
+
+				//Actually fill the fuel if that is the case
+				if (currentFluid == FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid()) || currentFluid == FluidRegistry.getFluid(linkedRocket.stats.getOxidizerFluid()) || currentFluid == FluidRegistry.getFluid(linkedRocket.stats.getWorkingFluid())) {
+					if (linkedRocket.getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT && FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, currentFluid)) {
+						int fuelRate = (int) (FuelRegistry.instance.getMultiplier(FuelType.LIQUID_OXIDIZER, currentFluid) * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_OXIDIZER));
+						tank.drain(linkedRocket.addFuelAmount(FuelType.LIQUID_OXIDIZER, ARConfiguration.getCurrentConfig().fuelPointsPer10Mb), true);
+						linkedRocket.setFuelConsumptionRate(FuelType.LIQUID_OXIDIZER, fuelRate);
+					} else {
+						int fuelRate = (int) (FuelRegistry.instance.getMultiplier(linkedRocket.getRocketFuelType(), currentFluid) * linkedRocket.stats.getBaseFuelRate(linkedRocket.getRocketFuelType()));
+						tank.drain(linkedRocket.addFuelAmount(linkedRocket.getRocketFuelType(), ARConfiguration.getCurrentConfig().fuelPointsPer10Mb), true);
+						linkedRocket.setFuelConsumptionRate(linkedRocket.getRocketFuelType(), fuelRate);
+					}
+
+				}
+
+				//If the rocket is full then emit redstone
+				setRedstoneState(!canRocketFitFluid(currentFluid));
 			}
-
-			if (tank.getFluid() != null && isFluidFillable(tank.getFluid().getFluid())) {
-				if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid())) {
-					int fuelRate = (int)FuelRegistry.instance.getMultiplier(FuelType.LIQUID_MONOPROPELLANT, tank.getFluid().getFluid()) * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT);
-
-					tank.drain(linkedRocket.addFuelAmountMonopropellant(ARConfiguration.getCurrentConfig().fuelPointsPer10Mb), true);
-					linkedRocket.setFuelRateMonopropellant(fuelRate);
-				} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid())) {
-					int fuelRate = (int)FuelRegistry.instance.getMultiplier(FuelType.LIQUID_BIPROPELLANT, tank.getFluid().getFluid()) * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_BIPROPELLANT);
-
-					tank.drain(linkedRocket.addFuelAmountBipropellant(ARConfiguration.getCurrentConfig().fuelPointsPer10Mb), true);
-					linkedRocket.setFuelRateBipropellant(fuelRate);
-				} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid())) {
-					int fuelRate = (int)FuelRegistry.instance.getMultiplier(FuelType.LIQUID_OXIDIZER, tank.getFluid().getFluid()) * linkedRocket.stats.getBaseFuelRate(FuelType.LIQUID_OXIDIZER);
-
-					tank.drain(linkedRocket.addFuelAmountOxidizer(ARConfiguration.getCurrentConfig().fuelPointsPer10Mb), true);
-					linkedRocket.setFuelRateOxidizer(fuelRate);
-				}
-			}
-			//If the rocket is full then emit redstone
-			if (tank.getFluid() != null)
-			    setRedstoneState(!canRocketFitFluid(tank.getFluid().getFluid()));
 		}
 		useBucket(0, inventory.getStackInSlot(0));
-	}
-
-	public boolean isFluidFillable (Fluid fluid) {
-		return fluid == FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid()) || (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluid) && fluid == FluidRegistry.getFluid(linkedRocket.stats.getOxidizerFluid()) && FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid())));
 	}
 
 	@Override
@@ -135,20 +133,21 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 
 	@Override
 	public boolean canPerformFunction() {
-		// TODO Solid fuel?
-		return linkedRocket != null && ( /*(inv != null) ||*/ (tank.getFluid() != null && tank.getFluidAmount() > 9 &&
-				(linkedRocket.getRocketStats().getFuelAmount(FuelType.LIQUID_MONOPROPELLANT) < linkedRocket.getRocketStats().getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT) ||
-				linkedRocket.getRocketStats().getFuelAmount(FuelType.LIQUID_BIPROPELLANT) < linkedRocket.getRocketStats().getFuelCapacity(FuelType.LIQUID_BIPROPELLANT) ||
-				linkedRocket.getRocketStats().getFuelAmount(FuelType.LIQUID_OXIDIZER) < linkedRocket.getRocketStats().getFuelCapacity(FuelType.LIQUID_OXIDIZER))));
+		return linkedRocket != null && (tank.getFluid() != null && tank.getFluidAmount() > 9 && canRocketFitFluid(tank.getFluid().getFluid()));
 	}
 
 	@Override
 	public boolean canFill(Fluid fluid) {
-		return FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT,fluid) || FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT,fluid) || FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER,fluid);
+		return FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT,fluid) || FuelRegistry.instance.isFuel(FuelType.NUCLEAR_WORKING_FLUID,fluid) || FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT,fluid) || FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER,fluid);
 	}
 
+
+	/**
+	 * @param fluid the fluid to check whether the rocket has space for it
+	 * @return boolean on whether the rocket can accept the fluid
+	 */
 	public boolean canRocketFitFluid(Fluid fluid) {
-		return isFluidFillable(fluid) && (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluid)) ? linkedRocket.getFuelCapacityMonopropellant() > linkedRocket.getFuelAmountMonopropellant() : (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluid)) ? linkedRocket.getFuelCapacityBipropellant() > linkedRocket.getFuelAmountBipropellant() : linkedRocket.getFuelCapacityOxidizer() > linkedRocket.getFuelAmountOxidizer();
+		return canFill(fluid) && ((linkedRocket.getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT && FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluid)) ? linkedRocket.getFuelCapacity(FuelType.LIQUID_OXIDIZER) > linkedRocket.getFuelAmount(FuelType.LIQUID_OXIDIZER) : linkedRocket.getFuelCapacity(linkedRocket.getRocketFuelType()) > linkedRocket.getFuelAmount(linkedRocket.getRocketFuelType()));
 	}
 
 
@@ -163,21 +162,25 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 
 		super.setInventorySlotContents(slot, stack);
 		while(useBucket(0, getStackInSlot(0)));
 
 	}
 
-	//Handles internal bucket tank interaction
-	//Returns true on successful bucket use
-	private boolean useBucket( int slot, ItemStack stack) {
+	/**
+	 * Handles internal bucket tank interaction
+	 * @param slot integer slot to insert into
+	 * @param stack the itemstack to work fluid handling on
+	 * @return boolean on whether the fluid stack was successfully filled from or not, returns false if the stack cannot be extracted from or has no fluid left
+	 */
+	private boolean useBucket(int slot, @Nonnull ItemStack stack) {
 		if(slot == 0 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
 			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
 			FluidStack fluidStack = fluidItem.getTankProperties()[0].getContents();
 
-			if(fluidStack != null && (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid()) || FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid()) || FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid()))) {
+			if(fluidStack != null && canFill(fluidStack.getFluid())) {
 
 				FluidStack preTransfer = FluidUtil.tryFluidTransfer(tank, FluidUtil.getFluidHandler(stack), 5000, false);
 				if (preTransfer != null) {
@@ -191,22 +194,22 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 						super.setInventorySlotContents(1, resultContainer.copy());
 						super.setInventorySlotContents(0, ItemStack.EMPTY);
 					}
-                    return true;
 				} else
 					return false;
 			} else
 				return false;
 		} else
 			return false;
+		return false;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
 		if(stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
 			FluidStack fstack = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP).getTankProperties()[0].getContents();
-			return fstack != null && FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fstack.getFluid());
+			return fstack != null && canFill(fstack.getFluid());
 		}
-		return FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT,stack);
+		return false;
 	}
 
 	@Override
@@ -230,7 +233,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity,
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 
 		ItemLinker.setMasterCoords(item, pos);
@@ -257,7 +260,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
-	public boolean onLinkComplete(ItemStack item, TileEntity entity,
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("msg.linker.error.firstMachine"));
@@ -265,6 +268,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
+	@Nonnull
 	public int[] getSlotsForFace(EnumFacing side) {
 		if(side == EnumFacing.DOWN)
 			return  new int[]{1};
@@ -273,7 +277,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> list = new ArrayList<ModuleBase>();
+		List<ModuleBase> list = new ArrayList<>();
 
 		list.add(new ModulePower(156, 12, this));
 		list.add(new ModuleSlotArray(45, 18, this, 0, 1));
@@ -298,7 +302,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
-	public boolean linkMission(IMission misson) {
+	public boolean linkMission(IMission mission) {
 		return false;
 	}
 

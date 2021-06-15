@@ -40,8 +40,6 @@ public class MapGenInvertedPillar extends MapGenBase {
 
 			final float SHAPE = -0.005f;
 
-			currentEdgeRadius = (int)((SHAPE*(edgeRadius * Math.pow(treeHeight,2) )) + ((1f-SHAPE)*edgeRadius));
-
 			y++;
 
 			for(int yOff = -20; yOff < treeHeight; yOff++) {

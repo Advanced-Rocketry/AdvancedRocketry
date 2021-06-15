@@ -1,30 +1,15 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
-import zmaster587.advancedRocketry.tile.multiblock.energy.TileBlackHoleGenerator;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileCentrifuge;
 import zmaster587.libVulpes.block.RotatableBlock;
-import zmaster587.libVulpes.render.RenderHelper;
-import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
-import zmaster587.libVulpes.tile.multiblock.TileMultiPowerProducer;
 
 public class RenderCentrifuge extends TileEntitySpecialRenderer {
 

@@ -1,9 +1,9 @@
-itemGroup.advancedRocketry = Advanced Rocketry
+itemGroup.advancedRocketry=Advanced Rocketry
 itemGroup.advancedRocketryOres=Руди Advanced Rocketry
- 
-entity.advancedRocketry.rocket.name = Ракета
-entity.rocket.name = Ракета
- 
+
+entity.advancedRocketry.rocket.name=Ракета
+entity.rocket.name=Ракета
+
 tile.seat.name=Сидіння
 tile.pad.name=Стартовий майданчик
 tile.structuretower.name=Структурна вежа
@@ -13,7 +13,6 @@ tile.cuttingMachine.name=Різальна машина
 tile.sawBlade.name=Збірка циркулярної пили
 tile.controlComp.name=Комп'ютер для управління польотами
 tile.precisionAssemblingMachine.name=Точний складальний аппарат
-tile.Laser Emitter.name=Лазерна дрель
 tile.Crystallizer.name=Кристалізатор
 tile.blastBrick.name=Жаростійкий кирпич
 tile.blastFurnaceController.name=Контроллер високотемпературної печі
@@ -28,14 +27,13 @@ tile.rocket.name=Рідинний ракетный двигун
 tile.fuelTank.name=Бак для палива
 tile.monitoringstation.name=Станція моніторингу
 tile.satelliteMonitor.name=Супутниковий термінал
-tile.sapling.name=Садженець Лайтвуд
-tile.leaves2.name=Листя Lightwood
+tile.lightwoodsapling.name=Садженець Лайтвуд
+tile.lightwoodleaves.name=Листя Lightwood
 tile.chipStorage.name=Сховище адрес супутників
 tile.planetanalyser.name=Планетний аналізатор
 tile.lunaranalyser.name=Лунный анализатор
-tile.guidanceComputer.name = Автопілот
+tile.guidanceComputer.name=Автопілот
 tile.electricArcFurnace.name=Электродугова піч
-tile.motor.name=Електродвигун
 tile.hotDryturf.name=Залізняковий грунт
 tile.concrete.name=Бетон
 tile.lathe.name=Токарний станок
@@ -68,10 +66,8 @@ tile.sapphire.name=Сапфіровый блок
 tile.citrine.name=Цитриновий блок
 tile.wulfentite.name=Блок вульфеніту
 tile.amethyst.name=Блок аметисту
-tile.orientationControl.name=Контролер орієнтації
 tile.gravityControl.name=Контролер гравітації
-tile.drill.name = Бур
-tile.dataCable.name=Кабель даних
+tile.drill.name=Бур
 tile.rfOutput.name=Вихід RF
 tile.microwaveReciever.name=Мікрохвильвий приймач
 tile.solarPanel.name=Сонячна панель
@@ -79,6 +75,7 @@ tile.suitWorkStation.name=Станція модифікації костюма
 tile.orientationControl.name=Контролер орієнтації
 tile.biomeScanner.name=Сканер біомів
 tile.atmoshereTerraformer.name=Тераформер атмосфери
+tile.qcrucible.name=Кварцовий тигель
 
 tile.Dilithium.name=Руда ділітія
 tile.coil.dilithium.name=Ділітійова котушка
@@ -94,7 +91,6 @@ item.circuitIC.3.name=Контролююча плата
 item.circuitIC.4.name=Плата введення-виведення предметів
 item.circuitIC.5.name=Плата введення-виведення рідин
 item.OreScanner.name=Сканер руд
-item.qcrucible.name=Кварцовий тигель
 item.dataUnit.0.name=Сховище даних
 item.sawBlade.0.name=Металева пила
 item.satellite.name=Супутник
@@ -119,11 +115,10 @@ item.spaceHelmet.name=Шолом скафандра
 item.spaceLeggings.name=Штани скафандра
 item.spaceChest.name=Скафандр
 item.spaceBoots.name=чоботи скафандра
-item.bucketRocketFuel.name=Відро ракетного палива
 item.smallAirlock.name=Малаі герметичні двері
 item.carbonScrubberCartridge.name=Поглинаючий картридж
 item.jackhammer.name=Відбійний молоток
-item.sealDetector.name = шукач теч
+item.sealDetector.name=шукач теч
 item.itemUpgrade.0.name=Покращення "Політ"
 item.itemUpgrade.1.name=Покращення "Контроль швидкості польоту"
 item.itemUpgrade.2.name=Покращення "Біонічні ноги"
@@ -137,7 +132,7 @@ item.pressureTank.1.name=Балон
 item.pressureTank.2.name=Балон високого тиску
 item.pressureTank.3.name=Балон надвисокого тиску
 
-material.Dilithium.name = Дилітіївий
+material.Dilithium.name=Дилітіївий
 material.TitaniumAluminide.name=Титано-алюмінієвий
 
 container.crystallizer=Кристалізатор
@@ -147,7 +142,7 @@ container.observatory=Обсерваторія
 container.satellite=Відсік для супутника
 container.monitoringstation=Станція моніторингу
 container.satelliteMonitor=Супутниковий термінал
- 
+
 data.undefined.name=Невідомо
 data.distance.name=Відстань
 data.humidity.name=Вологість

@@ -6,19 +6,20 @@ import zmaster587.advancedRocketry.integration.jei.ARPlugin;
 public class CompatibilityMgr {
 
 	public static boolean gregtechLoaded;
-	public static boolean thermalExpansion;
-	
+	public static boolean thermalExpansionLoaded;
+	public static boolean isSpongeInstalled;
+
 	public CompatibilityMgr() {
 		gregtechLoaded = false;
-		thermalExpansion = false;
+		thermalExpansionLoaded = false;
 	}
 	
 	public static void getLoadedMods() {
-		thermalExpansion = Loader.isModLoaded("ThermalExpansion");
+		thermalExpansionLoaded = Loader.isModLoaded("ThermalExpansion");
 		gregtechLoaded = Loader.isModLoaded("gregtech_addon");
-	};
+	}
 	
-	public static void initCompatRecipies() {
+	public static void initCompatRecipes() {
 		if(gregtechLoaded) {
 			
 		}

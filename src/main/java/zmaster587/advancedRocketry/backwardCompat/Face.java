@@ -33,10 +33,9 @@ public class Face
 
         if ((textureCoordinates != null) && (textureCoordinates.length > 0))
         {
-            for (int i = 0; i < textureCoordinates.length; ++i)
-            {
-                averageU += textureCoordinates[i].u;
-                averageV += textureCoordinates[i].v;
+            for (TextureCoordinate textureCoordinate : textureCoordinates) {
+                averageU += textureCoordinate.u;
+                averageV += textureCoordinate.v;
             }
 
             averageU = averageU / textureCoordinates.length;
@@ -77,7 +76,7 @@ public class Face
     	
         Vec3d v1 = new Vec3d(vertices[1].x - vertices[0].x, vertices[1].y - vertices[0].y, vertices[1].z - vertices[0].z);
         Vec3d v2 = new Vec3d(vertices[2].x - vertices[0].x, vertices[2].y - vertices[0].y, vertices[2].z - vertices[0].z);
-        Vec3d normalVector = null;
+        Vec3d normalVector;
 
         normalVector = v1.crossProduct(v2).normalize();
 

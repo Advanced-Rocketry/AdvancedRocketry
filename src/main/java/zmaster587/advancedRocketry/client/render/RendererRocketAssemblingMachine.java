@@ -54,7 +54,7 @@ public class RendererRocketAssemblingMachine extends TileEntitySpecialRenderer {
 			double uMin = 0;
 			double vMin = 0;
 			double uMax = 1;
-			double vMax = 1;
+			double vMax;
 
 			GL11.glPushMatrix();
 			GL11.glTranslated(x,y,z);

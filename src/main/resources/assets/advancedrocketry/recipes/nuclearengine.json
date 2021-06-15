@@ -1,0 +1,30 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"sss",
+	"tdt",
+	"t t"
+    ],
+    "key":
+    {
+        "s":
+        {
+            "type": "forge:ore_dict",
+            "ore": "ingotTitaniumIridium"
+        },
+	"t":
+        {
+            "type": "forge:ore_dict",
+            "ore": "plateTitaniumAluminide"
+        },
+    "d": {
+        "type": "forge:ore_dict",
+        "ore": "gemDilithium"}
+    },
+    "result":
+    {
+        "item": "advancedrocketry:nuclearrocketmotor",
+        "count": 1
+    }
+}

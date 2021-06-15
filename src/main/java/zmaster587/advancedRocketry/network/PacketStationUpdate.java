@@ -41,7 +41,7 @@ public class PacketStationUpdate extends BasePacket {
 	public PacketStationUpdate() {}
 
 	public PacketStationUpdate(ISpaceObject dimProperties, Type type) {
-		this.spaceObject = (SpaceStationObject)dimProperties;
+		this.spaceObject = dimProperties;
 		this.stationNumber = dimProperties.getId();
 		this.type = type;
 	}
@@ -95,39 +95,37 @@ public class PacketStationUpdate extends BasePacket {
 
 
 		switch(type) {
-		case DEST_ORBIT_UPDATE:
-			destOrbitingBody = in.readInt();
-			break;
-		case ORBIT_UPDATE:
-			destOrbitingBody = in.readInt();
-			break;
-		case FUEL_UPDATE:
-			fuel = in.readInt();
-			break;
-		case ROTANGLE_UPDATE:
-			rx = in.readDouble();
-			ry = in.readDouble();
-			rz = in.readDouble();
-			drx = in.readDouble();
-			dry = in.readDouble();
-			drz = in.readDouble();
-			break;
-		case SIGNAL_WHITE_BURST:
-			break;
-		case ALTITUDE_UPDATE:
-			orbitalDistance = in.readFloat();
-			break;
-		case DIM_PROPERTY_UPDATE:
-			PacketBuffer packetBuffer = new PacketBuffer(in);
-			try {
-				nbt = packetBuffer.readCompoundTag();
+			case DEST_ORBIT_UPDATE:
+			case ORBIT_UPDATE:
+					destOrbitingBody = in.readInt();
+				break;
+			case FUEL_UPDATE:
+				fuel = in.readInt();
+				break;
+			case ROTANGLE_UPDATE:
+				rx = in.readDouble();
+				ry = in.readDouble();
+				rz = in.readDouble();
+				drx = in.readDouble();
+				dry = in.readDouble();
+				drz = in.readDouble();
+				break;
+			case SIGNAL_WHITE_BURST:
+				break;
+			case ALTITUDE_UPDATE:
+				orbitalDistance = in.readFloat();
+				break;
+			case DIM_PROPERTY_UPDATE:
+				PacketBuffer packetBuffer = new PacketBuffer(in);
+				try {
+					nbt = packetBuffer.readCompoundTag();
 
-			} catch (IOException e) {
-				e.printStackTrace();
-				nbt = null;
-				return;
-			}
-			break;
+				} catch (IOException e) {
+					e.printStackTrace();
+					nbt = null;
+					return;
+				}
+				break;
 		}	
 	}
 

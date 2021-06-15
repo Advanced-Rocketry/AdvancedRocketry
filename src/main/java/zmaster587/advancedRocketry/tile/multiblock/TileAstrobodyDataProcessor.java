@@ -32,6 +32,7 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,12 +48,12 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	};
 
 
-	private TileDataBus dataCables[];
+	private TileDataBus[] dataCables;
 	private boolean researchingDistance, researchingAtmosphere, researchingMass;
 	private int atmosphereProgress, distanceProgress, massProgress;
 	private static final int maxResearchTime = 20;
 	private EmbeddedInventory inventory;
-	TileInventoryHatch inputHatch, outputHatch;
+	private TileInventoryHatch inputHatch, outputHatch;
 
 	public TileAstrobodyDataProcessor() {
 		dataCables = new TileDataBus[3];
@@ -107,9 +108,9 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken, IBlockState state) {
 
 		//Make sure to unlock the data cables
-		for(int i = 0; i < dataCables.length; i++) {
-			if(dataCables[i] != null)
-				dataCables[i].lockData(null);
+		for (TileDataBus dataCable : dataCables) {
+			if (dataCable != null)
+				dataCable.lockData(null);
 		}
 
 		super.deconstructMultiBlock(world, destroyedPos,
@@ -135,6 +136,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	}
 
 	@Override
+	@Nonnull
 	public AxisAlignedBB getRenderBoundingBox() {
 
 		return new AxisAlignedBB(pos.add(-2,-2,-2),pos.add(2,2,2));
@@ -150,7 +152,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 		if(getStackInSlot(0) == ItemStack.EMPTY) {
 			for(int j = 0; j < inputHatch.getSizeInventory(); j++) {
 				ItemStack stack2 = inputHatch.getStackInSlot(j);
-				if(stack2 != null && stack2.getItem() instanceof ItemAsteroidChip && ((ItemAsteroidChip)stack2.getItem()).getUUID(stack2) != null) {
+				if(!stack2.isEmpty() && stack2.getItem() instanceof ItemAsteroidChip && ((ItemAsteroidChip)stack2.getItem()).getUUID(stack2) != null) {
 					setInventorySlotContents(0, inputHatch.decrStackSize(j, 1));
 					break;
 				}
@@ -175,17 +177,13 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	@Override
 	public boolean completeStructure(IBlockState state) {
 		boolean result = super.completeStructure(state);
-		if(result) {
-			((BlockMultiblockMachine)world.getBlockState(pos).getBlock()).setBlockState(world, world.getBlockState(pos), pos, true);
-		}
-		else
-			((BlockMultiblockMachine)world.getBlockState(pos).getBlock()).setBlockState(world, world.getBlockState(pos), pos, false);
+		((BlockMultiblockMachine)world.getBlockState(pos).getBlock()).setBlockState(world, world.getBlockState(pos), pos, result);
 		return result;
 	}
 
 	private void incrementDataOnChip(int planetId, int amount, DataStorage.DataType dataType) {
 		ItemStack stack = getStackInSlot(0);
-		if(stack != null && stack.getItem().equals(AdvancedRocketryItems.itemAsteroidChip)) {
+		if(!stack.isEmpty() && stack.getItem().equals(AdvancedRocketryItems.itemAsteroidChip)) {
 			ItemAsteroidChip item = (ItemAsteroidChip)stack.getItem();
 			item.addData(stack, amount, dataType);
 			int maxData = item.getMaxData(stack);
@@ -198,7 +196,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 
 	private void attemptAllResearchStart() {
 		ItemStack stack = getStackInSlot(0);
-		if(stack == null || !(stack.getItem() instanceof ItemAsteroidChip))
+		if(stack.isEmpty() || !(stack.getItem() instanceof ItemAsteroidChip))
 			return;
 
 		ItemAsteroidChip item = (ItemAsteroidChip)stack.getItem();
@@ -239,7 +237,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 
 		ItemStack stack = getStackInSlot(0);
 
-		if(stack != null && stack.getItem().equals(AdvancedRocketryItems.itemAsteroidChip)) {
+		if(!stack.isEmpty() && stack.getItem().equals(AdvancedRocketryItems.itemAsteroidChip)) {
 			ItemAsteroidChip item = (ItemAsteroidChip) stack.getItem();
 
 			if(researchingAtmosphere && extractData(1, DataStorage.DataType.COMPOSITION, true) > 0 && !item.isFull(stack, DataStorage.DataType.COMPOSITION)) {
@@ -288,7 +286,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 
 	@Override
 	public boolean isRunning() {
-		return (getStackInSlot(0) != null && getStackInSlot(0).getItem().equals(AdvancedRocketryItems.itemAsteroidChip) && (researchingAtmosphere || researchingDistance || researchingMass));
+		return (!getStackInSlot(0).isEmpty() && getStackInSlot(0).getItem().equals(AdvancedRocketryItems.itemAsteroidChip) && (researchingAtmosphere || researchingDistance || researchingMass));
 	}
 
 	@Override
@@ -358,7 +356,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 
-		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
+		LinkedList<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModulePower(18, 20, getBatteries()));
 
 		//TODO: write NBT
@@ -493,22 +491,25 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int slot) {
 		return inventory.getStackInSlot(slot);
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int slot, int amount) {
 		return inventory.decrStackSize(slot, amount);
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 		onInventoryUpdated();
 	}
 
 	@Override
+	@Nonnull
 	public String getName() {
 		return getMachineName();
 	}
@@ -543,11 +544,12 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
 		return false;//inventory.isItemValidForSlot(slot, stack);
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		return inventory.removeStackFromSlot(index);
 	}

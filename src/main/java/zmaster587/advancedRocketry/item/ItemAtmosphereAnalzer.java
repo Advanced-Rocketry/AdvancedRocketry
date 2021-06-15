@@ -34,6 +34,7 @@ import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.render.RenderHelper;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,17 +49,17 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	private static String no = LibVulpes.proxy.getLocalizedString("msg.no");
 
 	@Override
-	public void onTick(World world, EntityPlayer player, ItemStack armorStack,
-			IInventory modules, ItemStack componentStack) {
+	public void onTick(World world, EntityPlayer player, @Nonnull ItemStack armorStack,
+			IInventory modules, @Nonnull ItemStack componentStack) {
 
 	}
 
-	private List<ITextComponent> getAtmosphereReadout(ItemStack stack, AtmosphereType atm, World world) {
+	private List<ITextComponent> getAtmosphereReadout(@Nonnull ItemStack stack, AtmosphereType atm, World world) {
 		if(atm == null)
 			atm = AtmosphereType.AIR;
 		
 
-		List<ITextComponent> str = new LinkedList<ITextComponent>();
+		List<ITextComponent> str = new LinkedList<>();
 		
 		str.add(new TextComponentTranslation("%s %s %s",
 				new TextComponentTranslation("msg.atmanal.atmtype"),
@@ -84,28 +85,28 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public boolean onComponentAdded(World world, ItemStack armorStack) {
+	public boolean onComponentAdded(World world, @Nonnull ItemStack armorStack) {
 		return true;
 	}
 
 	@Override
-	public void onComponentRemoved(World world, ItemStack armorStack) {
+	public void onComponentRemoved(World world, @Nonnull ItemStack armorStack) {
 	}
 
 	@Override
-	public void onArmorDamaged(EntityLivingBase entity, ItemStack armorStack,
-			ItemStack componentStack, DamageSource source, int damage) {
+	public void onArmorDamaged(EntityLivingBase entity, @Nonnull ItemStack armorStack,
+							   @Nonnull ItemStack componentStack, DamageSource source, int damage) {
 
 	}
 
 	@Override
-	public boolean isAllowedInSlot(ItemStack componentStack, EntityEquipmentSlot targetSlot) {
+	public boolean isAllowedInSlot(@Nonnull ItemStack componentStack, EntityEquipmentSlot targetSlot) {
 		return targetSlot == EntityEquipmentSlot.HEAD;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void renderScreen(ItemStack componentStack, List<ItemStack> modules,
+	public void renderScreen(@Nonnull ItemStack componentStack, List<ItemStack> modules,
 			RenderGameOverlayEvent event, Gui gui) {
 		
 		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
@@ -123,7 +124,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 		GL11.glPushMatrix();
 		Minecraft.getMinecraft().renderEngine.bindTexture(eyeCandySpinner);
 		GL11.glTranslatef(screenX + 12, screenY + 8, 0);
-		GL11.glRotatef(( System.currentTimeMillis() / 100 ) % 360, 0, 0, 1);
+		GL11.glRotatef(( System.currentTimeMillis() / 100f ) % 360, 0, 0, 1);
 		
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		
@@ -142,7 +143,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public ResourceIcon getComponentIcon(ItemStack armorStack) {
+	public ResourceIcon getComponentIcon(@Nonnull ItemStack armorStack) {
 		return null;
 	}
 

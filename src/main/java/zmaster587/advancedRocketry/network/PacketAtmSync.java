@@ -38,11 +38,10 @@ public class PacketAtmSync extends BasePacket {
 
 	@Override
 	public void readClient(ByteBuf in) {
-		NBTTagCompound nbt = new NBTTagCompound();
 		PacketBuffer packetBuffer = new PacketBuffer(in);
 		
 		try {
-			nbt = packetBuffer.readCompoundTag();
+			NBTTagCompound nbt = packetBuffer.readCompoundTag();
 			type = nbt.getString("type");
 			pressure = nbt.getShort("pressure");
 		} catch (IOException e) {

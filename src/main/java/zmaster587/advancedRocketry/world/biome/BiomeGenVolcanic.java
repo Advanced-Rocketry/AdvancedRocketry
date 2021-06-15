@@ -1,7 +1,6 @@
 package zmaster587.advancedRocketry.world.biome;
 
 import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.MapGenBase;

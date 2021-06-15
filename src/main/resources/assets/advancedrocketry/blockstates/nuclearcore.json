@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "default": { "model": "advancedrocketry:nuclearcore" },
+        "normal": { "model": "advancedrocketry:nuclearcore" },
+        "inventory" : { "model": "advancedrocketry:nuclearcore" }
+    }
+}

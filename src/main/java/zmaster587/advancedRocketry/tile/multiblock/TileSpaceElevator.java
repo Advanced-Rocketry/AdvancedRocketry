@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,6 +37,7 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TileSpaceElevator extends TileMultiPowerConsumer implements IModularInventory, ILinkableTile, ITickable {
@@ -60,6 +60,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 
 	EntityElevatorCapsule capsule;
 	boolean firstTick;
+	private boolean isTetherConnected;
 	DimensionBlockPosition dimBlockPos;
 
 	private ModuleText landingPadDisplayText;
@@ -81,10 +82,10 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 			boolean blockBroken, IBlockState state) {
 		super.deconstructMultiBlock(world, destroyedPos, blockBroken, state);
 		
-		Entity e = getCapsuleOnLine();
+		Entity entity = getCapsuleOnLine();
 		
-		if(e != null)
-			e.setDead();
+		if(entity != null)
+			entity.setDead();
 
 
 		World otherPlanet;
@@ -136,7 +137,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 				modules.add(new ModuleText(30, 23, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.anchored0"), 0x2d2d2d));
 				modules.add(new ModuleText(30, 35, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.anchored1"), 0x2d2d2d));
 			} else {
-				modules.add(new ModuleText(30, 23, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.unanchored"), 0x2d2d2d));
+				modules.add(new ModuleText(30, 32, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.unanchored"), 0x2d2d2d));
 			}
 
 		}
@@ -176,8 +177,6 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 		if( buttonId >= BUTTON_ID_OFFSET) {
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)buttonId));
 		}
-
-
 		super.onInventoryButtonPressed(buttonId);
 	}
 
@@ -207,22 +206,6 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 		default:
 			capsule.rotationYaw = 0;
 		}
-	}
-
-	@Override
-	public void update() {
-		super.update();
-	}
-
-	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
-		super.writeDataToNetwork(out, id);
-	}
-
-	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
-		super.readDataFromNetwork(in, packetId, nbt);
 	}
 
 	@Override
@@ -270,7 +253,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 
 	public void summonCapsule() {
 		//Don't spawn a new capsule if one exists
-		if(getCapsuleOnLine() != null)
+		if(getCapsuleOnLine() != null || !isTetherConnected())
 			return;
 
 		capsule = new EntityElevatorCapsule(world);
@@ -301,8 +284,8 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 	}
 
 	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
+							   EntityPlayer player, World world) {
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, world.provider.getDimension());
 		if(dimBlockPos != null) {
@@ -315,7 +298,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 	}
 
 	@Override
-	public boolean onLinkComplete(ItemStack item, TileEntity entity,
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
 			EntityPlayer player, World myWorld) {
 
 		if(!myWorld.isRemote) {
@@ -363,8 +346,11 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 					if (capsule != null) {
 						capsule.setDst(dimBlockPos);
 					}
-					markDirty();
-					world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
+					this.markDirty();
+					this.world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
+					this.isTetherConnected = true;
+					setMachineRunning(true);
+					setMachineEnabled(true);
 
 					return true;
 				}
@@ -386,13 +372,13 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation( 0, EnumFacing.UP);
 				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation( 0, EnumFacing.NORTH);
 			}
-			SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setIsAnchored( (dimensionBlockPosition == null) ? false : true);
+			SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setIsAnchored(dimensionBlockPosition != null);
 		}
 		dimBlockPos = dimensionBlockPosition;
 	}
 
 	public boolean isTetherConnected() {
-		return dimBlockPos != null;
+		return isTetherConnected;
 	}
 
 	@Override
@@ -405,14 +391,11 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 
 	@Override
 	public void writeNetworkData(NBTTagCompound nbt) {
-
-
-		if(dimBlockPos != null)
-		{
+		if(dimBlockPos != null) {
 			nbt.setInteger("dstDimId", dimBlockPos.dimid);
 			nbt.setIntArray("dstPos", new int[] { dimBlockPos.pos.x, dimBlockPos.pos.y, dimBlockPos.pos.z });
-
-		}
+			nbt.setBoolean("tether", isTetherConnected);
+		} else
 
 		super.writeNetworkData(nbt);
 	}
@@ -425,8 +408,6 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 	@Override
 	public void readNetworkData(NBTTagCompound nbt) {
 		super.readNetworkData(nbt);
-
-
 		if(nbt.hasKey("dstDimId")) {
 			int id = nbt.getInteger("dstDimId");
 			int[] pos = nbt.getIntArray("dstPos");
@@ -434,6 +415,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 		}
 		else
 			dimBlockPos = null;
+		isTetherConnected = nbt.getBoolean("tether");
 
 		landingPadDisplayText.setText(dimBlockPos != null ? dimBlockPos.toString() : LibVulpes.proxy.getLocalizedString("msg.label.noneSelected"));
 	}

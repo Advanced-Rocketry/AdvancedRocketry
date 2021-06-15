@@ -5,7 +5,6 @@ import mezz.jei.api.gui.IAdvancedGuiHandler;
 import mezz.jei.api.ingredients.IIngredientBlacklist;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.block.BlockSmallPlatePress;
@@ -43,9 +42,9 @@ import zmaster587.advancedRocketry.integration.jei.sawmill.SawMillCategory;
 import zmaster587.advancedRocketry.integration.jei.sawmill.SawMillRecipeHandler;
 import zmaster587.advancedRocketry.integration.jei.sawmill.SawMillRecipeMaker;
 import zmaster587.advancedRocketry.tile.multiblock.machine.*;
-import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.inventory.GuiModular;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.List;
 
@@ -93,6 +92,7 @@ public class ARPlugin implements IModPlugin {
 		
 		registry.addAdvancedGuiHandlers(new IAdvancedGuiHandler<GuiModular>() {
 			@Override
+			@Nonnull
 			public Class<GuiModular> getGuiContainerClass() {
 				return GuiModular.class;
 			}
@@ -113,7 +113,6 @@ public class ARPlugin implements IModPlugin {
 		//Hide problematic blocks
 		blacklist.addIngredientToBlacklist(new ItemStack(AdvancedRocketryBlocks.blockForceField));
 		blacklist.addIngredientToBlacklist(new ItemStack(AdvancedRocketryBlocks.blockLightSource));
-		blacklist.addIngredientToBlacklist(new ItemStack(AdvancedRocketryBlocks.blockAstroBed));
 		blacklist.addIngredientToBlacklist(new ItemStack(AdvancedRocketryBlocks.blockAirLock));
 		//Hide problematic items
 		blacklist.addIngredientToBlacklist(new ItemStack(AdvancedRocketryItems.itemSpaceStation));

@@ -1,7 +1,6 @@
 package zmaster587.advancedRocketry.block.plant;
 
 import net.minecraft.block.BlockLog;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
@@ -20,7 +19,7 @@ public class BlockLightwoodWood extends BlockLog  {
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {LOG_AXIS});
+		return new BlockStateContainer(this, LOG_AXIS);
 	}
 
 	@Override
@@ -50,7 +49,7 @@ public class BlockLightwoodWood extends BlockLog  {
 	public int getMetaFromState(IBlockState state)
 	{
 		int i = 0;
-		switch ((BlockLog.EnumAxis)state.getValue(LOG_AXIS))
+		switch (state.getValue(LOG_AXIS))
 		{
 		case X:
 			i |= 4;

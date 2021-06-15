@@ -10,6 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.libVulpes.items.ItemIngredient;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemData extends ItemIngredient {
@@ -22,27 +23,23 @@ public class ItemData extends ItemIngredient {
 	}
 
 	public int getMaxData(int damage) {
-		switch(damage) {
-		case 0:
-			return 1000;
-		}
-		return 0;
+		return damage == 0 ? 1000 : 0;
 	}
 
 	@Override
-	public int getItemStackLimit(ItemStack stack) {
+	public int getItemStackLimit(@Nonnull ItemStack stack) {
 		return getData(stack) == 0 ? super.getItemStackLimit(stack) : 1;
 	}
 	
-	public int getData(ItemStack stack) {
+	public int getData(@Nonnull ItemStack stack) {
 		return getDataStorage(stack).getData();
 	}
 	
-	public DataStorage.DataType getDataType(ItemStack stack) {
+	public DataStorage.DataType getDataType(@Nonnull ItemStack stack) {
 		return getDataStorage(stack).getDataType();
 	}
 	
-	public DataStorage getDataStorage(ItemStack item) {
+	public DataStorage getDataStorage(@Nonnull ItemStack item) {
 
 		DataStorage data = new DataStorage();
 
@@ -57,7 +54,7 @@ public class ItemData extends ItemIngredient {
 		return data;
 	}
 
-	public int addData(ItemStack item, int amount, DataStorage.DataType dataType) {
+	public int addData(@Nonnull ItemStack item, int amount, DataStorage.DataType dataType) {
 		DataStorage data = getDataStorage(item);
 
 		int amt = data.addData(amount, dataType, true);
@@ -69,7 +66,7 @@ public class ItemData extends ItemIngredient {
 		return amt;
 	}
 
-	public int removeData(ItemStack item, int amount, DataStorage.DataType dataType) {
+	public int removeData(@Nonnull ItemStack item, int amount, DataStorage.DataType dataType) {
 		DataStorage data = getDataStorage(item);
 
 		int amt = data.removeData(amount, true);
@@ -81,7 +78,7 @@ public class ItemData extends ItemIngredient {
 		return amt;
 	}
 
-	public void setData(ItemStack item, int amount, DataStorage.DataType dataType) {
+	public void setData(@Nonnull ItemStack item, int amount, DataStorage.DataType dataType) {
 		DataStorage data = getDataStorage(item);
 
 		data.setData(amount, dataType);
@@ -93,14 +90,13 @@ public class ItemData extends ItemIngredient {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World player,
-			List list, ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
 		super.addInformation(stack, player, list, bool);
 
 		DataStorage data = getDataStorage(stack);
 
 		list.add(data.getData() + " / " + data.getMaxData() + " Data");
-		list.add(I18n.format(data.getDataType().toString(), new Object[0]));
+		list.add(I18n.format(data.getDataType().toString()));
 
 	}
 

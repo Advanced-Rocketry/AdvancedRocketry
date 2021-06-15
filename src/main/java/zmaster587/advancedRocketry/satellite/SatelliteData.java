@@ -18,6 +18,8 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+
 public abstract class SatelliteData extends SatelliteBase {
 	DataStorage data;
 	long lastActionTime, prevLastActionTime;
@@ -38,14 +40,14 @@ public abstract class SatelliteData extends SatelliteBase {
 	}
 
 	@Override
-	public boolean acceptsItemInConstruction(ItemStack item) {
+	public boolean acceptsItemInConstruction(@Nonnull ItemStack item) {
 		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
 
 		return super.acceptsItemInConstruction(item) || SatelliteProperties.Property.DATA.isOfType(flag);
 	}
 
 	@Override
-	public void setProperties(ItemStack satelliteProperties) {
+	public void setProperties(@Nonnull ItemStack satelliteProperties) {
 		super.setProperties(satelliteProperties);
 		data.setMaxData(this.satelliteProperties.getMaxDataStorage());
 	}
@@ -129,12 +131,12 @@ public abstract class SatelliteData extends SatelliteBase {
 
 	@Override
 	public void onChangeReceived(int slot, int value) {
-		lastActionTime = ( lastActionTime & ( ~(0xffffl << (slot*16) ) ) ) | ( ( long )value << (slot*16) );
+		lastActionTime = ( lastActionTime & ( ~(0xffffL << (slot * 16) ) ) ) | ( (long) value << (slot * 16) );
 	}
 
 	@Override
 	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {
-		crafter.sendWindowProperty(container, variableId, (short)(( lastActionTime >>> (localId*16) ) & 0xffff));
+		crafter.sendWindowProperty(container, variableId, (short)(( lastActionTime >>> (localId * 16) ) & 0xffff));
 
 		if(localId == 3)
 			prevLastActionTime=lastActionTime;

@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.cable;
 
-import java.util.Iterator;
 import java.util.Map.Entry;
 
 public class HandlerDataNetwork extends HandlerCableNetwork {
@@ -24,9 +23,8 @@ public class HandlerDataNetwork extends HandlerCableNetwork {
 
 
 	public void tickAllNetworks() {
-		Iterator<Entry<Integer, CableNetwork>> iter = networks.entrySet().iterator();
-		while(iter.hasNext()) {
-			iter.next().getValue().tick();
+		for (Entry<Integer, CableNetwork> integerCableNetworkEntry : networks.entrySet()) {
+			integerCableNetworkEntry.getValue().tick();
 		}
 	}
 }

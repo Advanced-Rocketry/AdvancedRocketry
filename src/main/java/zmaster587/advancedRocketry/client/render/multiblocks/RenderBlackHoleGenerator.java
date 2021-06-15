@@ -14,8 +14,6 @@ import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.tile.multiblock.energy.TileBlackHoleGenerator;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
-import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
-import zmaster587.libVulpes.tile.multiblock.TileMultiPowerProducer;
 
 public class RenderBlackHoleGenerator extends TileEntitySpecialRenderer {
 

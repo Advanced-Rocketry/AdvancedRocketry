@@ -1,10 +1,6 @@
 package zmaster587.advancedRocketry.entity.fx;
 
-import org.lwjgl.util.Color;
-
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class InverseTrailFluid extends InverseTrailFx {
@@ -22,12 +18,12 @@ public class InverseTrailFluid extends InverseTrailFx {
 		
 		float intensity = ((float)(Math.random())*0.3f) + 0.7f;
 		
-		this.particleRed = (float) (((color >> 16) & 0xFF)/255f) *intensity;
-		this.particleGreen = (float) (((color >> 8) & 0xFF)/255f)*intensity;
-		this.particleBlue = (float) (((color& 0xFF)/255f))*intensity;
+		this.particleRed = (((color >> 16) & 0xFF)/255f) *intensity;
+		this.particleGreen = (((color >> 8) & 0xFF)/255f) *intensity;
+		this.particleBlue = ((color& 0xFF)/255f) *intensity;
 		
         this.particleMaxAge = time;
-        this.particleScale = (float) (this.rand.nextFloat() * 0.25F) + 0.75f;
+        this.particleScale = (this.rand.nextFloat() * 0.25F) + 0.75f;
 	}
 	
 	@Override

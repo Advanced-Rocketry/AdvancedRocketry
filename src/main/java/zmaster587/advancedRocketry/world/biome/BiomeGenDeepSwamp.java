@@ -4,7 +4,6 @@ import net.minecraft.block.BlockFlower.EnumFlowerType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -14,6 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.world.gen.WorldGenNoTree;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class BiomeGenDeepSwamp extends Biome {
@@ -44,18 +44,20 @@ public class BiomeGenDeepSwamp extends Biome {
 	}
 	
 	@Override
+    @Nonnull
 	public WorldGenAbstractTree getRandomTreeFeature(Random rand) {
-		return this.SWAMP_FEATURE;
+		return SWAMP_FEATURE;
 	}
 	
 	@Override
+    @Nonnull
 	public EnumFlowerType pickRandomFlower(Random rand, BlockPos pos) {
 		return EnumFlowerType.BLUE_ORCHID;
 	}
 	
 	@Override
 	public void genTerrainBlocks(World worldIn, Random rand,
-			ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal) {
+			@Nonnull ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal) {
 		
 		double d0 = GRASS_COLOR_NOISE.getValue((double)x * 0.25D, (double)z * 0.25D);
 

@@ -11,7 +11,7 @@ public class LatheRecipeMaker {
 
 	public static List<LatheWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
 		
-		List<LatheWrapper> list = new LinkedList<LatheWrapper>();
+		List<LatheWrapper> list = new LinkedList<>();
 		for(IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
 			list.add(new LatheWrapper(rec));
 		}

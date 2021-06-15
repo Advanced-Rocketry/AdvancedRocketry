@@ -2,13 +2,13 @@
     "type": "minecraft:crafting_shaped",
     "pattern":
     [
-	"lal",
+	"ial",
 	"bgb",
 	"   "
     ],
     "key":
     {
-        "l":
+        "i":
         {
             "item": "advancedrocketry:ic",
             "data": 2
@@ -23,7 +23,7 @@
 	    "type": "forge:ore_dict",
             "ore": "itemBattery"
         },
-	"l":
+        "l":
         {
             "item": "minecraft:lever"
         },

@@ -13,9 +13,9 @@ public class MapGenMassiveRavine extends MapGenRavineExt {
     {
         if (this.rand.nextInt(50) == 0)
         {
-            double d0 = (double)(chunkX * 16 + this.rand.nextInt(16));
-            double d1 = (double)(this.rand.nextInt(this.rand.nextInt(40) + 8) + 20);
-            double d2 = (double)(chunkZ * 16 + this.rand.nextInt(16));
+            double d0 = chunkX * 16 + this.rand.nextInt(16);
+            double d1 = this.rand.nextInt(this.rand.nextInt(40) + 8) + 20;
+            double d2 = chunkZ * 16 + this.rand.nextInt(16);
             int i = 1;
 
             for (int j = 0; j < 24; ++j)

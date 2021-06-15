@@ -8,12 +8,12 @@ public interface IDataInventory extends IInventory, IDataHandler {
 	/**
 	 * stores from external into this
 	 */
-	public void loadData(int id);
+	void loadData(int id);
 	
 	
 	/**
 	 * Stores in external
-	 * @param storeTo IDataInventory to store data to
+	 * @param id IDataInventory to store data to
 	 */
-	public void storeData(int id);
+	void storeData(int id);
 }

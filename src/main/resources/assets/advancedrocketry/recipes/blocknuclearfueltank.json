@@ -2,31 +2,31 @@
     "type": "minecraft:crafting_shaped",
     "pattern":
     [
-	"sss",
-	"rcr",
-	"sss"
+	"s s",
+	"pSp",
+	"s s"
     ],
     "key":
     {
-        "c":
-        {
-            "item": "advancedrocketry:ic",
-            "data": 3
-        },
         "s":
-	{
-            "type": "forge:ore_dict",
-            "ore": "sheetAluminum"
-        },
-        "r":
         {
             "type": "forge:ore_dict",
-            "ore": "rodTitanium"
+            "ore": "stickSteel"
+        },
+        "S":
+        {
+            "type": "forge:ore_dict",
+            "ore": "sheetTitanium"
+        },
+	"p":
+        {
+            "type": "forge:ore_dict",
+            "ore": "plateTitanium"
         }
     },
     "result":
     {
-        "item": "advancedrocketry:satellite",
+        "item": "advancedrocketry:nuclearfueltank",
         "count": 1
     }
 }

@@ -1,14 +1,13 @@
 package zmaster587.advancedRocketry.util;
 
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class AsteroidSmall {
+public class Asteroid {
 	public String ID;
 	public int distance;					//distance from the star, impacts fuelcost
 	public int mass;						//factor of the amount of material total
@@ -18,15 +17,16 @@ public class AsteroidSmall {
 	public float richnessVariability;		//variability of richness
 	public float probability;				//probability of the asteroid spawning
 	public float timeMultiplier;
-	public List<Float> stackProbabilites;	//
+	public ItemStack baseStack;
+	public List<Float> stackProbabilities;	//
 	public List<ItemStack> itemStacks;
 	public static Random rand = new Random();
 	private static final int precision = 1000;
 	
-	
-	public AsteroidSmall() {
-		stackProbabilites = new LinkedList<Float>();
-		itemStacks = new LinkedList<ItemStack>();
+
+	public Asteroid() {
+		stackProbabilities = new LinkedList<>();
+		itemStacks = new LinkedList<>();
 	}
 	
 	public String getName() {return ID;}
@@ -47,14 +47,15 @@ public class AsteroidSmall {
 	 */
 	public List<StackEntry> getHarvest(long seed, float uncertainty) {
 		
-		List<StackEntry> entries = new LinkedList<StackEntry>();
+		List<StackEntry> entries = new LinkedList<>();
 		rand.setSeed(seed);
 		
 		int myMass = (int)(mass + ((rand.nextFloat()*massVariability)*mass) - massVariability*mass/2f);
 		int numOres = (int) (myMass*(richness + rand.nextFloat()*richnessVariability - richnessVariability/2f));
 		
 		StackEntry entry = new StackEntry();
-		entry.stack = new ItemStack(Blocks.COBBLESTONE, myMass - numOres);
+		baseStack.setCount( myMass - numOres);
+		entry.stack = baseStack;
 		entry.variablility = (int)(uncertainty*entry.stack.getCount());
 		entry.midpoint =  (int)(entry.variablility*rand.nextFloat() - uncertainty*entry.variablility/2f);
 		
@@ -64,12 +65,12 @@ public class AsteroidSmall {
 			entry.midpoint += myMass - numOres;
 		entries.add(entry);
 		
-		int ores[] = new int[itemStacks.size()];
+		int[] ores = new int[itemStacks.size()];
 		
 		float normFactor = 0;
-		for(Float prob : stackProbabilites)
+		for(Float prob : stackProbabilities)
 			normFactor += prob;
-		 //normFactor /= stackProbabilites.size(); 
+		 //normFactor /= stackProbabilities.size();
 		
 		for(int i = 0; i < numOres; i++) {
 			
@@ -77,11 +78,9 @@ public class AsteroidSmall {
 			
 			float currentLocation = 0;
 			int counter = 0;
-			Item item = null;
 			
-			for(Float prob : stackProbabilites) {
+			for(Float prob : stackProbabilities) {
 				if(probability <= currentLocation + prob/normFactor && currentLocation <= probability) {
-					item = itemStacks.get(counter).getItem();
 					break;
 				}
 				

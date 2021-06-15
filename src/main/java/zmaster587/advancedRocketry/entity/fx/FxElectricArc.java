@@ -53,10 +53,10 @@ public class FxElectricArc  extends Particle {
 		int i = this.getBrightnessForRender(0);
 		int j = i >> 16 & 65535;
 		int k = i & 65535;
-		tess.pos((double)( x - scale * (rotX + rotYZ)), (double)(y - rotXZ * scale), (double)(z - rotZ * scale - rotXY * scale)).tex(1,1).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		tess.pos((double)( x + scale * (rotYZ - rotX)), (double)(y + rotXZ * scale), (double)(z - rotZ * scale + rotXY * scale)).tex(1,0).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		tess.pos((double)( x + scale * (rotX + rotYZ)), (double)(y + rotXZ * scale), (double)(z + rotZ * scale + rotXY * scale)).tex(0,0).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		tess.pos((double)( x + scale * (rotX - rotYZ)), (double)(y - rotXZ * scale), (double)(z + rotZ * scale - rotXY * scale)).tex(0,1).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+		tess.pos(x - scale * (rotX + rotYZ), y - rotXZ * scale, z - rotZ * scale - rotXY * scale).tex(1,1).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+		tess.pos(x + scale * (rotYZ - rotX), y + rotXZ * scale, z - rotZ * scale + rotXY * scale).tex(1,0).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+		tess.pos(x + scale * (rotX + rotYZ), y + rotXZ * scale, z + rotZ * scale + rotXY * scale).tex(0,0).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+		tess.pos(x + scale * (rotX - rotYZ), y - rotXZ * scale, z + rotZ * scale - rotXY * scale).tex(0,1).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
 
 	}
 

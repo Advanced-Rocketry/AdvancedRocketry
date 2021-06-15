@@ -30,10 +30,13 @@ repositories {
             artifactPattern "https://addons-origin.cursecdn.com/files/2347/256/[module]-[revision].[ext]"
         }*/
     maven {
-    // location of a maven mirror for JEI files, as a fallback
-    name = "ModMaven"
-    url = "https://modmaven.k-4u.nl"
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
     }
+    /*flatDir {
+        dirs 'libs'
+    }*/
 }
 
 dependencies {
@@ -41,6 +44,7 @@ dependencies {
     compileOnly name: 'industrialcraft-2', version: '2.7.39-ex111-api', ext: 'jar'
     //compile name: 'Tesla', version: '1.11-1.3.0.51-deobf', ext: 'jar'
     //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
+    //compileOnly name: 'LibVulpes', version: '1.12.2-' + project.libVulpesVersion  + '-deobf', ext: 'jar'
     compileOnly name: 'LibVulpes', version: '1.12.2-' + project.libVulpesVersion  + '-' + project.libVulpesBuildNum + '-deobf', ext: 'jar'
     
     

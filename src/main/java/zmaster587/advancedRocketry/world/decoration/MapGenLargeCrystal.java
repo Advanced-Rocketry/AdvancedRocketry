@@ -52,7 +52,8 @@ public class MapGenLargeCrystal extends MapGenBase {
 
 			y = 80;//getHeightValue(x, z, blocks) - 2;
 
-			currentEdgeRadius = (int)((SHAPE*(edgeRadius * height )) + ((1f-SHAPE)*edgeRadius));
+			final int startingCurrentEdgeRadius = (int)((SHAPE*(edgeRadius * height )) + ((1f-SHAPE)*edgeRadius));
+			currentEdgeRadius = startingCurrentEdgeRadius;
 
 			//Make the base of the crystal
 			//Generate the top trapezoid
@@ -120,7 +121,7 @@ public class MapGenLargeCrystal extends MapGenBase {
 			}
 
 
-			currentEdgeRadius = (int)((SHAPE*(edgeRadius * height )) + ((1f-SHAPE)*edgeRadius));
+			currentEdgeRadius = startingCurrentEdgeRadius;
 			//Make some rand noise in the base
 			//Generate the top trapezoid
 			for(int zOff = -numDiag - currentEdgeRadius/2; zOff <= -currentEdgeRadius/2; zOff++) {
@@ -162,8 +163,7 @@ public class MapGenLargeCrystal extends MapGenBase {
 		int y;
 		if(x > 15 || x < 0 || z > 15 || z < 0)
 			return 0;
-		for(y = 255; blocks.getBlockState(x, y, z).getBlock() == Blocks.AIR && y > 0; y--)
-		{
+		for(y = 255; blocks.getBlockState(x, y, z).getBlock() == Blocks.AIR && y > 0; y--) {
 			//System.out.println(y);
 		}
 		return y;
