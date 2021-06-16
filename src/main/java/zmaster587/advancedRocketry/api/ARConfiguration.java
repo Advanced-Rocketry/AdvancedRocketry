@@ -391,7 +391,7 @@ public class ARConfiguration {
 
 	public void addSealedBlock(Block newblock) {
 		SealableBlockHandler.INSTANCE.addSealableBlock(newblock);
-		List<Block> blockList = SealableBlockHandler.INSTANCE.getOverridenSealableBlocks();
+		List<Block> blockList = SealableBlockHandler.INSTANCE.getOverriddenSealableBlocks();
 		String[] blocks = new String[blockList.size()];
 		int index = 0;
 		for( Block block : blockList)

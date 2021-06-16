@@ -42,5 +42,5 @@ public interface IAtmosphereSealHandler
     /**
      * Returns a list of blocks that can have been forced to be sealable
      */
-    List<Block> getOverridenSealableBlocks();
+    List<Block> getOverriddenSealableBlocks();
 }
