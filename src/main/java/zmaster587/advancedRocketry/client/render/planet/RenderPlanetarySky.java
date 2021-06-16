@@ -440,7 +440,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GlStateManager.disableTexture2D();
 		float f18 = mc.world.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
 
-		if(mc.world.isRainingAt(mc.player.getPosition()))
+		if(mc.world.isRainingAt(mc.player.getPosition().add(0, 199, 0)))
 			f18 *= 1-mc.world.getRainStrength(partialTicks);
 
 		if (f18 > 0.0F)

@@ -350,7 +350,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 								thrustNuclearReactorLimit += ((IRocketNuclearCore) block).getMaxThrust(world, currBlockPos);
 							}
 
-							if(block instanceof BlockSeat && world.getBlockState(abovePos).getBlock().isAir(world.getBlockState(abovePos), world, abovePos)) {
+							if(block instanceof BlockSeat && world.getBlockState(abovePos).getBlock().isPassable(world, abovePos)) {
 								stats.addPassengerSeat((int) (x), yCurr - actualMinY, (int) (z));
 							}
 

@@ -1,13 +1,19 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:orientable",
+        "textures": {
+            "top": "libvulpes:blocks/machinegeneric",
+            "front": "advancedrocketry:blocks/monitorfront",
+            "side": "libvulpes:blocks/machinegeneric"
+        }
+    },
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:rocketBuilder" },
-        "facing=south,state=false": { "model": "advancedrocketry:rocketBuilder", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:rocketBuilder", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:rocketBuilder", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:rocketBuilder" },
-        "facing=south,state=true": { "model": "advancedrocketry:rocketBuilder", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:rocketBuilder", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:rocketBuilder", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:rocketbuilder" }
+        "facing=north,state=false": [{}],
+        "facing=south,state=false": { "model": "minecraft:orientable", "y": 180 },
+        "facing=west,state=false":  { "model": "minecraft:orientable", "y": 270 },
+        "facing=east,state=false":  { "model": "minecraft:orientable", "y": 90 },
+        "inventory" : [{}]
     }
 }

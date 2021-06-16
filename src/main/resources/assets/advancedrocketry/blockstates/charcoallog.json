@@ -1,8 +1,23 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:cube_column",
+        "textures": {
+            "end": "advancedrocketry:blocks/log_charcoal_top",
+            "side": "advancedrocketry:blocks/log_charcoal"
+        }
+    },
     "variants": {
-        "axis=y":    { "model": "advancedrocketry:charcoal_log" },
-        "axis=z":     { "model": "advancedrocketry:charcoal_log", "x": 90 },
-        "axis=x":     { "model": "advancedrocketry:charcoal_log", "x": 90, "y": 90 },
-        "axis=none":   { "model": "advancedrocketry:charcoal_bark" }
+        "axis=y": [{}],
+        "axis=none": {
+            "model": "minecraft:cube_all",
+            "textures": {
+                "all": "advancedrocketry:blocks/log_charcoal"
+            }
+        },
+        "axis=z": {"model": "minecraft:cube_column", "x": 90},
+        "axis=x": {"model": "minecraft:cube_column", "x": 90, "y": 90},
+        "inventory": [{}]
     }
 }
