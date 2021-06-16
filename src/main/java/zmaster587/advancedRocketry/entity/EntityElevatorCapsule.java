@@ -183,6 +183,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 		{
 			float yaw = this.rotationYaw;
 			float pitch = this.rotationPitch;
+			DimensionBlockPosition destination = this.dstTilePos;
 
 			List<Entity> passengers = getPassengers();
 			int i = this.dimension;
@@ -198,6 +199,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 				return null;
 			
 			entity.setPositionAndRotation(posX, y, posZ, yaw, pitch);
+			((EntityElevatorCapsule)entity).dstTilePos = destination;
 			
 			int timeOffset = 1;
 			for(Entity e : passengers) {
