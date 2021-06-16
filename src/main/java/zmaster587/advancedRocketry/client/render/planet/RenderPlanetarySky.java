@@ -440,7 +440,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		GlStateManager.disableTexture2D();
 		float f18 = mc.world.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
 
-		if(mc.world.isRainingAt(mc.player.getPosition()))
+		if(mc.world.isRainingAt(mc.player.getPosition().add(0, 199, 0)))
 			f18 *= 1-mc.world.getRainStrength(partialTicks);
 
 		if (f18 > 0.0F)
@@ -763,10 +763,10 @@ public class RenderPlanetarySky extends IRenderHandler {
 			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.getShadowResource());
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GlStateManager.color(1f, 1f, 1f, alphaMultiplier);
-			buffer.pos(-size, zLevel-0.01f, size).tex(f15, f14).endVertex();
-			buffer.pos(size, zLevel-0.01f, size).tex(f14, f14).endVertex();
-			buffer.pos(size, zLevel-0.01f, -size).tex(f14, f15).endVertex();
-			buffer.pos(-size, zLevel-0.01f, -size).tex(f15, f15).endVertex();
+			buffer.pos(-size * 1.05F, zLevel-0.01f, size* 1.05F).tex(f15, f14).endVertex();
+			buffer.pos(size* 1.05F, zLevel-0.01f, size* 1.05F).tex(f14, f14).endVertex();
+			buffer.pos(size* 1.05F, zLevel-0.01f, -size* 1.05F).tex(f14, f15).endVertex();
+			buffer.pos(-size* 1.05F, zLevel-0.01f, -size* 1.05F).tex(f15, f15).endVertex();
 			Tessellator.getInstance().draw();
 		}
 
