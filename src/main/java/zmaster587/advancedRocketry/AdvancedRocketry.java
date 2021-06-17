@@ -1135,7 +1135,6 @@ public class AdvancedRocketry {
 		if(!file.exists()) {
 			logger.info(file.getAbsolutePath() + " not found, generating");
 			try {
-
 				file.createNewFile();
 				BufferedWriter stream;
 				stream = new BufferedWriter(new FileWriter(file));
@@ -1157,15 +1156,16 @@ public class AdvancedRocketry {
 
 		XMLAsteroidLoader load = new XMLAsteroidLoader();
 		try {
-			load.loadFile(file);
-			for(Asteroid asteroid : load.loadPropertyFile()) {
-				zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().asteroidTypes.put(asteroid.ID, asteroid);
+			if(load.loadFile(file)) {
+				for (Asteroid asteroid : load.loadPropertyFile()) {
+					zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().asteroidTypes.put(asteroid.ID, asteroid);
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		// End load asteroids from XML
-		
+
 		
 		file = new File("./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/oreConfig.xml");
 		logger.info("Checking for ore config at " + file.getAbsolutePath());
@@ -1185,27 +1185,24 @@ public class AdvancedRocketry {
 		else {
 			XMLOreLoader oreLoader = new XMLOreLoader();
 			try {
-				oreLoader.loadFile(file);
+				if(oreLoader.loadFile(file)) {
+					List<SingleEntry<HashedBlockPosition, OreGenProperties>> mapping = oreLoader.loadPropertyFile();
 
-				List<SingleEntry<HashedBlockPosition, OreGenProperties>> mapping = oreLoader.loadPropertyFile();
+					for (Entry<HashedBlockPosition, OreGenProperties> entry : mapping) {
+						int pressure = entry.getKey().x;
+						int temp = entry.getKey().y;
 
-				for(Entry<HashedBlockPosition, OreGenProperties> entry : mapping) {
-					int pressure = entry.getKey().x;
-					int temp = entry.getKey().y;
-
-					if(pressure == -1) {
-						if(temp != -1) {
-							OreGenProperties.setOresForTemperature(Temps.values()[temp], entry.getValue());
+						if (pressure == -1) {
+							if (temp != -1) {
+								OreGenProperties.setOresForTemperature(Temps.values()[temp], entry.getValue());
+							}
+						} else if (temp == -1) {
+							OreGenProperties.setOresForPressure(AtmosphereTypes.values()[pressure], entry.getValue());
+						} else {
+							OreGenProperties.setOresForPressureAndTemp(AtmosphereTypes.values()[pressure], Temps.values()[temp], entry.getValue());
 						}
 					}
-					else if(temp == -1) {
-						OreGenProperties.setOresForPressure(AtmosphereTypes.values()[pressure], entry.getValue());
-					}
-					else {
-						OreGenProperties.setOresForPressureAndTemp(AtmosphereTypes.values()[pressure], Temps.values()[temp], entry.getValue());
-					}
 				}
-
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -1213,7 +1210,6 @@ public class AdvancedRocketry {
 		//End open and load ore files
 
 		DimensionManager.getInstance().createAndLoadDimensions(resetFromXml);
-		
 	}
 
 

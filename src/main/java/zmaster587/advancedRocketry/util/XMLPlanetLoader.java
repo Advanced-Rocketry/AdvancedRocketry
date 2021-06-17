@@ -497,7 +497,7 @@ public class XMLPlanetLoader {
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_ARTIFACT)) {
 				ItemStack stack = XMLPlanetLoader.getStack(planetPropertyNode.getTextContent());
 
-				if(stack != null)
+				if(!stack.isEmpty())
 					properties.getRequiredArtifacts().add(stack);
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_PLANET)) {
 				List<DimensionProperties> childList = readPlanetFromNode(planetPropertyNode, star);

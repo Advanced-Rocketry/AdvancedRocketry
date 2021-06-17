@@ -53,7 +53,17 @@ public class XMLOreLoader {
 	 * @return  list of singleEntry (order MUST be preserved)
 	 */
 	public List<SingleEntry<HashedBlockPosition, OreGenProperties>> loadPropertyFile() {
-		Node childNode = doc.getFirstChild().getFirstChild();
+		Node childNode = doc.getFirstChild();
+
+		while(childNode != null) {
+			if(!childNode.getNodeName().equalsIgnoreCase("oreconfig")) {
+				childNode = childNode.getFirstChild();
+				break;
+			}
+
+			childNode = childNode.getNextSibling();
+		}
+
 		List<SingleEntry<HashedBlockPosition, OreGenProperties>> mapping = new LinkedList<>();
 		OreGenProperties properties;
 

@@ -803,15 +803,23 @@ public class DimensionManager implements IGalaxy {
 		if(file.exists()) {
 			logger.info("Advanced Planet Config file Found!  Loading from file.");
 			loader = new XMLPlanetLoader();
+			boolean loadSuccessful = true;
+
 			try {
-				loader.loadFile(file);
-				if(!loader.isValid())
-					throw new Exception("Cannot read XML");
-				dimCouplingList = loader.readAllPlanets();
-				DimensionManager.dimOffset += dimCouplingList.dims.size();
+				if(loader.loadFile(file)) {
+					dimCouplingList = loader.readAllPlanets();
+					DimensionManager.dimOffset += dimCouplingList.dims.size();
+				}
+				else {
+					loadSuccessful = false;
+				}
 			} catch(Exception e) {
 				e.printStackTrace();
-				logger.fatal("A serious error has occured while loading the planetDefs XML");
+				loadSuccessful = false;
+			}
+
+			if(!loadSuccessful) {
+				logger.fatal("A serious error has occurred while loading the planetDefs XML");
 				FMLCommonHandler.instance().exitJava(-1, false);
 			}
 		}
