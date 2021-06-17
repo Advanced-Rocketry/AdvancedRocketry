@@ -24,7 +24,7 @@ import java.util.List;
 
 public class XMLOreLoader {
 
-	Document doc;
+	private Document doc;
 
 	public boolean loadFile(File xmlFile) throws IOException {
 		DocumentBuilder docBuilder;

@@ -99,14 +99,14 @@ public class XMLPlanetLoader {
 	private static final String ATTR_GROUPMAX = "groupMax";
 	private static final String ATTR_NBT = "nbt";
 	
-	Document doc;
+	private Document doc;
 	NodeList currentList;
-	int currentNodeIndex;
-	int starId;
-	int offset;
+	private int currentNodeIndex;
+	private int starId;
+	private int offset;
 
-	HashMap<StellarBody, Integer> maxPlanetNumber = new HashMap<>();
-	HashMap<StellarBody, Integer> maxGasPlanetNumber = new HashMap<>();
+	private HashMap<StellarBody, Integer> maxPlanetNumber = new HashMap<>();
+	private HashMap<StellarBody, Integer> maxGasPlanetNumber = new HashMap<>();
 
 	public boolean loadFile(File xmlFile) throws IOException {
 		DocumentBuilder docBuilder;
