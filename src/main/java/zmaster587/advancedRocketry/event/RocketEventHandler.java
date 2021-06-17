@@ -477,48 +477,6 @@ public class RocketEventHandler extends Gui {
 		}
 	}
 
-	@SubscribeEvent
-	public void mouseInputEvent(MouseInputEvent event) {
-		if(!ARConfiguration.getCurrentConfig().lockUI && !Mouse.isGrabbed()) {
-
-			if(Mouse.isButtonDown(2)) {
-				ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
-				int i = scaledresolution.getScaledWidth();
-				int j = scaledresolution.getScaledHeight();
-				int mouseX =  Mouse.getX() * i / Minecraft.getMinecraft().displayWidth;
-				int mouseY = j - Mouse.getY() * j / Minecraft.getMinecraft().displayHeight - 1;
-
-				if(currentlySelectedBox == null && mouseX >= suitPanel.getX(i) && mouseX < suitPanel.getX(i) + suitPanel.sizeX &&
-						mouseY >= suitPanel.getY(j) && mouseY < suitPanel.getY(j) + suitPanel.sizeY) {
-					currentlySelectedBox = suitPanel;
-				}
-
-				if(currentlySelectedBox == null && mouseX >= oxygenBar.getX(i) && mouseX < oxygenBar.getX(i) + oxygenBar.sizeX &&
-						mouseY >= oxygenBar.getY(j) && mouseY < oxygenBar.getY(j) + oxygenBar.sizeY) {
-					currentlySelectedBox = oxygenBar;
-				}
-
-				if(currentlySelectedBox == null && mouseX >= hydrogenBar.getX(i) && mouseX < hydrogenBar.getX(i) + hydrogenBar.sizeX &&
-						mouseY >= hydrogenBar.getY(j) && mouseY < hydrogenBar.getY(j) + hydrogenBar.sizeY) {
-					currentlySelectedBox = hydrogenBar;
-				}
-				
-				if(currentlySelectedBox == null && mouseX >= atmBar.getX(i) && mouseX < atmBar.getX(i) + atmBar.sizeX &&
-						mouseY >= atmBar.getY(j) && mouseY < atmBar.getY(j) + atmBar.sizeY) {
-					currentlySelectedBox = atmBar;
-				}
-				
-				if(currentlySelectedBox != null) {
-
-					currentlySelectedBox.setRenderX(mouseX, i);
-					currentlySelectedBox.setRenderY(mouseY, j);
-				}
-			}
-			else
-				currentlySelectedBox = null;
-		}
-	}
-
 	private void renderModuleSlots(@Nonnull ItemStack armorStack, int slot, RenderGameOverlayEvent event) {
 		int index = 1;
 		float color = 0.85f + 0.15F*MathHelper.sin( 2f*(float)Math.PI*((Minecraft.getMinecraft().world.getTotalWorldTime()) % 60)/60f );

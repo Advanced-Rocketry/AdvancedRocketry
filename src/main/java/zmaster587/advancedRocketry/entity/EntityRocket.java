@@ -2248,10 +2248,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				modules.add(new ModuleImage(173, 168, new IconResource(98, 168, 78, 3, CommonResources.genericBackground)));
 			}
 
-			//Fuel
-			modules.add(new ModuleProgress(192, 7, 0, new ProgressBarImage(2, 173, 12, 71, 17, 6, 3, 69, 1, 1, EnumFacing.UP, TextureResources.rocketHud), this));
-
 			//TODO DEBUG tiles!
+			//Render TEs in a pan-able list y-axis only
 			List<TileEntity> tiles = storage.getGUITiles();
 			List<ModuleBase> panModules = new ArrayList<>();
 			for(int i = 0; i < tiles.size(); i++) {
@@ -2264,6 +2262,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				}
 			}
 			modules.add(new ModuleContainerPanYOnly(8, 17, panModules, new LinkedList<>(), null, 171, 40, 0, 0));
+
+			//Fuel
+			modules.add(new ModuleProgress(192, 7, 0, new ProgressBarImage(2, 173, 12, 71, 17, 6, 3, 69, 1, 1, EnumFacing.UP, TextureResources.rocketHud), this));
 
 
 			//Add buttons

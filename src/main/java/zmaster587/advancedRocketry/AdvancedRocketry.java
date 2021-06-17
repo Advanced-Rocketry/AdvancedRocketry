@@ -1139,14 +1139,24 @@ public class AdvancedRocketry {
 				file.createNewFile();
 				BufferedWriter stream;
 				stream = new BufferedWriter(new FileWriter(file));
-				stream.write("<Asteroids>\n\t<asteroid name=\"Small Asteroid\" distance=\"10\" mass=\"100\" massVariability=\"0.5\" minLevel=\"0\" probability=\"10\" richness=\"0.2\" richnessVariability=\"0.5\">"
+				stream.write("<Asteroids>"
+						+ "\n\t<asteroid name=\"Small Asteroid\" distance=\"10\" mass=\"200\" massVariability=\"0.5\" minLevel=\"0\" probability=\"20\" richness=\"0.3\" richnessVariability=\"0.5\">"
 						+ "\n\t\t<ore itemStack=\"minecraft:iron_ore\" chance=\"15\" />"
 						+ "\n\t\t<ore itemStack=\"minecraft:gold_ore\" chance=\"10\" />"
 						+ "\n\t\t<ore itemStack=\"minecraft:redstone_ore\" chance=\"10\" />"
 						+ "\n\t</asteroid>"
-						+ "\n\t<asteroid name=\"Iridium Enriched asteroid\" distance=\"100\" mass=\"25\" massVariability=\"0.5\" minLevel=\"0\" probability=\"0.75\" richness=\"0.2\" richnessVariability=\"0.3\">"
+						+ "\n\t<asteroid name=\"Light Asteroid\" distance=\"60\" mass=\"200\" massVariability=\"0.5\" minLevel=\"0\" probability=\"15\" richness=\"0.2\" richnessVariability=\"0.5\">"
+						+ "\n\t\t<ore itemStack=\"libvulpes:ore0;9\" chance=\"20\" />"
+						+ "\n\t\t<ore itemStack=\"libvulpes:ore0;8\" chance=\"10\" />"
+						+ "\n\t\t<ore itemStack=\"minecraft:quartz_block\" chance=\"5\" />"
+						+ "\n\t</asteroid>"
+						+ "\n\t<asteroid name=\"Iridium Enriched asteroid\" distance=\"100\" mass=\"75\" massVariability=\"0.5\" minLevel=\"0\" probability=\"2\" richness=\"0.2\" richnessVariability=\"0.3\">"
 						+ "\n\t\t<ore itemStack=\"minecraft:iron_ore\" chance=\"25\" />"
 						+ "\n\t\t<ore itemStack=\"libvulpes:ore0 10\" chance=\"5\" />"
+						+ "\n\t</asteroid>"
+						+ "\n\t<asteroid name=\"Strange Asteroid\" distance=\"120\" mass=\"50\" massVariability=\"0.5\" minLevel=\"0\" probability=\"1\" richness=\"0.2\" richnessVariability=\"0.5\">"
+						+ "\n\t\t<ore itemStack=\"libvulpes:ore0;0\" chance=\"20\" />"
+						+ "\n\t\t<ore itemStack=\"minecraft:emerald_ore\" chance=\"5\" />"
 						+ "\n\t</asteroid>"
 						+ "\n</Asteroids>");
 				stream.close();
@@ -1226,9 +1236,6 @@ public class AdvancedRocketry {
 		((BlockSeal)AdvancedRocketryBlocks.blockPipeSealer).clearMap();
 		DimensionManager.dimOffset = config.getInt("minDimension", "Planet", 2, -127, 8000, "Dimensions including and after this number are allowed to be made into planets");
 		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().spaceDimId = config.get(Configuration.CATEGORY_GENERAL,"spaceStationId" , -2,"Dimension ID to use for space stations").getInt();
-		
-		if(!zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().lockUI)
-			proxy.saveUILayout(config);
 	}
 
 	@SubscribeEvent

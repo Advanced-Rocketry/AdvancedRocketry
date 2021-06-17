@@ -1052,9 +1052,6 @@ public class ARConfiguration {
 	@ConfigProperty
 	public boolean laserDrillOresBlackList;
 
-	@ConfigProperty
-	public boolean lockUI;
-
 	@ConfigProperty(needsSync=true, keyType=String.class, valueType= Asteroid.class)
 	public HashMap<String, Asteroid> asteroidTypes = new HashMap<>();
 
