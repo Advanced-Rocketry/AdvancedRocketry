@@ -430,32 +430,40 @@ public class StatsRocket {
 		//TODO: finish other ones
 		switch(type) {
 		case WARP:
-			fuelWarp += amt;
-			return fuelWarp;
+			int maxAddWarp = fuelCapacityWarp - fuelWarp;
+			int amountToAddWarp = Math.min(amt, maxAddWarp);
+			fuelWarp += amountToAddWarp;
+			return amountToAddWarp;
 		case IMPULSE:
-			fuelImpulse += amt;
-			return fuelImpulse;
+			int maxAddImpulse = fuelCapacityImpulse - fuelImpulse;
+			int amountToAddImpulse = Math.min(amt, maxAddImpulse);
+			fuelImpulse += amountToAddImpulse;
+			return amountToAddImpulse;
 		case ION:
-			fuelIon += amt;
-			return fuelIon;
+			int maxAddIon = fuelCapacityIon - fuelIon;
+			int amountToAddIon = Math.min(amt, maxAddIon);
+			fuelIon += amountToAddIon;
+			return amountToAddIon;
 		case LIQUID_MONOPROPELLANT:
-			int maxAddMono = fuelCapacityMonopropellant - fuelMonopropellant;
-			int amountToAddMono = Math.min(amt, maxAddMono);
-			fuelMonopropellant += amountToAddMono;
-			return amountToAddMono;
+			int maxAddMonopropellant = fuelCapacityMonopropellant - fuelMonopropellant;
+			int amountToAddMonopropellant = Math.min(amt, maxAddMonopropellant);
+			fuelMonopropellant += amountToAddMonopropellant;
+			return amountToAddMonopropellant;
 		case LIQUID_BIPROPELLANT:
-			int maxAddBi = fuelCapacityBipropellant - fuelBipropellant;
-			int amountToAddBi = Math.min(amt, maxAddBi);
-			fuelBipropellant += amountToAddBi;
-			return amountToAddBi;
+			int maxAddBipropellant = fuelCapacityBipropellant - fuelBipropellant;
+			int amountToAddBipropellant = Math.min(amt, maxAddBipropellant);
+			fuelBipropellant += amountToAddBipropellant;
+			return amountToAddBipropellant;
 		case LIQUID_OXIDIZER:
-			int maxAddOxi = fuelCapacityOxidizer - fuelOxidizer;
-			int amountToAddOxi = Math.min(amt, maxAddOxi);
-			fuelOxidizer += amountToAddOxi;
-			return amountToAddOxi;
+			int maxAddOxidizer = fuelCapacityOxidizer - fuelOxidizer;
+			int amountToAddOxidizer = Math.min(amt, maxAddOxidizer);
+			fuelOxidizer += amountToAddOxidizer;
+			return amountToAddOxidizer;
 		case NUCLEAR_WORKING_FLUID:
-			fuelNuclearWorkingFluid += amt;
-			return fuelNuclearWorkingFluid;
+			int maxAddNuclearWorkingFluid = fuelCapacityNuclearWorkingFluid - fuelNuclearWorkingFluid;
+			int amountToAddNuclearWorkingFluid = Math.min(amt, maxAddNuclearWorkingFluid);
+			fuelNuclearWorkingFluid += amountToAddNuclearWorkingFluid;
+			return amountToAddNuclearWorkingFluid;
 		}
 		return 0;
 	}
