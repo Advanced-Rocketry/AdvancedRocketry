@@ -2253,15 +2253,18 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 			//TODO DEBUG tiles!
 			List<TileEntity> tiles = storage.getGUITiles();
+			List<ModuleBase> panModules = new ArrayList<>();
 			for(int i = 0; i < tiles.size(); i++) {
 				TileEntity tile  = tiles.get(i);
 				IBlockState state = storage.getBlockState(tile.getPos());
 				try {
-					modules.add(new ModuleSlotButton(8 + 18* (i % 9), 17 + 18*(i/9), i + tilebuttonOffset, this, new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)), world));
+					panModules.add(new ModuleSlotButton(18 * (i % 9),  18*(i/9), i + tilebuttonOffset, this, new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)), world));
 				} catch (NullPointerException e) {
 
 				}
 			}
+			modules.add(new ModuleContainerPanYOnly(8, 17, panModules, new LinkedList<>(), null, 171, 40, 0, 0));
+
 
 			//Add buttons
 			modules.add(new ModuleButton(180, 140, 0, LibVulpes.proxy.getLocalizedString("msg.entity.rocket.disass"), this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild, 64, 20));
