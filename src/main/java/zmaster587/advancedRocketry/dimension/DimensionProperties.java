@@ -1498,6 +1498,15 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			}
 		}
 
+		if(nbt.hasKey("artifacts")) {
+			requiredArtifacts.clear();
+			list = nbt.getTagList("artifacts", NBT.TAG_COMPOUND);
+			for(NBTBase entry : list) {
+				assert entry instanceof NBTTagCompound;
+				requiredArtifacts.add(new ItemStack((NBTTagCompound) entry));
+			}
+		}
+
 		gravitationalMultiplier = nbt.getFloat("gravitationalMultiplier");
 		orbitalDist = nbt.getInteger("orbitalDist");
 		orbitTheta = nbt.getDouble("orbitTheta");
@@ -1518,6 +1527,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		averageTemperature = nbt.getInteger("avgTemperature");
 		rotationalPeriod = nbt.getInteger("rotationalPeriod");
 		name = nbt.getString("name");
+		customIcon = nbt.getString("icon");
 		isNativeDimension = !nbt.hasKey("isNative") || nbt.getBoolean("isNative"); //Prevent world breakages when loading from old version
 		isGasGiant = nbt.getBoolean("isGasGiant");
 		hasRings = nbt.getBoolean("hasRings");
@@ -1711,6 +1721,16 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			nbt.setTag("craterOres",list);
 		}
 
+		if(!requiredArtifacts.isEmpty()) {
+			list = new NBTTagList();
+			for(ItemStack ore : requiredArtifacts) {
+				NBTTagCompound entry = new NBTTagCompound();
+				ore.writeToNBT(entry);
+				list.appendTag(entry);
+			}
+			nbt.setTag("artifacts",list);
+		}
+
 		nbt.setInteger("starId", starId);
 		nbt.setFloat("gravitationalMultiplier", gravitationalMultiplier);
 		nbt.setInteger("orbitalDist", orbitalDist);
@@ -1727,6 +1747,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setInteger("avgTemperature", averageTemperature);
 		nbt.setInteger("rotationalPeriod", rotationalPeriod);
 		nbt.setString("name", name);
+		nbt.setString("icon", customIcon);
 		nbt.setBoolean("isNative", isNativeDimension);
 		nbt.setBoolean("isGasGiant", isGasGiant);
 		nbt.setBoolean("hasRings", hasRings);
