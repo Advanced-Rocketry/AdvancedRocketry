@@ -14,6 +14,10 @@
         "facing=south,state=false": { "model": "minecraft:orientable", "y": 180 },
         "facing=west,state=false":  { "model": "minecraft:orientable", "y": 270 },
         "facing=east,state=false":  { "model": "minecraft:orientable", "y": 90 },
+        "facing=north,state=true": [{}],
+        "facing=south,state=true": { "model": "minecraft:orientable", "y": 180 },
+        "facing=west,state=true":  { "model": "minecraft:orientable", "y": 270 },
+        "facing=east,state=true":  { "model": "minecraft:orientable", "y": 90 },
         "inventory" : [{}]
     }
 }

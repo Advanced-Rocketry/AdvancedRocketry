@@ -15,6 +15,10 @@
         "facing=south,state=false": [{}],
         "facing=west,state=false":  [{}],
         "facing=east,state=false":  [{}],
+        "facing=north,state=true": [{}],
+        "facing=south,state=true": [{}],
+        "facing=west,state=true":  [{}],
+        "facing=east,state=true":  [{}],
         "inventory" : [{}]
     }
 }
