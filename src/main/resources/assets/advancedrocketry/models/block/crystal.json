@@ -1,5 +1,5 @@
 {
-    "parent": "libvulpes:block/tintedCubeAll",
+    "parent": "libvulpes:block/tintedcubeall",
     "textures": {
         "all": "advancedrocketry:blocks/crystal"
     }

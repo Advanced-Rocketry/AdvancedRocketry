@@ -1,9 +1,17 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:leaves",
+        "textures": {
+            "all": "advancedrocketry:blocks/leaves_alien"
+        }
+    },
     "variants": {
-        "normal": { "model": "advancedrocketry:alienLeaves" },
-        "check_decay=false,decayable=true": { "model": "advancedrocketry:alienLeaves" },
-        "check_decay=false,decayable=false": { "model": "advancedrocketry:alienLeaves" },
-        "check_decay=true,decayable=false": { "model": "advancedrocketry:alienLeaves" },
-        "check_decay=true,decayable=true": { "model": "advancedrocketry:alienLeaves" }
+        "check_decay=false,decayable=false": [{}],
+        "check_decay=false,decayable=true": [{}],
+        "check_decay=true,decayable=false": [{}],
+        "check_decay=true,decayable=true": [{}],
+        "inventory": [{}]
     }
 }

@@ -1,13 +1,24 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "advancedrocketry:orientablebottom",
+        "textures": {
+            "bottom": "advancedrocketry:blocks/laserbottom",
+            "front": "advancedrocketry:blocks/laserfront",
+            "side": "advancedrocketry:blocks/monitorside",
+            "top": "libvulpes:blocks/machinegeneric"
+        }
+    },
     "variants": {
-        "facing=north,state=true": { "model": "advancedrocketry:spaceLaser" },
-        "facing=south,state=true": { "model": "advancedrocketry:spaceLaser", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:spaceLaser", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:spaceLaser", "y": 90 },
-        "facing=north,state=false": { "model": "advancedrocketry:spaceLaser" },
-        "facing=south,state=false": { "model": "advancedrocketry:spaceLaser", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:spaceLaser", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:spaceLaser", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:spacelaser" }
+        "facing=north,state=false": [{}],
+        "facing=south,state=false": { "model": "advancedrocketry:orientablebottom", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:orientablebottom", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:orientablebottom", "y": 90 },
+        "facing=north,state=true": [{}],
+        "facing=south,state=true": { "model": "advancedrocketry:orientablebottom", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:orientablebottom", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:orientablebottom", "y": 90 },
+        "inventory" : [{}]
     }
 }

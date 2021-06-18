@@ -44,10 +44,10 @@ public class BlockOrbitalLaserDrill extends BlockMultiblockMachine {
 	}
 
 	@Override
-	public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos,
-			Explosion explosionIn) {
+	public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn) {
 		super.onBlockDestroyedByExplosion(worldIn, pos, explosionIn);
-		((TileOrbitalLaserDrill)worldIn.getTileEntity(pos)).onDestroy();
+		if (worldIn.getTileEntity(pos) instanceof TileOrbitalLaserDrill)
+		    ((TileOrbitalLaserDrill)worldIn.getTileEntity(pos)).onDestroy();
 	}
 
 	//To check if the laser is jammed

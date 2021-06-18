@@ -1,17 +1,20 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:half_slab",
+        "textures": {
+            "top": "advancedrocketry:blocks/hololamp",
+            "front": "advancedrocketry:blocks/panelside",
+            "side": "advancedrocketry:blocks/panelside",
+            "bottom": "libvulpes:blocks/machinegeneric"
+        }
+    },
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:planetHoloSelector" },
-        "facing=south,state=false": { "model": "advancedrocketry:planetHoloSelector", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:planetHoloSelector", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:planetHoloSelector", "y": 90 },
-        "facing=down,state=false":  { "model": "advancedrocketry:planetHoloSelector" },
-        "facing=up,state=false":  { "model": "advancedrocketry:planetHoloSelector" },
-        "facing=north,state=true": { "model": "advancedrocketry:planetHoloSelector" },
-        "facing=south,state=true": { "model": "advancedrocketry:planetHoloSelector", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:planetHoloSelector", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:planetHoloSelector", "y": 90 },
-        "facing=down,state=true":  { "model": "advancedrocketry:planetHoloSelector" },
-        "facing=up,state=true":  { "model": "advancedrocketry:planetHoloSelector" },
-        "inventory" : { "model": "advancedrocketry:planetholoselector" }
+        "facing=north,state=false": [{}],
+        "facing=south,state=false": [{}],
+        "facing=west,state=false":  [{}],
+        "facing=east,state=false":  [{}],
+        "inventory" : [{}]
     }
 }

@@ -156,7 +156,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		habitable = ((WorldProviderPlanet)worldObj.provider).getAtmosphere(new BlockPos(0,0,0)).isBreathable();
 
 
-		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters())
+		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters() && atmDensity <= 0.05)
 			craterGeneratorSmall = new MapGenCraterSmall( (int)((16 +  (8*(1-atmDensity)) )*dimProps.getCraterMultiplier()));
 		else
 			craterGeneratorSmall = null;

@@ -1,11 +1,25 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:cube",
+        "textures": {
+            "up": "advancedrocketry:blocks/vacuumlaserfront",
+            "north": "advancedrocketry:blocks/forcefieldprojector_off",
+            "south": "advancedrocketry:blocks/forcefieldprojector_off",
+            "west": "advancedrocketry:blocks/forcefieldprojector_off",
+            "east": "advancedrocketry:blocks/forcefieldprojector_off",
+            "down": "advancedrocketry:blocks/hololamp",
+            "particle": "advancedrocketry:blocks/machineGeneric"
+        }
+    },
     "variants": {
-        "facing=north": { "model": "advancedrocketry:vacuumLaser", "x": 90 },
-        "facing=south": { "model": "advancedrocketry:vacuumLaser", "y": 180, "x": 90 },
-        "facing=west":  { "model": "advancedrocketry:vacuumLaser", "y": 270, "x": 90 },
-        "facing=east":  { "model": "advancedrocketry:vacuumLaser", "y": 90, "x": 90 },
-        "facing=up": { "model": "advancedrocketry:vacuumLaser" },
-        "facing=down": { "model": "advancedrocketry:vacuumLaser", "y": 180 },
-        "inventory": { "model": "advancedrocketry:vacuumLaser" }
+        "facing=north": { "model": "minecraft:cube", "x": 90 },
+        "facing=south": { "model": "minecraft:cube", "y": 180, "x": 90 },
+        "facing=west":  { "model": "minecraft:cube", "y": 270, "x": 90 },
+        "facing=east":  { "model": "minecraft:cube", "y": 90, "x": 90 },
+        "facing=up": [{}],
+        "facing=down": { "model": "minecraft:cube", "y": 180 },
+        "inventory" : [{}]
     }
 }

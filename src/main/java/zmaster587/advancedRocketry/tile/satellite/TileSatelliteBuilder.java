@@ -80,7 +80,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		}
 
 		//Make sure critical parts exist and output is empty
-		if(getStackInSlot(primaryFunctionSlot).isEmpty() || SatelliteRegistry.getSatelliteProperty(getStackInSlot(primaryFunctionSlot)).getSatelliteType() == null || !hasPowerGeneration)
+		if(getStackInSlot(primaryFunctionSlot).isEmpty() || SatelliteRegistry.getSatelliteProperty(getStackInSlot(primaryFunctionSlot)) == null || !hasPowerGeneration)
 			return false;
 		if(!getStackInSlot(holdingSlot).isEmpty() || !getStackInSlot(outputSlot).isEmpty() )
 			return false;

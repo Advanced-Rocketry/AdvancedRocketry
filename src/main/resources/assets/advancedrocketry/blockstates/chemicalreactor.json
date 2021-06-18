@@ -1,13 +1,42 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:orientable",
+        "textures": {
+            "top": "libvulpes:blocks/machinegeneric",
+            "front": "advancedrocketry:blocks/crystallizer",
+            "side": "libvulpes:blocks/machinegeneric"
+        }
+    },
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:chemicalReactor" },
-        "facing=south,state=false": { "model": "advancedrocketry:chemicalReactor", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:chemicalReactor", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:chemicalReactor", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:chemicalReactor_on" },
-        "facing=south,state=true": { "model": "advancedrocketry:chemicalReactor_on", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:chemicalReactor_on", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:chemicalReactor_on", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:chemicalreactor" }
+        "facing=north,state=false": [{}],
+        "facing=south,state=false": { "model": "minecraft:orientable", "y": 180 },
+        "facing=west,state=false":  { "model": "minecraft:orientable", "y": 270 },
+        "facing=east,state=false":  { "model": "minecraft:orientable", "y": 90 },
+        "facing=north,state=true": {
+            "model": "minecraft:orientable",
+            "textures": {
+                "front": "advancedrocketry:blocks/crystallizer_active"
+            }
+        },
+        "facing=south,state=true": {
+            "model": "minecraft:orientable", "y": 180,
+            "textures": {
+                "front": "advancedrocketry:blocks/crystallizer_active"
+            }},
+        "facing=west,state=true":  {
+            "model": "minecraft:orientable", "y": 270,
+            "textures": {
+                "front": "advancedrocketry:blocks/crystallizer_active"
+            }
+        },
+        "facing=east,state=true":  {
+            "model": "minecraft:orientable", "y": 90,
+            "textures": {
+                "front": "advancedrocketry:blocks/crystallizer_active"
+            }
+        },
+        "inventory" : [{}]
     }
 }

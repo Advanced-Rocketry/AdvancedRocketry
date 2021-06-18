@@ -1,21 +1,29 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:cube_all",
+        "textures": {
+            "all": "advancedrocketry:blocks/blastbrick"
+        }
+    },
     "variants": {
-        "varient=0": { "model": "advancedrocketry:blastBrick" },
-        "varient=1": { "model": "advancedrocketry:blastBrick" },
-        "varient=2": { "model": "advancedrocketry:blastBrick" },
-        "varient=3": { "model": "advancedrocketry:blastBrick" },
-        "varient=4": { "model": "advancedrocketry:blastBrick" },
-        "varient=5": { "model": "advancedrocketry:blastBrick" },
-        "varient=6": { "model": "advancedrocketry:blastBrick" },
-        "varient=7": { "model": "advancedrocketry:blastBrick" },
-        "varient=8": { "model": "advancedrocketry:blastBrick" },
-        "varient=9": { "model": "advancedrocketry:blastBrick" },
-        "varient=10": { "model": "advancedrocketry:blastBrick" },
-        "varient=11": { "model": "advancedrocketry:blastBrick" },
-        "varient=12": { "model": "advancedrocketry:blastBrick" },
-        "varient=13": { "model": "advancedrocketry:blastBrick" },
-        "varient=14": { "model": "advancedrocketry:blastBrick" },
-        "varient=15": { "model": "advancedrocketry:blastBrick" },
-        "inventory" : { "model": "advancedrocketry:blastbrick" }
+        "varient=0": [{}],
+        "varient=1": [{}],
+        "varient=2": [{}],
+        "varient=3": [{}],
+        "varient=4": [{}],
+        "varient=5": [{}],
+        "varient=6": [{}],
+        "varient=7": [{}],
+        "varient=8": [{}],
+        "varient=9": [{}],
+        "varient=10": [{}],
+        "varient=11": [{}],
+        "varient=12": [{}],
+        "varient=13": [{}],
+        "varient=14": [{}],
+        "varient=15": [{}],
+        "inventory": [{}]
     }
 }
