@@ -232,7 +232,7 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 				boolean artifactFlag = (dimCache != null && meetsArtifactReq(dimCache));
 
 				canWarp = new ModuleText(baseX, baseY + sizeY + 30,
-						(getSpaceObject().isAnchored()) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.anchored") :
+						(isOnStation && getSpaceObject().isAnchored()) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.anchored") :
 						((isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody())) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") :
 						(!artifactFlag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.missingart") :
 						(flag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.ready") :

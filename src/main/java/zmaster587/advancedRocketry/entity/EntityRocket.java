@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.entity;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.BlockFire;
 import net.minecraft.block.BlockSand;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -940,8 +941,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			launchCount--;
 			this.dataManager.set(LAUNCH_COUNTER, launchCount);
 			//Just before launch, damage the ground. We'll do it again on the tick that we launch
-			if (launchCount == 20 && ARConfiguration.getCurrentConfig().launchingDestroysBlocks && this.getFuelCapacity(getRocketFuelType()) > 0)
-				damageGroundBelowRocket(world, (int)this.posX, (int)this.posY, (int)this.posZ, (int)Math.pow(stats.getThrust(), 0.3333));
+			if (ARConfiguration.getCurrentConfig().launchingDestroysBlocks && launchCount <= 100 && launchCount != 0 && this.getFuelCapacity(getRocketFuelType()) > 0)
+				damageGroundBelowRocket(world, (int)this.posX, (int)this.posY, (int)this.posZ, (int)Math.pow(stats.getThrust(), 0.4));
 		}
 		
 		// When flying around in space
@@ -1237,8 +1238,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			runEngines();
 
 		//When we're landing, we should also destroy the blocks below the rocket if they are valid to be destroyed - but overall we do it fewer times than on launch (once instead of twice)
-		if((int)this.posY == world.getTopSolidOrLiquidBlock(new BlockPos(this.posX, this.posY, this.posZ)).getY() + 2 && ARConfiguration.getCurrentConfig().launchingDestroysBlocks && this.isDescentPhase()) {
-			damageGroundBelowRocket(world, (int)this.posX, (int)this.posY -1, (int)this.posZ, (int)Math.pow(stats.getThrust(), 0.3333));
+		if(this.posY < getTopBlock(new BlockPos(this.posX, this.posY, this.posZ)).getY() + 4 && ARConfiguration.getCurrentConfig().launchingDestroysBlocks) {
+			damageGroundBelowRocket(world, (int)this.posX, (int)this.posY -1, (int)this.posZ, (int)Math.pow(stats.getThrust(), 0.4));
 		}
 	}
 
@@ -1695,9 +1696,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				}
 			}
 		}
-		//When we launch, we want to damage blocks a second time if possible
-		if (ARConfiguration.getCurrentConfig().launchingDestroysBlocks)
-		    damageGroundBelowRocket(world, (int)posX, (int)posY, (int)posZ, (int)Math.pow(stats.getThrust(), 0.3333));
 	}
 
 	/**
@@ -1705,19 +1703,21 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 */
 	private void damageGroundBelowRocket(World world, int x, int y, int z, int radius) {
 		//Start on the same level as the bottom of the rocket
-		for (int i = 0; i <= radius; i++) {
-			for (int j = 0; j <= radius; j++) {
-				for (int k = 1; k >= -2; k--) {
+		BlockPos center = new BlockPos(x - 1, y, z);
+		for (int i = -radius; i <= radius; i++) {
+			for (int j = -radius; j <= radius; j++) {
+				for (int k = -3; k < radius/12; k++) {
 					//Check for a circle, not a square
-					if (Math.sqrt((i*i) + (j*j)) <= radius) {
-						//Set blocks to their damaged variants, the if statements make sure we don't set cardinal directions twice the times we should be
-						setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x + i, y + k, z + j))), world, new BlockPos(x + i, y + k, z + j));
-						if (j != 0)
-							setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x + i, y + k, z - j))), world, new BlockPos(x + i, y + k, z - j));
-						if (i != 0) {
-							setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y + k, z + j))), world, new BlockPos(x - i, y + k, z + j));
-							if (j != 0)
-								setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y + k, z - j))), world, new BlockPos(x - i, y + k, z - j));
+					BlockPos position = center.add(i, k, j);
+					if (center.distanceSq(position) <= radius * radius) {
+						//Set blocks to their damaged variants
+						if (rand.nextInt(80) == 0 && getDamagedBlock(world.getBlockState(position)) != null) {
+							world.setBlockState(position, getDamagedBlock(world.getBlockState(position)));
+						}
+						//Always set fire above that
+						BlockPos blockAbove = position.add(0, 1, 0);
+						if ( world.getBlockState(blockAbove).getBlock().isAir(world.getBlockState(blockAbove), world, blockAbove)) {
+							world.setBlockState(blockAbove, AdvancedRocketryBlocks.blockRocketFire.getDefaultState());
 						}
 					}
 				}
@@ -1754,22 +1754,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		} else if (blockState.getMaterial() == Material.WOOD || blockState.getMaterial() == Material.LEAVES || blockState.getMaterial() == Material.PLANTS || blockState.getMaterial() == Material.GOURD || blockState.getMaterial() == Material.WEB || blockState.getMaterial() == Material.CLOTH || blockState.getMaterial() == Material.CARPET || blockState.getMaterial() == Material.CACTUS || blockState.getMaterial() == Material.SPONGE) {
 			return Blocks.FIRE.getDefaultState();
 		}
-		return blockState;
-	}
-
-	/**
-	 * Sets the damaged blockstate, checking to see if it can
-	 */
-	private static void setDamagedBlock(IBlockState blockState, World world, BlockPos position) {
-		//Damage our block
-		if (blockState != world.getBlockState(position)) {
-			world.setBlockState(position, blockState);
-		}
-		//Set fire above that
-		BlockPos blockAbove = new BlockPos(position.getX(), position.getY() + 1, position.getZ());
-		if (world.getBlockState(blockAbove).getBlock().isReplaceable(world, blockAbove) || world.getBlockState(blockAbove).getBlock() == Blocks.AIR) {
-			world.setBlockState(blockAbove, Blocks.FIRE.getDefaultState());
-		}
+		return null;
 	}
 
 	/**
