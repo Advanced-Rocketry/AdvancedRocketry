@@ -49,7 +49,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockFuelFluid;
 	public static Block test;
 	public static Block blockOxygenVent;
-	public static Block blockOxygenScrubber;
+	public static Block blockCO2Scrubber;
 	public static Block blockOxygenCharger;
 	public static Block blockAirLock;
 	public static Block blockLandingPad;
