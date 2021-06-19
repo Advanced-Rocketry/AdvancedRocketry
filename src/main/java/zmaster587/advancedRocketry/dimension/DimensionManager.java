@@ -1001,29 +1001,7 @@ public class DimensionManager implements IGalaxy {
 				}
 				if(properties.isNativeDimension)
 					DimensionManager.getInstance().registerDim(properties, properties.isNativeDimension);
-
-				if(!properties.customIcon.isEmpty()) {
-					DimensionProperties loadedProps;
-					if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
-						loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
-						loadedProps.customIcon = properties.customIcon;
-					}
-				}
 				//TODO: add properties fromXML
-
-				//Add artifacts if needed
-				if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
-					DimensionProperties loadedProps;
-					loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
-					List<ItemStack> list = new LinkedList<>(properties.getRequiredArtifacts());
-					loadedProps.getRequiredArtifacts().clear();
-					loadedProps.getRequiredArtifacts().addAll(list);
-
-					List<SpawnListEntryNBT> list2 = new LinkedList<>(properties.getSpawnListEntries());
-					loadedProps.getSpawnListEntries().clear();
-					loadedProps.getSpawnListEntries().addAll(list2);
-
-				}
 
 
 				if(properties.oreProperties != null) {
