@@ -20,6 +20,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
@@ -222,7 +223,7 @@ public class PlanetEventHandler {
 	public void sleepEvent(@Nonnull PlayerSleepInBedEvent event) {
 
 		if(event.getEntity().world.provider instanceof WorldProviderPlanet) {
-			WorldProviderPlanet provider = (WorldProviderPlanet) event.getEntity().world.provider;
+			WorldProvider provider = event.getEntity().world.provider;
 			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(provider.getDimension());
 
 			if (!ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace && AtmosphereHandler.hasAtmosphereHandler(provider.getDimension()) && atmhandler != null &&
@@ -234,7 +235,7 @@ public class PlanetEventHandler {
 
 	@SubscribeEvent
 	public void blockPlacedEvent(@Nonnull PlaceEvent event) {
-		WorldProviderPlanet provider = (WorldProviderPlanet) event.getWorld().provider;
+		WorldProvider provider = event.getWorld().provider;
 		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(provider.getDimension());
 
 		if(!event.getWorld().isRemote  && AtmosphereHandler.getOxygenHandler(provider.getDimension()) != null && atmhandler != null &&
@@ -255,7 +256,7 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void blockRightClicked(@Nonnull RightClickBlock event) {
 		EnumFacing direction = event.getFace();
-		WorldProviderPlanet provider = (WorldProviderPlanet) event.getWorld().provider;
+		WorldProvider provider = event.getWorld().provider;
 		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(provider.getDimension());
 
 		if(!event.getWorld().isRemote && direction != null  && event.getEntityPlayer() != null  && AtmosphereHandler.getOxygenHandler(provider.getDimension()) != null && atmhandler != null &&
