@@ -573,7 +573,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 	}
 
-	protected boolean interact(EntityPlayer player) {
+	protected boolean interact(@Nonnull EntityPlayer player) {
 		//Actual interact code needs to be moved to a packet receive on the server
 
 		ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
@@ -760,7 +760,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 				AtmosphereHandler handler = AtmosphereHandler.getOxygenHandler(world.provider.getDimension());
 				IAtmosphere atmosphere = null;
-				
+
 				if(handler != null)
 					atmosphere = handler.getAtmosphereType(this);
 
@@ -1288,7 +1288,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		super.onOrbitReached();
 
 		long targetSatellite;
-		if(storage.getGuidanceComputer() != null && (targetSatellite = storage.getGuidanceComputer().getTargetSatellite()) != -1L) {
+		if(storage.getGuidanceComputer() != null && (targetSatellite = storage.getGuidanceComputer().getTargetSatellite()) != -1) {
 			SatelliteBase sat = DimensionManager.getInstance().getSatellite(targetSatellite);
 			for(TileEntity tile : storage.getTileEntityList()) {
 				if(tile instanceof TileSatelliteHatch && ((IInventory)tile).getStackInSlot(0).isEmpty()) {
@@ -1630,8 +1630,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		boolean allowLaunch = false;
 
 
-		if(!(ARConfiguration.getCurrentConfig().experimentalSpaceFlight && storage.getGuidanceComputer() != null && storage.getGuidanceComputer().isEmpty()))
-		{
+		if(ARConfiguration.getCurrentConfig().experimentalSpaceFlight && storage.getGuidanceComputer() != null && storage.getGuidanceComputer().isEmpty()) {
+			allowLaunch = true;
+		}
+		else {
 
 			//Get destination dimid and lock the computer
 			//TODO: lock the computer
@@ -1673,8 +1675,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 				return;
 			}
 		}
-		else
-			allowLaunch = true;
 
 
 		//Check to see what place we should be going to
