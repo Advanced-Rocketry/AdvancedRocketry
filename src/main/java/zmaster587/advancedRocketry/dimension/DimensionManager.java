@@ -42,6 +42,7 @@ import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.network.PacketHandler;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
@@ -382,6 +383,10 @@ public class DimensionManager implements IGalaxy {
 	 * @return true if it can be traveled to, in general if it has a surface
 	 */
 	public boolean canTravelTo(int dimId){
+		AdvancedRocketry.logger.info("dimId=" + dimId);
+		AdvancedRocketry.logger.info("net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId)=" + net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId));
+		AdvancedRocketry.logger.info("Constants.INVALID_PLANET=" + Constants.INVALID_PLANET);
+		AdvancedRocketry.logger.info("getDimensionProperties(dimId).hasSurface()=" + getDimensionProperties(dimId).hasSurface());
 		return net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId) && dimId != Constants.INVALID_PLANET && getDimensionProperties(dimId).hasSurface();
 	}
 
@@ -390,7 +395,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param properties {@link DimensionProperties} to register
 	 * @return false if the dimension has not been registered, true if it is being newly registered
 	 */
-	public boolean registerDim(DimensionProperties properties, boolean registerWithForge) {
+	public boolean registerDim(@Nonnull DimensionProperties properties, boolean registerWithForge) {
 		boolean bool = registerDimNoUpdate(properties, registerWithForge);
 
 		if(bool)
@@ -404,7 +409,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param registerWithForge if true also registers the dimension with forge
 	 * @return true if the dimension has NOT been registered before, false if the dimension IS registered exist already
 	 */
-	public boolean registerDimNoUpdate(DimensionProperties properties, boolean registerWithForge) {
+	public boolean registerDimNoUpdate(@Nonnull DimensionProperties properties, boolean registerWithForge) {
 		int dimId = properties.getId();
 
 		if(dimensionList.containsKey(dimId))
@@ -673,7 +678,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param dimId integer id of the dimension
 	 * @return true if the dimension exists and is registered
 	 */
-	public boolean isDimensionCreated( int dimId) {
+	public boolean isDimensionCreated(int dimId) {
 		return dimensionList.containsKey(dimId) || dimId == ARConfiguration.getCurrentConfig().spaceDimId;
 	}
 

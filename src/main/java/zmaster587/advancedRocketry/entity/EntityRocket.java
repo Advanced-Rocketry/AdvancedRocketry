@@ -758,8 +758,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		if(world.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2 && areEnginesRunning()) {
 			for(Vector3F<Float> vec : stats.getEngineLocations()) {
 
-				AtmosphereHandler handler;
-				if(Minecraft.getMinecraft().gameSettings.particleSetting < 1 && world.getTotalWorldTime() % 10 == 0 && (engineNum < 8 || ((world.getTotalWorldTime()/10) % Math.max((stats.getEngineLocations().size()/8),1)) == (engineNum/8)) && ( (handler = AtmosphereHandler.getOxygenHandler(world.provider.getDimension())) == null || (handler.getAtmosphereType(this) != null && handler.getAtmosphereType(this).allowsCombustion())) )
+				AtmosphereHandler handler = AtmosphereHandler.getOxygenHandler(world.provider.getDimension());
+				IAtmosphere atmosphere = null;
+				
+				if(handler != null)
+					atmosphere = handler.getAtmosphereType(this);
+
+				if(Minecraft.getMinecraft().gameSettings.particleSetting < 1 && world.getTotalWorldTime() % 10 == 0 && (engineNum < 8 || ((world.getTotalWorldTime()/10) % Math.max((stats.getEngineLocations().size()/8),1)) == (engineNum/8)) && ( handler == null || (atmosphere != null && atmosphere.allowsCombustion())) )
 					AdvancedRocketry.proxy.spawnParticle("rocketSmoke", world, this.posX + vec.x, this.posY + vec.y - 0.75, this.posZ +vec.z,0,0,0);
 
 				for(int i = 0; i < 4; i++) {

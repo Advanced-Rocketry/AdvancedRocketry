@@ -22,13 +22,14 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
 
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class TileAtmosphereDetector extends TileEntity implements ITickable, IModularInventory, IButtonInventory, INetworkMachine {
 
-	IAtmosphere atmosphereToDetect;
+	private IAtmosphere atmosphereToDetect;
 
 	public TileAtmosphereDetector() {
 		atmosphereToDetect = AtmosphereType.AIR;
@@ -42,12 +43,13 @@ public class TileAtmosphereDetector extends TileEntity implements ITickable, IMo
 			boolean detectedAtm = false;
 
 			//TODO: Galacticcraft support
-			if(AtmosphereHandler.getOxygenHandler(world.provider.getDimension()) == null) {
+			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(world.provider.getDimension());
+			if(atmhandler == null) {
 				detectedAtm = atmosphereToDetect == AtmosphereType.AIR;
 			}
 			else {
 				for(EnumFacing  direction : EnumFacing.values()) {
-					detectedAtm = (!world.getBlockState(pos.offset(direction)).isOpaqueCube() && atmosphereToDetect == AtmosphereHandler.getOxygenHandler(world.provider.getDimension()).getAtmosphereType(pos.offset(direction)));
+					detectedAtm = (!world.getBlockState(pos.offset(direction)).isOpaqueCube() && atmosphereToDetect == atmhandler.getAtmosphereType(pos.offset(direction)));
 					if(detectedAtm) break;
 				}
 			}
@@ -89,7 +91,7 @@ public class TileAtmosphereDetector extends TileEntity implements ITickable, IMo
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(@Nullable EntityPlayer entity) {
 		return true;
 	}
 

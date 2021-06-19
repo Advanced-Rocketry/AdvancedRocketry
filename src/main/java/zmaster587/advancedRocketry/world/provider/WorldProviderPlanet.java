@@ -39,6 +39,7 @@ import zmaster587.advancedRocketry.world.ChunkProviderCavePlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Set;
 
 public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProvider {
@@ -70,6 +71,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	@SideOnly(Side.CLIENT)
+	@Nullable
 	public IRenderHandler getSkyRenderer() {
 		if(!ARConfiguration.getCurrentConfig().planetSkyOverride)
 			return null;
@@ -147,11 +149,13 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}
 
 	@Override
-	public int getRespawnDimension(EntityPlayerMP player) {
+	public int getRespawnDimension(@Nonnull EntityPlayerMP player) {
 		if(ARConfiguration.getCurrentConfig().canPlayerRespawnInSpace) {
 			BlockPos coords = player.getBedLocation(getDimension());
+			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(player.world.provider.getDimension());
 
-			if (ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace || AtmosphereHandler.hasAtmosphereHandler(player.world.provider.getDimension()) && AtmosphereHandler.getOxygenHandler(player.world.provider.getDimension()).getAtmosphereType(coords).isBreathable()) {
+			//this absolutely can be null, ignore your IDE's warning!
+			if (ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace || coords != null && AtmosphereHandler.hasAtmosphereHandler(player.world.provider.getDimension()) && atmhandler != null && atmhandler.getAtmosphereType(coords).isBreathable()) {
 				return getDimension();
 			}
 		}
@@ -161,8 +165,10 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	
 	@Override
 	@Nonnull
-	public WorldSleepResult canSleepAt(EntityPlayer player, @Nonnull BlockPos pos) {
-		if (ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace || AtmosphereHandler.hasAtmosphereHandler(player.world.provider.getDimension()) && AtmosphereHandler.getOxygenHandler(player.world.provider.getDimension()).getAtmosphereType(pos).isBreathable()) {
+	public WorldSleepResult canSleepAt(@Nonnull EntityPlayer player, @Nonnull BlockPos pos) {
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(player.world.provider.getDimension());
+
+		if (ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace || AtmosphereHandler.hasAtmosphereHandler(player.world.provider.getDimension()) && atmhandler != null && atmhandler.getAtmosphereType(pos).isBreathable()) {
 			return WorldSleepResult.ALLOW;
 		}
 		else
@@ -253,7 +259,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 		return f2*super.getSunBrightness(partialTicks);
 	}
 
-	private float eclipseValue(DimensionProperties properties, float lightValue, double partialTicks) {
+	private float eclipseValue(@Nonnull DimensionProperties properties, float lightValue, double partialTicks) {
 		
 		double currentTheta = (((partialTicks*properties.orbitTheta + ((1-partialTicks)*properties.prevOrbitalTheta)) * 180/Math.PI)  % 360d);
 		int solarDistance = properties.getSolarOrbitalDistance();
@@ -290,7 +296,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	@Nonnull
-	public Vec3d getSkyColor(Entity cameraEntity, float partialTicks) {
+	public Vec3d getSkyColor(@Nonnull Entity cameraEntity, float partialTicks) {
 		float[] vec = getDimensionProperties(new BlockPos((int)cameraEntity.posX, 0, (int)cameraEntity.posZ)).skyColor;
 		if(vec == null)
 			return super.getSkyColor(cameraEntity, partialTicks);
@@ -352,49 +358,49 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}
 
 	@Override
-	public double getGravitationalMultiplier(BlockPos pos) {
+	public double getGravitationalMultiplier(@Nullable BlockPos pos) {
 		return getDimensionProperties(pos).gravitationalMultiplier;
 	}
 
 	@Override
-	public int getOrbitingDimension(BlockPos pos) {
+	public int getOrbitingDimension(@Nullable BlockPos pos) {
 		return getDimensionProperties(pos).getParentPlanet();
 	}
 
 	@Override
-	public int[] getDimensionsInOrbit(BlockPos pos) {
+	public int[] getDimensionsInOrbit(@Nullable BlockPos pos) {
 		Set<Integer> intSet = getDimensionProperties(pos).getChildPlanets();
 		Integer[] intArray = new Integer[intSet.size()];
 		return ArrayUtils.toPrimitive(getDimensionProperties(pos).getChildPlanets().toArray(intArray));
 	}
 
 	@Override
-	public int getOrbitalDistance(BlockPos pos) {
+	public int getOrbitalDistance(@Nullable BlockPos pos) {
 		return getDimensionProperties(pos).orbitalDist;
 	}
 	
 	@Override
-	public IAtmosphere getAtmosphere(BlockPos pos) {
+	public IAtmosphere getAtmosphere(@Nullable BlockPos pos) {
 		return getDimensionProperties(pos).getAtmosphere();
 	}
 
 	@Override
-	public float getAtmosphereDensity(BlockPos pos) {
-		return getDimensionProperties(pos).getAtmosphereDensity()/100f;
+	public float getAtmosphereDensity(@Nullable BlockPos pos) {
+		return getDimensionProperties(pos).getAtmosphereDensity() / 100f;
 	}
 
 	@Override
-	public float getAtmosphereDensityFromHeight(double y, BlockPos pos) {
+	public float getAtmosphereDensityFromHeight(double y, @Nullable BlockPos pos) {
 		return getDimensionProperties(pos).getAtmosphereDensityAtHeight(y);
 	}
 
 	@Override
-	public int getAverageTemperature(BlockPos pos) {
+	public int getAverageTemperature(@Nullable BlockPos pos) {
 		return getDimensionProperties(pos).getAverageTemp();
 	}
 
 	@Override
-	public int getRotationalPeriod(BlockPos pos) {
+	public int getRotationalPeriod(@Nullable BlockPos pos) {
 		return getDimensionProperties(new BlockPos(0,0,0)).rotationalPeriod;
 	}
 
@@ -414,18 +420,18 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}
 
 	@Override
-	public Vec3d getSunColor(BlockPos pos) {
+	public Vec3d getSunColor(@Nullable BlockPos pos) {
 		float[] vec = getDimensionProperties(pos).getSunColor();
 		return new Vec3d(vec[0],vec[1],vec[2]);
 	}
 
 
-	public int getSolarOrbitalDistance(BlockPos pos) {
+	public int getSolarOrbitalDistance(@Nullable BlockPos pos) {
 		return getDimensionProperties(pos).getSolarOrbitalDistance();
 	}
 
 	@Override
-	public DimensionProperties getDimensionProperties(BlockPos pos) {
+	public DimensionProperties getDimensionProperties(@Nullable BlockPos pos) {
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(this.getDimension());
 		return properties == null ? new DimensionProperties(this.getDimension()) : properties;
 	}
