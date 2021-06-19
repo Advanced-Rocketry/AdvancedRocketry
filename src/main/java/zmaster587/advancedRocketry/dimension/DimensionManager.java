@@ -382,11 +382,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param dimId dimension id to check
 	 * @return true if it can be traveled to, in general if it has a surface
 	 */
-	public boolean canTravelTo(int dimId){
-		AdvancedRocketry.logger.info("dimId=" + dimId);
-		AdvancedRocketry.logger.info("net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId)=" + net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId));
-		AdvancedRocketry.logger.info("Constants.INVALID_PLANET=" + Constants.INVALID_PLANET);
-		AdvancedRocketry.logger.info("getDimensionProperties(dimId).hasSurface()=" + getDimensionProperties(dimId).hasSurface());
+	public boolean canTravelTo(int dimId) {
 		return net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId) && dimId != Constants.INVALID_PLANET && getDimensionProperties(dimId).hasSurface();
 	}
 
