@@ -20,24 +20,29 @@ import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
+import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileStationGravityController extends TileEntity implements IModularInventory, ITickable, INetworkMachine, ISliderBar {
+public class TileStationGravityController extends TileEntity implements IModularInventory, ITickable, INetworkMachine, ISliderBar, IButtonInventory {
 
 	private int progress;
+	RedstoneState state;
 
 	private static int minGravity = 10;
 
 	private ModuleText moduleGrav, maxGravBuildSpeed, targetGrav;
+	private ModuleRedstoneOutputButton redstoneControl;
 
 	public TileStationGravityController() {
 		moduleGrav = new ModuleText(6, 15, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.alt"), 0xaa2020);
 		//numGravPylons = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
 		maxGravBuildSpeed = new ModuleText(6, 25, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.maxaltrate"), 0xaa2020);
 		targetGrav = new ModuleText(6, 35, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.tgtalt"), 0x202020);
-		
+
+		redstoneControl = new ModuleRedstoneOutputButton(174, 4, -1, "", this);
+
 		minGravity = ARConfiguration.getCurrentConfig().allowZeroGSpacestations ? 0 : 10;
 	}
 
@@ -51,12 +56,23 @@ public class TileStationGravityController extends TileEntity implements IModular
 		modules.add(moduleGrav);
 		//modules.add(numThrusters);
 		modules.add(maxGravBuildSpeed);
+		modules.add(redstoneControl);
 
 		modules.add(targetGrav);
 		modules.add(new ModuleSlider(6, 60, 0, TextureResources.doubleWarningSideBarIndicator, this));
 
 		updateText();
 		return modules;
+	}
+
+	@Override
+	public void onInventoryButtonPressed(int buttonId) {
+		if(buttonId != -1)
+			PacketHandler.sendToServer(new PacketMachine(this, (byte) (buttonId + 100)) );
+		else {
+			state = redstoneControl.getState();
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
+		}
 	}
 
 	@Override
@@ -95,6 +111,11 @@ public class TileStationGravityController extends TileEntity implements IModular
 				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(spaceObject != null) {
+					if (redstoneControl.getState() == RedstoneState.ON)
+						((SpaceStationObject) spaceObject).targetGravity = (world.getStrongPower(pos) * 6) + 10;
+					else if (redstoneControl.getState() == RedstoneState.INVERTED)
+						((SpaceStationObject) spaceObject).targetGravity = Math.abs(15 - world.getStrongPower(pos)) * 6 + 10;
+
 					progress = ((SpaceStationObject) spaceObject).targetGravity - minGravity;
 
 					int targetMultiplier = (ARConfiguration.getCurrentConfig().allowZeroGSpacestations) ? ((SpaceStationObject) spaceObject).targetGravity : Math.max(11, ((SpaceStationObject) spaceObject).targetGravity);
@@ -141,7 +162,8 @@ public class TileStationGravityController extends TileEntity implements IModular
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 		if(id == 0) {
 			out.writeShort(progress);
-		}
+		} else if(id == 2)
+			out.writeByte(state.ordinal());
 	}
 
 	@Override
@@ -149,24 +171,31 @@ public class TileStationGravityController extends TileEntity implements IModular
 			NBTTagCompound nbt) {
 		if(packetId == 0) {
 			setProgress(0, in.readShort());
+		} else if(packetId == 2) {
+			nbt.setByte("state", in.readByte());
 		}
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
-
+	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt) {
+		if(id == 2) {
+			state = RedstoneState.values()[nbt.getByte("state")];
+			redstoneControl.setRedstoneState(state);
+		}
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
+		nbt.setByte("redstoneState", (byte) state.ordinal());
 		return nbt;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		state = RedstoneState.values()[nbt.getByte("redstoneState")];
+		redstoneControl.setRedstoneState(state);
 	}
 
 
