@@ -53,6 +53,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	boolean hasFluid;
 	boolean soundInit;
 	boolean allowTrace;
+	boolean lock;
 	int numScrubbers;
 	List<TileCO2Scrubber> scrubbers;
 	int radius = 0;
@@ -114,6 +115,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		tiles[2] = world.getTileEntity(pos.add(0,0,1));
 		tiles[3] = world.getTileEntity(pos.add(0,0,-1));
 
+		lock = true;
 		for(TileEntity tile : tiles) {
 			if(tile instanceof TileCO2Scrubber && world.getBlockState(tile.getPos()).getBlock() == AdvancedRocketryBlocks.blockOxygenScrubber)
 				scrubbers.add((TileCO2Scrubber)tile);
@@ -224,7 +226,8 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 				}
 			}
 
-			if(isSealed) {
+			//Lock the vent while the scrubbers do their block updates
+			if(isSealed && !lock) {
 
 				//If scrubbers exist and the config allows then use the cartridge
 				if(ARConfiguration.getCurrentConfig().scrubberRequiresCartrige){
@@ -258,7 +261,9 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 					hasFluid = false;
 				}
-			}
+			} else
+				lock = false;
+
 		}
 	}
 	

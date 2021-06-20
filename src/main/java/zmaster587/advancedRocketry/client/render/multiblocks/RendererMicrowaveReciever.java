@@ -109,7 +109,7 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 			GL11.glDepthMask(false);
 
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			GlStateManager.tryBlendFuncSeparate(770, 1, 1, 0);
 			GL11.glPushMatrix();
 			GlStateManager.color(0.2F, 0.2F, 0.2F, 0.3F);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);

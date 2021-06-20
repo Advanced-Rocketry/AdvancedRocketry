@@ -19,16 +19,17 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.IComparatorOverride;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileStationGravityController extends TileEntity implements IModularInventory, ITickable, INetworkMachine, ISliderBar, IButtonInventory {
+public class TileStationGravityController extends TileEntity implements IModularInventory, ITickable, INetworkMachine, ISliderBar, IButtonInventory, IComparatorOverride {
 
 	private int progress;
-	RedstoneState state;
+	private RedstoneState state;
 
 	private static int minGravity = 10;
 
@@ -72,6 +73,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 		else {
 			state = redstoneControl.getState();
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
+			markDirty();
 		}
 	}
 
@@ -85,7 +87,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		super.onDataPacket(net, pkt);
-
+        readFromNBT(pkt.getNbtCompound());
 	}
 	
 	private void updateText() {
@@ -118,14 +120,14 @@ public class TileStationGravityController extends TileEntity implements IModular
 
 					progress = ((SpaceStationObject) spaceObject).targetGravity - minGravity;
 
-					int targetMultiplier = (ARConfiguration.getCurrentConfig().allowZeroGSpacestations) ? ((SpaceStationObject) spaceObject).targetGravity : Math.max(11, ((SpaceStationObject) spaceObject).targetGravity);
+					int targetMultiplier = (ARConfiguration.getCurrentConfig().allowZeroGSpacestations) ? ((SpaceStationObject) spaceObject).targetGravity : Math.max(10, ((SpaceStationObject) spaceObject).targetGravity);
 					double targetGravity = targetMultiplier/100D;
 					double angVel = spaceObject.getProperties().getGravitationalMultiplier();
 					double acc = 0.001;
 
 					double difference = targetGravity - angVel;
 
-					if(Math.abs(difference) > 0.01) {
+					if(Math.abs(difference) >= 0.001) {
 						double finalVel = angVel;
 						if(difference < 0) {
 							finalVel = angVel + Math.max(difference, -acc);
@@ -138,6 +140,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 						if(!world.isRemote) {
 							//PacketHandler.sendToNearby(new PacketStationUpdate(spaceObject, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
 							PacketHandler.sendToAll(new PacketStationUpdate(spaceObject, PacketStationUpdate.Type.DIM_PROPERTY_UPDATE));
+							markDirty();
 						}
 						else
 							updateText();
@@ -156,6 +159,11 @@ public class TileStationGravityController extends TileEntity implements IModular
 	@Override
 	public boolean canInteractWithContainer(EntityPlayer entity) {
 		return true;
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		return writeToNBT(new NBTTagCompound());
 	}
 
 	@Override
@@ -226,6 +234,19 @@ public class TileStationGravityController extends TileEntity implements IModular
 	@Override
 	public void setTotalProgress(int id, int progress) {
 
+	}
+
+	@Override
+	public int getComparatorOverride() {
+		if(this.world.provider instanceof WorldProviderSpace) {
+			if (!world.isRemote) {
+				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+				if (spaceObject != null) {
+					return (int)((((SpaceStationObject)spaceObject).getProperties().getGravitationalMultiplier() - 0.1)/0.059);
+				}
+			}
+		}
+		return 0;
 	}
 
 	@Override

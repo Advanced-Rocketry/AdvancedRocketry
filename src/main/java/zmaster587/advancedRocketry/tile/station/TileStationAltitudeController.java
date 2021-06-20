@@ -6,7 +6,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
@@ -19,16 +18,17 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.IComparatorOverride;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileStationAltitudeController extends TileEntity implements IModularInventory, ITickable, INetworkMachine, ISliderBar, IButtonInventory {
+public class TileStationAltitudeController extends TileEntity implements IModularInventory, ITickable, INetworkMachine, ISliderBar, IButtonInventory, IComparatorOverride {
 
 	int progress;
-	RedstoneState state;
+	private RedstoneState state;
 
 	private ModuleText moduleGrav, numGravPylons, maxGravBuildSpeed, targetGrav;
 	private ModuleRedstoneOutputButton redstoneControl;
@@ -63,6 +63,7 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 		else {
 			state = redstoneControl.getState();
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
+			markDirty();
 		}
 	}
 
@@ -77,7 +78,7 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		super.onDataPacket(net, pkt);
-
+		readFromNBT(pkt.getNbtCompound());
 	}
 	
 	private void updateText() {
@@ -86,11 +87,10 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 			if(spaceObject != null) {
 				moduleGrav.setText(String.format("%s %.0fKm",LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.alt"), spaceObject.getOrbitalDistance()*200 + 100 ));
 				maxGravBuildSpeed.setText(String.format("%s%.1f", LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.maxaltrate"), 7200D*spaceObject.getMaxRotationalAcceleration()));
+				targetGrav.setText(String.format("%s %d", LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.tgtalt"), ((SpaceStationObject) spaceObject).targetOrbitalDistance * 200 + 100));
 			}
 
 			//numThrusters.setText("Number Of Thrusters: 0");
-
-			targetGrav.setText(String.format("%s %d", LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.tgtalt"), ((SpaceStationObject) spaceObject).targetOrbitalDistance * 200 + 100));
 		}
 	}
 
@@ -128,6 +128,7 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 						if(!world.isRemote) {
 							//PacketHandler.sendToNearby(new PacketStationUpdate(spaceObject, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
 							PacketHandler.sendToAll(new PacketStationUpdate(spaceObject, PacketStationUpdate.Type.ALTITUDE_UPDATE));
+							markDirty();
 						}
 						else
 							updateText();
@@ -146,6 +147,11 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 	@Override
 	public boolean canInteractWithContainer(EntityPlayer entity) {
 		return true;
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		return writeToNBT(new NBTTagCompound());
 	}
 
 	@Override
@@ -216,6 +222,19 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 	@Override
 	public void setTotalProgress(int id, int progress) {
 
+	}
+
+	@Override
+	public int getComparatorOverride() {
+		if(this.world.provider instanceof WorldProviderSpace) {
+			if (!world.isRemote) {
+				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+				if (spaceObject != null) {
+                    return (int)(spaceObject.getOrbitalDistance() + 5)/13;
+				}
+			}
+		}
+		return 0;
 	}
 
 	@Override

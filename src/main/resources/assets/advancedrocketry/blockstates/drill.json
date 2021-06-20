@@ -10,6 +10,8 @@
         }
     },
     "variants": {
+        "facing=up": [{}],
+        "facing=down": [{}],
         "facing=north": [{}],
         "facing=south": { "model": "minecraft:orientable", "y": 180 },
         "facing=west":  { "model": "minecraft:orientable", "y": 270 },

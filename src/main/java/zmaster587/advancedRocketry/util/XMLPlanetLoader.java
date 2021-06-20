@@ -94,6 +94,7 @@ public class XMLPlanetLoader {
 	private static final String ELEMENT_VOLCANO_MULTIPLIER = "volcanoFrequencyMultiplier";
 	private static final String ELEMENT_GEODE_MULTIPLIER = "geodefrequencyMultiplier";
 	private static final String ELEMENT_CAN_DECORATE = "hasShading";
+	private static final String ELEMENT_SKYOVERRIDE = "skyRenderOverride";
 	private static final String ATTR_WEIGHT = "weight";
 	private static final String ATTR_GROUPMIN = "groupMin";
 	private static final String ATTR_GROUPMAX = "groupMax";
@@ -295,6 +296,8 @@ public class XMLPlanetLoader {
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_HASOXYGEN))
 				properties.hasOxygen = Boolean.parseBoolean(planetPropertyNode.getTextContent());
+			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_SKYOVERRIDE))
+				properties.skyRenderOverride = Boolean.parseBoolean(planetPropertyNode.getTextContent());
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_ATMDENSITY)) {
 
 				try {
@@ -922,6 +925,9 @@ public class XMLPlanetLoader {
 
 		if(!properties.hasOxygen)
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_HASOXYGEN, "false"));
+		if(properties.skyRenderOverride)
+			nodePlanet.appendChild(createTextNode(doc, ELEMENT_SKYOVERRIDE, "true"));
+
 
 		if(properties.hasRivers)
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_RIVER_OVERRIDE, "true"));

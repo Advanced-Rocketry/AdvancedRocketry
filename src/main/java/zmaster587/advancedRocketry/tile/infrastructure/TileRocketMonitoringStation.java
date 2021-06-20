@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -17,6 +18,7 @@ import zmaster587.advancedRocketry.api.IMission;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.client.util.IndicatorBarImage;
@@ -26,6 +28,7 @@ import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.IComparatorOverride;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
@@ -34,7 +37,7 @@ import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileRocketMonitoringStation extends TileEntity  implements IModularInventory, IAdjBlockUpdate, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory, IProgressBar  {
+public class TileRocketMonitoringStation extends TileEntity  implements IModularInventory, ITickable, IAdjBlockUpdate, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory, IProgressBar, IComparatorOverride {
 
 	EntityRocketBase linkedRocket;
 	IMission mission;
@@ -89,6 +92,18 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	public int getMaxLinkDistance() {
 		return 300000;
 	}
+
+	@Override
+	public void update() {
+		if (!world.isRemote) {
+			if (linkedRocket instanceof EntityRocket) {
+				if ((int)(15 * ((EntityRocket) linkedRocket).getRelativeHeightFraction()) != (int)(15 * ((EntityRocket) linkedRocket).getPreviousRelativeHeightFraction())) {
+					markDirty();
+				}
+			}
+		}
+	}
+
 
 	@Override
 	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
@@ -373,5 +388,13 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	@Override
 	public boolean canRenderConnection() {
 		return false;
+	}
+
+	@Override
+	public int getComparatorOverride() {
+		if (linkedRocket instanceof EntityRocket) {
+			return (int)(15 * ((EntityRocket) linkedRocket).getRelativeHeightFraction());
+		}
+		return 0;
 	}
 }
