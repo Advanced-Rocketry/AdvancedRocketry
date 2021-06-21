@@ -9,7 +9,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.api.stations.IStorageChunk;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -23,8 +22,8 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	private int posX, posY;
 	private int altitude;
 	private HashedBlockPosition spawnLocation;
-	private double rotation[];
-	private double angularVelocity[];
+	private double[] rotation;
+	private double[] angularVelocity;
 	private long lastTimeModification = 0;
 	private DimensionProperties properties;
 

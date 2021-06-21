@@ -1,7 +1,11 @@
 package zmaster587.advancedRocketry.inventory.modules;
 
 import net.minecraft.client.gui.FontRenderer;
+<<<<<<< HEAD
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+=======
+import net.minecraft.client.gui.inventory.GuiContainer;
+>>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.IContainerListener;
@@ -10,10 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.util.IDataInventory;
-import zmaster587.libVulpes.inventory.TextureResources;
-import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleButton;
 import zmaster587.libVulpes.util.IconResource;
 
 import java.util.LinkedList;
@@ -28,8 +29,8 @@ public class ModuleAutoData extends ModuleBase {
 	static final int textureOffsetX = 0;
 	static final int textureOffsetY = 215;
 
-	DataStorage data[];
-	int prevData[];
+	DataStorage[] data;
+	int[] prevData;
 	int prevDataType;
 	int slot1;
 	int slot2;
@@ -108,9 +109,9 @@ public class ModuleAutoData extends ModuleBase {
 				totalMaxData += datum.getMaxData();
 			}
 
-			List<String> list = new LinkedList<String>();
+			List<String> list = new LinkedList<>();
 			list.add(totalData + " / " + totalMaxData + " Data");
-			list.add("Type: " +  I18n.format(data[0].getDataType().toString(), new Object[0]));
+			list.add("Type: " +  I18n.format(data[0].getDataType().toString()));
 
 			this.drawTooltip(gui, matrix, list, mouseX, mouseY, zLevel, font);
 		}

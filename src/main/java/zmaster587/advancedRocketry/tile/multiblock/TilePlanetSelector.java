@@ -83,7 +83,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 
         DimensionProperties props = DimensionManager.getEffectiveDimId(player.world, new BlockPos(player.getPositionVec()));
 		container = new ModulePlanetSelector((props != null ? props.getStarId() : DimensionManager.getSol().getId()), TextureResources.starryBG, this, true);
@@ -127,7 +127,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 
 				ItemStack stack = ((ITilePlanetSystemSelectable)getMasterBlock()).getChipWithId(container.getSelectedSystem());
 
-				if(stack != null) {
+				if(!stack.isEmpty()) {
 
 					DataType data;
 					if(id == 0)

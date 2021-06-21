@@ -1,19 +1,31 @@
 package zmaster587.advancedRocketry.world.decoration;
 
+<<<<<<< HEAD
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.util.Direction.Axis;
+=======
+import net.minecraft.block.BlockLeaves;
+import net.minecraft.block.BlockLog;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
+>>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkPrimer;
+<<<<<<< HEAD
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraft.world.gen.carver.WorldCarver;
 import net.minecraft.world.gen.feature.ProbabilityConfig;
+=======
+import net.minecraft.world.gen.MapGenBase;
+import zmaster587.advancedRocketry.world.biome.BiomeGenDeepSwamp;
+>>>>>>> origin/feature/nuclearthermalrockets
 
 import java.util.BitSet;
 import java.util.HashMap;
@@ -32,11 +44,18 @@ public class MapGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 	private final static double arcSize = 16.0;
 	int chancePerChunk;
 
+<<<<<<< HEAD
 	public MapGenSwampTree(Codec<ProbabilityConfig> codec, int chancePerChunk) {
 		super(codec, chancePerChunk);
 		chancePerChunk= 10;
 		cachedCanopy = new HashMap<BlockPos, BlockState>();
 		cachedRoots = new HashMap<BlockPos, BlockState>();
+=======
+	public MapGenSwampTree(int chancePerChunk) {
+		super();
+		cachedCanopy = new HashMap<>();
+		cachedRoots = new HashMap<>();
+>>>>>>> origin/feature/nuclearthermalrockets
 		this.chancePerChunk = chancePerChunk;
 		buildCanopy();
 		buildRoots();
@@ -187,6 +206,16 @@ public class MapGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 
 			}
 
+<<<<<<< HEAD
+=======
+					final int p_i46030_2_ = y + treeHeight + yy - yOffset + 2;
+					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
+					setBlock( new BlockPos(x + 3 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
+					setBlock( new BlockPos(x + 1 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
+					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yOffset +3, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
+					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset + 1), Blocks.LOG.getDefaultState(), blocks);
+					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset - 1), Blocks.LOG.getDefaultState(), blocks);
+>>>>>>> origin/feature/nuclearthermalrockets
 
 			//Generate the hangy things
 			if(rand.nextInt(4) == 0) {
@@ -207,11 +236,43 @@ public class MapGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 				for(int yyy = 0; yyy < 10; yyy++) {
 
 
+<<<<<<< HEAD
 					for(zz = -2; zz < 3; zz++)
 						for(xx = -2; xx < 3; xx++)
 							setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState().with(LeavesBlock.PERSISTENT, true), world);
 					xx=xxx;
 					zz=zzz;
+=======
+					int yy = (int)(arcSize*Math.sin(Math.PI/3.0));
+					double xzRadius = (1.25*arcSize*Math.cos(Math.PI/2.0));
+					int xx = (int) (xzRadius*Math.cos(Yangle));
+					int zz = (int) (xzRadius*Math.sin(Yangle));
+					int xxx = xx;
+					int zzz = zz;
+					//Leaf caps on bottom
+					for(zz = -1; zz < 2; zz++)
+						for(xx = -1; xx < 2; xx++)
+							setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false), blocks);
+					//Descending 
+					for(int yyy = 0; yyy < 10; yyy++) {
+
+
+						for(zz = -2; zz < 3; zz++)
+							for(xx = -2; xx < 3; xx++)
+								setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight - yyy + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false), blocks);
+						xx=xxx;
+						zz=zzz;
+
+						final int p_i46030_2_ = y + treeHeight + yy - yyy - yOffset + 2;
+						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
+						setBlock( new BlockPos(x + 3 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
+						setBlock( new BlockPos(x + 1 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
+						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +3, z + zz- zOffset), Blocks.LOG.getDefaultState(), blocks);
+						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset + 1), Blocks.LOG.getDefaultState(), blocks);
+						setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, p_i46030_2_, z + zz- zOffset - 1), Blocks.LOG.getDefaultState(), blocks);
+					}
+				}
+>>>>>>> origin/feature/nuclearthermalrockets
 
 					setBlock( new BlockPos(x + 2 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), world);
 					setBlock( new BlockPos(x + 3 + xx - xOffset - radius/2, y + treeHeight + yy - yyy - yOffset +2, z + zz- zOffset), Blocks.OAK_LOG.getDefaultState(), world);
@@ -385,9 +446,13 @@ public class MapGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 				//Leaf caps on bottom
 				for(zz = -1; zz < 2; zz++)
 					for(xx = -1; xx < 2; xx++)
+<<<<<<< HEAD
 						world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2,y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.OAK_LEAVES.getDefaultState().with(LeavesBlock.PERSISTENT, true), 5);
 				xx=xxx;
 				zz=zzz;
+=======
+						world.setBlockState( new BlockPos(x + 2 + xx - xOffset - radius/2,y + treeHeight - 10 + yy - yOffset +2, z + zz- zOffset), Blocks.LEAVES.getDefaultState().withProperty(BlockLeaves.CHECK_DECAY, false), 5);
+>>>>>>> origin/feature/nuclearthermalrockets
 				//Descending 
 				for(int yyy = 0; yyy < 10; yyy++) {
 

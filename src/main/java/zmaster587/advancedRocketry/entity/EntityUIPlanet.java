@@ -25,6 +25,8 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.tile.station.TileHolographicPlanetSelector;
 import zmaster587.libVulpes.network.PacketSpawnEntity;
 
+import javax.annotation.Nullable;
+
 public class EntityUIPlanet extends Entity implements IEntityAdditionalSpawnData {
 
 	DimensionProperties properties;
@@ -33,6 +35,8 @@ public class EntityUIPlanet extends Entity implements IEntityAdditionalSpawnData
 	protected static final DataParameter<Float> scale =  EntityDataManager.<Float>createKey(EntityUIPlanet.class, DataSerializers.FLOAT);
 	protected static final DataParameter<Boolean> selected =  EntityDataManager.<Boolean>createKey(EntityUIPlanet.class, DataSerializers.BOOLEAN);
 	protected EntitySize size;
+
+
 	
 	public EntityUIPlanet(World worldIn, DimensionProperties properties, TileHolographicPlanetSelector tile, double x, double y, double z) {
 		this(AdvancedRocketryEntities.ENTITY_UIPLANET, worldIn);
@@ -65,7 +69,7 @@ public class EntityUIPlanet extends Entity implements IEntityAdditionalSpawnData
 	}
 	
 	public float getScale() {
-		float scale = this.dataManager.get(this.scale);
+		float scale = this.dataManager.get(EntityUIPlanet.scale);
 		setSize(0.1f*scale, 0.1f*scale);
 		return scale;
 	}

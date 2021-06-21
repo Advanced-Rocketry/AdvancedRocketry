@@ -19,6 +19,12 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.entity.EntityDummy;
 
+<<<<<<< HEAD
+=======
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNullableByDefault;
+>>>>>>> origin/feature/nuclearthermalrockets
 import java.util.List;
 
 public class BlockSeat extends Block {
@@ -28,11 +34,42 @@ public class BlockSeat extends Block {
 	public BlockSeat(Properties mat) {
 		super(mat);
 	}
+<<<<<<< HEAD
 	
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
 			ISelectionContext context) {
 		return VoxelShapes.empty();
+=======
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	@Nonnull
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.CUTOUT;
+	}
+	
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
+	
+    @Nullable
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
+    {
+        return NULL_AABB;
+    }
+	
+	@Override
+	@ParametersAreNullableByDefault
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world,
+			BlockPos pos, EnumFacing side) {
+		return side == EnumFacing.DOWN;
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 	
 	//If the block is destroyed remove any mounting associated with it
@@ -44,16 +81,28 @@ public class BlockSeat extends Block {
 		List<EntityDummy> list = world.getEntitiesWithinAABB(EntityDummy.class, new AxisAlignedBB(pos, pos.add(1,1,1)));
 
 		//We only expect one but just be sure
+<<<<<<< HEAD
 		for(EntityDummy e : list) {
 			if(e instanceof EntityDummy) {
 				// kill
 				e.remove();
+=======
+		for(EntityDummy entityDummy : list) {
+			if(entityDummy != null) {
+				entityDummy.setDead();
+>>>>>>> origin/feature/nuclearthermalrockets
 			}
 		}
 	}
 	
 	@Override
+<<<<<<< HEAD
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+=======
+	@Nonnull
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source,
+			BlockPos pos) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		return bb;
 	}
 	

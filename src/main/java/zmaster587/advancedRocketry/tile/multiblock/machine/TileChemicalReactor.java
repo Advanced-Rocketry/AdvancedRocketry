@@ -16,8 +16,13 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+<<<<<<< HEAD
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
+=======
+import net.minecraftforge.oredict.OreDictionary;
+import zmaster587.advancedRocketry.api.ARConfiguration;
+>>>>>>> origin/feature/nuclearthermalrockets
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
@@ -36,6 +41,7 @@ import zmaster587.libVulpes.recipe.NumberedOreDictStack;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -66,19 +72,29 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 		if(getOutputs() == null && (recipe = getRecipe(getMachineRecipeList())) != null && canProcessRecipe(recipe))
 		{
 			if(!recipe.getOutput().isEmpty()) {
+<<<<<<< HEAD
 			ListNBT list = recipe.getOutput().get(0).getEnchantmentTagList();
 			
 			if(list != null) {
 				for( int i = 0 ; i < list.size(); i++ ) {
 					CompoundNBT tag = (CompoundNBT)list.get(i);
 					//if(tag.getInt("id") == Enchantment.getEnchantmentID(AdvancedRocketryAPI.enchantmentSpaceProtection) ) {
+=======
+			NBTTagList list = recipe.getOutput().get(0).getEnchantmentTagList();
+
+			/*
+				for( int i = 0 ; i < list.tagCount(); i++ ) {
+					NBTTagCompound tag = (NBTTagCompound)list.get(i);
+					if(tag.getInteger("id") == Enchantment.getEnchantmentID(AdvancedRocketryAPI.enchantmentSpaceProtection) ) {
+>>>>>>> origin/feature/nuclearthermalrockets
 
 						flag = true;
 						break;
-					//}
+					}
 				}
-			}
-				
+			 */
+				flag = true;
+
 			}
 		}
 
@@ -86,7 +102,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 		if(flag && getOutputs() == null) {
 			if(enabled && (recipe = getRecipe(getMachineRecipeList())) != null && canProcessRecipe(recipe)) {
 				consumeItemsSpecial(recipe);
-				setOutputFluids(new LinkedList<FluidStack>());
+				setOutputFluids(new LinkedList<>());
 				powerPerTick = (int)Math.ceil((getPowerMultiplierForRecipe(recipe)*recipe.getPower()));
 				completionTime = Math.max((int)(getTimeMultiplierForRecipe(recipe)*recipe.getTime()), 1);
 
@@ -111,28 +127,33 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 	public void consumeItemsSpecial(IRecipe recipe) {
 		List<List<ItemStack>> ingredients = recipe.getPossibleIngredients();
 
-		for(int ingredientNum = 0;ingredientNum < ingredients.size(); ingredientNum++) {
-
-			List<ItemStack> ingredient = ingredients.get(ingredientNum);
+		for (List<ItemStack> ingredient : ingredients) {
 
 			ingredientCheck:
-			for(IInventory hatch : itemInPorts) {
-				for(int i = 0; i < hatch.getSizeInventory(); i++) {
+			for (IInventory hatch : itemInPorts) {
+				for (int i = 0; i < hatch.getSizeInventory(); i++) {
 					ItemStack stackInSlot = hatch.getStackInSlot(i);
 					for (ItemStack stack : ingredient) {
+<<<<<<< HEAD
 						if(stackInSlot != null && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.getItem() == stack.getItem() && (stackInSlot.getDamage() == stack.getDamage()) )) {
 							ItemStack stack2 = hatch.decrStackSize(i, stack.getCount());
 							
 							if(stack2.getItem() instanceof ArmorItem)
 							{
+=======
+						if (!stackInSlot.isEmpty() && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.getItem() == stack.getItem() && (stackInSlot.getItemDamage() == stack.getItemDamage() || stack.getItemDamage() == OreDictionary.WILDCARD_VALUE))) {
+							ItemStack stack2 = hatch.decrStackSize(i, stack.getCount());
+
+							if (stack2.getItem() instanceof ItemArmor) {
+>>>>>>> origin/feature/nuclearthermalrockets
 								stack2.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
-								List<ItemStack> list = new LinkedList<ItemStack>();
+								List<ItemStack> list = new LinkedList<>();
 								list.add(stack2);
 								setOutputs(list);
 							}
-							
+
 							hatch.markDirty();
-							world.notifyBlockUpdate(pos, world.getBlockState(((TileEntity)hatch).getPos()),  world.getBlockState(((TileEntity)hatch).getPos()), 6);
+							world.notifyBlockUpdate(pos, world.getBlockState(((TileEntity) hatch).getPos()), world.getBlockState(((TileEntity) hatch).getPos()), 6);
 							break ingredientCheck;
 						}
 					}
@@ -178,6 +199,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 	}
 
 	@Override
+	@Nonnull
 	public AxisAlignedBB getRenderBoundingBox() {
 		return new AxisAlignedBB(pos.add(-2,-2,-2), pos.add(2,2,2));
 	}

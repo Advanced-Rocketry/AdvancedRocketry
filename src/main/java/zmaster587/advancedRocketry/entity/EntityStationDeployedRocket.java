@@ -57,7 +57,6 @@ import zmaster587.libVulpes.util.ZUtils;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 public class EntityStationDeployedRocket extends EntityRocket {
 
@@ -97,10 +96,10 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			//((ServerWorld)this.world).getChunkProvider().chunkManager.getTicketManager().register(type, pos, distance, value); forceChunk(false);
 	}
 
-	@Override
 	/**
 	 * Called immediately before launch
 	 */
+	@Override
 	public void prepareLaunch() {
 		
 		RocketPreLaunchEvent event = new RocketEvent.RocketPreLaunchEvent(this);
@@ -124,7 +123,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			setInFlight(true);
 			return;
 		}
-		if(getFuelAmountMonopropellant() < getFuelCapacityMonopropellant())
+		if(getFuelAmount(getRocketFuelType()) < getFuelCapacity(getRocketFuelType()))
 			return;
 
 		ISpaceObject spaceObj;
@@ -155,13 +154,10 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		lastWorldTickTicked = world.getGameTime();
 		if(this.ticksExisted == 20) {
 			//problems with loading on other world then where the infrastructure was set?
-			ListIterator<HashedBlockPosition> itr = (new LinkedList<HashedBlockPosition>(infrastructureCoords)).listIterator();
-			while(itr.hasNext()) {
-				HashedBlockPosition temp = itr.next();
-
+			for (HashedBlockPosition temp : new LinkedList<>(infrastructureCoords)) {
 				TileEntity tile = this.world.getTileEntity(new BlockPos(temp.x, temp.y, temp.z));
-				if(tile instanceof IInfrastructure) {
-					this.linkInfrastructure((IInfrastructure)tile);
+				if (tile instanceof IInfrastructure) {
+					this.linkInfrastructure((IInfrastructure) tile);
 				}
 			}
 
@@ -363,10 +359,10 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			return;
 
 		//Check again to make sure we are around a gas giant
-		ISpaceObject spaceObj = null;
+		ISpaceObject spaceObj;
 		setInOrbit(true);
 		if( ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world)) && ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(this.getPositionVec()))) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() )) { //Abort if destination is invalid
-			this.setPosition(forwardDirection.getXOffset()*64d + this.launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5d), getPosY(), forwardDirection.getZOffset()*64d + this.launchLocation.z + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5d));	
+			this.setPosition(forwardDirection.getXOffset()*64d + this.launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5d), getPosY(), forwardDirection.getZOffset()*64d + this.launchLocation.z + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5d));
 		}
 		else {
 			setInOrbit(true);

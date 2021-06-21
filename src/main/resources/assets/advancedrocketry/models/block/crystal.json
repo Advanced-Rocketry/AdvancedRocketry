@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
     "parent": "minecraft:block/cube_all",
+=======
+    "parent": "libvulpes:block/tintedcubeall",
+>>>>>>> origin/feature/nuclearthermalrockets
     "textures": {
         "all": "advancedrocketry:blocks/crystal"
     }

@@ -50,6 +50,7 @@ import zmaster587.libVulpes.api.material.MaterialRegistry;
 public class AdvancedRocketryItems {
 
 	//TODO: fix
+<<<<<<< HEAD
 	public static final ArmorMaterial spaceSuit = new ArmorMaterial("spaceSuit", net.minecraft.item.ArmorMaterial.DIAMOND.getDurability(EquipmentSlotType.CHEST), new int[] {1,1,1,1}, 0, new SoundEvent(new ResourceLocation("")), 0, 0, null);
 
 	public static Item itemSiliconWafer;
@@ -70,9 +71,17 @@ public class AdvancedRocketryItems {
 	public static Item itemSensorMicrowave;
 	public static Item itemSensorOreMapper;
 	public static Item itemSensorBiomeChanger;
+=======
+	public static final ArmorMaterial spaceSuit = EnumHelper.addArmorMaterial("spaceSuit", "", ArmorMaterial.DIAMOND.getDurability(EntityEquipmentSlot.CHEST), new int[] {1,1,1,1}, 0, new SoundEvent(new ResourceLocation("")), 0);
+	
+	public static Item itemWafer;
+	public static Item itemCircuitPlate;
+	public static Item itemIC;
+	public static Item itemSatellitePowerSource;
+	public static Item itemSatellitePrimaryFunction;
+>>>>>>> origin/feature/nuclearthermalrockets
 	public static Item itemOreScanner;
 	public static Item itemQuartzCrucible;
-	public static Item itemSaplingBlue; 
 	public static Item itemDataUnit;
 	public static Item itemSatellite;
 	public static Item itemSatelliteIdChip;
@@ -106,7 +115,6 @@ public class AdvancedRocketryItems {
 	public static Item itemUpgradeFogGoggles;
 	public static Item itemAtmAnalyser;
 	public static Item itemBiomeChanger;
-	public static Item itemAstroBed;
 	public static Item itemBasicLaserGun;
 	public static Item itemSpaceElevatorChip;
 	public static Item itemBeaconFinder;

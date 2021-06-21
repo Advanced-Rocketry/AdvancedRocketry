@@ -45,6 +45,8 @@ import zmaster587.libVulpes.network.PacketItemModifcation;
 import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.naming.directory.NoSuchAttributeException;
 import java.util.LinkedList;
 import java.util.List;
@@ -69,27 +71,40 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	}
 
 	@Override
+<<<<<<< HEAD
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand) {
 		ItemStack stack = playerIn.getHeldItem(hand);
 		if(!playerIn.world.isRemote && stack != null && playerIn.isSneaking())
 			NetworkHooks.openGui((ServerPlayerEntity)playerIn, (INamedContainerProvider)stack.getItem(), packetBuffer -> {packetBuffer.writeInt(getModularInvType().ordinal()); packetBuffer.writeBoolean(hand == Hand.MAIN_HAND);});
+=======
+	@ParametersAreNonnullByDefault
+	@Nonnull
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
+		ItemStack stack = playerIn.getHeldItem(hand);
+		if(!playerIn.world.isRemote && !stack.isEmpty() && playerIn.isSneaking())
+			playerIn.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARCENTEREDFULLSCREEN.ordinal(), worldIn, -1, -1, -1);
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		return super.onItemRightClick(worldIn, playerIn, hand);
 	}
 
 	@Override
+<<<<<<< HEAD
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+=======
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+		List<ModuleBase> modules = new LinkedList<>();
+>>>>>>> origin/feature/nuclearthermalrockets
 		final int offset_all = 96;
 
 		ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);
 
-		if(stack != null) {
-
-			modules.clear();
+		if(!stack.isEmpty()) {
 			modules.add(new ModuleStellarBackground(0, 0, zmaster587.libVulpes.inventory.TextureResources.starryBG));
 
 
+<<<<<<< HEAD
 			List<ModuleBase> list2 = new LinkedList<ModuleBase>();
 			ModuleButton btnAdd = new ModuleButton(172-offset_all, 18*2+28, LibVulpes.proxy.getLocalizedString("msg.label.add"), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
 			btnAdd.setAdditionalData(BUTTON_ID_ADD);
@@ -98,6 +113,13 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			ModuleButton btnDelete = new ModuleButton(172-offset_all, 18*3+28, LibVulpes.proxy.getLocalizedString("msg.label.delete"), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
 			btnDelete.setAdditionalData(BUTTON_ID_DELETE);
 			
+=======
+			List<ModuleBase> list2 = new LinkedList<>();
+			ModuleButton btnAdd = new ModuleButton(172-offset_all, 18*2+28, BUTTON_ID_ADD, LibVulpes.proxy.getLocalizedString("msg.label.add"), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
+			ModuleButton btnClear = new ModuleButton(172-offset_all, 18*4+28, BUTTON_ID_CLEAR, LibVulpes.proxy.getLocalizedString("msg.label.clear"), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
+			ModuleButton btnDelete = new ModuleButton(172-offset_all, 18*3+28, BUTTON_ID_DELETE, LibVulpes.proxy.getLocalizedString("msg.label.delete"), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
+
+>>>>>>> origin/feature/nuclearthermalrockets
 			modules.add(btnClear);
 			modules.add(btnDelete);
 			modules.add(btnAdd);
@@ -123,7 +145,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 				i++;
 			}
 
-			ModuleContainerPan pan = new ModuleContainerPan(25-offset_all, 50, list2, new LinkedList<ModuleBase>(), null, 512, 256, 0, -48, 258, 256);
+			ModuleContainerPan pan = new ModuleContainerPan(25-offset_all, 50, list2, new LinkedList<>(), null, 512, 256, 0, -48, 258, 256);
 			modules.add(pan);
 		}
 
@@ -136,22 +158,30 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	}
 
 	@Override
+<<<<<<< HEAD
 	@OnlyIn(value=Dist.CLIENT)
 	public void onInventoryButtonPressed(ModuleButton buttonId) {
 		ItemStack stack = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
 		if(stack != null && stack.getItem() == this) {
 			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getInstance().player, (byte)(buttonId.getAdditionalData())));
+=======
+	@SideOnly(Side.CLIENT)
+	public void onInventoryButtonPressed(int buttonId) {
+		ItemStack stack = Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND);
+		if(!stack.isEmpty() && stack.getItem() == this) {
+			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getMinecraft().player, (byte)(buttonId)));
+>>>>>>> origin/feature/nuclearthermalrockets
 		}
 	}
 
 
-	private void setTempName(ItemStack stack, String string)
+	private void setTempName(@Nonnull ItemStack stack, String string)
 	{
 		if(stack.hasTag())
 			stack.getTag().putString(TMPNAME, string);
 	}
 
-	private String getTempName(ItemStack stack)
+	private String getTempName(@Nonnull ItemStack stack)
 	{
 		if(stack.hasTag())
 			return stack.getTag().getString(TMPNAME);
@@ -159,7 +189,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id, ItemStack stack) {
+	public void writeDataToNetwork(ByteBuf out, byte id, @Nonnull ItemStack stack) {
 		if(id == BUTTON_ID_ADD)
 		{
 			String str = getTempName(stack);
@@ -172,7 +202,11 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void readDataFromNetwork(ByteBuf in, byte id, CompoundNBT nbt, ItemStack stack) {
+=======
+	public void readDataFromNetwork(ByteBuf in, byte id, NBTTagCompound nbt, @Nonnull ItemStack stack) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		if(id == BUTTON_ID_ADD)
 		{
 			short len = in.readShort();
@@ -183,7 +217,11 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt, ItemStack stack) {
+=======
+	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt, @Nonnull ItemStack stack) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		if(!player.world.isRemote)
 		{
 			ResourceLocation dimId = DimensionManager.getEffectiveDimId(player.world, new BlockPos(player.getPositionVec())).getId();
@@ -208,7 +246,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			{
 				//Can't delete "Last"
 				List<LandingLocation> locs = getLandingLocations(stack, dimId);
-				List<LandingLocation> locs2 = new LinkedList<LandingLocation>();
+				List<LandingLocation> locs2 = new LinkedList<>();
 				locs2.add(locs.get(0));
 				setLandingLocations(stack, dimId, locs2);
 			}
@@ -234,7 +272,11 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		return player.getHeldItem(player.getActiveHand()).getItem() == this;
 	}
 
+<<<<<<< HEAD
 	public int getSelectionId(ItemStack stack, ResourceLocation dimid)
+=======
+	public int getSelectionId(@Nonnull ItemStack stack, int dimid)
+>>>>>>> origin/feature/nuclearthermalrockets
 	{
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
@@ -248,7 +290,11 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		return 0;
 	}
 
+<<<<<<< HEAD
 	public void setSelectionId(ItemStack stack, ResourceLocation dimid, int slotId)
+=======
+	public void setSelectionId(@Nonnull ItemStack stack, int dimid, int slotId)
+>>>>>>> origin/feature/nuclearthermalrockets
 	{
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
@@ -259,9 +305,13 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		}
 	}
 
+<<<<<<< HEAD
 	public List<LandingLocation> getLandingLocations(ItemStack stack, ResourceLocation dimid)
+=======
+	public List<LandingLocation> getLandingLocations(@Nonnull ItemStack stack, int dimid)
+>>>>>>> origin/feature/nuclearthermalrockets
 	{
-		List<LandingLocation> retList = new LinkedList<LandingLocation>();
+		List<LandingLocation> retList = new LinkedList<>();
 
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
@@ -286,8 +336,12 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 				}
 
+<<<<<<< HEAD
 				for(INBT tag : destList)
 				{
+=======
+				for(NBTBase tag : destList) {
+>>>>>>> origin/feature/nuclearthermalrockets
 					try {
 						retList.add(LandingLocation.loadFromNBT((CompoundNBT)tag));
 					} catch (NoSuchAttributeException e) {
@@ -299,7 +353,11 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		return retList;
 	}
 
+<<<<<<< HEAD
 	public void setLandingLocations(ItemStack stack, ResourceLocation dimid, List<LandingLocation> locations)
+=======
+	public void setLandingLocations(@Nonnull ItemStack stack, int dimid, List<LandingLocation> locations)
+>>>>>>> origin/feature/nuclearthermalrockets
 	{
 		if(stack.hasTag()) {
 			CompoundNBT stackNBT = stack.getTag();
@@ -315,9 +373,15 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 			for(LandingLocation loc : locations)
 			{
+<<<<<<< HEAD
 				CompoundNBT nbtTag = new CompoundNBT();
 				loc.savetoNBT(nbtTag);
 				destList.add(nbtTag);
+=======
+				NBTTagCompound nbtTag = new NBTTagCompound();
+				loc.saveToNBT(nbtTag);
+				destList.appendTag(nbtTag);
+>>>>>>> origin/feature/nuclearthermalrockets
 			}
 
 			nbt.put(DESTINATION, destList);
@@ -325,24 +389,36 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		}
 	}
 
+<<<<<<< HEAD
 	public void setTakeoffCoords(ItemStack stack, Vector3F<Float> pos, ResourceLocation dimid, int slot) {
 		setTakeoffCoords(stack, pos.x, pos.y, pos.z, dimid, slot);
 	}
 
 	public void setTakeoffCoords(ItemStack stack, float x, float y, float z, ResourceLocation dimid, int slot) {
 		CompoundNBT nbt;
+=======
+	public void setTakeoffCoords(@Nonnull ItemStack stack, Vector3F<Float> pos, int dimid, int slot) {
+		setTakeoffCoords(stack, pos.x, pos.y, pos.z, dimid, slot);
+	}
+
+	public void setTakeoffCoords(@Nonnull ItemStack stack, float x, float y, float z, int dimid, int slot) {
+		NBTTagCompound nbt;
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		if(stack.hasTag()) 
 			nbt = stack.getTag();
 		else 
 			nbt = new CompoundNBT();
 
+<<<<<<< HEAD
 		CompoundNBT nbtEntry;
 		if(nbt.contains("dimid" + dimid)) 
 			nbtEntry = nbt.getCompound("dimid" + dimid);
 		else
 			nbtEntry = new CompoundNBT();
 
+=======
+>>>>>>> origin/feature/nuclearthermalrockets
 		LandingLocation landingLoc = new LandingLocation("Last", x,y,z);
 
 		List<LandingLocation> landingLocList = getLandingLocations(stack, dimid);
@@ -357,13 +433,21 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 	/**
 	 * @param stack
+	 * @param dimid
 	 * @return Vector3F containing the takeoff coords or null if there is none
 	 */
+<<<<<<< HEAD
 	public LandingLocation getTakeoffCoords(ItemStack stack, ResourceLocation dimid) {
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
 			if(nbt.contains("dimid" + dimid)) {
 				nbt = nbt.getCompound("dimid" + dimid);
+=======
+	public LandingLocation getTakeoffCoords(@Nonnull ItemStack stack, int dimid) {
+		if(stack.hasTagCompound()) {
+			NBTTagCompound nbt = stack.getTagCompound();
+			if(nbt.hasKey("dimid" + dimid)) {
+>>>>>>> origin/feature/nuclearthermalrockets
 				List<LandingLocation> landingLocList = getLandingLocations(stack, dimid);
 				int id = getSelectionId(stack, dimid);
 				LandingLocation loc;
@@ -381,6 +465,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		return null;
 	}
 
+<<<<<<< HEAD
 	public static ResourceLocation getUUID(ItemStack stack) {
 		if(stack.hasTag())
 			return new ResourceLocation(stack.getTag().getString(uuidIdentifier));
@@ -391,6 +476,18 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		CompoundNBT nbt;
 		if(stack.hasTag())
 			nbt = stack.getTag();
+=======
+	public static int getUUID(@Nonnull ItemStack stack) {
+		if(stack.hasTagCompound())
+			return stack.getTagCompound().getInteger(uuidIdentifier);
+		return 0;
+	}
+
+	public static void setUUID(@Nonnull ItemStack stack, int uuid) {
+		NBTTagCompound nbt;
+		if(stack.hasTagCompound())
+			nbt = stack.getTagCompound();
+>>>>>>> origin/feature/nuclearthermalrockets
 		else
 			nbt = new CompoundNBT();
 
@@ -399,6 +496,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	}
 
 	@Override
+<<<<<<< HEAD
 	@OnlyIn(value=Dist.CLIENT)
 	public void addInformation(ItemStack stack, World world, List list,
 			ITooltipFlag bool) {
@@ -410,9 +508,21 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
 				Entity p = Minecraft.getInstance().player;
 				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(p.getPositionVec()));
+=======
+	@SideOnly(Side.CLIENT)
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
+		if(getUUID(stack) == 0)
+			list.add(ChatFormatting.GRAY + LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
+		else {
+			list.add(ChatFormatting.GREEN + LibVulpes.proxy.getLocalizedString("msg.stationchip.sation") + getUUID(stack));
+			super.addInformation(stack, player, list, bool);
+			if(player.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+				Entity p = Minecraft.getMinecraft().player;
+				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(p.getPosition());
+>>>>>>> origin/feature/nuclearthermalrockets
 
-				if(obj != null) {
-					LandingLocation loc = getTakeoffCoords(stack, obj.getOrbitingPlanetId());
+				if(spaceObject != null) {
+					LandingLocation loc = getTakeoffCoords(stack, spaceObject.getOrbitingPlanetId());
 					if(loc != null) {
 						Vector3F<Float> vec = loc.location;
 						list.add(new StringTextComponent("Name: " + loc.name));
@@ -458,13 +568,13 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		public LandingLocation(String name, float x, float y, float z)
 		{
 			this.name = name;
-			this.location = new Vector3F<Float>(x,y,z);
+			this.location = new Vector3F<>(x, y, z);
 		}
 
 		public LandingLocation()
 		{
 			this.name = "";
-			this.location = new Vector3F<Float>(0f,0f,0f);
+			this.location = new Vector3F<>(0f, 0f, 0f);
 		}
 
 		@Override
@@ -472,15 +582,23 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			return String.format("%s: %.0f, %.0f", name, location.x, location.z);
 		}
 
+<<<<<<< HEAD
 		static LandingLocation loadFromNBT(CompoundNBT nbt) throws NoSuchAttributeException
 		{
+=======
+		static LandingLocation loadFromNBT(NBTTagCompound nbt)  throws NoSuchAttributeException {
+>>>>>>> origin/feature/nuclearthermalrockets
 			String name = nbt.getString("name");
-			Vector3F<Float> vec = new Vector3F<Float>(nbt.getFloat("x"), nbt.getFloat("y"),nbt.getFloat("z"));
+			Vector3F<Float> vec = new Vector3F<>(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"));
 
 			return new LandingLocation(name, vec);
 		}
 
+<<<<<<< HEAD
 		void savetoNBT(CompoundNBT nbt)
+=======
+		void saveToNBT(NBTTagCompound nbt)
+>>>>>>> origin/feature/nuclearthermalrockets
 		{
 			nbt.putString("name", this.name);
 			nbt.putFloat("x", this.location.x);

@@ -31,8 +31,13 @@ public class ItemSealDetector extends Item
 	}
 
 	@Override
+<<<<<<< HEAD
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand) {
 		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
+=======
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
+		return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 	
 	@Override

@@ -28,7 +28,7 @@ import java.util.List;
 
 public class TileRollingMachine extends TileMultiblockMachine {
 
-	public static final Object structure[][][] = new Object[][][] { 
+	public static final Object[][][] structure = new Object[][][] {
 		{   {Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},
 			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock},
 			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, "blockSteel", LibVulpesBlocks.blockStructureBlock}},

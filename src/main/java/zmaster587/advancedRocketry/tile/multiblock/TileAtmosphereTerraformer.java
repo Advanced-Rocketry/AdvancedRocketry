@@ -50,6 +50,7 @@ import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.IconResource;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -287,7 +288,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 		text = new ModuleText(10, 100, "", 0x282828);
 		powerPerTick = 1000;
 
-		List<ModuleToggleSwitch> buttons = new LinkedList<ModuleToggleSwitch>();
+		List<ModuleToggleSwitch> buttons = new LinkedList<>();
 		buttons.add(buttonIncrease);
 		buttons.add(buttonDecrease);
 		radioButton = new ModuleRadioButton(this, buttons);
@@ -390,6 +391,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 			int requiredN2 = ARConfiguration.getCurrentConfig().terraformliquidRate.get(), requiredO2 =  ARConfiguration.getCurrentConfig().terraformliquidRate.get();
 
 			for(IFluidHandler handler : fluidInPorts) {
+<<<<<<< HEAD
 				FluidStack stack = handler.drain(new FluidStack(AdvancedRocketryFluids.nitrogenStill.get(), requiredN2), FluidAction.EXECUTE);
 
 				if(stack != null)
@@ -399,6 +401,17 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 
 				if(stack != null)
 					requiredO2 -= stack.getAmount();
+=======
+				FluidStack fStack = handler.drain(new FluidStack(AdvancedRocketryFluids.fluidNitrogen, requiredN2), true);
+
+				if(fStack != null)
+					requiredN2 -= fStack.amount;
+
+				fStack = handler.drain(new FluidStack(AdvancedRocketryFluids.fluidOxygen, requiredO2), true);
+
+				if(fStack != null)
+					requiredO2 -= fStack.amount;
+>>>>>>> origin/feature/nuclearthermalrockets
 			}
 
 			if(!world.isRemote) {
@@ -428,10 +441,17 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	private boolean hasValidBiomeChanger() {
 		ItemStack biomeChanger = inv.getStackInSlot(0);
 		SatelliteBase satellite;
+<<<<<<< HEAD
 		return false;	
 		/*return biomeChanger != null && (biomeChanger.getItem() instanceof ItemBiomeChanger) && DimensionManager.getInstance().getSatellite(((ItemBiomeChanger)biomeChanger.getItem()).getSatelliteId(biomeChanger)) != null &&
 				(satellite = ((ItemSatelliteIdentificationChip)AdvancedRocketryItems.itemBiomeChanger).getSatellite(biomeChanger)).getDimensionId().get() == ZUtils.getDimensionIdentifier(world) &&
 				satellite instanceof SatelliteBiomeChanger;*/
+=======
+				
+		return !biomeChanger.isEmpty() && (biomeChanger.getItem() instanceof ItemBiomeChanger) && DimensionManager.getInstance().getSatellite(((ItemBiomeChanger)biomeChanger.getItem()).getSatelliteId(biomeChanger)) != null &&
+				(satellite = ((ItemSatelliteIdentificationChip)AdvancedRocketryItems.itemBiomeChanger).getSatellite(biomeChanger)).getDimensionId() == world.provider.getDimension() &&
+				satellite instanceof SatelliteBiomeChanger;
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override
@@ -487,7 +507,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 
 
 		if(packetId == (byte)TileMultiblockMachine.NetworkPackets.TOGGLE.ordinal()) {
-			radioButton.setOptionSelected((int)in.readByte());
+			radioButton.setOptionSelected(in.readByte());
 		}
 		super.readDataFromNetwork(in, packetId, nbt);
 	}
@@ -574,16 +594,19 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int index) {
 		return inv.getStackInSlot(index);
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int index, int count) {
 		return inv.decrStackSize(index, count);
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		ItemStack stack = inv.removeStackFromSlot(index);
 		if(world.isRemote)
@@ -592,7 +615,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	}
 
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) {
+	public void setInventorySlotContents(int index, @Nonnull ItemStack stack) {
 		inv.setInventorySlotContents(index, stack);
 		if(world.isRemote)
 			setText();
@@ -614,7 +637,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
+	public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
 		return inv.isItemValidForSlot(index, stack);
 	}
 

@@ -4,10 +4,10 @@
             "item": "advancedrocketry:moonturf"
         },
         "title": {
-            "translate": "achievement.oneSmallStep"
+            "translate": "advancement.oneSmallStep"
         },
         "description": {
-            "translate": "achievement.oneSmallStep.desc"
+            "translate": "advancement.oneSmallStep.desc"
         },
         "frame": "challenge"
     },

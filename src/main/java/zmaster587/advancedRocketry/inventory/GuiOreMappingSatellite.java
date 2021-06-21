@@ -25,30 +25,37 @@ import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.render.RenderHelper;
+<<<<<<< HEAD
+=======
+import zmaster587.libVulpes.util.VulpineMath;
+
+import javax.annotation.Nonnull;
+import java.io.IOException;
+>>>>>>> origin/feature/nuclearthermalrockets
 import java.nio.IntBuffer;
 
 public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingSatellite> {
 
-	ClientDynamicTexture texture;
-	Thread currentMapping;
+	private ClientDynamicTexture texture;
+	private Thread currentMapping;
 	TileEntity masterConsole;
-	boolean merged = false;
+	private boolean merged = false;
 	private static final int SCREEN_SIZE = 146;
-	private int maxZoom = 128;
+	private int maxZoom;
 	private static final int MAXRADIUS = 16;
 	private static final int FANCYSCANMAXSIZE = 57;
 	private int fancyScanOffset;
 	private long prevWorldTickTime;
 	private int prevSlot;
 	private int mouseValue;
-	private int scanSize = 2;
+	private int scanSize;
 	private int radius = 1;
 	private int zoomScale;
 	private int xSelected, zSelected, xCenter, zCenter, playerPosX, playerPosZ;
 	private static final ResourceLocation backdrop = new ResourceLocation("advancedrocketry", "textures/gui/VideoSatallite.png");
-	int[][] oreMap;
-	World world;
-	SatelliteOreMapping satellite;
+	private int[][] oreMap;
+	private World world;
+	private SatelliteOreMapping satellite;
 
 	public GuiOreMappingSatellite(ContainerOreMappingSatellite container, PlayerInventory inventoryPlayer, ITextComponent title) {
 		super( container, inventoryPlayer, title);
@@ -63,10 +70,8 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		satellite = container.inv;
 		
 		//Max zoom is 128
-		if(satellite != null) {
-			maxZoom = (int) Math.pow(2, satellite.getZoomRadius());
-			zoomScale = satellite.getZoomRadius();
-		}
+		maxZoom = (int) Math.pow(2, satellite.getZoomRadius());
+		zoomScale = satellite.getZoomRadius();
 
 		if(maxZoom == 1)
 			this.satellite = null;
@@ -78,13 +83,11 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 	}
 
 	//Create separate thread to do this because it takes a while!
-	Runnable mapper = new Runnable() {
+	private Runnable mapper = new Runnable() {
 		@Override
 		public void run() {
 			oreMap = satellite.scanChunk(world, xCenter, zCenter, scanSize/2, radius, zoomScale);
-			if(oreMap != null && !Thread.interrupted())
-				merged = true;
-			else merged = false;
+			merged = oreMap != null && !Thread.interrupted();
 		}
 	};
 
@@ -92,19 +95,17 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 	class ItemMapper implements Runnable {
 		private ItemStack myBlock;
 
-		ItemMapper(ItemStack block) {
-			//Copy so we dont have any possible CME or oddness due to that
+		ItemMapper(@Nonnull ItemStack block) {
+			//Copy so we don't have any possible CME or oddness due to that
 			myBlock = block.copy();
 		}
 
 		@Override
 		public void run() {
 			oreMap = satellite.scanChunk(world, xCenter, zCenter, scanSize/2, radius, myBlock, zoomScale);
-			if(oreMap != null && !Thread.interrupted())
-				merged = true;
-			else merged = false;
+			merged = oreMap != null && !Thread.interrupted();
 		}
-	};
+	}
 
 	//Don't pause the game whilst player is looking at the satellite
 	public boolean doesGuiPauseGame(){ return false; }
@@ -117,13 +118,17 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		resetTexture();
 		if(prevSlot == -1) {
 			currentMapping = new Thread(mapper);
-			currentMapping.setName("Ore Scan");
 		}
 		else {
 
+<<<<<<< HEAD
 			currentMapping = new Thread(new ItemMapper(this.playerInventory.getStackInSlot(prevSlot).getStack()));
 			currentMapping.setName("Ore Scan");
+=======
+			currentMapping = new Thread(new ItemMapper(inventorySlots.getSlot(prevSlot).getStack()));
+>>>>>>> origin/feature/nuclearthermalrockets
 		}
+		currentMapping.setName("Ore Scan");
 		currentMapping.start();
 	}
 
@@ -260,18 +265,32 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		RenderSystem.disableTexture();
 		RenderSystem.color4f(0f, 0.8f, 0f,1f);
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+<<<<<<< HEAD
 		buffer.pos(-21, 82 + fancyScanOffset, (double)this.getBlitOffset()).endVertex();
 		buffer.pos(0, 84 + fancyScanOffset, (double)this.getBlitOffset()).endVertex();
 		buffer.pos(0, 81 + fancyScanOffset, (double)this.getBlitOffset()).endVertex();
 		buffer.pos(-21, 81 + fancyScanOffset, (double)this.getBlitOffset()).endVertex();
+=======
+		buffer.pos(-21, 82 + fancyScanOffset, this.zLevel).endVertex();
+		buffer.pos(0, 84 + fancyScanOffset, this.zLevel).endVertex();
+		buffer.pos(0, 81 + fancyScanOffset, this.zLevel).endVertex();
+		buffer.pos(-21, 81 + fancyScanOffset, this.zLevel).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 		Tessellator.getInstance().draw();
 
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+<<<<<<< HEAD
 		buffer.pos(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.getBlitOffset()).endVertex();
 		buffer.pos(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.getBlitOffset()).endVertex();
 		buffer.pos(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.getBlitOffset()).endVertex();
 		buffer.pos(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.getBlitOffset()).endVertex();
+=======
+		buffer.pos(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, this.zLevel).endVertex();
+		buffer.pos(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, this.zLevel).endVertex();
+		buffer.pos(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, this.zLevel).endVertex();
+		buffer.pos(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, this.zLevel).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 		Tessellator.getInstance().draw();
 
 
@@ -354,18 +373,22 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		//Render player location
 		float offsetX = playerPosX - xCenter + 0.5f;
 		float offsetY = zCenter - playerPosZ + 0.5f;
-		double numPixels = SCREEN_SIZE/scanSize;//(scanSize/(float)(SCREEN_SIZE*radius));
+		double numPixels = ((float) SCREEN_SIZE)/scanSize;//(scanSize/(float)(SCREEN_SIZE*radius));
 
 
 		float radius = 2;
-		if(Math.abs(offsetX) < scanSize/2 && Math.abs(offsetY) < scanSize/2) {
+		if(Math.abs(offsetX) < scanSize/2f && Math.abs(offsetY) < scanSize/2f) {
 			offsetX *= numPixels;
 			offsetY *= numPixels;
 
 			RenderSystem.disableTexture();
 			RenderSystem.color4f(0.4f, 1f, 0.4f,1f);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+<<<<<<< HEAD
 			RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.getBlitOffset(), offsetX + 47 + x + SCREEN_SIZE/2 - radius,  offsetY + 20 + y + SCREEN_SIZE/2 - radius, offsetX + 47 + x + SCREEN_SIZE/2 + radius, offsetY + 20 + y + SCREEN_SIZE/2 + radius, 0, 1, 0, 1);
+=======
+			RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, offsetX + 47 + x + SCREEN_SIZE/2d - radius,  offsetY + 20 + y + SCREEN_SIZE/2d - radius, offsetX + 47 + x + SCREEN_SIZE/2d + radius, offsetY + 20 + y + SCREEN_SIZE/2d + radius, 0, 1, 0, 1);
+>>>>>>> origin/feature/nuclearthermalrockets
 			Tessellator.getInstance().draw();
 			RenderSystem.color4f(1, 1, 1,1f);
 			RenderSystem.enableTexture();

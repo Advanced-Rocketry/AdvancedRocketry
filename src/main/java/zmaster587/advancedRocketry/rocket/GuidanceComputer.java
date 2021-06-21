@@ -14,12 +14,14 @@ import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
 public class GuidanceComputer implements IInventory, IModularInventory {
 
-	ItemStack inv;
+	private ItemStack inv;
 	private static final String destinationSlot = "destinationSlot";
 	
 	@Override
@@ -28,26 +30,28 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int slot) {
 		return inv;
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int slot, int amount) {
 		
-		if(inv == null)
-			return null;
+		if(inv.isEmpty())
+			return ItemStack.EMPTY;
 		else {
 			ItemStack stack;
 			stack = inv.split(amount);
 			if(inv.getCount() == 0)
-				inv = null;
+				inv = ItemStack.EMPTY;
 			return stack;
 		}
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		inv = stack;
 	}
 
@@ -55,6 +59,20 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	public String getModularInventoryName() {
 		return "tile.guidanceComputer.name";
 	}
+<<<<<<< HEAD
+=======
+	
+	@Override
+	@Nonnull
+	public String getName() {
+		return getModularInventoryName();
+	}
+
+	@Override
+	public boolean hasCustomName() {
+		return false;
+	}
+>>>>>>> origin/feature/nuclearthermalrockets
 
 	@Override
 	public int getInventoryStackLimit() {
@@ -67,7 +85,11 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public boolean isUsableByPlayer(PlayerEntity player) {
+=======
+	public boolean isUsableByPlayer(@Nullable EntityPlayer player) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		return true;
 	}
 
@@ -82,15 +104,23 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
+	public boolean isItemValidForSlot(int p_94041_1_, @Nonnull ItemStack p_94041_2_) {
 		return true;
 	}
 	
+<<<<<<< HEAD
 	public void writeToNBT(CompoundNBT nbt) {
 		if(inv != null) {
 			CompoundNBT itemNbt = new CompoundNBT();
 			inv.write(itemNbt);
 			nbt.put(destinationSlot, itemNbt);
+=======
+	public void writeToNBT(NBTTagCompound nbt) {
+		if(!inv.isEmpty()) {
+			NBTTagCompound itemNbt = new NBTTagCompound();
+			inv.writeToNBT(itemNbt);
+			nbt.setTag(destinationSlot, itemNbt);
+>>>>>>> origin/feature/nuclearthermalrockets
 		}
 	}
 	
@@ -100,8 +130,13 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+=======
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+		List<ModuleBase> modules = new LinkedList<>();
+>>>>>>> origin/feature/nuclearthermalrockets
 		
 		modules.add(new ModuleSlotArray(8, 17, this, 0, 1));
 		
@@ -114,14 +149,16 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
+	@Nullable
 	public ITextComponent getDisplayName() {
 		return null;
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		ItemStack stack = inv;
-		inv = null;
+		inv = ItemStack.EMPTY;
 		return stack;
 	}
 

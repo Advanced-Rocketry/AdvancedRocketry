@@ -9,6 +9,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.LibVulpes;
 
+import javax.annotation.Nonnull;
+import java.util.List;
+
 public class ItemAsteroidChip  extends ItemMultiData {
 
 	private static final String uuidIdentifier = "UUID";
@@ -27,6 +30,7 @@ public class ItemAsteroidChip  extends ItemMultiData {
 	 * Removes any Information and reset the stack to a default state
 	 * @param stack stack to erase
 	 */
+<<<<<<< HEAD
 	public void erase(ItemStack stack) {
 		stack.setTag(null);
 	}
@@ -41,6 +45,22 @@ public class ItemAsteroidChip  extends ItemMultiData {
 		CompoundNBT nbt;
 		if(stack.hasTag())
 			nbt = stack.getTag();
+=======
+	public void erase(@Nonnull ItemStack stack) {
+		stack.setTagCompound(null);
+	}
+
+	public Long getUUID(@Nonnull ItemStack stack) {
+		if(stack.hasTagCompound())
+			return stack.getTagCompound().getLong(uuidIdentifier);
+		return null;
+	}
+
+	public void setUUID(@Nonnull ItemStack stack, long uuid) {
+		NBTTagCompound nbt;
+		if(stack.hasTagCompound())
+			nbt = stack.getTagCompound();
+>>>>>>> origin/feature/nuclearthermalrockets
 		else
 			nbt = new CompoundNBT();
 
@@ -48,6 +68,7 @@ public class ItemAsteroidChip  extends ItemMultiData {
 		stack.setTag(nbt);
 	}
 	
+<<<<<<< HEAD
 	public String getType(ItemStack stack) {
 		if(stack.hasTag())
 			return stack.getTag().getString(astType);
@@ -58,6 +79,18 @@ public class ItemAsteroidChip  extends ItemMultiData {
 		CompoundNBT nbt;
 		if(stack.hasTag())
 			nbt = stack.getTag();
+=======
+	public String getType(@Nonnull ItemStack stack) {
+		if(stack.hasTagCompound())
+			return stack.getTagCompound().getString(astType);
+		return null;
+	}
+
+	public void setType(@Nonnull ItemStack stack, String type) {
+		NBTTagCompound nbt;
+		if(stack.hasTagCompound())
+			nbt = stack.getTagCompound();
+>>>>>>> origin/feature/nuclearthermalrockets
 		else
 			nbt = new CompoundNBT();
 
@@ -66,7 +99,7 @@ public class ItemAsteroidChip  extends ItemMultiData {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, World player, java.util.List list, ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
 
 		if(!stack.hasTag()) {
 			list.add(new TranslationTextComponent("msg.unprogrammed"));

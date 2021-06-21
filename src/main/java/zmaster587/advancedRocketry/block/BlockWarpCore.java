@@ -16,6 +16,8 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+
 public class BlockWarpCore extends BlockMultiblockMachine {
 
 	public BlockWarpCore(Properties property,
@@ -24,8 +26,13 @@ public class BlockWarpCore extends BlockMultiblockMachine {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state,
 			LivingEntity placer, ItemStack stack) {
+=======
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
+			EntityLivingBase placer, @Nonnull ItemStack stack) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
 		
 		if(!world.isRemote && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {

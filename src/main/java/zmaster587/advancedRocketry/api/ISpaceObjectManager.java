@@ -7,5 +7,5 @@ import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 
 public interface ISpaceObjectManager {
 	
-	public @Nullable ISpaceObject getSpaceStationFromBlockCoords(BlockPos pos);
+	@Nullable ISpaceObject getSpaceStationFromBlockCoords(BlockPos pos);
 }

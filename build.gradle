@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
@@ -283,3 +284,175 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
 }
 
 tasks.build.dependsOn makeChangelog, deobfJar
+=======
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { name = 'forge'; url = "https://files.minecraftforge.net/maven" }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+
+
+plugins {
+  id "com.gradle.build-scan" version "1.9"
+  id "com.matthewprenger.cursegradle" version "1.1.0"
+  id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.64"
+}
+apply plugin: 'java'
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = project.archivebase
+
+sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+jar {
+        manifest {
+        attributes 'FMLCorePlugin': 'zmaster587.advancedRocketry.asm.AdvancedRocketryPlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
+apply from: "gradle/scripts/getbuildnumber.gradle"
+minecraft {
+    version = "1.12.2-14.23.4.2739"
+    runDir = "run"
+    mappings = "snapshot_20170624"
+    
+    replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
+    replace "@MAJOR@", project.version_major
+    replace "@MINOR@", project.version_minor
+    replace "@REVIS@", project.version_revis
+    replace "@BUILD@", project.getBuildNumber()
+    
+    replace "%LIBVULPESVERSION%", project.libVulpesVersion
+}
+
+apply from: "gradle/scripts/jars.gradle"
+apply from: "gradle/scripts/version.gradle"
+apply from: "gradle/scripts/deps.gradle"
+
+processResources
+{
+    includeEmptyDirs = false
+    
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+/*task deobfJar(type: Jar) {
+     from sourceSets.main.output
+     //if project name is BBM-Dev it makes the deobf jar deobf-dev if not its just deobf
+     classifier = "deobf"
+     //sets where the jars go to.
+     destinationDir = file 'output'
+     manifest {
+        attributes 'FMLCorePlugin': 'zmaster587.advancedRocketry.asm.AdvancedRocketryPlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+     mustRunAfter "jar" 
+}*/
+
+curseforge{
+  if (project.hasProperty("thecursedkey")) {
+        apiKey = project.thecursedkey
+    }
+    else {
+    apiKey = ""
+    }
+  project {
+  //AdvancedRocketry
+    id = "236542"
+    relations {
+        requiredDependency 'libvulpes'
+    }
+    changelog = file('changelog.html')
+    changelogType = 'html'
+    releaseType = "beta"
+    addGameVersion minecraft.version
+    mainArtifact(jar) {
+        displayName = "AdvancedRocketry ${project.version} build " + project.getBuildNumber() +  " for " + minecraft.version
+    }
+    addArtifact (deobfJar){
+        displayName = "AdvancedRocketry ${project.version}-deobf build " + project.getBuildNumber() + " for " + minecraft.version
+    }
+   }
+}
+
+// Commented out until jenkins supports newer verisons of java
+task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
+    file = new File ("changelog.html")
+    untaggedName = "Current release ${project.version}"
+    
+    //Get the last commit from the cache or config if no cache exists
+    File newFile = rootProject.file('lasthash.txt')
+    if (!newFile.exists()) fromCommit = startGitRev
+    else fromCommit = newFile.text.trim()
+    
+    //get the latest commit and write it to the cache file
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    newFile.delete()
+    newFile << stdout.toString().trim()
+    
+    toRef =  "HEAD"
+    gitHubIssuePattern = "nonada123";
+    templateContent = """
+{{#tags}}
+  <h3>{{name}}</h3>
+  <ul>
+    {{#commits}}
+    <li> <a href="https://github.com/zmaster587/AdvancedRocketry/commit/{{hash}}" target=_blank> {{{message}}}</a>
+</li>
+    {{/commits}}
+  </ul>
+{{/tags}}
+"""
+}
+
+tasks.build.dependsOn makeChangelog
+
+buildScan {
+    licenseAgreementUrl = 'https://gradle.com/terms-of-service' 
+    licenseAgree = 'yes'                                        
+
+    publishAlways() 
+
+    if (System.getenv('CI')) {
+        tag 'CI'
+    } else {
+        tag 'Local'
+    }
+
+    tag System.getProperty('os.name')                                            
+}
+>>>>>>> origin/feature/nuclearthermalrockets

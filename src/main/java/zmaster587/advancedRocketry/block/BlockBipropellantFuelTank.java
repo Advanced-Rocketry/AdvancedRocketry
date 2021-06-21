@@ -3,10 +3,16 @@ package zmaster587.advancedRocketry.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+<<<<<<< HEAD
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
+=======
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+>>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -60,8 +66,13 @@ public class BlockBipropellantFuelTank extends Block implements IFuelTank{
 	}
 	
 	@Override
+<<<<<<< HEAD
 	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return VoxelShapes.empty();
+=======
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, TANKSTATES);
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 	
 	@Override

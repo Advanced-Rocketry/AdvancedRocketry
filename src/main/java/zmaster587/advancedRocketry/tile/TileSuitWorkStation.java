@@ -21,13 +21,15 @@ import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
 public class TileSuitWorkStation extends TileEntity implements IModularInventory, IInventory {
 
-	EmbeddedInventory inventory;
-	ModuleTexturedLimitedSlotArray slotArray[];
+	private EmbeddedInventory inventory;
+	private ModuleTexturedLimitedSlotArray[] slotArray;
 
 	public TileSuitWorkStation() {
 		super(AdvancedRocketryTileEntityType.TILE_WORK_STATION);
@@ -36,8 +38,13 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
+<<<<<<< HEAD
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+=======
+	public List<ModuleBase> getModules(int id, EntityPlayer player) {
+		List<ModuleBase> modules = new LinkedList<>();
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		modules.add(new ModuleSlotArray(15, 15, this, 0, 1));
 		
@@ -67,6 +74,7 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int slot) {
 		if(slot == 0) {
 			return inventory.getStackInSlot(slot);
@@ -78,6 +86,7 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int slot, int amt) {
 		if(slot == 0) {
 			return inventory.decrStackSize(slot, amt);
@@ -92,9 +101,9 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack contents) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack contents) {
 		if(slot == 0) {
-			if(contents != null && contents.getItem() instanceof IModularArmor) {
+			if(!contents.isEmpty() && contents.getItem() instanceof IModularArmor) {
 				
 				for(ModuleTexturedLimitedSlotArray slot2 : slotArray) {
 					slot2.setEnabled(false);
@@ -138,8 +147,14 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
+<<<<<<< HEAD
 	public CompoundNBT write(CompoundNBT nbt) {
 		super.write(nbt);
+=======
+	@Nonnull
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+>>>>>>> origin/feature/nuclearthermalrockets
 		
 		inventory.write(nbt);
 		return nbt;
@@ -151,6 +166,20 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 		
 		inventory.readFromNBT(nbt);
 	}
+<<<<<<< HEAD
+=======
+	
+	@Override
+	@Nonnull
+	public String getName() {
+		return getModularInventoryName();
+	}
+
+	@Override
+	public boolean hasCustomName() {
+		return true;
+	}
+>>>>>>> origin/feature/nuclearthermalrockets
 
 	@Override
 	public int getInventoryStackLimit() {
@@ -158,7 +187,11 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
+<<<<<<< HEAD
 	public boolean isUsableByPlayer(PlayerEntity p_70300_1_) {
+=======
+	public boolean isUsableByPlayer(@Nullable EntityPlayer p_70300_1_) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		return true;
 	}
 
@@ -168,17 +201,30 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 	
 	@Override
+<<<<<<< HEAD
 	public void openInventory(PlayerEntity player) {
+=======
+	public void openInventory(@Nullable EntityPlayer player) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		inventory.openInventory(player);
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void closeInventory(PlayerEntity player) {
+=======
+	public void closeInventory(@Nullable EntityPlayer player) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		inventory.closeInventory(player);	
 	}
 
 	@Override
+<<<<<<< HEAD
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+=======
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
+		
+>>>>>>> origin/feature/nuclearthermalrockets
 		return (slot == 0 && stack.getItem() instanceof IModularArmor) || 
 				(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() instanceof IModularArmor && slot != 0 && stack.getItem() instanceof IArmorComponent && 
 				((IArmorComponent)stack.getItem()).isAllowedInSlot(stack, ((ArmorItem)inventory.getStackInSlot(0).getItem()).getEquipmentSlot()) && slot - 1 < ((IModularArmor)inventory.getStackInSlot(0).getItem()).getNumSlots(inventory.getStackInSlot(0))
@@ -186,9 +232,10 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		// TODO Auto-generated method stub
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override

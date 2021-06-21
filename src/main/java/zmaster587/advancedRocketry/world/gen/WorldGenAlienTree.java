@@ -19,8 +19,12 @@ import net.minecraft.world.gen.trunkplacer.TrunkPlacerType;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocktryTrees;
 
+<<<<<<< HEAD
 import java.util.LinkedList;
 import java.util.List;
+=======
+import javax.annotation.Nonnull;
+>>>>>>> origin/feature/nuclearthermalrockets
 import java.util.Random;
 import java.util.Set;
 
@@ -39,8 +43,13 @@ public class WorldGenAlienTree extends StraightTrunkPlacer {
 		super(i, j, k);
 	}
 
+<<<<<<< HEAD
 	public List<FoliagePlacer.Foliage> func_230382_a_(IWorldGenerationReader world, Random random, int p_230382_3_, BlockPos pos, Set<BlockPos> p_230382_5_, MutableBoundingBox boundingBox, BaseTreeFeatureConfig p_230382_7_)
 	{
+=======
+	@Override
+	public boolean generate(@Nonnull World world, Random random, BlockPos pos) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		int treeHeight = random.nextInt(10) + 20;
 		boolean flag = true;
 
@@ -115,6 +124,7 @@ public class WorldGenAlienTree extends StraightTrunkPlacer {
 
 				for (j2 = 0; j2 < treeHeight; ++j2)
 				{
+<<<<<<< HEAD
 					trunkY = y + j2;
 
 					func_236913_a_(world, new BlockPos(trunkX, trunkY, trunkZ), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
@@ -174,10 +184,90 @@ public class WorldGenAlienTree extends StraightTrunkPlacer {
 								this.replaceAirWithLeaves(world, 1 + trunkX - j2, i2 + b1 - c, trunkZ + trunkY, boundingBox);
 								this.replaceAirWithLeaves(world, trunkX + j2, i2 + b1 - c, 1 + trunkZ - trunkY, boundingBox);
 								this.replaceAirWithLeaves(world, 1 + trunkX - j2, i2 + b1 - c, 1 + trunkZ - trunkY, boundingBox);
+=======
+					//Throw events
+					onPlantGrow(world, x,     y - 1, z,     x, y, z);
+					onPlantGrow(world, x + 1, y - 1, z,     x, y, z);
+					onPlantGrow(world, x + 1, y - 1, z + 1, x, y, z);
+					onPlantGrow(world, x,     y - 1, z + 1, x, y, z);
+					int i2 = 0;
+					int j2;
+					int trunkY;
+
+					for (j2 = 0; j2 < treeHeight; ++j2)
+					{
+						trunkY = y + j2;
+
+						IBlockState state1 = world.getBlockState(new BlockPos(x, trunkY, z));
+						Block block1 = state1.getBlock();
+
+						if (world.isAirBlock(new BlockPos(x, trunkY, z)) || block1.isLeaves(state1, world, new BlockPos(x, trunkY, z)))
+						{
+							this.setBlockAndNotifyAdequately(world, new BlockPos(x, trunkY, z), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+							this.setBlockAndNotifyAdequately(world, new BlockPos(x + 1, trunkY, z), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+							this.setBlockAndNotifyAdequately(world, new BlockPos(x, trunkY, z + 1), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+							this.setBlockAndNotifyAdequately(world, new BlockPos(x + 1, trunkY, z + 1), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+							i2 = trunkY;
+						}
+					}
+
+					//Genthe root
+					this.setBlockAndNotifyAdequately(world, new BlockPos(x - 1, y, z), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(x + 2, y, z), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(x + 2, y, z + 1), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(x - 1, y, z + 1), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+
+					this.setBlockAndNotifyAdequately(world, new BlockPos(x, y, z - 1), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(x + 1, y, z - 1), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(x + 1, y, z + 2), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(x, y, z + 2), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+
+					this.setBlockAndNotifyAdequately(world, new BlockPos(x, y, z), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(x + 1, y, z), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(x, y, z +1 ), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					this.setBlockAndNotifyAdequately(world, new BlockPos(x + 1, y, z + 1), AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState());
+					
+					
+					generatePod(world, random, 6, x + 1, random.nextInt(10) + y + treeHeight / 6, z, 1, 1);
+					generatePod(world, random, 6, x, random.nextInt(10) + y + treeHeight / 6, z + 1, -1, -1);
+					generatePod(world, random, 6, x, random.nextInt(10) + y + treeHeight / 6, z + 1, -1, 1);
+					generatePod(world, random, 6, x + 1, random.nextInt(10) + y + treeHeight / 6, z, 1, -1);
+
+					generatePod(world, random, 6, x + 1, random.nextInt(10) + y + treeHeight / 6, z, 1, 0);
+					generatePod(world, random, 6, x, random.nextInt(10) + y + treeHeight / 6, z + 1, -1, 0);
+					generatePod(world, random, 6, x, random.nextInt(10) + y + treeHeight / 6, z + 1, 0, 1);
+					generatePod(world, random, 6, x + 1, random.nextInt(10) + y + treeHeight / 6, z, 0, -1);
+
+					generatePod(world, random, 3, x + 1, random.nextInt(5) + y + treeHeight-(treeHeight / 3), z, 1, 1);
+					generatePod(world, random, 3, x, random.nextInt(5) + y + treeHeight-(treeHeight / 3), z + 1, -1, -1);
+					generatePod(world, random, 3, x, random.nextInt(5) + y + treeHeight-(treeHeight / 3), z + 1, -1, 1);
+					generatePod(world, random, 3, x + 1, random.nextInt(5) + y + treeHeight-(treeHeight / 3), z, 1, -1);
+
+					generatePod(world, random, 3, x + 1, random.nextInt(5) + y + treeHeight-(treeHeight / 3), z, 1, 0);
+					generatePod(world, random, 3, x, random.nextInt(5) + y + treeHeight- (treeHeight / 3), z + 1, -1, 0);
+					generatePod(world, random, 3, x, random.nextInt(5) + y + treeHeight - (treeHeight / 3), z + 1, 0, 1);
+					generatePod(world, random, 3, x + 1, random.nextInt(5) + y + treeHeight - (treeHeight / 3), z, 0, -1);
+
+					for (j2 = -3; j2 <= 3; ++j2)
+					{
+						for (trunkY = -3; trunkY <= 1; ++trunkY)
+						{
+							byte b1 = -1;
+
+							for(int c = 0; c < treeHeight - 4; c++) {
+								int radius = Math.abs(x + j2) + Math.abs(z + trunkY);
+								if( (c < treeHeight/3 && radius < 3 ) || ((c >= treeHeight/3) && radius < 4)){
+									this.replaceAirWithLeaves(world, x + j2, i2 + b1 - c, z + trunkY);
+									this.replaceAirWithLeaves(world, 1 + x - j2, i2 + b1 - c, z + trunkY);
+									this.replaceAirWithLeaves(world, x + j2, i2 + b1 - c, 1 + z - trunkY);
+									this.replaceAirWithLeaves(world, 1 + x - j2, i2 + b1 - c, 1 + z - trunkY);
+								}
+>>>>>>> origin/feature/nuclearthermalrockets
 							}
 						}
 
 
+<<<<<<< HEAD
 						if ((j2 > -2 || trunkY > -1) && (j2 != -1 || trunkY != -2))
 						{
 							byte b2 = 1;
@@ -185,10 +275,21 @@ public class WorldGenAlienTree extends StraightTrunkPlacer {
 							this.replaceAirWithLeaves(world, 1 + trunkX - j2, i2 + b2, trunkZ + trunkY, boundingBox);
 							this.replaceAirWithLeaves(world, trunkX + j2, i2 + b2, 1 + trunkZ - trunkY, boundingBox);
 							this.replaceAirWithLeaves(world, 1 + trunkX - j2, i2 + b2, 1 + trunkZ - trunkY, boundingBox);
+=======
+							if ((j2 > -2 || trunkY > -1) && (j2 != -1 || trunkY != -2))
+							{
+								byte b2 = 1;
+								this.replaceAirWithLeaves(world, x + j2, i2 + b2, z + trunkY);
+								this.replaceAirWithLeaves(world, 1 + x - j2, i2 + b2, z + trunkY);
+								this.replaceAirWithLeaves(world, x + j2, i2 + b2, 1 + z - trunkY);
+								this.replaceAirWithLeaves(world, 1 + x - j2, i2 + b2, 1 + z - trunkY);
+							}
+>>>>>>> origin/feature/nuclearthermalrockets
 						}
 					}
 				}
 
+<<<<<<< HEAD
 				if (random.nextBoolean())
 				{
 					this.replaceAirWithLeaves(world, trunkX, i2 + 2, trunkZ, boundingBox);
@@ -196,6 +297,15 @@ public class WorldGenAlienTree extends StraightTrunkPlacer {
 					this.replaceAirWithLeaves(world, trunkX + 1, i2 + 2, trunkZ + 1, boundingBox);
 					this.replaceAirWithLeaves(world, trunkX, i2 + 2, trunkZ + 1, boundingBox);
 				}
+=======
+					if (random.nextBoolean())
+					{
+						this.replaceAirWithLeaves(world, x, i2 + 2, z);
+						this.replaceAirWithLeaves(world, x + 1, i2 + 2, z);
+						this.replaceAirWithLeaves(world, x + 1, i2 + 2, z + 1);
+						this.replaceAirWithLeaves(world, x, i2 + 2, z + 1);
+					}
+>>>>>>> origin/feature/nuclearthermalrockets
 
 				for (j2 = -3; j2 <= 4; ++j2)
 				{
@@ -203,7 +313,14 @@ public class WorldGenAlienTree extends StraightTrunkPlacer {
 					{
 						if ((j2 != -3 || trunkY != -3) && (j2 != -3 || trunkY != 4) && (j2 != 4 || trunkY != -3) && (j2 != 4 || trunkY != 4) && (Math.abs(j2) < 3 || Math.abs(trunkY) < 3))
 						{
+<<<<<<< HEAD
 							this.replaceAirWithLeaves(world, trunkX + j2, i2, trunkZ + trunkY, boundingBox);
+=======
+							if ((j2 != -3 || trunkY != -3) && (j2 != -3 || trunkY != 4) && (j2 != 4 || trunkY != -3) && (j2 != 4 || trunkY != 4) && (Math.abs(j2) < 3 || Math.abs(trunkY) < 3))
+							{
+								this.replaceAirWithLeaves(world, x + j2, i2, z + trunkY);
+							}
+>>>>>>> origin/feature/nuclearthermalrockets
 						}
 					}
 				}
@@ -225,10 +342,17 @@ public class WorldGenAlienTree extends StraightTrunkPlacer {
 			int newY = l >= branchLength/2 ? y + 2 : y;
 			int newZ = z + (dirZ*l);
 
+<<<<<<< HEAD
 			flag = flag && this.replaceBlockWithWood(world, newX, newY, newZ, direction, boundingBox);
 			flag = flag && this.replaceBlockWithWood(world, newX, newY - 1, newZ, direction, boundingBox);
 			flag = flag && this.replaceBlockWithWood(world, newX + dirZ, newY, newZ + dirX, direction, boundingBox);
 			flag = flag && this.replaceBlockWithWood(world, newX + dirZ, newY - 1, newZ + dirX, direction, boundingBox);
+=======
+			flag =         this.replaceBlockWithWood(world, newX, newY, newZ, direction);
+			flag = flag && this.replaceBlockWithWood(world, newX, newY - 1, newZ, direction);
+			flag = flag && this.replaceBlockWithWood(world, newX + dirZ, newY, newZ + dirX, direction);
+			flag = flag && this.replaceBlockWithWood(world, newX + dirZ, newY - 1, newZ + dirX, direction);
+>>>>>>> origin/feature/nuclearthermalrockets
 		}
 
 		int radius = 4;

@@ -36,13 +36,19 @@ import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.InputSyncHandler;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
+<<<<<<< HEAD
 
 	private static enum MODES {
+=======
+	
+	private enum MODES {
+>>>>>>> origin/feature/nuclearthermalrockets
 		NORMAL,
-		HOVER;
+		HOVER
 	}
 
 	public ItemJetpack(Properties props) {
@@ -53,8 +59,13 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 	private ResourceLocation background = TextureResources.rocketHud;
 
 	@Override
+<<<<<<< HEAD
 	public void onTick(World world, PlayerEntity player,
 			ItemStack armorStack, IInventory inv, ItemStack componentStack) {
+=======
+	public void onTick(World world, EntityPlayer player,
+					   @Nonnull ItemStack armorStack, IInventory inv, @Nonnull ItemStack componentStack) {
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		if(player.isCreative()) {
 			return;
@@ -63,11 +74,16 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		int speedUpgrades = 0;
 		boolean allowsHover = false;
 
+<<<<<<< HEAD
 		ItemStack helm = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
 		if(helm != null && helm.getItem() instanceof IModularArmor) {
+=======
+		ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+		if(!helm.isEmpty() && helm.getItem() instanceof IModularArmor) {
+>>>>>>> origin/feature/nuclearthermalrockets
 			List<ItemStack> helmInv = ((IModularArmor)helm.getItem()).getComponents(helm);
 			for(ItemStack stack : helmInv) {
-				if(stack != null) {
+				if(!stack.isEmpty()) {
 					Item item = stack.getItem();
 
 					if (item.getItem() == AdvancedRocketryItems.itemUpgradeHover)
@@ -132,26 +148,36 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
 
 	@Override
-	public boolean onComponentAdded(World world, ItemStack armorStack) {
+	public boolean onComponentAdded(World world, @Nonnull ItemStack armorStack) {
 		return true;
 	}
 
 	@Override
-	public void onComponentRemoved(World world, ItemStack armorStack) {
+	public void onComponentRemoved(World world, @Nonnull ItemStack armorStack) {
 
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void onArmorDamaged(LivingEntity entity, ItemStack armorStack,
 			ItemStack componentStack, DamageSource source, int damage) {
 	}
 
 	@Override
 	public boolean isActive(ItemStack stack, PlayerEntity player) {
+=======
+	public void onArmorDamaged(EntityLivingBase entity, @Nonnull ItemStack armorStack,
+							   @Nonnull ItemStack componentStack, DamageSource source, int damage) {
+	}
+
+	@Override
+	public boolean isActive(@Nonnull ItemStack stack, EntityPlayer player) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		return InputSyncHandler.isSpaceDown(player);
 	}
 
 	@Override
+<<<<<<< HEAD
 	public boolean isEnabled(ItemStack stack) {
 		return stack.hasTag() && stack.getTag().getBoolean("enabled");
 	}
@@ -168,6 +194,25 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			nbt = new CompoundNBT();
 			nbt.putBoolean("enabled", state);
 			stack.setTag(nbt);
+=======
+	public boolean isEnabled(@Nonnull ItemStack stack) {
+		return stack.hasTagCompound() && stack.getTagCompound().getBoolean("enabled");
+	}
+
+	@Override
+	public void setEnabledState(@Nonnull ItemStack stack, boolean state) {
+		NBTTagCompound nbt;
+		if(stack.hasTagCompound()) {
+			nbt = stack.getTagCompound();
+			nbt.setBoolean("enabled", state);
+			flagModeSwitched(stack);
+		}
+		else if(state) {
+			nbt = new NBTTagCompound();
+			//noinspection ConstantConditions
+			nbt.setBoolean("enabled", state);
+			stack.setTagCompound(nbt);
+>>>>>>> origin/feature/nuclearthermalrockets
 			flagModeSwitched(stack);
 		}
 	}
@@ -190,7 +235,11 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void onAccelerate(ItemStack stack, IInventory inv, PlayerEntity player) {
+=======
+	public void onAccelerate(@Nonnull ItemStack stack, IInventory inv, EntityPlayer player) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		boolean hasFuel = hasFuel(inv);
 
 		MODES mode = getMode(stack);
@@ -199,8 +248,13 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
 			player.addVelocity(0, (double)ARConfiguration.getCurrentConfig().jetPackThrust.get()*0.1f, 0);
 			if(player.world.isRemote) {
+<<<<<<< HEAD
 				double xPos = player.getPosX();
 				double zPos = player.getPosZ();
+=======
+				double xPos;
+				double zPos;
+>>>>>>> origin/feature/nuclearthermalrockets
 				float playerRot = (float) ((Math.PI/180f)*(player.rotationYaw - 55));
 				xPos = player.getPosX() + MathHelper.cos(playerRot)*.4f;
 				zPos = player.getPosZ() + MathHelper.sin(playerRot)*.4f;
@@ -225,6 +279,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 	}
 
 	@Override
+<<<<<<< HEAD
 	@OnlyIn(value=Dist.CLIENT)
 	public ResourceIcon getComponentIcon(ItemStack armorStack) {
 
@@ -234,13 +289,30 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 	private MODES getMode(ItemStack stack) {
 		if(stack.hasTag())
 			return MODES.values()[stack.getTag().getInt("mode")];
+=======
+	@SideOnly(Side.CLIENT)
+	public ResourceIcon getComponentIcon(@Nonnull ItemStack armorStack) {
+		
+		return isEnabled(armorStack) ? getMode(armorStack) == MODES.HOVER ? new ResourceIcon(TextureResources.jetpackIconHover) : new ResourceIcon(TextureResources.jetpackIconEnabled) : new ResourceIcon(TextureResources.jetpackIconDisabled);
+	}
+
+	private MODES getMode(@Nonnull ItemStack stack) {
+		if(stack.hasTagCompound())
+			return MODES.values()[stack.getTagCompound().getInteger("mode")];
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		return MODES.values()[0];
 	}
 
+<<<<<<< HEAD
 	private void setHeight(ItemStack stack, float height) {
 		if(stack.hasTag())
 			stack.getTag().putFloat("height", height);
+=======
+	private void setHeight(@Nonnull ItemStack stack, float height) {
+		if(stack.hasTagCompound())
+			stack.getTagCompound().setFloat("height", height);
+>>>>>>> origin/feature/nuclearthermalrockets
 		else {
 			CompoundNBT nbt = new CompoundNBT();
 			nbt.putFloat("height", height);
@@ -248,13 +320,20 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		}
 	}
 
+<<<<<<< HEAD
 	private float getHeight(ItemStack stack) {
 		if(stack.hasTag())
 			return stack.getTag().getFloat("height");
+=======
+	private float getHeight(@Nonnull ItemStack stack) {
+		if(stack.hasTagCompound())
+			return stack.getTagCompound().getFloat("height");
+>>>>>>> origin/feature/nuclearthermalrockets
 		return 0;
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void changeMode(ItemStack stack, IInventory modules, PlayerEntity player) {
 		CompoundNBT nbt;
 		int mode = 0;
@@ -264,6 +343,17 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			List<ItemStack> helmInv = ((IModularArmor)helm.getItem()).getComponents(helm);
 			for(ItemStack helmStack : helmInv) 
 				if (stack != null && helmStack.getItem() == AdvancedRocketryItems.itemUpgradeHover && helmStack.getDamage() == 0) {
+=======
+	public void changeMode(@Nonnull ItemStack stack, IInventory modules, EntityPlayer player) {
+		NBTTagCompound nbt;
+		int mode = 0;
+
+		ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+		if(!helm.isEmpty() && helm.getItem() instanceof IModularArmor) {
+			List<ItemStack> helmInv = ((IModularArmor)helm.getItem()).getComponents(helm);
+			for(ItemStack helmStack : helmInv) 
+				if (!stack.isEmpty() && helmStack.getItem() == AdvancedRocketryItems.itemUpgrade && helmStack.getItemDamage() == 0) {
+>>>>>>> origin/feature/nuclearthermalrockets
 					mode = 1;
 					break;
 				}
@@ -279,6 +369,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 					mode =0;
 			}
 
+<<<<<<< HEAD
 			nbt.putInt("mode", mode);
 			flagModeSwitched(stack);
 		}
@@ -287,16 +378,32 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			nbt.putInt("mode", mode);
 			stack.setTag(nbt);
 			flagModeSwitched(stack);
+=======
+			nbt.setInteger("mode", mode);
+		} else {
+			nbt = new NBTTagCompound();
+			nbt.setInteger("mode", mode);
+			stack.setTagCompound(nbt);
+>>>>>>> origin/feature/nuclearthermalrockets
 		}
+		flagModeSwitched(stack);
 
 		if(mode == MODES.HOVER.ordinal())
 			setHeight(stack, (float)player.getPosY() + player.getHeight());
 	}
+<<<<<<< HEAD
 
 	private void flagModeSwitched(ItemStack stack) {
 		CompoundNBT nbt;
 		if(stack.hasTag()) {
 			nbt = stack.getTag();
+=======
+	
+	private void flagModeSwitched(@Nonnull ItemStack stack) {
+		NBTTagCompound nbt;
+		if(stack.hasTagCompound()) {
+			nbt = stack.getTagCompound();
+>>>>>>> origin/feature/nuclearthermalrockets
 
 			nbt.putBoolean("modeSwitch", true);
 		}
@@ -306,12 +413,21 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			stack.setTag(nbt);
 		}
 	}
+<<<<<<< HEAD
 
 
 	private boolean hasModeSwitched(ItemStack stack) {
 		CompoundNBT nbt;
 		if(stack.hasTag() && stack.getTag().contains("modeSwitch")) {
 			nbt = stack.getTag();
+=======
+	
+	
+	private boolean hasModeSwitched(@Nonnull ItemStack stack) {
+		NBTTagCompound nbt;
+		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("modeSwitch")) {
+			nbt = stack.getTagCompound();
+>>>>>>> origin/feature/nuclearthermalrockets
 
 			boolean hasSwitched = nbt.getBoolean("modeSwitch");
 
@@ -322,11 +438,17 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public boolean isAllowedInSlot(ItemStack stack, EquipmentSlotType slot) {
 		return slot == EquipmentSlotType.CHEST;
+=======
+	public boolean isAllowedInSlot(@Nonnull ItemStack stack, EntityEquipmentSlot slot) {
+		return slot == EntityEquipmentSlot.CHEST;
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override
+<<<<<<< HEAD
 	@OnlyIn(value=Dist.CLIENT)
 	public void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Screen gui) {
 		List<ItemStack> inv = modules;
@@ -343,6 +465,20 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			}
 
 			/*if(currentStack != null && currentStack.getItem() instanceof IFluidContainerItem ) {
+=======
+	@SideOnly(Side.CLIENT)
+	public void renderScreen(@Nonnull ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Gui gui) {
+		int amt = 0, maxAmt = 0;
+		for (ItemStack currentStack : modules) {
+			if (FluidUtils.containsFluid(currentStack, AdvancedRocketryFluids.fluidHydrogen)) {
+				FluidStack fluidStack = FluidUtils.getFluidForItem(currentStack);
+				if (fluidStack != null)
+					amt += fluidStack.amount;
+				maxAmt += FluidUtils.getFluidItemCapacity(currentStack);
+			}
+			
+			/*if(!currentStack.isEmpty() && currentStack.getItem() instanceof IFluidContainerItem ) {
+>>>>>>> origin/feature/nuclearthermalrockets
 				FluidStack fluid = ((IFluidContainerItem)currentStack.getItem()).getFluid(currentStack);
 				if(fluid == null)
 					maxAmt += ((IFluidContainerItem)currentStack.getItem()).getCapacity(currentStack);

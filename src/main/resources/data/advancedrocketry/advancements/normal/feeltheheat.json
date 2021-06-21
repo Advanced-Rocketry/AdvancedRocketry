@@ -4,10 +4,10 @@
             "item": "advancedrocketry:arcfurnace"
         },
         "title": {
-            "translate": "achievement.feelTheHeat"
+            "translate": "advancement.feelTheHeat"
         },
         "description": {
-            "translate": "achievement.feelTheHeat.desc"
+            "translate": "advancement.feelTheHeat.desc"
         }
     },
     "parent": "advancedrocketry:normal/holographic",

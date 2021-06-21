@@ -6,10 +6,18 @@ import com.google.common.collect.Maps;
 import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.util.ITooltipFlag;
+<<<<<<< HEAD
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+=======
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
+>>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.properties.PistonType;
@@ -31,6 +39,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -50,6 +60,7 @@ public class BlockSmallPlatePress extends PistonBlock {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		return this.getDefaultState().with(FACING, Direction.DOWN).with(EXTENDED, Boolean.valueOf(false));
 	}
@@ -57,6 +68,17 @@ public class BlockSmallPlatePress extends PistonBlock {
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state,
 			LivingEntity placer, ItemStack stack) {
+=======
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos,
+			EnumFacing facing, float hitX, float hitY, float hitZ, int meta,
+			EntityLivingBase placer) {
+		return this.getDefaultState().withProperty(FACING, EnumFacing.DOWN).withProperty(EXTENDED, Boolean.FALSE);
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
+			EntityLivingBase placer, @Nonnull ItemStack stack) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		if (!world.isRemote)
 		{
 			this.checkForMove(world, pos, state);
@@ -99,7 +121,11 @@ public class BlockSmallPlatePress extends PistonBlock {
 		boolean flag = this.shouldBeExtended(worldIn, pos, enumfacing);
 
 		ItemStack stack;
+<<<<<<< HEAD
 		if (flag && (stack = getRecipe(worldIn, pos, state)) != null && !((Boolean)state.get(EXTENDED)).booleanValue())
+=======
+		if (flag && !(stack = getRecipe(worldIn, pos, state)).isEmpty() && !state.getValue(EXTENDED))
+>>>>>>> origin/feature/nuclearthermalrockets
 		{
 			worldIn.setBlockState(pos.down(), Blocks.AIR.getDefaultState());
 
@@ -110,41 +136,68 @@ public class BlockSmallPlatePress extends PistonBlock {
 				worldIn.addBlockEvent(pos, this, 0, enumfacing.getIndex());
 			}
 		}
+<<<<<<< HEAD
 		else if (!flag && ((Boolean)state.get(EXTENDED)).booleanValue())
+=======
+		else if (!flag && state.getValue(EXTENDED))
+>>>>>>> origin/feature/nuclearthermalrockets
 		{
 			worldIn.addBlockEvent(pos, this, 1, enumfacing.getIndex());
 		}
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
 		if (!((World)world).isRemote)
+=======
+	@ParametersAreNonnullByDefault
+	public void neighborChanged(IBlockState state, World world, BlockPos pos,
+			Block blockIn, BlockPos fromPos) {
+		if (!world.isRemote)
+>>>>>>> origin/feature/nuclearthermalrockets
 		{
 			this.checkForMove(world, pos, state);
 		}
 	}
 
+<<<<<<< HEAD
 
 	private ItemStack getRecipe(World world, BlockPos pos, BlockState state) {
+=======
+	@Nonnull
+	private ItemStack getRecipe(World world, BlockPos pos, IBlockState state) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		if(world.isAirBlock(pos.add(0, -1, 0)))
-			return null;
+			return ItemStack.EMPTY;
 
 		BlockState state2 = world.getBlockState(pos.add(0, -1, 0));
 		Block block = state2.getBlock();
 
 		Item item = Item.getItemFromBlock(block);
+<<<<<<< HEAD
 		if(item == null)
 			return null;
 
 
 		ItemStack stackInWorld =  block.getItem(world, pos.add(0, -1, 0), state2);
+=======
+		if(item.equals(Items.AIR))
+			return ItemStack.EMPTY;
+		
+		ItemStack stackInWorld = new ItemStack(item,1, block.getMetaFromState(state2));
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		List<IRecipe> recipes = RecipesMachine.getInstance().getRecipes(this.getClass());
-		ItemStack stack = null;
+		ItemStack stack = ItemStack.EMPTY;
 
 		for(IRecipe recipe : recipes) {
+<<<<<<< HEAD
 			for(ItemStack stack2 : recipe.getPossibleIngredients().get(0))
+=======
+			for(@Nonnull ItemStack stack2 : recipe.getIngredients().get(0))
+>>>>>>> origin/feature/nuclearthermalrockets
 				if(stack2.isItemEqual(stackInWorld)) {
 					stack = recipe.getOutput().get(0);
 					break;
@@ -155,7 +208,7 @@ public class BlockSmallPlatePress extends PistonBlock {
 		if(world.getBlockState(pos.add(0,-2,0)).getBlock() == Blocks.OBSIDIAN)
 			return stack;
 
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	private boolean doMove(World worldIn, BlockPos pos, Direction directionIn, boolean extending) {
@@ -167,6 +220,7 @@ public class BlockSmallPlatePress extends PistonBlock {
 		PistonBlockStructureHelper pistonblockstructurehelper = new PistonBlockStructureHelper(worldIn, pos, directionIn, extending);
 		if (!pistonblockstructurehelper.canMove()) {
 			return false;
+<<<<<<< HEAD
 		} else {
 			Map<BlockPos, BlockState> map = Maps.newHashMap();
 			List<BlockPos> list = pistonblockstructurehelper.getBlocksToMove();
@@ -201,6 +255,45 @@ public class BlockSmallPlatePress extends PistonBlock {
 				worldIn.setBlockState(blockpos3, Blocks.MOVING_PISTON.getDefaultState().with(FACING, directionIn), 68);
 				worldIn.setTileEntity(blockpos3, MovingPistonBlock.createTilePiston(list1.get(l), directionIn, extending, false));
 				ablockstate[j++] = blockstate5;
+=======
+		}
+		else
+		{
+			List<BlockPos> list = blockpistonstructurehelper.getBlocksToMove();
+			List<IBlockState> list1 = Lists.newArrayList();
+
+			for (BlockPos blockPos : list) {
+				list1.add(worldIn.getBlockState(blockPos).getActualState(worldIn, blockPos));
+			}
+
+			List<BlockPos> list2 = blockpistonstructurehelper.getBlocksToDestroy();
+			int k = list.size() + list2.size();
+			IBlockState[] aiblockstate = new IBlockState[k];
+			EnumFacing enumfacing = extending ? direction : direction.getOpposite();
+
+			for (int j = list2.size() - 1; j >= 0; --j)
+			{
+				BlockPos blockpos1 = list2.get(j);
+				IBlockState iblockstate = worldIn.getBlockState(blockpos1);
+				// Forge: With our change to how snowballs are dropped this needs to disallow to mimic vanilla behavior.
+				float chance = iblockstate.getBlock() instanceof BlockSnow ? -1.0f : 1.0f;
+				iblockstate.getBlock().dropBlockAsItemWithChance(worldIn, blockpos1, iblockstate, chance, 0);
+				worldIn.setBlockToAir(blockpos1);
+				--k;
+				aiblockstate[k] = iblockstate;
+			}
+
+			for (int l = list.size() - 1; l >= 0; --l)
+			{
+				BlockPos blockpos3 = list.get(l);
+				IBlockState iblockstate2 = worldIn.getBlockState(blockpos3);
+				worldIn.setBlockState(blockpos3, Blocks.AIR.getDefaultState(), 2);
+				blockpos3 = blockpos3.offset(enumfacing);
+				worldIn.setBlockState(blockpos3, Blocks.PISTON_EXTENSION.getDefaultState().withProperty(FACING, direction), 4);
+				worldIn.setTileEntity(blockpos3, BlockPistonMoving.createTilePiston(list1.get(l), direction, extending, false));
+				--k;
+				aiblockstate[k] = iblockstate2;
+>>>>>>> origin/feature/nuclearthermalrockets
 			}
 
 			if (extending) {
@@ -212,10 +305,21 @@ public class BlockSmallPlatePress extends PistonBlock {
 				worldIn.setTileEntity(blockpos, MovingPistonBlock.createTilePiston(blockstate4, directionIn, true, true));
 			}
 
+<<<<<<< HEAD
 			BlockState blockstate3 = Blocks.AIR.getDefaultState();
 
 			for(BlockPos blockpos4 : map.keySet()) {
 				worldIn.setBlockState(blockpos4, blockstate3, 82);
+=======
+			for (int i1 = list2.size() - 1; i1 >= 0; --i1)
+			{
+				worldIn.notifyNeighborsOfStateChange(list2.get(i1), aiblockstate[k++].getBlock(), true);
+			}
+
+			for (int j1 = list.size() - 1; j1 >= 0; --j1)
+			{
+				worldIn.notifyNeighborsOfStateChange(list.get(j1), aiblockstate[k++].getBlock(), true);
+>>>>>>> origin/feature/nuclearthermalrockets
 			}
 
 			for(Entry<BlockPos, BlockState> entry : map.entrySet()) {
@@ -226,6 +330,7 @@ public class BlockSmallPlatePress extends PistonBlock {
 				blockstate3.updateDiagonalNeighbors(worldIn, blockpos5, 2);
 			}
 
+<<<<<<< HEAD
 			j = 0;
 
 			for(int i1 = list2.size() - 1; i1 >= 0; --i1) {
@@ -233,6 +338,24 @@ public class BlockSmallPlatePress extends PistonBlock {
 				BlockPos blockpos6 = list2.get(i1);
 				blockstate7.updateDiagonalNeighbors(worldIn, blockpos6, 2);
 				worldIn.notifyNeighborsOfStateChange(blockpos6, blockstate7.getBlock());
+=======
+			return true;
+		}
+	}
+
+	public boolean eventReceived(IBlockState state, World worldIn, @Nonnull BlockPos pos, int id, int param)
+	{
+		EnumFacing enumfacing = EnumFacing.DOWN;
+
+		if (!worldIn.isRemote)
+		{
+			boolean flag = this.shouldBeExtended(worldIn, pos, enumfacing);
+
+			if (flag && id == 1)
+			{
+				worldIn.setBlockState(pos, state.withProperty(EXTENDED, Boolean.TRUE), 2);
+				return false;
+>>>>>>> origin/feature/nuclearthermalrockets
 			}
 
 			for(int j1 = list.size() - 1; j1 >= 0; --j1) {
@@ -243,10 +366,16 @@ public class BlockSmallPlatePress extends PistonBlock {
 				worldIn.notifyNeighborsOfStateChange(blockpos, Blocks.PISTON_HEAD);
 			}
 
+<<<<<<< HEAD
 			return true;
+=======
+			worldIn.setBlockState(pos, state.withProperty(EXTENDED, Boolean.TRUE), 2);
+			worldIn.playSound(null, pos, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.5F, worldIn.rand.nextFloat() * 0.25F + 0.6F);
+>>>>>>> origin/feature/nuclearthermalrockets
 		}
 	}
 
+<<<<<<< HEAD
 	/**
 	 * Called on server when World#addBlockEvent is called. If server returns true, then also called on the client. On
 	 * the Server, this may perform additional changes to the world, like pistons replacing the block with an extended
@@ -297,8 +426,13 @@ public class BlockSmallPlatePress extends PistonBlock {
 		 net.minecraftforge.event.ForgeEventFactory.onPistonMovePost(worldIn, pos, direction, (id == 0));
 		 return true;
 	 }
+=======
+			worldIn.playSound(null, pos, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.5F, worldIn.rand.nextFloat() * 0.15F + 0.6F);
+		}
+>>>>>>> origin/feature/nuclearthermalrockets
 
 
+<<<<<<< HEAD
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
 	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
@@ -307,6 +441,12 @@ public class BlockSmallPlatePress extends PistonBlock {
 		Style style = Style.EMPTY.setFormatting(TextFormatting.DARK_GRAY).setFormatting(TextFormatting.ITALIC);
 		
 		tooltip.add( new TranslationTextComponent("machine.tooltip.smallplatepress").mergeStyle(style));
+=======
+	@SideOnly(Side.CLIENT)
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+		super.addInformation(stack, player, tooltip, advanced);
+		tooltip.add(ChatFormatting.DARK_GRAY + "" + ChatFormatting.ITALIC + LibVulpes.proxy.getLocalizedString("machine.tooltip.smallplatepress"));
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 }

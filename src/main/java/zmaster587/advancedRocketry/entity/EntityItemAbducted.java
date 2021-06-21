@@ -44,6 +44,14 @@ public class EntityItemAbducted extends Entity implements IEntityAdditionalSpawn
 		this.lifespan = 200;
 		this.setMotion(new Vector3d(0,2,0));
 	}
+
+    public int getLifespan() {
+        return lifespan;
+    }
+
+    public int getAge() {
+        return age;
+    }
 	
 	@Override
     protected void registerData()
@@ -55,7 +63,7 @@ public class EntityItemAbducted extends Entity implements IEntityAdditionalSpawn
 	public void tick() {
 		ItemStack stack = this.getDataManager().get(ITEM);
 		
-        if (this.getEntityItem() == null)
+        if (this.getEntityItem().isEmpty())
         {
             this.remove();
         }
@@ -74,7 +82,7 @@ public class EntityItemAbducted extends Entity implements IEntityAdditionalSpawn
         	this.remove();
         }
 
-        if (stack != null && stack.getCount() <= 0)
+        if (!stack.isEmpty() && stack.getCount() <= 0)
         {
             this.remove();
         }
@@ -86,9 +94,9 @@ public class EntityItemAbducted extends Entity implements IEntityAdditionalSpawn
      */
     public ItemStack getEntityItem()
     {
-        ItemStack itemstack = (ItemStack)(this.getDataManager().get(ITEM));
+        ItemStack itemstack = this.getDataManager().get(ITEM);
 
-        if (itemstack == null)
+        if (itemstack.isEmpty())
         {
             return new ItemStack(Blocks.STONE);
         }
@@ -101,7 +109,7 @@ public class EntityItemAbducted extends Entity implements IEntityAdditionalSpawn
     /**
      * Sets the ItemStack for this entity
      */
-    public void setEntityItemStack( ItemStack stack)
+    public void setEntityItemStack(ItemStack stack)
     {
         this.getDataManager().set(ITEM, stack);
     }
@@ -116,7 +124,7 @@ public class EntityItemAbducted extends Entity implements IEntityAdditionalSpawn
         p_70014_1_.putInt("Lifespan", lifespan);
 
 
-        if (this.getEntityItem() != null)
+        if (!this.getEntityItem().isEmpty())
         {
             p_70014_1_.put("Item", this.getEntityItem().write(new CompoundNBT()));
         }
@@ -134,9 +142,9 @@ public class EntityItemAbducted extends Entity implements IEntityAdditionalSpawn
         CompoundNBT nbttagcompound1 = p_70037_1_.getCompound("Item");
         this.setEntityItemStack(ItemStack.read(nbttagcompound1));
 
-        ItemStack item = (ItemStack)(this.getDataManager().get(ITEM));
+        ItemStack stack = this.getDataManager().get(ITEM);
 
-        if (item == null || item.getCount() <= 0)
+        if (stack.isEmpty() || stack.getCount() <= 0)
         {
             this.remove();
         }

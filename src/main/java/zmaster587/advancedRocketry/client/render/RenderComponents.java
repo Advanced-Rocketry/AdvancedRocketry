@@ -18,11 +18,16 @@ public class RenderComponents {
 	public void renderPostSpecial(RenderPlayerEvent.Post event) {
 		//RenderJet pack
 		//RenderJetPack pack = new RenderJetPack();
+<<<<<<< HEAD
 		
 		MatrixStack matrix = event.getMatrixStack();
 		
 		ItemStack chest = event.getEntityLiving().getItemStackFromSlot(EquipmentSlotType.CHEST);
 		if(chest != null && chest.getItem() instanceof IModularArmor) {
+=======
+		ItemStack chest = event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		if(!chest.isEmpty() && chest.getItem() instanceof IModularArmor) {
+>>>>>>> origin/feature/nuclearthermalrockets
 			for(ItemStack stack : ((IModularArmor)chest.getItem()).getComponents(chest)) {
 				if(stack.getItem() == AdvancedRocketryItems.itemJetpack) {
 					

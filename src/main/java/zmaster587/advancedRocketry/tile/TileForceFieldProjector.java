@@ -14,10 +14,14 @@ import zmaster587.libVulpes.block.BlockFullyRotatable;
 public class TileForceFieldProjector extends TileEntity implements ITickableTileEntity {
 
 	private short extensionRange;
-	private static short MAX_RANGE = 32;
+	private final short MAX_RANGE = 32;
 
+<<<<<<< HEAD
 	public TileForceFieldProjector() {
 		super(AdvancedRocketryTileEntityType.TILE_FORCE_FIELD_PROJECTOR);
+=======
+    public TileForceFieldProjector() {
+>>>>>>> origin/feature/nuclearthermalrockets
 		extensionRange = 0;
 	}
 
@@ -37,7 +41,7 @@ public class TileForceFieldProjector extends TileEntity implements ITickableTile
 
 		if(world.getGameTime() % 5 == 0) {
 			if(world.isBlockPowered(getPos())) {
-				if(extensionRange < MAX_RANGE) {
+                if(extensionRange < MAX_RANGE) {
 					if(extensionRange == 0)
 						extensionRange = 1;
 

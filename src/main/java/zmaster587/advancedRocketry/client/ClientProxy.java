@@ -43,7 +43,6 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryParticleTypes;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.client.render.*;
-import zmaster587.advancedRocketry.client.render.RenderLaser;
 import zmaster587.advancedRocketry.client.render.entity.*;
 import zmaster587.advancedRocketry.client.render.multiblocks.*;
 import zmaster587.advancedRocketry.common.CommonProxy;
@@ -67,6 +66,10 @@ import zmaster587.libVulpes.api.LibVulpesTileEntityTypes;
 import zmaster587.libVulpes.entity.fx.FxErrorBlock;
 import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
 import zmaster587.libVulpes.tile.TileSchematic;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Objects;
 
 public class ClientProxy extends CommonProxy {
 
@@ -139,7 +142,7 @@ public class ClientProxy extends CommonProxy {
 		Minecraft.getInstance().getItemColors().register(new IItemColor()
 		{
 			@Override
-			public int getColor(ItemStack stack, int tintIndex) {
+			public int getColor(@Nonnull ItemStack stack, int tintIndex) {
 				return tintIndex > 0 ? -1 : ((IDyeableArmorItem)stack.getItem()).getColor(stack);
 			}
 		}, AdvancedRocketryItems.itemSpaceSuit_Boots, AdvancedRocketryItems.itemSpaceSuit_Chest, AdvancedRocketryItems.itemSpaceSuit_Helmet, AdvancedRocketryItems.itemSpaceSuit_Leggings);
@@ -183,11 +186,41 @@ public class ClientProxy extends CommonProxy {
 		//ModelLoader.setCustomMeshDefinition(item, MeshDefinitionFix.create(stack -> modelResourceLocation));
 
 
+<<<<<<< HEAD
 		StateMapperBase ignoreState = new FluidStateMapper(modelResourceLocation);
 
 		ModelLoader.setCustomStateMapper((Block) fluidBlock, ignoreState);
 		ModelBakery.registerItemVariants(item, modelResourceLocation);
 	}*/
+=======
+		@Override
+		protected ModelResourceLocation getModelResourceLocation(@Nullable IBlockState iBlockState) {
+			return location;
+		}
+	}
+
+	private static class FluidItemMeshDefinition implements ItemMeshDefinition {
+		private final ModelResourceLocation location;
+
+		public FluidItemMeshDefinition(ModelResourceLocation fluidLocation) {
+			this.location = fluidLocation;
+		}
+
+		@Override
+		public ModelResourceLocation getModelLocation(@Nonnull ItemStack stack) {
+			return location;
+		}
+}
+
+	@SubscribeEvent
+	public void modelBakeEvent(ModelBakeEvent event) {
+		IBakedModel bakedModel =  event.getModelRegistry().getObject(ModelRocket.resource);
+		if (bakedModel != null) {
+			ModelRocket customModel = new ModelRocket();
+			event.getModelRegistry().putObject(ModelRocket.resource, bakedModel);
+		}
+	}
+>>>>>>> origin/feature/nuclearthermalrockets
 
 	@Override
 	public void registerEventHandlers() {
@@ -306,12 +339,18 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void loadUILayout(ARConfiguration config) {
 		/*final String CLIENT = "Client";
 
 		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().lockUI = config.get(CLIENT, "lockUI", true, "If UI is not locked, the middle mouse can be used to drag certain AR UIs around the screen, positions are saved on hitting quit in the menu").getBoolean();
 
 		config.addCustomCategoryComment(CLIENT, "UI locations can by set by clicking and dragging the middle mouse button ingame");
+=======
+	public void loadUILayout(Configuration config) {
+		final String CLIENT = "Client";
+
+>>>>>>> origin/feature/nuclearthermalrockets
 		RocketEventHandler.suitPanel.setRawX(config.get(CLIENT, "suitPanelX", 8).getInt());
 		RocketEventHandler.suitPanel.setRawY(config.get(CLIENT, "suitPanelY", 8).getInt());
 		RocketEventHandler.suitPanel.setSizeModeX(config.get(CLIENT, "suitPanelModeX", -1).getInt());
@@ -334,6 +373,7 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void saveUILayout(ARConfiguration configuration) {
 		/*final String CLIENT = "Client";
 		configuration.su
@@ -360,6 +400,8 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
+=======
+>>>>>>> origin/feature/nuclearthermalrockets
 	public void displayMessage(String msg, int time) {
 		RocketEventHandler.setOverlay(Minecraft.getInstance().world.getGameTime() + time, msg);
 	}

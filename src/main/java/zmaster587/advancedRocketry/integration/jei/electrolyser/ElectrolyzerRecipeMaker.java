@@ -11,7 +11,7 @@ public class ElectrolyzerRecipeMaker {
 
 	public static List<ElectrolyzerWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
 		
-		List<ElectrolyzerWrapper> list = new LinkedList<ElectrolyzerWrapper>();
+		List<ElectrolyzerWrapper> list = new LinkedList<>();
 		for(IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
 			list.add(new ElectrolyzerWrapper(rec));
 		}

@@ -2,13 +2,13 @@
     "type": "minecraft:crafting_shaped",
     "pattern":
     [
-	"lal",
+	"ial",
 	"bgb",
 	"   "
     ],
     "key":
     {
-        "l":
+        "i":
         {
             "item": "advancedrocketry:circuit_ic_adv"
         },
@@ -21,7 +21,7 @@
 
             "item": "libvulpes:smallbattery"
         },
-	"l":
+        "l":
         {
             "item": "minecraft:lever"
         },

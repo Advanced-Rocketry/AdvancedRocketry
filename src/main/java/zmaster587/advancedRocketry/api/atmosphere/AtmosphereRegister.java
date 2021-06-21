@@ -13,24 +13,23 @@ public class AtmosphereRegister {
 	private static final AtmosphereRegister instance = new AtmosphereRegister();
 	
 	private AtmosphereRegister() {
-		atmosphereRegistration = new HashMap<String, IAtmosphere>();
-		atmosphereList = new LinkedList<IAtmosphere>();
-		harvestableAtmosphere = new LinkedList<Fluid>();
+		atmosphereRegistration = new HashMap<>();
+		atmosphereList = new LinkedList<>();
+		harvestableAtmosphere = new LinkedList<>();
 	}
 	
 	
-	public static final AtmosphereRegister getInstance() {
+	public static AtmosphereRegister getInstance() {
 		return instance;
 	}
 	
-	Map<String, IAtmosphere> atmosphereRegistration;
-	List<Fluid> harvestableAtmosphere;
-	List<IAtmosphere> atmosphereList;
+	private Map<String, IAtmosphere> atmosphereRegistration;
+	private List<Fluid> harvestableAtmosphere;
+	private List<IAtmosphere> atmosphereList;
 	
 	/**
 	 * Registers the atmosphere with the mod
 	 * @param atmosphere atmosphere to register
-	 * @param name name to register the atmosphere.  using the unlocalized name is HIGHLY recommended
 	 */
 	public void registerAtmosphere(IAtmosphere atmosphere) {
 		atmosphereRegistration.put(atmosphere.getUnlocalizedName(), atmosphere);

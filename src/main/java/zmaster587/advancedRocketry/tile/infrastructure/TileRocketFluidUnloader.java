@@ -104,6 +104,7 @@ public class TileRocketFluidUnloader extends TileFluidOutputHatch implements IIn
 					rocketContainsItems = true;
 
 				if(isAllowToOperate) {
+<<<<<<< HEAD
 					FluidStack stack = fluidTank.getFluid();
 					if(stack == null) {
 						this.fill(handler.drain(fluidTank.getCapacity(), FluidAction.EXECUTE), FluidAction.EXECUTE);
@@ -114,6 +115,18 @@ public class TileRocketFluidUnloader extends TileFluidOutputHatch implements IIn
 
 						if(stack.getAmount() != 0) {
 							this.fill(handler.drain( stack, FluidAction.EXECUTE), FluidAction.EXECUTE);
+=======
+					FluidStack fStack = fluidTank.getFluid();
+					if(fStack == null) {
+						this.fill(handler.drain(fluidTank.getCapacity(), true), true);
+					}
+					else {
+						fStack = fStack.copy();
+						fStack.amount = fluidTank.getCapacity() - fluidTank.getFluidAmount();
+
+						if(fStack.amount != 0) {
+							this.fill(handler.drain( fStack, true), true);
+>>>>>>> origin/feature/nuclearthermalrockets
 						}
 					}
 				}

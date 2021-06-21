@@ -36,6 +36,7 @@ public class PacketAtmSync extends BasePacket {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void readClient(PacketBuffer in) {
 		CompoundNBT nbt = new CompoundNBT();
 		PacketBuffer packetBuffer = new PacketBuffer(in);
@@ -43,6 +44,18 @@ public class PacketAtmSync extends BasePacket {
 		nbt = packetBuffer.readCompoundTag();
 		type = nbt.getString("type");
 		pressure = nbt.getShort("pressure");
+=======
+	public void readClient(ByteBuf in) {
+		PacketBuffer packetBuffer = new PacketBuffer(in);
+		
+		try {
+			NBTTagCompound nbt = packetBuffer.readCompoundTag();
+			type = nbt.getString("type");
+			pressure = nbt.getShort("pressure");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override

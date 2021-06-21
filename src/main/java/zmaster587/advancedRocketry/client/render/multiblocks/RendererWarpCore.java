@@ -25,7 +25,11 @@ public class RendererWarpCore extends TileEntityRenderer<TileWarpCore> {
 
 	public static WavefrontObject model;
 
+<<<<<<< HEAD
 	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/warpcore.png");
+=======
+	private ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/warpcore.png");
+>>>>>>> origin/feature/nuclearthermalrockets
 
 	//private final RenderItem dummyItem = Minecraft.getInstance().getRenderItem();
 
@@ -67,10 +71,17 @@ public class RendererWarpCore extends TileEntityRenderer<TileWarpCore> {
 		
 		if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(tile.getWorld()))) {
 			
+<<<<<<< HEAD
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(tile.getPos());
 			if(obj instanceof SpaceStationObject && ((SpaceStationObject)obj).getFuelAmount() > 50) {
 				IVertexBuilder entityTranslucentBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));
 				double speedMult = 1.5;//((DimensionProperties)obj.getProperties()).getParentPlanet() == SpaceObjectManager.WARPDIMID ? 1.5d : 0.1d;
+=======
+			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(tile.getPos());
+			if(spaceObject instanceof SpaceStationObject && ((SpaceStationObject)spaceObject).getFuelAmount() > 50) {
+
+				double speedMult = 1.5;//((DimensionProperties)spaceObject.getProperties()).getParentPlanet() == SpaceObjectManager.WARPDIMID ? 1.5d : 0.1d;
+>>>>>>> origin/feature/nuclearthermalrockets
 				
 				double speedRotate = speedMult*0.25d;
 				

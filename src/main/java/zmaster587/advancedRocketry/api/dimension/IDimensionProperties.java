@@ -6,6 +6,7 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.util.SpacePosition;
 
 import java.util.Collection;
@@ -15,205 +16,227 @@ public interface IDimensionProperties {
 	/**
 	 * @return the DIMID of the planet
 	 */
+<<<<<<< HEAD
 	public ResourceLocation getId();
+=======
+	int getId();
+>>>>>>> origin/feature/nuclearthermalrockets
 	
 	/**
 	 * @return the color of the sun as an array of floats represented as  {r,g,b}
 	 */
-	public float[] getSunColor();
+	float[] getSunColor();
 	
 	/**
 	 * @return the host star for this planet
 	 */
-	public StellarBody getStar();
+	StellarBody getStar();
 	
 	/**
 	 * @return position in space of the planet
 	 */
-	public SpacePosition getSpacePosition();
+	SpacePosition getSpacePosition();
 	
 	/**
 	 * @return the name of the planet
 	 */
-	public String getName();
+	String getName();
 	
 	/**
 	 * @return the {@link DimensionProperties} of the parent planet
 	 */
-	public IDimensionProperties getParentProperties();
+	IDimensionProperties getParentProperties();
 	
 	/**
 	 * Range 0 < value <= 200
 	 * @return if the planet is a moon, then the distance from the host planet where the earth's moon is 100, higher is farther, if planet, distance from the star, 100 is earthlike, higher value is father
 	 */
-	public int getParentOrbitalDistance();
+	int getParentOrbitalDistance();
 	
 	/**
 	 * @return if a planet, the same as getParentOrbitalDistance(), if a moon, the moon's distance from the host star
 	 */
-	public int getSolarOrbitalDistance();
+	int getSolarOrbitalDistance();
 	
 	/**
 	 * @return true if the planet has moons
 	 */
-	public boolean hasChildren();
+	boolean hasChildren();
 	
 	/**
 	 * @return true if this DIM orbits another
 	 */
-	public boolean isMoon();
+	boolean isMoon();
 	
 	/**
 	 * @return the default atmosphere of this dimension
 	 */
-	public IAtmosphere getAtmosphere();
+	IAtmosphere getAtmosphere();
 	
 	/**
 	 * @return true if the planet has an atmosphere
 	 */
-	public boolean hasAtmosphere();
+	boolean hasAtmosphere();
 	
 	/**
 	 * @return the multiplier compared to Earth(1040W) for peak insolation of the body
 	 */
-	public double getPeakInsolationMultiplier();
+	double getPeakInsolationMultiplier();
 
 	/**
 	 * @return the multiplier compared to Earth(1040W) for peak insolation of the body, disregarding atmosphere
 	 */
-	public double getPeakInsolationMultiplierWithoutAtmosphere();
+	double getPeakInsolationMultiplierWithoutAtmosphere();
 	
 	/**
 	 * @return true if the planet has rings
 	 */
-	public boolean hasRings();
+	boolean hasRings();
 	
 	/**
 	 * @return float[3] array containing ring color
 	 */
-	public float[] getRingColor();
+	float[] getRingColor();
 	
 	/**
 	 * @return float[3] array containing sky color
 	 */
-	public float[] getSkyColor();
+	float[] getSkyColor();
 	
 	/**
 	 * @return set of all moons orbiting this planet
 	 */
+<<<<<<< HEAD
 	public Set<ResourceLocation> getChildPlanets();
+=======
+	Set<Integer> getChildPlanets();
+>>>>>>> origin/feature/nuclearthermalrockets
 	
 	/**
 	 * sets the gravity multiplier of the object
 	 */
-	public void setGravitationalMultiplier(float mult);
+	void setGravitationalMultiplier(float mult);
 	
 	/**
 	 * gets the gravity multiplier of the object
 	 */
-	public float getGravitationalMultiplier();
+	float getGravitationalMultiplier();
 	
 	/**
 	 * Adds a satellite to this DIM
 	 * @param satellite satellite to add
 	 * @param world world to add the satellite to
 	 */
-	public void addSatellite(SatelliteBase satellite, World world);
-	public void addSatellite(SatelliteBase satellte);
+	void addSatellite(SatelliteBase satellite, World world);
+	void addSatellite(SatelliteBase satellte);
 	
 	/**
 	 * Returns the satellite with that ID
 	 * @param lng satellite ID
 	 * @return
 	 */
-	public SatelliteBase getSatellite(long lng);
+	SatelliteBase getSatellite(long lng);
 
 	/**
 	 * Returns all of a dimension's satellites
 	 * @return a Collection containing all of a dimension's satellites
 	 */
-	public Collection<SatelliteBase> getAllSatellites();
+	Collection<SatelliteBase> getAllSatellites();
 	
 	/**
 	 * Removes the satellite from orbit around this world
-	 * @param satalliteId ID # for this satellite
+	 * @param id ID # for this satellite
 	 * @return reference to the satellite object
 	 */
-	public SatelliteBase removeSatellite(long id);
+	SatelliteBase removeSatellite(long id);
 
+<<<<<<< HEAD
 	public void writeToNBT(CompoundNBT nbt);
 
 	public void readFromNBT(CompoundNBT nbt);
+=======
+	void writeToNBT(NBTTagCompound nbt);
 
-	public void setParentOrbitalDistance(int distance);
+	void readFromNBT(NBTTagCompound nbt);
+>>>>>>> origin/feature/nuclearthermalrockets
+
+	void setParentOrbitalDistance(int distance);
 
 	/**
 	 * @return true if the dimension is a gas giant
 	 */
-	public boolean isGasGiant();
+	boolean isGasGiant();
 
 	/**
 	 * @param posY height
 	 * @return density of the atmosphere
 	 */
-	public float getAtmosphereDensityAtHeight(double posY);
+	float getAtmosphereDensityAtHeight(double posY);
 
 	/**
 	 * @return the integer id of the star
 	 */
+<<<<<<< HEAD
 	public ResourceLocation getStarId();
+=======
+	int getStarId();
+>>>>>>> origin/feature/nuclearthermalrockets
 
 	/**
 	 * @return density of the atmosphere in the range 0 to 200
 	 */
-	public int getAtmosphereDensity();
+	int getAtmosphereDensity();
 
 	/**
 	 * @return true if terraforming activity has changed the planet properties
 	 */
-	public boolean isTerraformed();
+	boolean isTerraformed();
 
 	/**
 	 * @return reource location of the planet
 	 */
-	public ResourceLocation getPlanetIcon();
+	ResourceLocation getPlanetIcon();
 
 	/**
 	 * @return the location along the orbit in radians
 	 */
-	public double getOrbitTheta();
+	double getOrbitTheta();
 
 	/**
 	 * @return distance of the planet from sun or moon in the range 0 to 200
 	 */
-	public int getOrbitalDist();
+	int getOrbitalDist();
 
 	/**
 	 * @return temperature of the planet in Kelvin
 	 */
-	public int getAverageTemp();
+	int getAverageTemp();
 	
 	/**
 	 * @return depth in the tree planet is.  If the planet orbits the star directly, the result is 0, the moon 1, the moon of a moon 2, etc
 	 */
-	public int getPathLengthToStar();
+	int getPathLengthToStar();
 
 	/**
 	 * @return id of the parent planet
 	 */
+<<<<<<< HEAD
 	public ResourceLocation getParentPlanet();
+=======
+	int getParentPlanet();
+>>>>>>> origin/feature/nuclearthermalrockets
 
 	/**
 	 * Set the atmosphere like the terraformer does, can trigger terraform event
 	 * @param i new atmosphere density
 	 */
-	public void setAtmosphereDensity(int i);
+	void setAtmosphereDensity(int i);
 
 	// Client side only
-	public ResourceLocation getPlanetIconLEO();
+	ResourceLocation getPlanetIconLEO();
 	
-	public float getRenderSizePlanetView();
+	float getRenderSizePlanetView();
 	
-	public float getRenderSizeSolarView();
+	float getRenderSizeSolarView();
 	
 }

@@ -14,6 +14,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.libVulpes.LibVulpes;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemSatelliteIdentificationChip extends Item implements ISatelliteIdItem {
@@ -30,18 +31,30 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		return false;
 	}
 
+<<<<<<< HEAD
 	public long getSatelliteId(ItemStack stack) {
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
+=======
+	public long getSatelliteId(@Nonnull ItemStack stack) {
+		if(stack.hasTagCompound()) {
+			NBTTagCompound nbt = stack.getTagCompound();
+>>>>>>> origin/feature/nuclearthermalrockets
 
 			return nbt.getLong("satelliteId");
 		}
 		return -1;
 	}
 
+<<<<<<< HEAD
 	public SatelliteBase getSatellite(ItemStack stack) {
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
+=======
+	public SatelliteBase getSatellite(@Nonnull ItemStack stack) {
+		if(stack.hasTagCompound()) {
+			NBTTagCompound nbt = stack.getTagCompound();
+>>>>>>> origin/feature/nuclearthermalrockets
 
 			long satId = nbt.getLong("satelliteId");
 
@@ -63,10 +76,17 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		return null;
 	}
 
+<<<<<<< HEAD
 	public void setSatellite(ItemStack stack, SatelliteBase satellite) {
 		CompoundNBT nbt;
 		if(stack.hasTag())
 			nbt = stack.getTag();
+=======
+	public void setSatellite(@Nonnull ItemStack stack, SatelliteBase satellite) {
+		NBTTagCompound nbt;
+		if(stack.hasTagCompound())
+			nbt = stack.getTagCompound();
+>>>>>>> origin/feature/nuclearthermalrockets
 		else 
 			nbt = new CompoundNBT();
 
@@ -80,7 +100,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	 * @param stack itemStack
 	 * @param satellite properties of satellite to set info with
 	 */
-	public void setSatellite(ItemStack stack, SatelliteProperties satellite) {
+	public void setSatellite(@Nonnull ItemStack stack, SatelliteProperties satellite) {
 		erase(stack);
 		SatelliteBase satellite2 = SatelliteRegistry.getSatellite(satellite.getSatelliteType());
 		if(satellite2 != null) {
@@ -98,6 +118,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		}
 	}
 
+<<<<<<< HEAD
 	public void erase(ItemStack stack) {
 		stack.setTag(null);
 	}
@@ -106,23 +127,44 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		CompoundNBT nbt;
 		if(stack.hasTag())
 			nbt = stack.getTag();
+=======
+	public void erase(@Nonnull ItemStack stack) {
+		stack.setTagCompound(null);
+	}
+
+	public void setDim(@Nonnull ItemStack stack, int dimId) {
+		NBTTagCompound nbt;
+		if(stack.hasTagCompound())
+			nbt = stack.getTagCompound();
+>>>>>>> origin/feature/nuclearthermalrockets
 		else 
 			return;
 
 		nbt.putInt("dimId", dimId);
 	}
 
+<<<<<<< HEAD
 	public String getSatelliteName(ItemStack stack) {
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
+=======
+	public String getSatelliteName(@Nonnull ItemStack stack) {
+		if(stack.hasTagCompound()) {
+			NBTTagCompound nbt = stack.getTagCompound();
+>>>>>>> origin/feature/nuclearthermalrockets
 
 			return nbt.getString("satelliteName");
 		}
 		return "";
 	}
 
+<<<<<<< HEAD
 	public ResourceLocation getWorldId(ItemStack stack) {
 		CompoundNBT nbt;
+=======
+	public int getWorldId(@Nonnull ItemStack stack) {
+		NBTTagCompound nbt;
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		if(stack.hasTag() && (nbt = stack.getTag()).contains("dimId") ) {
 
@@ -133,9 +175,14 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void addInformation(ItemStack stack, World player,
 			List list, ITooltipFlag bool) {
 		ResourceLocation worldId = getWorldId(stack);
+=======
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
+		int worldId = getWorldId(stack);
+>>>>>>> origin/feature/nuclearthermalrockets
 		long satId = getSatelliteId(stack);
 
 		String satelliteName = getSatelliteName(stack);

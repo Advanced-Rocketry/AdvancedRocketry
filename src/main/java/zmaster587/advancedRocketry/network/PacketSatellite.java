@@ -23,8 +23,13 @@ public class PacketSatellite extends BasePacket {
 	byte packetId;
 
 	public PacketSatellite() {
+<<<<<<< HEAD
 		nbt = new CompoundNBT();
 	};
+=======
+		nbt = new NBTTagCompound();
+	}
+>>>>>>> origin/feature/nuclearthermalrockets
 
 	public PacketSatellite(SatelliteBase machine) {
 		this();
@@ -50,7 +55,19 @@ public class PacketSatellite extends BasePacket {
 		nbt = packetBuffer.readCompoundTag();
 		SatelliteBase satellite = SatelliteRegistry.createFromNBT(nbt);
 		
+<<<<<<< HEAD
 		DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId().get()).addSatellite(satellite);
+=======
+		//TODO: error handling
+		try {
+			nbt = packetBuffer.readCompoundTag();
+			SatelliteBase satellite = SatelliteRegistry.createFromNBT(nbt);
+			
+			zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()).addSatellite(satellite);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override

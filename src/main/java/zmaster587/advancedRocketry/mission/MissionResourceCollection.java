@@ -39,13 +39,18 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 	protected LinkedList<HashedBlockPosition> infrastructureCoords;
 
 	public MissionResourceCollection(){
-		infrastructureCoords = new LinkedList<HashedBlockPosition>();
+		infrastructureCoords = new LinkedList<>();
 	}
 
 	public MissionResourceCollection(long duration, EntityRocket entity, LinkedList<IInfrastructure> infrastructureCoords) {
 		super();
+<<<<<<< HEAD
 		missionPersistantNBT = new CompoundNBT();
 		entity.writeMissionPersistantNBT(missionPersistantNBT);
+=======
+		missionPersistantNBT = new NBTTagCompound();
+		entity.writeMissionPersistentNBT(missionPersistantNBT);
+>>>>>>> origin/feature/nuclearthermalrockets
 		
 		satelliteProperties.setId(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getNextSatelliteId());
 
@@ -59,7 +64,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 		z = entity.getPosZ();
 		worldId = ZUtils.getDimensionIdentifier(entity.world);
 
-		this.infrastructureCoords = new LinkedList<HashedBlockPosition>();
+		this.infrastructureCoords = new LinkedList<>();
 
 		for(IInfrastructure tile : infrastructureCoords)
 			this.infrastructureCoords.add(new HashedBlockPosition(((TileEntity)tile).getPos()));
@@ -133,6 +138,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 		nbt.putString("startDimid", worldId.toString());
 		nbt.putString("launchDim", launchDimension.toString());
 
+<<<<<<< HEAD
 		ListNBT itemList = new ListNBT();
 		for(int i = 0; i < infrastructureCoords.size(); i++)
 		{
@@ -141,6 +147,13 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 			CompoundNBT tag = new CompoundNBT();
 			tag.putIntArray("loc", new int[] {inf.x, inf.y, inf.z});
 			itemList.add(tag);
+=======
+		NBTTagList itemList = new NBTTagList();
+		for (HashedBlockPosition inf : infrastructureCoords) {
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setIntArray("loc", new int[]{inf.x, inf.y, inf.z});
+			itemList.appendTag(tag);
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		}
 		nbt.put("infrastructure", itemList);
@@ -169,8 +182,13 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 		ListNBT tagList = nbt.getList("infrastructure", 10);
 		infrastructureCoords.clear();
 
+<<<<<<< HEAD
 		for (int i = 0; i < tagList.size(); i++) {
 			int coords[] = tagList.getCompound(i).getIntArray("loc");
+=======
+		for (int i = 0; i < tagList.tagCount(); i++) {
+			int[] coords = tagList.getCompoundTagAt(i).getIntArray("loc");
+>>>>>>> origin/feature/nuclearthermalrockets
 			infrastructureCoords.add(new HashedBlockPosition(coords[0], coords[1], coords[2]));
 		}
 	}
@@ -181,7 +199,11 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 	}
 
 	@Override
+<<<<<<< HEAD
 	public ResourceLocation getOriginatingDimention() {
+=======
+	public int getOriginatingDimension() {
+>>>>>>> origin/feature/nuclearthermalrockets
 		return worldId;
 	}
 

@@ -12,6 +12,8 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.tile.cables.TileDataPipe;
 import zmaster587.advancedRocketry.tile.cables.TilePipe;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNullableByDefault;
 import java.util.Random;
 
 public class BlockPipe extends Block {
@@ -23,8 +25,14 @@ public class BlockPipe extends Block {
 
 	}
 
+<<<<<<< HEAD
 	/*@Override
 	public AxisAlignedBB getBoundingBox(BlockState state, IBlockAccess source,
+=======
+	@Override
+	@Nonnull
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source,
+>>>>>>> origin/feature/nuclearthermalrockets
 			BlockPos pos) {
 		return bb;
 	}
@@ -51,8 +59,14 @@ public class BlockPipe extends Block {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public boolean shouldSideBeRendered(BlockState blockState,
 			IBlockAccess blockAccess, BlockPos pos, Direction side) {
+=======
+	@ParametersAreNullableByDefault
+	public boolean shouldSideBeRendered(IBlockState blockState,
+			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		return true;
 	}
 
@@ -62,25 +76,36 @@ public class BlockPipe extends Block {
 		super.updateTick(worldIn, pos, state, rand);
 		TilePipe pipe = ((TilePipe)worldIn.getTileEntity(pos));
 
-		if (!pipe.isInitialized()) {
+		if (pipe != null && !pipe.isInitialized()) {
 			pipe.onPlaced();
 			pipe.markDirty();
 		}
 	}
 	
 	@Override
+<<<<<<< HEAD
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state,
 			LivingEntity placer, ItemStack stack) {
+=======
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state,
+			EntityLivingBase placer, @Nonnull ItemStack stack) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		((TilePipe)worldIn.getTileEntity(pos)).onPlaced();
 	}
 
 
 	@Override
+<<<<<<< HEAD
 	public TileEntity createTileEntity(World world, BlockState state) {
+=======
+	@ParametersAreNullableByDefault
+	public TileEntity createTileEntity(World world, IBlockState state) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		return new TileDataPipe();
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos,
 			Block blockIn, BlockPos fromPos) {
 		((TilePipe)worldIn.getTileEntity(pos)).onPlaced();
@@ -89,6 +114,9 @@ public class BlockPipe extends Block {
 	@Override
 	public void onNeighborChange(IBlockAccess world, BlockPos pos,
 			BlockPos neighbor) {
+=======
+	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		((TilePipe)world.getTileEntity(pos)).onNeighborTileChange(neighbor);
 	}*/
 

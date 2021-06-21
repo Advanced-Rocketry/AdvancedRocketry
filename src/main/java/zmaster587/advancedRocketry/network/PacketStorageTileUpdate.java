@@ -43,11 +43,20 @@ public class PacketStorageTileUpdate extends BasePacket {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void write(PacketBuffer out) {
 		CompoundNBT nbt = tile.getUpdatePacket().getNbtCompound();
 		
 		//this.writeWorld(out, ((Entity)entity).world);
 		out.writeInt(((Entity)entity).getEntityId());
+=======
+	public void write(ByteBuf out) {
+		NBTTagCompound nbt = ReflectionHelper.getPrivateValue(SPacketUpdateTileEntity.class, tile.getUpdatePacket(), "field_148860_e");
+
+
+		out.writeInt(entity.world.provider.getDimension());
+		out.writeInt(entity.getEntityId());
+>>>>>>> origin/feature/nuclearthermalrockets
 		out.writeInt(x);
 		out.writeInt(y);
 		out.writeInt(z);
@@ -79,7 +88,7 @@ public class PacketStorageTileUpdate extends BasePacket {
 		this.nbt = nbt;
 
 
-		if(ent != null && ent instanceof INetworkEntity) {
+		if(ent instanceof INetworkEntity) {
 			entity = (EntityRocket)ent;
 			this.chunk = entity.storage;
 		}

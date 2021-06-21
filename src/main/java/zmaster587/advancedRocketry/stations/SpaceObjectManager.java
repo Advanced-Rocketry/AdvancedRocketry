@@ -43,11 +43,19 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	private final static SpaceObjectManager spaceObjectManager = new SpaceObjectManager();
 
 	private SpaceObjectManager() {
+<<<<<<< HEAD
 		stationLocations = new HashMap<ResourceLocation,ISpaceObject>();
 		spaceStationOrbitMap = new HashMap<ResourceLocation, List<ISpaceObject>>();
 		nameToClass = new HashMap<String, Class>();
 		classToString = new HashMap<Class, String>();
 		temporaryDimensions = new HashMap<ResourceLocation, Long>();
+=======
+		stationLocations = new HashMap<>();
+		spaceStationOrbitMap = new HashMap<>();
+		nameToClass = new HashMap<>();
+		classToString = new HashMap<>();
+		temporaryDimensions = new HashMap<>();
+>>>>>>> origin/feature/nuclearthermalrockets
 		AdvancedRocketryAPI.spaceObjectManager = this;
 	}
 
@@ -55,7 +63,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * The {@link SpaceObjectManager} is used for tasks such as managing space stations and orbiting worlds 
 	 * @return the {@link SpaceObjectManager} registered with the DimensionManager
 	 */
-	public final static SpaceObjectManager getSpaceManager() {
+	public static SpaceObjectManager getSpaceManager() {
 		return spaceObjectManager;
 	}
 
@@ -89,7 +97,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * @param str key with which to register the spaceObject type
 	 * @param clazz class of space object to register
 	 */
-	public void registerSpaceObjectType(String str, Class<? extends Object> clazz) {
+	public void registerSpaceObjectType(String str, Class<?> clazz) {
 		nameToClass.put(str, clazz);
 		classToString.put(clazz, str);
 	}
@@ -104,9 +112,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 
 		try {
 			return (ISpaceObject)clazz.newInstance();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -123,8 +129,13 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	public ISpaceObject getSpaceStationFromBlockCoords(BlockPos pos) {
 
 		int x = pos.getX(); int z = pos.getZ();
+<<<<<<< HEAD
 		x = (int) Math.round((x)/(2f*ARConfiguration.getCurrentConfig().stationSize.get()));
 		z = (int) Math.round((z)/(2f*ARConfiguration.getCurrentConfig().stationSize.get()));
+=======
+		x = Math.round((x)/(2f*ARConfiguration.getCurrentConfig().stationSize));
+		z = Math.round((z)/(2f*ARConfiguration.getCurrentConfig().stationSize));
+>>>>>>> origin/feature/nuclearthermalrockets
 		int radius = Math.max(Math.abs(x), Math.abs(z));
 
 		int index = (int) Math.pow((2*radius-1),2) + x + radius;
@@ -143,13 +154,19 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 
 	/**
 	 * Registers a space object with this manager, the class must have been registered prior to this with registerSpaceObjectType!
-	 * @param object
+	 * @param spaceObject
 	 * @param dimId
 	 * @param stationId
 	 */
+<<<<<<< HEAD
 	public void registerSpaceObject(ISpaceObject object, ResourceLocation dimId, ResourceLocation stationId) {
 		object.setId(stationId);
 		stationLocations.put(stationId, object);
+=======
+	public void registerSpaceObject(ISpaceObject spaceObject, int dimId, int stationId) {
+		spaceObject.setId(stationId);
+		stationLocations.put(stationId, spaceObject);
+>>>>>>> origin/feature/nuclearthermalrockets
 
 
 		/*Calculate the location of a space station along a square spiral
@@ -185,34 +202,53 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 				x = radius;
 		}
 		
+<<<<<<< HEAD
 		if(!object.hasCustomSpawnLocation())
 			object.setSpawnLocation(2*ARConfiguration.getCurrentConfig().stationSize.get()*x + ARConfiguration.getCurrentConfig().stationSize.get()/2, 128, 2*ARConfiguration.getCurrentConfig().stationSize.get()*z + ARConfiguration.getCurrentConfig().stationSize.get()/2);
+=======
+		if(!spaceObject.hasCustomSpawnLocation())
+			spaceObject.setSpawnLocation(2*ARConfiguration.getCurrentConfig().stationSize*x + ARConfiguration.getCurrentConfig().stationSize/2, 128, 2*ARConfiguration.getCurrentConfig().stationSize*z + ARConfiguration.getCurrentConfig().stationSize/2);
+>>>>>>> origin/feature/nuclearthermalrockets
 
-		object.setOrbitingBody(dimId);
-		moveStationToBody(object, dimId, false);
+		spaceObject.setOrbitingBody(dimId);
+		moveStationToBody(spaceObject, dimId, false);
 	}
 
 	/**
 	 * Registers a dimension that is set to expire at a given an expiration time
-	 * @param object object to register
+	 * @param spaceObject spaceObject to register
 	 * @param dimId dimid to orbit around
 	 * @param expireTime time at which to expire the dimension
 	 */
+<<<<<<< HEAD
 	public void registerTemporarySpaceObject(ISpaceObject object, ResourceLocation dimId, long expireTime) {
 		ResourceLocation nextDimId = getNextStationId();
+=======
+	public void registerTemporarySpaceObject(ISpaceObject spaceObject, int dimId, long expireTime) {
+		int nextDimId = getNextStationId();
+>>>>>>> origin/feature/nuclearthermalrockets
 		temporaryDimensions.put(nextDimId, expireTime);
 		temporaryDimensionPlayerNumber.put(dimId, 0);
-		registerSpaceObject(object, nextDimId);
+		registerSpaceObject(spaceObject, nextDimId);
 	}
 
 	/**
 	 * Registers a space station and updates clients
+<<<<<<< HEAD
 	 * @param object
 	 * @param nextDimId dimension to place it in orbit around, Constants.INVALID_PLANET for undefined
 	 */
 	public void registerSpaceObject(ISpaceObject object, ResourceLocation nextDimId) {
 		registerSpaceObject(object, nextDimId, getNextStationId());
 		PacketHandler.sendToAll(new PacketSpaceStationInfo(object.getId(), object));
+=======
+	 * @param spaceObject
+	 * @param dimId dimension to place it in orbit around, Constants.INVALID_PLANET for undefined
+	 */
+	public void registerSpaceObject(ISpaceObject spaceObject, int dimId) {
+		registerSpaceObject(spaceObject, dimId, getNextStationId());
+		PacketHandler.sendToAll(new PacketSpaceStationInfo(spaceObject.getId(), spaceObject));
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 	
 	public void unregisterSpaceObject(ResourceLocation id) {
@@ -227,12 +263,18 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * registers a dimension with the given station ID
 	 * Used on client to create stations on packet recieve from server
 	 * FOR INTERNAL USE ONLY
-	 * @param object
+	 * @param spaceObject
 	 * @param dimId dimension to place it in orbit around, Constants.INVALID_PLANET for undefined
 	 */
+<<<<<<< HEAD
 	@OnlyIn(value=Dist.CLIENT)
 	public void registerSpaceObjectClient(ISpaceObject object, ResourceLocation dimId, ResourceLocation stationId) {
 		registerSpaceObject(object, dimId, stationId);
+=======
+	@SideOnly(Side.CLIENT)
+	public void registerSpaceObjectClient(ISpaceObject spaceObject, int dimId, int stationId) {
+		registerSpaceObject(spaceObject, dimId, stationId);
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	/**
@@ -252,11 +294,17 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	public void onPlayerTick(PlayerTickEvent event) {
 		if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(event.player.world))) {
 
+<<<<<<< HEAD
 			if(event.player.getPosY() < 0 && !event.player.world.isRemote) {
 				ISpaceObject object = getSpaceStationFromBlockCoords(new BlockPos(event.player.getPositionVec()));
 				if(object != null) {
+=======
+			if(event.player.posY < 0 && !event.player.world.isRemote) {
+				ISpaceObject spaceObject = getSpaceStationFromBlockCoords(event.player.getPosition());
+				if(spaceObject != null) {
+>>>>>>> origin/feature/nuclearthermalrockets
 
-					HashedBlockPosition loc = object.getSpawnLocation();
+					HashedBlockPosition loc = spaceObject.getSpawnLocation();
 
 					event.player.fallDistance=0;
 					event.player.setMotion(event.player.getMotion().mul(1, 0, 1));
@@ -280,7 +328,11 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 
 			result = Math.abs(2*(((int)event.player.getPosX() + ARConfiguration.getCurrentConfig().stationSize.get()/2) % (2*ARConfiguration.getCurrentConfig().stationSize.get()) )/ARConfiguration.getCurrentConfig().stationSize.get());
 
+<<<<<<< HEAD
 			if(event.player.getPosX() < -ARConfiguration.getCurrentConfig().stationSize.get()/2)
+=======
+			if(event.player.posX < -ARConfiguration.getCurrentConfig().stationSize/2.)
+>>>>>>> origin/feature/nuclearthermalrockets
 				if(result == 3)
 					result = 0;
 				else if(result == 0)
@@ -308,13 +360,13 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 		//If no dim undergoing transition then nextTransitionTick = -1
 		if((nextStationTransitionTick != -1 && worldTime >= nextStationTransitionTick && spaceStationOrbitMap.get(WARPDIMID) != null) || (nextStationTransitionTick == -1 && spaceStationOrbitMap.get(WARPDIMID) != null && !spaceStationOrbitMap.get(WARPDIMID).isEmpty())) {
 			long newNextTransitionTick = -1;
-			for(ISpaceObject obj : spaceStationOrbitMap.get(WARPDIMID)) {
-				if(obj.getTransitionTime() <= worldTime) {
-					moveStationToBody(obj, obj.getDestOrbitingBody());
-					spaceStationOrbitMap.get(WARPDIMID).remove(obj);
+			for(ISpaceObject spaceObject : spaceStationOrbitMap.get(WARPDIMID)) {
+				if(spaceObject.getTransitionTime() <= worldTime) {
+					moveStationToBody(spaceObject, spaceObject.getDestOrbitingBody());
+					spaceStationOrbitMap.get(WARPDIMID).remove(spaceObject);
 				}
-				else if(newNextTransitionTick == -1 || obj.getTransitionTime() < newNextTransitionTick)
-					newNextTransitionTick = obj.getTransitionTime();
+				else if(newNextTransitionTick == -1 || spaceObject.getTransitionTime() < newNextTransitionTick)
+					newNextTransitionTick = spaceObject.getTransitionTime();
 			}
 
 			nextStationTransitionTick = newNextTransitionTick;
@@ -373,8 +425,12 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 			spaceStationOrbitMap.get(station.getOrbitingPlanetId()).remove(station);
 		}
 
+<<<<<<< HEAD
 		if(spaceStationOrbitMap.get(dimId) == null)
 			spaceStationOrbitMap.put(dimId, new LinkedList<ISpaceObject>());
+=======
+		spaceStationOrbitMap.computeIfAbsent(dimId, k -> new LinkedList<>());
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		if(!spaceStationOrbitMap.get(dimId).contains(station))
 			spaceStationOrbitMap.get(dimId).add(station);
@@ -400,8 +456,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 			spaceStationOrbitMap.get(station.getOrbitingPlanetId()).remove(station);
 		}
 
-		if(spaceStationOrbitMap.get(WARPDIMID) == null)
-			spaceStationOrbitMap.put(WARPDIMID,new LinkedList<ISpaceObject>());
+		spaceStationOrbitMap.computeIfAbsent(WARPDIMID, k -> new LinkedList<>());
 
 		if(!spaceStationOrbitMap.get(WARPDIMID).contains(station))
 			spaceStationOrbitMap.get(WARPDIMID).add(station);
@@ -424,6 +479,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 		ListNBT nbtList = new ListNBT();
 
 		while(iterator.hasNext()) {
+<<<<<<< HEAD
 			ISpaceObject object = iterator.next();
 			CompoundNBT nbtTag = new CompoundNBT();
 			object.writeToNbt(nbtTag);
@@ -432,6 +488,16 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 			if(temporaryDimensions.containsKey(object.getId())) {
 				nbtTag.putLong("expireTime", temporaryDimensions.get(object.getId()));
 				nbtTag.putInt("numPlayers", temporaryDimensionPlayerNumber.get(object.getId()));
+=======
+			ISpaceObject spaceObject = iterator.next();
+			NBTTagCompound nbtTag = new NBTTagCompound();
+			spaceObject.writeToNbt(nbtTag);
+			
+			nbtTag.setString("type", classToString.get(spaceObject.getClass()));
+			if(temporaryDimensions.containsKey(spaceObject.getId())) {
+				nbtTag.setLong("expireTime", temporaryDimensions.get(spaceObject.getId()));
+				nbtTag.setInteger("numPlayers", temporaryDimensionPlayerNumber.get(spaceObject.getId()));
+>>>>>>> origin/feature/nuclearthermalrockets
 			}
 			
 			nbtList.add(nbtTag);
@@ -449,8 +515,8 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 		for(int i = 0; i < list.size(); i++) {
 			CompoundNBT tag = list.getCompound(i);
 			try {
-				ISpaceObject object = (ISpaceObject)nameToClass.get(tag.getString("type")).newInstance();
-				object.readFromNbt(tag);
+				ISpaceObject spaceObject = (ISpaceObject)nameToClass.get(tag.getString("type")).newInstance();
+				spaceObject.readFromNbt(tag);
 				
 				
 				if(tag.contains("expireTime")) {
@@ -458,11 +524,11 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 					int numPlayers = tag.getInt("numPlayers");
 					if (ZUtils.getWorld(ARConfiguration.GetSpaceDimId()).getGameTime() >= expireTime && numPlayers == 0)
 						continue;
-					temporaryDimensions.put(object.getId(), expireTime);
-					temporaryDimensionPlayerNumber.put(object.getId(), numPlayers);
+					temporaryDimensions.put(spaceObject.getId(), expireTime);
+					temporaryDimensionPlayerNumber.put(spaceObject.getId(), numPlayers);
 				}
 				
-				registerSpaceObject(object, object.getOrbitingPlanetId(), object.getId() );
+				registerSpaceObject(spaceObject, spaceObject.getOrbitingPlanetId(), spaceObject.getId() );
 
 			} catch (Exception e) {
 				System.out.println(tag.getString("type"));

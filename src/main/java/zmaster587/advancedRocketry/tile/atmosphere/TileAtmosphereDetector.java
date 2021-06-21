@@ -68,9 +68,21 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 	}
 	
 	@Override
+<<<<<<< HEAD
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		List<ModuleBase> btns = new LinkedList<ModuleBase>();
+=======
+	public boolean shouldRefresh(World world, BlockPos pos,
+			IBlockState oldState, IBlockState newSate) {
+		return (oldState.getBlock() != newSate.getBlock());
+	}
+
+	@Override
+	public List<ModuleBase> getModules(int id, EntityPlayer player) {
+		List<ModuleBase> modules = new LinkedList<>();
+		List<ModuleBase> btns = new LinkedList<>();
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		Iterator<IAtmosphere> atmIter = AtmosphereRegister.getInstance().getAtmosphereList().iterator();
 
@@ -81,7 +93,7 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 			i++;
 		}
 
-		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<ModuleBase>(), zmaster587.libVulpes.inventory.TextureResources.starryBG, 165, 120, 0, 500);
+		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<>(), zmaster587.libVulpes.inventory.TextureResources.starryBG, 165, 120, 0, 500);
 		modules.add(panningContainer);
 		return modules;
 	}

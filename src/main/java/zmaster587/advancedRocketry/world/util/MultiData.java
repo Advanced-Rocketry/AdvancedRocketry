@@ -12,10 +12,10 @@ import java.util.HashMap;
  *
  */
 public class MultiData implements IDataHandler {
-	HashMap<DataStorage.DataType, DataStorage> dataStorages;
+	private HashMap<DataStorage.DataType, DataStorage> dataStorages;
 
 	public MultiData() {
-		dataStorages = new HashMap<DataStorage.DataType, DataStorage>();
+		dataStorages = new HashMap<>();
 		reset();
 	}
 

@@ -54,7 +54,7 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
 				double u = 256/distance;
 				double resolution = (int)u;
 
-				double yLoc[][] = new double[(int)resolution][(int)resolution];
+				double[][] yLoc = new double[(int)resolution][(int)resolution];
 
 				for(int i = 0; i < (int)resolution; i++) {
 					for(int g = 0; g < (int)resolution; g++) {
@@ -97,6 +97,7 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
 		RenderHelper.renderCube(matrix, entitySolidSideManualColor, -2, 0.99, -2, -1.9, 1.1, 3, 1,1,1,1);
 		RenderHelper.renderCube(matrix, entitySolidSideManualColor, -2, 0.99, -2, 3, 1.1, -1.9,1,1,1,1);
 		
+<<<<<<< HEAD
 		RenderHelper.renderCube(matrix, entitySolidSideManualColor, -1.9, 0.99, 2.9, 3, 1.1, 3, 1,1,1,1);
 		RenderHelper.renderCube(matrix, entitySolidSideManualColor, 2.9, 0.99, -1.9, 3, 1.1, 3, 1,1,1,1);
 
@@ -106,6 +107,25 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
 			//GlStateManager.color4f(0.2F, 0.2F, 0.2F, 0.3F);
 			float x = 0, y = 0, z = 0;
 			laserBeam = buffer.getBuffer(RenderHelper.getLaserBeamType());
+=======
+		Tessellator.getInstance().draw();
+
+		if(multiBlockTile.getPowerMadeLastTick() > 0 ) {
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glDisable(GL11.GL_FOG);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glDepthMask(false);
+
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GlStateManager.tryBlendFuncSeparate(770, 1, 1, 0);
+			GL11.glPushMatrix();
+			GlStateManager.color(0.2F, 0.2F, 0.2F, 0.3F);
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+	
+			//GL11.glTranslated(0.5, 0, 0.5);
+			//GL11.glRotated(tile.getWorldObj().getTotalWorldTime()/10.0 % 360, 0, 1, 0);
+			//GL11.glTranslated(-0.3, 0, -0.3);
+>>>>>>> origin/feature/nuclearthermalrockets
 			
 			for(float radius = 0.25F; radius < 2; radius += .25F) {
 

@@ -11,7 +11,7 @@ public class SawMillRecipeMaker {
 
 	public static List<SawMillWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
 		
-		List<SawMillWrapper> list = new LinkedList<SawMillWrapper>();
+		List<SawMillWrapper> list = new LinkedList<>();
 		for(IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
 			list.add(new SawMillWrapper(rec));
 		}

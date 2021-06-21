@@ -54,8 +54,13 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 	}
 
 	@Override
+<<<<<<< HEAD
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+=======
+	public List<ModuleBase> getModules(int id, EntityPlayer player) {
+		List<ModuleBase> modules = new LinkedList<>();
+>>>>>>> origin/feature/nuclearthermalrockets
 		modules.add(new ModuleText(20, 50, LibVulpes.proxy.getLocalizedString("msg.dockingport.target"), 0x2a2a2a));
 		if(world.isRemote) {
 			myId = new ModuleTextBox(this, 20, 30, 60, 12, 9);

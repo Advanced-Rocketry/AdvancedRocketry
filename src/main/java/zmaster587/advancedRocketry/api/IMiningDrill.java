@@ -7,10 +7,10 @@ public interface IMiningDrill {
 	/**
 	 * @return mining speed of the drill in blocks/tick
 	 */
-	public float getMiningSpeed(World world, BlockPos pos);
+	float getMiningSpeed(World world, BlockPos pos);
 	
 	/**
 	 * @return power consumption in units/tick
 	 */
-	public int powerConsumption();
+	int powerConsumption();
 }

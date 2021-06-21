@@ -7,7 +7,10 @@ import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.item.ItemStack;
+<<<<<<< HEAD
 import net.minecraft.util.ResourceLocation;
+=======
+>>>>>>> origin/feature/nuclearthermalrockets
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.block.BlockSmallPlatePress;
@@ -34,8 +37,18 @@ import zmaster587.advancedRocketry.integration.jei.rollingMachine.RollingMachine
 import zmaster587.advancedRocketry.integration.jei.sawmill.SawMillCategory;
 import zmaster587.advancedRocketry.integration.jei.sawmill.SawMillRecipeMaker;
 import zmaster587.advancedRocketry.tile.multiblock.machine.*;
+<<<<<<< HEAD
 
 @JeiPlugin
+=======
+import zmaster587.libVulpes.inventory.GuiModular;
+
+import javax.annotation.Nonnull;
+import java.awt.*;
+import java.util.List;
+
+@JEIPlugin
+>>>>>>> origin/feature/nuclearthermalrockets
 public class ARPlugin implements IModPlugin {
 	public static IJeiHelpers jeiHelpers;
 	public static final ResourceLocation rollingMachineUUID = new ResourceLocation(Constants.modId, "zmaster587.ar.rollingmachine");
@@ -53,6 +66,7 @@ public class ARPlugin implements IModPlugin {
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry) {
 		
+<<<<<<< HEAD
 		IGuiHelper guiHelper = registry.getJeiHelpers().getGuiHelper();
 		registry.addRecipeCategories(new RollingMachineCategory(guiHelper, new ItemStack(AdvancedRocketryBlocks.blockRollingMachine)),
 		new LatheCategory(guiHelper, new ItemStack(AdvancedRocketryBlocks.blockLathe)),
@@ -72,6 +86,49 @@ public class ARPlugin implements IModPlugin {
 	 * Register modded recipes.
 	 */
 	public void registerRecipes(IRecipeRegistration registry) {
+=======
+		registry.addAdvancedGuiHandlers(new IAdvancedGuiHandler<GuiModular>() {
+			@Override
+			@Nonnull
+			public Class<GuiModular> getGuiContainerClass() {
+				return GuiModular.class;
+			}
+
+			@Override
+			public List<Rectangle> getGuiExtraAreas(GuiModular guiContainer) {
+				return guiContainer.getExtraAreasCovered();
+			}
+
+			@Override
+			public Object getIngredientUnderMouse(GuiModular guiContainer,
+					int mouseX, int mouseY) {
+				return null;
+			}
+		});
+
+		IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
+		//Hide problematic blocks
+		blacklist.addIngredientToBlacklist(new ItemStack(AdvancedRocketryBlocks.blockForceField));
+		blacklist.addIngredientToBlacklist(new ItemStack(AdvancedRocketryBlocks.blockLightSource));
+		blacklist.addIngredientToBlacklist(new ItemStack(AdvancedRocketryBlocks.blockAirLock));
+		//Hide problematic items
+		blacklist.addIngredientToBlacklist(new ItemStack(AdvancedRocketryItems.itemSpaceStation));
+
+
+
+		registry.addRecipeHandlers(new RollingMachineRecipeHandler(),
+		new LatheRecipeHandler(),
+		new PrecisionAssemblerRecipeHandler(),
+		new SawMillRecipeHandler(),
+		new ChemicalReactorRecipeHandler(),
+		new CrystallizerRecipeHandler(),
+		new ElectrolyzerRecipeHandler(),
+		new ArcFurnaceRecipeHandler(),
+		new PlatePressRecipeHandler(),
+		new CentrifugeRecipeHandler(),
+		new PrecisionLaserEtcherRecipeHandler());
+
+>>>>>>> origin/feature/nuclearthermalrockets
 		registry.addRecipes(RollingMachineRecipeMaker.getMachineRecipes(jeiHelpers, TileRollingMachine.class), rollingMachineUUID);
 		registry.addRecipes(LatheRecipeMaker.getMachineRecipes(jeiHelpers, TileLathe.class), latheUUID);
 		registry.addRecipes(PrecisionAssemblerRecipeMaker.getMachineRecipes(jeiHelpers, TilePrecisionAssembler.class), precisionAssemblerUUID);

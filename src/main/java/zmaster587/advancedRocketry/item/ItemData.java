@@ -11,6 +11,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.api.DataStorage;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemData extends Item {
@@ -21,24 +22,29 @@ public class ItemData extends Item {
 		super(props);
 	}
 
+<<<<<<< HEAD
 	public int getMaxData(ItemStack stack) {
 		return 1000;
+=======
+	public int getMaxData(int damage) {
+		return damage == 0 ? 1000 : 0;
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override
-	public int getItemStackLimit(ItemStack stack) {
+	public int getItemStackLimit(@Nonnull ItemStack stack) {
 		return getData(stack) == 0 ? super.getItemStackLimit(stack) : 1;
 	}
 	
-	public int getData(ItemStack stack) {
+	public int getData(@Nonnull ItemStack stack) {
 		return getDataStorage(stack).getData();
 	}
 	
-	public DataStorage.DataType getDataType(ItemStack stack) {
+	public DataStorage.DataType getDataType(@Nonnull ItemStack stack) {
 		return getDataStorage(stack).getDataType();
 	}
 	
-	public DataStorage getDataStorage(ItemStack item) {
+	public DataStorage getDataStorage(@Nonnull ItemStack item) {
 
 		DataStorage data = new DataStorage();
 
@@ -53,7 +59,7 @@ public class ItemData extends Item {
 		return data;
 	}
 
-	public int addData(ItemStack item, int amount, DataStorage.DataType dataType) {
+	public int addData(@Nonnull ItemStack item, int amount, DataStorage.DataType dataType) {
 		DataStorage data = getDataStorage(item);
 
 		int amt = data.addData(amount, dataType, true);
@@ -65,7 +71,7 @@ public class ItemData extends Item {
 		return amt;
 	}
 
-	public int removeData(ItemStack item, int amount, DataStorage.DataType dataType) {
+	public int removeData(@Nonnull ItemStack item, int amount, DataStorage.DataType dataType) {
 		DataStorage data = getDataStorage(item);
 
 		int amt = data.removeData(amount, true);
@@ -77,7 +83,7 @@ public class ItemData extends Item {
 		return amt;
 	}
 
-	public void setData(ItemStack item, int amount, DataStorage.DataType dataType) {
+	public void setData(@Nonnull ItemStack item, int amount, DataStorage.DataType dataType) {
 		DataStorage data = getDataStorage(item);
 
 		data.setData(amount, dataType);
@@ -88,15 +94,25 @@ public class ItemData extends Item {
 	}
 
 	@Override
+<<<<<<< HEAD
 	@OnlyIn(value=Dist.CLIENT)
 	public void addInformation(ItemStack stack, World player,
 			List list, ITooltipFlag bool) {
+=======
+	@SideOnly(Side.CLIENT)
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		super.addInformation(stack, player, list, bool);
 
 		DataStorage data = getDataStorage(stack);
 
+<<<<<<< HEAD
 		list.add(new StringTextComponent(data.getData() + " / " + data.getMaxData() + " Data"));
 		list.add(new StringTextComponent(I18n.format(data.getDataType().toString(), new Object[0])));
+=======
+		list.add(data.getData() + " / " + data.getMaxData() + " Data");
+		list.add(I18n.format(data.getDataType().toString()));
+>>>>>>> origin/feature/nuclearthermalrockets
 
 	}
 

@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"s s",
+	"pSp",
+	"s s"
+    ],
+    "key":
+    {
+        "s":
+        {
+            "type": "forge:ore_dict",
+            "ore": "stickSteel"
+        },
+        "S":
+        {
+            "type": "forge:ore_dict",
+            "ore": "sheetTitanium"
+        },
+	"p":
+        {
+            "type": "forge:ore_dict",
+            "ore": "plateTitanium"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:nuclearfueltank",
+        "count": 1
+    }
+}

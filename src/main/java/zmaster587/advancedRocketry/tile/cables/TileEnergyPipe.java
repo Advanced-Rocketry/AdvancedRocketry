@@ -14,6 +14,8 @@ import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.cap.ForgePowerCapability;
 import zmaster587.libVulpes.cap.TeslaHandler;
 
+import javax.annotation.Nullable;
+
 public class TileEnergyPipe extends TilePipe implements IUniversalEnergy {
 	
 	public TileEnergyPipe() {
@@ -33,7 +35,17 @@ public class TileEnergyPipe extends TilePipe implements IUniversalEnergy {
 	}
 	
 	@Override
+<<<<<<< HEAD
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
+=======
+	public boolean hasCapability(@Nullable Capability<?> capability, EnumFacing facing) {
+
+		return capability == CapabilityEnergy.ENERGY || TeslaHandler.hasTeslaCapability(this, capability);
+	}
+
+	@Override
+	public <T> T getCapability(@Nullable Capability<T> capability, EnumFacing facing) {
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		if(capability == CapabilityEnergy.ENERGY )
 			return LazyOptional.of(() -> new ForgePowerCapability(this)).cast();

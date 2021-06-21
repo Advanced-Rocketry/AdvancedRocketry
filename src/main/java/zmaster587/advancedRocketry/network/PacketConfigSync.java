@@ -1,19 +1,19 @@
 package zmaster587.advancedRocketry.network;
 
 import io.netty.buffer.ByteBuf;
+<<<<<<< HEAD
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+=======
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+>>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.network.PacketBuffer;
 import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.libVulpes.network.BasePacket;
 
-import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 public class PacketConfigSync extends BasePacket {
 	ARConfiguration config;

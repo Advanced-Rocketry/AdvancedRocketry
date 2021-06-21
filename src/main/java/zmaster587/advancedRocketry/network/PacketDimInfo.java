@@ -6,7 +6,10 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
+<<<<<<< HEAD
 import net.minecraft.util.ResourceLocation;
+=======
+>>>>>>> origin/feature/nuclearthermalrockets
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
@@ -27,7 +30,7 @@ public class PacketDimInfo extends BasePacket {
 	String customIcon;
 
 	public PacketDimInfo() {
-		artifacts = new LinkedList<ItemStack>();
+		artifacts = new LinkedList<>();
 		customIcon = "";
 	}
 
@@ -128,7 +131,7 @@ public class PacketDimInfo extends BasePacket {
 				dimProperties.getRequiredArtifacts().clear();
 				dimProperties.getRequiredArtifacts().addAll(artifacts);
 				
-				List<SpawnListEntryNBT> list = new LinkedList<SpawnListEntryNBT>(DimensionManager.getInstance().getDimensionProperties(dimNumber).getSpawnListEntries());
+				List<SpawnListEntryNBT> list = new LinkedList<>(DimensionManager.getInstance().getDimensionProperties(dimNumber).getSpawnListEntries());
 				dimProperties.getSpawnListEntries().clear();
 				dimProperties.getSpawnListEntries().addAll(list);
 				

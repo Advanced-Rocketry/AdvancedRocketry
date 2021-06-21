@@ -2,8 +2,12 @@ package zmaster587.advancedRocketry.client.render.entity;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+<<<<<<< HEAD
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+=======
+import net.minecraft.client.renderer.GlStateManager;
+>>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -136,7 +140,14 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 		
 		IVertexBuilder buf = bufferIn.getBuffer(RenderHelper.getTranslucentManualRenderType());
 
+<<<<<<< HEAD
 		float myTime = ((entity.world.getGameTime() & 0xF)/16f);
+=======
+		BufferBuilder buf = Tessellator.getInstance().getBuffer();
+		GlStateManager.disableTexture2D();
+
+		float myTime;
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		for(int i = 0; i < 4; i++ ) {
 			myTime = ((i*4 + entity.world.getGameTime() & 0xF)/16f);

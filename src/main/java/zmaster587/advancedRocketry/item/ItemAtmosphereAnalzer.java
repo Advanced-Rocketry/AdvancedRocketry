@@ -44,6 +44,25 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+<<<<<<< HEAD
+=======
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
+import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.event.RocketEventHandler;
+import zmaster587.advancedRocketry.inventory.TextureResources;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.IArmorComponent;
+import zmaster587.libVulpes.client.ResourceIcon;
+import zmaster587.libVulpes.render.RenderHelper;
+
+import javax.annotation.Nonnull;
+import java.util.LinkedList;
+import java.util.List;
+>>>>>>> origin/feature/nuclearthermalrockets
 
 public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 
@@ -60,17 +79,22 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	private static String no = LibVulpes.proxy.getLocalizedString("msg.no");
 
 	@Override
+<<<<<<< HEAD
 	public void onTick(World world, PlayerEntity player, ItemStack armorStack,
 			IInventory modules, ItemStack componentStack) {
+=======
+	public void onTick(World world, EntityPlayer player, @Nonnull ItemStack armorStack,
+			IInventory modules, @Nonnull ItemStack componentStack) {
+>>>>>>> origin/feature/nuclearthermalrockets
 
 	}
 
-	private List<ITextComponent> getAtmosphereReadout(ItemStack stack, AtmosphereType atm, World world) {
+	private List<ITextComponent> getAtmosphereReadout(@Nonnull ItemStack stack, AtmosphereType atm, World world) {
 		if(atm == null)
 			atm = AtmosphereType.AIR;
 		
 
-		List<ITextComponent> str = new LinkedList<ITextComponent>();
+		List<ITextComponent> str = new LinkedList<>();
 		
 		str.add(new TranslationTextComponent("%s %s %s",
 				new TranslationTextComponent("msg.atmanal.atmtype"),
@@ -96,30 +120,46 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public boolean onComponentAdded(World world, ItemStack armorStack) {
+	public boolean onComponentAdded(World world, @Nonnull ItemStack armorStack) {
 		return true;
 	}
 
 	@Override
-	public void onComponentRemoved(World world, ItemStack armorStack) {
+	public void onComponentRemoved(World world, @Nonnull ItemStack armorStack) {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void onArmorDamaged(LivingEntity entity, ItemStack armorStack,
 			ItemStack componentStack, DamageSource source, int damage) {
+=======
+	public void onArmorDamaged(EntityLivingBase entity, @Nonnull ItemStack armorStack,
+							   @Nonnull ItemStack componentStack, DamageSource source, int damage) {
+>>>>>>> origin/feature/nuclearthermalrockets
 
 	}
 
 	@Override
+<<<<<<< HEAD
 	public boolean isAllowedInSlot(ItemStack componentStack, EquipmentSlotType targetSlot) {
 		return targetSlot == EquipmentSlotType.HEAD;
+=======
+	public boolean isAllowedInSlot(@Nonnull ItemStack componentStack, EntityEquipmentSlot targetSlot) {
+		return targetSlot == EntityEquipmentSlot.HEAD;
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 	
 	
 	@OnlyIn(value=Dist.CLIENT)
 	@Override
+<<<<<<< HEAD
 	public void renderScreen(MatrixStack matrix, ItemStack componentStack, List<ItemStack> modules,
 			RenderGameOverlayEvent event, Screen gui) {
+=======
+	@SideOnly(Side.CLIENT)
+	public void renderScreen(@Nonnull ItemStack componentStack, List<ItemStack> modules,
+			RenderGameOverlayEvent event, Gui gui) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		
 		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
 		
@@ -136,7 +176,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 		GL11.glPushMatrix();
 		Minecraft.getInstance().getTextureManager().bindTexture(eyeCandySpinner);
 		GL11.glTranslatef(screenX + 12, screenY + 8, 0);
-		GL11.glRotatef(( System.currentTimeMillis() / 100 ) % 360, 0, 0, 1);
+		GL11.glRotatef(( System.currentTimeMillis() / 100f ) % 360, 0, 0, 1);
 		
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		
@@ -155,7 +195,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public ResourceIcon getComponentIcon(ItemStack armorStack) {
+	public ResourceIcon getComponentIcon(@Nonnull ItemStack armorStack) {
 		return null;
 	}
 

@@ -34,6 +34,7 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastructure,  ITickableTileEntity,  IButtonInventory, INetworkMachine, IGuiCallback {
@@ -44,8 +45,8 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	ModuleRedstoneOutputButton inputRedstoneControl;
 	RedstoneState inputstate;
 	ModuleBlockSideSelector sideSelectorModule;
-	
-	private static int ALLOW_REDSTONEOUT = 2;
+
+	private final static int ALLOW_REDSTONEOUT = 2;
 
 	public TileRocketFluidLoader(TileEntityType<?> type) {
 		super(type);
@@ -54,7 +55,11 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 		inputRedstoneControl = new ModuleRedstoneOutputButton(174, 32, "", this, LibVulpes.proxy.getLocalizedString("msg.fluidloader.allowloading"));
 		inputstate = RedstoneState.OFF;
 		inputRedstoneControl.setRedstoneState(inputstate);
+<<<<<<< HEAD
 		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, new String[] {LibVulpes.proxy.getLocalizedString("msg.fluidloader.none"), LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowredstoneoutput"), LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowredstoneinput")});
+=======
+		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, LibVulpes.proxy.getLocalizedString("msg.fluidLoader.none"), LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowredstoneoutput"), LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowredstoneinput"));
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	public TileRocketFluidLoader(TileEntityType<?> type, int size) {
@@ -64,6 +69,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 		inputRedstoneControl = new ModuleRedstoneOutputButton(174, 32, "", this, LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowloading"));
 		inputstate = RedstoneState.OFF;
 		inputRedstoneControl.setRedstoneState(inputstate);
+<<<<<<< HEAD
 		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, new String[] {LibVulpes.proxy.getLocalizedString("msg.fluidloader.none"), LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowredstoneoutput"), LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowredstoneinput")});
 	}
 	
@@ -75,6 +81,9 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	public TileRocketFluidLoader(int size)
 	{
 		this(AdvancedRocketryTileEntityType.TILE_FLUID_LOADER, size);
+=======
+		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, LibVulpes.proxy.getLocalizedString("msg.fluidLoader.none"), LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowredstoneoutput"), LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowredstoneinput"));
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override
@@ -126,6 +135,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 				IFluidHandler handler = (IFluidHandler)tile;
 
 				//See if we have anything to fill because redstone output
+<<<<<<< HEAD
 				FluidStack stack = handler.drain(1, FluidAction.SIMULATE);
 				if(stack == null || handler.fill(stack, FluidAction.SIMULATE) > 0)
 					rocketContainsItems = true;
@@ -134,6 +144,16 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 					stack = fluidTank.drain(fluidTank.getCapacity(), FluidAction.SIMULATE);
 					if(stack != null && stack.getAmount() > 0)
 						fluidTank.drain(handler.fill(stack, FluidAction.EXECUTE), FluidAction.EXECUTE);
+=======
+				FluidStack fStack = handler.drain(1, false);
+				if(fStack == null || handler.fill(fStack, false) > 0)
+					rocketContainsItems = true;
+
+				if(isAllowToOperate) {
+					fStack = fluidTank.drain(fluidTank.getCapacity(), false);
+					if(fStack != null && fStack.amount > 0)
+						fluidTank.drain(handler.fill(fStack, true), true);
+>>>>>>> origin/feature/nuclearthermalrockets
 				}
 			}
 
@@ -174,8 +194,13 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	}
 
 	@Override
+<<<<<<< HEAD
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
+=======
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
+							   EntityPlayer player, World world) {
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		ItemLinker.setMasterCoords(item, this.getPos());
 
@@ -190,8 +215,13 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	}
 
 	@Override
+<<<<<<< HEAD
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
+=======
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
+			EntityPlayer player, World world) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		if(player.world.isRemote)
 			Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessage(new TranslationTextComponent("msg.linker.error.firstmachine"));
 		return false;
@@ -227,7 +257,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	}
 
 	@Override
-	public boolean linkMission(IMission misson) {
+	public boolean linkMission(IMission mission) {
 		return false;
 	}
 
@@ -291,7 +321,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 		nbt.putByte("state", in.readByte());
 		nbt.putByte("inputstate", in.readByte());
 
-		byte bytes[] = new byte[6];
+		byte[] bytes = new byte[6];
 		for(int i = 0; i < 6; i++)
 			bytes[i] = in.readByte();
 		nbt.putByteArray("bytes", bytes);
@@ -303,7 +333,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 		state = RedstoneState.values()[nbt.getByte("state")];
 		inputstate = RedstoneState.values()[nbt.getByte("inputstate")];
 
-		byte bytes[] = nbt.getByteArray("bytes");
+		byte[] bytes = nbt.getByteArray("bytes");
 		for(int i = 0; i < 6; i++)
 			sideSelectorModule.setStateForSide(i, bytes[i]);
 

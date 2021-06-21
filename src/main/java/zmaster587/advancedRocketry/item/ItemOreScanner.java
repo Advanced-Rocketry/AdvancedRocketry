@@ -27,6 +27,8 @@ import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,8 +40,7 @@ public class ItemOreScanner extends Item {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, World player,
-			List list, ITooltipFlag arg5) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag arg5) {
 		
 		SatelliteBase sat = DimensionManager.getInstance().getSatellite(this.getSatelliteID(stack));
 		
@@ -62,10 +63,17 @@ public class ItemOreScanner extends Item {
 		super.addInformation(stack, player, list, arg5);
 	}
 	
+<<<<<<< HEAD
 	public void setSatelliteID(ItemStack stack, long id) {
 		CompoundNBT nbt;
 		if(!stack.hasTag())
 			nbt = new CompoundNBT();
+=======
+	public void setSatelliteID(@Nonnull ItemStack stack, long id) {
+		NBTTagCompound nbt;
+		if(!stack.hasTagCompound())
+			nbt = new NBTTagCompound();
+>>>>>>> origin/feature/nuclearthermalrockets
 		else
 			nbt = stack.getTag();
 		
@@ -73,9 +81,15 @@ public class ItemOreScanner extends Item {
 		stack.setTag(nbt);
 	}
 
+<<<<<<< HEAD
 	public long getSatelliteID(ItemStack stack) {
 		CompoundNBT nbt;
 		if(!stack.hasTag())
+=======
+	public long getSatelliteID(@Nonnull ItemStack stack) {
+		NBTTagCompound nbt;
+		if(!stack.hasTagCompound())
+>>>>>>> origin/feature/nuclearthermalrockets
 			return -1;
 		
 		nbt = stack.getTag();
@@ -84,7 +98,13 @@ public class ItemOreScanner extends Item {
 	}
 	
 	@Override
+<<<<<<< HEAD
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand) {
+=======
+	@ParametersAreNonnullByDefault
+	@Nonnull
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		ItemStack stack = playerIn.getHeldItem(hand);
 		if(!playerIn.world.isRemote && !stack.isEmpty())
 		{
@@ -92,20 +112,34 @@ public class ItemOreScanner extends Item {
 			
 			SatelliteBase satellite = DimensionManager.getInstance().getSatellite(satelliteId);
 			
+<<<<<<< HEAD
 			if(satellite != null && (satellite instanceof SatelliteOreMapping) && satellite.getDimensionId().get() == ZUtils.getDimensionIdentifier(worldIn))
 				satellite.performAction(playerIn, worldIn, new BlockPos(playerIn.getPositionVec()));
+=======
+			if(satellite instanceof SatelliteOreMapping && satellite.getDimensionId() == worldIn.provider.getDimension())
+				playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, playerIn.getPosition().getX(), (int)getSatelliteID(stack), playerIn.getPosition().getZ());
+
+>>>>>>> origin/feature/nuclearthermalrockets
 		}
 			
 		return super.onItemRightClick(worldIn, playerIn, hand);
 	}
 	
 	@Override
+<<<<<<< HEAD
 	public ActionResultType onItemUse(ItemUseContext context) {
 		PlayerEntity playerIn = context.getPlayer();
 		Hand hand = context.getHand();
 		World worldIn = context.getWorld();
 		
 		if(!playerIn.world.isRemote && hand == Hand.MAIN_HAND)
+=======
+	@Nonnull
+	public EnumActionResult onItemUse(EntityPlayer playerIn,
+			World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
+			float hitX, float hitY, float hitZ) {
+		if(!playerIn.world.isRemote && hand == EnumHand.MAIN_HAND)
+>>>>>>> origin/feature/nuclearthermalrockets
 		{
 			ItemStack stack = playerIn.getHeldItem(hand);
 			if(!playerIn.world.isRemote && !stack.isEmpty())
@@ -114,12 +148,21 @@ public class ItemOreScanner extends Item {
 				
 				SatelliteBase satellite = DimensionManager.getInstance().getSatellite(satelliteId);
 				
+<<<<<<< HEAD
 				if(satellite != null && (satellite instanceof SatelliteOreMapping) && satellite.getDimensionId().get() == ZUtils.getDimensionIdentifier(worldIn))
 					satellite.performAction(playerIn, worldIn, new BlockPos(playerIn.getPositionVec()));
 
 			}
 		}
 		return super.onItemUse(context);
+=======
+				if(satellite instanceof SatelliteOreMapping && satellite.getDimensionId() == worldIn.provider.getDimension())
+					playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, playerIn.getPosition().getX(), (int)getSatelliteID(stack), playerIn.getPosition().getZ());
+
+			}
+		}
+		return super.onItemUse(playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 
@@ -127,9 +170,15 @@ public class ItemOreScanner extends Item {
 		satellite.performAction(player, world, pos);
 	}
 
+<<<<<<< HEAD
 	
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+=======
+	@Override
+	public List<ModuleBase> getModules(int id, EntityPlayer player) {
+		List<ModuleBase> modules = new LinkedList<>();
+>>>>>>> origin/feature/nuclearthermalrockets
 		//modules.add(new ModuleOreMapper(0, 0));
 		return modules;
 	}

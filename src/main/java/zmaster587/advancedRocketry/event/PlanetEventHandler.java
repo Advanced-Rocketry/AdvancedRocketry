@@ -1,9 +1,13 @@
 package zmaster587.advancedRocketry.event;
 
+<<<<<<< HEAD
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PortalInfo;
 import net.minecraft.block.WallTorchBlock;
+=======
+import net.minecraft.block.BlockTorch;
+>>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -15,6 +19,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+<<<<<<< HEAD
 import net.minecraft.item.Items;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.util.Direction;
@@ -26,6 +31,11 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.IWorld;
+=======
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentString;
+>>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
@@ -53,7 +63,7 @@ import net.minecraftforge.fml.network.NetworkEvent.ServerCustomPayloadLoginEvent
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.achievements.ARAdvancements;
+import zmaster587.advancedRocketry.advancements.ARAdvancements;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
@@ -64,13 +74,18 @@ import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.block.BlockTorchUnlitWall;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.network.PacketConfigSync;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
+<<<<<<< HEAD
 import zmaster587.advancedRocketry.util.GravityHandler;
+=======
+import zmaster587.advancedRocketry.util.BiomeHandler;
+>>>>>>> origin/feature/nuclearthermalrockets
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
@@ -88,13 +103,39 @@ public class PlanetEventHandler {
 
 	public static long time = 0;
 	private static long endTime, duration;
-	private static List<TransitionEntity> transitionMap = new LinkedList<TransitionEntity>();
+	private static List<TransitionEntity> transitionMap = new LinkedList<>();
 
 	public static void addDelayedTransition(TransitionEntity entity) {
 		transitionMap.add(entity);
 	}
 
 	@SubscribeEvent
+<<<<<<< HEAD
+=======
+	public void onCrafting(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent event) {
+		if(!event.crafting.isEmpty()) {
+			Item item = event.crafting.getItem();//TODO Advancments for crafting.
+			//			if(item == LibVulpesItems.itemHoloProjector) 
+			//				event.player.addStat(ARAchivements.holographic);
+			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockRollingMachine))
+			//				event.player.addStat(ARAchivements.rollin);
+			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystallizer))
+			//				event.player.addStat(ARAchivements.crystalline);
+			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockLathe))
+			//				event.player.addStat(ARAchivements.spinDoctor);
+			//			else if(item ==Item.getItemFromBlock(AdvancedRocketryBlocks.blockElectrolyser))
+			//				event.player.addStat(ARAchivements.electrifying);
+			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockArcFurnace))
+			//				event.player.addStat(ARAchivements.feelTheHeat);
+			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockWarpCore))
+			//				event.player.addStat(ARAchivements.warp);
+			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlatePress))
+			//				event.player.addStat(ARAchivements.blockPresser);
+		}
+	}
+
+	@SubscribeEvent
+>>>>>>> origin/feature/nuclearthermalrockets
 	public void CheckSpawn(LivingSpawnEvent.CheckSpawn event)
 	{
 		IWorld world = event.getWorld();
@@ -144,7 +185,22 @@ public class PlanetEventHandler {
 				event.setResult(Result.DEFAULT);
 			}
 		}
+<<<<<<< HEAD
 	}*/
+=======
+	}
+
+	@SubscribeEvent
+	public void onPickup(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent event) {
+		if(event.getOriginalEntity() != null && !event.getOriginalEntity().getItem().isEmpty()) {
+
+			//TODO pickup advancement
+			//			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.getOriginalEntity().getEntityItem());
+			//			if(mat != null && mat.getUnlocalizedName().contains("Dilithium"))
+			//				event.player.addStat(ARAchievements.dilithiumCrystals);
+		}
+	}
+>>>>>>> origin/feature/nuclearthermalrockets
 
 	//Handle gravity
 	@SubscribeEvent
@@ -163,6 +219,7 @@ public class PlanetEventHandler {
 					event.getEntity().getPositionVec().squareDistanceTo(2347,80, 67) < 512 ) {
 				ARAdvancements.triggerAchievement(ARAdvancements.WENT_TO_THE_MOON, (ServerPlayerEntity)event.getEntity());
 			}
+<<<<<<< HEAD
 			if(event.getEntity() instanceof PlayerEntity && ZUtils.getDimensionIdentifier(event.getEntity().world).equals(ARConfiguration.getCurrentConfig().spaceDimId) && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.getEntity().getPosition()) == null) {
 				double distance = 0;
 				HashedBlockPosition teleportPosition = null;
@@ -174,6 +231,20 @@ public class PlanetEventHandler {
 							distance = distanceTo;
 							teleportPosition = station.getSpawnLocation();
 						}
+=======
+		}
+
+		if(event.getEntity() instanceof EntityPlayer && event.getEntity().world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.getEntity().getPosition()) == null && !(event.getEntity().getRidingEntity() instanceof EntityRocket)) {
+			double distance = 0;
+			HashedBlockPosition teleportPosition = null;
+			for (ISpaceObject spaceObject : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
+				if (spaceObject instanceof SpaceStationObject) {
+					SpaceStationObject station = ((SpaceStationObject) spaceObject);
+					double distanceTo = event.getEntity().getPosition().getDistance(station.getSpawnLocation().x, station.getSpawnLocation().y, station.getSpawnLocation().z);
+					if (distanceTo > distance) {
+						distance = distanceTo;
+						teleportPosition = station.getSpawnLocation();
+>>>>>>> origin/feature/nuclearthermalrockets
 					}
 				}
 				if (teleportPosition != null) {
@@ -229,14 +300,24 @@ public class PlanetEventHandler {
 		if(!event.getWorld().isRemote && direction != null  && event.getPlayer() != null  && AtmosphereHandler.getOxygenHandler(event.getWorld()) != null &&
 				!AtmosphereHandler.getOxygenHandler(event.getWorld()).getAtmosphereType(event.getPos().offset(direction)).allowsCombustion()) {
 
+<<<<<<< HEAD
 			if(event.getPlayer().getHeldItem(event.getHand()) != null) {
 				if(event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD )
+=======
+			if(!event.getEntityPlayer().getHeldItem(event.getHand()).isEmpty()) {
+				if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD )
+>>>>>>> origin/feature/nuclearthermalrockets
 					event.setCanceled(true);
 			}
 		}
 
+<<<<<<< HEAD
 		if(!event.getWorld().isRemote && event.getItemStack() != null && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
 			ARAdvancements.triggerAchievement(ARAdvancements.BEER, (ServerPlayerEntity)event.getEntity());
+=======
+		if(!event.getWorld().isRemote && !event.getItemStack().isEmpty() && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
+			ARAdvancements.BEER.trigger((EntityPlayerMP) event.getEntityPlayer());
+>>>>>>> origin/feature/nuclearthermalrockets
 		}
 	}
 
@@ -264,7 +345,7 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void tick(ServerTickEvent event) {
 		//Tick satellites
-		if(event.phase == event.phase.END) {
+		if(event.phase == TickEvent.Phase.END) {
 			DimensionManager.getInstance().tickDimensions();
 			time++;
 
@@ -298,7 +379,7 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	@OnlyIn(value=Dist.CLIENT)
 	public void tickClient(TickEvent.ClientTickEvent event) {
-		if(event.phase == event.phase.END)
+		if(event.phase == TickEvent.Phase.END)
 			DimensionManager.getInstance().tickDimensionsClient();
 	}
 
@@ -319,8 +400,13 @@ public class PlanetEventHandler {
 			PacketHandler.sendToPlayer(new PacketDimInfo(i, DimensionManager.getInstance().getDimensionProperties(i)), mgr);
 		}
 
+<<<<<<< HEAD
 		for(ISpaceObject obj : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
 			PacketHandler.sendToPlayer(new PacketSpaceStationInfo(obj.getId(), obj), mgr);
+=======
+		for(ISpaceObject spaceObject : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
+			PacketHandler.sendToDispatcher(new PacketSpaceStationInfo(spaceObject.getId(), spaceObject), event.getManager());
+>>>>>>> origin/feature/nuclearthermalrockets
 		}
 	}
 
@@ -362,10 +448,20 @@ public class PlanetEventHandler {
 		World world = entity.world;
 		BlockState state = event.getInfo().getBlockAtCamera();
 
+<<<<<<< HEAD
 		if(state.getMaterial() == Material.WATER)
 			return;
 
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world);
+=======
+		IBlockState state = ActiveRenderInfo.getBlockStateAtEntityViewpoint(event.getEntity().world, event.getEntity(), (float)event.getRenderPartialTicks());
+
+		if(state.getMaterial() == Material.WATER)
+			return;
+
+
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getEntity().dimension);
+>>>>>>> origin/feature/nuclearthermalrockets
 		if(properties != null) {
 			float fog = Math.min(properties.getAtmosphereDensityAtHeight(entity.getPosY()), 200);
 
@@ -429,7 +525,11 @@ public class PlanetEventHandler {
 	@OnlyIn(value=Dist.CLIENT)
 	public void fogColor(RenderFogEvent event) {
 
+<<<<<<< HEAD
 		if(event.getInfo().getRenderViewEntity().getEntityWorld() == null || event.getInfo().getRenderViewEntity().getEntityWorld() instanceof WorldDummy)
+=======
+		if(event.getFogMode() == -1) {
+>>>>>>> origin/feature/nuclearthermalrockets
 			return;
 
 
@@ -448,7 +548,7 @@ public class PlanetEventHandler {
 			int atmosphere = Math.min(properties.getAtmosphereDensity(), 200);
 			ItemStack armor = Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD);
 
-			if(armor != null && armor.getItem() instanceof IModularArmor) {
+			if(!armor.isEmpty() && armor.getItem() instanceof IModularArmor) {
 				for(ItemStack i : ((IModularArmor)armor.getItem()).getComponents(armor)) {
 					if(i.isItemEqual(component)) {
 						atmosphere = Math.min(atmosphere, 100);

@@ -20,7 +20,7 @@ import java.util.LinkedList;
 
 public class BlockSeal extends Block {
 
-	private HashMap<HashedBlockPosition,BlobHandler> blobList = new HashMap<HashedBlockPosition,BlobHandler>();
+	private HashMap<HashedBlockPosition,BlobHandler> blobList = new HashMap<>();
 	
 	public BlockSeal(Properties materialIn) {
 		super(materialIn);
@@ -126,7 +126,7 @@ public class BlockSeal extends Block {
 			blobList.put(hashPos, handler);
 			
 			AreaBlob blob = new AreaBlob(handler);
-			blob.addBlock(hashPos, new LinkedList<AreaBlob>());
+			blob.addBlock(hashPos, new LinkedList<>());
 			atmhandler.registerBlob(handler, pos, blob);
 			
 			return true;
@@ -144,7 +144,7 @@ public class BlockSeal extends Block {
 			blobList.put(hashPos, handler);
 			
 			AreaBlob blob = new AreaBlob(handler);
-			blob.addBlock(hashPos, new LinkedList<AreaBlob>());
+			blob.addBlock(hashPos, new LinkedList<>());
 			atmhandler.registerBlob(handler, pos, blob);
 			return true;
 		}

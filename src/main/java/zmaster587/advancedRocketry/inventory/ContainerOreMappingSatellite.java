@@ -21,6 +21,9 @@ import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class ContainerOreMappingSatellite extends Container {
 	
 	public static ContainerOreMappingSatellite createFromNetworkItem(int windowId, PlayerInventory invPlayer, PacketBuffer buf)
@@ -54,6 +57,7 @@ public class ContainerOreMappingSatellite extends Container {
 	}
 	
 	@Override
+	@Nonnull
 	public ItemStack slotClick(int slot, int dragType, ClickType clickTypeIn,
 			PlayerEntity player) {
 		//Check if slot exists
@@ -80,16 +84,25 @@ public class ContainerOreMappingSatellite extends Container {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public boolean canInteractWith(PlayerEntity p_75145_1_) {
+=======
+	public boolean canInteractWith(@Nullable EntityPlayer p_75145_1_) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		return true;
 	}
 
 	//int slot.. slot being taken from
 	@Override
+<<<<<<< HEAD
 	public ItemStack transferStackInSlot(PlayerEntity player, int p_82846_2_)
+=======
+	@Nonnull
+	public ItemStack transferStackInSlot(EntityPlayer player, int p_82846_2_)
+>>>>>>> origin/feature/nuclearthermalrockets
 	{
-		ItemStack itemstack = null;
-		Slot slot = (Slot)this.inventorySlots.get(p_82846_2_);
+		ItemStack itemstack = ItemStack.EMPTY;
+		Slot slot = this.inventorySlots.get(p_82846_2_);
 
 		if (slot != null && slot.getHasStack())
 		{
@@ -99,18 +112,18 @@ public class ContainerOreMappingSatellite extends Container {
 			//merges the item into player inventory since its in the tileEntity
 			if (p_82846_2_ <= 1) {
 				if (!this.mergeItemStack(stackInSlot, 0, 35, true)) {
-					return null;
+					return ItemStack.EMPTY;
 				}
 			}
 			//places it into the tileEntity is possible since its in the player inventory
 			else if (!this.mergeItemStack(stackInSlot, 0, 0, false)) {
-				return null;
+				return ItemStack.EMPTY;
 			}
 
 
 			if (stackInSlot.getCount() == 0)
 			{
-				slot.putStack((ItemStack)null);
+				slot.putStack(ItemStack.EMPTY);
 			}
 			else
 			{

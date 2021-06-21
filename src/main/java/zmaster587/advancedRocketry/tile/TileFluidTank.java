@@ -12,6 +12,8 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 
+import javax.annotation.Nonnull;
+
 public class TileFluidTank extends TileFluidHatch {
 
 	private long lastUpdateTime;
@@ -95,13 +97,19 @@ public class TileFluidTank extends TileFluidHatch {
 	public FluidStack drain(int maxDrain, FluidAction doDrain) {
 		IFluidHandler handler = this.getFluidTankInDirection(Direction.UP);
 
+<<<<<<< HEAD
 		FluidStack stack = null;
 		if(handler != null && handler.getFluidInTank(0) != null && 
+=======
+		FluidStack fStack = null;
+		if(handler != null && handler.getTankProperties()[0].getContents() != null && 
+>>>>>>> origin/feature/nuclearthermalrockets
 				fluidTank.getFluid() != null && fluidTank.getFluid().getFluid() ==
 				handler.getFluidInTank(0).getFluid()) {
 
-			stack = handler.drain(maxDrain, doDrain);
+			fStack = handler.drain(maxDrain, doDrain);
 		}
+<<<<<<< HEAD
 		if(stack != null)
 			return stack;
 
@@ -112,12 +120,20 @@ public class TileFluidTank extends TileFluidHatch {
 
 		
 		if(stack2 != null && doDrain.execute()) {
+=======
+		if(fStack != null)
+			return fStack;
+
+		FluidStack fStack2 = super.drain(maxDrain, doDrain);
+
+		if(fStack2 != null && doDrain) {
+>>>>>>> origin/feature/nuclearthermalrockets
 			fluidChanged = true;
 		}
 		checkForUpdate();
 		
 		
-		return stack2;
+		return fStack2;
 	}
 
 	@Override
@@ -138,11 +154,15 @@ public class TileFluidTank extends TileFluidHatch {
 		return null;
 	}
 	
-	private boolean canFill(FluidStack stack)
+	private boolean canFill(FluidStack fStack)
 	{
-		FluidStack stack2 = fluidTank.getFluid();
+		FluidStack fStack2 = fluidTank.getFluid();
 		
+<<<<<<< HEAD
 		return stack2.isEmpty() || (stack2.getFluid() == stack.getFluid());
+=======
+		return fStack2 == null || (fStack2.getFluid() == fStack.getFluid());
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override
@@ -159,7 +179,7 @@ public class TileFluidTank extends TileFluidHatch {
 	}
 
 	@Override
-	protected boolean useBucket(int slot, ItemStack stack) {
+	protected boolean useBucket(int slot, @Nonnull ItemStack stack) {
 		boolean bucketUsed = super.useBucket(slot, stack);
 
 		if(bucketUsed) {

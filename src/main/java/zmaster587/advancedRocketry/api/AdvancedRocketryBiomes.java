@@ -64,8 +64,8 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-
 import java.lang.reflect.Field;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -352,10 +352,10 @@ public class AdvancedRocketryBiomes {
 
 
 	private AdvancedRocketryBiomes() {
-		registeredBiomes = new ArrayList<Biome>();
-		registeredHighPressureBiomes = new LinkedList<Biome>();
-		blackListedBiomeIds = new ArrayList<ResourceLocation>();
-		registeredSingleBiome = new ArrayList<Biome>();
+		registeredBiomes = new ArrayList<>();
+		registeredHighPressureBiomes = new LinkedList<>();
+		blackListedBiomeIds = new ArrayList<>();
+		registeredSingleBiome = new ArrayList<>();
 	}
 
 	

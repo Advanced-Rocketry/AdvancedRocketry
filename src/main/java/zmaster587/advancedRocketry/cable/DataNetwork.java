@@ -19,7 +19,7 @@ public class DataNetwork extends CableNetwork  {
 
 		int id = random.nextInt();
 
-		while(usedIds.contains(id)){ id = random.nextInt(); };
+		while(usedIds.contains(id)){ id = random.nextInt(); }
 
 		DataNetwork net = new DataNetwork();
 
@@ -52,7 +52,7 @@ public class DataNetwork extends CableNetwork  {
 			
 			while(sinkItr.hasNext()) {
 				//Get tile and key
-				Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sinkItr.next();
+				Entry<TileEntity,Direction> obj = sinkItr.next();
 				IDataHandler dataHandlerSink = (IDataHandler)obj.getKey();
 
 				demand += dataHandlerSink.addData(amount, data, obj.getValue(), false);
@@ -60,7 +60,7 @@ public class DataNetwork extends CableNetwork  {
 			
 			while(sourceItr.hasNext()) {
 				//Get tile and key
-				Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sourceItr.next();
+				Entry<TileEntity,Direction> obj = sourceItr.next();
 				IDataHandler dataHandlerSink = (IDataHandler)obj.getKey();
 				
 				supply += dataHandlerSink.extractData(amount, data, obj.getValue(), false);
@@ -73,7 +73,7 @@ public class DataNetwork extends CableNetwork  {
 
 
 				//Get tile and key
-				Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sinkItr.next();
+				Entry<TileEntity,Direction> obj = sinkItr.next();
 				IDataHandler dataHandlerSink = (IDataHandler)obj.getKey();
 
 
@@ -85,7 +85,7 @@ public class DataNetwork extends CableNetwork  {
 
 
 				//Get tile and key
-				Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sourceItr.next();
+				Entry<TileEntity,Direction> obj = sourceItr.next();
 				IDataHandler dataHandlerSink = (IDataHandler)obj.getKey();
 
 				amountMoved -= dataHandlerSink.extractData(amountMoved, data, obj.getValue(), true);

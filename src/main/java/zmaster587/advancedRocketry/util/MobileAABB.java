@@ -185,16 +185,22 @@ public class MobileAABB extends AxisAlignedBB {
         }
 	}*/
 
+<<<<<<< HEAD
 	
 	/*public double calculateYOffset(AxisAlignedBB aabbIn, double var2) {
 		if (aabbIn.maxX > this.minX && aabbIn.minX < this.maxX)
 		{
 			if (aabbIn.maxZ > this.minZ && aabbIn.minZ < this.maxZ)
 			{
+=======
+	@Override
+	public double calculateYOffset(AxisAlignedBB aabbIn, double var2) {
+		if (aabbIn.maxX > this.minX && aabbIn.minX < this.maxX) {
+			if (aabbIn.maxZ > this.minZ && aabbIn.minZ < this.maxZ) {
+>>>>>>> origin/feature/nuclearthermalrockets
 				double d1;
 
-				if (var2 > 0.0D && aabbIn.maxY <= this.minY)
-				{
+				if (var2 > 0.0D && aabbIn.maxY <= this.minY) {
 
 					d1 = this.minY - aabbIn.maxY;
 
@@ -202,9 +208,7 @@ public class MobileAABB extends AxisAlignedBB {
 					{
 						var2 = d1;
 					}
-				}
-				else if(var2 > 0.0D && aabbIn.maxY < this.maxY)
-				{
+				} else if(var2 > 0.0D && aabbIn.maxY < this.maxY) {
 
 					double maxUp = 256;
 					for(int deltaX = (int) Math.floor(aabbIn.minX - this.minX ); deltaX <= Math.ceil(aabbIn.maxX - this.minX ); deltaX++) {
@@ -229,17 +233,14 @@ public class MobileAABB extends AxisAlignedBB {
 						var2 = d1;
 				}
 
-				if (var2 < 0.0D && aabbIn.minY >= this.maxY)
-				{
+				if (var2 < 0.0D && aabbIn.minY >= this.maxY) {
 					d1 = this.maxY - aabbIn.minY;
 
 					if (d1 > var2)
 					{
 						var2 = d1;
 					}
-				}
-				else if(var2 < 0.0D && aabbIn.minY > this.minY)
-				{
+				} else if(var2 < 0.0D && aabbIn.minY > this.minY) {
 
 					double maxUp = -256;
 					for(int deltaX = (int) Math.floor(aabbIn.minX - this.minX ); deltaX <= Math.ceil(aabbIn.maxX - this.minX ); deltaX++) {
@@ -265,17 +266,9 @@ public class MobileAABB extends AxisAlignedBB {
 						var2 = d1;
 				}
 
-				return var2;
-			}
-			else
-			{
-				return var2;
 			}
 		}
-		else
-		{
-			return var2;
-		}
+		return var2;
 	}
 
 	@Override

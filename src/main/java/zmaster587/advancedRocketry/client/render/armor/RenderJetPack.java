@@ -15,7 +15,7 @@ import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 
 public class RenderJetPack extends BipedModel {
 	static WavefrontObject model;
-	static ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/jetpack.png");;
+	static ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/jetpack.png");
 
 	BipedModel biped;
 	float scale;

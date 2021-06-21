@@ -9,6 +9,8 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
 
+import javax.annotation.Nonnull;
+
 public class CapabilitySpaceArmor {
 
 	@CapabilityInject(IProtectiveArmor.class)
@@ -32,6 +34,7 @@ public class CapabilitySpaceArmor {
 	public static void register() { CapabilityManager.INSTANCE.register(IProtectiveArmor.class, new Capability.IStorage<IProtectiveArmor>() 
 			{
 				@Override
+<<<<<<< HEAD
 				public INBT writeNBT(Capability<IProtectiveArmor> capability, IProtectiveArmor instance, Direction side) {
 					// TODO Auto-generated method stub
 					return null;
@@ -41,6 +44,10 @@ public class CapabilitySpaceArmor {
 						INBT nbt) {
 					// TODO Auto-generated method stub
 					
+=======
+				public boolean protectsFromSubstance(IAtmosphere atmosphere, @Nonnull ItemStack stack, boolean commitProtection) {
+					return false;
+>>>>>>> origin/feature/nuclearthermalrockets
 				}
 			}, CapabilitySpaceArmor::generateArmor );
 	}

@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+<<<<<<< HEAD
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
@@ -10,6 +11,11 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
+=======
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+>>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
@@ -30,9 +36,14 @@ public class BlockLinkedHorizontalTexture extends Block {
 	}
 
 	@Override
+<<<<<<< HEAD
 	protected void fillStateContainer(Builder<Block, net.minecraft.block.BlockState> builder) {
 		super.fillStateContainer(builder);
 		builder.add(TYPE);
+=======
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, TYPE);
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override
@@ -100,8 +111,13 @@ public class BlockLinkedHorizontalTexture extends Block {
 		
 		return this.getDefaultState().with(TYPE, IconNames.values()[state]);
 	}
+<<<<<<< HEAD
 
 	static enum IconNames implements IStringSerializable {
+=======
+	
+	enum IconNames implements IStringSerializable {
+>>>>>>> origin/feature/nuclearthermalrockets
 		ALLEDGE("all"),
 		NOTRIGHTEDGE("nredge"),
 		NOTTOPEDGE("ntedge"),

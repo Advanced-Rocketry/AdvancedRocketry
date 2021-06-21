@@ -36,16 +36,18 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumer;
 import zmaster587.libVulpes.util.INetworkMachine;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
 public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements INetworkMachine, IModularInventory, IButtonInventory, IDataInventory {
 
 
-	//ModuleText satelliteText;
-	ModuleSatellite moduleSatellite;
-	ModuleText moduleText;
-	DataStorage data;
+	//private ModuleText satelliteText;
+	private ModuleSatellite moduleSatellite;
+	private ModuleText moduleText;
+	private DataStorage data;
 
 	public TileSatelliteTerminal() {
 	super(AdvancedRocketryTileEntityType.TILE_SAT_CONTROL, 10000, 2);
@@ -57,7 +59,12 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 	}
 
 	@Override
+<<<<<<< HEAD
 	public int[] getSlotsForFace(Direction side) {
+=======
+	@Nonnull
+	public int[] getSlotsForFace(@Nullable EnumFacing side) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		return new int[0];
 	}
 
@@ -67,7 +74,7 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
 		return true;
 	}
 
@@ -116,7 +123,7 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
 		moduleSatellite.setSatellite(getSatelliteFromSlot(0));
 		updateInventoryInfo();
@@ -158,7 +165,7 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModulePower(18, 20, this.energy));
 		modules.add(new ModuleButton(116, 70, LibVulpes.proxy.getLocalizedString("msg.satctrlcenter.connect"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild).setAdditionalData(0));
 		modules.add(new ModuleButton(173, 3, "", this, TextureResources.buttonKill, LibVulpes.proxy.getLocalizedString("msg.satctrlcenter.destroysat"), 24, 24).setAdditionalData(1));
@@ -234,10 +241,10 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 	@Override
 	public void storeData(int id) {
 		if(!world.isRemote) {
-			ItemStack inv = getStackInSlot(1);
-			if(inv != null && inv.getItem() instanceof ItemData && inv.getCount() == 1) {
-				ItemData dataItem = (ItemData)inv.getItem();
-				data.removeData(dataItem.addData(inv, data.getData(), data.getDataType()), true);
+			ItemStack stack = getStackInSlot(1);
+			if(!stack.isEmpty() && stack.getItem() instanceof ItemData && stack.getCount() == 1) {
+				ItemData dataItem = (ItemData)stack.getItem();
+				data.removeData(dataItem.addData(stack, data.getData(), data.getDataType()), true);
 			}
 		}
 		else {
@@ -250,7 +257,11 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 		//TODO
 		
 		SatelliteBase satellite = getSatelliteFromSlot(0);
+<<<<<<< HEAD
 		if(satellite != null && satellite instanceof SatelliteData && PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(satellite.getDimensionId().get(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
+=======
+		if(satellite instanceof SatelliteData && PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
+>>>>>>> origin/feature/nuclearthermalrockets
 				satellite.performAction(null, world, pos);
 		}
 		

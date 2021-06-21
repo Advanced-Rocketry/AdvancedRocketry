@@ -15,6 +15,7 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.inventory.GuiHandler;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class BlockTileWithMultitooltip extends BlockTile {
@@ -24,10 +25,17 @@ public class BlockTileWithMultitooltip extends BlockTile {
 	}
 
 	@Override
+<<<<<<< HEAD
 	@OnlyIn(value=Dist.CLIENT)
 	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
 			ITooltipFlag flagIn) {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + LibVulpes.proxy.getLocalizedString("machine.tooltip.multiblock")));
+=======
+	@SideOnly(Side.CLIENT)
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+		super.addInformation(stack, player, tooltip, advanced);
+		tooltip.add(ChatFormatting.DARK_GRAY + "" + ChatFormatting.ITALIC + LibVulpes.proxy.getLocalizedString("machine.tooltip.multiblock"));
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 }

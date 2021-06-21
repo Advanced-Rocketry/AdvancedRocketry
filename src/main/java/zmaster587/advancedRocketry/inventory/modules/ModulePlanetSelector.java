@@ -41,7 +41,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 
 	//Closest thing i can get to a struct :/
-	private class PlanetRenderProperties {
+	private static class PlanetRenderProperties {
 		int radius;
 		int posX;
 		int posY;
@@ -58,10 +58,16 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	ModuleButton btnUpLevel, btnConfirm, btnPlanetList;
 
 	private static final int size = 2000;
+<<<<<<< HEAD
 	private ResourceLocation topLevel;
 	ISelectionNotify hostTile;
 	private ResourceLocation currentSystem;
 	ResourceLocation selectedSystem;
+=======
+	private int topLevel;
+	private ISelectionNotify hostTile;
+	private int currentSystem, selectedSystem;
+>>>>>>> origin/feature/nuclearthermalrockets
 	private double zoom;
 	private boolean currentSystemChanged = false;
 	//If the current view is a starmap
@@ -70,9 +76,15 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 	private ModuleContainerPan clickablePlanetList;
 	private boolean allowStarSelection;
 
+<<<<<<< HEAD
 	private HashMap<ResourceLocation, PlanetRenderProperties> renderPropertiesMap;
 	PlanetRenderProperties currentlySelectedPlanet;
 	IPlanetDefiner planetDefiner;
+=======
+	private HashMap<Integer, PlanetRenderProperties> renderPropertiesMap;
+	private PlanetRenderProperties currentlySelectedPlanet;
+	private IPlanetDefiner planetDefiner;
+>>>>>>> origin/feature/nuclearthermalrockets
 
 	public ModulePlanetSelector(ResourceLocation planetId, ResourceLocation backdrop, ISelectionNotify tile, boolean star) {
 		this(planetId, backdrop, tile, null, star);
@@ -85,10 +97,17 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		int center = size/2;
 		zoom = 1.0;
 
+<<<<<<< HEAD
 		planetList = new ArrayList<ModuleButton>();
 		moduleList = new ArrayList<ModuleBase>();
 		staticModuleList = new ArrayList<ModuleBase>();
 		renderPropertiesMap = new HashMap<ResourceLocation, PlanetRenderProperties>();
+=======
+		planetList = new ArrayList<>();
+		moduleList = new ArrayList<>();
+		staticModuleList = new ArrayList<>();
+		renderPropertiesMap = new HashMap<>();
+>>>>>>> origin/feature/nuclearthermalrockets
 		currentlySelectedPlanet = new PlanetRenderProperties();
 		currentSystem = Constants.INVALID_STAR;
 		selectedSystem = Constants.INVALID_PLANET;
@@ -168,7 +187,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			ModuleButton button;
 
 			if(star.getSubStars() != null && !star.getSubStars().isEmpty()) {
-				float phaseInc = 360/star.getSubStars().size();
+				float phaseInc = 360f / star.getSubStars().size();
 				float phase = 0;
 				for(StellarBody star2 : star.getSubStars()) {
 					displaySize = (int)(planetSizeMultiplier*star2.getDisplayRadius());
@@ -209,7 +228,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		ModuleButton button;
 
 		if(star.getSubStars() != null && !star.getSubStars().isEmpty()) {
-			float phaseInc = 360/star.getSubStars().size();
+			float phaseInc = 360f / star.getSubStars().size();
 			float phase = 0;
 			for(StellarBody star2 : star.getSubStars()) {
 				displaySize = (int)(planetSizeMultiplier*star2.getDisplayRadius());
@@ -335,9 +354,9 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		int offsetY = -currentPosY;
 		setOffset2(0,0);
 		for(int i = 0; i< planetList.size(); i++) {
-			ModuleBase module = planetList.get(i);
+			ModuleButton module = planetList.get(i);
 			if(planetList.contains(module))
-				this.buttonList.remove(((ModuleButton)module).button);
+				this.buttonList.remove(module.button);
 		}
 
 		this.moduleList.removeAll(planetList);
@@ -349,10 +368,14 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 				renderPlanetarySystem(properties, size/2, size/2, 1f,3f*properties.getPathLengthToStar());
 			}
 			else
+<<<<<<< HEAD
 				renderStarSystem(DimensionManager.getInstance().getStar(currentSystem), size/2, size/2, 1f*(float) zoom, (float)zoom*.5f);
+=======
+				renderStarSystem(DimensionManager.getInstance().getStar(currentSystem - Constants.STAR_ID_OFFSET), size/2, size/2, (float) zoom, (float)zoom*.5f);
+>>>>>>> origin/feature/nuclearthermalrockets
 		}
 		else
-			renderGalaxyMap(DimensionManager.getInstance(), size/2, size/2, 1f*(float) zoom, (float)zoom*.25f);
+			renderGalaxyMap(DimensionManager.getInstance(), size/2, size/2, (float) zoom, (float)zoom*.25f);
 
 
 		int x = currentPosX - size/2, y = currentPosY - size/2;
@@ -401,7 +424,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 	@Override
 	protected void moveContainerInterior(int deltaX, int deltaY) {
-		super.moveContainerInterior((int)(deltaX), (int)(deltaY));
+		super.moveContainerInterior(deltaX, deltaY);
 	}
 
 	@Override
@@ -426,8 +449,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		//Render orbits
 		if(!stellarView) {
 			for(int ii = 1; ii < 10; ii++) {
-				int radius = ii*80;
-				float x2 = radius;
+				float x2 /*aka radius*/ = ii*80;
 				float y2 = 0;
 				float t;
 				GL11.glPushMatrix();
@@ -465,11 +487,11 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			GL11.glPushMatrix();
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			float radius = currentlySelectedPlanet.radius/2;
+			float radius = currentlySelectedPlanet.radius / 2f;
 
 			if(renderPropertiesMap.containsKey(selectedSystem)) {
 				PlanetRenderProperties base = renderPropertiesMap.get(selectedSystem);
-				GL11.glTranslatef(base.posX + currentPosX + base.radius/2, base.posY + currentPosY + base.radius/2, 0);
+				GL11.glTranslatef(base.posX + currentPosX + base.radius/ 2f, base.posY + currentPosY + base.radius/ 2f, 0);
 			}
 			else 
 				GL11.glTranslatef(currentlySelectedPlanet.posX + currentPosX + radius, currentlySelectedPlanet.posY  + currentPosY + radius, 0);
@@ -556,15 +578,25 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		}
 	}
 
+<<<<<<< HEAD
 	@OnlyIn(value=Dist.CLIENT)
 	private void refreshSideBar(boolean planetChanged, ResourceLocation selectedPlanet) {
 		List<ModuleBase> list2 = new LinkedList<ModuleBase>();
+=======
+	@SideOnly(Side.CLIENT)
+	private void refreshSideBar(boolean planetChanged, int selectedPlanet) {
+		List<ModuleBase> list2 = new LinkedList<>();
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		if(!stellarView) {
 			if(!DimensionManager.getInstance().isStar(currentSystem)) {
 				DimensionProperties parent = DimensionManager.getInstance().getDimensionProperties(currentSystem);
 
+<<<<<<< HEAD
 				List<ResourceLocation> propertyList = new LinkedList<ResourceLocation>(parent.getChildPlanets());
+=======
+				List<Integer> propertyList = new LinkedList<>(parent.getChildPlanets());
+>>>>>>> origin/feature/nuclearthermalrockets
 				propertyList.add(parent.getId());
 				int i = 0;
 				for( ResourceLocation childId :  propertyList) 
@@ -634,7 +666,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			offY = clickablePlanetList.getScrollY();
 		}
 
-		clickablePlanetList = new ModuleContainerPan(0, 128, list2, new LinkedList<ModuleBase>(), null, 512, 256, 0, 0, 258, 8192);
+		clickablePlanetList = new ModuleContainerPan(0, 128, list2, new LinkedList<>(), null, 512, 256, 0, 0, 258, 8192);
 		staticModuleList.add(clickablePlanetList);
 		clickablePlanetList.addButtons(0, 0);
 

@@ -12,15 +12,15 @@ import java.util.Set;
 
 public class AreaBlob {
 	//Graph containing the acutal area enclosed
-	protected AdjacencyGraph<HashedBlockPosition> graph;
+	protected final AdjacencyGraph<HashedBlockPosition> graph;
 	//Object to call back to when events happen, usually a tileentity
 	protected IBlobHandler blobHandler;
 	//Data stored by this blob
-	Object data;
+	private Object data;
 
 	public AreaBlob(IBlobHandler blobHandler) {
 		this.blobHandler = blobHandler;
-		graph = new AdjacencyGraph<HashedBlockPosition>();
+		graph = new AdjacencyGraph<>();
 		data = null;
 	}
 
@@ -74,7 +74,7 @@ public class AreaBlob {
 	 * @return list containing valid adjacent blocks
 	 */
 	protected HashSet<HashedBlockPosition> getPositionsToAdd(HashedBlockPosition blockPos) {
-		HashSet<HashedBlockPosition> set = new HashSet<HashedBlockPosition>();
+		HashSet<HashedBlockPosition> set = new HashSet<>();
 		
 		for(Direction direction : Direction.values()) {
 			
@@ -91,7 +91,7 @@ public class AreaBlob {
 	 * @return true if the block exists in the blob
 	 */
 	public boolean contains(HashedBlockPosition position) {
-		boolean contains = false;
+		boolean contains;
 		
 		//synchronized (graph) {
 			contains = graph.contains(position);
@@ -121,9 +121,7 @@ public class AreaBlob {
 
 	/**
 	 * Removes the block at the given coords for this blob
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param blockPos
 	 */
 	public void removeBlock(HashedBlockPosition blockPos) {
 		//HashedBlockPosition blockPos = new HashedBlockPosition(x, y, z);

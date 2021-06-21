@@ -13,7 +13,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 public class GroupObject
 {
     public String name;
-    public ArrayList<Face> faces = new ArrayList<Face>();
+    public ArrayList<Face> faces = new ArrayList<>();
     public int glDrawingMode;
     public VertexFormat drawMode;
 

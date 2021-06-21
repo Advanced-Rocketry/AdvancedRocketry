@@ -45,6 +45,7 @@ import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,7 +61,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 		inventory.setCanInsertSlot(0, true);
 		inventory.setCanExtractSlot(0, true);
 		MinecraftForge.EVENT_BUS.register(this);
-		blockPos = new LinkedList<HashedBlockPosition>();
+		blockPos = new LinkedList<>();
 		moduleNameTextbox = new ModuleTextBox(this, 40, 30, 60, 12, 9);
 		name = "";
 	}
@@ -99,8 +100,13 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	@Override
+<<<<<<< HEAD
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
+=======
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
+			EntityPlayer player, World world) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		ItemLinker.setMasterCoords(item, getPos());
 		ItemLinker.setDimId(item, ZUtils.getDimensionIdentifier(world));
 		return true;
@@ -112,8 +118,13 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	@Override
+<<<<<<< HEAD
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
+=======
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
+			EntityPlayer player, World world) {
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		TileEntity tile = world.getTileEntity(ItemLinker.getMasterCoords(item));
 
@@ -211,7 +222,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 				AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
 				List<EntityRocketBase> rockets = world.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 
-				if(rockets != null && !rockets.isEmpty())
+				if(!rockets.isEmpty())
 					((SpaceStationObject)spaceObj).setPadStatus(pos, true);
 			}
 		}
@@ -236,7 +247,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
 
 		if(!stack.isEmpty()) {
@@ -272,19 +283,19 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
 		return stack.getItem() == LibVulpesItems.itemLinker;
 	}
 
 	public List<IInfrastructure> getConnectedInfrastructure() {
-		List<IInfrastructure> infrastructure = new LinkedList<IInfrastructure>();
+		List<IInfrastructure> infrastructure = new LinkedList<>();
 
 		Iterator<HashedBlockPosition> iter = blockPos.iterator();
 
 		while(iter.hasNext()) {
 			HashedBlockPosition position = iter.next();
 			TileEntity tile = world.getTileEntity(position.getBlockPos());
-			if((tile = world.getTileEntity(position.getBlockPos())) instanceof IInfrastructure) {
+			if(tile instanceof IInfrastructure) {
 				infrastructure.add((IInfrastructure)tile);
 			}
 			else
@@ -360,8 +371,13 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	public void read(BlockState state, CompoundNBT nbt) {
 		super.read(state, nbt);
 		blockPos.clear();
+<<<<<<< HEAD
 		if(nbt.contains("infrastructureLocations")) {
 			int array[] = nbt.getIntArray("infrastructureLocations");
+=======
+		if(nbt.hasKey("infrastructureLocations")) {
+			int[] array = nbt.getIntArray("infrastructureLocations");
+>>>>>>> origin/feature/nuclearthermalrockets
 
 			for(int counter = 0; counter < array.length; counter += 3) {
 				blockPos.add(new HashedBlockPosition(array[counter], array[counter+1], array[counter+2]));

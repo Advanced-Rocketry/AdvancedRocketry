@@ -54,8 +54,9 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 	//Mostly vanilla code
 	//TODO: make usable on other planets
 	public RenderPlanetarySky() {
-		axis = new Vector3F<Float>(1f, 0f, 0f);
+		axis = new Vector3F<>(1f, 0f, 0f);
 
+<<<<<<< HEAD
 		this.generateStars();
 		this.generateSky();
 		this.generateSky2();
@@ -67,6 +68,34 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		if (this.glSkyList2 != null) {
 			this.glSkyList2.close();
+=======
+		this.starGLCallList = GLAllocation.generateDisplayLists(3);
+		GL11.glPushMatrix();
+		GL11.glNewList(this.starGLCallList, GL11.GL_COMPILE);
+		this.renderStars();
+		GL11.glEndList();
+		GL11.glPopMatrix();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+		this.glSkyList = this.starGLCallList + 1;
+		GL11.glNewList(this.glSkyList, GL11.GL_COMPILE);
+		byte b2 = 64;
+		int i = 256 / b2 + 2;
+		float f = 16.0F;
+		int j;
+		int k;
+
+		for (j = -b2 * i; j <= b2 * i; j += b2)
+		{
+			for (k = -b2 * i; k <= b2 * i; k += b2)
+			{
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+				buffer.pos(j, f, k).endVertex();
+				buffer.pos(j + b2, f, k).endVertex();
+				buffer.pos(j + b2, f, k + b2).endVertex();
+				buffer.pos(j, f, k + b2).endVertex();
+				Tessellator.getInstance().draw();
+			}
+>>>>>>> origin/feature/nuclearthermalrockets
 		}
 
 		this.glSkyList2 = new VertexBuffer(this.skyVertexFormat);
@@ -75,6 +104,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		this.glSkyList2.upload(bufferbuilder);
 	}
 
+<<<<<<< HEAD
 	private void generateSky() {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
@@ -106,6 +136,16 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				bufferBuilderIn.pos((double)f1, (double)posY, (double)l).endVertex();
 				bufferBuilderIn.pos((double)f1, (double)posY, (double)(l + 64)).endVertex();
 				bufferBuilderIn.pos((double)f, (double)posY, (double)(l + 64)).endVertex();
+=======
+		for (j = -b2 * i; j <= b2 * i; j += b2)
+		{
+			for (k = -b2 * i; k <= b2 * i; k += b2)
+			{
+				buffer.pos((j     ), f, (k     )).endVertex();
+				buffer.pos((j + b2), f, (k     )).endVertex();
+				buffer.pos((j + b2), f, (k + b2)).endVertex();
+				buffer.pos((j     ), f, (k + b2)).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 			}
 		}
 
@@ -128,11 +168,20 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		Random random = new Random(10842L);
 		bufferBuilderIn.begin(7, DefaultVertexFormats.POSITION);
 
+<<<<<<< HEAD
 		for(int i = 0; i < 1500; ++i) {
 			double d0 = (double)(random.nextFloat() * 2.0F - 1.0F);
 			double d1 = (double)(random.nextFloat() * 2.0F - 1.0F);
 			double d2 = (double)(random.nextFloat() * 2.0F - 1.0F);
 			double d3 = (double)(0.15F + random.nextFloat() * 0.1F);
+=======
+		for (int i = 0; i < 2000; ++i)
+		{
+			double d0 = random.nextFloat() * 2.0F - 1.0F;
+			double d1 = random.nextFloat() * 2.0F - 1.0F;
+			double d2 = random.nextFloat() * 2.0F - 1.0F;
+			double d3 = 0.15F + random.nextFloat() * 0.1F;
+>>>>>>> origin/feature/nuclearthermalrockets
 			double d4 = d0 * d0 + d1 * d1 + d2 * d2;
 			if (d4 < 1.0D && d4 > 0.01D) {
 				d4 = 1.0D / Math.sqrt(d4);
@@ -251,11 +300,12 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		int solarOrbitalDistance, planetOrbitalDistance = 0;
 		double myPhi = 0, myTheta = 0, myPrevOrbitalTheta = 0, myRotationalPhi = 0;
 		boolean hasAtmosphere = false, isMoon;
-		float parentAtmColor[] = new float[]{1f,1f,1f};
-		float parentRingColor[] = new float[] {1f,1f,1f};
-		float ringColor[] = new float[] {1f,1f,1f};
+		float[] shadowColorMultiplier = {0f,0f,0f};
+		float[] parentAtmColor = new float[]{1f,1f,1f};
+		float[] parentRingColor = new float[] {1f,1f,1f};
+		float[] ringColor = new float[] {1f,1f,1f};
 		float sunSize = 1.0f;
-		float starSeperation = 0f;
+		float starSeparation = 0f;
 		boolean isWarp = false;
 		boolean isGasGiant = false;
 		boolean hasRings = false;
@@ -266,16 +316,73 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		Direction travelDirection = null;
 		ResourceLocation parentPlanetIcon = null;
 		List<DimensionProperties> children;
+<<<<<<< HEAD
 		StellarBody primaryStar = DimensionManager.getSol();
 		celestialAngle = mc.world.getCelestialAngleRadians(partialTicks);
 		BlockPos playerPos = new BlockPos(mc.player.getPositionVec());
+=======
+		StellarBody primaryStar;
+		celestialAngle = mc.world.getCelestialAngle(partialTicks);
+
+		Vec3d sunColor;
+
+
+		if(mc.world.provider instanceof IPlanetaryProvider) {
+			IPlanetaryProvider planetaryProvider = (IPlanetaryProvider)mc.world.provider;
+
+			properties = (DimensionProperties)planetaryProvider.getDimensionProperties(mc.player.getPosition());
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		Vector3d sunColor;
 
+<<<<<<< HEAD
 		if(dimensionMgr.isDimensionCreated(mc.world)) {
+=======
+			myPhi = properties.orbitalPhi;
+			myTheta = properties.orbitTheta;
+			myRotationalPhi = properties.rotationalPhi;
+			myPrevOrbitalTheta = properties.prevOrbitalTheta;
+			hasRings = properties.hasRings();
+			ringColor = properties.ringColor;
+
+			children = new LinkedList<>();
+			for (Integer i : properties.getChildPlanets()) {
+				children.add(DimensionManager.getInstance().getDimensionProperties(i));
+			}
+
+			solarOrbitalDistance = properties.getSolarOrbitalDistance();
+>>>>>>> origin/feature/nuclearthermalrockets
 
 			properties = DimensionManager.getInstance().getDimensionProperties(mc.world, new BlockPos(mc.player.getPositionVec()));
 
+<<<<<<< HEAD
+=======
+			if(isMoon = properties.isMoon()) {
+				parentProperties = properties.getParentProperties();
+				planetOrbitalDistance = properties.getParentOrbitalDistance();
+				parentHasRings = parentProperties.hasRings;
+				parentRingColor = parentProperties.ringColor;
+			}
+
+			sunColor = planetaryProvider.getSunColor(mc.player.getPosition());
+			primaryStar = properties.getStar();
+			if (primaryStar != null) {
+				sunSize = properties.getStar().getSize();
+			}
+			else
+				primaryStar = DimensionManager.getInstance().getStar(0);
+			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
+				if(isWarp) {
+					SpaceStationObject station = (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.player.getPosition());
+					travelDirection = station.getForwardDirection();
+				}
+			}
+		}
+		else if(DimensionManager.getInstance().isDimensionCreated(mc.world.provider.getDimension())) {
+
+			properties = DimensionManager.getInstance().getDimensionProperties(mc.world.provider.getDimension());
+>>>>>>> origin/feature/nuclearthermalrockets
 
 			atmosphere = properties.getAtmosphereDensityAtHeight(mc.getRenderViewEntity().getPosY());//planetaryProvider.getAtmosphereDensityFromHeight(mc.getRenderViewEntity().posY, mc.player.getPosition());
 			Direction dir = getRotationAxis(properties, playerPos);
@@ -290,8 +397,13 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			hasRings = properties.hasRings();
 			ringColor = properties.ringColor;
 
+<<<<<<< HEAD
 			children = new LinkedList<DimensionProperties>();
 			for (ResourceLocation i : properties.getChildPlanets()) {
+=======
+			children = new LinkedList<>();
+			for (Integer i : properties.getChildPlanets()) {
+>>>>>>> origin/feature/nuclearthermalrockets
 				children.add(DimensionManager.getInstance().getDimensionProperties(i));
 			}
 
@@ -300,27 +412,32 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 			if(isMoon = properties.isMoon()) {
 				parentProperties = properties.getParentProperties();
-				isGasGiant = parentProperties.isGasGiant();
-				hasAtmosphere = parentProperties.hasAtmosphere();
 				planetOrbitalDistance = properties.getParentOrbitalDistance();
-				parentAtmColor = parentProperties.skyColor;
-				parentPlanetIcon = getTextureForPlanet(parentProperties);
 				parentHasRings = parentProperties.hasRings;
 				parentRingColor = parentProperties.ringColor;
 			}
 
+<<<<<<< HEAD
 			float sunColorFloat[] = properties.getSunColor();
 			sunColor = new Vector3d(sunColorFloat[0], sunColorFloat[1], sunColorFloat[2]);//planetaryProvider.getSunColor(mc.player.getPosition());
+=======
+			float[] sunColorFloat = properties.getSunColor();
+			sunColor = new Vec3d(sunColorFloat[0], sunColorFloat[1], sunColorFloat[2]);//planetaryProvider.getSunColor(mc.player.getPosition());
+>>>>>>> origin/feature/nuclearthermalrockets
 			primaryStar = properties.getStar();
-			if (primaryStar != null)
-			{
+			if (primaryStar != null) {
 				sunSize = properties.getStar().getSize();
-				starSeperation = properties.getStar().getStarSeparation();
 			}
 			else
+<<<<<<< HEAD
 				primaryStar = DimensionManager.getSol();
 			if(properties.isStation()) {
 				isWarp = SpaceObjectManager.WARPDIMID.equals(properties.getParentPlanet());
+=======
+				primaryStar = DimensionManager.getInstance().getStar(0);
+			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
+>>>>>>> origin/feature/nuclearthermalrockets
 				if(isWarp) {
 					SpaceStationObject station = (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(playerPos);
 					travelDirection = station.getForwardDirection();
@@ -328,10 +445,14 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			}
 		}
 		else {
-			children = new LinkedList<DimensionProperties>();
+			children = new LinkedList<>();
 			isMoon = false;
+<<<<<<< HEAD
 			hasAtmosphere = DimensionManager.overworldProperties.hasAtmosphere();
 			atmosphere = DimensionManager.overworldProperties.getAtmosphereDensityAtHeight(mc.getRenderViewEntity().getPosY());
+=======
+			atmosphere = DimensionManager.overworldProperties.getAtmosphereDensityAtHeight(mc.getRenderViewEntity().posY);
+>>>>>>> origin/feature/nuclearthermalrockets
 			solarOrbitalDistance = DimensionManager.overworldProperties.orbitalDist;
 			sunColor = new Vector3d(1, 1, 1);
 			primaryStar = DimensionManager.overworldProperties.getStar();
@@ -372,6 +493,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		float f9;
 		float f10;
 
+<<<<<<< HEAD
 		if (afloat != null)
 		{
 			RenderSystem.disableTexture();
@@ -380,6 +502,16 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			matrix.rotate(new Quaternion(90.0F, 0.0F, 0.0F, true));
 			matrix.rotate(new Quaternion(0.0F, 0.0F, MathHelper.sin(mc.world.getCelestialAngleRadians(partialTicks)) < 0.0F ? 180.0F : 0.0F, true));
 			matrix.rotate(new Quaternion( 0.0F, 0.0F, 90.0F - (float)myRotationalPhi,true));
+=======
+		if (afloat != null) {
+			GlStateManager.disableTexture2D();
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
+			shadowColorMultiplier = afloat;
+			GL11.glPushMatrix();
+			GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef(MathHelper.sin(mc.world.getCelestialAngleRadians(partialTicks)) < 0.0F ? 180.0F : 0.0F, 0.0F, 0.0F, 1.0F);
+			GL11.glRotated(90.0F - myRotationalPhi, 0.0F, 0.0F, 1.0F);
+>>>>>>> origin/feature/nuclearthermalrockets
 
 			//Sim atmospheric thickness
 			f6 = afloat[0];
@@ -396,12 +528,23 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				f11 = (float)j * (float)Math.PI * 2.0F / (float)b0;
 				float f12 = MathHelper.sin(f11);
 				float f13 = MathHelper.cos(f11);
+<<<<<<< HEAD
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(f12 * 120.0F), (double)(f13 * 120.0F), (double)(-f13 * 40.0F * afloat[3])).color(afloat[0], afloat[1], afloat[2], 0.0F).endVertex();
 			}
 
 			Tessellator.getInstance().draw();
 			matrix.pop();
 			RenderSystem.shadeModel(GL11.GL_FLAT);
+=======
+				buffer.pos(f12 * 120.0F, f13 * 120.0F, -f13 * 40.0F * afloat[3]).color(afloat[0], afloat[1], afloat[2], 0.0F).endVertex();
+			}
+
+			Tessellator.getInstance().draw();
+			GL11.glPopMatrix();
+			GlStateManager.shadeModel(GL11.GL_FLAT);
+		} else if (world.isDaytime()) {
+			shadowColorMultiplier = new float[]{f1, f2, f3};
+>>>>>>> origin/feature/nuclearthermalrockets
 		}
 
 		RenderSystem.enableTexture();
@@ -442,10 +585,17 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 			RenderSystem.color4f(ringColor[0], ringColor[1], ringColor[2],multiplier);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
+<<<<<<< HEAD
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, ringDist, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), ringDist, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), ringDist, (double)f10).tex(0.0f, 1.0f).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, ringDist, (double)f10).tex(1.0f, 1.0f).endVertex();
+=======
+			buffer.pos(f10, ringDist, -f10).tex(1.0D, 0.0D).endVertex();
+			buffer.pos(-f10, ringDist, -f10).tex(0.0D, 0.0D).endVertex();
+			buffer.pos(-f10, ringDist, f10).tex(0.0D, 1.0D).endVertex();
+			buffer.pos(f10, ringDist, f10).tex(1.0D, 1.0D).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 			Tessellator.getInstance().draw();
 			matrix.pop();
 
@@ -460,10 +610,17 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			mc.getTextureManager().bindTexture(DimensionProperties.planetRingShadow);
 			RenderSystem.color4f(0f, 0f, 0f,multiplier);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
+<<<<<<< HEAD
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, ringDist, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), ringDist, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), ringDist, (double)f10).tex(0.0f, 1.0f).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, ringDist, (double)f10).tex(1.0f, 1.0f).endVertex();
+=======
+			buffer.pos(f10, ringDist, -f10).tex(1.0D, 0.0D).endVertex();
+			buffer.pos(-f10, ringDist, -f10).tex(0.0D, 0.0D).endVertex();
+			buffer.pos(-f10, ringDist, f10).tex(0.0D, 1.0D).endVertex();
+			buffer.pos(f10, ringDist, f10).tex(1.0D, 1.0D).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 			Tessellator.getInstance().draw();
 			matrix.pop();
 
@@ -477,7 +634,11 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		RenderSystem.disableTexture();
 		float f18 = mc.world.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
 
+<<<<<<< HEAD
 		if(mc.world.isRainingAt(playerPos))
+=======
+		if(mc.world.isRainingAt(mc.player.getPosition().add(0, 199, 0)))
+>>>>>>> origin/feature/nuclearthermalrockets
 			f18 *= 1-mc.world.getRainStrength(partialTicks);
 
 		if (f18 > 0.0F)
@@ -542,7 +703,6 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			drawStarAndSubStars(buffer, matrix, primaryStar, properties, solarOrbitalDistance, sunSize, sunColor, multiplier);
 
 		}
-		f10 = 20.0F;
 
 		//Render the parent planet
 		if(isMoon) {
@@ -573,10 +733,17 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 				RenderSystem.color4f(parentRingColor[0], parentRingColor[1], parentRingColor[2],multiplier);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
+<<<<<<< HEAD
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, ringDist, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), ringDist, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), ringDist, (double)f10).tex(0.0f, 1.0f).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, ringDist, (double)f10).tex(1.0f, 1.0f).endVertex();
+=======
+				buffer.pos(f10, ringDist, -f10).tex(1.0D, 0.0D).endVertex();
+				buffer.pos(-f10, ringDist, -f10).tex(0.0D, 0.0D).endVertex();
+				buffer.pos(-f10, ringDist, f10).tex(0.0D, 1.0D).endVertex();
+				buffer.pos(f10, ringDist, f10).tex(1.0D, 1.0D).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 				Tessellator.getInstance().draw();
 				matrix.pop();
 
@@ -590,19 +757,32 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				mc.getTextureManager().bindTexture(DimensionProperties.planetRingShadow);
 				RenderSystem.color4f(0f, 0f, 0f,1);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
+<<<<<<< HEAD
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, ringDist, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), ringDist, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), ringDist, (double)f10).tex(0.0f, 1.0f).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, ringDist, (double)f10).tex(1.0f, 1.0f).endVertex();
+=======
+				buffer.pos(f10, ringDist, -f10).tex(1.0D, 0.0D).endVertex();
+				buffer.pos(-f10, ringDist, -f10).tex(0.0D, 0.0D).endVertex();
+				buffer.pos(-f10, ringDist, f10).tex(0.0D, 1.0D).endVertex();
+				buffer.pos(f10, ringDist, f10).tex(1.0D, 1.0D).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 				Tessellator.getInstance().draw();
 				matrix.pop();
 
 				RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 			}
 
+
 			assert(parentProperties != null);
+<<<<<<< HEAD
 			renderPlanet(buffer, matrix, parentProperties, planetOrbitalDistance, multiplier, rotation, false, false, (float)Math.pow(parentProperties.getGravitationalMultiplier(), 0.4));
 			matrix.pop();
+=======
+			renderPlanet(buffer, parentProperties, planetOrbitalDistance, multiplier, rotation, false, false, (float)Math.pow(parentProperties.getGravitationalMultiplier(), 0.4), shadowColorMultiplier);
+			GL11.glPopMatrix();
+>>>>>>> origin/feature/nuclearthermalrockets
 		}
 
 		for(DimensionProperties moons : children) {
@@ -618,6 +798,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			double x = -MathHelper.sin(phiAngle)*MathHelper.cos((float)moons.orbitTheta);
 			double y = MathHelper.sin((float)moons.orbitTheta);
 			double rotation = -Math.PI/2f + Math.atan2(x, y) - (moons.orbitTheta - Math.PI)*MathHelper.sin(phiAngle);
+<<<<<<< HEAD
 			renderPlanet(buffer, matrix, moons, moons.getParentOrbitalDistance(), multiplier, rotation, moons.hasAtmosphere(), moons.hasRings, (float)Math.pow(moons.gravitationalMultiplier, 0.4));
 			matrix.pop();
 		}
@@ -641,12 +822,52 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			VertexBuffer.unbindBuffer();
 			this.skyVertexFormat.clearBufferState();
 			matrix.pop();
+=======
+
+			renderPlanet(buffer, moons, moons.getParentOrbitalDistance(), multiplier, rotation, moons.hasAtmosphere(), moons.hasRings, (float)Math.pow(moons.gravitationalMultiplier, 0.4), shadowColorMultiplier);
+			GL11.glPopMatrix();
+>>>>>>> origin/feature/nuclearthermalrockets
 		}
 
 		RenderSystem.enableTexture();
 
 
+<<<<<<< HEAD
 		RenderSystem.enableTexture();
+=======
+		if (d0 < 0.0D)
+		{
+			GL11.glPushMatrix();
+			GL11.glTranslatef(0.0F, 12.0F, 0.0F);
+			GL11.glCallList(this.glSkyList2);
+			GL11.glPopMatrix();
+			f8 = 1.0F;
+			f9 = -((float)(d0 + 65.0D));
+			f10 = -f8;
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+
+			buffer.color(0,0,0,1f);
+			buffer.pos(-f8, f9, f8).endVertex();
+			buffer.pos(f8, f9, f8).endVertex();
+			buffer.pos(f8, f10, f8).endVertex();
+			buffer.pos(-f8, f10, f8).endVertex();
+			buffer.pos(-f8, f10, -f8).endVertex();
+			buffer.pos(f8, f10, -f8).endVertex();
+			buffer.pos(f8, f9, -f8).endVertex();
+			buffer.pos(-f8, f9, -f8).endVertex();
+			buffer.pos(f8, f10, -f8).endVertex();
+			buffer.pos(f8, f10, f8).endVertex();
+			buffer.pos(f8, f9, f8).endVertex();
+			buffer.pos(f8, f9, -f8).endVertex();
+			buffer.pos(-f8, f9, -f8).endVertex();
+			buffer.pos(-f8, f9, f8).endVertex();
+			buffer.pos(-f8, f10, f8).endVertex();
+			buffer.pos(-f8, f10, -f8).endVertex();
+			buffer.pos(-f8, f10, -f8).endVertex();
+			buffer.pos(-f8, f10, f8).endVertex();
+			buffer.pos(f8, f10, f8).endVertex();
+			buffer.pos(f8, f10, -f8).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		if(properties.isAsteroid())
 		{
@@ -695,19 +916,31 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		return Direction.EAST;
 	}
 
+<<<<<<< HEAD
 	protected void renderPlanet(BufferBuilder buffer, MatrixStack matrix, DimensionProperties properties, float planetOrbitalDistance, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, boolean hasRing, float gravitationalMultiplier) {
 		renderPlanet2(buffer, matrix, properties, 20f*AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance) * gravitationalMultiplier, alphaMultiplier, shadowAngle, hasRing);
 	}
 
 	protected void renderPlanet2(BufferBuilder buffer, MatrixStack matrix, DimensionProperties properties, float size, float alphaMultiplier, double shadowAngle, boolean hasRing) {
+=======
+	protected void renderPlanet(BufferBuilder buffer, DimensionProperties properties, float planetOrbitalDistance, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, boolean hasRing, float gravitationalMultiplier, float[] shadowColorMultiplier) {
+		renderPlanet2(buffer, properties, 20f*AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance) * gravitationalMultiplier, alphaMultiplier, shadowAngle, hasRing, shadowColorMultiplier);
+	}
+
+	protected void renderPlanet2(BufferBuilder buffer, DimensionProperties properties, float size, float alphaMultiplier, double shadowAngle, boolean hasRing, float[] shadowColorMultiplier) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		ResourceLocation icon = getTextureForPlanet(properties);
 		boolean hasAtmosphere = properties.hasAtmosphere();
 		boolean gasGiant = properties.isGasGiant();
 		boolean hasDecorators = properties.hasDecorators();
-		float skyColor[] = properties.skyColor;
-		float ringColor[] = properties.skyColor;
+		float[] skyColor = properties.skyColor;
+		float[] ringColor = properties.skyColor;
 
+<<<<<<< HEAD
 		renderPlanetPubHelper(buffer, matrix, icon, 0, 0, -20, size*0.2f, alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing, hasDecorators);
+=======
+		renderPlanetPubHelper(buffer, icon, 0, 0, -20, size*0.2f, alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing, hasDecorators, shadowColorMultiplier);
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	protected void rotateAroundAxis(MatrixStack matrix) {
@@ -724,20 +957,22 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		return axis;
 	}
 
+<<<<<<< HEAD
 	public static void renderPlanetPubHelper(BufferBuilder buffer, MatrixStack matrix, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing, boolean hasDecorators) {
 		RenderSystem.enableBlend();
+=======
+	public static void renderPlanetPubHelper(BufferBuilder buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing, boolean hasDecorators, float[] shadowColorMultiplier) {
+		GlStateManager.enableBlend();
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		//int k = mc.theWorld.getMoonPhase();
 		//int l = k % 4;
 		//int i1 = k / 4 % 2;
 
 		//Set planet Orbiting distance; size
-		float f10 = size;
 
 		float f14 = 1f;//(float)(l + 0) / 4.0F;
 		float f15 = 0f;//(float)(i1 + 0) / 2.0F;
-		float f16 = f15;//(float)(l + 1) / 4.0F;
-		float f17 = f14;//(float)(i1 + 1) / 2.0F;
 
 
 		matrix.push();
@@ -750,6 +985,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 			//Rings
 			if(hasRing) {
+<<<<<<< HEAD
 				RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				RenderSystem.color4f(ringColor[0], ringColor[1], ringColor[2], alphaMultiplier*0.2f);
 				float ringSize = f10 *1.4f;
@@ -760,15 +996,34 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, ringSize, zLevel-0.01f, ringSize).tex(f14, f17).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, ringSize, zLevel-0.01f, -ringSize).tex(f14, f15).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -ringSize, zLevel-0.01f, -ringSize).tex(f16, f15).endVertex();
+=======
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				GlStateManager.color(ringColor[0], ringColor[1], ringColor[2], alphaMultiplier*0.2f);
+				float ringSize = size *1.4f;
+				Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.planetRings);
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
+				buffer.pos(-ringSize, zLevel-0.01f, ringSize).tex(f15, f14).endVertex();
+				buffer.pos(ringSize, zLevel-0.01f, ringSize).tex(f14, f14).endVertex();
+				buffer.pos(ringSize, zLevel-0.01f, -ringSize).tex(f14, f15).endVertex();
+				buffer.pos(-ringSize, zLevel-0.01f, -ringSize).tex(f15, f15).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 				Tessellator.getInstance().draw();
 
 				RenderSystem.color4f(0f, 0f, 0f, alphaMultiplier);
 				Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.planetRingShadow);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+<<<<<<< HEAD
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -ringSize, zLevel-0.01f, ringSize).tex(f16, f17).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, ringSize, zLevel-0.01f, ringSize).tex(f14, f17).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, ringSize, zLevel-0.01f, -ringSize).tex(f14, f15).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -ringSize, zLevel-0.01f, -ringSize).tex(f16, f15).endVertex();
+=======
+				buffer.pos(-ringSize, zLevel-0.01f, ringSize).tex(f15, f14).endVertex();
+				buffer.pos(ringSize, zLevel-0.01f, ringSize).tex(f14, f14).endVertex();
+				buffer.pos(ringSize, zLevel-0.01f, -ringSize).tex(f14, f15).endVertex();
+				buffer.pos(-ringSize, zLevel-0.01f, -ringSize).tex(f15, f15).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 				Tessellator.getInstance().draw();
 			}
 
@@ -776,11 +1031,19 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.atmGlow);
 
+<<<<<<< HEAD
 			RenderSystem.color4f(1f, 1f, 1f, alphaMultiplier);
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -f10, zLevel+0.01f, f10).tex(f16, f17).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, f10, zLevel+0.01f, f10).tex(f14, f17).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, f10, zLevel+0.01f, -f10).tex(f14, f15).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -f10, zLevel+0.01f, -f10).tex(f16, f15).endVertex();
+=======
+			GlStateManager.color(1f, 1f, 1f, alphaMultiplier);
+			buffer.pos(-size, zLevel+0.01f, size).tex(f15, f14).endVertex();
+			buffer.pos(size, zLevel+0.01f, size).tex(f14, f14).endVertex();
+			buffer.pos(size, zLevel+0.01f, -size).tex(f14, f15).endVertex();
+			buffer.pos(-size, zLevel+0.01f, -size).tex(f15, f15).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 			Tessellator.getInstance().draw();
 			matrix.pop();
 		}
@@ -793,11 +1056,19 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
+<<<<<<< HEAD
 		RenderSystem.color4f(1f, 1f, 1f, alphaMultiplier);
 		zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -f10, zLevel, f10).tex(f16, f17).endVertex();
 		zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, f10, zLevel, f10).tex(f14, f17).endVertex();
 		zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, f10, zLevel, -f10).tex(f14, f15).endVertex();
 		zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -f10, zLevel, -f10).tex(f16, f15).endVertex();
+=======
+		GlStateManager.color(1f, 1f, 1f, alphaMultiplier);
+		buffer.pos(-size, zLevel, size).tex(f15, f14).endVertex();
+		buffer.pos(size, zLevel, size).tex(f14, f14).endVertex();
+		buffer.pos(size, zLevel, -size).tex(f14, f15).endVertex();
+		buffer.pos(-size, zLevel, -size).tex(f15, f15).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 		Tessellator.getInstance().draw();
 		//buffer.finishDrawing();
 
@@ -809,12 +1080,21 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+<<<<<<< HEAD
 				Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.getAtmosphereResource());
 				RenderSystem.color4f(skyColor[0], skyColor[1], skyColor[2], alphaMultiplier);
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -f10, zLevel, f10).tex(f16, f17).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, f10, zLevel, f10).tex(f14, f17).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, f10, zLevel, -f10).tex(f14, f15).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -f10, zLevel, -f10).tex(f16, f15).endVertex();
+=======
+				Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.getAtmosphereResource());
+				GlStateManager.color(skyColor[0], skyColor[1], skyColor[2], alphaMultiplier);
+				buffer.pos(-size, zLevel, size).tex(f15, f14).endVertex();
+				buffer.pos(size, zLevel, size).tex(f14, f14).endVertex();
+				buffer.pos(size, zLevel, -size).tex(f14, f15).endVertex();
+				buffer.pos(-size, zLevel, -size).tex(f15, f15).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 				Tessellator.getInstance().draw();
 				//buffer.finishDrawing();
 
@@ -823,8 +1103,12 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 			matrix.rotate(new Quaternion(0, (float) (90-shadowAngle* 180/Math.PI), 0, true));
 
+
+			Minecraft.getMinecraft().world.getCelestialAngle(0);
 			//Draw Shadow
+			GlStateManager.color(shadowColorMultiplier[0], shadowColorMultiplier[1], shadowColorMultiplier[2], 1);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+<<<<<<< HEAD
 			Minecraft.getInstance().getTextureManager().bindTexture(DimensionProperties.getShadowResource());
 			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			RenderSystem.color4f(1f, 1f, 1f, alphaMultiplier);
@@ -832,6 +1116,14 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, f10, zLevel-0.01f, f10).tex(f14, f17).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, f10, zLevel-0.01f, -f10).tex(f14, f15).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, -f10, zLevel-0.01f, -f10).tex(f16, f15).endVertex();
+=======
+			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.getShadowResource());
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			buffer.pos(-size, zLevel-0.01f, size).tex(f15, f14).endVertex();
+			buffer.pos(size, zLevel-0.01f, size).tex(f14, f14).endVertex();
+			buffer.pos(size, zLevel-0.01f, -size).tex(f14, f15).endVertex();
+			buffer.pos(-size, zLevel-0.01f, -size).tex(f15, f15).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 			Tessellator.getInstance().draw();
 		}
 
@@ -848,17 +1140,29 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		List<StellarBody> subStars = sun.getSubStars();
 
 		if(subStars != null && !subStars.isEmpty()) {
+<<<<<<< HEAD
 			matrix.push();
 			float phaseInc = 360/subStars.size();
+=======
+			GL11.glPushMatrix();
+			float phaseInc = 360f / subStars.size();
+>>>>>>> origin/feature/nuclearthermalrockets
 
 			for(StellarBody subStar : subStars) {
 				matrix.rotate(new Quaternion(0, phaseInc, 0, true));
 				matrix.push();
 
+<<<<<<< HEAD
 				matrix.rotate(new Quaternion(subStar.getStarSeparation()*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance), 0, 0, true));
 				float color[] = subStar.getColor();
 				drawStar(buffer, matrix, subStar , properties, solarOrbitalDistance, subStar.getSize(), new Vector3d(color[0], color[1], color[2]), multiplier);
 				matrix.pop();
+=======
+				GL11.glRotatef(subStar.getStarSeparation()*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance), 1, 0, 0);
+				float[] color = subStar.getColor();
+				drawStar(buffer, subStar , properties, solarOrbitalDistance, subStar.getSize(), new Vec3d(color[0], color[1], color[2]), multiplier);
+				GL11.glPopMatrix();
+>>>>>>> origin/feature/nuclearthermalrockets
 			}
 			matrix.pop();
 		}
@@ -884,11 +1188,18 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			RenderSystem.color4f((float)1, (float).5 , (float).4 ,1f);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 			float f10 = sunSize*2.5f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
+<<<<<<< HEAD
 			//multiplier = 2;
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 0.0D, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 0.0D, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 0.0D, (double)f10).tex(1.0f, 1.0f).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 0.0D, (double)f10).tex(0.0f, 1.0f).endVertex();
+=======
+			buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+			buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+			buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+			buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 			Tessellator.getInstance().draw();
 			matrix.pop();
 
@@ -907,10 +1218,17 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				RenderSystem.color4f((float)1, (float).5 , (float).4 ,1f);
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 				f10 = sunSize*20f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
+<<<<<<< HEAD
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 0.0D, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 0.0D, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 0.0D, (double)f10).tex(1.0f, 1.0f).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 0.0D, (double)f10).tex(0.0f, 1.0f).endVertex();
+=======
+				buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 				Tessellator.getInstance().draw();
 				matrix.pop();
 
@@ -924,10 +1242,17 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 				f10 = sunSize*15f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
 				//multiplier = 2;
+<<<<<<< HEAD
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 0.0D, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 0.0D, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 0.0D, (double)f10).tex(1.0f, 1.0f).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 0.0D, (double)f10).tex(0.0f, 1.0f).endVertex();
+=======
+				buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 				Tessellator.getInstance().draw();
 				matrix.pop();
 
@@ -941,10 +1266,17 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 				f10 = sunSize*7.5f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
 				//multiplier = 2;
+<<<<<<< HEAD
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 0.0D, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 0.0D, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 0.0D, (double)f10).tex(1.0f, 1.0f).endVertex();
 				zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 0.0D, (double)f10).tex(0.0f, 1.0f).endVertex();
+=======
+				buffer.pos(-f10, 0.0D, -f10).tex(0.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, -f10).tex(1.0D, 0.0D).endVertex();
+				buffer.pos(f10, 0.0D, f10).tex(1.0D, 1.0D).endVertex();
+				buffer.pos(-f10, 0.0D, f10).tex(0.0D, 1.0D).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 				Tessellator.getInstance().draw();
 				matrix.pop();
 			}
@@ -961,10 +1293,17 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
 			float f10 = sunSize*15f*AstronomicalBodyHelper.getBodySizeMultiplier(solarOrbitalDistance);
 			//multiplier = 2;
+<<<<<<< HEAD
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 100.0D, (double)(-f10)).tex(0.0f, 0.0f).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 100.0D, (double)(-f10)).tex(1.0f, 0.0f).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)f10, 100.0D, (double)f10).tex(1.0f, 1.0f).endVertex();
 			zmaster587.libVulpes.render.RenderHelper.vertexPos(matrix, buffer, (double)(-f10), 100.0D, (double)f10).tex(0.0f, 1.0f).endVertex();
+=======
+			buffer.pos(-f10, 100.0D, -f10).tex(0.0D, 0.0D).endVertex();
+			buffer.pos(f10, 100.0D, -f10).tex(1.0D, 0.0D).endVertex();
+			buffer.pos(f10, 100.0D, f10).tex(1.0D, 1.0D).endVertex();
+			buffer.pos(-f10, 100.0D, f10).tex(0.0D, 1.0D).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
 			Tessellator.getInstance().draw();
 		}
 	}

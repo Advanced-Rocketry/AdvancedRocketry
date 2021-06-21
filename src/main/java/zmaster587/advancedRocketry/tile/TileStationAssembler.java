@@ -27,6 +27,7 @@ import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -122,13 +123,20 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 			}
 
 			ItemStack outputStack;
+<<<<<<< HEAD
 			SpaceStationObject object = null;
 			if(Constants.INVALID_PLANET.equals(storedId)) {
 				object = new SpaceStationObject();
 				SpaceObjectManager.getSpaceManager().registerSpaceObject(object, Constants.INVALID_PLANET);
+=======
+			SpaceStationObject spaceStationObject = null;
+			if(storedId == null) {
+				spaceStationObject = new SpaceStationObject();
+				SpaceObjectManager.getSpaceManager().registerSpaceObject(spaceStationObject, Constants.INVALID_PLANET);
+>>>>>>> origin/feature/nuclearthermalrockets
 
 				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1);
-				ItemStationChip.setUUID(outputStack, object.getId());
+				ItemStationChip.setUUID(outputStack, spaceStationObject.getId());
 
 			}
 			else {
@@ -142,7 +150,7 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 
 			if(Constants.INVALID_PLANET.equals(storedId)) {
 				ItemStack stack = new ItemStack(AdvancedRocketryItems.itemSpaceStationChip,1);
-				ItemStationChip.setUUID(stack,object.getId() );
+				ItemStationChip.setUUID(stack,spaceStationObject.getId() );
 				inventory.setInventorySlotContents(3, stack);
 			}
 
@@ -169,8 +177,13 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 	}
 
 	@Override
+<<<<<<< HEAD
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+=======
+	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+		List<ModuleBase> modules = new LinkedList<>();
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		modules.add(new ModulePower(160, 30, this));
 
@@ -233,19 +246,21 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int slot) {
 		return inventory.getStackInSlot(slot);
 	}
 
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int slot, int amt) {
 		return inventory.decrStackSize(slot, amt);
 	}
 
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 	}
 
@@ -256,7 +271,11 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 
 
 	@Override
+<<<<<<< HEAD
 	public boolean isUsableByPlayer(PlayerEntity player) {
+=======
+	public boolean isUsableByPlayer(@Nonnull EntityPlayer player) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		return inventory.isUsableByPlayer(player);
 	}
 
@@ -278,11 +297,12 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
 		return inventory.isItemValidForSlot(slot, stack);
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		return inventory.removeStackFromSlot(index);
 	}

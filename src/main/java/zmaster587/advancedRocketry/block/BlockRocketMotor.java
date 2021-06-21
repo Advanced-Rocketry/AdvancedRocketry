@@ -14,6 +14,8 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.IRocketEngine;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 
+import javax.annotation.Nonnull;
+
 public class BlockRocketMotor extends BlockFullyRotatable implements IRocketEngine {
 
 	public BlockRocketMotor(Properties mat) {
@@ -43,7 +45,13 @@ public class BlockRocketMotor extends BlockFullyRotatable implements IRocketEngi
 	}
 	
 	@Override
+<<<<<<< HEAD
 	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return VoxelShapes.empty();
+=======
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, @Nonnull ItemStack stack) {
+		
+		world.setBlockState(pos, state.withProperty(FACING, EnumFacing.DOWN));
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 }

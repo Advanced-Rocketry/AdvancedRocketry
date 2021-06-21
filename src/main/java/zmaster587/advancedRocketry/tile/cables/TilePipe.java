@@ -9,13 +9,15 @@ import net.minecraft.util.math.BlockPos;
 import zmaster587.advancedRocketry.cable.HandlerCableNetwork;
 import zmaster587.advancedRocketry.cable.NetworkRegistry;
 
+import javax.annotation.Nonnull;
+
 public class TilePipe extends TileEntity {
 
-	int networkID;
-	boolean initialized, destroyed;
+	private int networkID;
+	private boolean initialized, destroyed;
 
-	static boolean debug = false;
-	boolean connectedSides[];
+	private static boolean debug = false;
+	boolean[] connectedSides;
 
 	public TilePipe(TileEntityType<?> type) {
 		super(type);
@@ -63,8 +65,14 @@ public class TilePipe extends TileEntity {
 	}
 	
 	@Override
+<<<<<<< HEAD
 	public CompoundNBT getUpdateTag() {
 		CompoundNBT nbt = super.getUpdateTag();
+=======
+	@Nonnull
+	public NBTTagCompound getUpdateTag() {
+		NBTTagCompound nbt = super.getUpdateTag();
+>>>>>>> origin/feature/nuclearthermalrockets
 		
 		byte sides = 0;
 		
@@ -80,8 +88,14 @@ public class TilePipe extends TileEntity {
 	}
 	
 	@Override
+<<<<<<< HEAD
 	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
         super.handleUpdateTag(state, tag);
+=======
+    public void handleUpdateTag(@Nonnull NBTTagCompound tag)
+    {
+        super.handleUpdateTag(tag);
+>>>>>>> origin/feature/nuclearthermalrockets
         
         byte sides = tag.getByte("conn");
         
@@ -145,24 +159,34 @@ public class TilePipe extends TileEntity {
 		//if(!(tile instanceof IFluidHandler))
 		//return;
 
+<<<<<<< HEAD
 		if(canExtract(dir, tile) && (world.getRedstonePowerFromNeighbors(pos) > 0 || world.getStrongPower(pos) > 0)) {
 			if(world.isRemote)
 				connectedSides[dir.ordinal()]=true;
 			else {
+=======
+		if(canExtract(dir, tile) && (world.isBlockIndirectlyGettingPowered(pos) > 0 || world.getStrongPower(pos) > 0)) {
+			if(!world.isRemote)  {
+>>>>>>> origin/feature/nuclearthermalrockets
 				getNetworkHandler().removeFromAllTypes(this, tile);
 				getNetworkHandler().addSource(this,tile,dir);
-				connectedSides[dir.ordinal()]=true;
 			}
+			connectedSides[dir.ordinal()]=true;
 		}
 
+<<<<<<< HEAD
 		if(canInject(dir, tile) && world.getRedstonePowerFromNeighbors(pos) == 0 && world.getStrongPower(pos) == 0) {
 			if(world.isRemote)
 				connectedSides[dir.ordinal()]=true;
 			else {
+=======
+		if(canInject(dir, tile) && world.isBlockIndirectlyGettingPowered(pos) == 0 && world.getStrongPower(pos) == 0) {
+			if(!world.isRemote)  {
+>>>>>>> origin/feature/nuclearthermalrockets
 				getNetworkHandler().removeFromAllTypes(this, tile);
 				getNetworkHandler().addSink(this, tile,dir);
-				connectedSides[dir.ordinal()]=true;
 			}
+			connectedSides[dir.ordinal()]=true;
 		}
 	}
 
@@ -204,6 +228,7 @@ public class TilePipe extends TileEntity {
 					if(this.destroyed)
 						return;
 
+					debug = false;
 					if(pipe.isInitialized()) {
 						if(!isInitialized()) {
 							initialize(pipe.getNetworkID());

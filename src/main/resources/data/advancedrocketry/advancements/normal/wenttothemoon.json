@@ -4,10 +4,10 @@
             "item": "advancedrocketry:spaceboots"
         },
         "title": {
-            "translate": "achievement.weReallyWentToTheMoon"
+            "translate": "advancement.weReallyWentToTheMoon"
         },
         "description": {
-            "translate": "achievement.weReallyWentToTheMoon.desc"
+            "translate": "advancement.weReallyWentToTheMoon.desc"
         },
         "frame": "challenge"
     },

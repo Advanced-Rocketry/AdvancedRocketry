@@ -67,8 +67,8 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 	private static final byte PACKET_WRITE_SRC_INFO = 4;
 
 
-	protected static final DataParameter<Byte> motionDir =  EntityDataManager.<Byte>createKey(EntityElevatorCapsule.class, DataSerializers.BYTE);
-	protected static final DataParameter<Integer> standTimeCounter =  EntityDataManager.<Integer>createKey(EntityElevatorCapsule.class, DataSerializers.VARINT);
+	protected static final DataParameter<Byte> motionDir =  EntityDataManager.createKey(EntityElevatorCapsule.class, DataSerializers.BYTE);
+	protected static final DataParameter<Integer> standTimeCounter =  EntityDataManager.createKey(EntityElevatorCapsule.class, DataSerializers.VARINT);
 
 	public EntityElevatorCapsule( World worldIn) {
 		super(AdvancedRocketryEntities.ENTITY_ELEVATOR_CAPSULE, worldIn);
@@ -203,6 +203,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 		{
 			float yaw = this.rotationYaw;
 			float pitch = this.rotationPitch;
+			DimensionBlockPosition destination = this.dstTilePos;
 
 			List<Entity> passengers = getPassengers();
 			MinecraftServer minecraftserver = this.getServer();
@@ -217,6 +218,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 				return null;
 			
 			entity.setPositionAndRotation(posX, y, posZ, yaw, pitch);
+			((EntityElevatorCapsule)entity).dstTilePos = destination;
 			
 			int timeOffset = 1;
 			for(Entity e : passengers) {
@@ -424,7 +426,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 					srcTile = world.getTileEntity(srcTilePos.pos.getBlockPos());
 				
 				
-				if( srcTile != null && srcTile instanceof TileSpaceElevator && !((TileSpaceElevator)srcTile).getMachineEnabled())
+				if(srcTile instanceof TileSpaceElevator && !((TileSpaceElevator) srcTile).getMachineEnabled())
 					standTime = 0;
 				
 				setStandTime(standTime);
@@ -460,8 +462,8 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 				if(srcTilePos != null && srcTilePos.pos != null)
 					srcTile = world.getTileEntity(srcTilePos.pos.getBlockPos());
 				
-				
-				if( srcTile != null && srcTile instanceof TileSpaceElevator && !((TileSpaceElevator)srcTile).getMachineEnabled())
+
+				if( srcTile instanceof TileSpaceElevator && !((TileSpaceElevator)srcTile).getMachineEnabled())
 					AdvancedRocketry.proxy.displayMessage(LibVulpes.proxy.getLocalizedString("msg.spaceelevator.turnedoff"),5);
 				else if(dstTilePos != null) 
 					AdvancedRocketry.proxy.displayMessage(LibVulpes.proxy.getLocalizedString("msg.spaceelevator.ascentready") + ": " + (int)((MAX_STANDTIME - getStandTime())/20) + "\nDST " + dstTilePos,5);

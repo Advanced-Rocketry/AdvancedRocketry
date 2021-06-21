@@ -12,15 +12,21 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 import com.mojang.serialization.Codec;
 
+<<<<<<< HEAD
 public class WorldGenLargeCrystal extends Feature<NoFeatureConfig> {
 
 	BlockState block;
 	public WorldGenLargeCrystal(Codec<NoFeatureConfig> codec) {
 		super(codec);
+=======
+	private IBlockState block;
+	public WorldGenLargeCrystal() {
+>>>>>>> origin/feature/nuclearthermalrockets
 		this.block = AdvancedRocketryBlocks.blockCrystal.getDefaultState();
 	}
 
@@ -30,11 +36,15 @@ public class WorldGenLargeCrystal extends Feature<NoFeatureConfig> {
 	}*/
 
 	@Override
+<<<<<<< HEAD
 	public boolean generate(ISeedReader world, ChunkGenerator chunkGen, Random rand,
 			BlockPos pos, NoFeatureConfig config) {
 		
 		if(rand.nextInt() % 18 != 0)
 			return false;
+=======
+	public boolean generate(World world, Random rand, @Nonnull BlockPos pos) {
+>>>>>>> origin/feature/nuclearthermalrockets
 
 		BlockState state = world.getBiome(pos).getGenerationSettings().getSurfaceBuilderConfig().getUnder();
 		Block fillerBlock = state.getBlock();
@@ -56,7 +66,8 @@ public class WorldGenLargeCrystal extends Feature<NoFeatureConfig> {
 		int y = world.getHeight(Type.WORLD_SURFACE, new BlockPos(x, 0, z)).getY() - 2;
 
 
-		currentEdgeRadius = (int)((SHAPE*(edgeRadius * height )) + ((1f-SHAPE)*edgeRadius));
+		final int startingCurrentEdgeRadius = (int)((SHAPE*(edgeRadius * height )) + ((1f-SHAPE)*edgeRadius));
+		currentEdgeRadius = startingCurrentEdgeRadius;
 
 		//Make the base of the crystal
 		//Generate the top trapezoid
@@ -124,7 +135,7 @@ public class WorldGenLargeCrystal extends Feature<NoFeatureConfig> {
 		}
 
 		
-		currentEdgeRadius = (int)((SHAPE*(edgeRadius * height )) + ((1f-SHAPE)*edgeRadius));
+		currentEdgeRadius = startingCurrentEdgeRadius;
 		//Make some rand noise in the base
 		//Generate the top trapezoid
 		for(int zOff = -numDiag - currentEdgeRadius/2; zOff <= -currentEdgeRadius/2; zOff++) {

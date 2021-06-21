@@ -16,8 +16,13 @@ public class DataStorage {
 		MASS;
 
 		public String toString() {
+<<<<<<< HEAD
 			return "data." + name().toLowerCase(Locale.ENGLISH);
 		};
+=======
+			return "data." + name().toLowerCase(Locale.ENGLISH) + ".name";
+		}
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	private int data, maxData;

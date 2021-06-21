@@ -1,11 +1,19 @@
 package zmaster587.advancedRocketry.atmosphere;
 
+<<<<<<< HEAD
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+=======
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+>>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -43,8 +51,8 @@ public class AtmosphereHandler {
 
 	public static long lastSuffocationTime = Integer.MIN_VALUE;
 	private static final int MAX_BLOB_RADIUS = ((ARConfiguration.getCurrentConfig().atmosphereHandleBitMask.get() & 1) == 1) ? 256 : ARConfiguration.getCurrentConfig().oxygenVentSize.get();
-	private static HashMap<ResourceLocation, AtmosphereHandler> dimensionOxygen = new HashMap<ResourceLocation, AtmosphereHandler>();
-	private static HashMap<PlayerEntity, IAtmosphere> prevAtmosphere = new HashMap<PlayerEntity, IAtmosphere>();
+	private static HashMap<ResourceLocation, AtmosphereHandler> dimensionOxygen = new HashMap<>();
+	private static HashMap<PlayerEntity, IAtmosphere> prevAtmosphere = new HashMap<>();
 
 	private HashMap<IBlobHandler,AreaBlob> blobs;
 	ResourceLocation dimId;
@@ -82,7 +90,7 @@ public class AtmosphereHandler {
 
 	private AtmosphereHandler(ResourceLocation dimId) {
 		this.dimId = dimId;
-		blobs = new HashMap<IBlobHandler,AreaBlob>();
+		blobs = new HashMap<>();
 	}
 
 	@SubscribeEvent
@@ -101,7 +109,7 @@ public class AtmosphereHandler {
 				AtmosphereEvent event2 = new AtmosphereEvent.AtmosphereTickEvent(entity, atmosType);
 				MinecraftForge.EVENT_BUS.post(event2);
 				if(!event2.isCanceled() && !atmosType.isImmune(event.getEntity().getClass()))
-					atmosType.onTick((LivingEntity)event.getEntityLiving());
+					atmosType.onTick(event.getEntityLiving());
 			}
 		}
 	}
@@ -130,7 +138,7 @@ public class AtmosphereHandler {
 	}
 
 	/**
-	 * @return true if the dimension has an atmospherehandler Object associated with it
+	 * @return true if the dimension has an AtmosphereHandler Object associated with it
 	 */
 	public static boolean hasAtmosphereHandler(ResourceLocation dimId) {
 		return dimensionOxygen.containsKey(dimId);
@@ -177,18 +185,40 @@ public class AtmosphereHandler {
 			if(handler == null)
 				return; //WTF
 
-			//Block handling for what should and shoudln't exist or what should be on fire
+			//Block handling for what should and shouldn't exist or what should be on fire
 			//Things should be on fire
 			if (handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATED) {
+<<<<<<< HEAD
 				if(world.getBlockState(bpos).getMaterial().isFlammable()) {
 				} else if (world.getBlockState(bpos).getMaterial() == Material.WEB) {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+=======
+				if(world.getBlockState(bpos).getBlock().isLeaves(world.getBlockState(bpos), world, bpos)) {
+					world.setBlockToAir(bpos);
+				} else if (world.getBlockState(bpos).getMaterial() == Material.CACTUS) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				} else if (world.getBlockState(bpos).getMaterial() == Material.PLANTS) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				} else if (world.getBlockState(bpos).getMaterial() == Material.VINE) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				} else if (world.getBlockState(bpos).getBlock().isLeaves(world.getBlockState(bpos), world, bpos)) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				}else if (world.getBlockState(bpos).getMaterial() == Material.WOOD) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				} else if (world.getBlockState(bpos).getMaterial() == Material.WEB) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				} else if (world.getBlockState(bpos).getMaterial() == Material.CARPET) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+				} else if (world.getBlockState(bpos).getMaterial() == Material.CLOTH) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+>>>>>>> origin/feature/nuclearthermalrockets
 				} else if (world.getBlockState(bpos).getMaterial() == Material.GOURD) {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
 				}
 			}
 			//Plants should die
 			else if(!handler.getAtmosphereType(bpos).allowsCombustion()) {
+<<<<<<< HEAD
 					if(world.getBlockState(bpos).getMaterial() == Material.LEAVES) {
 						world.setBlockState(bpos, Blocks.AIR.getDefaultState());
 					} else if (world.getBlockState(bpos).getMaterial() == Material.FIRE) {
@@ -197,11 +227,29 @@ public class AtmosphereHandler {
 						world.setBlockState(bpos, Blocks.AIR.getDefaultState());
 					} else if (world.getBlockState(bpos).getMaterial() == Material.PLANTS && world.getBlockState(bpos).getBlock() != Blocks.DEAD_BUSH) {
 						world.setBlockState(bpos, Blocks.DEAD_BUSH.getDefaultState());
+=======
+					if(world.getBlockState(bpos).getBlock().isLeaves(world.getBlockState(bpos), world, bpos)) {
+						world.setBlockToAir(bpos);
+					} else if (world.getBlockState(bpos).getMaterial() == Material.FIRE) {
+						world.setBlockToAir(bpos);
+					} else if (world.getBlockState(bpos).getMaterial() == Material.CACTUS) {
+						world.setBlockToAir(bpos);
+					} else if (world.getBlockState(bpos).getMaterial() == Material.PLANTS && world.getBlockState(bpos).getBlock() != Blocks.DEADBUSH) {
+						world.setBlockState(bpos, Blocks.DEADBUSH.getDefaultState());
+					} else if (world.getBlockState(bpos).getMaterial() == Material.VINE) {
+						world.setBlockToAir(bpos);
+					} else if (world.getBlockState(bpos).getMaterial() == Material.GRASS) {
+						world.setBlockState(bpos, Blocks.DIRT.getDefaultState());
+>>>>>>> origin/feature/nuclearthermalrockets
 					}
 			}
 			//Gasses should automatically vaporize and dissipate
 			if (handler.getAtmosphereType(bpos) == AtmosphereType.VACUUM) {
+<<<<<<< HEAD
 				 if (world.getBlockState(bpos).getMaterial() == Material.WATER && !(world.getBlockState(bpos).getBlock() instanceof FlowingFluidBlock)) {
+=======
+				 if (world.getBlockState(bpos).getMaterial() == Material.WATER && world.getBlockState(bpos).getBlock() instanceof IFluidBlock) {
+>>>>>>> origin/feature/nuclearthermalrockets
 					 IFluidBlock fluidblock = (IFluidBlock)world.getBlockState(bpos).getBlock();
 					 if (fluidblock.getFluid().getAttributes().isGaseous())
 						 world.setBlockState(bpos, Blocks.AIR.getDefaultState());
@@ -210,7 +258,11 @@ public class AtmosphereHandler {
 			//Water blocks should also vaporize and disappear
 			if (handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATED || handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATEDNOO2 || handler.getAtmosphereType(bpos) == AtmosphereType.VERYHOT || handler.getAtmosphereType(bpos) == AtmosphereType.VERYHOTNOO2) {
 				if (world.getBlockState(bpos).getMaterial() == Material.WATER) {
+<<<<<<< HEAD
 					world.setBlockState(bpos, Blocks.AIR.getDefaultState());
+=======
+					world.setBlockToAir(bpos);
+>>>>>>> origin/feature/nuclearthermalrockets
 				}
 			}
 
@@ -244,7 +296,7 @@ public class AtmosphereHandler {
 	 * @return List of AreaBlobs within the radius from the position
 	 */
 	protected List<AreaBlob> getBlobWithinRadius(HashedBlockPosition pos, int radius) {
-		LinkedList<AreaBlob> list = new LinkedList<AreaBlob>();
+		LinkedList<AreaBlob> list = new LinkedList<>();
 		for(AreaBlob blob : blobs.values()) {
 			if(blob.getRootPosition().getDistance(pos) - radius <= 0) {
 				list.add(blob);
@@ -275,9 +327,7 @@ public class AtmosphereHandler {
 	 * Registers a Blob with the atmosphere handler.  
 	 * Must be called before use
 	 * @param handler IBlobHander to register with
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param pos
 	 */
 	public void registerBlob(IBlobHandler handler, BlockPos pos) {
 		AreaBlob blob = blobs.get(handler);
@@ -292,9 +342,8 @@ public class AtmosphereHandler {
 	 * Registers a Blob with provided blob type
 	 * Must be called before use
 	 * @param handler IBlobHander to register with
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param pos
+	 * @param blob2
 	 */
 	public void registerBlob(IBlobHandler handler, BlockPos pos, AreaBlob blob2) {
 		AreaBlob blob = blobs.get(handler);
@@ -347,9 +396,7 @@ public class AtmosphereHandler {
 	}
 
 	/**
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param pos2
 	 * @return AtmosphereType at this location
 	 */
 	public IAtmosphere getAtmosphereType(BlockPos pos2) {

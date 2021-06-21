@@ -12,6 +12,8 @@ import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.inventory.GuiHandler;
 
+import javax.annotation.Nonnull;
+
 public class BlockWarpController extends BlockTile {
 
 	public BlockWarpController(Properties properties, GuiHandler.guiId guiId) {
@@ -19,14 +21,22 @@ public class BlockWarpController extends BlockTile {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
 		
 		
 		ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+=======
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
+			EntityLivingBase placer, @Nonnull ItemStack stack) {
+		super.onBlockPlacedBy(world, pos, state, placer, stack);
 		
-		if(object instanceof SpaceStationObject) {
-			((SpaceStationObject)object).setForwardDirection(getFront(state).getOpposite());
+		ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+>>>>>>> origin/feature/nuclearthermalrockets
+		
+		if(spaceObject instanceof SpaceStationObject) {
+			((SpaceStationObject)spaceObject).setForwardDirection(getFront(state).getOpposite());
 		}
 	}
 }

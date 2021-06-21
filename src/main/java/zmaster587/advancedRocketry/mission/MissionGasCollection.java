@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IInfrastructure;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
 import zmaster587.libVulpes.LibVulpes;
@@ -24,7 +25,7 @@ import java.util.LinkedList;
 public class MissionGasCollection extends MissionResourceCollection {
 
 
-	Fluid gasFluid;
+	private Fluid gasFluid;
 	public MissionGasCollection() {
 		super();
 	}
@@ -61,10 +62,14 @@ public class MissionGasCollection extends MissionResourceCollection {
 		}
 		
 		EntityStationDeployedRocket rocket = new EntityStationDeployedRocket(world, rocketStorage, rocketStats, x, y, z);
-		rocket.setFuelAmountMonoproellant(0);
-		rocket.setFuelAmountBipropellant(0);
-		rocket.setFuelAmountOxidizer(0);
-		rocket.readMissionPersistantNBT(missionPersistantNBT);
+
+		FuelRegistry.FuelType fuelType = rocket.getRocketFuelType();
+		if(fuelType != null) {
+			rocket.setFuelAmount(fuelType, 0);
+			if (fuelType == FuelRegistry.FuelType.LIQUID_BIPROPELLANT)
+				rocket.setFuelAmount(FuelRegistry.FuelType.LIQUID_OXIDIZER, 0);
+		}
+		rocket.readMissionPersistentNBT(missionPersistantNBT);
 
 		Direction dir = rocket.forwardDirection;
 		rocket.forceSpawn = true;
