@@ -99,7 +99,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockAirLock = new DoorBlock(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f, 8f));
 	public static Block blockLandingPad = new BlockLandingPad(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f,3f));
 	public static Block blockOxygenDetection = new BlockRedstoneEmitter(machineLineProperties,"advancedrocketry:atmosphereDetector_active");
-	public static Block blockOxygenScrubber = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockCO2Scrubber = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
 	public static Block blockUnlitTorch = new BlockTorchUnlit(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().zeroHardnessAndResistance().hardnessAndResistance(0));
 	public static Block blockUnlitTorchWall = new BlockTorchUnlitWall(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().zeroHardnessAndResistance().hardnessAndResistance(0));
 
@@ -291,7 +291,7 @@ public class AdvancedRocketryBlocks {
 				AdvancedRocketryBlocks.blockStationBuilder.setRegistryName("stationbuilder"),
 				AdvancedRocketryBlocks.blockElectrolyser.setRegistryName("electrolyser"),
 				AdvancedRocketryBlocks.blockChemicalReactor.setRegistryName("chemicalreactor"),
-				AdvancedRocketryBlocks.blockOxygenScrubber.setRegistryName("oxygenscrubber"),
+				AdvancedRocketryBlocks.blockCO2Scrubber.setRegistryName("oxygenscrubber"),
 				AdvancedRocketryBlocks.blockOxygenVent.setRegistryName("oxygenvent"),
 				AdvancedRocketryBlocks.blockOxygenCharger.setRegistryName("oxygencharger"),
 				AdvancedRocketryBlocks.blockAirLock.setRegistryName("airlock_door"),

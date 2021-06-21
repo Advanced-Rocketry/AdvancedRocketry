@@ -1901,15 +1901,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		boolean allowLaunch = false;
 
 
-<<<<<<< HEAD
-		if(!(ARConfiguration.getCurrentConfig().experimentalSpaceFlight.get() && storage.getGuidanceComputer() != null && storage.getGuidanceComputer().isEmpty()))
-		{
-=======
-		if(ARConfiguration.getCurrentConfig().experimentalSpaceFlight && storage.getGuidanceComputer() != null && storage.getGuidanceComputer().isEmpty()) {
+		if(ARConfiguration.getCurrentConfig().experimentalSpaceFlight.get() && storage.getGuidanceComputer() != null && storage.getGuidanceComputer().isEmpty()) {
 			allowLaunch = true;
 		}
 		else {
->>>>>>> origin/feature/nuclearthermalrockets
 
 			//Get destination dimid and lock the computer
 			//TODO: lock the computer
@@ -2163,14 +2158,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 
 
 
-<<<<<<< HEAD
 	public Entity changeDimension(ServerWorld newDimId) {
-		return changeDimension(newDimId, this.getPosX(), (double)getEntryHeight(ZUtils.getDimensionIdentifier(newDimId)), this.getPosZ());
-=======
-	@Override
-	public Entity changeDimension(int newDimId) {
-		return changeDimension(newDimId, this.posX, getEntryHeight(newDimId), this.posZ);
->>>>>>> origin/feature/nuclearthermalrockets
+		return changeDimension(newDimId, this.getPosX(), getEntryHeight(ZUtils.getDimensionIdentifier(newDimId)), this.getPosZ());
 	}
 
 	@Nullable
@@ -2216,9 +2205,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		this.getPassengers().clear();
 	}
 
-<<<<<<< HEAD
 	protected void readNetworkableNBT(CompoundNBT nbt) {
-		//Normal function checks for the existance of the data anyway
+		//Normal function checks for the existence of the data anyway
 		readAdditional(nbt);
 	}
 
@@ -2229,11 +2217,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 	private void setSize(float x, float z)
 	{
 		mySize = new EntitySize(x,z, false);
-=======
-	protected void readNetworkableNBT(NBTTagCompound nbt) {
-		//Normal function checks for the existence of the data anyway
-		readEntityFromNBT(nbt);
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override
@@ -2254,13 +2237,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 
 		setInFlight(isInFlight = nbt.getBoolean("flight"));
 
-<<<<<<< HEAD
-		readMissionPersistantNBT(nbt);
-		if(nbt.contains("data"))
-=======
 		readMissionPersistentNBT(nbt);
-		if(nbt.hasKey("data"))
->>>>>>> origin/feature/nuclearthermalrockets
+		if(nbt.contains("data"))
 		{
 			if(storage == null) 
 				storage = new StorageChunk();
@@ -2270,17 +2248,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			this.setSize(Math.max(storage.getSizeX(), storage.getSizeZ()), storage.getSizeY());
 		}
 
-<<<<<<< HEAD
 		if(nbt.contains("infrastructure")) {
 			ListNBT tagList = nbt.getList("infrastructure", 10);
 			for (int i = 0; i < tagList.size(); i++) {
-				int coords[] = tagList.getCompound(i).getIntArray("loc");
-=======
-		if(nbt.hasKey("infrastructure")) {
-			NBTTagList tagList = nbt.getTagList("infrastructure", 10);
-			for (int i = 0; i < tagList.tagCount(); i++) {
-				int[] coords = tagList.getCompoundTagAt(i).getIntArray("loc");
->>>>>>> origin/feature/nuclearthermalrockets
+				int[] coords = tagList.getCompound(i).getIntArray("loc");
 
 				infrastructureCoords.add(new HashedBlockPosition(coords[0], coords[1], coords[2]));
 
@@ -2301,23 +2272,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		spacePosition.readFromNBT(nbt);
 	}
 
-<<<<<<< HEAD
 	protected void writeNetworkableNBT(CompoundNBT nbt) {
-		writeMissionPersistantNBT(nbt);
+		writeMissionPersistentNBT(nbt);
 		nbt.putBoolean("orbit", isInOrbit());
 		nbt.putBoolean("flight", isInFlight());
 		nbt.putBoolean("rcs_mode", rcs_mode);
 		nbt.putInt("rcs_mode_cnt", rcs_mode_counter);
 		nbt.putBoolean("inSpaceFlight", getInSpaceFlight());
-=======
-	protected void writeNetworkableNBT(NBTTagCompound nbt) {
-		writeMissionPersistentNBT(nbt);
-		nbt.setBoolean("orbit", isInOrbit());
-		nbt.setBoolean("flight", isInFlight());
-		nbt.setBoolean("rcs_mode", rcs_mode);
-		nbt.setInteger("rcs_mode_cnt", rcs_mode_counter);
-		nbt.setBoolean("inSpaceFlight", getInSpaceFlight());
->>>>>>> origin/feature/nuclearthermalrockets
 		stats.writeToNBT(nbt);
 
 		if(!infrastructureCoords.isEmpty()) {
@@ -2347,28 +2308,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		spacePosition.writeToNBT(nbt);
 	}
 
-<<<<<<< HEAD
-	public void writeMissionPersistantNBT(CompoundNBT nbt) {
+	public void writeMissionPersistentNBT(CompoundNBT nbt) {
 
 	}
 
-	public void readMissionPersistantNBT(CompoundNBT nbt) {
-=======
-	public void writeMissionPersistentNBT(NBTTagCompound nbt) {
-
-	}
-
-	public void readMissionPersistentNBT(NBTTagCompound nbt) {
->>>>>>> origin/feature/nuclearthermalrockets
+	public void readMissionPersistentNBT(CompoundNBT nbt) {
 
 	}
 
 	@Override
-<<<<<<< HEAD
-	protected void writeAdditional(CompoundNBT nbt) {
-=======
-	protected void writeEntityToNBT(@Nonnull NBTTagCompound nbt) {
->>>>>>> origin/feature/nuclearthermalrockets
+	protected void writeAdditional(@Nonnull CompoundNBT nbt) {
 
 		writeNetworkableNBT(nbt);
 		if(storage != null) {
@@ -2430,13 +2379,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			else {
 				if(storage.getGuidanceComputer() != null) {
 					ItemStack stack = storage.getGuidanceComputer().getStackInSlot(0);
-<<<<<<< HEAD
-					if(stack != null && stack.getItem() == AdvancedRocketryItems.itemPlanetIdChip) {
-						out.writeString(((ItemPlanetIdentificationChip)AdvancedRocketryItems.itemPlanetIdChip).getDimensionId(stack).toString());
-=======
 					if(!stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemPlanetIdChip) {
-						out.writeInt(((ItemPlanetIdentificationChip)AdvancedRocketryItems.itemPlanetIdChip).getDimensionId(stack));
->>>>>>> origin/feature/nuclearthermalrockets
+						out.writeString(((ItemPlanetIdentificationChip)AdvancedRocketryItems.itemPlanetIdChip).getDimensionId(stack).toString());
 					}
 				}
 			}
@@ -2515,13 +2459,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		}
 		else if(id == PacketType.SENDPLANETDATA.ordinal()) {
 			ItemStack stack = storage.getGuidanceComputer().getStackInSlot(0);
-<<<<<<< HEAD
-			if(stack != null && stack.getItem() == AdvancedRocketryItems.itemPlanetIdChip) {
-				((ItemPlanetIdentificationChip)AdvancedRocketryItems.itemPlanetIdChip).setDimensionId(stack, new ResourceLocation(nbt.getString("selection")));
-=======
 			if(!stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemPlanetIdChip) {
-				((ItemPlanetIdentificationChip)AdvancedRocketryItems.itemPlanetIdChip).setDimensionId(stack, nbt.getInteger("selection"));
->>>>>>> origin/feature/nuclearthermalrockets
+				((ItemPlanetIdentificationChip)AdvancedRocketryItems.itemPlanetIdChip).setDimensionId(stack, new ResourceLocation(nbt.getString("selection")));
 
 				//Send data back to sync destination dims
 				if(!world.isRemote) {
@@ -2584,13 +2523,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		ItemStack slot0 = storage.getGuidanceComputer().getStackInSlot(0);
 		ResourceLocation uuid;
 		//Station location select
-<<<<<<< HEAD
-		if( slot0 != null && slot0.getItem() instanceof ItemStationChip && !Constants.INVALID_PLANET.equals((uuid = ItemStationChip.getUUID(slot0)))) {
-			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStation(uuid);
-=======
-		if(!slot0.isEmpty() && slot0.getItem() instanceof ItemStationChip && (uuid = ItemStationChip.getUUID(slot0)) != 0) {
+		if(!slot0.isEmpty() && slot0.getItem() instanceof ItemStationChip && !Constants.INVALID_PLANET.equals((uuid = ItemStationChip.getUUID(slot0)))) {
 			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStation(uuid);
->>>>>>> origin/feature/nuclearthermalrockets
 
 			if(spaceObject instanceof SpaceStationObject) {
 
@@ -2739,22 +2673,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 
 			modules.add(new ModuleButton(180, 114, LibVulpes.proxy.getLocalizedString("msg.entity.rocket.seldst"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, 64,20).setAdditionalData(1));
 			//modules.add(new ModuleText(180, 114, "Inventories", 0x404040));
-<<<<<<< HEAD
 		}
 		else {
-			ItemStack slot0 = storage.getGuidanceComputer().getStackInSlot(0);
+			ItemStack slot0 = storage.getGuidanceComputer() != null ? storage.getGuidanceComputer().getStackInSlot(0) : ItemStack.EMPTY;
 			ResourceLocation uuid;
 			//Station location select
-			if( slot0 != null && slot0.getItem() instanceof ItemStationChip && !Constants.INVALID_PLANET.equals((uuid = ItemStationChip.getUUID(slot0)))) {
+			if(!slot0.isEmpty() && slot0.getItem() instanceof ItemStationChip && !Constants.INVALID_PLANET.equals((uuid = ItemStationChip.getUUID(slot0)))) {
 				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStation(uuid);
-=======
-		} else {
-			ItemStack slot0 = storage.getGuidanceComputer() != null ? storage.getGuidanceComputer().getStackInSlot(0) : ItemStack.EMPTY;
-			int uuid;
-			//Station location select
-			if(!slot0.isEmpty() && slot0.getItem() instanceof ItemStationChip && (uuid = ItemStationChip.getUUID(slot0)) != 0) {
-				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStation(uuid);
->>>>>>> origin/feature/nuclearthermalrockets
 
 				modules.add(new ModuleStellarBackground(0, 0, zmaster587.libVulpes.inventory.TextureResources.starryBG));
 				//modules.add(new ModuleImage(0, 0, icon));
@@ -2762,13 +2687,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				if(spaceObject == null)
 					return modules;
 
-<<<<<<< HEAD
-				List<ModuleBase> list2 = new LinkedList<ModuleBase>();
-				ModuleButton button = new ModuleButton(0, 0, LibVulpes.proxy.getLocalizedString("msg.entity.rocket.clear"), this, TextureResources.buttonGeneric, 72, 18).setAdditionalData(STATION_LOC_OFFSET);
-=======
 				List<ModuleBase> list2 = new LinkedList<>();
-				ModuleButton button = new ModuleButton(0, 0, STATION_LOC_OFFSET, LibVulpes.proxy.getLocalizedString("msg.entity.rocket.clear"), this, TextureResources.buttonGeneric, 72, 18);
->>>>>>> origin/feature/nuclearthermalrockets
+				ModuleButton button = new ModuleButton(0, 0, LibVulpes.proxy.getLocalizedString("msg.entity.rocket.clear"), this, TextureResources.buttonGeneric, 72, 18).setAdditionalData(STATION_LOC_OFFSET);
 				list2.add(button);
 
 				int i = 1;

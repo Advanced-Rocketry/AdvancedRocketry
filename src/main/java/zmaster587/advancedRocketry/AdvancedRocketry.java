@@ -33,7 +33,6 @@ import net.minecraftforge.common.world.ForgeChunkManager.LoadingValidationCallba
 import net.minecraftforge.common.world.ForgeChunkManager.TicketHelper;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
-<<<<<<< HEAD
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -41,12 +40,6 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
-=======
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -114,18 +107,12 @@ import zmaster587.libVulpes.api.LibVulpesItems;
 import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.api.material.MixedMaterial;
-<<<<<<< HEAD
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockTile;
-=======
-import zmaster587.libVulpes.block.*;
 import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
-import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisibleAlphaTexture;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.items.ItemBlockMeta;
-import zmaster587.libVulpes.items.ItemIngredient;
->>>>>>> origin/feature/nuclearthermalrockets
 import zmaster587.libVulpes.items.ItemProjector;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketItemModifcation;
@@ -183,12 +170,8 @@ public class AdvancedRocketry {
 
 	public static ItemGroup tabAdvRocketry = new ItemGroup("advancedRocketry") {
 		@Override
-<<<<<<< HEAD
-		public ItemStack createIcon() {
-=======
 		@Nonnull
-		public ItemStack getTabIconItem() {
->>>>>>> origin/feature/nuclearthermalrockets
+		public ItemStack createIcon() {
 			return new ItemStack(AdvancedRocketryItems.itemSatelliteIdChip);
 		}
 	};
@@ -1033,11 +1016,7 @@ public class AdvancedRocketry {
 			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {MinecraftForge.EVENT_BUS.register(eventHandler);} );
 				
 		}
-<<<<<<< HEAD
-		Compat.isSpongeInstalled = ModList.get().isLoaded("sponge");
-=======
-		CompatibilityMgr.isSpongeInstalled = Loader.isModLoaded("sponge");
->>>>>>> origin/feature/nuclearthermalrockets
+		CompatibilityMgr.isSpongeInstalled = ModList.get().isLoaded("sponge");
 		// End compat stuff
 
 		MinecraftForge.EVENT_BUS.register(SpaceObjectManager.getSpaceManager());

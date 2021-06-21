@@ -239,7 +239,7 @@ public class XMLAsteroidLoader {
 		}
 
 <<<<<<< HEAD
-		ItemStack stack = null;
+		ItemStack stack = ItemStack.EMPTY;
 		Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(splitStr[0].trim()));
 		if(item != null)
 			stack = new ItemStack(item, size);

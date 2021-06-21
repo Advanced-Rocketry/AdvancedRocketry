@@ -15,7 +15,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Dimension;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
-<<<<<<< HEAD
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.biome.ColumnFuzzedBiomeMagnifier;
@@ -29,12 +28,6 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
-=======
-import net.minecraft.world.WorldProvider;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
-
->>>>>>> origin/feature/nuclearthermalrockets
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
@@ -67,6 +60,9 @@ import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderSpace;
 import zmaster587.advancedRocketry.world.CustomPlanetBiomeProvider;
 import zmaster587.advancedRocketry.world.ModdedDimensionType;
+import zmaster587.advancedRocketry.world.provider.WorldProviderAsteroid;
+import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
+import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.ZUtils;
 
@@ -90,9 +86,8 @@ public class DimensionManager implements IGalaxy {
 	public static final String worldXML = "/planetDefs.xml";
 <<<<<<< HEAD
 	public static final String datapackPath = "datapacks";
-	private boolean hasBeenInitiallized = false;
+	private boolean hasBeenInitialized = false;
 =======
-	public static int dimOffset = 0;
 	public static final DimensionType PlanetDimensionType = DimensionType.register("planet", "planet", 2, WorldProviderPlanet.class, false);
 	public static final DimensionType spaceDimensionType = DimensionType.register("space", "space", 3, WorldProviderSpace.class, false);
 	public static final DimensionType AsteroidDimensionType = DimensionType.register("asteroid", "asteroid", 4, WorldProviderAsteroid.class, false);
@@ -110,12 +105,7 @@ public class DimensionManager implements IGalaxy {
 
 	public static final int GASGIANT_DIMID_OFFSET = 0x100; //Offset by 256
 	private static long nextSatelliteId;
-<<<<<<< HEAD
-	private static StellarBody sol;
 	public Set<ResourceLocation> knownPlanets;
-=======
-	public Set<Integer> knownPlanets;
->>>>>>> origin/feature/nuclearthermalrockets
 
 	//The default properties belonging to the overworld
 	public static DimensionProperties overworldProperties;
@@ -124,31 +114,14 @@ public class DimensionManager implements IGalaxy {
 	
 	public static DimensionProperties warpDimensionProperties;
 
-<<<<<<< HEAD
-	@Deprecated
-	public static StellarBody getSol() {
-		
-		if(sol == null)
-			sol = new StellarBody();
-		return sol;
-	}
-
-=======
->>>>>>> origin/feature/nuclearthermalrockets
 	public static DimensionManager getInstance() {
 		return AdvancedRocketry.proxy.getDimensionManager(); //instance;
 	}
 
 	public DimensionManager() {
-<<<<<<< HEAD
 		dimensionListResource = new HashMap<ResourceLocation, DimensionProperties>();
-		starList = new HashMap<ResourceLocation, StellarBody>();
-		sol = new StellarBody();
-=======
-		dimensionList = new HashMap<>();
 		starList = new HashMap<>();
 		StellarBody sol = new StellarBody();
->>>>>>> origin/feature/nuclearthermalrockets
 		sol.setTemperature(100);
 		sol.setId(new ResourceLocation(Constants.STAR_NAMESPACE, "0"));
 		sol.setName("Sol");
@@ -186,25 +159,15 @@ public class DimensionManager implements IGalaxy {
 		warpDimensionProperties.orbitalDist = 1;
 
 		random = new Random(System.currentTimeMillis());
-<<<<<<< HEAD
-		knownPlanets = new HashSet<ResourceLocation>();
-=======
 		knownPlanets = new HashSet<>();
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	/**
 	 * @return an Integer array of dimensions registered with this DimensionManager
 	 */
-<<<<<<< HEAD
 	public ResourceLocation[] getRegisteredDimensions() {
-		ResourceLocation ret[] = new ResourceLocation[dimensionListResource.size()];
+		ResourceLocation[] ret = new ResourceLocation[dimensionListResource.size()];
 		return dimensionListResource.keySet().toArray(ret);
-=======
-	public Integer[] getRegisteredDimensions() {
-		Integer[] ret = new Integer[dimensionList.size()];
-		return dimensionList.keySet().toArray(ret);
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	/**
@@ -247,13 +210,8 @@ public class DimensionManager implements IGalaxy {
 		//Hack to allow monitoring stations to properly reload after a server restart
 		//Because there should never be a tile in the world where no planets have been generated load file first
 		//Worst thing that can happen is there is no file and it gets genned later and the monitor does not reconnect
-<<<<<<< HEAD
-		if(!hasBeenInitiallized && EffectiveSide.get().isServer() ) {
+		if(!hasBeenInitialized && EffectiveSide.get().isServer() ) {
 			DimensionManager.getInstance().loadDimensions(ServerLifecycleHooks.getCurrentServer().func_240776_a_(new FolderName(DimensionManager.workingPath)).toString());
-=======
-		if(!hasBeenInitialized && FMLCommonHandler.instance().getSide().isServer()) {
-			zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().loadDimensions(zmaster587.advancedRocketry.dimension.DimensionManager.workingPath);
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 
 		SatelliteBase satellite = overworldProperties.getSatellite(satId);
@@ -319,13 +277,8 @@ public class DimensionManager implements IGalaxy {
 	 * @param dimId id to set the properties of
 	 * @param properties to set for that dimension
 	 */
-<<<<<<< HEAD
-	public void setDimProperties( ResourceLocation dimId, DimensionProperties properties) {
+	public void setDimProperties(ResourceLocation dimId, DimensionProperties properties) {
 		dimensionListResource.put(dimId,properties);
-=======
-	public void setDimProperties( int dimId, DimensionProperties properties) {
-		dimensionList.put(dimId,properties);
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	/**
@@ -727,11 +680,7 @@ public class DimensionManager implements IGalaxy {
 				ZUtils.unregisterDimension(dimId);
 			}
 		}
-<<<<<<< HEAD
 		dimensionListResource.remove(dimId);
-=======
-		dimensionList.remove(dimId);
->>>>>>> origin/feature/nuclearthermalrockets
 
 		//Delete World Folder
 		
@@ -774,15 +723,9 @@ public class DimensionManager implements IGalaxy {
 			starProps.setName(starProps.getStar().getName());
 			return starProps;
 		}
-<<<<<<< HEAD
 		
 		DimensionProperties properties = dimensionListResource.get(resourceLocation);
 		if(ARConfiguration.GetSpaceDimId().equals(resourceLocation) || resourceLocation == null) {
-=======
-
-		DimensionProperties properties = dimensionList.get(dimId);
-		if(dimId == ARConfiguration.getCurrentConfig().spaceDimId || dimId == Integer.MIN_VALUE) {
->>>>>>> origin/feature/nuclearthermalrockets
 			return defaultSpaceDimensionProperties;
 		}
 		return properties == null ? overworldProperties : properties;
@@ -817,11 +760,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param id star id for which to get the object
 	 * @return the {@link StellarBody} object
 	 */
-<<<<<<< HEAD
 	public StellarBody getStar(ResourceLocation id) {
-=======
-	public StellarBody getStar(int id) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return starList.get(id);
 	}
 
@@ -997,17 +936,8 @@ public class DimensionManager implements IGalaxy {
 	 * @param dimId integer id of the dimension
 	 * @return true if the dimension exists and is registered
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	public boolean isDimensionCreated( ResourceLocation dimId) {
+	public boolean isDimensionCreated(ResourceLocation dimId) {
 		return dimensionListResource.containsKey(dimId) || ARConfiguration.GetSpaceDimId().equals(dimId);
-=======
-	public boolean isDimensionCreated( int dimId) {
-=======
-	public boolean isDimensionCreated(int dimId) {
->>>>>>> origin/feature/nuclearthermalrockets
-		return dimensionList.containsKey(dimId) || dimId == ARConfiguration.getCurrentConfig().spaceDimId;
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	public boolean isDimensionCreated( World dimId) {
@@ -1143,16 +1073,6 @@ public class DimensionManager implements IGalaxy {
 			boolean loadSuccessful = true;
 
 			try {
-<<<<<<< HEAD
-				loader.loadFile(file);
-				if(!loader.isValid())
-					throw new Exception("Cannot read XML");
-				dimCouplingList = loader.readAllPlanets();
-			} catch(Exception e) {
-				e.printStackTrace();
-				AdvancedRocketry.logger.fatal("A serious error has occured while loading the planetDefs XML");
-				ServerLifecycleHooks.handleExit(-1);
-=======
 				if(loader.loadFile(file)) {
 					dimCouplingList = loader.readAllPlanets();
 					DimensionManager.dimOffset += dimCouplingList.dims.size();
@@ -1166,9 +1086,8 @@ public class DimensionManager implements IGalaxy {
 			}
 
 			if(!loadSuccessful) {
-				logger.fatal("A serious error has occurred while loading the planetDefs XML");
-				FMLCommonHandler.instance().exitJava(-1, false);
->>>>>>> origin/feature/nuclearthermalrockets
+                AdvancedRocketry.logger.fatal("A serious error has occurred while loading the planetDefs XML");
+                ServerLifecycleHooks.handleExit(-1);
 			}
 		}
 		//End load planet files
@@ -1296,13 +1215,8 @@ public class DimensionManager implements IGalaxy {
 					dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiomeDark);
 
 					dimensionProperties.setParentPlanet(DimensionManager.overworldProperties);
-<<<<<<< HEAD
-					dimensionProperties.setStar(DimensionManager.getSol());
+                    dimensionProperties.setStar(DimensionManager.getInstance().getStar(0));
 					dimensionProperties.isNativeDimension = !ModList.get().isLoaded("GalacticraftCore");
-=======
-					dimensionProperties.setStar(DimensionManager.getInstance().getStar(0));
-					dimensionProperties.isNativeDimension = !Loader.isModLoaded("GalacticraftCore");
->>>>>>> origin/feature/nuclearthermalrockets
 					dimensionProperties.initDefaultAttributes();
 
 					DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !ModList.get().isLoaded("GalacticraftCore"));
@@ -1451,11 +1365,11 @@ public class DimensionManager implements IGalaxy {
 		for(ISpaceObject spaceObject : SpaceObjectManager.getSpaceManager().getSpaceObjects())
 		{
 <<<<<<< HEAD
-			ResourceLocation orbitingId = i.getOrbitingPlanetId(); 
+			ResourceLocation orbitingId = spaceObject.getOrbitingPlanetId();
 			if(!isDimensionCreated(orbitingId) && !SpaceObjectManager.WARPDIMID.equals(orbitingId) && orbitingId.getNamespace().equals(Constants.PLANET_NAMESPACE))
 			{
-				AdvancedRocketry.logger.warn("Dimension ID " + i.getOrbitingPlanetId() + " is not registered and a space station is orbiting it, moving to dimid 0");
-				i.setOrbitingBody(defaultSpaceDimensionProperties.getId());
+				AdvancedRocketry.logger.warn("Dimension ID " + spaceObject.getOrbitingPlanetId() + " is not registered and a space station is orbiting it, moving to dimid 0");
+                spaceObject.setOrbitingBody(defaultSpaceDimensionProperties.getId());
 =======
 			int orbitingId = spaceObject.getOrbitingPlanetId();
 			if(!isDimensionCreated(orbitingId) && orbitingId != 0 && orbitingId != SpaceObjectManager.WARPDIMID && orbitingId < Constants.STAR_ID_OFFSET) {
@@ -1472,15 +1386,9 @@ public class DimensionManager implements IGalaxy {
 	 * Loads all information to rebuild the galaxy and solar systems from disk into the current instance of DimensionManager
 	 * @param filePath file path from which to load the information
 	 */
-<<<<<<< HEAD
 	public Map<ResourceLocation,IDimensionProperties> loadDimensions(String filePath) {
 		hasBeenInitiallized = true;
-		Map<ResourceLocation,IDimensionProperties> loadedDimProps = new HashMap<ResourceLocation,IDimensionProperties>();
-=======
-	public Map<Integer,IDimensionProperties> loadDimensions(String filePath) {
-		hasBeenInitialized = true;
-		Map<Integer,IDimensionProperties> loadedDimProps = new HashMap<>();
->>>>>>> origin/feature/nuclearthermalrockets
+		Map<ResourceLocation,IDimensionProperties> loadedDimProps = new HashMap<>();
 
 		FileInputStream inStream;
 		CompoundNBT nbt;
@@ -1604,17 +1512,10 @@ public class DimensionManager implements IGalaxy {
 
 	public static DimensionProperties getEffectiveDimId(ResourceLocation dimId, BlockPos pos) {
 
-<<<<<<< HEAD
 		if(ARConfiguration.GetSpaceDimId().equals(dimId)) {
-			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(obj != null)
-				return (DimensionProperties) obj.getProperties().getParentProperties();
-=======
-		if(dimId == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObject != null)
 				return (DimensionProperties) spaceObject.getProperties().getParentProperties();
->>>>>>> origin/feature/nuclearthermalrockets
 			else 
 				return defaultSpaceDimensionProperties;
 		}
@@ -1624,17 +1525,10 @@ public class DimensionManager implements IGalaxy {
 	public static DimensionProperties getEffectiveDimId(World world, BlockPos pos) {
 		ResourceLocation dimId = ZUtils.getDimensionIdentifier(world);
 
-<<<<<<< HEAD
 		if(ARConfiguration.GetSpaceDimId().equals(dimId)) {
-			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(obj != null)
-				return (DimensionProperties) obj.getProperties().getParentProperties();
-=======
-		if(dimId == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObject != null)
 				return (DimensionProperties) spaceObject.getProperties().getParentProperties();
->>>>>>> origin/feature/nuclearthermalrockets
 			else 
 				return defaultSpaceDimensionProperties;
 		}

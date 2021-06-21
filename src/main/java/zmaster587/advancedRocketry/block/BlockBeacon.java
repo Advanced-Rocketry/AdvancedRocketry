@@ -39,11 +39,7 @@ public class BlockBeacon extends BlockMultiblockMachine {
 	public void randomDisplayTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand)
 	{
 		if(worldIn.getTileEntity(pos) instanceof TileBeacon && ((TileBeacon)worldIn.getTileEntity(pos)).getMachineEnabled()) {
-<<<<<<< HEAD
-			Direction enumfacing = (Direction)stateIn.get(FACING);
-=======
-			EnumFacing enumfacing = stateIn.getValue(FACING);
->>>>>>> origin/feature/nuclearthermalrockets
+			Direction enumfacing = stateIn.get(FACING);
 			for(int i = 0; i < 10; i++)
 				AdvancedRocketry.proxy.spawnParticle("reddust", worldIn,  pos.getX() +- enumfacing.getXOffset() + worldIn.rand.nextDouble(), pos.getY() + 5 - worldIn.rand.nextDouble(), pos.getZ() - enumfacing.getZOffset() + worldIn.rand.nextDouble(), 0, 0, 0);
 		}

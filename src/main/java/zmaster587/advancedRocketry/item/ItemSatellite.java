@@ -18,7 +18,6 @@ import java.util.List;
 
 public class ItemSatellite extends ItemIdWithName {
 
-<<<<<<< HEAD
 	public ItemSatellite(Properties properties) {
 		super(properties);
 	}
@@ -70,10 +69,7 @@ public class ItemSatellite extends ItemIdWithName {
 		return null;
 	}
 
-	public EmbeddedInventory readInvFromNBT(ItemStack stackIn) {
-=======
 	public EmbeddedInventory readInvFromNBT(@Nonnull ItemStack stackIn) {
->>>>>>> origin/feature/nuclearthermalrockets
 		EmbeddedInventory inv = new EmbeddedInventory(7);
 		if(!stackIn.hasTag() || !stackIn.getTag().contains("inv"))
 			return inv;
@@ -82,17 +78,10 @@ public class ItemSatellite extends ItemIdWithName {
 		return inv;
 	}
 
-<<<<<<< HEAD
-	public void writeInvToNBT(ItemStack stackIn, EmbeddedInventory inv) {
+	public void writeInvToNBT(@Nonnull ItemStack stackIn, EmbeddedInventory inv) {
 		CompoundNBT nbt = new CompoundNBT();
 		if(!stackIn.hasTag())
 			stackIn.setTag(nbt);
-=======
-	public void writeInvToNBT(@Nonnull ItemStack stackIn, EmbeddedInventory inv) {
-		NBTTagCompound nbt = new NBTTagCompound();
-		if(!stackIn.hasTagCompound())
-			stackIn.setTagCompound(nbt);
->>>>>>> origin/feature/nuclearthermalrockets
 		else
 			nbt = stackIn.getTag();
 

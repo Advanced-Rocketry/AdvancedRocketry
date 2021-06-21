@@ -137,14 +137,8 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 
 			List<String> list = new LinkedList<>();
 			list.add(totalData + " / " + totalMaxData + " Data");
-<<<<<<< HEAD
-			list.add("Type: " +  I18n.format(data[0].getDataType().toString(), new Object[0]));
-			this.drawTooltip(gui, matrix, list, mouseX, mouseY, zLevel, font);
-=======
 			list.add("Type: " +  I18n.format(data[0].getDataType().toString()));
-
-			this.drawTooltip(gui, list, mouseX, mouseY, zLevel, font);
->>>>>>> origin/feature/nuclearthermalrockets
+			this.drawTooltip(gui, matrix, list, mouseX, mouseY, zLevel, font);
 		}
 
 	}

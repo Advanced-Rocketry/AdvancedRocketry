@@ -39,15 +39,9 @@ import java.util.Map;
 
 public class TileGuidanceComputer extends TileInventoryHatch implements IModularInventory {
 
-<<<<<<< HEAD
-	ResourceLocation destinationId;
-	Vector3F<Float> landingPos;
-	Map<ResourceLocation, HashedBlockPosition> landingLoc;
-=======
-	private int destinationId;
+	private ResourceLocation destinationId;
 	private Vector3F<Float> landingPos;
-	private Map<Integer, HashedBlockPosition> landingLoc;
->>>>>>> origin/feature/nuclearthermalrockets
+	private Map<ResourceLocation, HashedBlockPosition> landingLoc;
 
 	public TileGuidanceComputer() {
 		super( AdvancedRocketryTileEntityType.TILE_GUIDANCE_COMPUTER, 1);
@@ -55,21 +49,11 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		inventory.setCanExtractSlot(0, true);
 		landingPos = new Vector3F<>(0f, 0f, 0f);
 		destinationId = Constants.INVALID_PLANET;
-<<<<<<< HEAD
-		landingLoc = new HashMap<ResourceLocation, HashedBlockPosition>();
-	}
-	@Override
-	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		List<ModuleBase> modules = super.getModules(ID, player);
-
-		return modules;
-=======
 		landingLoc = new HashMap<>();
 	}
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		return super.getModules(ID, player);
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override
@@ -77,9 +61,6 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		return 1;
 	}
 
-<<<<<<< HEAD
-	public void setLandingLocation(ResourceLocation stationId, StationLandingLocation loc) {
-=======
 	@Override
 	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack itemStack) {
 		Item item = itemStack.getItem();
@@ -92,8 +73,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				item == LibVulpesItems.itemLinker);
 	}
 
-	public void setLandingLocation(int stationId, StationLandingLocation loc) {
->>>>>>> origin/feature/nuclearthermalrockets
+	public void setLandingLocation(ResourceLocation stationId, StationLandingLocation loc) {
 		if(loc == null)
 			landingLoc.remove(stationId);
 		else
@@ -140,19 +120,11 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				return item.getDimensionId(stack);
 			}
 			else if(itemType instanceof ItemStationChip) {
-<<<<<<< HEAD
 				if(ARConfiguration.GetSpaceDimId().equals(currentDimension)) {
-					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-					if(object != null) {
-						if(ItemStationChip.getUUID(stack).equals(object.getId()))
-							return object.getOrbitingPlanetId();
-=======
-				if(ARConfiguration.getCurrentConfig().spaceDimId == currentDimension) {
 					ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 					if(spaceObject != null) {
-						if(ItemStationChip.getUUID(stack) == spaceObject.getId())
+						if(ItemStationChip.getUUID(stack).equals(spaceObject.getId()))
 							return spaceObject.getOrbitingPlanetId();
->>>>>>> origin/feature/nuclearthermalrockets
 					}
 					else
 						return Constants.INVALID_PLANET;
@@ -167,15 +139,9 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				return currentDimension;
 			}
 			else if(itemType instanceof ItemSatelliteIdentificationChip) {
-<<<<<<< HEAD
-				long l = getTargetSatellite();
-				if(l != Constants.INVALID_SAT) {
-					SatelliteBase sat = DimensionManager.getInstance().getSatellite(l);
-=======
 				long satelliteId = getTargetSatellite();
-				if(satelliteId != -1) {
+				if(satelliteId != Constants.INVALID_SAT) {
 					SatelliteBase sat = DimensionManager.getInstance().getSatellite(satelliteId);
->>>>>>> origin/feature/nuclearthermalrockets
 					
 					if(sat != null)
 						return sat.getDimensionId().get();
@@ -236,19 +202,11 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			{
 				//Use the destination the Linker in the Guidance computer directs.
 				BlockPos landingBlock = ItemLinker.getMasterCoords(stack);
-<<<<<<< HEAD
-				return new Vector3F<Float>(landingBlock.getX() + 0.5f, (float)ARConfiguration.getCurrentConfig().orbit.get(), landingBlock.getZ() + 0.5f);
+				return new Vector3F<>(landingBlock.getX() + 0.5f, (float)ARConfiguration.getCurrentConfig().orbit.get(), landingBlock.getZ() + 0.5f);
 			}
 
 		}		
 		else if (stack.isEmpty() && !Constants.INVALID_PLANET.equals(destinationId))
-=======
-				return new Vector3F<>(landingBlock.getX() + 0.5f, (float) ARConfiguration.getCurrentConfig().orbit, landingBlock.getZ() + 0.5f);
-			}
-
-		}		
-		else if (destinationId != Constants.INVALID_PLANET)
->>>>>>> origin/feature/nuclearthermalrockets
 		{
 			//Use the override coordinates from a Linker in a Docking Pad.
 			return landingPos;
@@ -283,11 +241,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	
 	public void overrideLandingStation(ISpaceObject spaceObject)
 	{
-<<<<<<< HEAD
-		setFallbackDestination(ARConfiguration.GetSpaceDimId(), getStationLocation(object, true));
-=======
-		setFallbackDestination(ARConfiguration.getCurrentConfig().spaceDimId, getStationLocation(spaceObject, true));
->>>>>>> origin/feature/nuclearthermalrockets
+		setFallbackDestination(ARConfiguration.GetSpaceDimId(), getStationLocation(spaceObject, true));
 	}
 	
 	public String getDestinationName(ResourceLocation landingDimension)
@@ -378,15 +332,9 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 
 		ListNBT stationList = nbt.getList("stationMapping", NBT.TAG_COMPOUND);
 
-<<<<<<< HEAD
 		for(int i = 0; i < stationList.size(); i++) {
 			CompoundNBT tag = stationList.getCompound(i);
-			int pos[];
-=======
-		for(int i = 0; i < stationList.tagCount(); i++) {
-			NBTTagCompound tag = stationList.getCompoundTagAt(i);
 			int[] pos;
->>>>>>> origin/feature/nuclearthermalrockets
 			pos = tag.getIntArray("pos");
 			ResourceLocation id = new ResourceLocation(tag.getString("id"));
 			landingLoc.put(id, new HashedBlockPosition(pos[0], pos[1], pos[2]));

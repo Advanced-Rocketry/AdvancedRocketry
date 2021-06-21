@@ -1,13 +1,9 @@
 package zmaster587.advancedRocketry.event;
 
-<<<<<<< HEAD
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PortalInfo;
 import net.minecraft.block.WallTorchBlock;
-=======
-import net.minecraft.block.BlockTorch;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -19,7 +15,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-<<<<<<< HEAD
 import net.minecraft.item.Items;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.util.Direction;
@@ -31,23 +26,13 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.IWorld;
-=======
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentString;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.world.World;
-<<<<<<< HEAD
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent.LoggedOutEvent;
-=======
-import net.minecraft.world.WorldProvider;
-import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent;
 import net.minecraftforge.event.TickEvent;
@@ -71,14 +56,10 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.advancements.ARAdvancements;
-<<<<<<< HEAD
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.ARConfiguration;
-=======
-import zmaster587.advancedRocketry.api.*;
->>>>>>> origin/feature/nuclearthermalrockets
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
@@ -92,11 +73,8 @@ import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
-<<<<<<< HEAD
 import zmaster587.advancedRocketry.util.GravityHandler;
-=======
 import zmaster587.advancedRocketry.util.BiomeHandler;
->>>>>>> origin/feature/nuclearthermalrockets
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
@@ -105,13 +83,10 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
-<<<<<<< HEAD
 import zmaster587.libVulpes.util.ZUtils;
-=======
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
->>>>>>> origin/feature/nuclearthermalrockets
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -240,9 +215,9 @@ public class PlanetEventHandler {
 			if(event.getEntity() instanceof PlayerEntity && ZUtils.getDimensionIdentifier(event.getEntity().world).equals(ARConfiguration.getCurrentConfig().spaceDimId) && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.getEntity().getPosition()) == null) {
 				double distance = 0;
 				HashedBlockPosition teleportPosition = null;
-				for (ISpaceObject object : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
-					if (object instanceof SpaceStationObject) {
-						SpaceStationObject station = ((SpaceStationObject) object);
+				for (ISpaceObject spaceObject : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
+					if (spaceObject instanceof SpaceStationObject) {
+						SpaceStationObject station = ((SpaceStationObject) spaceObject);
 						double distanceTo = event.getEntity().getDistanceSq(station.getSpawnLocation().x, station.getSpawnLocation().y, station.getSpawnLocation().z);
 						if (distanceTo > distance) {
 							distance = distanceTo;
@@ -275,7 +250,7 @@ public class PlanetEventHandler {
 
 	@SubscribeEvent
 <<<<<<< HEAD
-	public void sleepEvent(PlayerSleepInBedEvent event) {
+	public void sleepEvent(@Nonnull PlayerSleepInBedEvent event) {
 		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(event.getEntity().getEntityWorld());
 		if(props != DimensionManager.defaultSpaceDimensionProperties) {
 			if (!ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace.get() && AtmosphereHandler.hasAtmosphereHandler(event.getEntity().world) && 
@@ -332,40 +307,21 @@ public class PlanetEventHandler {
 	}
 
 	@SubscribeEvent
-<<<<<<< HEAD
-	public void blockRightClicked(RightClickBlock event) {
-		Direction direction = event.getFace();
-		if(!event.getWorld().isRemote && direction != null  && event.getPlayer() != null  && AtmosphereHandler.getOxygenHandler(event.getWorld()) != null &&
-				!AtmosphereHandler.getOxygenHandler(event.getWorld()).getAtmosphereType(event.getPos().offset(direction)).allowsCombustion()) {
-
-<<<<<<< HEAD
-			if(event.getPlayer().getHeldItem(event.getHand()) != null) {
-				if(event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD )
-=======
-=======
 	public void blockRightClicked(@Nonnull RightClickBlock event) {
-		EnumFacing direction = event.getFace();
-		WorldProvider provider = event.getWorld().provider;
-		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(provider.getDimension());
+		Direction direction = event.getFace();
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(event.getWorld().getDimension());
 
-		if(!event.getWorld().isRemote && direction != null  && event.getEntityPlayer() != null  && AtmosphereHandler.getOxygenHandler(provider.getDimension()) != null && atmhandler != null &&
+		if(!event.getWorld().isRemote && direction != null  && event.getPlayer() != null  && AtmosphereHandler.getOxygenHandler(event.getWorld()) != null && atmhandler != null &&
 				!atmhandler.getAtmosphereType(event.getPos().offset(direction)).allowsCombustion()) {
 
->>>>>>> origin/feature/nuclearthermalrockets
-			if(!event.getEntityPlayer().getHeldItem(event.getHand()).isEmpty()) {
-				if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD )
->>>>>>> origin/feature/nuclearthermalrockets
+			if(!event.getPlayer().getHeldItem(event.getHand()).isEmpty()) {
+				if(event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD )
 					event.setCanceled(true);
 			}
 		}
 
-<<<<<<< HEAD
-		if(!event.getWorld().isRemote && event.getItemStack() != null && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
-			ARAdvancements.triggerAchievement(ARAdvancements.BEER, (ServerPlayerEntity)event.getEntity());
-=======
 		if(!event.getWorld().isRemote && !event.getItemStack().isEmpty() && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
-			ARAdvancements.BEER.trigger((EntityPlayerMP) event.getEntityPlayer());
->>>>>>> origin/feature/nuclearthermalrockets
+			ARAdvancements.triggerAchievement(ARAdvancements.BEER, (ServerPlayerEntity)event.getEntity());
 		}
 	}
 
@@ -448,13 +404,8 @@ public class PlanetEventHandler {
 			PacketHandler.sendToPlayer(new PacketDimInfo(i, DimensionManager.getInstance().getDimensionProperties(i)), mgr);
 		}
 
-<<<<<<< HEAD
-		for(ISpaceObject obj : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
-			PacketHandler.sendToPlayer(new PacketSpaceStationInfo(obj.getId(), obj), mgr);
-=======
 		for(ISpaceObject spaceObject : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
-			PacketHandler.sendToDispatcher(new PacketSpaceStationInfo(spaceObject.getId(), spaceObject), event.getManager());
->>>>>>> origin/feature/nuclearthermalrockets
+			PacketHandler.sendToDispatcher(new PacketSpaceStationInfo(spaceObject.getId(), spaceObject), mgr);
 		}
 	}
 
@@ -568,11 +519,7 @@ public class PlanetEventHandler {
 	}*/
 
 
-<<<<<<< HEAD
-	static final ItemStack component = new ItemStack(AdvancedRocketryItems.itemUpgradeFogGoggles, 1);
-=======
-	private static final ItemStack component = new ItemStack(AdvancedRocketryItems.itemUpgrade, 1, 4);
->>>>>>> origin/feature/nuclearthermalrockets
+	private static final ItemStack component = new ItemStack(AdvancedRocketryItems.itemUpgradeFogGoggles, 1);
 	@SubscribeEvent
 	@OnlyIn(value=Dist.CLIENT)
 	public void fogColor(RenderFogEvent event) {

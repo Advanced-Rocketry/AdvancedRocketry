@@ -191,13 +191,13 @@ public class ItemHovercraft extends Item {
 				{
 					itemstack.shrink(1);
 				}
-				return new ActionResult<ItemStack>(ActionResultType.SUCCESS, itemstack);
+				return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
 			}
 		}
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, World worldIn, List tooltip, ITooltipFlag flagIn) {
+	public void addInformation(@Nonnull ItemStack stack, World worldIn, List tooltip, ITooltipFlag flagIn) {
 		tooltip.add(new TranslationTextComponent("item.hovercraft.tooltip"));
 	}
 =======

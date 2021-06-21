@@ -12,11 +12,7 @@ public interface IDataHandler {
 	 * @param commit true if the change is to be commited, false if simulated
 	 * @return amount of data actually extracted
 	 */
-<<<<<<< HEAD
-	public int extractData(int maxAmount, DataStorage.DataType type, Direction dir, boolean commit);
-=======
-	int extractData(int maxAmount, DataStorage.DataType type, EnumFacing dir, boolean commit);
->>>>>>> origin/feature/nuclearthermalrockets
+	int extractData(int maxAmount, DataStorage.DataType type, Direction dir, boolean commit);
 	
 	/**
 	 * @param maxAmount Maximum amount to add
@@ -25,11 +21,7 @@ public interface IDataHandler {
 	 * @param commit true if the change is to be commited, false if simulated
 	 * @return Amount of data actually added
 	 */
-<<<<<<< HEAD
-	public int addData(int maxAmount, DataStorage.DataType type, Direction dir, boolean commit);
-=======
-	int addData(int maxAmount, DataStorage.DataType type, EnumFacing dir, boolean commit);
->>>>>>> origin/feature/nuclearthermalrockets
+	int addData(int maxAmount, DataStorage.DataType type, Direction dir, boolean commit);
 	
 	/**
 	 * 

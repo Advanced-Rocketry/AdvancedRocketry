@@ -168,36 +168,20 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	public void remove() {
 		super.remove();
 
-<<<<<<< HEAD
-		AtmosphereHandler handler = AtmosphereHandler.getOxygenHandler(this.world);
-		if(handler != null)
-			AtmosphereHandler.getOxygenHandler(this.world).unregisterBlob(this);
-		deactivateAdjblocks();
-=======
-		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(this.world.provider.getDimension());
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(this.world);
 		if(atmhandler != null)
 			atmhandler.unregisterBlob(this);
-		deactivateAdjBlocks();
->>>>>>> origin/feature/nuclearthermalrockets
+		deactivateAdjblocks();
 	}
 
 	@Override
 	public int getPowerPerOperation() {
-<<<<<<< HEAD
-		return (int)((numScrubbers*10 + 1)*ARConfiguration.getCurrentConfig().oxygenVentPowerMultiplier.get());
-	}
-
-	@Override
-	public boolean canFill( Fluid fluid) {
-		return FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.oxygenStill.get()) && super.canFill( fluid);
-=======
-		return (int)((numScrubbers * 10 + 1)*ARConfiguration.getCurrentConfig().oxygenVentPowerMultiplier);
+		return (int)((numScrubbers * 10 + 1) * ARConfiguration.getCurrentConfig().oxygenVentPowerMultiplier.get());
 	}
 
 	@Override
 	public boolean canFill(Fluid fluid) {
-		return FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.fluidOxygen) && super.canFill(fluid);
->>>>>>> origin/feature/nuclearthermalrockets
+		return FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.oxygenStill.get()) && super.canFill( fluid);
 	}
 
 	public boolean isTurnedOn() {
@@ -227,49 +211,30 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 				return;
 
 			if(firstRun) {
-<<<<<<< HEAD
-				AtmosphereHandler.getOxygenHandler(this.world).registerBlob(this, pos);
-=======
 				atmhandler.registerBlob(this, pos);
->>>>>>> origin/feature/nuclearthermalrockets
 
 				onAdjacentBlockUpdated();
 				//isSealed starts as true so we can accurately check for scrubbers, we now set it to false to force the tile to check for a seal on first run
 				setSealed(false);
 				firstRun = false;
 			}
-			
-<<<<<<< HEAD
-			if(isSealed && AtmosphereHandler.getOxygenHandler(this.world).getBlobSize(this) == 0) {
-				deactivateAdjblocks();
-				setSealed(false);
-			}
 
-			if(isSealed && !getEquivilentPower()) {
-				AtmosphereHandler.getOxygenHandler(this.world).clearBlob(this);
-=======
 			if(isSealed && atmhandler.getBlobSize(this) == 0) {
-				deactivateAdjBlocks();
+				deactivateAdjblocks();
 				setSealed(false);
 			}
 
 			if(isSealed && !isTurnedOn()) {
 				atmhandler.clearBlob(this);
->>>>>>> origin/feature/nuclearthermalrockets
 
 				deactivateAdjBlocks();
 
 				setSealed(false);
 			}
 			else if(!isSealed && isTurnedOn() && hasEnoughEnergy(getPowerPerOperation())) {
-				
-<<<<<<< HEAD
+
 				if(world.getGameTime() % 100 == 0)
-					setSealed(AtmosphereHandler.getOxygenHandler(this.world).addBlock(this, new HashedBlockPosition(pos)));
-=======
-				if(world.getTotalWorldTime() % 100 == 0)
 					setSealed(atmhandler.addBlock(this, new HashedBlockPosition(pos)));
->>>>>>> origin/feature/nuclearthermalrockets
 
 				if(isSealed) {
 					activateAdjBlocks();
@@ -296,41 +261,22 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 				}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-				int amtToDrain = (int)Math.ceil((AtmosphereHandler.getOxygenHandler(this.world).getBlobSize(this)*getGasUsageMultiplier()));
+				int amtToDrain = (int)Math.ceil((atmhandler.getBlobSize(this) * getGasUsageMultiplier()));
 				FluidStack drainedFluid = this.drain((int)amtToDrain, FluidAction.SIMULATE);
 
 				if( (drainedFluid != null && drainedFluid.getAmount() >= amtToDrain) || amtToDrain == 0) {
-					this.drain((int)amtToDrain, FluidAction.EXECUTE);
-=======
-				int amtToDrain = (int)Math.ceil((AtmosphereHandler.getOxygenHandler(this.world.provider.getDimension()).getBlobSize(this)*getGasUsageMultiplier()));
-=======
+					this.drain(amtToDrain, FluidAction.EXECUTE);
 				int amtToDrain = (int)Math.ceil((atmhandler.getBlobSize(this) * getGasUsageMultiplier()));
->>>>>>> origin/feature/nuclearthermalrockets
-				FluidStack drainedFluid = this.drain(amtToDrain, false);
-
-				if( (drainedFluid != null && drainedFluid.amount >= amtToDrain) || amtToDrain == 0) {
-					this.drain(amtToDrain, true);
->>>>>>> origin/feature/nuclearthermalrockets
 					if(!hasFluid) {
 						hasFluid = true;
 
 						activateAdjBlocks();
 
-<<<<<<< HEAD
-						AtmosphereHandler.getOxygenHandler(this.world).setAtmosphereType(this, AtmosphereType.PRESSURIZEDAIR);
-					}
-				}
-				else if(hasFluid){
-					AtmosphereHandler.getOxygenHandler(this.world).setAtmosphereType(this, DimensionManager.getInstance().getDimensionProperties(this.world).getAtmosphere());
-=======
 						atmhandler.setAtmosphereType(this, AtmosphereType.PRESSURIZEDAIR);
 					}
 				}
 				else if(hasFluid){
-					atmhandler.setAtmosphereType(this, DimensionManager.getInstance().getDimensionProperties(this.world.provider.getDimension()).getAtmosphere());
->>>>>>> origin/feature/nuclearthermalrockets
+					atmhandler.setAtmosphereType(this, DimensionManager.getInstance().getDimensionProperties(this.world).getAtmosphere());
 
 					deactivateAdjBlocks();
 
@@ -409,11 +355,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	}
 
 	public float getGasUsageMultiplier() {
-<<<<<<< HEAD
-		return (float) (Math.max(0.01f - numScrubbers*0.005f,0)*ARConfiguration.getCurrentConfig().oxygenVentConsumptionMult.get());
-=======
-		return (float) (Math.max(0.01f - numScrubbers * 0.005f, 0)*ARConfiguration.getCurrentConfig().oxygenVentConsumptionMult);
->>>>>>> origin/feature/nuclearthermalrockets
+		return (float) (Math.max(0.01f - numScrubbers * 0.005f,0)*ARConfiguration.getCurrentConfig().oxygenVentConsumptionMult.get());
 	}
 
 	@Override
@@ -432,12 +374,8 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	
 	
 	@Override
-<<<<<<< HEAD
-	public int[] getSlotsForFace(Direction side) {
-=======
 	@Nonnull
-	public int[] getSlotsForFace(@Nullable EnumFacing side) {
->>>>>>> origin/feature/nuclearthermalrockets
+	public int[] getSlotsForFace(@Nullable Direction side) {
 		return new int[]{};
 	}
 
@@ -463,13 +401,8 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		ArrayList<ModuleBase> modules = new ArrayList<ModuleBase>();
-=======
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		ArrayList<ModuleBase> modules = new ArrayList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 
 		modules.add(new ModuleSlotArray(52, 20, this, 0, 1));
 		modules.add(new ModuleSlotArray(52, 57, this, 1, 2));

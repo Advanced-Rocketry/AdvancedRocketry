@@ -63,17 +63,10 @@ public class ItemOreScanner extends Item {
 		super.addInformation(stack, player, list, arg5);
 	}
 	
-<<<<<<< HEAD
-	public void setSatelliteID(ItemStack stack, long id) {
+	public void setSatelliteID(@Nonnull ItemStack stack, long id) {
 		CompoundNBT nbt;
 		if(!stack.hasTag())
 			nbt = new CompoundNBT();
-=======
-	public void setSatelliteID(@Nonnull ItemStack stack, long id) {
-		NBTTagCompound nbt;
-		if(!stack.hasTagCompound())
-			nbt = new NBTTagCompound();
->>>>>>> origin/feature/nuclearthermalrockets
 		else
 			nbt = stack.getTag();
 		
@@ -81,15 +74,9 @@ public class ItemOreScanner extends Item {
 		stack.setTag(nbt);
 	}
 
-<<<<<<< HEAD
-	public long getSatelliteID(ItemStack stack) {
+	public long getSatelliteID(@Nonnull ItemStack stack) {
 		CompoundNBT nbt;
 		if(!stack.hasTag())
-=======
-	public long getSatelliteID(@Nonnull ItemStack stack) {
-		NBTTagCompound nbt;
-		if(!stack.hasTagCompound())
->>>>>>> origin/feature/nuclearthermalrockets
 			return -1;
 		
 		nbt = stack.getTag();
@@ -98,13 +85,9 @@ public class ItemOreScanner extends Item {
 	}
 	
 	@Override
-<<<<<<< HEAD
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand) {
-=======
-	@ParametersAreNonnullByDefault
 	@Nonnull
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
->>>>>>> origin/feature/nuclearthermalrockets
+	@ParametersAreNonnullByDefault
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand) {
 		ItemStack stack = playerIn.getHeldItem(hand);
 		if(!playerIn.world.isRemote && !stack.isEmpty())
 		{
@@ -126,20 +109,13 @@ public class ItemOreScanner extends Item {
 	}
 	
 	@Override
-<<<<<<< HEAD
+	@Nonnull
 	public ActionResultType onItemUse(ItemUseContext context) {
 		PlayerEntity playerIn = context.getPlayer();
 		Hand hand = context.getHand();
 		World worldIn = context.getWorld();
 		
 		if(!playerIn.world.isRemote && hand == Hand.MAIN_HAND)
-=======
-	@Nonnull
-	public EnumActionResult onItemUse(EntityPlayer playerIn,
-			World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
-			float hitX, float hitY, float hitZ) {
-		if(!playerIn.world.isRemote && hand == EnumHand.MAIN_HAND)
->>>>>>> origin/feature/nuclearthermalrockets
 		{
 			ItemStack stack = playerIn.getHeldItem(hand);
 			if(!playerIn.world.isRemote && !stack.isEmpty())
@@ -170,15 +146,9 @@ public class ItemOreScanner extends Item {
 		satellite.performAction(player, world, pos);
 	}
 
-<<<<<<< HEAD
-	
-	public List<ModuleBase> getModules(int id, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-=======
 	@Override
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
+	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 		//modules.add(new ModuleOreMapper(0, 0));
 		return modules;
 	}

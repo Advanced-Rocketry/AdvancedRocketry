@@ -143,21 +143,13 @@ public abstract class SatelliteBase {
 		}
 		dimId = Optional.of(newId);
 	}
-	
-<<<<<<< HEAD
+
 	public void setDimensionId(ResourceLocation world) {
 		ResourceLocation newId = world;
 		if(dimId.isPresent()) {
 			//TODO: handle dim change
 		}
-		dimId =  Optional.of(newId);
-=======
-	public void setDimensionId(int world) {
-		if(dimId != Constants.INVALID_PLANET) {
-			//TODO: handle dim change
-		}
-		dimId = world;
->>>>>>> origin/feature/nuclearthermalrockets
+		dimId = Optional.of(newId);
 	}
 	
 	/**

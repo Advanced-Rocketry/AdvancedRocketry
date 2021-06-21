@@ -94,25 +94,14 @@ public class ItemData extends Item {
 	}
 
 	@Override
-<<<<<<< HEAD
 	@OnlyIn(value=Dist.CLIENT)
-	public void addInformation(ItemStack stack, World player,
-			List list, ITooltipFlag bool) {
-=======
-	@SideOnly(Side.CLIENT)
 	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
->>>>>>> origin/feature/nuclearthermalrockets
 		super.addInformation(stack, player, list, bool);
 
 		DataStorage data = getDataStorage(stack);
 
-<<<<<<< HEAD
 		list.add(new StringTextComponent(data.getData() + " / " + data.getMaxData() + " Data"));
-		list.add(new StringTextComponent(I18n.format(data.getDataType().toString(), new Object[0])));
-=======
-		list.add(data.getData() + " / " + data.getMaxData() + " Data");
-		list.add(I18n.format(data.getDataType().toString()));
->>>>>>> origin/feature/nuclearthermalrockets
+		list.add(new StringTextComponent(I18n.format(data.getDataType().toString())));
 
 	}
 
