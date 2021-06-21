@@ -73,7 +73,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	@SideOnly(Side.CLIENT)
 	@Nullable
 	public IRenderHandler getSkyRenderer() {
-		if(!ARConfiguration.getCurrentConfig().planetSkyOverride)
+		if(!ARConfiguration.getCurrentConfig().planetSkyOverride || DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).skyRenderOverride)
 			return null;
 		
 		int genType = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGenType();

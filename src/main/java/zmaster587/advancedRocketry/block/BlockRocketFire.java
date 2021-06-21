@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFire;
 import net.minecraft.block.BlockTNT;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
@@ -30,7 +31,8 @@ import java.util.Random;
  */
 public class BlockRocketFire extends Block {
 
-	public static final PropertyInteger AGE = PropertyInteger.create("age", 0, 15);
+	//Because CCL is a little pain and needs a property named level to exist for all materials of lava
+	public static final PropertyInteger AGE = PropertyInteger.create("level", 0, 15);
 
 	public BlockRocketFire() {
 		super(Material.LAVA);
@@ -82,7 +84,7 @@ public class BlockRocketFire extends Block {
 							int l1 = (k1 + 40 + worldIn.getDifficulty().getDifficultyId() * 7) / (i + 30);
 
 							if (l1 > 0 && rand.nextInt(j1) <= l1 && (!worldIn.isRaining() || !canFireDie(worldIn, blockpos))) {
-								worldIn.setBlockState(blockpos, Blocks.FIRE.getDefaultState().withProperty(AGE, 2), 3);
+								worldIn.setBlockState(blockpos, Blocks.FIRE.getDefaultState().withProperty(BlockFire.AGE, 2), 3);
 							}
 						}
 					}
@@ -121,7 +123,7 @@ public class BlockRocketFire extends Block {
 					j = 15;
 				}
 
-				worldIn.setBlockState(pos, Blocks.FIRE.getDefaultState().withProperty(AGE, j), 3);
+				worldIn.setBlockState(pos, Blocks.FIRE.getDefaultState().withProperty(BlockFire.AGE, j), 3);
 			} else {
 				worldIn.setBlockToAir(pos);
 			}
@@ -172,6 +174,11 @@ public class BlockRocketFire extends Block {
 	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
+	}
+
+	public MapColor getMapColor(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+	{
+		return MapColor.TNT;
 	}
 
 	/**

@@ -214,6 +214,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	//True if dimension is managed and created by AR (false otherwise)
 	public boolean isNativeDimension;
+	public boolean skyRenderOverride;
 	//Gas giants DO NOT need a dimension registered to them
 	public float[] skyColor;
 	public float[] fogColor;
@@ -312,6 +313,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		requiredArtifacts = new LinkedList<>();
 		tickingSatellites = new HashMap<>();
 		isNativeDimension = true;
+		skyRenderOverride = false;
 		hasOxygen = true;
 		peakInsolationMultiplier = -1;
 		peakInsolationMultiplierWithoutAtmosphere = -1;

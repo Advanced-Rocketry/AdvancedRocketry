@@ -4,15 +4,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.block.BlockTileComparatorOverride;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 
-public class BlockTileNeighborUpdate extends BlockTile {
+public class BlockTileNeighborUpdate extends BlockTileComparatorOverride {
 
 	/**
 	 * @param tileClass must extend IAdjBlockUpdate
 	 */
-	public BlockTileNeighborUpdate(Class<? extends TileEntity> tileClass,
-			int guiId) {
+	public BlockTileNeighborUpdate(Class<? extends TileEntity> tileClass, int guiId) {
 		super(tileClass, guiId);
 	}
 	

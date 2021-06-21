@@ -891,7 +891,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 						BlockPos pos = new BlockPos(x, posY, z);
 						pos = getTopBlock(pos);
 
-						safeLanding = !world.getBlockState(pos).getMaterial().isLiquid() || world.getBlockState(pos).getBlock() == Blocks.WATER;
+						safeLanding = !world.getBlockState(pos).getMaterial().isLiquid() || world.getBlockState(pos).getBlock() == Blocks.WATER || world.getBlockState(pos).getBlock() == AdvancedRocketryBlocks.blockRocketFire;
 					}
 				}
 
@@ -1243,7 +1243,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 			runEngines();
 
 		//When we're landing, we should also destroy the blocks below the rocket if they are valid to be destroyed - but overall we do it fewer times than on launch (once instead of twice)
-		if(this.posY < getTopBlock(new BlockPos(this.posX, this.posY, this.posZ)).getY() + 4 && ARConfiguration.getCurrentConfig().launchingDestroysBlocks) {
+		if(this.posY < getTopBlock(getPosition()).getY() + 5 && this.posX > getTopBlock(getPosition()).getY() && ARConfiguration.getCurrentConfig().launchingDestroysBlocks && motionY < -0.1) {
 			damageGroundBelowRocket(world, (int)this.posX, (int)this.posY -1, (int)this.posZ, (int)Math.pow(stats.getThrust(), 0.4));
 		}
 	}
@@ -2338,6 +2338,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 
 		return 0;
+	}
+
+	public double getRelativeHeightFraction() {
+		return (posY - getTopBlock(getPosition()).getY())/(getEntryHeight(dimension) - getTopBlock(getPosition()).getY());
+	}
+
+	public double getPreviousRelativeHeightFraction() {
+		return (prevPosY - getTopBlock(getPosition()).getY())/(getEntryHeight(dimension) - getTopBlock(getPosition()).getY());
 	}
 
 	@Override

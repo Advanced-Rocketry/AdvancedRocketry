@@ -2,9 +2,10 @@ package zmaster587.advancedRocketry.tile.atmosphere;
 
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.libVulpes.tile.IComparatorOverride;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 
-public class TileCO2Scrubber extends TileInventoryHatch {
+public class TileCO2Scrubber extends TileInventoryHatch implements IComparatorOverride {
 	public TileCO2Scrubber() {
 		super(1);
 		inventory.setCanInsertSlot(0, true);
@@ -27,10 +28,20 @@ public class TileCO2Scrubber extends TileInventoryHatch {
 			
 			if(stack.getItemDamage() != stack.getMaxDamage()) {
 				stack.setItemDamage(stack.getItemDamage() + 1);
-				//this.markDirty();
+				if ((32766 - stack.getItemDamage() + 2184)/2185 != (32766 - stack.getItemDamage() + 1 + 2184)/2185)
+				    this.markDirty();
 				return true;
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public int getComparatorOverride() {
+		ItemStack stack = getStackInSlot(0);
+		if (!stack.isEmpty()) {
+			return (32766 - stack.getItemDamage() + 2184)/2185;
+		}
+		return 0;
 	}
 }
