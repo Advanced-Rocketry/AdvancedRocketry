@@ -343,12 +343,16 @@ public class WorldGenAlienTree extends StraightTrunkPlacer {
 			int newZ = z + (dirZ*l);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 			flag = flag && this.replaceBlockWithWood(world, newX, newY, newZ, direction, boundingBox);
 			flag = flag && this.replaceBlockWithWood(world, newX, newY - 1, newZ, direction, boundingBox);
 			flag = flag && this.replaceBlockWithWood(world, newX + dirZ, newY, newZ + dirX, direction, boundingBox);
 			flag = flag && this.replaceBlockWithWood(world, newX + dirZ, newY - 1, newZ + dirX, direction, boundingBox);
 =======
 			flag =         this.replaceBlockWithWood(world, newX, newY, newZ, direction);
+=======
+			flag = this.replaceBlockWithWood(world, newX, newY, newZ, direction);
+>>>>>>> origin/feature/nuclearthermalrockets
 			flag = flag && this.replaceBlockWithWood(world, newX, newY - 1, newZ, direction);
 			flag = flag && this.replaceBlockWithWood(world, newX + dirZ, newY, newZ + dirX, direction);
 			flag = flag && this.replaceBlockWithWood(world, newX + dirZ, newY - 1, newZ + dirX, direction);

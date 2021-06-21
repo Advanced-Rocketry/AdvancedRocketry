@@ -122,13 +122,13 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 				for (int l1 = 0; l1 < 16; ++l1)
 				{
 					double d0 = 0.125D;
-					double d1 =  this.buffer[((j1    ) * 5 + k1    ) * 17 + l1    ];
-					double d2 =  this.buffer[((j1    ) * 5 + k1 + 1) * 17 + l1    ];
-					double d3 =  this.buffer[((j1 + 1) * 5 + k1    ) * 17 + l1    ];
-					double d4 =  this.buffer[((j1 + 1) * 5 + k1 + 1) * 17 + l1    ];
-					double d5 = (this.buffer[((j1    ) * 5 + k1    ) * 17 + l1 + 1] - d1) * 0.125D;
-					double d6 = (this.buffer[((j1    ) * 5 + k1 + 1) * 17 + l1 + 1] - d2) * 0.125D;
-					double d7 = (this.buffer[((j1 + 1) * 5 + k1    ) * 17 + l1 + 1] - d3) * 0.125D;
+					double d1 =  this.buffer[(j1 * 5 + k1) * 17 + l1];
+					double d2 =  this.buffer[(j1 * 5 + k1 + 1) * 17 + l1];
+					double d3 = this.buffer[((j1 + 1) * 5 + k1) * 17 + l1];
+					double d4 =  this.buffer[((j1 + 1) * 5 + k1 + 1) * 17 + l1];
+					double d5 = (this.buffer[((j1) * 5 + k1) * 17 + l1 + 1] - d1) * 0.125D;
+					double d6 = (this.buffer[(j1 * 5 + k1 + 1) * 17 + l1 + 1] - d2) * 0.125D;
+					double d7 = (this.buffer[((j1 + 1) * 5 + k1) * 17 + l1 + 1] - d3) * 0.125D;
 					double d8 = (this.buffer[((j1 + 1) * 5 + k1 + 1) * 17 + l1 + 1] - d4) * 0.125D;
 
 					for (int i2 = 0; i2 < 8; ++i2)

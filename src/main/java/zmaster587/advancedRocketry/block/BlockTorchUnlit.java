@@ -94,10 +94,20 @@ public class BlockTorchUnlit extends TorchBlock {
 =======
 			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(world.provider.getDimension());
 
+<<<<<<< HEAD
 			if(atmhandler != null && !world.isRemote && !item.equals(Items.AIR) && atmhandler.getAtmosphereType(pos).allowsCombustion() && (item == Item.getItemFromBlock(Blocks.TORCH) ||
 >>>>>>> origin/feature/nuclearthermalrockets
 					item == Items.FLINT_AND_STEEL || 
 					item == Items.FIRE_CHARGE)) {
+=======
+			if(atmhandler != null
+			&& !world.isRemote
+			&& !item.equals(Items.AIR)
+			&& atmhandler.getAtmosphereType(pos).allowsCombustion()
+			&& (item == Item.getItemFromBlock(Blocks.TORCH)
+					|| item == Items.FLINT_AND_STEEL 
+					|| item == Items.FIRE_CHARGE)) {
+>>>>>>> origin/feature/nuclearthermalrockets
 
 				world.setBlockState(pos, Blocks.TORCH.getDefaultState());
 
