@@ -18,7 +18,7 @@ public class DataStorage {
 		public String toString() {
 <<<<<<< HEAD
 			return "data." + name().toLowerCase(Locale.ENGLISH);
-		};
+		}
 =======
 			return "data." + name().toLowerCase(Locale.ENGLISH) + ".name";
 		}

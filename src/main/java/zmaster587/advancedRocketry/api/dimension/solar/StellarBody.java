@@ -20,13 +20,8 @@ public class StellarBody {
 	private HashMap<ResourceLocation,IDimensionProperties> planets;
 	int numPlanets;
 	int discoveredPlanets;
-<<<<<<< HEAD
-	float color[];
-	ResourceLocation id;
-=======
 	float[] color;
-	int id;
->>>>>>> origin/feature/nuclearthermalrockets
+	ResourceLocation id;
 	float size;
 	String name;
 	short posX, posZ;
@@ -36,11 +31,7 @@ public class StellarBody {
 	StellarBody parentStar;
 
 	public StellarBody() {
-<<<<<<< HEAD
-		planets = new HashMap<ResourceLocation,IDimensionProperties>();
-=======
 		planets = new HashMap<>();
->>>>>>> origin/feature/nuclearthermalrockets
 		size = 1f;
 		subStars = new LinkedList<>();
 		starSeperation = 5f;
