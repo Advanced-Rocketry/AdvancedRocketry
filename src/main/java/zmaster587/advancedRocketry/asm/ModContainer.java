@@ -1,10 +1,6 @@
 package zmaster587.advancedRocketry.asm;
 
-<<<<<<< HEAD
-/*import com.google.common.eventbus.EventBus;
-=======
->>>>>>> origin/feature/nuclearthermalrockets
-import net.minecraftforge.fml.common.DummyModContainer;
+/*import net.minecraftforge.fml.common.DummyModContainer;
 import net.minecraftforge.fml.common.LoadController;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.ModMetadata;

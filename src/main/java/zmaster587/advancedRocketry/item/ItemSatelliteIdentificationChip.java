@@ -31,19 +31,9 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		return false;
 	}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-	public long getSatelliteId(ItemStack stack) {
+	public long getSatelliteId(@Nonnull ItemStack stack) {
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
-=======
-	public long getSatelliteId(@Nonnull ItemStack stack) {
-=======
-	public static long getSatelliteId(@Nonnull ItemStack stack) {
->>>>>>> origin/feature/nuclearthermalrockets
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
->>>>>>> origin/feature/nuclearthermalrockets
 
 			if(nbt != null)
 			    return nbt.getLong("satelliteId");
@@ -51,15 +41,9 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		return -1;
 	}
 
-<<<<<<< HEAD
-	public SatelliteBase getSatellite(ItemStack stack) {
+	public SatelliteBase getSatellite(@Nonnull ItemStack stack) {
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
-=======
-	public SatelliteBase getSatellite(@Nonnull ItemStack stack) {
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
->>>>>>> origin/feature/nuclearthermalrockets
 
             if(nbt == null)
                 return null;
@@ -84,17 +68,10 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		return null;
 	}
 
-<<<<<<< HEAD
-	public void setSatellite(ItemStack stack, SatelliteBase satellite) {
+	public void setSatellite(@Nonnull ItemStack stack, SatelliteBase satellite) {
 		CompoundNBT nbt;
 		if(stack.hasTag())
 			nbt = stack.getTag();
-=======
-	public void setSatellite(@Nonnull ItemStack stack, SatelliteBase satellite) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound())
-			nbt = stack.getTagCompound();
->>>>>>> origin/feature/nuclearthermalrockets
 		else 
 			nbt = new CompoundNBT();
 
@@ -126,53 +103,31 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		}
 	}
 
-<<<<<<< HEAD
-	public void erase(ItemStack stack) {
+	public void erase(@Nonnull ItemStack stack) {
 		stack.setTag(null);
 	}
 
-	public void setDim(ItemStack stack, int dimId) {
+	public void setDim(@Nonnull ItemStack stack, int dimId) {
 		CompoundNBT nbt;
 		if(stack.hasTag())
 			nbt = stack.getTag();
-=======
-	public void erase(@Nonnull ItemStack stack) {
-		stack.setTagCompound(null);
-	}
-
-	public void setDim(@Nonnull ItemStack stack, int dimId) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound())
-			nbt = stack.getTagCompound();
->>>>>>> origin/feature/nuclearthermalrockets
 		else 
 			return;
 
 		nbt.putInt("dimId", dimId);
 	}
 
-<<<<<<< HEAD
-	public String getSatelliteName(ItemStack stack) {
+	public String getSatelliteName(@Nonnull ItemStack stack) {
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
-=======
-	public String getSatelliteName(@Nonnull ItemStack stack) {
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
->>>>>>> origin/feature/nuclearthermalrockets
 
 			return nbt.getString("satelliteName");
 		}
 		return "";
 	}
 
-<<<<<<< HEAD
-	public ResourceLocation getWorldId(ItemStack stack) {
+	public ResourceLocation getWorldId(@Nonnull ItemStack stack) {
 		CompoundNBT nbt;
-=======
-	public int getWorldId(@Nonnull ItemStack stack) {
-		NBTTagCompound nbt;
->>>>>>> origin/feature/nuclearthermalrockets
 
 		if(stack.hasTag() && (nbt = stack.getTag()).contains("dimId") ) {
 
@@ -183,14 +138,8 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	}
 
 	@Override
-<<<<<<< HEAD
-	public void addInformation(ItemStack stack, World player,
-			List list, ITooltipFlag bool) {
-		ResourceLocation worldId = getWorldId(stack);
-=======
 	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
-		int worldId = getWorldId(stack);
->>>>>>> origin/feature/nuclearthermalrockets
+		ResourceLocation worldId = getWorldId(stack);
 		long satId = getSatelliteId(stack);
 
 		String satelliteName = getSatelliteName(stack);

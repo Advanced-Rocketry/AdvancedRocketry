@@ -43,12 +43,7 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 	}
 
 	@Override
-<<<<<<< HEAD
-	public void onTick(World world, PlayerEntity player, ItemStack armorStack,
-			IInventory modules, ItemStack componentStack) {
-=======
-	public void onTick(World world, EntityPlayer player, @Nonnull ItemStack armorStack, IInventory modules, @Nonnull ItemStack componentStack) {
->>>>>>> origin/feature/nuclearthermalrockets
+	public void onTick(World world, PlayerEntity player, @Nonnull ItemStack armorStack, IInventory modules, @Nonnull ItemStack componentStack) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -63,34 +58,17 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 	}
 
 	@Override
-<<<<<<< HEAD
-	public void onArmorDamaged(LivingEntity entity, ItemStack armorStack,
-			ItemStack componentStack, DamageSource source, int damage) {
+	public void onArmorDamaged(LivingEntity entity, @Nonnull ItemStack armorStack, @Nonnull ItemStack componentStack, DamageSource source, int damage) {
 	}
 
 	@Override
-	public boolean isAllowedInSlot(ItemStack componentStack,
-			EquipmentSlotType armorType) {
+	public boolean isAllowedInSlot(@Nonnull ItemStack componentStack, EquipmentSlotType armorType) {
 		return armorType == EquipmentSlotType.HEAD;
 	}
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void renderScreen(MatrixStack matrix, ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event,
-			Screen gui) {
-=======
-	public void onArmorDamaged(EntityLivingBase entity, @Nonnull ItemStack armorStack, @Nonnull ItemStack componentStack, DamageSource source, int damage) {
-	}
-
-	@Override
-	public boolean isAllowedInSlot(@Nonnull ItemStack componentStack, EntityEquipmentSlot armorType) {
-		return armorType == EntityEquipmentSlot.HEAD;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderScreen(@Nonnull ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Gui gui) {
->>>>>>> origin/feature/nuclearthermalrockets
+	public void renderScreen(MatrixStack matrix, @Nonnull ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Screen gui) {
 		
 		ResourceLocation dimid = ZUtils.getDimensionIdentifier(Minecraft.getInstance().world);
 		
@@ -105,11 +83,7 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 				double angle = MathHelper.wrapDegrees(MathHelper.atan2(deltaZ, deltaX)*180/Math.PI + 90 - Minecraft.getInstance().player.rotationYawHead);
 				
 				//GL11.glTranslatef(pos.x, pos.y, pos.z);
-<<<<<<< HEAD
-				GL11.glTranslated((Minecraft.getInstance().getMainWindow().getScaledWidth()*angle/180f) + Minecraft.getInstance().getMainWindow().getScaledWidth()/2,0,5);
-=======
-				GL11.glTranslated((event.getResolution().getScaledWidth_double()*angle/180f) + event.getResolution().getScaledWidth()/2f,0,5);
->>>>>>> origin/feature/nuclearthermalrockets
+				GL11.glTranslated((Minecraft.getInstance().getMainWindow().getScaledWidth()*angle/180f) + Minecraft.getInstance().getMainWindow().getScaledWidth()/2f,0,5);
 				//GL11.glDepthMask(false);
 				//GL11.glDisable(GL11.GL_TEXTURE_2D);
 				Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.buttonDown[0]);

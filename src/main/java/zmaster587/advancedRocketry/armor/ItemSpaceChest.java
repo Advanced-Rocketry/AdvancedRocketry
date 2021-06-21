@@ -97,17 +97,10 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 	 * @param amt amount of air to set the suit to
 	 */
 	@Override
-<<<<<<< HEAD
-	public void setAirRemaining(ItemStack stack, int amt) {
+	public void setAirRemaining(@Nonnull ItemStack stack, int amt) {
 		/*CompoundNBT nbt;
 		if(stack.hasTag()) {
 			nbt = stack.getTag();
-=======
-	public void setAirRemaining(@Nonnull ItemStack stack, int amt) {
-		/*NBTTagCompound nbt;
-		if(stack.hasTagCompound()) {
-			nbt = stack.getTagCompound();
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 		else {
 			nbt = new CompoundNBT();

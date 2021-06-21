@@ -12,11 +12,7 @@ public interface ISpaceObject {
 	/**
 	 * @return id of the space object (NOT the DIMID)
 	 */
-<<<<<<< HEAD
-	public ResourceLocation getId();
-=======
-	int getId();
->>>>>>> origin/feature/nuclearthermalrockets
+	ResourceLocation getId();
 	
 	float getOrbitalDistance();
 	
@@ -30,11 +26,7 @@ public interface ISpaceObject {
 	/**
 	 * @return the DIMID of the planet the object is currently orbiting, Constants.INVALID_PLANET if none
 	 */
-<<<<<<< HEAD
-	public ResourceLocation getOrbitingPlanetId();
-=======
-	int getOrbitingPlanetId();
->>>>>>> origin/feature/nuclearthermalrockets
+	ResourceLocation getOrbitingPlanetId();
 
 	/**
 	 * @return if the object is anchored in place by anything
@@ -49,11 +41,7 @@ public interface ISpaceObject {
 	/**
 	 * @param id the space object id of this object (NOT DIMID)
 	 */
-<<<<<<< HEAD
-	public void setId(ResourceLocation id);
-=======
-	void setId(int id);
->>>>>>> origin/feature/nuclearthermalrockets
+	void setId(ResourceLocation id);
 	
 	/**
 	 * Sets the coords of the space object on the graph
@@ -74,11 +62,7 @@ public interface ISpaceObject {
 	 * Sets the orbiting planet for the space object but does NOT register it with the planet
 	 * @param id
 	 */
-<<<<<<< HEAD
-	public void setOrbitingBody(ResourceLocation id);
-=======
-	void setOrbitingBody(int id);
->>>>>>> origin/feature/nuclearthermalrockets
+	void setOrbitingBody(ResourceLocation id);
 	
 	/**
 	 * @return the spawn location of the object
@@ -97,33 +81,18 @@ public interface ISpaceObject {
 	 */
 	void onModuleUnpack(IStorageChunk chunk);
 	
-<<<<<<< HEAD
-	public void writeToNbt(CompoundNBT nbt);
+	void writeToNbt(CompoundNBT nbt);
 	
-	public void readFromNbt(CompoundNBT nbt);
+	void readFromNbt(CompoundNBT nbt);
 	
-	public double getRotation(Direction dir);
-	public double getDeltaRotation(Direction dir);
+	double getRotation(Direction dir);
+	double getDeltaRotation(Direction dir);
 	
-	public void setRotation(double rotation, Direction dir);
-	
-	public double getMaxRotationalAcceleration();
-
-	public void setDeltaRotation(double rotation, Direction dir);
-=======
-	void writeToNbt(NBTTagCompound nbt);
-	
-	void readFromNbt(NBTTagCompound nbt);
-	
-	double getRotation(EnumFacing dir);
-	double getDeltaRotation(EnumFacing dir);
-	
-	void setRotation(double rotation, EnumFacing dir);
+	void setRotation(double rotation, Direction dir);
 	
 	double getMaxRotationalAcceleration();
-	
-	void setDeltaRotation(double rotation, EnumFacing dir);
->>>>>>> origin/feature/nuclearthermalrockets
+
+	void setDeltaRotation(double rotation, Direction dir);
 
 	double getInsolationMultiplier();
 
@@ -198,9 +167,5 @@ public interface ISpaceObject {
 	/**
 	 * @return
 	 */
-<<<<<<< HEAD
-	public Direction getForwardDirection();
-=======
-	EnumFacing getForwardDirection();
->>>>>>> origin/feature/nuclearthermalrockets
+	Direction getForwardDirection();
 }
