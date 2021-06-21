@@ -47,7 +47,7 @@ public class PacketSpaceStationInfo extends BasePacket {
 				//spaceObject.getProperties().writeToNBT(nbt);
 				PacketBuffer packetBuffer = new PacketBuffer(out);
 				out.writeBoolean(false);
-				packetBuffer.writeString(SpaceObjectManager.getSpaceManager().getItentifierFromClass(spaceObject.getClass()));
+				packetBuffer.writeString(SpaceObjectManager.getSpaceManager().getIdentifierFromClass(spaceObject.getClass()));
 				packetBuffer.writeCompoundTag(nbt);
 				
 				packetBuffer.writeInt(spaceObject.getFuelAmount());

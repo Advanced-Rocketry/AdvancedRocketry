@@ -41,14 +41,6 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 	}
 
 	@Override
-	public int fill(FluidStack resource, boolean doFill) {
-
-		if(canFill(resource.getFluid()))
-			return super.fill(resource, doFill);
-		return 0;
-	}
-
-	@Override
 	public boolean canFill(Fluid fluid) {
 		return FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.fluidOxygen) || FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.fluidHydrogen);
 	}	
@@ -77,8 +69,7 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 						int amtFluid = fillable.getMaxAir(stack) - fillable.getAirRemaining(stack);
 						FluidStack fluidStack = this.drain(amtFluid, false);
 
-						if(amtFluid > 0 &&
-								fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen) && fluidStack.amount > 0)  {
+						if(amtFluid > 0 && fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen) && fluidStack.amount > 0)  {
 							FluidStack fstack = this.drain(amtFluid, true);
 							this.markDirty();
 							world.markChunkDirty(getPos(), this);

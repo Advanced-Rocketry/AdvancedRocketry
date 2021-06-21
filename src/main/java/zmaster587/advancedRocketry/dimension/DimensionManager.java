@@ -42,6 +42,7 @@ import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.network.PacketHandler;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
@@ -381,7 +382,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param dimId dimension id to check
 	 * @return true if it can be traveled to, in general if it has a surface
 	 */
-	public boolean canTravelTo(int dimId){
+	public boolean canTravelTo(int dimId) {
 		return net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId) && dimId != Constants.INVALID_PLANET && getDimensionProperties(dimId).hasSurface();
 	}
 
@@ -390,7 +391,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param properties {@link DimensionProperties} to register
 	 * @return false if the dimension has not been registered, true if it is being newly registered
 	 */
-	public boolean registerDim(DimensionProperties properties, boolean registerWithForge) {
+	public boolean registerDim(@Nonnull DimensionProperties properties, boolean registerWithForge) {
 		boolean bool = registerDimNoUpdate(properties, registerWithForge);
 
 		if(bool)
@@ -404,7 +405,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param registerWithForge if true also registers the dimension with forge
 	 * @return true if the dimension has NOT been registered before, false if the dimension IS registered exist already
 	 */
-	public boolean registerDimNoUpdate(DimensionProperties properties, boolean registerWithForge) {
+	public boolean registerDimNoUpdate(@Nonnull DimensionProperties properties, boolean registerWithForge) {
 		int dimId = properties.getId();
 
 		if(dimensionList.containsKey(dimId))
@@ -673,7 +674,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param dimId integer id of the dimension
 	 * @return true if the dimension exists and is registered
 	 */
-	public boolean isDimensionCreated( int dimId) {
+	public boolean isDimensionCreated(int dimId) {
 		return dimensionList.containsKey(dimId) || dimId == ARConfiguration.getCurrentConfig().spaceDimId;
 	}
 
@@ -803,15 +804,23 @@ public class DimensionManager implements IGalaxy {
 		if(file.exists()) {
 			logger.info("Advanced Planet Config file Found!  Loading from file.");
 			loader = new XMLPlanetLoader();
+			boolean loadSuccessful = true;
+
 			try {
-				loader.loadFile(file);
-				if(!loader.isValid())
-					throw new Exception("Cannot read XML");
-				dimCouplingList = loader.readAllPlanets();
-				DimensionManager.dimOffset += dimCouplingList.dims.size();
+				if(loader.loadFile(file)) {
+					dimCouplingList = loader.readAllPlanets();
+					DimensionManager.dimOffset += dimCouplingList.dims.size();
+				}
+				else {
+					loadSuccessful = false;
+				}
 			} catch(Exception e) {
 				e.printStackTrace();
-				logger.fatal("A serious error has occured while loading the planetDefs XML");
+				loadSuccessful = false;
+			}
+
+			if(!loadSuccessful) {
+				logger.fatal("A serious error has occurred while loading the planetDefs XML");
 				FMLCommonHandler.instance().exitJava(-1, false);
 			}
 		}

@@ -18,12 +18,12 @@ import java.util.logging.Logger;
 
 public class PacketDimInfo extends BasePacket {
 
-	DimensionProperties dimProperties;
-	NBTTagCompound dimNBT;
-	int dimNumber;
-	boolean deleteDim;
-	List<ItemStack> artifacts;
-	String customIcon;
+	private DimensionProperties dimProperties;
+	private NBTTagCompound dimNBT;
+	private int dimNumber;
+	private boolean deleteDim;
+	private List<ItemStack> artifacts;
+	private String customIcon;
 
 	public PacketDimInfo() {
 		artifacts = new LinkedList<>();

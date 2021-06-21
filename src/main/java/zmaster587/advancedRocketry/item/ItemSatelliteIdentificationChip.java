@@ -24,11 +24,12 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		return false;
 	}
 
-	public long getSatelliteId(@Nonnull ItemStack stack) {
+	public static long getSatelliteId(@Nonnull ItemStack stack) {
 		if(stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
 
-			return nbt.getLong("satelliteId");
+			if(nbt != null)
+			    return nbt.getLong("satelliteId");
 		}
 		return -1;
 	}
@@ -37,7 +38,10 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		if(stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
 
-			long satId = nbt.getLong("satelliteId");
+            if(nbt == null)
+                return null;
+
+            long satId = nbt.getLong("satelliteId");
 
 			SatelliteBase satellite = zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getSatellite(satId);
 
