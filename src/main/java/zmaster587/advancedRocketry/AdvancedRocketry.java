@@ -694,7 +694,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockPlanetSelector = new BlockTile(TilePlanetSelector.class,GuiHandler.guiId.MODULARFULLSCREEN.ordinal()).setUnlocalizedName("planetSelector").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockPlanetHoloSelector = new BlockHalfTile(TileHolographicPlanetSelector.class,GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("planetHoloSelector").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		//Oxygen machines
-		AdvancedRocketryBlocks.blockOxygenScrubber = new BlockTileComparatorOverride(TileCO2Scrubber.class, GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setUnlocalizedName("scrubber").setHardness(3f);
+		AdvancedRocketryBlocks.blockCO2Scrubber = new BlockTileComparatorOverride(TileCO2Scrubber.class, GuiHandler.guiId.MODULAR.ordinal()).setCreativeTab(tabAdvRocketry).setUnlocalizedName("scrubber").setHardness(3f);
 		AdvancedRocketryBlocks.blockOxygenVent = new BlockTile(TileOxygenVent.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("oxygenVent").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockOxygenCharger = new BlockHalfTile(TileGasChargePad.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("oxygenCharger").setCreativeTab(tabAdvRocketry).setHardness(3f);
 		AdvancedRocketryBlocks.blockOxygenDetection = new BlockRedstoneEmitter(Material.IRON,"advancedrocketry:atmosphereDetector_active").setUnlocalizedName("atmosphereDetector").setHardness(3f).setCreativeTab(tabAdvRocketry);
@@ -731,7 +731,7 @@ public class AdvancedRocketry {
 		AdvancedRocketryFluids.fluidHydrogen = new Fluid("hydrogen", notFlowing, flowing).setUnlocalizedName("hydrogen").setGaseous(false).setDensity(800).setViscosity(1500).setColor(0xFFDBC1C1);
 		AdvancedRocketryFluids.fluidNitrogen = new Fluid("nitrogen",  notFlowing, flowing).setUnlocalizedName("nitrogen").setGaseous(false).setDensity(800).setViscosity(1500).setColor(0xFF97A7E7);
 		AdvancedRocketryFluids.fluidRocketFuel = new Fluid("rocketFuel",  notFlowing, flowing).setUnlocalizedName("rocketFuel").setGaseous(false).setLuminosity(2).setDensity(800).setViscosity(1500).setColor(0xFFE5D884);
-		AdvancedRocketryFluids.fluidEnrichedLava = new Fluid("enrichedLava",  new ResourceLocation("advancedrocketry:blocks/fluid/lava_still"), new ResourceLocation("advancedrocketry:blocks/fluid/oxygen_flow")).setUnlocalizedName("enrichedLava").setLuminosity(15).setDensity(3000).setViscosity(6000).setTemperature(1300).setColor(0xFFFFFFFF);
+		AdvancedRocketryFluids.fluidEnrichedLava = new Fluid("enrichedLava",  new ResourceLocation("advancedrocketry:blocks/fluid/lava_still"), new ResourceLocation("advancedrocketry:blocks/fluid/lava_flow")).setUnlocalizedName("enrichedLava").setLuminosity(15).setDensity(3000).setViscosity(6000).setTemperature(1300).setColor(0xFFFFFFFF);
 
 		//Fluid Registration
 		if(!FluidRegistry.registerFluid(AdvancedRocketryFluids.fluidOxygen))
@@ -856,7 +856,7 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockPlanetSelector.setRegistryName("planetSelector"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockPlanetHoloSelector.setRegistryName("planetHoloSelector"));
 		//Oxygen machines
-		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockOxygenScrubber.setRegistryName("oxygenScrubber"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockCO2Scrubber.setRegistryName("oxygenScrubber"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockOxygenVent.setRegistryName("oxygenVent"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockOxygenCharger.setRegistryName("oxygenCharger"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockOxygenDetection.setRegistryName("oxygenDetection"));
@@ -1137,7 +1137,6 @@ public class AdvancedRocketry {
 		if(!file.exists()) {
 			logger.info(file.getAbsolutePath() + " not found, generating");
 			try {
-
 				file.createNewFile();
 				BufferedWriter stream;
 				stream = new BufferedWriter(new FileWriter(file));
@@ -1169,15 +1168,16 @@ public class AdvancedRocketry {
 
 		XMLAsteroidLoader load = new XMLAsteroidLoader();
 		try {
-			load.loadFile(file);
-			for(Asteroid asteroid : load.loadPropertyFile()) {
-				zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().asteroidTypes.put(asteroid.ID, asteroid);
+			if(load.loadFile(file)) {
+				for (Asteroid asteroid : load.loadPropertyFile()) {
+					zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().asteroidTypes.put(asteroid.ID, asteroid);
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		// End load asteroids from XML
-		
+
 		
 		file = new File("./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/oreConfig.xml");
 		logger.info("Checking for ore config at " + file.getAbsolutePath());
@@ -1197,27 +1197,24 @@ public class AdvancedRocketry {
 		else {
 			XMLOreLoader oreLoader = new XMLOreLoader();
 			try {
-				oreLoader.loadFile(file);
+				if(oreLoader.loadFile(file)) {
+					List<SingleEntry<HashedBlockPosition, OreGenProperties>> mapping = oreLoader.loadPropertyFile();
 
-				List<SingleEntry<HashedBlockPosition, OreGenProperties>> mapping = oreLoader.loadPropertyFile();
+					for (Entry<HashedBlockPosition, OreGenProperties> entry : mapping) {
+						int pressure = entry.getKey().x;
+						int temp = entry.getKey().y;
 
-				for(Entry<HashedBlockPosition, OreGenProperties> entry : mapping) {
-					int pressure = entry.getKey().x;
-					int temp = entry.getKey().y;
-
-					if(pressure == -1) {
-						if(temp != -1) {
-							OreGenProperties.setOresForTemperature(Temps.values()[temp], entry.getValue());
+						if (pressure == -1) {
+							if (temp != -1) {
+								OreGenProperties.setOresForTemperature(Temps.values()[temp], entry.getValue());
+							}
+						} else if (temp == -1) {
+							OreGenProperties.setOresForPressure(AtmosphereTypes.values()[pressure], entry.getValue());
+						} else {
+							OreGenProperties.setOresForPressureAndTemp(AtmosphereTypes.values()[pressure], Temps.values()[temp], entry.getValue());
 						}
 					}
-					else if(temp == -1) {
-						OreGenProperties.setOresForPressure(AtmosphereTypes.values()[pressure], entry.getValue());
-					}
-					else {
-						OreGenProperties.setOresForPressureAndTemp(AtmosphereTypes.values()[pressure], Temps.values()[temp], entry.getValue());
-					}
 				}
-
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -1225,7 +1222,6 @@ public class AdvancedRocketry {
 		//End open and load ore files
 
 		DimensionManager.getInstance().createAndLoadDimensions(resetFromXml);
-		
 	}
 
 

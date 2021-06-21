@@ -37,21 +37,21 @@ import java.util.*;
 
 public class ARConfiguration {
 	public static final String configFolder = "advRocketry";
-	final static byte MAGIC_CODE = (byte)197;
-	final static long MAGIC_CODE_PT2 = 2932031007403L; // Prime
+	private final static byte MAGIC_CODE = (byte)197;
+	private final static long MAGIC_CODE_PT2 = 2932031007403L; // Prime
 
-	final static String WORLDGEN = "World and Ore Generation";
-	final static String ROCKET = "Rockets";
-	final static String STATION = "Station Configuration";
-	final static String PLANET = "Planet";
-	final static String OXYGEN = "Oxygen System";
-	final static String ENERGY = "Energy Production";
-	final static String MISSION = "Resource Collection Missions";
-	final static String PERFORMANCE = "Performance";
-	final static String CLIENT = "Client";
+	private final static String WORLDGEN = "World and Ore Generation";
+	private final static String ROCKET = "Rockets";
+	private final static String STATION = "Station Configuration";
+	private final static String PLANET = "Planet";
+	private final static String OXYGEN = "Oxygen System";
+	private final static String ENERGY = "Energy Production";
+	private final static String MISSION = "Resource Collection Missions";
+	private final static String PERFORMANCE = "Performance";
+	private final static String CLIENT = "Client";
 	public static Logger logger = LogManager.getLogger(Constants.modId);
 
-	static String[] sealableBlockWhiteList, sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, spawnableGasses, entityList, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidMonopropellant, liquidBipropellantFuel, liquidBipropellantOxidizer, liquidNuclearWorkingFluid;
+	private static String[] sealableBlockWhiteList, sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, spawnableGasses, entityList, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidMonopropellant, liquidBipropellantFuel, liquidBipropellantOxidizer, liquidNuclearWorkingFluid;
 
 
 	//Only to be set in preinit

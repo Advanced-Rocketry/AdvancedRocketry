@@ -35,6 +35,7 @@ import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.render.RenderHelper;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 
 	}
 
-	private List<ITextComponent> getAtmosphereReadout(@Nonnull ItemStack stack, AtmosphereType atm, World world) {
+	private List<ITextComponent> getAtmosphereReadout(@Nonnull ItemStack stack, @Nullable AtmosphereType atm, @Nonnull World world) {
 		if(atm == null)
 			atm = AtmosphereType.AIR;
 		
@@ -74,10 +75,12 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
+	@Nonnull
+	public ActionResult<ItemStack> onItemRightClick(@Nonnull World worldIn, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand) {
 		ItemStack stack = playerIn.getHeldItem(hand);
 		if(!worldIn.isRemote) {
-			List<ITextComponent> str = getAtmosphereReadout(stack, (AtmosphereType) AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension()).getAtmosphereType(playerIn),worldIn);
+			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension());
+			List<ITextComponent> str = getAtmosphereReadout(stack, atmhandler == null ? null : (AtmosphereType) atmhandler.getAtmosphereType(playerIn), worldIn);
 			for(ITextComponent str1 : str)
 				playerIn.sendMessage(str1);
 		}

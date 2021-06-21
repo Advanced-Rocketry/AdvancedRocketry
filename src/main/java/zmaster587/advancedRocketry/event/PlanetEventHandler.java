@@ -20,6 +20,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
@@ -45,10 +46,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.advancements.ARAdvancements;
-import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.IPlanetaryProvider;
+import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
@@ -73,6 +71,7 @@ import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -221,21 +220,26 @@ public class PlanetEventHandler {
 	}
 
 	@SubscribeEvent
-	public void sleepEvent(PlayerSleepInBedEvent event) {
+	public void sleepEvent(@Nonnull PlayerSleepInBedEvent event) {
 
 		if(event.getEntity().world.provider instanceof WorldProviderPlanet) {
-			if (!ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace && AtmosphereHandler.hasAtmosphereHandler(event.getEntity().world.provider.getDimension()) && 
-					!AtmosphereHandler.getOxygenHandler(event.getEntity().world.provider.getDimension()).getAtmosphereType(event.getPos()).isBreathable()) {
+			WorldProvider provider = event.getEntity().world.provider;
+			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(provider.getDimension());
+
+			if (!ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace && AtmosphereHandler.hasAtmosphereHandler(provider.getDimension()) && atmhandler != null &&
+					!atmhandler.getAtmosphereType(event.getPos()).isBreathable()) {
 				event.setResult(SleepResult.OTHER_PROBLEM);
 			}
 		}
 	}
 
 	@SubscribeEvent
-	public void blockPlacedEvent(PlaceEvent event)
-	{
-		if(!event.getWorld().isRemote  && AtmosphereHandler.getOxygenHandler(event.getWorld().provider.getDimension()) != null &&
-				!AtmosphereHandler.getOxygenHandler(event.getWorld().provider.getDimension()).getAtmosphereType(event.getPos()).allowsCombustion()) {
+	public void blockPlacedEvent(@Nonnull PlaceEvent event) {
+		WorldProvider provider = event.getWorld().provider;
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(provider.getDimension());
+
+		if(!event.getWorld().isRemote  && AtmosphereHandler.getOxygenHandler(provider.getDimension()) != null && atmhandler != null &&
+				!atmhandler.getAtmosphereType(event.getPos()).allowsCombustion()) {
 
 			if(event.getPlacedBlock().getBlock() == Blocks.TORCH) {
 				EnumFacing direction = event.getPlacedBlock().getValue(BlockTorch.FACING);
@@ -250,10 +254,13 @@ public class PlanetEventHandler {
 	}
 	
 	@SubscribeEvent
-	public void blockRightClicked(RightClickBlock event) {
+	public void blockRightClicked(@Nonnull RightClickBlock event) {
 		EnumFacing direction = event.getFace();
-		if(!event.getWorld().isRemote && direction != null  && event.getEntityPlayer() != null  && AtmosphereHandler.getOxygenHandler(event.getWorld().provider.getDimension()) != null &&
-				!AtmosphereHandler.getOxygenHandler(event.getWorld().provider.getDimension()).getAtmosphereType(event.getPos().offset(direction)).allowsCombustion()) {
+		WorldProvider provider = event.getWorld().provider;
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(provider.getDimension());
+
+		if(!event.getWorld().isRemote && direction != null  && event.getEntityPlayer() != null  && AtmosphereHandler.getOxygenHandler(provider.getDimension()) != null && atmhandler != null &&
+				!atmhandler.getAtmosphereType(event.getPos().offset(direction)).allowsCombustion()) {
 
 			if(!event.getEntityPlayer().getHeldItem(event.getHand()).isEmpty()) {
 				if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD )
@@ -285,7 +292,7 @@ public class PlanetEventHandler {
 		}
 	}*/
 
-	//Tick dimensions, needed for satellites, and guis
+	//Tick dimensions, needed for satellites, and GUIs
 	@SubscribeEvent
 	public void tick(TickEvent.ServerTickEvent event) {
 		//Tick satellites
@@ -520,7 +527,7 @@ public class PlanetEventHandler {
 	}
 
 
-	static final ItemStack component = new ItemStack(AdvancedRocketryItems.itemUpgrade, 1, 4);
+	private static final ItemStack component = new ItemStack(AdvancedRocketryItems.itemUpgrade, 1, 4);
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void fogColor(RenderFogEvent event) {
@@ -586,7 +593,7 @@ public class PlanetEventHandler {
 			try {
 				DimensionManager.getInstance().saveDimensions(DimensionManager.workingPath);
 			} catch (Exception e) {
-				AdvancedRocketry.logger.fatal("An error has occured saving planet data, this can happen if another mod causes the game to crash during game load.  If the game has fully loaded, then this is a serious error, Advanced Rocketry data has not been saved.");
+				AdvancedRocketry.logger.fatal("An error has occurred saving planet data, this can happen if another mod causes the game to crash during game load.  If the game has fully loaded, then this is a serious error, Advanced Rocketry data has not been saved.");
 				e.printStackTrace();
 			}
 	}

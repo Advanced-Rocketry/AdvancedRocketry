@@ -769,10 +769,10 @@ public class RenderPlanetarySky extends IRenderHandler {
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.getShadowResource());
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			buffer.pos(-size, zLevel-0.01f, size).tex(f15, f14).endVertex();
-			buffer.pos(size, zLevel-0.01f, size).tex(f14, f14).endVertex();
-			buffer.pos(size, zLevel-0.01f, -size).tex(f14, f15).endVertex();
-			buffer.pos(-size, zLevel-0.01f, -size).tex(f15, f15).endVertex();
+			buffer.pos(-size * 1.05F, zLevel - 0.01f, size * 1.05F).tex(f15, f14).endVertex();
+			buffer.pos(size * 1.05F, zLevel - 0.01f, size * 1.05F).tex(f14, f14).endVertex();
+			buffer.pos(size * 1.05F, zLevel - 0.01f, -size * 1.05F).tex(f14, f15).endVertex();
+			buffer.pos(-size * 1.05F, zLevel - 0.01f, -size * 1.05F).tex(f15, f15).endVertex();
 			Tessellator.getInstance().draw();
 		}
 

@@ -36,9 +36,9 @@ import java.util.Map;
 
 public class TileGuidanceComputer extends TileInventoryHatch implements IModularInventory {
 
-	int destinationId;
-	Vector3F<Float> landingPos;
-	Map<Integer, HashedBlockPosition> landingLoc;
+	private int destinationId;
+	private Vector3F<Float> landingPos;
+	private Map<Integer, HashedBlockPosition> landingLoc;
 
 	public TileGuidanceComputer() {
 		super(1);
@@ -56,6 +56,18 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	@Override
 	public int getInventoryStackLimit() {
 		return 1;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack itemStack) {
+		Item item = itemStack.getItem();
+
+		return slot == 0 &&
+				(item instanceof ItemPlanetIdentificationChip ||
+				item instanceof ItemStationChip ||
+				item instanceof ItemAsteroidChip ||
+				item instanceof ItemSatelliteIdentificationChip ||
+				item == LibVulpesItems.itemLinker);
 	}
 
 	public void setLandingLocation(int stationId, StationLandingLocation loc) {
@@ -85,7 +97,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	public long getTargetSatellite() {
 		ItemStack stack = getStackInSlot(0);
 		if(!stack.isEmpty() && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
-			return ((ItemSatelliteIdentificationChip)stack.getItem()).getSatelliteId(stack);
+			return ItemSatelliteIdentificationChip.getSatelliteId(stack);
 		}
 		return -1;
 	}
@@ -97,7 +109,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	public int getDestinationDimId(int currentDimension, BlockPos pos) {
 		ItemStack stack = getStackInSlot(0);
 
-		if(!stack.isEmpty()){
+		if(!stack.isEmpty()) {
 			Item itemType = stack.getItem();
 			if (itemType instanceof ItemPlanetIdentificationChip) {
 				ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)itemType;
@@ -124,9 +136,9 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				return currentDimension;
 			}
 			else if(itemType instanceof ItemSatelliteIdentificationChip) {
-				long l = getTargetSatellite();
-				if(l != Constants.INVALID_PLANET) {
-					SatelliteBase sat = DimensionManager.getInstance().getSatellite(l);
+				long satelliteId = getTargetSatellite();
+				if(satelliteId != -1) {
+					SatelliteBase sat = DimensionManager.getInstance().getSatellite(satelliteId);
 					
 					if(sat != null)
 						return sat.getDimensionId();

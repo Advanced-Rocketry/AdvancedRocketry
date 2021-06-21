@@ -54,15 +54,21 @@ public class BlockTorchUnlit extends BlockTorch {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
+	public boolean onBlockActivated(@Nonnull World world, @Nonnull BlockPos pos,
+			@Nonnull IBlockState state, @Nonnull EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
 			float hitZ) {
 
 		if(!player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()) {
 			Item item = player.getHeldItem(EnumHand.MAIN_HAND).getItem();
-			if(!world.isRemote && !item.equals(Items.AIR) && AtmosphereHandler.getOxygenHandler(world.provider.getDimension()).getAtmosphereType(pos).allowsCombustion() && (item == Item.getItemFromBlock(Blocks.TORCH) ||
-					item == Items.FLINT_AND_STEEL || 
-					item == Items.FIRE_CHARGE)) {
+			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(world.provider.getDimension());
+
+			if(atmhandler != null
+			&& !world.isRemote
+			&& !item.equals(Items.AIR)
+			&& atmhandler.getAtmosphereType(pos).allowsCombustion()
+			&& (item == Item.getItemFromBlock(Blocks.TORCH)
+					|| item == Items.FLINT_AND_STEEL 
+					|| item == Items.FIRE_CHARGE)) {
 
 				world.setBlockState(pos, Blocks.TORCH.getDefaultState().withProperty(FACING, state.getValue(FACING)));
 

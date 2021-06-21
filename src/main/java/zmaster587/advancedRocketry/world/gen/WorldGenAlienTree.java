@@ -225,7 +225,7 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 			int newY = l >= branchLength/2 ? y + 2 : y;
 			int newZ = z + (dirZ*l);
 
-			flag =         this.replaceBlockWithWood(world, newX, newY, newZ, direction);
+			flag = this.replaceBlockWithWood(world, newX, newY, newZ, direction);
 			flag = flag && this.replaceBlockWithWood(world, newX, newY - 1, newZ, direction);
 			flag = flag && this.replaceBlockWithWood(world, newX + dirZ, newY, newZ + dirX, direction);
 			flag = flag && this.replaceBlockWithWood(world, newX + dirZ, newY - 1, newZ + dirX, direction);
