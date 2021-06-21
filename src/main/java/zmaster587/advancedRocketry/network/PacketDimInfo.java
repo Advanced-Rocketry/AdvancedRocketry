@@ -22,12 +22,21 @@ import java.util.logging.Logger;
 
 public class PacketDimInfo extends BasePacket {
 
+<<<<<<< HEAD
 	DimensionProperties dimProperties;
 	CompoundNBT dimNBT;
 	ResourceLocation dimNumber;
 	boolean deleteDim;
 	List<ItemStack> artifacts;
 	String customIcon;
+=======
+	private DimensionProperties dimProperties;
+	private NBTTagCompound dimNBT;
+	private int dimNumber;
+	private boolean deleteDim;
+	private List<ItemStack> artifacts;
+	private String customIcon;
+>>>>>>> origin/feature/nuclearthermalrockets
 
 	public PacketDimInfo() {
 		artifacts = new LinkedList<>();

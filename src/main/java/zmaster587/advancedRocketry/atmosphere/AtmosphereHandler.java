@@ -1,19 +1,11 @@
 package zmaster587.advancedRocketry.atmosphere;
 
-<<<<<<< HEAD
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-=======
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -39,6 +31,8 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -172,7 +166,7 @@ public class AtmosphereHandler {
 	}*/
 
 	//Called from setBlock in World.class
-	public static void onBlockChange(World world, BlockPos bpos) {
+	public static void onBlockChange(@Nonnull World world, @Nonnull BlockPos bpos) {
 
 		if(ARConfiguration.getCurrentConfig().enableOxygen.get() && !world.isRemote && world.isBlockLoaded(new BlockPos(bpos))) {
 			HashedBlockPosition pos = new HashedBlockPosition(bpos);
@@ -295,7 +289,8 @@ public class AtmosphereHandler {
 	 * @param radius distance from the position to find blobs within
 	 * @return List of AreaBlobs within the radius from the position
 	 */
-	protected List<AreaBlob> getBlobWithinRadius(HashedBlockPosition pos, int radius) {
+	@Nonnull
+	protected List<AreaBlob> getBlobWithinRadius(@Nonnull HashedBlockPosition pos, int radius) {
 		LinkedList<AreaBlob> list = new LinkedList<>();
 		for(AreaBlob blob : blobs.values()) {
 			if(blob.getRootPosition().getDistance(pos) - radius <= 0) {
@@ -309,6 +304,7 @@ public class AtmosphereHandler {
 	 * @param dimNumber dimension number for which to get the oxygenhandler
 	 * @return the oxygen handler for the planet or null if none exists
 	 */
+	@Nullable
 	public static AtmosphereHandler getOxygenHandler(ResourceLocation dimNumber) {
 		//Get your oxyclean!
 		return dimensionOxygen.get(dimNumber);
@@ -329,7 +325,7 @@ public class AtmosphereHandler {
 	 * @param handler IBlobHander to register with
 	 * @param pos
 	 */
-	public void registerBlob(IBlobHandler handler, BlockPos pos) {
+	public void registerBlob(@Nonnull IBlobHandler handler, BlockPos pos) {
 		AreaBlob blob = blobs.get(handler);
 		if(blob == null) {
 			blob = new AtmosphereBlob(handler);
@@ -345,7 +341,7 @@ public class AtmosphereHandler {
 	 * @param pos
 	 * @param blob2
 	 */
-	public void registerBlob(IBlobHandler handler, BlockPos pos, AreaBlob blob2) {
+	public void registerBlob(@Nonnull IBlobHandler handler, BlockPos pos, @Nonnull AreaBlob blob2) {
 		AreaBlob blob = blobs.get(handler);
 		if(blob == null) {
 			blob = blob2;
@@ -358,7 +354,7 @@ public class AtmosphereHandler {
 	 * Unregisters a blob from the atmosphere handler
 	 * @param handler IBlobHandlerObject the blob is associated with
 	 */
-	public void unregisterBlob(IBlobHandler handler) {
+	public void unregisterBlob(@Nonnull IBlobHandler handler) {
 		blobs.remove(handler);
 	}
 
@@ -366,7 +362,7 @@ public class AtmosphereHandler {
 	 * Removes all blocks from the blob associated with this handler
 	 * @param handler the handler associated with this blob
 	 */
-	public void clearBlob(IBlobHandler handler) {
+	public void clearBlob(@Nonnull IBlobHandler handler) {
 
 		if(blobs.containsKey(handler)) {
 			blobs.get(handler).clearBlob();
@@ -380,7 +376,7 @@ public class AtmosphereHandler {
 	 * @param y
 	 * @param z
 	 */
-	public void addBlock(IBlobHandler handler, int x, int y, int z){
+	public void addBlock(@Nonnull IBlobHandler handler, int x, int y, int z){
 		addBlock(handler, new HashedBlockPosition(x, y, z));
 	}
 
@@ -389,7 +385,7 @@ public class AtmosphereHandler {
 	 * @param handler
 	 * @return true if blob addition is successful
 	 */
-	public boolean addBlock(IBlobHandler handler, HashedBlockPosition pos){
+	public boolean addBlock(@Nonnull IBlobHandler handler, @Nonnull HashedBlockPosition pos){
 		AreaBlob blob = blobs.get(handler);
 		blob.addBlock(pos, getBlobWithinRadius(pos, MAX_BLOB_RADIUS));
 		return !blob.getLocations().isEmpty();
@@ -399,15 +395,19 @@ public class AtmosphereHandler {
 	 * @param pos2
 	 * @return AtmosphereType at this location
 	 */
+    @Nonnull
 	public IAtmosphere getAtmosphereType(BlockPos pos2) {
 		if(ARConfiguration.getCurrentConfig().enableOxygen.get()) {
 			HashedBlockPosition pos = new HashedBlockPosition(pos2);
+
 			for(AreaBlob blob : blobs.values()) {
 				if(blob.contains(pos)) {
-					return (IAtmosphere)blob.getData();
+					IAtmosphere atmosphere = (IAtmosphere)blob.getData();
+
+					if(atmosphere != null)
+						return atmosphere;
 				}
 			}
-
 
 			return getDefaultAtmosphereType();
 		}
@@ -418,6 +418,7 @@ public class AtmosphereHandler {
 	/**
 	 * @return the default atmosphere type used by this planet
 	 */
+	@Nonnull
 	public IAtmosphere getDefaultAtmosphereType() {
 		return DimensionManager.getInstance().getDimensionProperties(dimId).getAtmosphere();
 	}
@@ -427,6 +428,7 @@ public class AtmosphereHandler {
 	 * @param entity the entity to check against
 	 * @return The atmosphere type this entity is inside of
 	 */
+    @Nullable
 	public IAtmosphere getAtmosphereType(Entity entity) {
 		if(ARConfiguration.getCurrentConfig().enableOxygen.get()) {
 			HashedBlockPosition pos = new HashedBlockPosition((int)Math.floor(entity.getPosX()), (int)Math.ceil(entity.getPosY()), (int)Math.floor(entity.getPosZ()));
@@ -446,7 +448,7 @@ public class AtmosphereHandler {
 	 * @param entity the entity to check against
 	 * @return The atmosphere pressure this entity is inside of, or -1 to use default
 	 */
-	public int getAtmospherePressure(Entity entity) {
+	public int getAtmospherePressure(@Nonnull Entity entity) {
 		if(ARConfiguration.getCurrentConfig().enableOxygen.get()) {
 			HashedBlockPosition pos = new HashedBlockPosition((int)Math.floor(entity.getPosX()), (int)Math.ceil(entity.getPosY()), (int)Math.floor(entity.getPosZ()));
 			for(AreaBlob blob : blobs.values()) {
@@ -462,11 +464,12 @@ public class AtmosphereHandler {
 	 * @param entity entity to check against
 	 * @return true if the entity can breathe in the this atmosphere
 	 */
-	public boolean canEntityBreathe(LivingEntity entity) {
+	public boolean canEntityBreathe(@Nonnull LivingEntity entity) {
 		if(ARConfiguration.getCurrentConfig().enableOxygen.get()) {
 			HashedBlockPosition pos = new HashedBlockPosition((int)Math.floor(entity.getPosX()), (int)Math.ceil(entity.getPosY()), (int)Math.floor(entity.getPosZ()));
 			for(AreaBlob blob : blobs.values()) {
-				if(blob.contains(pos) && ((IAtmosphere)blob.getData()).isImmune(entity)) {
+				IAtmosphere atmosphere = (IAtmosphere)blob.getData();
+				if(blob.contains(pos) && atmosphere != null && atmosphere.isImmune(entity)) {
 					return true;
 				}
 			}
@@ -480,7 +483,7 @@ public class AtmosphereHandler {
 	 * @param handler the handler registered to this blob
 	 * @return The current size of the blob
 	 */
-	public int getBlobSize(IBlobHandler handler) {
+	public int getBlobSize(@Nonnull IBlobHandler handler) {
 		return blobs.get(handler).getBlobSize();
 	}
 
@@ -489,7 +492,7 @@ public class AtmosphereHandler {
 	 * @param handler the handler for the blob
 	 * @param data the AtmosphereType to set this blob to.
 	 */
-	public void setAtmosphereType(IBlobHandler handler, IAtmosphere data) {
+	public void setAtmosphereType(@Nonnull IBlobHandler handler, @Nonnull IAtmosphere data) {
 		blobs.get(handler).setData(data);
 	}
 
@@ -497,7 +500,16 @@ public class AtmosphereHandler {
 	 * Gets the atmosphere type of this blob
 	 * @param handler the handler for the blob
 	 */
-	public IAtmosphere getAtmosphereType(IBlobHandler handler) {
-		return (IAtmosphere)blobs.get(handler).getData();
+	@Nonnull
+	public IAtmosphere getAtmosphereType(@Nonnull IBlobHandler handler) {
+		if(ARConfiguration.getCurrentConfig().enableOxygen) {
+			IAtmosphere atmosphere = (IAtmosphere) blobs.get(handler).getData();
+			if(atmosphere != null)
+				return atmosphere;
+			else
+				return getDefaultAtmosphereType();
+		}
+
+		return AtmosphereType.AIR;
 	}
 }

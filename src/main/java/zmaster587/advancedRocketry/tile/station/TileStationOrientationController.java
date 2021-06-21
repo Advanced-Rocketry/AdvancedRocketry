@@ -39,7 +39,7 @@ public class TileStationOrientationController extends TileEntity implements ITic
 public class TileStationOrientationController extends TileEntity implements ITickable, IModularInventory, INetworkMachine, ISliderBar, IButtonInventory {
 >>>>>>> origin/feature/nuclearthermalrockets
 
-	int[] progress;
+	private int[] progress;
 
 	private ModuleText moduleAngularVelocity, numThrusters, maxAngularAcceleration, targetRotations;
 
@@ -70,7 +70,6 @@ public class TileStationOrientationController extends TileEntity implements ITic
 		
 		modules.add(new ModuleText(10, 54, "X:", 0x202020));
 		modules.add(new ModuleText(10, 69, "Y:", 0x202020)); //AYYYY
-		
 
 		modules.add(new ModuleSlider(24, 50, 0, TextureResources.doubleWarningSideBarIndicator, this));
 		modules.add(new ModuleSlider(24, 65, 1, TextureResources.doubleWarningSideBarIndicator, this));
@@ -83,6 +82,7 @@ public class TileStationOrientationController extends TileEntity implements ITic
 
 	private void updateText() {
 		if(world.isRemote) {
+<<<<<<< HEAD
 
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object != null) {
@@ -91,10 +91,15 @@ public class TileStationOrientationController extends TileEntity implements ITic
 =======
 				moduleAngularVelocity.setText(String.format("%s%.1f %.1f %.1f", LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.alt"), 72000D * object.getDeltaRotation(EnumFacing.EAST), 72000D * object.getDeltaRotation(EnumFacing.UP), 7200D * object.getDeltaRotation(EnumFacing.NORTH)));
 >>>>>>> origin/feature/nuclearthermalrockets
+=======
+			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+			if(spaceObject != null) {
+				moduleAngularVelocity.setText(String.format("%s%.1f %.1f %.1f", LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.alt"), 72000D * spaceObject.getDeltaRotation(EnumFacing.EAST), 72000D * spaceObject.getDeltaRotation(EnumFacing.UP), 7200D * spaceObject.getDeltaRotation(EnumFacing.NORTH)));
+>>>>>>> origin/feature/nuclearthermalrockets
 				//maxAngularAcceleration.setText(String.format("Maximum Angular Acceleration: %.1f", 7200D*object.getMaxRotationalAcceleration()));
 
 				//numThrusters.setText("Number Of Thrusters: 0");
-				int[] targetRotationsPerHour = ((SpaceStationObject) object).targetRotationsPerHour;
+				int[] targetRotationsPerHour = ((SpaceStationObject) spaceObject).targetRotationsPerHour;
 				targetRotations.setText(String.format("%s%d %d %d", LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.tgtalt"), targetRotationsPerHour[0], targetRotationsPerHour[1], targetRotationsPerHour[2]));
 			}
 		}

@@ -1119,10 +1119,17 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 =======
 			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.getShadowResource());
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+<<<<<<< HEAD
 			buffer.pos(-size, zLevel-0.01f, size).tex(f15, f14).endVertex();
 			buffer.pos(size, zLevel-0.01f, size).tex(f14, f14).endVertex();
 			buffer.pos(size, zLevel-0.01f, -size).tex(f14, f15).endVertex();
 			buffer.pos(-size, zLevel-0.01f, -size).tex(f15, f15).endVertex();
+>>>>>>> origin/feature/nuclearthermalrockets
+=======
+			buffer.pos(-size * 1.05F, zLevel - 0.01f, size * 1.05F).tex(f15, f14).endVertex();
+			buffer.pos(size * 1.05F, zLevel - 0.01f, size * 1.05F).tex(f14, f14).endVertex();
+			buffer.pos(size * 1.05F, zLevel - 0.01f, -size * 1.05F).tex(f14, f15).endVertex();
+			buffer.pos(-size * 1.05F, zLevel - 0.01f, -size * 1.05F).tex(f15, f15).endVertex();
 >>>>>>> origin/feature/nuclearthermalrockets
 			Tessellator.getInstance().draw();
 		}

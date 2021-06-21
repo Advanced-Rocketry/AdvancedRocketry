@@ -10,6 +10,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class XMLAsteroidLoader {
 
-	Document doc;
+	private Document doc;
 
 	public boolean loadFile(File xmlFile) throws IOException {
 		DocumentBuilder docBuilder;
@@ -53,7 +54,17 @@ public class XMLAsteroidLoader {
 	 * @return  list of singleEntry (order MUST be preserved)
 	 */
 	public List<Asteroid> loadPropertyFile() {
-		Node childNode = doc.getFirstChild().getFirstChild();
+		Node childNode = doc.getFirstChild();
+
+		while(childNode != null) {
+			if(!childNode.getNodeName().equalsIgnoreCase("asteroids")) {
+				childNode = childNode.getFirstChild();
+				break;
+			}
+
+			childNode = childNode.getNextSibling();
+		}
+
 		List<Asteroid> mapping = new LinkedList<>();
 
 		while(childNode != null) {
@@ -151,7 +162,7 @@ public class XMLAsteroidLoader {
 				node = att.getNamedItem("baseStack");
 				if(node != null) {
 					ItemStack stack = getStack(node.getTextContent());
-					if(stack != null)
+					if(!stack.isEmpty())
 						asteroid.baseStack = (stack);
 					else {
 						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " has invalid baseStack: " + node.getTextContent());
@@ -197,7 +208,7 @@ public class XMLAsteroidLoader {
 						}
 					}
 					else
-						AdvancedRocketry.logger.warn("Expected 'itemStack' and 'chance' tags, at least one is missing in  " + asteroid.ID );
+						AdvancedRocketry.logger.warn("Asteroid " + asteroid.ID + " expected 'itemStack' and 'chance' tags, at least one is missing");
 				}
 
 				asteroidNode = asteroidNode.getNextSibling();
@@ -222,7 +233,9 @@ public class XMLAsteroidLoader {
 		if(splitStr.length > 1) {
 			try {
 				meta = Integer.parseInt(splitStr[1].trim());
-			} catch( NumberFormatException e) {}
+			} catch( NumberFormatException e) {
+				AdvancedRocketry.logger.warn("Unable to parse int in asteroid config: \"" + splitStr[1] + "\"");
+			}
 		}
 
 <<<<<<< HEAD

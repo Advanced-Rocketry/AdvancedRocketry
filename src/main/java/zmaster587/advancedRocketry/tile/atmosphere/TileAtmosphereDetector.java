@@ -30,13 +30,14 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class TileAtmosphereDetector extends TileEntity implements ITickableTileEntity, IModularInventory, IButtonInventory, INetworkMachine {
 
-	IAtmosphere atmosphereToDetect;
+	private IAtmosphere atmosphereToDetect;
 
 	public TileAtmosphereDetector() {
 		super(AdvancedRocketryTileEntityType.TILE_ATM_DETECTOR);
@@ -51,12 +52,22 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 			boolean detectedAtm = false;
 
 			//TODO: Galacticcraft support
+<<<<<<< HEAD
 			if(AtmosphereHandler.getOxygenHandler(ZUtils.getDimensionIdentifier(world)) == null) {
 				detectedAtm = atmosphereToDetect == AtmosphereType.AIR;
 			}
 			else {
 				for(Direction  direction : Direction.values()) {
 					detectedAtm = ((world.getBlockState(pos.offset(direction)).getShape(world, pos.offset(direction)) != VoxelShapes.fullCube()) && atmosphereToDetect == AtmosphereHandler.getOxygenHandler(world).getAtmosphereType(pos.offset(direction)));
+=======
+			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(world.provider.getDimension());
+			if(atmhandler == null) {
+				detectedAtm = atmosphereToDetect == AtmosphereType.AIR;
+			}
+			else {
+				for(EnumFacing  direction : EnumFacing.values()) {
+					detectedAtm = (!world.getBlockState(pos.offset(direction)).isOpaqueCube() && atmosphereToDetect == atmhandler.getAtmosphereType(pos.offset(direction)));
+>>>>>>> origin/feature/nuclearthermalrockets
 					if(detectedAtm) break;
 				}
 			}
@@ -104,7 +115,11 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 	}
 
 	@Override
+<<<<<<< HEAD
 	public boolean canInteractWithContainer(PlayerEntity entity) {
+=======
+	public boolean canInteractWithContainer(@Nullable EntityPlayer entity) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		return true;
 	}
 

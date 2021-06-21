@@ -667,7 +667,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		}
 	}
 
+<<<<<<< HEAD
 	protected ActionResultType interact(PlayerEntity player) {
+=======
+	protected boolean interact(@Nonnull EntityPlayer player) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		//Actual interact code needs to be moved to a packet receive on the server
 
 		ItemStack heldItem = player.getHeldItem(Hand.MAIN_HAND);
@@ -915,9 +919,20 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		if(world.isRemote && Minecraft.getInstance().gameSettings.particles != ParticleStatus.MINIMAL && areEnginesRunning()) {
 			for(Vector3F<Float> vec : stats.getEngineLocations()) {
 
+<<<<<<< HEAD
 				AtmosphereHandler handler;
 				if(Minecraft.getInstance().gameSettings.particles  == ParticleStatus.ALL && world.getGameTime() % 10 == 0 && (engineNum < 8 || ((world.getGameTime()/10) % Math.max((stats.getEngineLocations().size()/8),1)) == (engineNum/8)) && ( (handler = AtmosphereHandler.getOxygenHandler(world)) == null || (handler.getAtmosphereType(this) != null && handler.getAtmosphereType(this).allowsCombustion())) )
 					AdvancedRocketry.proxy.spawnParticle("rocketSmoke", world, this.getPosX() + vec.x, this.getPosY() + vec.y - 0.75, this.getPosZ() +vec.z,0,0,0);
+=======
+				AtmosphereHandler handler = AtmosphereHandler.getOxygenHandler(world.provider.getDimension());
+				IAtmosphere atmosphere = null;
+
+				if(handler != null)
+					atmosphere = handler.getAtmosphereType(this);
+
+				if(Minecraft.getMinecraft().gameSettings.particleSetting < 1 && world.getTotalWorldTime() % 10 == 0 && (engineNum < 8 || ((world.getTotalWorldTime()/10) % Math.max((stats.getEngineLocations().size()/8),1)) == (engineNum/8)) && ( handler == null || (atmosphere != null && atmosphere.allowsCombustion())) )
+					AdvancedRocketry.proxy.spawnParticle("rocketSmoke", world, this.posX + vec.x, this.posY + vec.y - 0.75, this.posZ +vec.z,0,0,0);
+>>>>>>> origin/feature/nuclearthermalrockets
 
 				for(int i = 0; i < 4; i++) {
 					AdvancedRocketry.proxy.spawnParticle("rocketFlame", world, this.getPosX() + vec.x, this.getPosY() + vec.y - 0.75, this.getPosZ() +vec.z,(this.rand.nextFloat() - 0.5f)/8f,-.75 ,(this.rand.nextFloat() - 0.5f)/8f);
@@ -1488,7 +1503,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		super.onOrbitReached();
 
 		long targetSatellite;
-		if(storage.getGuidanceComputer() != null && (targetSatellite = storage.getGuidanceComputer().getTargetSatellite()) != -1L) {
+		if(storage.getGuidanceComputer() != null && (targetSatellite = storage.getGuidanceComputer().getTargetSatellite()) != -1) {
 			SatelliteBase sat = DimensionManager.getInstance().getSatellite(targetSatellite);
 			for(TileEntity tile : storage.getTileEntityList()) {
 				if(tile instanceof TileSatelliteHatch && ((IInventory)tile).getStackInSlot(0).isEmpty()) {
@@ -1886,8 +1901,15 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		boolean allowLaunch = false;
 
 
+<<<<<<< HEAD
 		if(!(ARConfiguration.getCurrentConfig().experimentalSpaceFlight.get() && storage.getGuidanceComputer() != null && storage.getGuidanceComputer().isEmpty()))
 		{
+=======
+		if(ARConfiguration.getCurrentConfig().experimentalSpaceFlight && storage.getGuidanceComputer() != null && storage.getGuidanceComputer().isEmpty()) {
+			allowLaunch = true;
+		}
+		else {
+>>>>>>> origin/feature/nuclearthermalrockets
 
 			//Get destination dimid and lock the computer
 			//TODO: lock the computer
@@ -1954,8 +1976,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				return;
 			}
 		}
-		else
-			allowLaunch = true;
 
 
 		//Check to see what place we should be going to

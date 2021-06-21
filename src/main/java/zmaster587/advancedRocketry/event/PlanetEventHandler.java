@@ -37,10 +37,17 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 >>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.world.World;
+<<<<<<< HEAD
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent.LoggedOutEvent;
+=======
+import net.minecraft.world.WorldProvider;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.Chunk;
+>>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent;
 import net.minecraftforge.event.TickEvent;
@@ -64,10 +71,14 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.advancements.ARAdvancements;
+<<<<<<< HEAD
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+=======
+import zmaster587.advancedRocketry.api.*;
+>>>>>>> origin/feature/nuclearthermalrockets
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
@@ -94,7 +105,13 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
+<<<<<<< HEAD
 import zmaster587.libVulpes.util.ZUtils;
+=======
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+>>>>>>> origin/feature/nuclearthermalrockets
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -257,22 +274,42 @@ public class PlanetEventHandler {
 	}
 
 	@SubscribeEvent
+<<<<<<< HEAD
 	public void sleepEvent(PlayerSleepInBedEvent event) {
 		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(event.getEntity().getEntityWorld());
 		if(props != DimensionManager.defaultSpaceDimensionProperties) {
 			if (!ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace.get() && AtmosphereHandler.hasAtmosphereHandler(event.getEntity().world) && 
 					!AtmosphereHandler.getOxygenHandler(event.getEntity().world).getAtmosphereType(event.getPos()).isBreathable()) {
+=======
+	public void sleepEvent(@Nonnull PlayerSleepInBedEvent event) {
+
+		if(event.getEntity().world.provider instanceof WorldProviderPlanet) {
+			WorldProvider provider = event.getEntity().world.provider;
+			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(provider.getDimension());
+
+			if (!ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace && AtmosphereHandler.hasAtmosphereHandler(provider.getDimension()) && atmhandler != null &&
+					!atmhandler.getAtmosphereType(event.getPos()).isBreathable()) {
+>>>>>>> origin/feature/nuclearthermalrockets
 				event.setResult(SleepResult.OTHER_PROBLEM);
 			}
 		}
 	}
 
 	@SubscribeEvent
+<<<<<<< HEAD
 	public void blockPlacedEvent(BlockEvent.EntityPlaceEvent event)
 	{
 		World world =event.getEntity().getEntityWorld(); 
 		if(!world.isRemote  && AtmosphereHandler.getOxygenHandler(world) != null &&
 				!AtmosphereHandler.getOxygenHandler(world).getAtmosphereType(event.getPos()).allowsCombustion()) {
+=======
+	public void blockPlacedEvent(@Nonnull PlaceEvent event) {
+		WorldProvider provider = event.getWorld().provider;
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(provider.getDimension());
+
+		if(!event.getWorld().isRemote  && AtmosphereHandler.getOxygenHandler(provider.getDimension()) != null && atmhandler != null &&
+				!atmhandler.getAtmosphereType(event.getPos()).allowsCombustion()) {
+>>>>>>> origin/feature/nuclearthermalrockets
 
 			//TODO: move hardcoded torches to config
 			if(event.getPlacedBlock().getBlock() == Blocks.TORCH) {
@@ -295,6 +332,7 @@ public class PlanetEventHandler {
 	}
 
 	@SubscribeEvent
+<<<<<<< HEAD
 	public void blockRightClicked(RightClickBlock event) {
 		Direction direction = event.getFace();
 		if(!event.getWorld().isRemote && direction != null  && event.getPlayer() != null  && AtmosphereHandler.getOxygenHandler(event.getWorld()) != null &&
@@ -304,6 +342,16 @@ public class PlanetEventHandler {
 			if(event.getPlayer().getHeldItem(event.getHand()) != null) {
 				if(event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD )
 =======
+=======
+	public void blockRightClicked(@Nonnull RightClickBlock event) {
+		EnumFacing direction = event.getFace();
+		WorldProvider provider = event.getWorld().provider;
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(provider.getDimension());
+
+		if(!event.getWorld().isRemote && direction != null  && event.getEntityPlayer() != null  && AtmosphereHandler.getOxygenHandler(provider.getDimension()) != null && atmhandler != null &&
+				!atmhandler.getAtmosphereType(event.getPos().offset(direction)).allowsCombustion()) {
+
+>>>>>>> origin/feature/nuclearthermalrockets
 			if(!event.getEntityPlayer().getHeldItem(event.getHand()).isEmpty()) {
 				if(event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FLINT_AND_STEEL || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.FIRE_CHARGE|| event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_POWDER || event.getEntityPlayer().getHeldItem(event.getHand()).getItem() == Items.BLAZE_ROD )
 >>>>>>> origin/feature/nuclearthermalrockets
@@ -341,7 +389,7 @@ public class PlanetEventHandler {
 		}
 	}*/
 
-	//Tick dimensions, needed for satellites, and guis
+	//Tick dimensions, needed for satellites, and GUIs
 	@SubscribeEvent
 	public void tick(ServerTickEvent event) {
 		//Tick satellites
@@ -520,7 +568,11 @@ public class PlanetEventHandler {
 	}*/
 
 
+<<<<<<< HEAD
 	static final ItemStack component = new ItemStack(AdvancedRocketryItems.itemUpgradeFogGoggles, 1);
+=======
+	private static final ItemStack component = new ItemStack(AdvancedRocketryItems.itemUpgrade, 1, 4);
+>>>>>>> origin/feature/nuclearthermalrockets
 	@SubscribeEvent
 	@OnlyIn(value=Dist.CLIENT)
 	public void fogColor(RenderFogEvent event) {
@@ -590,7 +642,7 @@ public class PlanetEventHandler {
 			try {
 				DimensionManager.getInstance().saveDimensions(DimensionManager.workingPath);
 			} catch (Exception e) {
-				AdvancedRocketry.logger.fatal("An error has occured saving planet data, this can happen if another mod causes the game to crash during game load.  If the game has fully loaded, then this is a serious error, Advanced Rocketry data has not been saved.");
+				AdvancedRocketry.logger.fatal("An error has occurred saving planet data, this can happen if another mod causes the game to crash during game load.  If the game has fully loaded, then this is a serious error, Advanced Rocketry data has not been saved.");
 				e.printStackTrace();
 			}
 	}

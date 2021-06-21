@@ -18,6 +18,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.atmosphere.IAtmosphereSealHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -55,7 +56,7 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 	 * @return
 	 */
 	@Override
-	public boolean isBlockSealed(World world, BlockPos pos)
+	public boolean isBlockSealed(@Nonnull World world, @Nonnull BlockPos pos)
 	{
 		//Ensure we are not checking outside of the map
 		if(pos.getY() >= 0 && pos.getY() <= 256)

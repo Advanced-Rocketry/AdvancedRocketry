@@ -70,6 +70,7 @@ import zmaster587.advancedRocketry.world.ModdedDimensionType;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
@@ -505,6 +506,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param dimId dimension id to check
 	 * @return true if it can be traveled to, in general if it has a surface
 	 */
+<<<<<<< HEAD
 	public boolean canTravelTo(ResourceLocation dimId){
 		
 		return ZUtils.isWorldRegistered(dimId) && getDimensionProperties(dimId).hasSurface();
@@ -518,6 +520,10 @@ public class DimensionManager implements IGalaxy {
 	public boolean canTravelTo(ServerWorld dimId){
 		
 		return getDimensionProperties(ZUtils.getDimensionIdentifier(dimId)).hasSurface();
+=======
+	public boolean canTravelTo(int dimId) {
+		return net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId) && dimId != Constants.INVALID_PLANET && getDimensionProperties(dimId).hasSurface();
+>>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	/**
@@ -525,7 +531,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param properties {@link DimensionProperties} to register
 	 * @return false if the dimension has not been registered, true if it is being newly registered
 	 */
-	public boolean registerDim(DimensionProperties properties, boolean registerWithForge) {
+	public boolean registerDim(@Nonnull DimensionProperties properties, boolean registerWithForge) {
 		boolean bool = registerDimNoUpdate(properties, registerWithForge);
 
 		if(bool)
@@ -591,6 +597,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param registerWithForge if true also registers the dimension with forge
 	 * @return true if the dimension has NOT been registered before, false if the dimension IS registered exist already
 	 */
+<<<<<<< HEAD
 	public boolean registerDimNoUpdate(DimensionProperties properties, boolean registerWithForge) {
 <<<<<<< HEAD
 		ResourceLocation dimId = properties.getId();
@@ -612,6 +619,9 @@ public class DimensionManager implements IGalaxy {
 				ZUtils.registerDimension(dimId, dimType, dimension);
 			}
 =======
+=======
+	public boolean registerDimNoUpdate(@Nonnull DimensionProperties properties, boolean registerWithForge) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		int dimId = properties.getId();
 
 		if(dimensionList.containsKey(dimId))
@@ -988,10 +998,14 @@ public class DimensionManager implements IGalaxy {
 	 * @return true if the dimension exists and is registered
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	public boolean isDimensionCreated( ResourceLocation dimId) {
 		return dimensionListResource.containsKey(dimId) || ARConfiguration.GetSpaceDimId().equals(dimId);
 =======
 	public boolean isDimensionCreated( int dimId) {
+=======
+	public boolean isDimensionCreated(int dimId) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		return dimensionList.containsKey(dimId) || dimId == ARConfiguration.getCurrentConfig().spaceDimId;
 >>>>>>> origin/feature/nuclearthermalrockets
 	}
@@ -1126,7 +1140,10 @@ public class DimensionManager implements IGalaxy {
 		if(file.exists()) {
 			AdvancedRocketry.logger.info("Advanced Planet Config file Found!  Loading from file.");
 			loader = new XMLPlanetLoader();
+			boolean loadSuccessful = true;
+
 			try {
+<<<<<<< HEAD
 				loader.loadFile(file);
 				if(!loader.isValid())
 					throw new Exception("Cannot read XML");
@@ -1135,6 +1152,23 @@ public class DimensionManager implements IGalaxy {
 				e.printStackTrace();
 				AdvancedRocketry.logger.fatal("A serious error has occured while loading the planetDefs XML");
 				ServerLifecycleHooks.handleExit(-1);
+=======
+				if(loader.loadFile(file)) {
+					dimCouplingList = loader.readAllPlanets();
+					DimensionManager.dimOffset += dimCouplingList.dims.size();
+				}
+				else {
+					loadSuccessful = false;
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+				loadSuccessful = false;
+			}
+
+			if(!loadSuccessful) {
+				logger.fatal("A serious error has occurred while loading the planetDefs XML");
+				FMLCommonHandler.instance().exitJava(-1, false);
+>>>>>>> origin/feature/nuclearthermalrockets
 			}
 		}
 		//End load planet files

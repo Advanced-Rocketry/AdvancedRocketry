@@ -24,12 +24,14 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class SpaceObjectManager implements ISpaceObjectManager {
 	public static final ResourceLocation WARPDIMID = new ResourceLocation("warp" , "warp");
 	private long nextStationTransitionTick = -1;
 	//station ids to object
+<<<<<<< HEAD
 	HashMap<ResourceLocation,ISpaceObject> stationLocations;
 	//Map of planet IDs to station Ids
 	HashMap<ResourceLocation, List<ISpaceObject>> spaceStationOrbitMap;
@@ -39,6 +41,15 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	HashMap<Class, String> classToString;
 	
 	public final static String STATION_NAMESPACE = "station";
+=======
+	private HashMap<Integer,ISpaceObject> stationLocations;
+	//Map of planet IDs to station Ids
+	private HashMap<Integer, List<ISpaceObject>> spaceStationOrbitMap;
+	private HashMap<Integer, Long> temporaryDimensions;				//Stores a list of temporary dimensions to time they vanish
+	private HashMap<Integer, Integer> temporaryDimensionPlayerNumber;
+	private HashMap<String, Class> nameToClass;
+	private HashMap<Class, String> classToString;
+>>>>>>> origin/feature/nuclearthermalrockets
 
 	private final static SpaceObjectManager spaceObjectManager = new SpaceObjectManager();
 
@@ -118,7 +129,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 		return null;
 	}
 
-	public String getItentifierFromClass(Class<? extends ISpaceObject> clazz) {
+	public String getIdentifierFromClass(Class<? extends ISpaceObject> clazz) {
 		return classToString.get(clazz);
 	}
 
@@ -126,7 +137,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * Gets the object at the location of passed Block x and z
 	 * @return Space object occupying the block coords of null if none
 	 */
-	public ISpaceObject getSpaceStationFromBlockCoords(BlockPos pos) {
+	public ISpaceObject getSpaceStationFromBlockCoords(@Nonnull BlockPos pos) {
 
 		int x = pos.getX(); int z = pos.getZ();
 <<<<<<< HEAD
@@ -159,11 +170,15 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * @param stationId
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	public void registerSpaceObject(ISpaceObject object, ResourceLocation dimId, ResourceLocation stationId) {
 		object.setId(stationId);
 		stationLocations.put(stationId, object);
 =======
 	public void registerSpaceObject(ISpaceObject spaceObject, int dimId, int stationId) {
+=======
+	public void registerSpaceObject(@Nonnull ISpaceObject spaceObject, int dimId, int stationId) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		spaceObject.setId(stationId);
 		stationLocations.put(stationId, spaceObject);
 >>>>>>> origin/feature/nuclearthermalrockets
@@ -221,10 +236,14 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * @param expireTime time at which to expire the dimension
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	public void registerTemporarySpaceObject(ISpaceObject object, ResourceLocation dimId, long expireTime) {
 		ResourceLocation nextDimId = getNextStationId();
 =======
 	public void registerTemporarySpaceObject(ISpaceObject spaceObject, int dimId, long expireTime) {
+=======
+	public void registerTemporarySpaceObject(@Nonnull ISpaceObject spaceObject, int dimId, long expireTime) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		int nextDimId = getNextStationId();
 >>>>>>> origin/feature/nuclearthermalrockets
 		temporaryDimensions.put(nextDimId, expireTime);
@@ -245,7 +264,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * @param spaceObject
 	 * @param dimId dimension to place it in orbit around, Constants.INVALID_PLANET for undefined
 	 */
-	public void registerSpaceObject(ISpaceObject spaceObject, int dimId) {
+	public void registerSpaceObject(@Nonnull ISpaceObject spaceObject, int dimId) {
 		registerSpaceObject(spaceObject, dimId, getNextStationId());
 		PacketHandler.sendToAll(new PacketSpaceStationInfo(spaceObject.getId(), spaceObject));
 >>>>>>> origin/feature/nuclearthermalrockets
@@ -272,7 +291,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 		registerSpaceObject(object, dimId, stationId);
 =======
 	@SideOnly(Side.CLIENT)
-	public void registerSpaceObjectClient(ISpaceObject spaceObject, int dimId, int stationId) {
+	public void registerSpaceObjectClient(@Nonnull ISpaceObject spaceObject, int dimId, int stationId) {
 		registerSpaceObject(spaceObject, dimId, stationId);
 >>>>>>> origin/feature/nuclearthermalrockets
 	}
@@ -291,8 +310,13 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * TODO: prevent inf loop if nowhere to fall!
 	 */
 	@SubscribeEvent
+<<<<<<< HEAD
 	public void onPlayerTick(PlayerTickEvent event) {
 		if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(event.player.world))) {
+=======
+	public void onPlayerTick(@Nonnull PlayerTickEvent event) {
+		if(event.player.world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+>>>>>>> origin/feature/nuclearthermalrockets
 
 <<<<<<< HEAD
 			if(event.player.getPosY() < 0 && !event.player.world.isRemote) {
@@ -410,7 +434,11 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 
 	}*/
 
+<<<<<<< HEAD
 	public void moveStationToBody(ISpaceObject station, ResourceLocation dimId) {
+=======
+	public void moveStationToBody(@Nonnull ISpaceObject station, int dimId) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		moveStationToBody(station, dimId, true);
 	}
 
@@ -419,7 +447,11 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * @param station
 	 * @param dimId
 	 */
+<<<<<<< HEAD
 	public void moveStationToBody(ISpaceObject station, ResourceLocation dimId, boolean update) {
+=======
+	public void moveStationToBody(@Nonnull ISpaceObject station, int dimId, boolean update) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		//Remove station from the planet it's in orbit around before moving it!
 		if(spaceStationOrbitMap.get(station.getOrbitingPlanetId()) != null) {
 			spaceStationOrbitMap.get(station.getOrbitingPlanetId()).remove(station);
@@ -450,7 +482,11 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * @param dimId
 	 * @param timeDelta time in ticks to fully make the jump
 	 */
+<<<<<<< HEAD
 	public void moveStationToBody(ISpaceObject station, ResourceLocation dimId, int timeDelta) {
+=======
+	public void moveStationToBody(@Nonnull ISpaceObject station, int dimId, int timeDelta) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		//Remove station from the planet it's in orbit around before moving it!
 		if(!WARPDIMID.equals(station.getOrbitingPlanetId()) && spaceStationOrbitMap.get(station.getOrbitingPlanetId()) != null) {
 			spaceStationOrbitMap.get(station.getOrbitingPlanetId()).remove(station);

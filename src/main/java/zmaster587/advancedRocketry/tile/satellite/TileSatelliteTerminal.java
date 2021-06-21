@@ -153,7 +153,7 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 	public SatelliteBase getSatelliteFromSlot(int slot) {
 
 		ItemStack stack = getStackInSlot(slot);
-		if(stack != null && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
+		if(!stack.isEmpty() && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
 			ItemSatelliteIdentificationChip idchip = (ItemSatelliteIdentificationChip)stack.getItem();
 
 			return idchip.getSatellite(stack);
@@ -193,7 +193,7 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 		else if(buttonId == 1) {
 			ItemStack stack = getStackInSlot(0);
 
-			if(stack != null && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
+			if(!stack.isEmpty() && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
 				ItemSatelliteIdentificationChip idchip = (ItemSatelliteIdentificationChip)stack.getItem();
 
 				SatelliteBase satellite = idchip.getSatellite(stack);

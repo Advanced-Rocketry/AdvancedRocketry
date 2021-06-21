@@ -44,6 +44,7 @@ import org.apache.logging.log4j.Logger;
 
 public class ARConfiguration {
 	public static final String configFolder = "advRocketry";
+<<<<<<< HEAD
 	final static byte MAGIC_CODE = (byte)197;
 	final static long MAGIC_CODE_PT2 = 2932031007403L; // Prime
 
@@ -68,6 +69,23 @@ public class ARConfiguration {
 	public static ConfigValue<List<? extends String>> biomeSingle;
 =======
 	static String[] sealableBlockWhiteList, sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, spawnableGasses, entityList, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidMonopropellant, liquidBipropellantFuel, liquidBipropellantOxidizer, liquidNuclearWorkingFluid;
+>>>>>>> origin/feature/nuclearthermalrockets
+=======
+	private final static byte MAGIC_CODE = (byte)197;
+	private final static long MAGIC_CODE_PT2 = 2932031007403L; // Prime
+
+	private final static String WORLDGEN = "World and Ore Generation";
+	private final static String ROCKET = "Rockets";
+	private final static String STATION = "Station Configuration";
+	private final static String PLANET = "Planet";
+	private final static String OXYGEN = "Oxygen System";
+	private final static String ENERGY = "Energy Production";
+	private final static String MISSION = "Resource Collection Missions";
+	private final static String PERFORMANCE = "Performance";
+	private final static String CLIENT = "Client";
+	public static Logger logger = LogManager.getLogger(Constants.modId);
+
+	private static String[] sealableBlockWhiteList, sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, spawnableGasses, entityList, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidMonopropellant, liquidBipropellantFuel, liquidBipropellantOxidizer, liquidNuclearWorkingFluid;
 >>>>>>> origin/feature/nuclearthermalrockets
 
 

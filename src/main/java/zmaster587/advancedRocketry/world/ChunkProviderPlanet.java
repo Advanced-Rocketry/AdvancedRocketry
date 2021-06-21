@@ -123,9 +123,9 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	private NoiseGeneratorOctaves maxLimitPerlinNoise;
 	private NoiseGeneratorOctaves mainPerlinNoise;
 	private NoiseGeneratorPerlin surfaceNoise;
-	public NoiseGeneratorOctaves scaleNoise;
-	public NoiseGeneratorOctaves depthNoise;
-	public NoiseGeneratorOctaves forestNoise;
+	private NoiseGeneratorOctaves scaleNoise;
+	private NoiseGeneratorOctaves depthNoise;
+	private NoiseGeneratorOctaves forestNoise;
 	private final World worldObj;
 	private final boolean mapFeaturesEnabled;
 	private final WorldType terrainType;
@@ -143,13 +143,13 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	private MapGenBase ravineGenerator = new MapGenRavineExt();
 	private StructureOceanMonument oceanMonumentGenerator = new StructureOceanMonument();
 	private Biome[] biomesForGeneration;
-	double[] mainNoiseRegion;
-	double[] minLimitRegion;
-	double[] maxLimitRegion;
-	double[] depthRegion;
+	private double[] mainNoiseRegion;
+	private double[] minLimitRegion;
+	private double[] maxLimitRegion;
+	private double[] depthRegion;
 	protected int heightmapOffset = 0;
 	protected float heightmapMult = 1f;
-	protected boolean habitable;
+	private boolean habitable;
 
 
 	private MapGenCraterSmall craterGeneratorSmall;
@@ -670,7 +670,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		return chunk;
 	}
 
-	private void generateHeightmap(int p_185978_1_, int p_185978_2_, int p_185978_3_){
+	private void generateHeightmap(int p_185978_1_, int p_185978_2_, int p_185978_3_) {
 		this.depthRegion = this.depthNoise.generateNoiseOctaves(this.depthRegion, p_185978_1_, p_185978_3_, 5, 5, this.settings.depthNoiseScaleX, this.settings.depthNoiseScaleZ, this.settings.depthNoiseScaleExponent);
 		float f = this.settings.coordinateScale;
 		float f1 = this.settings.heightScale * heightmapMult;

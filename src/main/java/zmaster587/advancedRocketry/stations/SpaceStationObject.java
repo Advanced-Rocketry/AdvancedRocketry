@@ -37,6 +37,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -124,6 +125,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	 * @return dimension properties of the object
 	 */
 	@Override
+	@Nonnull
 	public DimensionProperties getProperties() {
 		return properties;
 	}
@@ -135,8 +137,13 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		return (isWarping()) ? 0.0 : getOrbitingPlanet().getPeakInsolationMultiplierWithoutAtmosphere();
 	}
 
+<<<<<<< HEAD
 	@OnlyIn(value=Dist.CLIENT)
 	public void setProperties(IDimensionProperties properties) {
+=======
+	@SideOnly(Side.CLIENT)
+	public void setProperties(@Nonnull IDimensionProperties properties) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		this.properties = (DimensionProperties)properties;
 	}
 

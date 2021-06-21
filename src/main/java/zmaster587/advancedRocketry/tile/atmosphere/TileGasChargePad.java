@@ -54,6 +54,7 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 	}
 
 	@Override
+<<<<<<< HEAD
 	public int fill(FluidStack resource, FluidAction doFill) {
 
 		if(canFill(resource.getFluid()))
@@ -62,6 +63,8 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 	}
 
 	@Override
+=======
+>>>>>>> origin/feature/nuclearthermalrockets
 	public boolean canFill(Fluid fluid) {
 		return FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.oxygenStill.get()) || FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.hydrogenStill.get());
 	}	
@@ -95,9 +98,14 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 						int amtFluid = fillable.getMaxAir(stack) - fillable.getAirRemaining(stack);
 						FluidStack fluidStack = this.drain(amtFluid, FluidAction.SIMULATE);
 
+<<<<<<< HEAD
 						if(amtFluid > 0 &&
 								fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.oxygenStill.get()) && fluidStack.getAmount() > 0)  {
 							FluidStack fstack = this.drain(amtFluid, FluidAction.EXECUTE);
+=======
+						if(amtFluid > 0 && fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen) && fluidStack.amount > 0)  {
+							FluidStack fstack = this.drain(amtFluid, true);
+>>>>>>> origin/feature/nuclearthermalrockets
 							this.markDirty();
 							world.markChunkDirty(getPos(), this);
 							fillable.increment(stack, fstack.getAmount());

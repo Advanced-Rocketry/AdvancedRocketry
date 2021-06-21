@@ -39,9 +39,15 @@ import java.util.Map;
 
 public class TileGuidanceComputer extends TileInventoryHatch implements IModularInventory {
 
+<<<<<<< HEAD
 	ResourceLocation destinationId;
 	Vector3F<Float> landingPos;
 	Map<ResourceLocation, HashedBlockPosition> landingLoc;
+=======
+	private int destinationId;
+	private Vector3F<Float> landingPos;
+	private Map<Integer, HashedBlockPosition> landingLoc;
+>>>>>>> origin/feature/nuclearthermalrockets
 
 	public TileGuidanceComputer() {
 		super( AdvancedRocketryTileEntityType.TILE_GUIDANCE_COMPUTER, 1);
@@ -71,7 +77,23 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		return 1;
 	}
 
+<<<<<<< HEAD
 	public void setLandingLocation(ResourceLocation stationId, StationLandingLocation loc) {
+=======
+	@Override
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack itemStack) {
+		Item item = itemStack.getItem();
+
+		return slot == 0 &&
+				(item instanceof ItemPlanetIdentificationChip ||
+				item instanceof ItemStationChip ||
+				item instanceof ItemAsteroidChip ||
+				item instanceof ItemSatelliteIdentificationChip ||
+				item == LibVulpesItems.itemLinker);
+	}
+
+	public void setLandingLocation(int stationId, StationLandingLocation loc) {
+>>>>>>> origin/feature/nuclearthermalrockets
 		if(loc == null)
 			landingLoc.remove(stationId);
 		else
@@ -98,7 +120,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	public long getTargetSatellite() {
 		ItemStack stack = getStackInSlot(0);
 		if(!stack.isEmpty() && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
-			return ((ItemSatelliteIdentificationChip)stack.getItem()).getSatelliteId(stack);
+			return ItemSatelliteIdentificationChip.getSatelliteId(stack);
 		}
 		return -1;
 	}
@@ -110,7 +132,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	public ResourceLocation getDestinationDimId(ResourceLocation currentDimension, BlockPos pos) {
 		ItemStack stack = getStackInSlot(0);
 
-		if(!stack.isEmpty()){
+		if(!stack.isEmpty()) {
 			Item itemType = stack.getItem();
 			if (itemType instanceof ItemPlanetIdentificationChip) {
 				ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)itemType;
@@ -145,9 +167,15 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				return currentDimension;
 			}
 			else if(itemType instanceof ItemSatelliteIdentificationChip) {
+<<<<<<< HEAD
 				long l = getTargetSatellite();
 				if(l != Constants.INVALID_SAT) {
 					SatelliteBase sat = DimensionManager.getInstance().getSatellite(l);
+=======
+				long satelliteId = getTargetSatellite();
+				if(satelliteId != -1) {
+					SatelliteBase sat = DimensionManager.getInstance().getSatellite(satelliteId);
+>>>>>>> origin/feature/nuclearthermalrockets
 					
 					if(sat != null)
 						return sat.getDimensionId().get();

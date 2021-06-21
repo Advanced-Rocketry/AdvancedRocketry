@@ -363,6 +363,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			//Calculate Types
 			int totalAmountAllowed = 10;
 			float totalWeight = 0;
+
 			List<Asteroid> viableTypes = new LinkedList<>();
 			for(String str :  ARConfiguration.getCurrentConfig().asteroidTypes.keySet()) {
 				Asteroid asteroid = ARConfiguration.getCurrentConfig().asteroidTypes.get(str);

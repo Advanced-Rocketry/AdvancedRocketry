@@ -15,6 +15,9 @@ import zmaster587.advancedRocketry.tile.atmosphere.TileSeal;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -31,16 +34,18 @@ public class BlockSeal extends Block {
 	}
 	
 	@Override
-	public boolean hasTileEntity(BlockState state) {
+	public boolean hasTileEntity(@Nullable BlockState state) {
 		return true;
 	}
 	
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	@Nonnull
+	public TileEntity createTileEntity(@Nullable BlockState state, @Nullable IBlockReader world) {
 		return new TileSeal();
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn);
 		if(atmhandler == null)
@@ -54,8 +59,8 @@ public class BlockSeal extends Block {
 		}
 		super.onReplaced(state, worldIn, pos, newState, isMoving);
 	}
-	
-	public void removeSeal(World worldIn, BlockPos pos) {
+
+	public void removeSeal(@Nonnull World worldIn, @Nonnull BlockPos pos) {
 		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn);
 		if(atmhandler == null)
 			return;
@@ -65,8 +70,8 @@ public class BlockSeal extends Block {
 			if (handler != null) atmhandler.unregisterBlob(handler);
 		}
 	}
-	
-	public void clearBlob(World worldIn, BlockPos pos, BlockState state) {
+
+	public void clearBlob(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nullable BlockState state) {
 		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn);
 		if(atmhandler == null)
 			return;
@@ -80,7 +85,7 @@ public class BlockSeal extends Block {
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onBlockAdded(@Nullable BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nullable BlockState oldState, boolean isMoving) {
 		super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
 
 		checkCompleteness(worldIn, pos);
@@ -89,15 +94,15 @@ public class BlockSeal extends Block {
 			fireCheckAllDirections(worldIn, pos.offset(dir), dir);
 		}
 	}
-	
-	public void fireCheckAllDirections(World worldIn, BlockPos startBlock, Direction directionFrom) {
+
+	public void fireCheckAllDirections(@Nonnull World worldIn, @Nonnull BlockPos startBlock, @Nonnull Direction directionFrom) {
 		for(Direction dir : Direction.values()) {
 			if(directionFrom.getOpposite() != dir)
 				fireCheck(worldIn, startBlock.offset(dir));
 		}
 	}
 	
-	private void fireCheck(World worldIn, BlockPos pos) {
+	private void fireCheck(@Nonnull World worldIn, @Nonnull BlockPos pos) {
 		Block block = worldIn.getBlockState(pos).getBlock();
 		if(block == this) {
 			BlockSeal blockSeal = (BlockSeal)block;
@@ -105,7 +110,7 @@ public class BlockSeal extends Block {
 		}
 	}
 
-	private boolean checkCompleteness(World worldIn, BlockPos pos) {
+	private boolean checkCompleteness(@Nonnull World worldIn, @Nonnull BlockPos pos) {
 		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn);
 		if(atmhandler == null)
 			return false;
@@ -131,7 +136,7 @@ public class BlockSeal extends Block {
 			
 			return true;
 		}
-		
+
 		// check along XZ axis
 		if(worldIn.getBlockState(pos.east().north()).getBlock() == this && 
 				worldIn.getBlockState(pos.east().south()).getBlock() == this &&
@@ -156,7 +161,7 @@ public class BlockSeal extends Block {
 		World world;
 		BlockPos pos;
 		
-		public BlobHandler(World world, BlockPos pos) {
+		public BlobHandler(@Nonnull World world, @Nonnull BlockPos pos) {
 			this.world = world;
 			this.pos = pos;
 		}
@@ -181,6 +186,7 @@ public class BlockSeal extends Block {
 		}
 
 		@Override
+		@Nonnull
 		public HashedBlockPosition getRootPosition() {
 			return new HashedBlockPosition(pos);
 		}
