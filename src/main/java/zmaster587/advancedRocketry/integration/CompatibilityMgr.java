@@ -16,15 +16,9 @@ public class CompatibilityMgr {
 	}
 	
 	public static void getLoadedMods() {
-<<<<<<< HEAD
-		thermalExpansion = ModList.get().isLoaded("ThermalExpansion");
+		thermalExpansionLoaded = ModList.get().isLoaded("ThermalExpansion");
 		gregtechLoaded = ModList.get().isLoaded("gregtech_addon");
-	};
-=======
-		thermalExpansionLoaded = Loader.isModLoaded("ThermalExpansion");
-		gregtechLoaded = Loader.isModLoaded("gregtech_addon");
 	}
->>>>>>> origin/feature/nuclearthermalrockets
 	
 	public static void initCompatRecipes() {
 		if(gregtechLoaded) {

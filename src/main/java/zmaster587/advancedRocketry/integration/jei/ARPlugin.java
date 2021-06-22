@@ -37,18 +37,13 @@ import zmaster587.advancedRocketry.integration.jei.rollingMachine.RollingMachine
 import zmaster587.advancedRocketry.integration.jei.sawmill.SawMillCategory;
 import zmaster587.advancedRocketry.integration.jei.sawmill.SawMillRecipeMaker;
 import zmaster587.advancedRocketry.tile.multiblock.machine.*;
-<<<<<<< HEAD
-
-@JeiPlugin
-=======
 import zmaster587.libVulpes.inventory.GuiModular;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.List;
 
-@JEIPlugin
->>>>>>> origin/feature/nuclearthermalrockets
+@JeiPlugin
 public class ARPlugin implements IModPlugin {
 	public static IJeiHelpers jeiHelpers;
 	public static final ResourceLocation rollingMachineUUID = new ResourceLocation(Constants.modId, "zmaster587.ar.rollingmachine");

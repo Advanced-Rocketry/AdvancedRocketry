@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
@@ -11,7 +10,7 @@ buildscript {
 }
 
 plugins {
-  id "com.matthewprenger.cursegradle" version "1.1.0"
+  id "com.matthewprenger.cursegradle" version "1.4.0"
   id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.64"
 }
 
@@ -21,10 +20,11 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'idea'
 
-group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "AdvancedRocketry"
+group = "${project.author}.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = project.archivebase
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+//sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(8) // Mojang ships Java 8 to end users, so your mod should target Java 8.
 
 apply from: "gradle/scripts/getbuildnumber.gradle"
 apply from: "gradle/scripts/jars.gradle"
@@ -37,14 +37,21 @@ clean{
 
 minecraft {
     // The mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   Snapshot are built nightly.
-    // stable_#            Stables are built at the discretion of the MCP team.
+    // Channel:   Version:
+    // snapshot   YYYYMMDD   Snapshot are built nightly.
+    // stable     #          Stables are built at the discretion of the MCP team.
+    // official   MCVersion  Official field/method names from Mojang mapping files
+    //
+    // You must be aware of the Mojang license when using the 'official' mappings.
+    // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
+    //
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'snapshot', version: '20201028-1.16.3'
+    //mappings channel: 'official', version: '1.16.5'
+    mappings channel: 'snapshot', version: '20210309-1.16.5'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
-    //accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -53,9 +60,15 @@ minecraft {
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
+            // The markers can be changed as needed. 
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
             // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
             property 'forge.logging.console.level', 'debug'
 
             mods {
@@ -69,9 +82,15 @@ minecraft {
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
+            // The markers can be changed as needed. 
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
             // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
             property 'forge.logging.console.level', 'trace'
 
             mods {
@@ -85,12 +104,19 @@ minecraft {
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
+            // The markers can be changed as needed. 
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
             // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'advancedrocketry', '--all', '--output', file('src/generated/resources/')
+            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+            args '--mod', 'advancedrocketry', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
                 advancedrocketry {
@@ -101,10 +127,13 @@ minecraft {
     }
 }
 
+// Include resources generated by data generators.
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
 repositories {
         maven {
             name = "mezz.jei"
-            url = "http://dvs1.progwml6.com/files/maven"
+            url = "https://dvs1.progwml6.com/files/maven"
         }
     ivy {
             name "industrialcraft-2"
@@ -135,23 +164,39 @@ repositories {
 }
 
 dependencies {
+    // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
+    // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
+    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.16.5-36.1.0'
+
+    // You may put jars on which you depend on in ./libs or you may define them like so..
+    // compile "some.group:artifact:version:classifier"
+    // compile "some.group:artifact:version"
+
+    // Real examples
+    // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
+    // compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+
+    // The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
+    // provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // These dependencies get remapped to your current MCP mappings
+    // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // For more info...
+    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
+    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
     //compile name: 'industrialcraft-2', version: '2.7.39-ex111-api', ext: 'jar'
     //compile name: 'Tesla', version: '1.11-1.3.0.51-deobf', ext: 'jar'
     //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
     compile name: 'LibVulpes', version: '1.16.5-' + project.libVulpesVersion  + '-' + project.libVulpesBuildNum + '-deobf', ext: 'jar'
     //compile name: 'GalacticraftCore', version: '1.12.2-4.0.1.174', ext: 'jar'
-    //compile name: 'LibVulpes', version: '1.16.5-1.0.1-2-deobf', ext: 'jar'
 
     // compile against the JEI API
     //decompile "mezz.jei:jei-1.16.1:7.0.0.6"
     // at runtime, use the full JEI jar
     compile "mezz.jei:jei-1.16.1:7.0.0.6:api"
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    //compile name:'LibVulpes', version: '1.16.3-1.0.0-deobf', ext:'jar'
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -159,11 +204,11 @@ jar {
     manifest {
         attributes([
             "Specification-Title": "advancedrockety",
-            "Specification-Vendor": "zmaster587",
-            "Specification-Version": version_major, // We are version 1 of ourselves
+            "Specification-Vendor": project.author,
+            "Specification-Version": project.version_major, // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"zmaster587",
+            "Implementation-Vendor": project.author,
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
             //'FMLCorePlugin': 'zmaster587.advancedRocketry.asm.AdvancedRocketryPlugin',
             //'FMLCorePluginContainsFMLMod': 'true'
@@ -181,11 +226,11 @@ task deobfJar(type: Jar) {
         attributes 'FMLCorePluginContainsFMLMod': 'true'
 	attributes([
             "Specification-Title": "AdvancedRocketry",
-            "Specification-Vendor": "zmaster587",
-            "Specification-Version": version_major, // We are version 1 of ourselves
+            "Specification-Vendor": project.author,
+            "Specification-Version": project.version_major, // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"zmaster587",
+            "Implementation-Vendor": project.author,
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
@@ -214,7 +259,6 @@ processResources
     }
 }
 
-
 // Example configuration to allow publishing using the maven-publish task
 // This is the preferred method to reobfuscate your jar file
 jar.finalizedBy('reobfJar') 
@@ -236,7 +280,6 @@ publishing {
 
 
 
-
 curseforge{
   if (project.hasProperty("thecursedkey")) {
         apiKey = project.thecursedkey
@@ -253,12 +296,12 @@ curseforge{
     changelog = file('changelog.html')
     changelogType = 'html'
     releaseType = "alpha"
-    addGameVersion mcversion
+    addGameVersion project.mcversion
     mainArtifact(jar) {
-      displayName = "Advanced Rocketry ${project.version} build " + project.getBuildNumber() +  " for " + mcversion
+      displayName = "Advanced Rocketry ${project.version} build " + project.getBuildNumber() +  " for " + project.mcversion
     }
     addArtifact (deobfJar){
-         displayName = "Advanced Rocketry ${project.version}-deobf build " + project.getBuildNumber() + " for " + mcversion
+         displayName = "Advanced Rocketry ${project.version}-deobf build " + project.getBuildNumber() + " for " + project.mcversion
     }
    }
 }
@@ -284,175 +327,3 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
 }
 
 tasks.build.dependsOn makeChangelog, deobfJar
-=======
-buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-        maven { name = 'forge'; url = "https://files.minecraftforge.net/maven" }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-    }
-}
-
-
-
-plugins {
-  id "com.gradle.build-scan" version "1.9"
-  id "com.matthewprenger.cursegradle" version "1.1.0"
-  id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.64"
-}
-apply plugin: 'java'
-apply plugin: 'net.minecraftforge.gradle.forge'
-
-group= "zmaster587.advancedRocketry" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = project.archivebase
-
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
-}
-
-jar {
-        manifest {
-        attributes 'FMLCorePlugin': 'zmaster587.advancedRocketry.asm.AdvancedRocketryPlugin'
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
-    }
-}
-
-apply from: "gradle/scripts/getbuildnumber.gradle"
-minecraft {
-    version = "1.12.2-14.23.4.2739"
-    runDir = "run"
-    mappings = "snapshot_20170624"
-    
-    replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
-    replace "@MAJOR@", project.version_major
-    replace "@MINOR@", project.version_minor
-    replace "@REVIS@", project.version_revis
-    replace "@BUILD@", project.getBuildNumber()
-    
-    replace "%LIBVULPESVERSION%", project.libVulpesVersion
-}
-
-apply from: "gradle/scripts/jars.gradle"
-apply from: "gradle/scripts/version.gradle"
-apply from: "gradle/scripts/deps.gradle"
-
-processResources
-{
-    includeEmptyDirs = false
-    
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
-
-/*task deobfJar(type: Jar) {
-     from sourceSets.main.output
-     //if project name is BBM-Dev it makes the deobf jar deobf-dev if not its just deobf
-     classifier = "deobf"
-     //sets where the jars go to.
-     destinationDir = file 'output'
-     manifest {
-        attributes 'FMLCorePlugin': 'zmaster587.advancedRocketry.asm.AdvancedRocketryPlugin'
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
-    }
-     mustRunAfter "jar" 
-}*/
-
-curseforge{
-  if (project.hasProperty("thecursedkey")) {
-        apiKey = project.thecursedkey
-    }
-    else {
-    apiKey = ""
-    }
-  project {
-  //AdvancedRocketry
-    id = "236542"
-    relations {
-        requiredDependency 'libvulpes'
-    }
-    changelog = file('changelog.html')
-    changelogType = 'html'
-    releaseType = "beta"
-    addGameVersion minecraft.version
-    mainArtifact(jar) {
-        displayName = "AdvancedRocketry ${project.version} build " + project.getBuildNumber() +  " for " + minecraft.version
-    }
-    addArtifact (deobfJar){
-        displayName = "AdvancedRocketry ${project.version}-deobf build " + project.getBuildNumber() + " for " + minecraft.version
-    }
-   }
-}
-
-// Commented out until jenkins supports newer verisons of java
-task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
-    file = new File ("changelog.html")
-    untaggedName = "Current release ${project.version}"
-    
-    //Get the last commit from the cache or config if no cache exists
-    File newFile = rootProject.file('lasthash.txt')
-    if (!newFile.exists()) fromCommit = startGitRev
-    else fromCommit = newFile.text.trim()
-    
-    //get the latest commit and write it to the cache file
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-parse', '--short', 'HEAD'
-        standardOutput = stdout
-    }
-    newFile.delete()
-    newFile << stdout.toString().trim()
-    
-    toRef =  "HEAD"
-    gitHubIssuePattern = "nonada123";
-    templateContent = """
-{{#tags}}
-  <h3>{{name}}</h3>
-  <ul>
-    {{#commits}}
-    <li> <a href="https://github.com/zmaster587/AdvancedRocketry/commit/{{hash}}" target=_blank> {{{message}}}</a>
-</li>
-    {{/commits}}
-  </ul>
-{{/tags}}
-"""
-}
-
-tasks.build.dependsOn makeChangelog
-
-buildScan {
-    licenseAgreementUrl = 'https://gradle.com/terms-of-service' 
-    licenseAgree = 'yes'                                        
-
-    publishAlways() 
-
-    if (System.getenv('CI')) {
-        tag 'CI'
-    } else {
-        tag 'Local'
-    }
-
-    tag System.getProperty('os.name')                                            
-}
->>>>>>> origin/feature/nuclearthermalrockets

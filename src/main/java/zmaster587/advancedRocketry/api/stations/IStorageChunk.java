@@ -22,9 +22,5 @@ public interface IStorageChunk {
 
 	List<TileEntity> getTileEntityList();
 
-<<<<<<< HEAD
-	public void rotateBy(Direction dir);
-=======
-	void rotateBy(EnumFacing dir);
->>>>>>> origin/feature/nuclearthermalrockets
+	void rotateBy(Direction dir);
 }

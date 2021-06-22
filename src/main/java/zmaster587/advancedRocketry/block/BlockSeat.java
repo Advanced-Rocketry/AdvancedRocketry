@@ -19,12 +19,9 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.entity.EntityDummy;
 
-<<<<<<< HEAD
-=======
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNullableByDefault;
->>>>>>> origin/feature/nuclearthermalrockets
 import java.util.List;
 
 public class BlockSeat extends Block {

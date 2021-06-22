@@ -85,11 +85,7 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
-<<<<<<< HEAD
-	public boolean isUsableByPlayer(PlayerEntity player) {
-=======
-	public boolean isUsableByPlayer(@Nullable EntityPlayer player) {
->>>>>>> origin/feature/nuclearthermalrockets
+	public boolean isUsableByPlayer(@Nullable PlayerEntity player) {
 		return true;
 	}
 
@@ -108,19 +104,11 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 		return true;
 	}
 	
-<<<<<<< HEAD
 	public void writeToNBT(CompoundNBT nbt) {
-		if(inv != null) {
+		if(!inv.isEmpty()) {
 			CompoundNBT itemNbt = new CompoundNBT();
 			inv.write(itemNbt);
 			nbt.put(destinationSlot, itemNbt);
-=======
-	public void writeToNBT(NBTTagCompound nbt) {
-		if(!inv.isEmpty()) {
-			NBTTagCompound itemNbt = new NBTTagCompound();
-			inv.writeToNBT(itemNbt);
-			nbt.setTag(destinationSlot, itemNbt);
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 	}
 	
@@ -130,13 +118,8 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-=======
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> modules = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 		
 		modules.add(new ModuleSlotArray(8, 17, this, 0, 1));
 		
