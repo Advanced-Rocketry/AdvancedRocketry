@@ -57,7 +57,7 @@ public class AtmosphereHandler {
 
 	/**
 	 * Registers the Atmosphere handler for the dimension given
-	 * @param dimId the dimension id to register the dimension for
+	 * @param world the world to register the atmosphere handler for
 	 */
 	public static void registerWorld(World world) {
 		ResourceLocation dimId = ZUtils.getDimensionIdentifier(world);
@@ -70,11 +70,11 @@ public class AtmosphereHandler {
 	}
 
 	/**
-	 * Unregisters the Atmosphere handler for the dimension given
-	 * @param dimId the dimension id to register the dimension for
+	 * Unregisters the Atmosphere handler for the world given
+	 * @param world the world to unregister the atmosphere handler for
 	 */
-	public static void unregisterWorld(World dimId) {
-		AtmosphereHandler handler = dimensionOxygen.remove(dimId);
+	public static void unregisterWorld(World world) {
+		AtmosphereHandler handler = dimensionOxygen.remove(ZUtils.getDimensionIdentifier(world));
 		if(ARConfiguration.getCurrentConfig().enableOxygen.get() && handler != null) {
 
 			MinecraftForge.EVENT_BUS.unregister(handler);
@@ -188,12 +188,12 @@ public class AtmosphereHandler {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
 =======
 				if(world.getBlockState(bpos).getBlock().isLeaves(world.getBlockState(bpos), world, bpos)) {
-					world.setBlockToAir(bpos);
+					world.setBlockState(bpos, Blocks.AIR.getDefaultState());
 				} else if (world.getBlockState(bpos).getMaterial() == Material.CACTUS) {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
 				} else if (world.getBlockState(bpos).getMaterial() == Material.PLANTS) {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
-				} else if (world.getBlockState(bpos).getMaterial() == Material.VINE) {
+				} else if (world.getBlockState(bpos).getMaterial() == Material.TALL_PLANTS) {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
 				} else if (world.getBlockState(bpos).getBlock().isLeaves(world.getBlockState(bpos), world, bpos)) {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
@@ -212,7 +212,6 @@ public class AtmosphereHandler {
 			}
 			//Plants should die
 			else if(!handler.getAtmosphereType(bpos).allowsCombustion()) {
-<<<<<<< HEAD
 					if(world.getBlockState(bpos).getMaterial() == Material.LEAVES) {
 						world.setBlockState(bpos, Blocks.AIR.getDefaultState());
 					} else if (world.getBlockState(bpos).getMaterial() == Material.FIRE) {
@@ -221,20 +220,10 @@ public class AtmosphereHandler {
 						world.setBlockState(bpos, Blocks.AIR.getDefaultState());
 					} else if (world.getBlockState(bpos).getMaterial() == Material.PLANTS && world.getBlockState(bpos).getBlock() != Blocks.DEAD_BUSH) {
 						world.setBlockState(bpos, Blocks.DEAD_BUSH.getDefaultState());
-=======
-					if(world.getBlockState(bpos).getBlock().isLeaves(world.getBlockState(bpos), world, bpos)) {
-						world.setBlockToAir(bpos);
-					} else if (world.getBlockState(bpos).getMaterial() == Material.FIRE) {
-						world.setBlockToAir(bpos);
-					} else if (world.getBlockState(bpos).getMaterial() == Material.CACTUS) {
-						world.setBlockToAir(bpos);
-					} else if (world.getBlockState(bpos).getMaterial() == Material.PLANTS && world.getBlockState(bpos).getBlock() != Blocks.DEADBUSH) {
-						world.setBlockState(bpos, Blocks.DEADBUSH.getDefaultState());
-					} else if (world.getBlockState(bpos).getMaterial() == Material.VINE) {
-						world.setBlockToAir(bpos);
-					} else if (world.getBlockState(bpos).getMaterial() == Material.GRASS) {
+					} else if (world.getBlockState(bpos).getMaterial() == Material.TALL_PLANTS) {
+						world.setBlockState(bpos, Blocks.AIR.getDefaultState());
+					} else if (world.getBlockState(bpos).getBlock() == Blocks.GRASS_BLOCK) {
 						world.setBlockState(bpos, Blocks.DIRT.getDefaultState());
->>>>>>> origin/feature/nuclearthermalrockets
 					}
 			}
 			//Gasses should automatically vaporize and dissipate
@@ -252,11 +241,7 @@ public class AtmosphereHandler {
 			//Water blocks should also vaporize and disappear
 			if (handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATED || handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATEDNOO2 || handler.getAtmosphereType(bpos) == AtmosphereType.VERYHOT || handler.getAtmosphereType(bpos) == AtmosphereType.VERYHOTNOO2) {
 				if (world.getBlockState(bpos).getMaterial() == Material.WATER) {
-<<<<<<< HEAD
 					world.setBlockState(bpos, Blocks.AIR.getDefaultState());
-=======
-					world.setBlockToAir(bpos);
->>>>>>> origin/feature/nuclearthermalrockets
 				}
 			}
 

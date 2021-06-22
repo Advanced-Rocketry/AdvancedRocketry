@@ -137,13 +137,8 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		return (isWarping()) ? 0.0 : getOrbitingPlanet().getPeakInsolationMultiplierWithoutAtmosphere();
 	}
 
-<<<<<<< HEAD
 	@OnlyIn(value=Dist.CLIENT)
-	public void setProperties(IDimensionProperties properties) {
-=======
-	@SideOnly(Side.CLIENT)
 	public void setProperties(@Nonnull IDimensionProperties properties) {
->>>>>>> origin/feature/nuclearthermalrockets
 		this.properties = (DimensionProperties)properties;
 	}
 

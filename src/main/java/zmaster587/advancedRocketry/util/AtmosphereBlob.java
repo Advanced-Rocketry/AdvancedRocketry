@@ -184,15 +184,10 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	 * @param world
 	 * @param blocks Collection containing affected locations
 	 */
-<<<<<<< HEAD
-	protected void runEffectOnWorldBlocks(World world, Collection<HashedBlockPosition> blocks) {
-		if(!AtmosphereHandler.getOxygenHandler(world).getDefaultAtmosphereType().allowsCombustion()) {
-=======
 	protected void runEffectOnWorldBlocks(@Nonnull World world, @Nonnull Collection<HashedBlockPosition> blocks) {
-		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(world.provider.getDimension());
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(world);
 
 		if(atmhandler != null &&  !atmhandler.getDefaultAtmosphereType().allowsCombustion()) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 			List<HashedBlockPosition> list;
 

@@ -5,6 +5,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,13 +23,8 @@ public class ItemData extends Item {
 		super(props);
 	}
 
-<<<<<<< HEAD
 	public int getMaxData(ItemStack stack) {
-		return 1000;
-=======
-	public int getMaxData(int damage) {
-		return damage == 0 ? 1000 : 0;
->>>>>>> origin/feature/nuclearthermalrockets
+		return stack.getDamage() == 0 ? 1000 : 0;
 	}
 
 	@Override
@@ -48,7 +44,7 @@ public class ItemData extends Item {
 
 		DataStorage data = new DataStorage();
 
-		if(!item.hasTag()) {
+		if(!item.hasTag() || item.getTag() == null) {
 			data.setMaxData(getMaxData(item));
 			CompoundNBT nbt = new CompoundNBT();
 			data.writeToNBT(nbt);
@@ -95,7 +91,7 @@ public class ItemData extends Item {
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag bool) {
 		super.addInformation(stack, player, list, bool);
 
 		DataStorage data = getDataStorage(stack);

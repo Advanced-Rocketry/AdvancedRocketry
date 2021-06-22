@@ -1,7 +1,5 @@
 package zmaster587.advancedRocketry.util;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.LinkedList;
@@ -57,11 +55,11 @@ public class Asteroid {
 		StackEntry entry = new StackEntry();
 		baseStack.setCount( myMass - numOres);
 		entry.stack = baseStack;
-		entry.variablility = (int)(uncertainty*entry.stack.getCount());
-		entry.midpoint =  (int)(entry.variablility*rand.nextFloat() - uncertainty*entry.variablility/2f);
+		entry.variability = (int)(uncertainty*entry.stack.getCount());
+		entry.midpoint =  (int)(entry.variability *rand.nextFloat() - uncertainty*entry.variability /2f);
 		
-		if(entry.midpoint + myMass - numOres < entry.variablility)
-			entry.midpoint = entry.variablility;
+		if(entry.midpoint + myMass - numOres < entry.variability)
+			entry.midpoint = entry.variability;
 		else
 			entry.midpoint += myMass - numOres;
 		entries.add(entry);
@@ -104,12 +102,12 @@ public class Asteroid {
 			entry = new StackEntry();
 			
 			entry.stack = stack;
-			entry.variablility = (int) (uncertainty*rand.nextFloat()*num);
+			entry.variability = (int) (uncertainty*rand.nextFloat()*num);
 			
-			entry.midpoint =  (int)(entry.variablility*rand.nextFloat() - entry.variablility/2f);
+			entry.midpoint =  (int)(entry.variability *rand.nextFloat() - entry.variability /2f);
 			
-			if(entry.midpoint + num < entry.variablility)
-				entry.midpoint = entry.variablility;
+			if(entry.midpoint + num < entry.variability)
+				entry.midpoint = entry.variability;
 			else
 				entry.midpoint += num;
 			
@@ -122,7 +120,7 @@ public class Asteroid {
 	
 	public static class StackEntry {
 		public ItemStack stack;
-		public int variablility;
+		public int variability;
 		public int midpoint;
 		public boolean isKnown;
 	}
