@@ -27,13 +27,9 @@ public class DimensionBlockPosition {
 		if(!(arg0 instanceof DimensionBlockPosition))
 			return false;
 		
-		boolean flag = false;
+		boolean flag = pos == null && ((DimensionBlockPosition)arg0).pos == null;
 		
-		if(pos == null) {
-			flag = ((DimensionBlockPosition)arg0).pos == null;
-		}
-		
-		return dimid == ((DimensionBlockPosition)arg0).dimid && (flag || pos.equals(((DimensionBlockPosition)arg0).pos));
+		return dimid == ((DimensionBlockPosition)arg0).dimid && (flag || ((DimensionBlockPosition)arg0).pos.equals(pos));
 	}
 	
 	@Override
