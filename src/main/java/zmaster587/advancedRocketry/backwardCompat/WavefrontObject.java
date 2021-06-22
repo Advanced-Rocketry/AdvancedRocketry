@@ -92,11 +92,7 @@ public class WavefrontObject
                 lineCount++;
                 currentLine = currentLine.replaceAll("\\s+", " ").trim();
 
-                /*if (currentLine.startsWith("#") || currentLine.length() == 0)
-                {
-                    continue;
-                }
-                else*/ if (currentLine.startsWith("v "))
+                if (currentLine.startsWith("v "))
                 {
                     Vertex vertex = parseVertex(currentLine, lineCount);
                     if (vertex != null)
