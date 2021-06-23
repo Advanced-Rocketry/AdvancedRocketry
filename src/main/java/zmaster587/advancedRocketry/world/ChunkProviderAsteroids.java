@@ -110,7 +110,7 @@ public class ChunkProviderAsteroids extends ChunkProviderPlanet {
                     double d2 = this.buffer[((j1) * 5 + k1 + 1) * 17 + l1];
                     double d3 = this.buffer[((j1 + 1) * 5 + k1) * 17 + l1];
                     double d4 = this.buffer[((j1 + 1) * 5 + k1 + 1) * 17 + l1];
-                    double d5 = (this.buffer[((j1) * 5 + k) * 17 + l1 + 1] - d1) * d0;
+                    double d5 = (this.buffer[((j1) * 5 + k1) * 17 + l1 + 1] - d1) * d0;
                     double d6 = (this.buffer[((j1) * 5 + k1 + 1) * 17 + l1 + 1] - d2) * d0;
                     double d7 = (this.buffer[((j1 + 1) * 5 + k1) * 17 + l1 + 1] - d3) * d0;
                     double d8 = (this.buffer[((j1 + 1) * 5 + k1 + 1) * 17 + l1 + 1] - d4) * d0;
