@@ -36,30 +36,14 @@ public class BlockTorchUnlit extends TorchBlock {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
 			PlayerEntity player) {
 		return ARConfiguration.getCurrentConfig().dropExTorches.get() ? super.getPickBlock(state, target, world, pos, player) : new ItemStack(Blocks.TORCH);
-=======
-	@Nonnull
-	@ParametersAreNonnullByDefault
-	public ItemStack getPickBlock(IBlockState state, @Nullable RayTraceResult target,
-			World world, BlockPos pos, @Nullable EntityPlayer player) {
-		return ARConfiguration.getCurrentConfig().dropExTorches ? super.getPickBlock(state, target, world, pos, player) : new ItemStack(Blocks.TORCH);
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public List<ItemStack> getDrops(BlockState state, Builder builder) {
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
-=======
-	@Nonnull
-	@ParametersAreNullableByDefault
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
-			IBlockState state, int fortune) {
-		ArrayList<ItemStack> ret = new ArrayList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 
 		
 		ret.add(new ItemStack(ARConfiguration.getCurrentConfig().dropExTorches.get() ? AdvancedRocketryBlocks.blockUnlitTorch : Blocks.TORCH));

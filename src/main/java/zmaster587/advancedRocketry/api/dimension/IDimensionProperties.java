@@ -16,11 +16,7 @@ public interface IDimensionProperties {
 	/**
 	 * @return the DIMID of the planet
 	 */
-<<<<<<< HEAD
 	public ResourceLocation getId();
-=======
-	int getId();
->>>>>>> origin/feature/nuclearthermalrockets
 	
 	/**
 	 * @return the color of the sun as an array of floats represented as  {r,g,b}
@@ -59,7 +55,7 @@ public interface IDimensionProperties {
 	int getSolarOrbitalDistance();
 	
 	/**
-	 * @return true if the planet has moons
+	 * @return true if the planet has moonscd
 	 */
 	boolean hasChildren();
 	
@@ -106,11 +102,7 @@ public interface IDimensionProperties {
 	/**
 	 * @return set of all moons orbiting this planet
 	 */
-<<<<<<< HEAD
 	public Set<ResourceLocation> getChildPlanets();
-=======
-	Set<Integer> getChildPlanets();
->>>>>>> origin/feature/nuclearthermalrockets
 	
 	/**
 	 * sets the gravity multiplier of the object
@@ -150,15 +142,9 @@ public interface IDimensionProperties {
 	 */
 	SatelliteBase removeSatellite(long id);
 
-<<<<<<< HEAD
 	public void writeToNBT(CompoundNBT nbt);
 
 	public void readFromNBT(CompoundNBT nbt);
-=======
-	void writeToNBT(NBTTagCompound nbt);
-
-	void readFromNBT(NBTTagCompound nbt);
->>>>>>> origin/feature/nuclearthermalrockets
 
 	void setParentOrbitalDistance(int distance);
 
@@ -176,11 +162,7 @@ public interface IDimensionProperties {
 	/**
 	 * @return the integer id of the star
 	 */
-<<<<<<< HEAD
 	public ResourceLocation getStarId();
-=======
-	int getStarId();
->>>>>>> origin/feature/nuclearthermalrockets
 
 	/**
 	 * @return density of the atmosphere in the range 0 to 200
@@ -220,11 +202,7 @@ public interface IDimensionProperties {
 	/**
 	 * @return id of the parent planet
 	 */
-<<<<<<< HEAD
 	public ResourceLocation getParentPlanet();
-=======
-	int getParentPlanet();
->>>>>>> origin/feature/nuclearthermalrockets
 
 	/**
 	 * Set the atmosphere like the terraformer does, can trigger terraform event

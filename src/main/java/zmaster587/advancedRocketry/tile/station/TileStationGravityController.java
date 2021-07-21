@@ -31,11 +31,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.IComparatorOverride;
 import zmaster587.libVulpes.util.INetworkMachine;
-<<<<<<< HEAD
 import zmaster587.libVulpes.util.ZUtils;
-=======
-import zmaster587.libVulpes.util.ZUtils.RedstoneState;
->>>>>>> origin/feature/nuclearthermalrockets
 
 import java.util.LinkedList;
 import java.util.List;

@@ -2,17 +2,12 @@ package zmaster587.advancedRocketry.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
-<<<<<<< HEAD
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
-=======
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -48,13 +43,10 @@ import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
-<<<<<<< HEAD
 import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
-=======
->>>>>>> origin/feature/nuclearthermalrockets
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketEntity;
@@ -194,19 +186,11 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 
 	public float getNeededThrust() {return getWeight();}
 
-<<<<<<< HEAD
 	public float getNeededFuel(FuelType fuelType) { return getAcceleration( getGravityMultiplier() ) > 0 ? 2*stats.getBaseFuelRate(fuelType)*MathHelper.sqrt((2*(ARConfiguration.getCurrentConfig().orbit.get()-this.getPos().getY()))/getAcceleration(getGravityMultiplier())) : 0; }
-=======
-	public float getNeededFuel(@Nonnull FuelType fuelType) { return getAcceleration( getGravityMultiplier() ) > 0 ? 2*stats.getBaseFuelRate(fuelType)*MathHelper.sqrt((2*(ARConfiguration.getCurrentConfig().orbit-this.getPos().getY()))/getAcceleration(getGravityMultiplier())) : 0; }
->>>>>>> origin/feature/nuclearthermalrockets
 
 	public float getGravityMultiplier () { return DimensionManager.getInstance().getDimensionProperties(world).getGravitationalMultiplier(); }
 
-<<<<<<< HEAD
 	public int getFuel(FuelType fuelType) {return (int) (stats.getFuelCapacity(fuelType)*ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());}
-=======
-	public int getFuel(@Nullable FuelType fuelType) {return (int) (stats.getFuelCapacity(fuelType)*ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);}
->>>>>>> origin/feature/nuclearthermalrockets
 
 	public boolean isBuilding() { return building; }
 
@@ -369,13 +353,9 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 								} else if (block instanceof BlockBipropellantFuelTank) {
 									fuelCapacityBipropellant += (((IFuelTank) block).getMaxFill(world, currBlockPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
 								} else if(block instanceof BlockOxidizerFuelTank) {
-<<<<<<< HEAD
 									fuelCapacityOxidizer += (((IFuelTank) block).getMaxFill(world, currBlockPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
-=======
-									fuelCapacityOxidizer += (((IFuelTank) block).getMaxFill(world, currBlockPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);
 								} else if(block instanceof BlockNuclearFuelTank) {
-									fuelCapacityNuclearWorkingFluid += (((IFuelTank) block).getMaxFill(world, currBlockPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);
->>>>>>> origin/feature/nuclearthermalrockets
+									fuelCapacityNuclearWorkingFluid += (((IFuelTank) block).getMaxFill(world, currBlockPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
 								}
 							}
 
@@ -497,13 +477,8 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 		world.addEntity(rocket);
 		CompoundNBT nbtdata = new CompoundNBT();
 
-<<<<<<< HEAD
 		rocket.writeUnlessRemoved(nbtdata);
 		PacketHandler.sendToNearby(new PacketEntity((INetworkEntity)rocket, (byte)0, nbtdata), rocket.world, this.pos, 64);
-=======
-		rocket.writeToNBT(nbtdata);
-		PacketHandler.sendToNearby(new PacketEntity(rocket, (byte)0, nbtdata), rocket.world.provider.getDimension(), this.pos, 64);
->>>>>>> origin/feature/nuclearthermalrockets
 
 		stats.reset();
 		this.status = ErrorCodes.FINISHED;
@@ -692,13 +667,8 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 		}
 
 		blockPos.clear();
-<<<<<<< HEAD
 		if(nbt.contains("infrastructureLocations")) {
 			int array[] = nbt.getIntArray("infrastructureLocations");
-=======
-		if(nbt.hasKey("infrastructureLocations")) {
-			int[] array = nbt.getIntArray("infrastructureLocations");
->>>>>>> origin/feature/nuclearthermalrockets
 
 			for(int counter = 0; counter < array.length; counter += 3) {
 				blockPos.add(new HashedBlockPosition(array[counter], array[counter+1], array[counter+2]));
@@ -814,13 +784,8 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-=======
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 
 		modules.add(new ModulePower(160, 90, this));
 
@@ -969,24 +934,14 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
-=======
-	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
-							   EntityPlayer player, World world) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return true;
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
-=======
-	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
->>>>>>> origin/feature/nuclearthermalrockets
 		TileEntity tile = world.getTileEntity(ItemLinker.getMasterCoords(item));
 
 		if(tile instanceof IInfrastructure) {

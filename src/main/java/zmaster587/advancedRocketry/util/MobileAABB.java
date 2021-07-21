@@ -185,19 +185,12 @@ public class MobileAABB extends AxisAlignedBB {
         }
 	}*/
 
-<<<<<<< HEAD
 	
 	/*public double calculateYOffset(AxisAlignedBB aabbIn, double var2) {
 		if (aabbIn.maxX > this.minX && aabbIn.minX < this.maxX)
 		{
 			if (aabbIn.maxZ > this.minZ && aabbIn.minZ < this.maxZ)
 			{
-=======
-	@Override
-	public double calculateYOffset(AxisAlignedBB aabbIn, double var2) {
-		if (aabbIn.maxX > this.minX && aabbIn.minX < this.maxX) {
-			if (aabbIn.maxZ > this.minZ && aabbIn.minZ < this.maxZ) {
->>>>>>> origin/feature/nuclearthermalrockets
 				double d1;
 
 				if (var2 > 0.0D && aabbIn.maxY <= this.minY) {

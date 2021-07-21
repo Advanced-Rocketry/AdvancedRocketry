@@ -8,11 +8,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
-<<<<<<< HEAD
 import net.minecraft.loot.LootContext.Builder;
 import net.minecraft.nbt.CompoundNBT;
-=======
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -81,7 +78,6 @@ public class BlockPressurizedFluidTank extends Block {
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new TileFluidTank((int) (64000*ARConfiguration.getCurrentConfig().blockTankCapacity.get()));
 	}
@@ -101,28 +97,6 @@ public class BlockPressurizedFluidTank extends Block {
 			LazyOptional<IFluidHandler> cap = ((TileFluidTank)tile).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.DOWN);
 			
 			IFluidHandler fluid = cap.orElse(null);
-=======
-	@ParametersAreNullableByDefault
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileFluidTank((int) (64000 * ARConfiguration.getCurrentConfig().blockTankCapacity));
-	}
-	
-	@Override
-	@Nonnull
-	@ParametersAreNullableByDefault
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
-			IBlockState state, int fortune) {
-		return new LinkedList<>();
-	}
-	
-	@Override
-	@ParametersAreNonnullByDefault
-	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @Nonnull ItemStack stack) {
-
-		if(te instanceof TileFluidTank) {
-			IFluidHandler fluid = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN);
-
->>>>>>> origin/feature/nuclearthermalrockets
 
 			ItemStack itemstack = new ItemStack(AdvancedRocketryBlocks.blockPressureTank);
 			
@@ -136,27 +110,15 @@ public class BlockPressurizedFluidTank extends Block {
 			float f2 = world.rand.nextFloat() * 0.8F + 0.1F;
 
 			itemstack.setCount(1);
-<<<<<<< HEAD
 			entityitem = new ItemEntity(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), itemstack.copy());
 			float f3 = 0.05F;
 			entityitem.setMotion((double)((float)world.rand.nextGaussian() * f3),
 							(double)((float)world.rand.nextGaussian() * f3 + 0.2F),
 							(double)((float)world.rand.nextGaussian() * f3));
-=======
-			entityitem = new EntityItem(world, (float)pos.getX() + f, (float)pos.getY() + f1, (float)pos.getZ() + f2, new ItemStack(itemstack.getItem(), 1, 0));
-			float f3 = 0.05F;
-			entityitem.motionX = (float)world.rand.nextGaussian() * f3;
-			entityitem.motionY = (float)world.rand.nextGaussian() * f3 + 0.2F;
-			entityitem.motionZ = (float)world.rand.nextGaussian() * f3;
->>>>>>> origin/feature/nuclearthermalrockets
 
 			if (itemstack.hasTag())
 			{
-<<<<<<< HEAD
 				entityitem.getItem().setTag((CompoundNBT)itemstack.getTag().copy());
-=======
-				entityitem.getItem().setTagCompound(itemstack.getTagCompound().copy());
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 			world.addEntity(entityitem);
 		}
@@ -165,13 +127,7 @@ public class BlockPressurizedFluidTank extends Block {
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
-=======
-	@ParametersAreNonnullByDefault
-	public boolean shouldSideBeRendered(IBlockState blockState,
-			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
->>>>>>> origin/feature/nuclearthermalrockets
 		
 		if(side.getYOffset() != 0) {
 			if(adjacentBlockState.getBlock() == this)
@@ -182,13 +138,7 @@ public class BlockPressurizedFluidTank extends Block {
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-=======
-	@Nonnull
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source,
-			BlockPos pos) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return bb;
 	}
 
@@ -197,26 +147,6 @@ public class BlockPressurizedFluidTank extends Block {
 	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileFluidTank)
-<<<<<<< HEAD
 			((TileFluidTank)tile).onAdjacentBlockUpdated(Direction.getFacingFromVector(neighbor.getX() - pos.getX(), neighbor.getY() - pos.getY(), neighbor.getZ() - pos.getZ()));
-=======
-			((TileFluidTank)tile).onAdjacentBlockUpdated(EnumFacing.getFacingFromVector(neighbor.getX() - pos.getX(), neighbor.getY() - pos.getY(), neighbor.getZ() - pos.getZ()));
-	}
-	
-	@Override
-	@Nonnull
-	public BlockRenderLayer getBlockLayer() {
-		return BlockRenderLayer.CUTOUT;
-	}
-	
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-	
-	@Override
-	public boolean isBlockNormalCube(IBlockState state) {
-		return false;
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 }

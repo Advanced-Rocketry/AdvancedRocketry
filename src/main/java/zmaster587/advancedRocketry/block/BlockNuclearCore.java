@@ -9,8 +9,8 @@ import zmaster587.advancedRocketry.api.IRocketNuclearCore;
 
 public class BlockNuclearCore extends Block implements IRocketNuclearCore {
 
-	public BlockNuclearCore(Material mat) {
-		super(mat);
+	public BlockNuclearCore(Properties properties) {
+		super(properties);
 	}
 
 	@Override

@@ -17,6 +17,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 <<<<<<< HEAD
+import net.minecraft.world.biome.BiomeColors;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 =======
@@ -70,32 +71,22 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 		IRecipe recipe;
 		boolean flag = false;
 		if(getOutputs() == null && (recipe = getRecipe(getMachineRecipeList())) != null && canProcessRecipe(recipe))
-		{
+		{/*
 			if(!recipe.getOutput().isEmpty()) {
-<<<<<<< HEAD
 			ListNBT list = recipe.getOutput().get(0).getEnchantmentTagList();
-			
+
 			if(list != null) {
 				for( int i = 0 ; i < list.size(); i++ ) {
 					CompoundNBT tag = (CompoundNBT)list.get(i);
 					//if(tag.getInt("id") == Enchantment.getEnchantmentID(AdvancedRocketryAPI.enchantmentSpaceProtection) ) {
-=======
-			NBTTagList list = recipe.getOutput().get(0).getEnchantmentTagList();
-
-			/*
-				for( int i = 0 ; i < list.tagCount(); i++ ) {
-					NBTTagCompound tag = (NBTTagCompound)list.get(i);
-					if(tag.getInteger("id") == Enchantment.getEnchantmentID(AdvancedRocketryAPI.enchantmentSpaceProtection) ) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 						flag = true;
 						break;
 					}
 				}
-			 */
 				flag = true;
 
-			}
+			}*/
 		}
 
 		//If airbreathing enchantment
@@ -134,18 +125,11 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 				for (int i = 0; i < hatch.getSizeInventory(); i++) {
 					ItemStack stackInSlot = hatch.getStackInSlot(i);
 					for (ItemStack stack : ingredient) {
-<<<<<<< HEAD
 						if(stackInSlot != null && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.getItem() == stack.getItem() && (stackInSlot.getDamage() == stack.getDamage()) )) {
 							ItemStack stack2 = hatch.decrStackSize(i, stack.getCount());
 							
 							if(stack2.getItem() instanceof ArmorItem)
 							{
-=======
-						if (!stackInSlot.isEmpty() && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.getItem() == stack.getItem() && (stackInSlot.getItemDamage() == stack.getItemDamage() || stack.getItemDamage() == OreDictionary.WILDCARD_VALUE))) {
-							ItemStack stack2 = hatch.decrStackSize(i, stack.getCount());
-
-							if (stack2.getItem() instanceof ItemArmor) {
->>>>>>> origin/feature/nuclearthermalrockets
 								stack2.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
 								List<ItemStack> list = new LinkedList<>();
 								list.add(stack2);
@@ -183,7 +167,6 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 		}
 	}
 
-	@Override
 	public Object[][][] getStructure() {
 		return structure;
 	}

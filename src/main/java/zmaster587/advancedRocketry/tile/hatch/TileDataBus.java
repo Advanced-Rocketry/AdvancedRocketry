@@ -109,13 +109,8 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
-=======
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		LinkedList<ModuleBase> modules = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 		modules.add(new ModuleAutoData(40, 20, 0, 1, this, this, data));
 		return modules;
 	}
@@ -151,20 +146,12 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
-=======
-	public boolean canExtractItem(int index, @Nonnull ItemStack stack, EnumFacing direction) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return index == 1;
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean canInsertItem(int index, ItemStack itemStackIn, Direction direction) {
-=======
-	public boolean canInsertItem(int index, @Nonnull ItemStack itemStackIn, EnumFacing direction) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return index == 0 && isItemValidForSlot(index, itemStackIn);
 	}
 
@@ -182,7 +169,6 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public void writeDataToNetwork(PacketBuffer out, byte id) {
 
 	}
@@ -196,22 +182,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	@Override
 	public void useNetworkData(PlayerEntity player, Dist side, byte id,
 			CompoundNBT nbt) {
-
-		if(id == -1) {
-			storeData(0);
-		}
-		else if(id == -2)
-			loadData(0);
 	}
-=======
-	public void writeDataToNetwork(ByteBuf out, byte id) { }
-
-	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId, NBTTagCompound nbt) { }
-
-	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt) { }
->>>>>>> origin/feature/nuclearthermalrockets
 
 	@Override
 	public int extractData(int maxAmount, DataType type, Direction dir, boolean commit) {

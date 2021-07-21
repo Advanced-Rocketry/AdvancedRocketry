@@ -250,14 +250,9 @@ public class StatsRocket {
 	 * @param type
 	 * @return the consumption rate of the fuel per tick
 	 */
-<<<<<<< HEAD
 	public int getFuelRate(FuelRegistry.FuelType type) {
 
-		if(!ARConfiguration.getCurrentConfig().rocketRequireFuel.get())
-=======
-	public int getFuelRate(@Nullable FuelRegistry.FuelType type) {
-		if(!ARConfiguration.getCurrentConfig().rocketRequireFuel || type == null)
->>>>>>> origin/feature/nuclearthermalrockets
+		if(!ARConfiguration.getCurrentConfig().rocketRequireFuel.get() || type == null)
 			return 0;
 
 		switch(type) {
@@ -284,15 +279,9 @@ public class StatsRocket {
 	 * @param type
 	 * @return the base engine consumption rate of the fuel per tick
 	 */
-<<<<<<< HEAD
 	public float getBaseFuelRate(FuelRegistry.FuelType type) {
 
-		if(!ARConfiguration.getCurrentConfig().rocketRequireFuel.get())
-=======
-	public int getBaseFuelRate(@Nullable FuelRegistry.FuelType type) {
-
-		if(!ARConfiguration.getCurrentConfig().rocketRequireFuel || type == null)
->>>>>>> origin/feature/nuclearthermalrockets
+		if(!ARConfiguration.getCurrentConfig().rocketRequireFuel.get() || type == null)
 			return 0;
 
 		switch(type) {
@@ -379,11 +368,7 @@ public class StatsRocket {
 	 * @param type
 	 * @param rate
 	 */
-<<<<<<< HEAD
 	public void setBaseFuelRate(FuelRegistry.FuelType type, float rate) {
-=======
-	public void setBaseFuelRate(@Nonnull FuelRegistry.FuelType type, int rate) {
->>>>>>> origin/feature/nuclearthermalrockets
 		switch(type) {
 			case WARP:
 				fuelBaseRateWarp = rate;
@@ -547,24 +532,25 @@ public class StatsRocket {
 		return new StatsRocket();
 	}
 
-<<<<<<< HEAD
 	public void writeToNBT(CompoundNBT nbt) {
 		CompoundNBT stats = new CompoundNBT();
 
 		stats.putInt("thrust", this.thrust);
 		stats.putInt("weight", this.weight);
-		if(this.fuelFluid != null)
-			stats.putString("fuelFluid", this.fuelFluid.toString());
-		if(this.oxidizerFluid != null)
-			stats.putString("oxidizerFluid", this.oxidizerFluid.toString());
 		stats.putFloat("drillingPower", this.drillingPower);
+		if(this.fuelFluid != null)
+		    stats.putString("fuelFluid", this.fuelFluid.toString());
+		if(this.oxidizerFluid != null)
+		    stats.putString("oxidizerFluid", this.oxidizerFluid.toString());
+		if(this.workingFluid != null)
+		    stats.putString("workingFluid", this.workingFluid.toString());
 
 		stats.putInt("fuelMonopropellant", this.fuelMonopropellant);
 		stats.putInt("fuelBipropellant", this.fuelBipropellant);
 		stats.putInt("fuelOxidizer", this.fuelOxidizer);
 		stats.putInt("fuelImpulse", this.fuelImpulse);
 		stats.putInt("fuelIon", this.fuelIon);
-		stats.putInt("fuelNuclear", this.fuelNuclear);
+		stats.putInt("fuelNuclearWorkingFluid", this.fuelNuclearWorkingFluid);
 		stats.putInt("fuelWarp", this.fuelWarp);
 
 		stats.putInt("fuelCapacityMonopropellant", this.fuelCapacityMonopropellant);
@@ -572,7 +558,7 @@ public class StatsRocket {
 		stats.putInt("fuelCapacityOxidizer", this.fuelCapacityOxidizer);
 		stats.putInt("fuelCapacityImpulse", this.fuelCapacityImpulse);
 		stats.putInt("fuelCapacityIon", this.fuelCapacityIon);
-		stats.putInt("fuelCapacityNuclear", this.fuelCapacityNuclear);
+		stats.putInt("fuelCapacityNuclearWorkingFluid", this.fuelCapacityNuclearWorkingFluid);
 		stats.putInt("fuelCapacityWarp", this.fuelCapacityWarp);
 
 		stats.putInt("fuelRateMonopropellant", this.fuelRateMonopropellant);
@@ -580,63 +566,18 @@ public class StatsRocket {
 		stats.putInt("fuelRateOxidizer", this.fuelRateOxidizer);
 		stats.putInt("fuelRateImpulse", this.fuelRateImpulse);
 		stats.putInt("fuelRateIon", this.fuelRateIon);
-		stats.putInt("fuelRateNuclear", this.fuelRateNuclear);
+		stats.putInt("fuelRateNuclearWorkingFluid", this.fuelRateNuclearWorkingFluid);
 		stats.putInt("fuelRateWarp", this.fuelRateWarp);
-		
+
 		stats.putFloat("fuelBaseRateMonopropellant", this.fuelBaseRateMonopropellant);
 		stats.putFloat("fuelBaseRateBipropellant", this.fuelBaseRateBipropellant);
 		stats.putFloat("fuelBaseRateOxidizer", this.fuelBaseRateOxidizer);
 		stats.putFloat("fuelBaseRateImpulse", this.fuelBaseRateImpulse);
 		stats.putFloat("fuelBaseRateIon", this.fuelBaseRateIon);
-		stats.putFloat("fuelBaseRateNuclear", this.fuelBaseRateNuclear);
+		stats.putFloat("fuelBaseRateNuclearWorkingFluid", this.fuelBaseRateNuclearWorkingFluid);
 		stats.putFloat("fuelBaseRateWarp", this.fuelBaseRateWarp);
 
 		CompoundNBT dynStats = new CompoundNBT();
-=======
-	public void writeToNBT(NBTTagCompound nbt) {
-		NBTTagCompound stats = new NBTTagCompound();
-
-		stats.setInteger("thrust", this.thrust);
-		stats.setInteger("weight", this.weight);
-		stats.setFloat("drillingPower", this.drillingPower);
-		stats.setString("fuelFluid", this.fuelFluid);
-		stats.setString("oxidizerFluid", this.oxidizerFluid);
-		stats.setString("workingFluid", this.workingFluid);
-
-		stats.setInteger("fuelMonopropellant", this.fuelMonopropellant);
-		stats.setInteger("fuelBipropellant", this.fuelBipropellant);
-		stats.setInteger("fuelOxidizer", this.fuelOxidizer);
-		stats.setInteger("fuelImpulse", this.fuelImpulse);
-		stats.setInteger("fuelIon", this.fuelIon);
-		stats.setInteger("fuelNuclearWorkingFluid", this.fuelNuclearWorkingFluid);
-		stats.setInteger("fuelWarp", this.fuelWarp);
-
-		stats.setInteger("fuelCapacityMonopropellant", this.fuelCapacityMonopropellant);
-		stats.setInteger("fuelCapacityBipropellant", this.fuelCapacityBipropellant);
-		stats.setInteger("fuelCapacityOxidizer", this.fuelCapacityOxidizer);
-		stats.setInteger("fuelCapacityImpulse", this.fuelCapacityImpulse);
-		stats.setInteger("fuelCapacityIon", this.fuelCapacityIon);
-		stats.setInteger("fuelCapacityNuclearWorkingFluid", this.fuelCapacityNuclearWorkingFluid);
-		stats.setInteger("fuelCapacityWarp", this.fuelCapacityWarp);
-
-		stats.setInteger("fuelRateMonopropellant", this.fuelRateMonopropellant);
-		stats.setInteger("fuelRateBipropellant", this.fuelRateBipropellant);
-		stats.setInteger("fuelRateOxidizer", this.fuelRateOxidizer);
-		stats.setInteger("fuelRateImpulse", this.fuelRateImpulse);
-		stats.setInteger("fuelRateIon", this.fuelRateIon);
-		stats.setInteger("fuelRateNuclearWorkingFluid", this.fuelRateNuclearWorkingFluid);
-		stats.setInteger("fuelRateWarp", this.fuelRateWarp);
-
-		stats.setFloat("fuelBaseRateMonopropellant", this.fuelBaseRateMonopropellant);
-		stats.setFloat("fuelBaseRateBipropellant", this.fuelBaseRateBipropellant);
-		stats.setFloat("fuelBaseRateOxidizer", this.fuelBaseRateOxidizer);
-		stats.setFloat("fuelBaseRateImpulse", this.fuelBaseRateImpulse);
-		stats.setFloat("fuelBaseRateIon", this.fuelBaseRateIon);
-		stats.setFloat("fuelBaseRateNuclearWorkingFluid", this.fuelBaseRateNuclearWorkingFluid);
-		stats.setFloat("fuelBaseRateWarp", this.fuelBaseRateWarp);
-
-		NBTTagCompound dynStats = new NBTTagCompound();
->>>>>>> origin/feature/nuclearthermalrockets
 		for(String key : statTags.keySet()) {
 			Object obj = statTags.get(key);
 
@@ -680,7 +621,6 @@ public class StatsRocket {
 		nbt.put(TAGNAME, stats);
 	}
 
-<<<<<<< HEAD
 	public void readFromNBT(CompoundNBT nbt) {
 		if(nbt.contains(TAGNAME)) {
 			CompoundNBT stats = nbt.getCompound(TAGNAME);
@@ -695,6 +635,10 @@ public class StatsRocket {
 				this.oxidizerFluid = ResourceLocation.tryCreate(stats.getString("oxidizerFluid"));
 			else
 				this.oxidizerFluid = null;
+			if(nbt.contains("workingFluid"))
+				this.workingFluid = ResourceLocation.tryCreate(stats.getString("workingFluid"));
+			else
+				this.workingFluid = null;
 			this.drillingPower = stats.getFloat("drillingPower");
 
 			this.fuelMonopropellant = stats.getInt("fuelMonopropellant");
@@ -702,7 +646,7 @@ public class StatsRocket {
 			this.fuelOxidizer = stats.getInt("fuelOxidizer");
 			this.fuelImpulse = stats.getInt("fuelImpulse");
 			this.fuelIon = stats.getInt("fuelIon");
-			this.fuelNuclear = stats.getInt("fuelNuclear");
+			this.fuelNuclearWorkingFluid = stats.getInt("fuelNuclearWorkingFluid");
 			this.fuelWarp = stats.getInt("fuelWarp");
 
 			this.fuelCapacityMonopropellant = stats.getInt("fuelCapacityMonopropellant");
@@ -710,7 +654,7 @@ public class StatsRocket {
 			this.fuelCapacityOxidizer = stats.getInt("fuelCapacityOxidizer");
 			this.fuelCapacityImpulse = stats.getInt("fuelCapacityImpulse");
 			this.fuelCapacityIon = stats.getInt("fuelCapacityIon");
-			this.fuelCapacityNuclear = stats.getInt("fuelCapacityNuclear");
+			this.fuelCapacityNuclearWorkingFluid = stats.getInt("fuelCapacityNuclearWorkingFluid");
 			this.fuelCapacityWarp = stats.getInt("fuelCapacityWarp");
 
 			this.fuelRateMonopropellant = stats.getInt("fuelRateMonopropellant");
@@ -718,7 +662,7 @@ public class StatsRocket {
 			this.fuelRateOxidizer = stats.getInt("fuelRateOxidizer");
 			this.fuelRateImpulse = stats.getInt("fuelRateImpulse");
 			this.fuelRateIon = stats.getInt("fuelRateIon");
-			this.fuelRateNuclear = stats.getInt("fuelRateNuclear");
+			this.fuelRateNuclearWorkingFluid = stats.getInt("fuelRateNuclearWorkingFluid");
 			this.fuelRateWarp = stats.getInt("fuelRateWarp");
 			
 			this.fuelBaseRateMonopropellant = stats.getInt("fuelBaseRateMonopropellant");
@@ -726,7 +670,7 @@ public class StatsRocket {
 			this.fuelBaseRateOxidizer = stats.getInt("fuelBaseRateOxidizer");
 			this.fuelBaseRateImpulse = stats.getInt("fuelBaseRateImpulse");
 			this.fuelBaseRateIon = stats.getInt("fuelBaseRateIon");
-			this.fuelBaseRateNuclear = stats.getInt("fuelBaseRateNuclear");
+			this.fuelBaseRateNuclearWorkingFluid = stats.getInt("fuelBaseRateNuclearWorkingFluid");
 			this.fuelBaseRateWarp = stats.getInt("fuelBaseRateWarp");
 			
 
@@ -741,63 +685,6 @@ public class StatsRocket {
 						setStatTag((String)key, dynStats.getFloat((String)key));
 					else if(obj instanceof IntNBT)
 						setStatTag((String)key, dynStats.getInt((String)key));
-=======
-	public void readFromNBT(NBTTagCompound nbt) {
-
-		if(nbt.hasKey(TAGNAME)) {
-			NBTTagCompound stats = nbt.getCompoundTag(TAGNAME);
-			this.thrust = stats.getInteger("thrust");
-			this.weight = stats.getInteger("weight");
-			this.fuelFluid = stats.getString("fuelFluid");
-			this.oxidizerFluid = stats.getString("oxidizerFluid");
-			this.workingFluid = stats.getString("workingFluid");
-			this.drillingPower = stats.getFloat("drillingPower");
-
-			this.fuelMonopropellant = stats.getInteger("fuelMonopropellant");
-			this.fuelBipropellant = stats.getInteger("fuelBipropellant");
-			this.fuelOxidizer = stats.getInteger("fuelOxidizer");
-			this.fuelImpulse = stats.getInteger("fuelImpulse");
-			this.fuelIon = stats.getInteger("fuelIon");
-			this.fuelNuclearWorkingFluid = stats.getInteger("fuelNuclearWorkingFluid");
-			this.fuelWarp = stats.getInteger("fuelWarp");
-
-			this.fuelCapacityMonopropellant = stats.getInteger("fuelCapacityMonopropellant");
-			this.fuelCapacityBipropellant = stats.getInteger("fuelCapacityBipropellant");
-			this.fuelCapacityOxidizer = stats.getInteger("fuelCapacityOxidizer");
-			this.fuelCapacityImpulse = stats.getInteger("fuelCapacityImpulse");
-			this.fuelCapacityIon = stats.getInteger("fuelCapacityIon");
-			this.fuelCapacityNuclearWorkingFluid = stats.getInteger("fuelCapacityNuclearWorkingFluid");
-			this.fuelCapacityWarp = stats.getInteger("fuelCapacityWarp");
-
-			this.fuelRateMonopropellant = stats.getInteger("fuelRateMonopropellant");
-			this.fuelRateBipropellant = stats.getInteger("fuelRateBipropellant");
-			this.fuelRateOxidizer = stats.getInteger("fuelRateOxidizer");
-			this.fuelRateImpulse = stats.getInteger("fuelRateImpulse");
-			this.fuelRateIon = stats.getInteger("fuelRateIon");
-			this.fuelRateNuclearWorkingFluid = stats.getInteger("fuelRateNuclearWorkingFluid");
-			this.fuelRateWarp = stats.getInteger("fuelRateWarp");
-
-			this.fuelBaseRateMonopropellant = stats.getInteger("fuelBaseRateMonopropellant");
-			this.fuelBaseRateBipropellant = stats.getInteger("fuelBaseRateBipropellant");
-			this.fuelBaseRateOxidizer = stats.getInteger("fuelBaseRateOxidizer");
-			this.fuelBaseRateImpulse = stats.getInteger("fuelBaseRateImpulse");
-			this.fuelBaseRateIon = stats.getInteger("fuelBaseRateIon");
-			this.fuelBaseRateNuclearWorkingFluid = stats.getInteger("fuelBaseRateNuclearWorkingFluid");
-			this.fuelBaseRateWarp = stats.getInteger("fuelBaseRateWarp");
-
-
-			if(stats.hasKey("dynStats")) {
-				NBTTagCompound dynStats = stats.getCompoundTag("dynStats");
-
-
-				for(String key : dynStats.getKeySet()) {
-					Object obj = dynStats.getTag(key);
-
-					if(obj instanceof NBTTagFloat)
-						setStatTag(key, dynStats.getFloat(key));
-					else if(obj instanceof NBTTagInt)
-						setStatTag(key, dynStats.getInteger(key));
->>>>>>> origin/feature/nuclearthermalrockets
 				}
 			}
 
@@ -805,13 +692,8 @@ public class StatsRocket {
 			pilotSeatPos.y = (short)stats.getInt("playerYPos");
 			pilotSeatPos.z = stats.getInt("playerZPos");
 
-<<<<<<< HEAD
 			if(stats.contains("engineLoc")) {
 				int locations[] = stats.getIntArray("engineLoc");
-=======
-			if(stats.hasKey("engineLoc")) {
-				int[] locations = stats.getIntArray("engineLoc");
->>>>>>> origin/feature/nuclearthermalrockets
 
 				for(int i=0 ; i < locations.length; i+=3) {
 
@@ -819,13 +701,8 @@ public class StatsRocket {
 				}
 			}
 
-<<<<<<< HEAD
 			if(stats.contains("passengerSeats")) {
 				int locations[] = stats.getIntArray("passengerSeats");
-=======
-			if(stats.hasKey("passengerSeats")) {
-				int[] locations = stats.getIntArray("passengerSeats");
->>>>>>> origin/feature/nuclearthermalrockets
 
 				for(int i=0 ; i < locations.length; i+=3) {
 

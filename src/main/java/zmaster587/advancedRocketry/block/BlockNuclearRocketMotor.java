@@ -6,8 +6,8 @@ import net.minecraft.world.World;
 
 public class BlockNuclearRocketMotor extends BlockRocketMotor {
 
-	public BlockNuclearRocketMotor(Material mat) {
-		super(mat);
+	public BlockNuclearRocketMotor(Properties properties) {
+		super(properties);
 	}
 
 	@Override

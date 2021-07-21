@@ -21,6 +21,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -61,12 +62,8 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	int powerMadeLastTick, prevPowerMadeLastTick;
 	ModuleText textModule;
 	public TileMicrowaveReciever() {
-<<<<<<< HEAD
 		super(AdvancedRocketryTileEntityType.TILE_MICROWAVE_RECIEVER);
 		connectedSatellites = new LinkedList<Long>();
-=======
-		connectedSatellites = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 		initialCheck = false;
 		insolationPowerMultiplier = 0;
 		textModule = new ModuleText(40, 20, LibVulpes.proxy.getLocalizedString("msg.microwaverec.notgenerating"), 0x2b2b2b);
@@ -176,53 +173,34 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 
 					if(pos2.getY() > this.getPos().getY()) {
 						if(!world.isAirBlock(pos2.add(0,1,0))) {
-<<<<<<< HEAD
 							world.removeBlock(pos2, false);
 							world.playSound((double)pos2.getX(), (double)pos2.getY(), (double)pos2.getZ(), new SoundEvent(new ResourceLocation("fire.fire")), SoundCategory.BLOCKS, 1f, 3f, false);
-=======
-							world.setBlockToAir(pos2);
-							world.playSound(pos2.getX(), pos2.getY(), pos2.getZ(), new SoundEvent(new ResourceLocation("fire.fire")), SoundCategory.BLOCKS, 1f, 3f, false);
->>>>>>> origin/feature/nuclearthermalrockets
 						}
 					}
 				}
 			}
 		}
 
-		DimensionProperties properties;
-<<<<<<< HEAD
+		IDimensionProperties properties;
 		ResourceLocation dimid = ZUtils.getDimensionIdentifier(world);
         SpaceStationObject spaceStation = (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos);
 		if(!world.isRemote && (DimensionManager.getInstance().isDimensionCreated(dimid) || ZUtils.getDimensionIdentifier(world) == DimensionManager.overworldProperties.getId())) {
-=======
-		int dimId = world.provider.getDimension();
-        SpaceStationObject spaceStation = (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos);
-		if(!world.isRemote && (DimensionManager.getInstance().isDimensionCreated(dimId) || world.provider.getDimension() == 0)) {
->>>>>>> origin/feature/nuclearthermalrockets
 			//This way we check to see if it's on a station, and if so, if it has any satellites in orbit around the planet the station is around to pull from
-			properties = (spaceStation != null) ? spaceStation.getOrbitingPlanet() : DimensionManager.getInstance().getDimensionProperties(dimId);
+			properties = (spaceStation != null) ? spaceStation.getOrbitingPlanet() : DimensionManager.getInstance().getDimensionProperties(dimid);
 			int energyReceived = 0;
 			if(enabled) {
 				for(long lng : connectedSatellites) {
 					SatelliteBase satellite =  properties.getSatellite(lng);
 
 					if(satellite instanceof IUniversalEnergyTransmitter) {
-<<<<<<< HEAD
-						energyRecieved += ((IUniversalEnergyTransmitter)satellite).transmitEnergy(Direction.UP, false);
-=======
-						energyReceived += ((IUniversalEnergyTransmitter)satellite).transmitEnergy(EnumFacing.UP, false);
->>>>>>> origin/feature/nuclearthermalrockets
+						energyReceived += ((IUniversalEnergyTransmitter)satellite).transmitEnergy(Direction.UP, false);
 					}
 				}
 
 				//Multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency, and by insolation mult for solar stuff
 				energyReceived *= 2 * insolationPowerMultiplier;
 			}
-<<<<<<< HEAD
-			powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().microwaveRecieverMulitplier.get());
-=======
 			powerMadeLastTick = energyReceived;
->>>>>>> origin/feature/nuclearthermalrockets
 
 			if(powerMadeLastTick != prevPowerMadeLastTick) {
 				prevPowerMadeLastTick = powerMadeLastTick;
@@ -281,12 +259,8 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void readDataFromNetwork(PacketBuffer in, byte packetId,
 			CompoundNBT nbt) {
-=======
-	public void readDataFromNetwork(ByteBuf in, byte packetId, NBTTagCompound nbt) {
->>>>>>> origin/feature/nuclearthermalrockets
 		super.readDataFromNetwork(in, packetId, nbt);	
 
 		if(packetId == 1) {
@@ -295,12 +269,8 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void useNetworkData(PlayerEntity player, Dist side, byte id,
 			CompoundNBT nbt) {
-=======
-	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt) {
->>>>>>> origin/feature/nuclearthermalrockets
 		super.useNetworkData(player, side, id, nbt);
 
 		if(id == 1) {
