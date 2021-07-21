@@ -103,16 +103,10 @@ public class RocketEventHandler extends Screen {
 			//So fix that...
 			//ForgeHooksClient. getSkyBlendColour(event.world, new BlockPos(event.getEntity().getPositionVec()));
 
-<<<<<<< HEAD
 			if(ARConfiguration.getCurrentConfig().planetSkyOverride.get() && !DimensionManager.getInstance().isDimensionCreated(event.world)) {
 				DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(event.world);
 				prevRenderHanlder = props.getSkyRenderer();
 				props.setSkyRenderer(new RenderPlanetarySky());
-=======
-			if(ARConfiguration.getCurrentConfig().planetSkyOverride && !DimensionManager.getInstance().getDimensionProperties(event.world.provider.getDimension()).skyRenderOverride && !(event.world.provider instanceof IPlanetaryProvider)) {
-				prevRenderHanlder = event.world.provider.getSkyRenderer();
-				event.world.provider.setSkyRenderer(new RenderPlanetarySky());
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 		}
 	}
@@ -125,19 +119,12 @@ public class RocketEventHandler extends Screen {
 	
 	@SubscribeEvent
 	public void onRocketLaunch(RocketEvent.RocketLaunchEvent event) {
-<<<<<<< HEAD
 		if(ARConfiguration.getCurrentConfig().planetSkyOverride.get() && event.world.isRemote && !event.getEntity().getPassengers().isEmpty() && event.getEntity().getPassengers().contains(Minecraft.getInstance().player)) {
 			//prepareOrbitalMap(event);
 			mapReady = true; //temp
 			DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(event.world);
 			prevRenderHanlder = props.getSkyRenderer();
 			props.setSkyRenderer(new RenderPlanetarySky());
-=======
-		if(ARConfiguration.getCurrentConfig().planetSkyOverride && !DimensionManager.getInstance().getDimensionProperties(event.world.provider.getDimension()).skyRenderOverride && event.world.isRemote && !event.getEntity().getPassengers().isEmpty() && event.getEntity().getPassengers().contains(Minecraft.getMinecraft().player)) {
-			prepareOrbitalMap(event);
-			prevRenderHanlder = event.world.provider.getSkyRenderer();
-			event.world.provider.setSkyRenderer(new RenderPlanetarySky());
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 	}
 
@@ -542,53 +529,7 @@ public class RocketEventHandler extends Screen {
 		}
 	}
 
-<<<<<<< HEAD
-	@SubscribeEvent
-	public void mouseInputEvent(MouseInputEvent event) {
-		if(!ARConfiguration.getCurrentConfig().lockUI.get() && Minecraft.getInstance().mouseHelper.isMouseGrabbed()) {
-
-			if(event.getButton() == GLFW.GLFW_MOUSE_BUTTON_2) {
-				int i = getMinecraft().getMainWindow().getScaledWidth();
-				int j = getMinecraft().getMainWindow().getScaledHeight();
-				
-				int mouseX =  (int) (Minecraft.getInstance().mouseHelper.getMouseX() * i / getMinecraft().getMainWindow().getWidth());
-				int mouseY = (int) (j - Minecraft.getInstance().mouseHelper.getMouseY() * j / getMinecraft().getMainWindow().getHeight() - 1);
-               
-				if(currentlySelectedBox == null && mouseX >= suitPanel.getX(i) && mouseX < suitPanel.getX(i) + suitPanel.sizeX &&
-						mouseY >= suitPanel.getY(j) && mouseY < suitPanel.getY(j) + suitPanel.sizeY) {
-					currentlySelectedBox = suitPanel;
-				}
-
-				if(currentlySelectedBox == null && mouseX >= oxygenBar.getX(i) && mouseX < oxygenBar.getX(i) + oxygenBar.sizeX &&
-						mouseY >= oxygenBar.getY(j) && mouseY < oxygenBar.getY(j) + oxygenBar.sizeY) {
-					currentlySelectedBox = oxygenBar;
-				}
-
-				if(currentlySelectedBox == null && mouseX >= hydrogenBar.getX(i) && mouseX < hydrogenBar.getX(i) + hydrogenBar.sizeX &&
-						mouseY >= hydrogenBar.getY(j) && mouseY < hydrogenBar.getY(j) + hydrogenBar.sizeY) {
-					currentlySelectedBox = hydrogenBar;
-				}
-				
-				if(currentlySelectedBox == null && mouseX >= atmBar.getX(i) && mouseX < atmBar.getX(i) + atmBar.sizeX &&
-						mouseY >= atmBar.getY(j) && mouseY < atmBar.getY(j) + atmBar.sizeY) {
-					currentlySelectedBox = atmBar;
-				}
-				
-				if(currentlySelectedBox != null) {
-
-					currentlySelectedBox.setRenderX(mouseX, i);
-					currentlySelectedBox.setRenderY(mouseY, j);
-				}
-			}
-			else
-				currentlySelectedBox = null;
-		}
-	}
-
 	private void renderModuleSlots(ItemStack armorStack, int slot, RenderGameOverlayEvent event) {
-=======
-	private void renderModuleSlots(@Nonnull ItemStack armorStack, int slot, RenderGameOverlayEvent event) {
->>>>>>> origin/feature/nuclearthermalrockets
 		int index = 1;
 		float color = 0.85f + 0.15F*MathHelper.sin( 2f*(float)Math.PI*((Minecraft.getInstance().world.getGameTime()) % 60)/60f );
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();

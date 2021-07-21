@@ -28,12 +28,9 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.advancedRocketry.satellite.SatelliteBiomeChanger;
 import zmaster587.libVulpes.LibVulpes;
-<<<<<<< HEAD
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.inventory.ContainerModular;
-=======
->>>>>>> origin/feature/nuclearthermalrockets
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.inventory.modules.*;
@@ -48,7 +45,6 @@ import java.util.List;
 
 public class ItemBiomeChanger extends Item {//extends ItemSatelliteIdentificationChip implements IModularInventory, IButtonInventory, INetworkItem {
 
-<<<<<<< HEAD
 	public ItemBiomeChanger(Properties properties) {
 		super(properties);
 		// TODO Auto-generated constructor stub
@@ -58,11 +54,6 @@ public class ItemBiomeChanger extends Item {//extends ItemSatelliteIdentificatio
 /*	@Override
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> list = new LinkedList<ModuleBase>();
-=======
-	@Override
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> list = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 
 		SatelliteBiomeChanger sat = (SatelliteBiomeChanger) getSatellite(player.getHeldItem(Hand.MAIN_HAND));
 		if(player.world.isRemote) {
@@ -98,13 +89,8 @@ public class ItemBiomeChanger extends Item {//extends ItemSatelliteIdentificatio
 		if(sat instanceof SatelliteBiomeChanger)
 			mapping = (SatelliteBiomeChanger)sat;
 
-<<<<<<< HEAD
 		if(!stack.hasTag())
 			list.add( LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
-=======
-		if(!stack.hasTagCompound())
-			list.add(LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
->>>>>>> origin/feature/nuclearthermalrockets
 		else if(mapping == null)
 			list.add(LibVulpes.proxy.getLocalizedString("msg.biomechanger.nosat"));
 		else if(mapping.getDimensionId().isPresent() && mapping.getDimensionId().get() ==  ZUtils.getDimensionIdentifier(player)) {
@@ -120,12 +106,7 @@ public class ItemBiomeChanger extends Item {//extends ItemSatelliteIdentificatio
 
 
 	@Override
-<<<<<<< HEAD
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-=======
-	@Nonnull
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
->>>>>>> origin/feature/nuclearthermalrockets
 		ItemStack stack = player.getHeldItem(hand);
 		if(!world.isRemote) {
 			SatelliteBase sat = DimensionManager.getInstance().getSatellite(this.getSatelliteId(stack));
@@ -176,17 +157,10 @@ public class ItemBiomeChanger extends Item {//extends ItemSatelliteIdentificatio
 	}
 
 	@Override
-<<<<<<< HEAD
 	@OnlyIn(value=Dist.CLIENT)
 	public void onInventoryButtonPressed(ModuleButton buttonId) {
 		ItemStack stack = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
 		if(stack != null && stack.getItem() == this) {
-=======
-	@SideOnly(Side.CLIENT)
-	public void onInventoryButtonPressed(int buttonId) {
-		ItemStack stack = Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND);
-		if(!stack.isEmpty() && stack.getItem() == this) {
->>>>>>> origin/feature/nuclearthermalrockets
 			setBiomeId(stack, buttonId);
 			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getInstance().player, (byte)(buttonId  == -1 ? -1 : 0)));
 		}
@@ -200,26 +174,16 @@ public class ItemBiomeChanger extends Item {//extends ItemSatelliteIdentificatio
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void readDataFromNetwork(PacketBuffer in, byte packetId,
 			CompoundNBT nbt, ItemStack stack) {
-=======
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt, @Nonnull ItemStack stack) {
->>>>>>> origin/feature/nuclearthermalrockets
 		if(packetId == 0) {
 			nbt.putInt("biome", in.readInt());
 		}
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void useNetworkData(PlayerEntity player, Dist side, byte id,
 			CompoundNBT nbt, ItemStack stack) {
-=======
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt, @Nonnull ItemStack stack) {
->>>>>>> origin/feature/nuclearthermalrockets
 		if(id == -1) {
 			//If -1 then discover current biome
 			((SatelliteBiomeChanger)getSatellite(stack)).addBiome(Biome.getIdForBiome(player.world.getBiome(new BlockPos((int)player.posX, 0, (int)player.posZ))));

@@ -1,11 +1,6 @@
 package zmaster587.advancedRocketry.integration.jei;
 
-import mezz.jei.api.ingredients.IIngredients;
-<<<<<<< HEAD
 import mezz.jei.api.recipe.category.extensions.IRecipeCategoryExtension;
-=======
-import mezz.jei.api.recipe.IRecipeWrapper;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
@@ -94,16 +89,6 @@ public class MachineRecipe extends Recipe implements IRecipeCategoryExtension {
 	@Override
 	public void setIngredients(IIngredients ingredients) {
 		// TODO Auto-generated method stub
-		
-<<<<<<< HEAD
-=======
-			String powerString = String.format("Power: %d RF/t", energy);
-			FontRenderer fontRendererObj = minecraft.fontRenderer;
-			fontRendererObj.drawString(powerString, 0, 55, Color.black.getRGB());
-			
-			String timeString = String.format("Time: %d s", time/20);
-			fontRendererObj.drawString(timeString, recipeWidth - 55, 55, Color.black.getRGB());
-			
->>>>>>> origin/feature/nuclearthermalrockets
+
 	}
 }

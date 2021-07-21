@@ -7,18 +7,9 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public interface ITilePlanetSystemSelectable {
-<<<<<<< HEAD
 	public ItemStack getChipWithId(ResourceLocation id);
 	
 	public void setSelectedPlanetId(ResourceLocation id);
 	
 	public List<ResourceLocation> getVisiblePlanets();
-=======
-	@Nonnull
-	ItemStack getChipWithId(int id);
-	
-	void setSelectedPlanetId(int id);
-	
-	List<Integer> getVisiblePlanets();
->>>>>>> origin/feature/nuclearthermalrockets
 }

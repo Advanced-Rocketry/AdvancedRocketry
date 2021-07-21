@@ -45,13 +45,7 @@ public class BlockBipropellantRocketMotor extends BlockFullyRotatable implements
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return VoxelShapes.empty();
-=======
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, @Nonnull ItemStack stack) {
-		
-		world.setBlockState(pos, state.withProperty(FACING, EnumFacing.DOWN));
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 }

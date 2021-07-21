@@ -14,7 +14,7 @@ public class BlockNuclearCore extends Block implements IRocketNuclearCore {
 	}
 
 	@Override
-	public int getMaxThrust(World world, BlockPos pos) { return (int)(1000 * ARConfiguration.getCurrentConfig().nuclearCoreThrustRatio); }
+	public int getMaxThrust(World world, BlockPos pos) { return (int)(1000 * ARConfiguration.getCurrentConfig().nuclearCoreThrustRatio.get()); }
 
 
 }

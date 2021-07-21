@@ -50,7 +50,6 @@ import zmaster587.libVulpes.api.material.MaterialRegistry;
 public class AdvancedRocketryItems {
 
 	//TODO: fix
-<<<<<<< HEAD
 	public static final ArmorMaterial spaceSuit = new ArmorMaterial("spaceSuit", net.minecraft.item.ArmorMaterial.DIAMOND.getDurability(EquipmentSlotType.CHEST), new int[] {1,1,1,1}, 0, new SoundEvent(new ResourceLocation("")), 0, 0, null);
 
 	public static Item itemSiliconWafer;
@@ -71,15 +70,6 @@ public class AdvancedRocketryItems {
 	public static Item itemSensorMicrowave;
 	public static Item itemSensorOreMapper;
 	public static Item itemSensorBiomeChanger;
-=======
-	public static final ArmorMaterial spaceSuit = EnumHelper.addArmorMaterial("spaceSuit", "", ArmorMaterial.DIAMOND.getDurability(EntityEquipmentSlot.CHEST), new int[] {1,1,1,1}, 0, new SoundEvent(new ResourceLocation("")), 0);
-	
-	public static Item itemWafer;
-	public static Item itemCircuitPlate;
-	public static Item itemIC;
-	public static Item itemSatellitePowerSource;
-	public static Item itemSatellitePrimaryFunction;
->>>>>>> origin/feature/nuclearthermalrockets
 	public static Item itemOreScanner;
 	public static Item itemQuartzCrucible;
 	public static Item itemDataUnit;
@@ -423,7 +413,7 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemElectrolyser = new BlockItem(AdvancedRocketryBlocks.blockElectrolyser, typicalBlockProperties);
 		AdvancedRocketryItems.itemChemicalReactor = new BlockItem(AdvancedRocketryBlocks.blockChemicalReactor, typicalBlockProperties);
 		AdvancedRocketryItems.itemOxygenVent = new BlockItem(AdvancedRocketryBlocks.blockOxygenVent, typicalBlockProperties);
-		AdvancedRocketryItems.itemOxygenScrubber = new BlockItem(AdvancedRocketryBlocks.blockOxygenScrubber, typicalBlockProperties);
+		AdvancedRocketryItems.itemOxygenScrubber = new BlockItem(AdvancedRocketryBlocks.blockCO2Scrubber, typicalBlockProperties);
 		AdvancedRocketryItems.itemOxygenCharger = new BlockItem(AdvancedRocketryBlocks.blockOxygenCharger, typicalBlockProperties);
 		AdvancedRocketryItems.itemAirLock = new BlockItem(AdvancedRocketryBlocks.blockAirLock, typicalBlockProperties);
 		AdvancedRocketryItems.itemLandingPad = new BlockItem(AdvancedRocketryBlocks.blockLandingPad, typicalBlockProperties);

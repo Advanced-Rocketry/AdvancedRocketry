@@ -59,20 +59,6 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	public String getModularInventoryName() {
 		return "tile.guidanceComputer.name";
 	}
-<<<<<<< HEAD
-=======
-	
-	@Override
-	@Nonnull
-	public String getName() {
-		return getModularInventoryName();
-	}
-
-	@Override
-	public boolean hasCustomName() {
-		return false;
-	}
->>>>>>> origin/feature/nuclearthermalrockets
 
 	@Override
 	public int getInventoryStackLimit() {

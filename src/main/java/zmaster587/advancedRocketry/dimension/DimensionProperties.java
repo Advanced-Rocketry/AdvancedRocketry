@@ -580,6 +580,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(isStar() && getStarData().isBlackHole())
 			return TextureResources.locationBlackHole_icon;
 
+		if(isStar())
+			return TextureResources.locationSunPng;
+
 		if(isGasGiant())
 			return PlanetIcons.GASGIANTBLUE.resource;
 

@@ -114,14 +114,9 @@ public class ItemMultiData extends Item {
 	}
 
 	@Override
-<<<<<<< HEAD
 	@OnlyIn(value=Dist.CLIENT)
 	public void addInformation(ItemStack stack, World player,
 			List list, ITooltipFlag bool) {
-=======
-	@SideOnly(Side.CLIENT)
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
->>>>>>> origin/feature/nuclearthermalrockets
 		super.addInformation(stack, player, list, bool);
 
 		MultiData data = getDataStorage(stack);
