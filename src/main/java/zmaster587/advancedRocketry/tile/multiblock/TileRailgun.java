@@ -52,10 +52,6 @@ import java.util.List;
 
 public class TileRailgun extends TileMultiPowerConsumer implements IInventory, ILinkableTile, IGuiCallback {
 	private EmbeddedInventory inv;
-<<<<<<< HEAD
-=======
-	private Ticket ticket;
->>>>>>> origin/feature/nuclearthermalrockets
 	public long recoil;
 	private int minStackTransferSize = 1;
 	private ModuleNumericTextbox textBox;
@@ -357,17 +353,10 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 					World world = ZUtils.getWorld(dimId);
 					TileEntity tile;
 
-<<<<<<< HEAD
-					if(world != null && (tile = world.getTileEntity(pos)) instanceof TileRailgun && ((TileRailgun)tile).canRecieveCargo(tfrStack) &&
+					if(world != null && (tile = world.getTileEntity(pos)) instanceof TileRailgun && ((TileRailgun)tile).canReceiveCargo(tfrStack) &&
 							(PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(ZUtils.getDimensionIdentifier(this.world),
 									DimensionManager.getEffectiveDimId(world, pos).getId()) ||
 									DimensionManager.getEffectiveDimId(world, pos).getId() == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(this.world, this.pos).getId()) ) {
-=======
-					if(world != null && (tile = world.getTileEntity(pos)) instanceof TileRailgun && ((TileRailgun)tile).canReceiveCargo(tfrStack) &&
-							(PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(this.world.provider.getDimension(),
-									zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(world, pos).getId()) ||
-									zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(world, pos).getId() == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(this.world, this.pos).getId()) ) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 						((TileRailgun)tile).onReceiveCargo(tfrStack);
 						inv2.setInventorySlotContents(index, ItemStack.EMPTY);
@@ -446,11 +435,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean isUsableByPlayer(PlayerEntity player) {
-=======
-	public boolean isUsableByPlayer(@Nullable EntityPlayer player) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return true;
 	}
 	
@@ -475,13 +460,8 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
-=======
-	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
->>>>>>> origin/feature/nuclearthermalrockets
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, ZUtils.getDimensionIdentifier(world));
 		if(!world.isRemote)
@@ -490,13 +470,8 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
-=======
-	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return false;
 	}
 
@@ -584,22 +559,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		super.readNetworkData(nbt);
 		state = RedstoneState.values()[nbt.getByte("redstoneState")];
 		redstoneControl.setRedstoneState(state);
-<<<<<<< HEAD
 		minStackTransferSize = nbt.getInt("minTfrSize");
-=======
-		minStackTransferSize = nbt.getInteger("minTfrSize");
-	}
-
-	@Override
-	@Nonnull
-	public String getName() {
-		return getMachineName();
-	}
-
-	@Override
-	public boolean hasCustomName() {
-		return false;
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override

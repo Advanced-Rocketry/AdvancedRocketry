@@ -17,6 +17,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -66,7 +67,7 @@ public class ItemSpaceArmor extends ArmorItem implements ICapabilityProvider, IP
 	}
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World p_77624_2_, List<String> list, ITooltipFlag p_77624_4_) {
+	public void addInformation(@Nonnull ItemStack stack, World p_77624_2_, List<ITextComponent> list, ITooltipFlag p_77624_4_) {
 		super.addInformation(stack, p_77624_2_, list, p_77624_4_);
 
 		list.add(new TranslationTextComponent("msg.modules"));
@@ -118,27 +119,17 @@ public class ItemSpaceArmor extends ArmorItem implements ICapabilityProvider, IP
 		return 0xFFFFFF;
 
 	}
-<<<<<<< HEAD
 	
 	/*@Override
 	public ArmorProperties getProperties(LivingEntity player,
 			ItemStack armor, DamageSource source, double damage, int slot) {
-=======
-	@Override
-	public ArmorProperties getProperties(EntityLivingBase player, @Nonnull ItemStack armor, DamageSource source, double damage, int slot) {
->>>>>>> origin/feature/nuclearthermalrockets
 		if(!source.isUnblockable())
 			return new ArmorProperties(0, 0, 1);
 		return new ArmorProperties(0, 0, 0);
 	}*/
 
-<<<<<<< HEAD
 	private EmbeddedInventory loadEmbeddedInventory(ItemStack stack) {
 		if(stack.hasTag()) {
-=======
-	private EmbeddedInventory loadEmbeddedInventory(@Nonnull ItemStack stack) {
-		if(stack.hasTagCompound()) {
->>>>>>> origin/feature/nuclearthermalrockets
 			EmbeddedInventory inv = new EmbeddedInventory(numModules);
 			inv.readFromNBT(stack.getTag());
 			return inv;
@@ -193,7 +184,6 @@ public class ItemSpaceArmor extends ArmorItem implements ICapabilityProvider, IP
 	}
 
 	@Override
-<<<<<<< HEAD
 	public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
 		// TODO Auto-generated method stub
 		return super.damageItem(stack, amount, entity, onBroken);
@@ -201,14 +191,6 @@ public class ItemSpaceArmor extends ArmorItem implements ICapabilityProvider, IP
 	
 	/*@Override
 	public void damageArmor(LivingEntity entity, ItemStack armor,
-=======
-	public int getArmorDisplay(EntityPlayer player, @Nonnull ItemStack armor, int slot) {
-		return 1;
-	}
-
-	@Override
-	public void damageArmor(EntityLivingBase entity, @Nonnull ItemStack armor,
->>>>>>> origin/feature/nuclearthermalrockets
 			DamageSource source, int damage, int slot) {
 		// TODO Handle armor damage
 
@@ -239,18 +221,11 @@ public class ItemSpaceArmor extends ArmorItem implements ICapabilityProvider, IP
 		}
 	}
 
-<<<<<<< HEAD
 
 
 	public ItemStack removeComponent(World world, ItemStack armor, int index) {
 		CompoundNBT nbt;
 		ListNBT componentList;
-=======
-	@Nonnull
-	public ItemStack removeComponent(World world, @Nonnull ItemStack armor, int index) {
-		NBTTagCompound nbt;
-		NBTTagList componentList;
->>>>>>> origin/feature/nuclearthermalrockets
 
 		if(armor.hasTag()) {
 			nbt = armor.getTag();

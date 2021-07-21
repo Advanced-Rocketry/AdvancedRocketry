@@ -1,10 +1,7 @@
 package zmaster587.advancedRocketry.inventory;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill.TileOrbitalLaserDrill;
@@ -127,7 +124,7 @@ public class ContainerOrbitalLaserDrill extends Container {
 
 	@Override
 	@Nonnull
-	public ItemStack transferStackInSlot(EntityPlayer player, int slot)
+	public ItemStack transferStackInSlot(PlayerEntity player, int slot)
 	{
 		ItemStack stack = ItemStack.EMPTY;
 		Slot slotObject = inventorySlots.get(slot);
@@ -164,9 +161,8 @@ public class ContainerOrbitalLaserDrill extends Container {
 		return stack;
 	}
 
-
 	@Override
-	public boolean canInteractWith(@Nonnull EntityPlayer entityplayer) {
+	public boolean canInteractWith(@Nonnull PlayerEntity entityplayer) {
 		return laserTile.isUsableByPlayer(entityplayer);
 	}
 }

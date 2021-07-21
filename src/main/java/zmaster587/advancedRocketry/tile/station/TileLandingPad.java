@@ -100,13 +100,8 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
-=======
-	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
->>>>>>> origin/feature/nuclearthermalrockets
 		ItemLinker.setMasterCoords(item, getPos());
 		ItemLinker.setDimId(item, ZUtils.getDimensionIdentifier(world));
 		return true;
@@ -118,13 +113,8 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
-=======
-	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 		TileEntity tile = world.getTileEntity(ItemLinker.getMasterCoords(item));
 
@@ -371,13 +361,8 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	public void read(BlockState state, CompoundNBT nbt) {
 		super.read(state, nbt);
 		blockPos.clear();
-<<<<<<< HEAD
 		if(nbt.contains("infrastructureLocations")) {
 			int array[] = nbt.getIntArray("infrastructureLocations");
-=======
-		if(nbt.hasKey("infrastructureLocations")) {
-			int[] array = nbt.getIntArray("infrastructureLocations");
->>>>>>> origin/feature/nuclearthermalrockets
 
 			for(int counter = 0; counter < array.length; counter += 3) {
 				blockPos.add(new HashedBlockPosition(array[counter], array[counter+1], array[counter+2]));

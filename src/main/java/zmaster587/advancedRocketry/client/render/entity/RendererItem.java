@@ -15,18 +15,10 @@ import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-<<<<<<< HEAD
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 @OnlyIn(value=Dist.CLIENT)
 public class RendererItem extends EntityRenderer<EntityItemAbducted> implements IRenderFactory<EntityItemAbducted>
-=======
-/**
- * Yeah, i know, this is literally a copy of the item renderer, other option was asm the class responsible for render distance
- */
-@SideOnly(Side.CLIENT)
-public class RendererItem extends Render<EntityItemAbducted> implements IRenderFactory<EntityItemAbducted>
->>>>>>> origin/feature/nuclearthermalrockets
 {
     private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
     /** The RNG used in RenderItem (for bobbing itemstacks on the ground) */
@@ -56,14 +48,9 @@ public class RendererItem extends Render<EntityItemAbducted> implements IRenderF
     }
 
 	@Override
-<<<<<<< HEAD
 	public EntityRenderer<? super EntityItemAbducted> createRenderFor(
 			EntityRendererManager manager) {
 		return new RendererItem(manager);
-=======
-	protected ResourceLocation getEntityTexture(@Nullable EntityItemAbducted entity) {
-		return TextureMap.LOCATION_BLOCKS_TEXTURE;
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override

@@ -10,17 +10,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
-<<<<<<< HEAD
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-=======
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Biomes;
-import net.minecraft.init.Blocks;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -111,17 +105,12 @@ import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 
-<<<<<<< HEAD
 import javax.annotation.Nullable;
 
 public class StorageChunk implements IWorld, IStorageChunk {
 
 	private static final int CHUNK_SIZE = 16;
 	private static final int CHUNK_HEIGHT = 256;
-=======
-	Block[][][] blocks;
-	private short[][][] metas;
->>>>>>> origin/feature/nuclearthermalrockets
 	int sizeX, sizeY, sizeZ;
 	public Chunk chunk;
 
@@ -211,22 +200,13 @@ public class StorageChunk implements IWorld, IStorageChunk {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public BlockState getBlockState(BlockPos pos) {
-=======
-	@Nonnull
-	public IBlockState getBlockState(BlockPos pos) {
->>>>>>> origin/feature/nuclearthermalrockets
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();
 		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ || chunk == null)
 			return Blocks.AIR.getDefaultState();
-<<<<<<< HEAD
 		return chunk.getBlockState(pos);
-=======
-		return blocks[x][y][z].getStateFromMeta(metas[x][y][z]);
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	public void setBlockState(BlockPos pos, BlockState state) {
@@ -266,18 +246,8 @@ public class StorageChunk implements IWorld, IStorageChunk {
 					chunksection.getData().writeChunkPalette(compoundnbt2, "Palette", "BlockStates");
 				}
 
-<<<<<<< HEAD
 				if (nibblearray != null && !nibblearray.isEmpty()) {
 					compoundnbt2.putByteArray("BlockLight", nibblearray.getData());
-=======
-		int[] blockId = new int[sizeX*sizeY*sizeZ];
-		int[] metasId = new int[sizeX*sizeY*sizeZ];
-		for(int x = 0; x < sizeX; x++) {
-			for(int y = 0; y < sizeY; y++) {
-				for(int z = 0; z < sizeZ; z++) {
-					blockId[z + (sizeZ*y) + (sizeZ*sizeY*x)] = Block.getIdFromBlock(blocks[x][y][z]);
-					metasId[z + (sizeZ*y) + (sizeZ*sizeY*x)] = metas[x][y][z];
->>>>>>> origin/feature/nuclearthermalrockets
 				}
 
 				if (nibblearray1 != null && !nibblearray1.isEmpty()) {
@@ -354,12 +324,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		HashedBlockPosition newerSize = remapCoord(newSizes, dir);
 		newSizes = remapCoord(newSizes, dir);
 
-<<<<<<< HEAD
 		BlockState blocks[][][] = new BlockState[newSizes.x][newSizes.y][newSizes.z];
-=======
-		Block[][][] blocks = new Block[newSizes.x][newSizes.y][newSizes.z];
-		short[][][] metas = new short[newSizes.x][newSizes.y][newSizes.z];
->>>>>>> origin/feature/nuclearthermalrockets
 
 		for(int y = 0; y < getSizeY(); y++) {
 			for(int z = 0; z < getSizeZ(); z++) {
@@ -723,29 +688,8 @@ public class StorageChunk implements IWorld, IStorageChunk {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public Biome getBiome(BlockPos pos) {
 		return AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getRegistryName());
-=======
-	@Nonnull
-	public Biome getBiome(@Nullable BlockPos pos) {
-		//Don't care, gen ocean
-		return Biomes.OCEAN;
-	}
-
-	@Override
-	public boolean isSideSolid(BlockPos pos, @Nonnull EnumFacing side, boolean _default) {
-		int x = pos.getX();
-		int y = pos.getY();
-		int z = pos.getZ();
-		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ  || x + side.getFrontOffsetX() < 0 
-				|| x + side.getFrontOffsetX() >= sizeX || y + side.getFrontOffsetY() < 0 || y + side.getFrontOffsetY() >= sizeY 
-				|| z + side.getFrontOffsetZ() < 0 || z + side.getFrontOffsetZ() >= sizeZ)
-			return false;
-
-		return blocks[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()].isSideSolid(blocks[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()].getStateFromMeta(metas[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()]), this, pos.offset(side), side.getOpposite());
-
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	public static StorageChunk cutWorldBB(World worldObj, AxisAlignedBB bb) {
@@ -770,13 +714,8 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		}
 
 		//Carpenter's block's dupe
-<<<<<<< HEAD
 		for(Object entity : worldObj.getEntitiesWithinAABB(ItemEntity.class, bb.grow(5, 5, 5)) ) {
 			((Entity)entity).remove();
-=======
-		for(Entity entity : worldObj.getEntitiesWithinAABB(EntityItem.class, bb.grow(5, 5, 5)) ) {
-			entity.setDead();
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 
 		return chunk;
@@ -827,7 +766,6 @@ public class StorageChunk implements IWorld, IStorageChunk {
 	/**
 	 * @return destination ID or Constants.INVALID_PLANET if none
 	 */
-<<<<<<< HEAD
 	public ResourceLocation getDestinationDimId(ResourceLocation currentDimId, int x, int z) {
 		Iterator<TileEntity> iterator = getTileEntityList().iterator();
 		while(iterator.hasNext()) {
@@ -835,19 +773,12 @@ public class StorageChunk implements IWorld, IStorageChunk {
 
 			if(tile instanceof TileGuidanceComputer) {
 				return ((TileGuidanceComputer)tile).getDestinationDimId(currentDimId, new BlockPos(x,0,z));
-=======
-	public int getDestinationDimId(int currentDimId, int x, int z) {
-		for (TileEntity tile : getTileEntityList()) {
-			if (tile instanceof TileGuidanceComputer) {
-				return ((TileGuidanceComputer) tile).getDestinationDimId(currentDimId, new BlockPos(x, 0, z));
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 		}
 
 		return Constants.INVALID_PLANET;
 	}
 
-<<<<<<< HEAD
 	public ResourceLocation getDestinationDimId(World world, int x, int z) {
 		Iterator<TileEntity> iterator = getTileEntityList().iterator();
 		while(iterator.hasNext()) {
@@ -867,17 +798,10 @@ public class StorageChunk implements IWorld, IStorageChunk {
 			TileEntity tile = iterator.next();
 			if(tile instanceof TileGuidanceComputer) {
 				return ((TileGuidanceComputer)tile).getLandingLocation(destDimID, commit);
-=======
-	public Vector3F<Float> getDestinationCoordinates(int destDimID, boolean commit) {
-		for (TileEntity tile : getTileEntityList()) {
-			if (tile instanceof TileGuidanceComputer) {
-				return ((TileGuidanceComputer) tile).getLandingLocation(destDimID, commit);
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 		}
 		return null;
 	}
-<<<<<<< HEAD
 
 	public String getDestinationName(ResourceLocation destDimID) {
 		Iterator<TileEntity> iterator = getTileEntityList().iterator();
@@ -885,31 +809,17 @@ public class StorageChunk implements IWorld, IStorageChunk {
 			TileEntity tile = iterator.next();
 			if(tile instanceof TileGuidanceComputer) {
 				return ((TileGuidanceComputer)tile).getDestinationName(destDimID);
-=======
-	
-	public String getDestinationName(int destDimID) {
-		for (TileEntity tile : getTileEntityList()) {
-			if (tile instanceof TileGuidanceComputer) {
-				return ((TileGuidanceComputer) tile).getDestinationName(destDimID);
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 		}
 		return "";
 	}
 
-<<<<<<< HEAD
 	public void setDestinationCoordinates(Vector3F<Float> vec, ResourceLocation dimid) {
 		Iterator<TileEntity> iterator = getTileEntityList().iterator();
 		while(iterator.hasNext()) {
 			TileEntity tile = iterator.next();
 			if(tile instanceof TileGuidanceComputer) {
 				((TileGuidanceComputer)tile).setReturnPosition(vec, dimid);
-=======
-	public void setDestinationCoordinates(Vector3F<Float> vec, int dimid) {
-		for (TileEntity tile : getTileEntityList()) {
-			if (tile instanceof TileGuidanceComputer) {
-				((TileGuidanceComputer) tile).setReturnPosition(vec, dimid);
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 		}
 	}
@@ -1030,7 +940,6 @@ public class StorageChunk implements IWorld, IStorageChunk {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean removeBlock(BlockPos pos, boolean isMoving) {
 		chunk.setBlockState(pos, Blocks.AIR.getDefaultState(), isMoving);
 		return true;
@@ -1090,21 +999,5 @@ public class StorageChunk implements IWorld, IStorageChunk {
 
 	@Override
 	public void playEvent(PlayerEntity player, int type, BlockPos pos, int data) {
-
-=======
-	public int getCombinedLight(@Nullable BlockPos pos, int lightValue) {
-		return lightValue;
-	}
-
-	@Override
-	public int getStrongPower(@Nullable BlockPos pos, @Nullable EnumFacing direction) {
-		return 0;
-	}
-
-	@Override
-	@Nonnull
-	public WorldType getWorldType() {
-		return WorldType.CUSTOMIZED;
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 }

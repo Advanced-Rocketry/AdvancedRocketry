@@ -27,11 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 
-<<<<<<< HEAD
 	static ThreadPoolExecutor pool = (ARConfiguration.getCurrentConfig().atmosphereHandleBitMask.get() & 1) == 1 ? new ThreadPoolExecutor(2, 16, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(32)) : null;
-=======
-	private static ThreadPoolExecutor pool = (ARConfiguration.getCurrentConfig().atmosphereHandleBitMask & 1) == 1 ? new ThreadPoolExecutor(2, 16, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(32)) : null;
->>>>>>> origin/feature/nuclearthermalrockets
 
 	private boolean executing;
 	private HashedBlockPosition blockPos;
@@ -110,13 +106,8 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		Stack<HashedBlockPosition> stack = new Stack<>();
 		stack.push(blockPos);
 
-<<<<<<< HEAD
 		final int maxSize = (ARConfiguration.getCurrentConfig().atmosphereHandleBitMask.get() & 2) != 0 ? (int)(Math.pow(this.getBlobMaxRadius(), 3)*((4f/3f)*Math.PI)) : this.getBlobMaxRadius();
 		final HashSet<HashedBlockPosition> addableBlocks = new HashSet<HashedBlockPosition>();
-=======
-		final int maxSize = (ARConfiguration.getCurrentConfig().atmosphereHandleBitMask & 2) != 0 ? (int)(Math.pow(this.getBlobMaxRadius(), 3)*((4f/3f)*Math.PI)) : this.getBlobMaxRadius();
-		final HashSet<HashedBlockPosition> addableBlocks = new HashSet<>();
->>>>>>> origin/feature/nuclearthermalrockets
 
 		//Breadth first search; non recursive
 		while(!stack.isEmpty()) {

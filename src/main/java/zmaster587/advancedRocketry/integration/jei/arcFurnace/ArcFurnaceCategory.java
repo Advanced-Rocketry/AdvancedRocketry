@@ -13,50 +13,24 @@ import zmaster587.advancedRocketry.integration.jei.MachineRecipe;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.LibVulpes;
 
-<<<<<<< HEAD
 public class ArcFurnaceCategory extends MachineCategoryTemplate<MachineRecipe> {
-=======
-import javax.annotation.Nonnull;
-
-public class ArcFurnaceCategory extends MachineCategoryTemplate<ArcFurnaceWrapper> {
->>>>>>> origin/feature/nuclearthermalrockets
 
 	public ArcFurnaceCategory(IGuiHelper helper, ItemStack icon) {
 		super(helper, TextureResources.arcFurnaceProgressBar, icon);
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public ResourceLocation getUid() {
-=======
-	@Nonnull
-	public String getUid() {
->>>>>>> origin/feature/nuclearthermalrockets
 		return ARPlugin.arcFurnaceUUID;
 	}
 
 	@Override
-<<<<<<< HEAD
 	public Class<? extends MachineRecipe> getRecipeClass() {
 		return MachineRecipe.class;
 	}
 	
 	@Override
-=======
-	@Nonnull
->>>>>>> origin/feature/nuclearthermalrockets
 	public String getTitle() {
 		return LibVulpes.proxy.getLocalizedString("block.advancedrocketry.arcfurnace");
 	}
-<<<<<<< HEAD
-=======
-
-    @Override
-	@Nonnull
-    public String getModName()
-    {
-        return "Advanced Rocketry";
-    }
-
->>>>>>> origin/feature/nuclearthermalrockets
 }

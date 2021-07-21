@@ -54,7 +54,6 @@ import zmaster587.advancedRocketry.util.PlanetaryTravelHelper;
 import zmaster587.advancedRocketry.util.FluidGasGiantGas;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader;
-import zmaster587.advancedRocketry.util.XMLPlanetLoader.DimensionPropertyCoupling;
 import zmaster587.advancedRocketry.world.ChunkProviderAsteroids;
 import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderSpace;
@@ -84,15 +83,8 @@ public class DimensionManager implements IGalaxy {
 	public static final String workingPath = "advRocketry";
 	public static final String tempFile = "/ARdata.dat";
 	public static final String worldXML = "/planetDefs.xml";
-<<<<<<< HEAD
 	public static final String datapackPath = "datapacks";
 	private boolean hasBeenInitialized = false;
-=======
-	public static final DimensionType PlanetDimensionType = DimensionType.register("planet", "planet", 2, WorldProviderPlanet.class, false);
-	public static final DimensionType spaceDimensionType = DimensionType.register("space", "space", 3, WorldProviderSpace.class, false);
-	public static final DimensionType AsteroidDimensionType = DimensionType.register("asteroid", "asteroid", 4, WorldProviderAsteroid.class, false);
-	private boolean hasBeenInitialized = false;
->>>>>>> origin/feature/nuclearthermalrockets
 	public static String prevBuild;
 
 	//Stat tracking
@@ -459,7 +451,6 @@ public class DimensionManager implements IGalaxy {
 	 * @param dimId dimension id to check
 	 * @return true if it can be traveled to, in general if it has a surface
 	 */
-<<<<<<< HEAD
 	public boolean canTravelTo(ResourceLocation dimId){
 		
 		return ZUtils.isWorldRegistered(dimId) && getDimensionProperties(dimId).hasSurface();
@@ -473,10 +464,6 @@ public class DimensionManager implements IGalaxy {
 	public boolean canTravelTo(ServerWorld dimId){
 		
 		return getDimensionProperties(ZUtils.getDimensionIdentifier(dimId)).hasSurface();
-=======
-	public boolean canTravelTo(int dimId) {
-		return net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId) && dimId != Constants.INVALID_PLANET && getDimensionProperties(dimId).hasSurface();
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	/**
@@ -550,9 +537,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param registerWithForge if true also registers the dimension with forge
 	 * @return true if the dimension has NOT been registered before, false if the dimension IS registered exist already
 	 */
-<<<<<<< HEAD
 	public boolean registerDimNoUpdate(DimensionProperties properties, boolean registerWithForge) {
-<<<<<<< HEAD
 		ResourceLocation dimId = properties.getId();
 
 		if(dimensionListResource.containsKey(dimId))
@@ -571,21 +556,6 @@ public class DimensionManager implements IGalaxy {
 				Dimension dimension = new Dimension(() -> dimType, chunks);
 				ZUtils.registerDimension(dimId, dimType, dimension);
 			}
-=======
-=======
-	public boolean registerDimNoUpdate(@Nonnull DimensionProperties properties, boolean registerWithForge) {
->>>>>>> origin/feature/nuclearthermalrockets
-		int dimId = properties.getId();
-
-		if(dimensionList.containsKey(dimId))
-			return false;
-
-		//Avoid registering gas giants as dimensions
-		if(registerWithForge && properties.hasSurface() && !net.minecraftforge.common.DimensionManager.isDimensionRegistered(dimId)) {
-
-			if(properties.isAsteroid())
-				net.minecraftforge.common.DimensionManager.registerDimension(dimId, AsteroidDimensionType);
->>>>>>> origin/feature/nuclearthermalrockets
 			else
 			{
 				DimensionType dimType = new ModdedDimensionType(OptionalLong.empty(), true, false, false, true, 1.0D, false, false, true, false, true, 256, ColumnFuzzedBiomeMagnifier.INSTANCE, BlockTags.INFINIBURN_OVERWORLD.getName(), dimId, 0.0F);
@@ -814,22 +784,7 @@ public class DimensionManager implements IGalaxy {
 		//Save SolarSystems first
 
 		//Save satelliteId
-<<<<<<< HEAD
 		nbt.putLong("nextSatelliteId", nextSatelliteId);
-=======
-		nbt.setLong("nextSatelliteId", nextSatelliteId);
-
-		//Save Overworld
-		for(Entry<Integer, DimensionProperties> dimSet : dimensionList.entrySet()) {
-
-			NBTTagCompound dimNbt = new NBTTagCompound();
-			dimSet.getValue().writeToNBT(dimNbt);
-
-			dimListnbt.setTag(dimSet.getKey().toString(), dimNbt);
-		}
-
-		nbt.setTag("dimList", dimListnbt);
->>>>>>> origin/feature/nuclearthermalrockets
 
 		//Stats
 		CompoundNBT stats = new CompoundNBT();
@@ -844,7 +799,6 @@ public class DimensionManager implements IGalaxy {
 		String xmlOutput = XMLPlanetLoader.writeXML(this);
 
 		try {
-<<<<<<< HEAD
 			File planetXMLOutput = new File(saveDir, filePath + worldXML);
 			
 			File advRocketrySaveDir = new File(saveDir, filePath);
@@ -857,14 +811,6 @@ public class DimensionManager implements IGalaxy {
 			File tmpFileXml = File.createTempFile("ARXMLdata_", ".DAT", saveDir);
 			FileOutputStream bufoutStream = new FileOutputStream(tmpFileXml);
 			bufoutStream.write(xmlOutput.getBytes());
-=======
-			File planetXMLOutput = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory(), filePath + worldXML);
-			planetXMLOutput.createNewFile();
-
-			File tmpFileXml = File.createTempFile("ARXMLdata_", ".DAT", net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory());
-			FileOutputStream bufOutStream = new FileOutputStream(tmpFileXml);
-			bufOutStream.write(xmlOutput.getBytes());
->>>>>>> origin/feature/nuclearthermalrockets
 
 			//Commit to OS, tell OS to commit to disk, release and close stream
 			bufOutStream.flush();
@@ -875,7 +821,6 @@ public class DimensionManager implements IGalaxy {
 			Files.copy(tmpFileXml.toPath(), planetXMLOutput.toPath(), REPLACE_EXISTING);
 			tmpFileXml.delete();
 
-<<<<<<< HEAD
 			File file = new File(saveDir, filePath + tempFile);
 
 			if(!file.exists())
@@ -890,10 +835,6 @@ public class DimensionManager implements IGalaxy {
 				satelliteNbt.add(satTag);
 			}
 			nbt.put("satellites", satelliteNbt);
-=======
-			File file = new File(net.minecraftforge.common.DimensionManager.getCurrentSaveRootDirectory(), filePath + tempFile);
-			file.createNewFile();
->>>>>>> origin/feature/nuclearthermalrockets
 
 			//Getting real sick of my planet file getting toasted during debug...
 			File tmpFile = File.createTempFile("dimprops", ".DAT", saveDir);
@@ -1288,60 +1229,6 @@ public class DimensionManager implements IGalaxy {
 
 		//Attempt to load ore config from adv planet XML
 		if(dimCouplingList != null) {
-<<<<<<< HEAD
-=======
-			//Register new stars
-			for(StellarBody star : dimCouplingList.stars) {
-				if(DimensionManager.getInstance().getStar(star.getId()) == null)
-					DimensionManager.getInstance().addStar(star);
-
-				DimensionManager.getInstance().getStar(star.getId()).setName(star.getName());
-				DimensionManager.getInstance().getStar(star.getId()).setPosX(star.getPosX());
-				DimensionManager.getInstance().getStar(star.getId()).setPosZ(star.getPosZ());
-				DimensionManager.getInstance().getStar(star.getId()).setSize(star.getSize());
-				DimensionManager.getInstance().getStar(star.getId()).setTemperature(star.getTemperature());
-				DimensionManager.getInstance().getStar(star.getId()).subStars = star.subStars;
-				DimensionManager.getInstance().getStar(star.getId()).setBlackHole(star.isBlackHole());
-			}
-
-			for(DimensionProperties properties : dimCouplingList.dims) {
-
-				//Register dimensions loaded by other mods if not already loaded
-				if(!properties.isNativeDimension && properties.getStar() != null && !DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
-					for(StellarBody star : dimCouplingList.stars) {
-						for(StellarBody loadedStar : DimensionManager.getInstance().getStars()) {
-							if(star.getId() == properties.getStarId() && star.getName().equals(loadedStar.getName())) {
-								DimensionManager.getInstance().registerDimNoUpdate(properties, false);
-								properties.setStar(loadedStar);
-							}
-						}
-					}
-				}
-
-				
-				if(loadedPlanets.containsKey(properties.getId()))
-				{
-					DimensionProperties loadedDim = (DimensionProperties)loadedPlanets.get(properties.getId());
-					if(loadedDim != null)
-					{
-						properties.copySatellites(loadedDim);
-						properties.copyTerraformedBiomes(loadedDim);
-					}
-				}
-				if(properties.isNativeDimension)
-					DimensionManager.getInstance().registerDim(properties, properties.isNativeDimension);
-				//TODO: add properties fromXML
-
-
-				if(properties.oreProperties != null) {
-					DimensionProperties loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
-
-					if(loadedProps != null)
-						loadedProps.oreProperties = properties.oreProperties;
-				}
-			}
-
->>>>>>> origin/feature/nuclearthermalrockets
 			//Don't load random planets twice on initial load
 			//TODO: rework the logic, low priority because low time cost and one time run per world
 			if(!loadedFromXML)
@@ -1364,20 +1251,11 @@ public class DimensionManager implements IGalaxy {
 		//Try to fix invalid objects
 		for(ISpaceObject spaceObject : SpaceObjectManager.getSpaceManager().getSpaceObjects())
 		{
-<<<<<<< HEAD
 			ResourceLocation orbitingId = spaceObject.getOrbitingPlanetId();
 			if(!isDimensionCreated(orbitingId) && !SpaceObjectManager.WARPDIMID.equals(orbitingId) && orbitingId.getNamespace().equals(Constants.PLANET_NAMESPACE))
 			{
 				AdvancedRocketry.logger.warn("Dimension ID " + spaceObject.getOrbitingPlanetId() + " is not registered and a space station is orbiting it, moving to dimid 0");
                 spaceObject.setOrbitingBody(defaultSpaceDimensionProperties.getId());
-=======
-			int orbitingId = spaceObject.getOrbitingPlanetId();
-			if(!isDimensionCreated(orbitingId) && orbitingId != 0 && orbitingId != SpaceObjectManager.WARPDIMID && orbitingId < Constants.STAR_ID_OFFSET) {
-				AdvancedRocketry.logger.warn("Dimension ID " + spaceObject.getOrbitingPlanetId() + " is not registered and a space station is orbiting it, moving to dimid 0");
-				SpaceObjectManager.getSpaceManager().moveStationToBody(spaceObject, 0);
-				spaceObject.setDestOrbitingBody(0);
-				spaceObject.setOrbitingBody(0);
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 		}
 	}
@@ -1413,7 +1291,6 @@ public class DimensionManager implements IGalaxy {
 		} catch (IOException e) {
 			e.printStackTrace();
 			return loadedDimProps;
-<<<<<<< HEAD
 		}
 		
 		CompoundNBT stats = nbt.getCompound("stat");
@@ -1422,52 +1299,6 @@ public class DimensionManager implements IGalaxy {
 
 		nextSatelliteId = nbt.getLong("nextSatelliteId");
 
-=======
-		}//TODO: try not to obliterate planets in the future
-
-
-		//Load SolarSystems first
-		NBTTagCompound solarSystem = nbt.getCompoundTag("starSystems");
-
-		if(solarSystem.hasNoTags())
-			return loadedDimProps;
-
-		NBTTagCompound stats = nbt.getCompoundTag("stat");
-		hasReachedMoon = stats.getBoolean("hasReachedMoon");
-		hasReachedWarp = stats.getBoolean("hasReachedWarp");
-
-		for(String key : solarSystem.getKeySet()) {
-
-			NBTTagCompound solarNBT = solarSystem.getCompoundTag(key);
-			StellarBody star = new StellarBody();
-			star.readFromNBT(solarNBT);
-			starList.put(star.getId(), star);
-		}
-
-		nbt.setTag("starSystems", solarSystem);
-
-		nextSatelliteId = nbt.getLong("nextSatelliteId");
-
-		NBTTagCompound dimListNbt = nbt.getCompoundTag("dimList");
-
-
-		for(String key : dimListNbt.getKeySet()) {
-			DimensionProperties properties = DimensionProperties.createFromNBT(Integer.parseInt(key) ,dimListNbt.getCompoundTag(key));
-
-			int keyInt = Integer.parseInt(key);
-				/*if(!net.minecraftforge.common.DimensionManager.isDimensionRegistered(keyInt) && properties.isNativeDimension && !properties.isGasGiant()) {
-					if(properties.isAsteroid())
-						net.minecraftforge.common.DimensionManager.registerDimension(keyInt, AsteroidDimensionType);
-					else
-						net.minecraftforge.common.DimensionManager.registerDimension(keyInt, PlanetDimensionType);
-				}*/
-
-			loadedDimProps.put(keyInt, properties);
-			//TODO: print unable to register world
-		}
-
-
->>>>>>> origin/feature/nuclearthermalrockets
 		//Check for tag in case old version of Adv rocketry is in use
 		if(nbt.contains("spaceObjects")) {
 			CompoundNBT nbtTag = nbt.getCompound("spaceObjects");

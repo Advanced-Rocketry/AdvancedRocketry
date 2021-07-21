@@ -84,22 +84,13 @@ public class ContainerOreMappingSatellite extends Container {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean canInteractWith(PlayerEntity p_75145_1_) {
-=======
-	public boolean canInteractWith(@Nullable EntityPlayer p_75145_1_) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return true;
 	}
 
 	//int slot.. slot being taken from
 	@Override
-<<<<<<< HEAD
 	public ItemStack transferStackInSlot(PlayerEntity player, int p_82846_2_)
-=======
-	@Nonnull
-	public ItemStack transferStackInSlot(EntityPlayer player, int p_82846_2_)
->>>>>>> origin/feature/nuclearthermalrockets
 	{
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(p_82846_2_);

@@ -62,7 +62,7 @@ public class AtmosphereHandler {
 	public static void registerWorld(World world) {
 		ResourceLocation dimId = ZUtils.getDimensionIdentifier(world);
 		//If O2 is allowed and
-		DimensionProperties dimProp = DimensionManager.getInstance().getDimensionProperties(dimId);
+		DimensionProperties dimProp = (DimensionProperties) DimensionManager.getInstance().getDimensionProperties(dimId);
 		if(ARConfiguration.getCurrentConfig().enableOxygen.get() && dimProp.hasSurface() && (ARConfiguration.getCurrentConfig().overrideGCAir.get() || dimId != ARConfiguration.getCurrentConfig().MoonId || dimProp.isNativeDimension)) {
 			dimensionOxygen.put(dimId, new AtmosphereHandler(dimId));
 			MinecraftForge.EVENT_BUS.register(dimensionOxygen.get(dimId));
@@ -271,7 +271,7 @@ public class AtmosphereHandler {
 	}
 	
 	/**
-	 * @param dimNumber dimension number for which to get the oxygenhandler
+	 * @param world dimension number for which to get the oxygenhandler
 	 * @return the oxygen handler for the planet or null if none exists
 	 */
 	public static AtmosphereHandler getOxygenHandler(World world) {
@@ -462,7 +462,7 @@ public class AtmosphereHandler {
 	 */
 	@Nonnull
 	public IAtmosphere getAtmosphereType(@Nonnull IBlobHandler handler) {
-		if(ARConfiguration.getCurrentConfig().enableOxygen) {
+		if(ARConfiguration.getCurrentConfig().enableOxygen.get()) {
 			IAtmosphere atmosphere = (IAtmosphere) blobs.get(handler).getData();
 			if(atmosphere != null)
 				return atmosphere;

@@ -4,6 +4,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -34,15 +35,9 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 * @param stack itemStack of this item-type
 	 * @return the DimensionProperties of the dimId stored on the item or null if invalid
 	 */
-<<<<<<< HEAD
 	public DimensionProperties getDimension(ItemStack stack) {
 		if(stack.hasTag()) {
-			return DimensionManager.getInstance().getDimensionProperties( new ResourceLocation( stack.getTag().getString(dimensionIdIdentifier)));
-=======
-	public DimensionProperties getDimension(@Nonnull ItemStack stack) {
-		if(stack.hasTagCompound()) {
-			return DimensionManager.getInstance().getDimensionProperties(stack.getTagCompound().getInteger(dimensionIdIdentifier));
->>>>>>> origin/feature/nuclearthermalrockets
+			return (DimensionProperties) DimensionManager.getInstance().getDimensionProperties( new ResourceLocation( stack.getTag().getString(dimensionIdIdentifier)));
 		}
 		return null;
 	}
@@ -65,13 +60,8 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 * Removes any Information and reset the stack to a default state
 	 * @param stack stack to erase
 	 */
-<<<<<<< HEAD
 	public void erase(ItemStack stack) {
 		stack.setTag(null);
-=======
-	public void erase(@Nonnull ItemStack stack) {
-		stack.setTagCompound(null);
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	/**
@@ -79,11 +69,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 * @param stack itemStack to operate on
 	 * @param dimensionId dimension Id number
 	 */
-<<<<<<< HEAD
 	public void setDimensionId(ItemStack stack, ResourceLocation dimensionId) {
-=======
-	public void setDimensionId(@Nonnull ItemStack stack, int dimensionId) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 		CompoundNBT nbt;
 		if(Constants.INVALID_PLANET.equals(dimensionId)) {
@@ -92,7 +78,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 			return;
 		}
 
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimensionId);
+		DimensionProperties properties = (DimensionProperties) DimensionManager.getInstance().getDimensionProperties(dimensionId);
 		if(properties == null) {
 			erase(stack);
 			return;
@@ -112,15 +98,9 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 * @param stack stack to get the dimId from
 	 * @return id of the dimension stored or Constants.INVALID_PLANET if invalid
 	 */
-<<<<<<< HEAD
 	public ResourceLocation getDimensionId(ItemStack stack) {
 		if(stack.hasTag())
 			return new ResourceLocation(stack.getTag().getString(dimensionIdIdentifier));
-=======
-	public int getDimensionId(@Nonnull ItemStack stack) {
-		if(stack.hasTagCompound())
-			return stack.getTagCompound().getInteger(dimensionIdIdentifier);
->>>>>>> origin/feature/nuclearthermalrockets
 		return Constants.INVALID_PLANET;
 	}
 
@@ -129,10 +109,9 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 * @param stack stack to get the DimensionProperties object from
 	 * @return DimensionProperties Object of the relevent dimension or null if invalid
 	 */
-<<<<<<< HEAD
 	public DimensionProperties getDimensionProperties(ItemStack stack) {
 		if(stack.hasTag())
-			return DimensionManager.getInstance().getDimensionProperties(new ResourceLocation(stack.getTag().getString(dimensionIdIdentifier)));
+			return (DimensionProperties) DimensionManager.getInstance().getDimensionProperties(new ResourceLocation(stack.getTag().getString(dimensionIdIdentifier)));
 		return null;
 	}
 
@@ -146,24 +125,6 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 		CompoundNBT nbt;
 		if(stack.hasTag())
 			nbt = stack.getTag();
-=======
-	public DimensionProperties getDimensionProperties(@Nonnull ItemStack stack) {
-		if(stack.hasTagCompound())
-			return DimensionManager.getInstance().getDimensionProperties(stack.getTagCompound().getInteger(dimensionIdIdentifier));
-		return null;
-	}
-
-	public Long getUUID(@Nonnull ItemStack stack) {
-		if(stack.hasTagCompound())
-			return stack.getTagCompound().getLong(uuidIdentifier);
-		return null;
-	}
-
-	public void setUUID(@Nonnull ItemStack stack, long uuid) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound())
-			nbt = stack.getTagCompound();
->>>>>>> origin/feature/nuclearthermalrockets
 		else
 			nbt = new CompoundNBT();
 
@@ -172,7 +133,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	}
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list,
+	public void addInformation(@Nonnull ItemStack stack, World player, List<ITextComponent> list,
                                ITooltipFlag bool){
 
 		if(!stack.hasTag()) {
@@ -183,7 +144,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 		}
 		else {
 			if(stack.getDamage()  == 0) {
-				DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(getDimensionId(stack));
+				DimensionProperties props = (DimensionProperties) DimensionManager.getInstance().getDimensionProperties(getDimensionId(stack));
 
 				String unknown = TextFormatting.YELLOW + "???";
 				String dimName = stack.getTag().getString(dimensionNameIdentifier);

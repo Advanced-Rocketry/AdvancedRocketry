@@ -145,11 +145,7 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickableT
 				//Slight adjustment to make Earth 0.9995 into a 1.0
 				energyRecieved = (int) (numPanels * 1.0005d * 2 * insolationPowerMultiplier);
 			}
-<<<<<<< HEAD
 			powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().solarGeneratorMult.get());
-=======
-			powerMadeLastTick = energyRecieved*ARConfiguration.getCurrentConfig().solarGeneratorMult;
->>>>>>> origin/feature/nuclearthermalrockets
 
 			if(powerMadeLastTick != prevPowerMadeLastTick) {
 				prevPowerMadeLastTick = powerMadeLastTick;
@@ -163,50 +159,30 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickableT
 	}
 
 	@Override
-<<<<<<< HEAD
 	public SUpdateTileEntityPacket getUpdatePacket() {
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putInt("amtPwr", powerMadeLastTick);
-=======
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setInteger("amtPwr", powerMadeLastTick);
-		nbt.setBoolean("canRender", this.canRender);
->>>>>>> origin/feature/nuclearthermalrockets
+
 		writeNetworkData(nbt);
 		return new SUpdateTileEntityPacket(pos, 0, nbt);
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		CompoundNBT nbt = pkt.getNbtCompound();
 
 		powerMadeLastTick = nbt.getInt("amtPwr");
-=======
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		NBTTagCompound nbt = pkt.getNbtCompound();
-		powerMadeLastTick = nbt.getInteger("amtPwr");
 		this.canRender = nbt.getBoolean("canRender");
->>>>>>> origin/feature/nuclearthermalrockets
 		readNetworkData(nbt);
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public CompoundNBT getUpdateTag() {
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putInt("powerMadeLastTick", powerMadeLastTick);
 		nbt.putInt("numPanels", numPanels);
+		nbt.putBoolean("canRender", this.canRender);
 		write(nbt);
-=======
-	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setInteger("powerMadeLastTick", powerMadeLastTick);
-		nbt.setInteger("numPanels", numPanels);
-		nbt.setBoolean("canRender", this.canRender);
-		writeToNBT(nbt);
->>>>>>> origin/feature/nuclearthermalrockets
 		return nbt;
 	}
 

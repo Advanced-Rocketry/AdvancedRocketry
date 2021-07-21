@@ -51,63 +51,20 @@ public class RendererRocketAssemblingMachine extends TileEntityRenderer<TileRock
 			double xMax = xOffset + 0.5;
 			double yMax = yOffset + yLocation+ 0.25;
 			double zMax = zOffset + zSize;
-<<<<<<< HEAD
 			float uMin = 0;
 			float vMin = 0;
 			float uMax = 1;
 			float vMax = 1;
-=======
-			double uMin = 0;
-			double vMin = 0;
-			double uMax = 1;
-			double vMax;
->>>>>>> origin/feature/nuclearthermalrockets
 
 			matrix.push();
 			
-			
-<<<<<<< HEAD
+
 			//Draw Supports
 			IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidTexturedManualRenderType(girder));
 			
 			float size = 0.25f;
 			
 			vMax = (float) (yMin/size);
-=======
-			//Draw scanning grid
-			GlStateManager.disableLighting();
-			GlStateManager.disableFog();
-			GlStateManager.enableBlend();
-			if(renderTile.isBuilding())
-				GlStateManager.color(1, 0.5f, 0.5f, .05f);
-			else
-				GlStateManager.color(0.5f, 1, 0.5f, .05f);
-			GlStateManager.disableDepth();
-			GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.01f);
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			
-			bindTexture(grid);
-
-			float min = 0;
-			float maxU = (float)(1*xSize);
-			float maxV = (float)(1*zSize);
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 0xf0, 0xf0);
-			GlStateManager.enableDepth();
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			for(int i = 0; i < 20; i++) {
-				//BOTTOM
-				double offset = i/80d;
-				RenderHelper.renderBottomFaceWithUV(buffer, yOffset + yLocation+offset, xOffset, zOffset, xOffset + xSize, zOffset  + zSize, min, maxU, min, maxV);
-				RenderHelper.renderTopFaceWithUV(buffer, yOffset + yLocation+offset, xOffset, zOffset, xOffset + xSize, zOffset  + zSize, min, maxU, min, maxV);
-				
-				//TOP
-			}
-			Tessellator.getInstance().draw();
-			
-			GlStateManager.disableBlend();
-			GlStateManager.enableLighting();
-			GlStateManager.enableFog();
->>>>>>> origin/feature/nuclearthermalrockets
 			
 			float r = 0.78f, g= 0.5f, b = 0.34f, a = 1f;
 			
@@ -160,8 +117,7 @@ public class RendererRocketAssemblingMachine extends TileEntityRenderer<TileRock
 			RenderHelper.renderSouthFaceWithUV(matrix, round, zMax, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax,1,1,1,1);
 			RenderHelper.renderNorthFaceWithUV(matrix, round, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax,1,1,1,1);
 			RenderHelper.renderTopFaceWithUV(matrix, round, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax,1,1,1,1);
-			
-<<<<<<< HEAD
+
 			//Draw scanning grid
 			if(tile.isBuilding())
 			{
@@ -193,40 +149,6 @@ public class RendererRocketAssemblingMachine extends TileEntityRenderer<TileRock
 			}
 			
 			matrix.pop();
-=======
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderBottomFaceWithUV(buffer, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
-			RenderHelper.renderEastFaceWithUV(buffer, xMax, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax);
-			RenderHelper.renderSouthFaceWithUV(buffer, zMax, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax);
-			RenderHelper.renderNorthFaceWithUV(buffer, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax);
-			RenderHelper.renderTopFaceWithUV(buffer, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
-			Tessellator.getInstance().draw();
-
-            //Draw Supports
-			GlStateManager.color(0.78f, 0.5f, 0.34f, 1f);
-			bindTexture(girder);
-			GlStateManager.enableDepth();
-			GlStateManager.disableBlend();
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-
-			float size = 0.25f;
-
-			vMax = yMin/size;
-
-			RenderHelper.renderCubeWithUV(buffer, xOffset, 0d, zOffset, xOffset + size, yOffset + yLocation, zOffset + size, uMin, uMax, 0d, vMax);
-			RenderHelper.renderCubeWithUV(buffer, xOffset + xSize - size, 0d, zOffset, xOffset  + xSize , yOffset + yLocation, zOffset + size, uMin, uMax, vMin, vMax);
-			RenderHelper.renderCubeWithUV(buffer, xOffset + xSize - size, 0d, zOffset + zSize - size, xOffset  + xSize, yOffset + yLocation, zOffset + zSize, uMin, uMax, vMin, vMax);
-			RenderHelper.renderCubeWithUV(buffer, xOffset, 0d, zOffset + zSize  - size, xOffset + size, yOffset + yLocation, zOffset + zSize, uMin, uMax, vMin, vMax);
-			Tessellator.getInstance().draw();
-
-
-
-			GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.1f);
-			GlStateManager.enableDepth();
-			GlStateManager.enableTexture2D();
-			GlStateManager.enableBlend();
-			GL11.glPopMatrix();
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 	}
 

@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.util;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -238,25 +238,12 @@ public class XMLAsteroidLoader {
 			}
 		}
 
-<<<<<<< HEAD
 		ItemStack stack = ItemStack.EMPTY;
 		Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(splitStr[0].trim()));
 		if(item != null)
 			stack = new ItemStack(item, size);
 
 
-=======
-		ItemStack stack = ItemStack.EMPTY;
-		Block block = Block.getBlockFromName(splitStr[0].trim());
-		if(block == null) {
-			Item item = Item.getByNameOrId(splitStr[0].trim());
-			if(item != null)
-				stack = new ItemStack(item, size, meta);
-		}
-		else
-			stack = new ItemStack(block, size, meta);
-	
->>>>>>> origin/feature/nuclearthermalrockets
 		return stack;
 	}
 }
