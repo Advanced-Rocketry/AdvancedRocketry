@@ -7,12 +7,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
@@ -301,13 +303,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-=======
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		List<ModuleBase> modules = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 
 		modules.add(tabModule);
 
@@ -338,13 +335,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 				List<StackEntry> harvestList = asteroidSmol.getHarvest(lastSeed + lastButton, Math.max(1 - ((Math.min(getDataAmt(DataType.COMPOSITION),2000)  + Math.min(getDataAmt(DataType.MASS), 2000) )/4000f), 0));
 				for(StackEntry entry : harvestList) {
 					//buttonList.add(new ModuleButton((g % 3)*24, 24*(g/3), -2, "",this, TextureResources.tabData, 24, 24));
-<<<<<<< HEAD
-					buttonList.add(new ModuleSlotButton((g % 3)*24 + 1, 24*(g/3) + 1, this, entry.stack, String.valueOf(entry.midpoint) + " +/-  " + String.valueOf(entry.variability), getWorld()).setAdditionalData(-2));
-					buttonList.add(new ModuleText((g % 3)*24 + 1, 24*(g/3) + 1, String.valueOf(entry.midpoint) + "\n+/- " + String.valueOf(entry.variability) , 0xFFFFFF, 0.5f ));
-=======
-					buttonList.add(new ModuleSlotButton((g % 3)*24 + 1, 24*(g/3) + 1, -2, this, entry.stack, entry.midpoint + " +/-  " + entry.variability, getWorld()));
-					buttonList.add(new ModuleText((g % 3)*24 + 1, 24*(g/3) + 1, entry.midpoint + "\n+/- " + entry.variability, 0xFFFFFF, 0.5f ));
->>>>>>> origin/feature/nuclearthermalrockets
+					buttonList.add(new ModuleSlotButton((g % 3)*24 + 1, 24*(g/3) + 1, this, entry.stack, entry.midpoint + " +/-  " + entry.variability, getWorld()).setAdditionalData(-2));
+					buttonList.add(new ModuleText((g % 3)*24 + 1, 24*(g/3) + 1, entry.midpoint + "\n+/- " + entry.variability , 0xFFFFFF, 0.5f ));
 					g++;
 				}
 				
@@ -510,7 +502,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 	@Override
 	public void useNetworkData(PlayerEntity player, Dist side, byte id,
-			CompoundNBT nbt) {
+							   CompoundNBT nbt) {
 		super.useNetworkData(player, side, id, nbt);
 
 		if(id == -1)
@@ -608,11 +600,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
-<<<<<<< HEAD
-	public boolean isUsableByPlayer(PlayerEntity player) {
-=======
-	public boolean isUsableByPlayer(@Nullable EntityPlayer player) {
->>>>>>> origin/feature/nuclearthermalrockets
+	public boolean isUsableByPlayer(@Nullable PlayerEntity player) {
 		return true;
 	}
 	
@@ -677,16 +665,6 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)-1));
 		}
 	}
-<<<<<<< HEAD
-=======
-
-	@Override
-	@Nullable
-	public String getName() {
-		return null;
-	}
-
->>>>>>> origin/feature/nuclearthermalrockets
 	@Override
 	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {

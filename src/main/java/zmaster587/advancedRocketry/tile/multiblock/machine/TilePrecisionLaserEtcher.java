@@ -24,6 +24,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 import javax.annotation.Nonnull;
+import java.util.Iterator;
 import java.util.List;
 
 public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements IModularInventory {
@@ -67,7 +68,6 @@ public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements I
 		List<List<ItemStack>> ingredients = recipe.getPossibleIngredients();
 
 		label77:
-<<<<<<< HEAD
 			for(int ingredientNum = 0; ingredientNum < ingredients.size(); ++ingredientNum) {
 				List<ItemStack> ingredient = (List)ingredients.get(ingredientNum);
 				Iterator var5 = this.getItemInPorts().iterator();
@@ -88,19 +88,6 @@ public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements I
 								this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(((TileEntity)hatch).getPos()), this.world.getBlockState(((TileEntity)hatch).getPos()), 6);
 								continue label77;
 							}
-=======
-		for (List<ItemStack> ingredient : ingredients) {
-			for (IInventory hatch : this.getItemInPorts()) {
-				for (int i = 0; i < hatch.getSizeInventory(); ++i) {
-					ItemStack stackInSlot = hatch.getStackInSlot(i);
-
-					for (ItemStack stack : ingredient) {
-						if ((!stackInSlot.isEmpty() && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.isItemEqual(stack) || stack.getItemDamage() == 32767 && stackInSlot.getItem() == stack.getItem())) && !isLensItem(stack)) {
-							hatch.decrStackSize(i, stack.getCount());
-							hatch.markDirty();
-							this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(((TileEntity) hatch).getPos()), this.world.getBlockState(((TileEntity) hatch).getPos()), 6);
-							continue label77;
->>>>>>> origin/feature/nuclearthermalrockets
 						}
 					}
 				}
@@ -114,19 +101,8 @@ public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements I
 		return new AxisAlignedBB(pos.add(-3,-2,-3),pos.add(3,2,3));
 	}
 
-<<<<<<< HEAD
 	private boolean isLensItem (ItemStack stack) {
 		return ItemTags.getCollection().getOwningTags(stack.getItem()).contains(new ResourceLocation("advancedrocketry:lensPrecisionLaserEtcher"));
-=======
-	private boolean isLensItem (@Nonnull ItemStack stack) {
-		int[] oreIds = OreDictionary.getOreIDs(stack);
-		for (int oreId : oreIds) {
-			if (OreDictionary.getOreName(oreId).contains("lensPrecisionLaserEtcher")) {
-				return true;
-			}
-		}
-		return false;
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 	@Override
 	public SoundEvent getSound() {

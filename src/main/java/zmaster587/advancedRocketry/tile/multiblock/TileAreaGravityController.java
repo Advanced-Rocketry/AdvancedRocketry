@@ -80,15 +80,9 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();//super.getModules(id, player);
 		modules.add(toggleSwitch);
-=======
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<>();//super.getModules(id, player);
-		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
->>>>>>> origin/feature/nuclearthermalrockets
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(sideSelectorModule);
 

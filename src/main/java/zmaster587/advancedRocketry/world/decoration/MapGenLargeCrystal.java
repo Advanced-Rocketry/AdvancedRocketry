@@ -62,12 +62,7 @@ public class MapGenLargeCrystal extends WorldCarver<ProbabilityConfig> {
 
 		final float SHAPE = 0.01f + rand.nextFloat()*0.2f;
 
-<<<<<<< HEAD
 		y = 80;//getHeightValue(x, z, blocks) - 2;
-=======
-			final int startingCurrentEdgeRadius = (int)((SHAPE*(edgeRadius * height )) + ((1f-SHAPE)*edgeRadius));
-			currentEdgeRadius = startingCurrentEdgeRadius;
->>>>>>> origin/feature/nuclearthermalrockets
 
 		currentEdgeRadius = (int)((SHAPE*(edgeRadius * height )) + ((1f-SHAPE)*edgeRadius));
 
@@ -111,11 +106,6 @@ public class MapGenLargeCrystal extends WorldCarver<ProbabilityConfig> {
 
 			currentEdgeRadius = (int)((SHAPE*(edgeRadius * (height - yOff))) + ((1f-SHAPE)*edgeRadius));
 
-<<<<<<< HEAD
-=======
-			currentEdgeRadius = startingCurrentEdgeRadius;
-			//Make some rand noise in the base
->>>>>>> origin/feature/nuclearthermalrockets
 			//Generate the top trapezoid
 			for(int zOff = -numDiag - currentEdgeRadius/2; zOff <= -currentEdgeRadius/2; zOff++) {
 
@@ -195,7 +185,6 @@ public class MapGenLargeCrystal extends WorldCarver<ProbabilityConfig> {
 		int y;
 		if(x > 15 || x < 0 || z > 15 || z < 0)
 			return 0;
-<<<<<<< HEAD
 
 		return blocks.getHeightmap(Type.WORLD_SURFACE_WG).getHeight(x, z);
 	}
@@ -204,11 +193,5 @@ public class MapGenLargeCrystal extends WorldCarver<ProbabilityConfig> {
 	@Override
 	protected boolean func_222708_a(double p_222708_1_, double p_222708_3_, double p_222708_5_, int p_222708_7_) {
 		return false;
-=======
-		for(y = 255; blocks.getBlockState(x, y, z).getBlock() == Blocks.AIR && y > 0; y--) {
-			//System.out.println(y);
-		}
-		return y;
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 }

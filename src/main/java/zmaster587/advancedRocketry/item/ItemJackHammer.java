@@ -29,16 +29,6 @@ public class ItemJackHammer extends ToolItem {
 	public boolean getIsRepairable(@Nonnull ItemStack stackMe, @Nonnull ItemStack stackItem) {
 		return ItemTags.getCollection().getOwningTags(stackItem.getItem()).stream().anyMatch(value -> value.getPath().equals("stickTitanium"));
 	}
-<<<<<<< HEAD
-=======
-
-	@ParametersAreNonnullByDefault
-    public float getStrVsBlock(@Nonnull ItemStack stack, IBlockState state)
-    {
-    	return  state.getMaterial() == Material.IRON || state.getMaterial() == Material.ROCK || state.getMaterial() == MaterialGeode.geode  ? this.efficiencyOnProperMaterial : super.getStrVsBlock(stack, state);
-    	   
-    }
->>>>>>> origin/feature/nuclearthermalrockets
     
 	@Override
     public boolean canHarvestBlock(BlockState blockIn)

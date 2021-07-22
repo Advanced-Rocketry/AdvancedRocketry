@@ -59,12 +59,7 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 	}
 
 	@Override
-<<<<<<< HEAD
 	public int[] getSlotsForFace(Direction side) {
-=======
-	@Nonnull
-	public int[] getSlotsForFace(@Nullable EnumFacing side) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return new int[0];
 	}
 
@@ -257,11 +252,7 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 		//TODO
 		
 		SatelliteBase satellite = getSatelliteFromSlot(0);
-<<<<<<< HEAD
-		if(satellite != null && satellite instanceof SatelliteData && PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(satellite.getDimensionId().get(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
-=======
-		if(satellite instanceof SatelliteData && PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(satellite.getDimensionId(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
->>>>>>> origin/feature/nuclearthermalrockets
+		if(satellite instanceof SatelliteData && PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(satellite.getDimensionId().get(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
 				satellite.performAction(null, world, pos);
 		}
 		

@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.item;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -30,7 +31,6 @@ public class ItemAsteroidChip  extends ItemMultiData {
 	 * Removes any Information and reset the stack to a default state
 	 * @param stack stack to erase
 	 */
-<<<<<<< HEAD
 	public void erase(ItemStack stack) {
 		stack.setTag(null);
 	}
@@ -45,30 +45,13 @@ public class ItemAsteroidChip  extends ItemMultiData {
 		CompoundNBT nbt;
 		if(stack.hasTag())
 			nbt = stack.getTag();
-=======
-	public void erase(@Nonnull ItemStack stack) {
-		stack.setTagCompound(null);
-	}
-
-	public Long getUUID(@Nonnull ItemStack stack) {
-		if(stack.hasTagCompound())
-			return stack.getTagCompound().getLong(uuidIdentifier);
-		return null;
-	}
-
-	public void setUUID(@Nonnull ItemStack stack, long uuid) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound())
-			nbt = stack.getTagCompound();
->>>>>>> origin/feature/nuclearthermalrockets
 		else
 			nbt = new CompoundNBT();
 
 		nbt.putLong(uuidIdentifier,uuid);
 		stack.setTag(nbt);
 	}
-	
-<<<<<<< HEAD
+
 	public String getType(ItemStack stack) {
 		if(stack.hasTag())
 			return stack.getTag().getString(astType);
@@ -79,18 +62,6 @@ public class ItemAsteroidChip  extends ItemMultiData {
 		CompoundNBT nbt;
 		if(stack.hasTag())
 			nbt = stack.getTag();
-=======
-	public String getType(@Nonnull ItemStack stack) {
-		if(stack.hasTagCompound())
-			return stack.getTagCompound().getString(astType);
-		return null;
-	}
-
-	public void setType(@Nonnull ItemStack stack, String type) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound())
-			nbt = stack.getTagCompound();
->>>>>>> origin/feature/nuclearthermalrockets
 		else
 			nbt = new CompoundNBT();
 
@@ -99,7 +70,7 @@ public class ItemAsteroidChip  extends ItemMultiData {
 	}
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List list, ITooltipFlag bool) {
 
 		if(!stack.hasTag()) {
 			list.add(new TranslationTextComponent("msg.unprogrammed"));

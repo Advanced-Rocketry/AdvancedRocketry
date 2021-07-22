@@ -84,13 +84,8 @@ public class RenderAreaGravityController extends TileEntityRenderer<TileAreaGrav
 		entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 		matrix.rotate(new Quaternion(0, (float) tile.getArmRotation(), 0, true));
 		for(int i = 0; i < maxSize; i++) {
-<<<<<<< HEAD
 			matrix.rotate(new Quaternion(0, (float) 360/maxSize, 0, true));
 			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder, "Arm");
-=======
-			GL11.glRotated(360d / maxSize, 0, 1, 0);
-			model.renderOnly("Arm");
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 		matrix.pop();
 	}

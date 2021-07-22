@@ -15,14 +15,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-<<<<<<< HEAD
 import net.minecraft.world.chunk.AbstractChunkProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
-=======
-import net.minecraftforge.oredict.OreDictionary;
->>>>>>> origin/feature/nuclearthermalrockets
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
@@ -40,12 +36,8 @@ import java.util.List;
 
 public class SatelliteOreMapping extends SatelliteBase implements INamedContainerProvider {
 
-<<<<<<< HEAD
 	int blockCenterX, blockCenterZ;
 	public static ArrayList<Item> oreList = new ArrayList<Item>();
-=======
-	public static ArrayList<Integer> oreList = new ArrayList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 
 	private int selectedSlot = -1;
 
@@ -123,24 +115,17 @@ public class SatelliteOreMapping extends SatelliteBase implements INamedContaine
 								//Note:May not work with tileEntities (GT ores)
 								boolean found = false;
 								List<ItemStack> drops;
-<<<<<<< HEAD
 								BlockState state = world.getBlockState(pos);
 
-								if((drops = state.getDrops(new Builder((ServerWorld) world))) != null)
-									for(ItemStack stack : drops) {
-										if(stack.getItem() == block.getItem() && stack.getDamage() == block.getDamage()) {
+                                if (!state.getDrops(new Builder((ServerWorld) world)).isEmpty()) {
+									drops = state.getDrops(new Builder((ServerWorld) world));
+									for (ItemStack stack : drops) {
+										if (stack.getItem() == block.getItem() && stack.getDamage() == block.getDamage()) {
 											oreCount++;
 											found = true;
 										}
-=======
-								IBlockState state = world.getBlockState(pos);
-								drops = state.getBlock().getDrops(world, pos, state, 0);
-								for (ItemStack stack : drops) {
-									if (stack.getItem() == block.getItem() && stack.getItemDamage() == block.getItemDamage()) {
-										oreCount++;
-										found = true;
->>>>>>> origin/feature/nuclearthermalrockets
 									}
+
 								}
 
 								if (!found)
