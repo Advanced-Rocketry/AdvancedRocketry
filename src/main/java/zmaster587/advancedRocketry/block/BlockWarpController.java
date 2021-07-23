@@ -21,19 +21,11 @@ public class BlockWarpController extends BlockTile {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
 		
 		
-		ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-=======
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
-			EntityLivingBase placer, @Nonnull ItemStack stack) {
-		super.onBlockPlacedBy(world, pos, state, placer, stack);
-		
 		ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
->>>>>>> origin/feature/nuclearthermalrockets
 		
 		if(spaceObject instanceof SpaceStationObject) {
 			((SpaceStationObject)spaceObject).setForwardDirection(getFront(state).getOpposite());

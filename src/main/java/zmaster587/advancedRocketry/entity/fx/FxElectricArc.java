@@ -30,40 +30,6 @@ public class FxElectricArc extends SpriteTexturedParticle {
 		this.maxAge = 5;
 	}
 
-<<<<<<< HEAD
-=======
-	@Override
-	public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn,
-			float x1,
-			float rotX, float rotXZ, float rotZ,
-			float rotYZ, float rotXY) {
-
-		Minecraft.getMinecraft().getTextureManager().bindTexture(icon);
-
-		float x = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)x1 - interpPosX);
-		float y = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)x1 - interpPosY);
-		float z = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)x1 - interpPosZ);
-		float f10 = 0.1F * this.particleScale;
-
-
-		//GL11.glEnable(GL11.GL_BLEND);
-		render(worldRendererIn,x,y+ f10 * 2,z, f10, rotX, rotXZ, rotZ, rotYZ, rotXY, 0);
-		render(worldRendererIn,x,y,z, f10, rotX, rotXZ, rotZ, rotYZ, rotXY, 0);
-	}
-
-	private void render(BufferBuilder tess, float x, float y, float z, float scale,
-			float rotX, float rotXZ, float rotZ,
-			float rotYZ, float rotXY, float shearX) {
-		
-		int i = this.getBrightnessForRender(0);
-		int j = i >> 16 & 65535;
-		int k = i & 65535;
-		tess.pos(x - scale * (rotX + rotYZ), y - rotXZ * scale, z - rotZ * scale - rotXY * scale).tex(1,1).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		tess.pos(x + scale * (rotYZ - rotX), y + rotXZ * scale, z - rotZ * scale + rotXY * scale).tex(1,0).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		tess.pos(x + scale * (rotX + rotYZ), y + rotXZ * scale, z + rotZ * scale + rotXY * scale).tex(0,0).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		tess.pos(x + scale * (rotX - rotYZ), y - rotXZ * scale, z + rotZ * scale - rotXY * scale).tex(0,1).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
->>>>>>> origin/feature/nuclearthermalrockets
-
 	public IParticleRenderType getRenderType() {
 		return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 	}

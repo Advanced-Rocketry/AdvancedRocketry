@@ -281,6 +281,11 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
 		}
 		else
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)100) );if(buttonId == redstoneControl) {
+			state = redstoneControl.getState();
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
+		}
+		else
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)100) );
 	}
 

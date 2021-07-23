@@ -17,6 +17,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -36,14 +37,10 @@ import zmaster587.libVulpes.util.ZUtils;
 import java.util.LinkedList;
 import java.util.List;
 
-<<<<<<< HEAD
-public class TileStationGravityController extends TileEntity implements IModularInventory, ITickableTileEntity, INetworkMachine, ISliderBar {
-=======
-public class TileStationGravityController extends TileEntity implements IModularInventory, ITickable, INetworkMachine, ISliderBar, IButtonInventory, IComparatorOverride {
->>>>>>> origin/feature/nuclearthermalrockets
+public class TileStationGravityController extends TileEntity implements IModularInventory, ITickableTileEntity, INetworkMachine, ISliderBar, IButtonInventory, IComparatorOverride {
 
 	private int progress;
-	private RedstoneState state;
+	private ZUtils.RedstoneState state;
 
 	private static int minGravity = 10;
 
@@ -56,15 +53,9 @@ public class TileStationGravityController extends TileEntity implements IModular
 		//numGravPylons = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
 		maxGravBuildSpeed = new ModuleText(6, 25, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.maxaltrate"), 0xaa2020);
 		targetGrav = new ModuleText(6, 35, LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.tgtalt"), 0x202020);
-<<<<<<< HEAD
 		
 		minGravity = ARConfiguration.getCurrentConfig().allowZeroGSpacestations.get() ? 0 : 10;
-=======
-
-		redstoneControl = new ModuleRedstoneOutputButton(174, 4, -1, "", this);
-
-		minGravity = ARConfiguration.getCurrentConfig().allowZeroGSpacestations ? 0 : 10;
->>>>>>> origin/feature/nuclearthermalrockets
+		redstoneControl = new ModuleRedstoneOutputButton(174, 4, "", this);
 	}
 
 	public static int getMinGravity() {
@@ -72,13 +63,8 @@ public class TileStationGravityController extends TileEntity implements IModular
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-=======
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 		modules.add(moduleGrav);
 		//modules.add(numThrusters);
 		modules.add(maxGravBuildSpeed);
@@ -92,38 +78,67 @@ public class TileStationGravityController extends TileEntity implements IModular
 	}
 
 	@Override
-<<<<<<< HEAD
+	public void onInventoryButtonPressed(ModuleButton buttonId) {
+		if(buttonId == redstoneControl) {
+			state = redstoneControl.getState();
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
+		}
+		else
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)100) );
+	}
+	@Override
 	public SUpdateTileEntityPacket getUpdatePacket() {
 		CompoundNBT nbt = write(new CompoundNBT());
 
+
 		SUpdateTileEntityPacket packet = new SUpdateTileEntityPacket(pos, 0, nbt);
 		return packet;
-=======
-	public void onInventoryButtonPressed(int buttonId) {
-		if(buttonId != -1)
-			PacketHandler.sendToServer(new PacketMachine(this, (byte) (buttonId + 100)) );
-		else {
-			state = redstoneControl.getState();
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
-			markDirty();
+	}
+
+	@Override
+	public CompoundNBT getUpdateTag() {
+		return write(new CompoundNBT());
+	}
+
+	@Override
+	public void read(BlockState blkstate, CompoundNBT nbt) {
+		super.read(blkstate, nbt);
+
+		state = ZUtils.RedstoneState.values()[nbt.getByte("redstoneState")];
+		redstoneControl.setRedstoneState(state);
+	}
+
+	@Override
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
+		nbt.putByte("redstoneState", (byte) state.ordinal());
+		return nbt;
+	}
+
+	@Override
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
+		if(id == 2)
+			out.writeByte(state.ordinal());
+	}
+
+	@Override
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
+									CompoundNBT nbt) {
+		if(packetId == 1) {
+			nbt.putLong("id", in.readLong());
+		}
+		else if(packetId == 2) {
+			nbt.putByte("state", in.readByte());
 		}
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbt = writeToNBT(new NBTTagCompound());
-
-		return new SPacketUpdateTileEntity(pos, 0, nbt);
->>>>>>> origin/feature/nuclearthermalrockets
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-		super.onDataPacket(net, pkt);
-<<<<<<< HEAD
-=======
-        readFromNBT(pkt.getNbtCompound());
->>>>>>> origin/feature/nuclearthermalrockets
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+							   CompoundNBT nbt) {
+		if(id == 2) {
+			state = ZUtils.RedstoneState.values()[nbt.getByte("state")];
+			redstoneControl.setRedstoneState(state);
+		}
 	}
 	
 	private void updateText() {
@@ -149,18 +164,14 @@ public class TileStationGravityController extends TileEntity implements IModular
 				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(spaceObject != null) {
-					if (redstoneControl.getState() == RedstoneState.ON)
+					if (redstoneControl.getState() == ZUtils.RedstoneState.ON)
 						((SpaceStationObject) spaceObject).targetGravity = (world.getStrongPower(pos) * 6) + 10;
-					else if (redstoneControl.getState() == RedstoneState.INVERTED)
+					else if (redstoneControl.getState() == ZUtils.RedstoneState.INVERTED)
 						((SpaceStationObject) spaceObject).targetGravity = Math.abs(15 - world.getStrongPower(pos)) * 6 + 10;
 
 					progress = ((SpaceStationObject) spaceObject).targetGravity - minGravity;
 
-<<<<<<< HEAD
-					int targetMultiplier = (ARConfiguration.getCurrentConfig().allowZeroGSpacestations.get()) ? ((SpaceStationObject) object).targetGravity : Math.max(11, ((SpaceStationObject) object).targetGravity);
-=======
-					int targetMultiplier = (ARConfiguration.getCurrentConfig().allowZeroGSpacestations) ? ((SpaceStationObject) spaceObject).targetGravity : Math.max(10, ((SpaceStationObject) spaceObject).targetGravity);
->>>>>>> origin/feature/nuclearthermalrockets
+					int targetMultiplier = (ARConfiguration.getCurrentConfig().allowZeroGSpacestations.get()) ? ((SpaceStationObject) spaceObject).targetGravity : Math.max(11, ((SpaceStationObject) spaceObject).targetGravity);
 					double targetGravity = targetMultiplier/100D;
 					double angVel = spaceObject.getProperties().getGravitationalMultiplier();
 					double acc = 0.001;
@@ -201,60 +212,6 @@ public class TileStationGravityController extends TileEntity implements IModular
 		return true;
 	}
 
-	@Override
-<<<<<<< HEAD
-	public void writeDataToNetwork(PacketBuffer out, byte id) {
-=======
-	public NBTTagCompound getUpdateTag() {
-		return writeToNBT(new NBTTagCompound());
-	}
-
-	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
->>>>>>> origin/feature/nuclearthermalrockets
-		if(id == 0) {
-			out.writeShort(progress);
-		} else if(id == 2)
-			out.writeByte(state.ordinal());
-	}
-
-	@Override
-	public void readDataFromNetwork(PacketBuffer in, byte packetId,
-			CompoundNBT nbt) {
-		if(packetId == 0) {
-			setProgress(0, in.readShort());
-		} else if(packetId == 2) {
-			nbt.setByte("state", in.readByte());
-		}
-	}
-
-	@Override
-<<<<<<< HEAD
-	public void useNetworkData(PlayerEntity player, Dist side, byte id,
-			CompoundNBT nbt) {
-
-=======
-	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt) {
-		if(id == 2) {
-			state = RedstoneState.values()[nbt.getByte("state")];
-			redstoneControl.setRedstoneState(state);
-		}
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setByte("redstoneState", (byte) state.ordinal());
-		return nbt;
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		state = RedstoneState.values()[nbt.getByte("redstoneState")];
-		redstoneControl.setRedstoneState(state);
->>>>>>> origin/feature/nuclearthermalrockets
-	}
 
 
 	@Override
@@ -288,11 +245,11 @@ public class TileStationGravityController extends TileEntity implements IModular
 
 	@Override
 	public int getComparatorOverride() {
-		if(this.world.provider instanceof WorldProviderSpace) {
+		if(DimensionManager.getInstance().isSpaceDimension(world)) {
 			if (!world.isRemote) {
 				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 				if (spaceObject != null) {
-					return (int)((((SpaceStationObject)spaceObject).getProperties().getGravitationalMultiplier() - 0.1)/0.059);
+					return (int)(spaceObject.getOrbitalDistance() + 5)/13;
 				}
 			}
 		}

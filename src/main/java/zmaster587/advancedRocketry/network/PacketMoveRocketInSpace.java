@@ -1,17 +1,12 @@
 package zmaster587.advancedRocketry.network;
 
 import io.netty.buffer.ByteBuf;
-<<<<<<< HEAD
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-=======
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
->>>>>>> origin/feature/nuclearthermalrockets
 import zmaster587.advancedRocketry.util.SpacePosition;
 import zmaster587.libVulpes.network.BasePacket;
 

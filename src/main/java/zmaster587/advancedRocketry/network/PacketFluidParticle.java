@@ -69,14 +69,9 @@ public class PacketFluidParticle extends BasePacket {
 		int numIterations = Minecraft.getInstance().gameSettings.particles == ParticleStatus.ALL ? 5 : (Minecraft.getInstance().gameSettings.particles == ParticleStatus.DECREASED ? 3 : 0);
 		
 		for(int i = 0; i < numIterations;i++) {
-<<<<<<< HEAD
 			InverseTrailFluid fx2 = new InverseTrailFluid(thePlayer.world, fromPos.getX() + 0.1*(0.5 - Math.random()), fromPos.getY() + 0.1*(0.5 - Math.random()), fromPos.getZ() + 0.1*(0.5 - Math.random()), toPos.getX() + 0.5, toPos.getY() + 0.5, toPos.getZ() + 0.5, color, time);;
 			fx2.selectSpriteWithAge(InverseTrailFluid.Factory.spriteSet2);
 			Minecraft.getInstance().particles.addEffect(fx2);
-=======
-			InverseTrailFluid fx2 = new InverseTrailFluid(thePlayer.world, fromPos.getX() + 0.1*(0.5 - Math.random()), fromPos.getY() + 0.1*(0.5 - Math.random()), fromPos.getZ() + 0.1*(0.5 - Math.random()), toPos.getX() + 0.5, toPos.getY() + 0.5, toPos.getZ() + 0.5, color, time);
-			Minecraft.getMinecraft().effectRenderer.addEffect(fx2);
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 	}
 

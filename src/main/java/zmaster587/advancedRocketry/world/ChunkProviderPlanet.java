@@ -2,7 +2,6 @@
 
 package zmaster587.advancedRocketry.world;
 
-<<<<<<< HEAD
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityClassification;
@@ -10,13 +9,6 @@ import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.Util;
-=======
-import net.minecraft.block.BlockFalling;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.init.Biomes;
-import net.minecraft.init.Blocks;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -54,8 +46,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-<<<<<<< HEAD
-=======
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.util.OreGenProperties.OreEntry;
@@ -63,7 +53,6 @@ import zmaster587.advancedRocketry.world.decoration.*;
 import zmaster587.advancedRocketry.world.ore.CustomizableOreGen;
 import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 
->>>>>>> origin/feature/nuclearthermalrockets
 import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
@@ -72,7 +61,6 @@ import java.util.stream.IntStream;
 
 import javax.annotation.Nullable;
 
-<<<<<<< HEAD
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -112,87 +100,10 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 	private static final float[] field_236081_j_ = Util.make(new float[25], (p_236092_0_) -> {
 		for(int i = -2; i <= 2; ++i) {
 			for(int j = -2; j <= 2; ++j) {
-=======
-import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.*;
-
-public class ChunkProviderPlanet implements IChunkGenerator {
-	/** RNG. */
-	protected static final IBlockState STONE = Blocks.STONE.getDefaultState();
-	private final Random rand;
-	private NoiseGeneratorOctaves minLimitPerlinNoise;
-	private NoiseGeneratorOctaves maxLimitPerlinNoise;
-	private NoiseGeneratorOctaves mainPerlinNoise;
-	private NoiseGeneratorPerlin surfaceNoise;
-	private NoiseGeneratorOctaves scaleNoise;
-	private NoiseGeneratorOctaves depthNoise;
-	private NoiseGeneratorOctaves forestNoise;
-	private final World worldObj;
-	private final boolean mapFeaturesEnabled;
-	private final WorldType terrainType;
-	private final double[] heightMap;
-	private final float[] biomeWeights;
-	private ChunkGeneratorSettings settings;
-	private IBlockState oceanBlock = Blocks.WATER.getDefaultState();
-	private IBlockState fillblock = Blocks.STONE.getDefaultState();
-	private double[] depthBuffer = new double[256];
-	private MapGenBase caveGenerator = new MapGenCaveExt();
-	private MapGenStronghold strongholdGenerator = new MapGenStronghold();
-	private MapGenVillage villageGenerator = new MapGenSpaceVillage();
-	private MapGenMineshaft mineshaftGenerator = new MapGenMineshaft();
-	private MapGenScatteredFeature scatteredFeatureGenerator = new MapGenScatteredFeature();
-	private MapGenBase ravineGenerator = new MapGenRavineExt();
-	private StructureOceanMonument oceanMonumentGenerator = new StructureOceanMonument();
-	private Biome[] biomesForGeneration;
-	private double[] mainNoiseRegion;
-	private double[] minLimitRegion;
-	private double[] maxLimitRegion;
-	private double[] depthRegion;
-	protected int heightmapOffset = 0;
-	protected float heightmapMult = 1f;
-	private boolean habitable;
-
-
-	private MapGenCraterSmall craterGeneratorSmall;
-	private MapGenCrater craterGenerator;
-	private MapGenCraterHuge craterGeneratorHuge;
-	private MapGenGeode geodeGenerator;
-	private MapGenVolcano volcanoGenerator;
-	private MapGenSwampTree swampTreeGenerator;
-
-	{
-		caveGenerator = TerrainGen.getModdedMapGen(caveGenerator, CAVE);
-		strongholdGenerator = (MapGenStronghold) TerrainGen.getModdedMapGen(strongholdGenerator, STRONGHOLD);
-		villageGenerator = (MapGenVillage) TerrainGen.getModdedMapGen(villageGenerator, VILLAGE);
-		mineshaftGenerator = (MapGenMineshaft) TerrainGen.getModdedMapGen(mineshaftGenerator, MINESHAFT);
-		scatteredFeatureGenerator = (MapGenScatteredFeature) TerrainGen.getModdedMapGen(scatteredFeatureGenerator, SCATTERED_FEATURE);
-		ravineGenerator = TerrainGen.getModdedMapGen(ravineGenerator, RAVINE);
-	}
-
-	public ChunkProviderPlanet(World worldIn, long seed, boolean mapFeaturesEnabledIn, String p_i46668_5_) {
-		this.worldObj = worldIn;
-		this.terrainType = worldIn.getWorldInfo().getTerrainType();
-		this.rand = new Random(seed);
-		this.minLimitPerlinNoise = new NoiseGeneratorOctaves(this.rand, 16);
-		this.maxLimitPerlinNoise = new NoiseGeneratorOctaves(this.rand, 16);
-		this.mainPerlinNoise = new NoiseGeneratorOctaves(this.rand, 8);
-		this.surfaceNoise = new NoiseGeneratorPerlin(this.rand, 4);
-		this.scaleNoise = new NoiseGeneratorOctaves(this.rand, 10);
-		this.depthNoise = new NoiseGeneratorOctaves(this.rand, 16);
-		this.forestNoise = new NoiseGeneratorOctaves(this.rand, 8);
-		this.heightMap = new double[825];
-		this.biomeWeights = new float[25];
-
-		DimensionProperties dimProps = DimensionManager.getInstance().getDimensionProperties(worldIn.provider.getDimension());
-
-		for (int i = -2; i <= 2; ++i) {
-			for (int j = -2; j <= 2; ++j) {
->>>>>>> origin/feature/nuclearthermalrockets
 				float f = 10.0F / MathHelper.sqrt((float)(i * i + j * j) + 0.2F);
 				p_236092_0_[i + 2 + (j + 2) * 5] = f;
 			}
 		}
-
-<<<<<<< HEAD
 	});
 	private static final BlockState AIR = Blocks.AIR.getDefaultState();
 	private final int verticalNoiseGranularity;
@@ -256,30 +167,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 			this.field_236083_v_ = new SimplexNoiseGenerator(sharedseedrandom);
 		} else {
 			this.field_236083_v_ = null;
-=======
-		if (p_i46668_5_ != null) {
-			this.settings = ChunkGeneratorSettings.Factory.jsonToFactory(p_i46668_5_).build();
-			this.oceanBlock = this.settings.useLavaOceans ? Blocks.LAVA.getDefaultState() : Blocks.WATER.getDefaultState();
-			worldIn.setSeaLevel(dimProps.getSeaLevel());
-		}
-
-		IBlockState oceanBlock = dimProps.getOceanBlock();
-		if(oceanBlock != null) {
-			this.oceanBlock = oceanBlock;
-			if(caveGenerator instanceof MapGenCaveExt)
-				((MapGenCaveExt)caveGenerator).setOceanBlock(this.oceanBlock);
-			if(ravineGenerator instanceof MapGenRavineExt)
-				((MapGenRavineExt)ravineGenerator).setOceanBlock(this.oceanBlock);
-		}
-
-		IBlockState fillBlock = dimProps.getStoneBlock();
-		if(fillBlock != null) {
-			this.fillblock = fillBlock;
-			if(caveGenerator instanceof MapGenCaveExt)
-				((MapGenCaveExt)caveGenerator).setFillerBlock(this.fillblock);
-			if(ravineGenerator instanceof MapGenRavineExt)
-				((MapGenRavineExt)ravineGenerator).setFillerBlock(this.fillblock);
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 
 		this.starts = starts;
@@ -289,7 +176,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		return planetCodec;
 	}
 
-<<<<<<< HEAD
 
 	private DimensionProperties getDimensionProperties()
 	{
@@ -303,99 +189,15 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 	public ChunkGenerator func_230349_a_(long p_230349_1_) {
 		return new ChunkProviderPlanet(this.biomeProvider.getBiomeProvider(p_230349_1_), p_230349_1_, this.dimensionSettings, this.starts, dimensionId);
 	}
-=======
-		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters() && atmDensity <= 0.05)
-			craterGeneratorSmall = new MapGenCraterSmall( (int)((16 +  (8*(1-atmDensity)) )*dimProps.getCraterMultiplier()));
-		else
-			craterGeneratorSmall = null;
-
-		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters())
-			craterGenerator = new MapGenCrater( (int)((250 + (175*(1-atmDensity)) )*dimProps.getCraterMultiplier()), atmDensity < 0.05);
-		else
-			craterGenerator = null;
-
-		if(ARConfiguration.getCurrentConfig().generateCraters && dimProps.canGenerateCraters() && atmDensity == 0)
-			craterGeneratorHuge = new MapGenCraterHuge((int)(200 * dimProps.getCraterMultiplier()));
-		else
-			craterGeneratorHuge = null;
-
-		if(dimProps.canGenerateGeodes() && ARConfiguration.getCurrentConfig().generateGeodes) {
-			geodeGenerator = new MapGenGeode((int)(800 * dimProps.getGeodeMultiplier()));
-		} else
-			geodeGenerator = null;
-
-		if(dimProps.canGenerateVolcanos() && ARConfiguration.getCurrentConfig().generateVolcanos) {
-			volcanoGenerator = new MapGenVolcano((int)(800 * dimProps.getVolcanoMultiplier()));
-		} else
-			volcanoGenerator = null;
-
-		if(!dimProps.canGenerateCaves()) {
-			caveGenerator = null;
-            ravineGenerator = null;
-		}
-
-		//Yes, the trees shouldn't be here. This, however, makes them NOT MAKE WALLS. So they're here
-		swampTreeGenerator = new MapGenSwampTree(10);
->>>>>>> origin/feature/nuclearthermalrockets
 
 	public boolean func_236088_a_(long p_236088_1_, RegistryKey<DimensionSettings> p_236088_3_) {
 		return this.seed == p_236088_1_ && this.dimensionSettings.get().func_242744_a(p_236088_3_);
 	}
 
-<<<<<<< HEAD
 	public void func_242707_a(DynamicRegistries p_242707_1_, StructureManager p_242707_2_, IChunk p_242707_3_, TemplateManager p_242707_4_, long p_242707_5_) {
 		ChunkPos chunkpos = p_242707_3_.getPos();
 		Biome biome = this.biomeProvider.getNoiseBiome((chunkpos.x << 2) + 2, 0, (chunkpos.z << 2) + 2);
 		this.func_242705_a(StructureFeatures.STRONGHOLD, p_242707_1_, p_242707_2_, p_242707_3_, p_242707_4_, p_242707_5_, chunkpos, biome);
-=======
-	public void setBlocksInChunk(int x, int z, ChunkPrimer primer) {
-		byte b0 = 63;
-		//TODO: may break for little planets
-		this.biomesForGeneration = this.worldObj.getBiomeProvider().getBiomesForGeneration(this.biomesForGeneration, x * 4 - 2, z * 4 - 2, 10, 10);
-		this.generateHeightmap(x * 4, 0, z * 4);
-
-		for (int i = 0; i < 4; ++i) {
-			int j = i * 5;
-			int k = (i + 1) * 5;
-
-			for (int l = 0; l < 4; ++l) {
-				int i1 = (j + l) * 33;
-				int j1 = (j + l + 1) * 33;
-				int k1 = (k + l) * 33;
-				int l1 = (k + l + 1) * 33;
-
-				for (int i2 = 0; i2 < 32; ++i2) {
-					double d0 = 0.125D;
-					double d1 = this.heightMap[i1 + i2];
-					double d2 = this.heightMap[j1 + i2];
-					double d3 = this.heightMap[k1 + i2];
-					double d4 = this.heightMap[l1 + i2];
-					double d5 = (this.heightMap[i1 + i2 + 1] - d1) * 0.125D;
-					double d6 = (this.heightMap[j1 + i2 + 1] - d2) * 0.125D;
-					double d7 = (this.heightMap[k1 + i2 + 1] - d3) * 0.125D;
-					double d8 = (this.heightMap[l1 + i2 + 1] - d4) * 0.125D;
-
-					for (int j2 = 0; j2 < 8; ++j2) {
-						double d9 = 0.25D;
-						double d10 = d1;
-						double d11 = d2;
-						double d12 = (d3 - d1) * 0.25D;
-						double d13 = (d4 - d2) * 0.25D;
-
-						for (int k2 = 0; k2 < 4; ++k2) {
-							double d14 = 0.25D;
-							double d16 = (d11 - d10) * 0.25D;
-							double lvt_45_1_ = d10 - d16;
-
-							for (int l2 = 0; l2 < 4; ++l2) {
-								if ((lvt_45_1_ += d16) > 0.0D) {
-									primer.setBlockState(i * 4 + k2, heightmapOffset + i2 * 8 + j2, l * 4 + l2, this.fillblock);
-								}
-								else if (i2 * 8 + j2 < worldObj.getSeaLevel()) {
-									primer.setBlockState(i * 4 + k2, heightmapOffset + i2 * 8 + j2, l * 4 + l2, this.oceanBlock);
-								}
-							}
->>>>>>> origin/feature/nuclearthermalrockets
 
 		for(Supplier<StructureFeature<?, ?>> supplier : biome.getGenerationSettings().getStructures()) {
 			this.func_242705_a(supplier.get(), p_242707_1_, p_242707_2_, p_242707_3_, p_242707_4_, p_242707_5_, chunkpos, biome);
@@ -406,7 +208,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		}
 	}
 
-<<<<<<< HEAD
 	private void func_242705_a(StructureFeature<?, ?> p_242705_1_, DynamicRegistries p_242705_2_, StructureManager p_242705_3_, IChunk p_242705_4_, TemplateManager p_242705_5_, long p_242705_6_, ChunkPos p_242705_8_, Biome p_242705_9_) {
 		StructureStart<?> structurestart = p_242705_3_.getStructureStart(SectionPos.from(p_242705_4_.getPos(), 0), p_242705_1_.field_236268_b_, p_242705_4_);
 		int i = structurestart != null ? structurestart.getRefCount() : 0;
@@ -414,23 +215,10 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		if (structureseparationsettings != null) {
 			StructureStart<?> structurestart1 = p_242705_1_.func_242771_a(p_242705_2_, this, this.biomeProvider, p_242705_5_, p_242705_6_, p_242705_8_, p_242705_9_, i, structureseparationsettings);
 			p_242705_3_.addStructureStart(SectionPos.from(p_242705_4_.getPos(), 0), p_242705_1_.field_236268_b_, structurestart1, p_242705_4_);
-=======
-	public void replaceBiomeBlocks(int x, int z, ChunkPrimer primer, Biome[] biomesIn) {
-		if (!net.minecraftforge.event.ForgeEventFactory.onReplaceBiomeBlocks(this, x, z, primer, this.worldObj)) return;
-		double d0 = 0.03125D;
-		this.depthBuffer = this.surfaceNoise.getRegion(this.depthBuffer, x * 16, z * 16, 16, 16, 0.0625D, 0.0625D, 1.0D);
-
-		for (int i = 0; i < 16; ++i) {
-			for (int j = 0; j < 16; ++j) {
-				Biome biome = biomesIn[j + i * 16];
-				biome.genTerrainBlocks(this.worldObj, this.rand, primer, x * 16 + i, z * 16 + j, this.depthBuffer[j + i * 16]);
-			}
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 
 	}
 
-<<<<<<< HEAD
 	private double func_222552_a(int p_222552_1_, int p_222552_2_, int p_222552_3_, double p_222552_4_, double p_222552_6_, double p_222552_8_, double p_222552_10_) {
 		double d0 = 0.0D;
 		double d1 = 0.0D;
@@ -447,16 +235,12 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 			if (improvednoisegenerator != null) {
 				d0 += improvednoisegenerator.func_215456_a(d4, d5, d6, d7, (double)p_222552_2_ * d7) / d3;
 			}
-=======
-	protected ChunkPrimer getChunkPrimer(int x, int z) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 			ImprovedNoiseGenerator improvednoisegenerator1 = this.field_222569_p.getOctave(i);
 			if (improvednoisegenerator1 != null) {
 				d1 += improvednoisegenerator1.func_215456_a(d4, d5, d6, d7, (double)p_222552_2_ * d7) / d3;
 			}
 
-<<<<<<< HEAD
 			if (i < 8) {
 				ImprovedNoiseGenerator improvednoisegenerator2 = this.field_222570_q.getOctave(i);
 				if (improvednoisegenerator2 != null) {
@@ -469,30 +253,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 		return MathHelper.clampedLerp(d0 / 512.0D, d1 / 512.0D, (d2 / 10.0D + 1.0D) / 2.0D);
 	}
-=======
-		if (this.settings.useCaves && caveGenerator != null) {
-			this.caveGenerator.generate(this.worldObj, x, z, chunkprimer);
-		}
-
-		if (this.settings.useRavines && ravineGenerator != null) {
-			this.ravineGenerator.generate(this.worldObj, x, z, chunkprimer);
-		}
-
-		if(this.craterGeneratorSmall != null)
-			this.craterGeneratorSmall.generate(this.worldObj, x, z, chunkprimer);
-
-		if(this.craterGenerator != null)
-			this.craterGenerator.generate(this.worldObj, x, z, chunkprimer);
-
-		if(this.craterGeneratorHuge != null)
-			this.craterGeneratorHuge.generate(this.worldObj, x, z, chunkprimer);
-		
-		if(this.volcanoGenerator != null)
-			this.volcanoGenerator.generate(this.worldObj, x, z, chunkprimer);
-
-		if(this.geodeGenerator != null)
-			this.geodeGenerator.generate(this.worldObj, x, z, chunkprimer);
->>>>>>> origin/feature/nuclearthermalrockets
 
 	private double[] func_222547_b(int p_222547_1_, int p_222547_2_) {
 		double[] adouble = new double[this.noiseSizeY + 1];
@@ -500,7 +260,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		return adouble;
 	}
 
-<<<<<<< HEAD
 	private void fillNoiseColumn(double[] noiseColumn, int noiseX, int noiseZ) {
 		NoiseSettings noisesettings = this.dimensionSettings.get().getNoise();
 		double d0;
@@ -511,11 +270,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 				d1 = 0.25D;
 			} else {
 				d1 = 1.0D;
-=======
-		if (this.mapFeaturesEnabled && habitable) {
-			if (this.settings.useMineShafts) {
-				this.mineshaftGenerator.generate(this.worldObj, x, z, chunkprimer);
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 		} else {
 			float f = 0.0F;
@@ -540,7 +294,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 						f7 = f5;
 					}
 
-<<<<<<< HEAD
 					float f8 = f4 > f3 ? 0.5F : 1.0F;
 					float f9 = f8 * field_236081_j_[k + 2 + (l + 2) * 5] / (f6 + 2.0F);
 					f += f7 * f9;
@@ -590,22 +343,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 			if (d2 > 0.0D) {
 				double d22 = ((double)i1 - d3) / d2;
 				d7 = MathHelper.clampedLerp(d21, d7, d22);
-=======
-			if (this.settings.useVillages) {
-				this.villageGenerator.generate(this.worldObj, x, z, chunkprimer);
-			}
-
-			if (this.settings.useStrongholds) {
-				this.strongholdGenerator.generate(this.worldObj, x, z, chunkprimer);
-			}
-
-			if (this.settings.useTemples) {
-				this.scatteredFeatureGenerator.generate(this.worldObj, x, z, chunkprimer);
-			}
-
-			if (this.settings.useMonuments) {
-				this.oceanMonumentGenerator.generate(this.worldObj, x, z, chunkprimer);
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 
 			noiseColumn[i1] = d7;
@@ -613,7 +350,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 	}
 
-<<<<<<< HEAD
 	private double func_236095_c_(int p_236095_1_, int p_236095_2_) {
 		double d0 = this.field_236082_u_.getValue((double)(p_236095_1_ * 200), 10.0D, (double)(p_236095_2_ * 200), 1.0D, 0.0D, true);
 		double d1;
@@ -621,18 +357,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 			d1 = -d0 * 0.3D;
 		} else {
 			d1 = d0;
-=======
-	/**
-	 * Generates the chunk at the specified position, from scratch
-	 */
-	public Chunk generateChunk(int x, int z) {
-		ChunkPrimer chunkprimer = getChunkPrimer(x,z);
-		Chunk chunk = new Chunk(this.worldObj, chunkprimer, x, z);
-		byte[] abyte = chunk.getBiomeArray();
-
-		for (int i = 0; i < abyte.length; ++i) {
-			abyte[i] = (byte)Biome.getIdForBiome(this.biomesForGeneration[i]);
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 
 		double d2 = d1 * 24.575625D - 2.0D;
@@ -643,7 +367,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		return this.func_236087_a_(p_222529_1_, p_222529_2_, (BlockState[])null, heightmapType.getHeightLimitPredicate());
 	}*/
 
-<<<<<<< HEAD
 	public IBlockReader func_230348_a_(int p_230348_1_, int p_230348_2_) {
 		BlockState[] ablockstate = new BlockState[this.noiseSizeY * this.verticalNoiseGranularity];
 		this.func_236087_a_(p_230348_1_, p_230348_2_, ablockstate, (Predicate<BlockState>)null);
@@ -655,56 +378,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 		//TODO: add planet specific carving
 	}
-=======
-	//@Override
-	public Chunk generateChunk2(int x, int z) {
-		ChunkPrimer chunkPrimer = getChunkPrimer(x, z);
-		Chunk chunk = new Chunk(this.worldObj, chunkPrimer, x, z);
-		byte[] abyte = chunk.getBiomeArray();
-
-		for (int i = 0; i < abyte.length; ++i) {
-			abyte[i] = (byte)Biome.getIdForBiome(this.biomesForGeneration[i]);
-		}
-
-		chunk.generateSkylightMap();
-		return chunk;
-	}
-
-	private void generateHeightmap(int p_185978_1_, int p_185978_2_, int p_185978_3_) {
-		this.depthRegion = this.depthNoise.generateNoiseOctaves(this.depthRegion, p_185978_1_, p_185978_3_, 5, 5, this.settings.depthNoiseScaleX, this.settings.depthNoiseScaleZ, this.settings.depthNoiseScaleExponent);
-		float f = this.settings.coordinateScale;
-		float f1 = this.settings.heightScale * heightmapMult;
-		this.mainNoiseRegion = this.mainPerlinNoise.generateNoiseOctaves(this.mainNoiseRegion, p_185978_1_, p_185978_2_, p_185978_3_, 5, 33, 5, f / this.settings.mainNoiseScaleX, f1 / this.settings.mainNoiseScaleY, f / this.settings.mainNoiseScaleZ);
-		this.minLimitRegion = this.minLimitPerlinNoise.generateNoiseOctaves(this.minLimitRegion, p_185978_1_, p_185978_2_, p_185978_3_, 5, 33, 5, f, f1, f);
-		this.maxLimitRegion = this.maxLimitPerlinNoise.generateNoiseOctaves(this.maxLimitRegion, p_185978_1_, p_185978_2_, p_185978_3_, 5, 33, 5, f, f1, f);
-		int i = 0;
-		int j = 0;
-
-		for (int k = 0; k < 5; ++k) {
-			for (int l = 0; l < 5; ++l) {
-				float f2 = 0.0F;
-				float f3 = 0.0F;
-				float f4 = 0.0F;
-				int i1 = 2;
-				Biome biome = this.biomesForGeneration[k + 2 + (l + 2) * 10];
-
-				for (int j1 = -2; j1 <= 2; ++j1) {
-					for (int k1 = -2; k1 <= 2; ++k1) {
-						Biome biome1 = this.biomesForGeneration[k + j1 + 2 + (l + k1 + 2) * 10];
-						float f5 = this.settings.biomeDepthOffSet + biome1.getBaseHeight() * this.settings.biomeDepthWeight;
-						float f6 = this.settings.biomeScaleOffset + biome1.getHeightVariation() * this.settings.biomeScaleWeight;
-
-						if (this.terrainType == WorldType.AMPLIFIED && f5 > 0.0F) {
-							f5 = 1.0F + f5 * 2.0F;
-							f6 = 1.0F + f6 * 4.0F;
-						}
-
-						float f7 = this.biomeWeights[j1 + 2 + (k1 + 2) * 5] / (f5 + 2.0F);
-
-						if (biome1.getBaseHeight() > biome.getBaseHeight()) {
-							f7 /= 2.0F;
-						}
->>>>>>> origin/feature/nuclearthermalrockets
 
 	private int func_236087_a_(int p_236087_1_, int p_236087_2_, @Nullable BlockState[] p_236087_3_, @Nullable Predicate<BlockState> p_236087_4_) {
 		int i = Math.floorDiv(p_236087_1_, this.horizontalNoiseGranularity);
@@ -734,24 +407,12 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 					p_236087_3_[k1] = blockstate;
 				}
 
-<<<<<<< HEAD
 				if (p_236087_4_ != null && p_236087_4_.test(blockstate)) {
 					return k1 + 1;
-=======
-				f2 = f2 / f4;
-				f3 = f3 / f4;
-				f2 = f2 * 0.9F + 0.1F;
-				f3 = (f3 * 4.0F - 1.0F) / 8.0F;
-				double d7 = this.depthRegion[j] / 8000.0D;
-
-				if (d7 < 0.0D) {
-					d7 = -d7 * 0.3D;
->>>>>>> origin/feature/nuclearthermalrockets
 				}
 			}
 		}
 
-<<<<<<< HEAD
 		return 0;
 	}
 
@@ -764,28 +425,10 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		} else {
 			blockstate = AIR;
 		}
-=======
-				d7 = d7 * 3.0D - 2.0D;
-
-				if (d7 < 0.0D) {
-					d7 = d7 / 2.0D;
-
-					if (d7 < -1.0D) {
-						d7 = -1.0D;
-					}
-
-					d7 = d7 / 1.4D;
-					d7 = d7 / 2.0D;
-				} else {
-					if (d7 > 1.0D) {
-						d7 = 1.0D;
-					}
->>>>>>> origin/feature/nuclearthermalrockets
 
 		return blockstate;
 	}
 
-<<<<<<< HEAD
 	/**
 	 * Generate the SURFACE part of a chunk
 	 */
@@ -831,39 +474,14 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 						if (j1 <= rand.nextInt(5)) {
 							chunkIn.setBlockState(blockpos$mutable.setPos(blockpos.getX(), l - j1, blockpos.getZ()), Blocks.BEDROCK.getDefaultState(), false);
 						}
-=======
-				++j;
-				double d8 = f3;
-				double d9 = f2;
-				d8 = d8 + d7 * 0.2D;
-				d8 = d8 * (double)this.settings.baseSize / 8.0D;
-				double d0 = (double)this.settings.baseSize + d8 * 4.0D;
-
-				for (int l1 = 0; l1 < 33; ++l1) {
-					double d1 = ((double)l1 - d0) * (double)this.settings.stretchY * 128.0D / 256.0D / d9;
-
-					if (d1 < 0.0D) {
-						d1 *= 4.0D;
->>>>>>> origin/feature/nuclearthermalrockets
 					}
 				}
 
-<<<<<<< HEAD
 				if (flag1) {
 					for(int k1 = 4; k1 >= 0; --k1) {
 						if (k1 <= rand.nextInt(5)) {
 							chunkIn.setBlockState(blockpos$mutable.setPos(blockpos.getX(), k + k1, blockpos.getZ()), Blocks.BEDROCK.getDefaultState(), false);
 						}
-=======
-					double d2 = this.minLimitRegion[i] / (double)this.settings.lowerLimitScale;
-					double d3 = this.maxLimitRegion[i] / (double)this.settings.upperLimitScale;
-					double d4 = (this.mainNoiseRegion[i] / 10.0D + 1.0D) / 2.0D;
-					double d5 = MathHelper.clamp(d2, d3, d4) - d1;
-
-					if (l1 > 29) {
-						double d6 = (float)(l1 - 29) / 3.0F;
-						d5 = d5 * (1.0D - d6) + -10.0D * d6;
->>>>>>> origin/feature/nuclearthermalrockets
 					}
 				}
 			}
@@ -871,7 +489,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		}
 	}
 
-<<<<<<< HEAD
 	public void func_230352_b_(IWorld p_230352_1_, StructureManager p_230352_2_, IChunk p_230352_3_) {
 		ObjectList<StructurePiece> objectlist = new ObjectArrayList<>(10);
 		ObjectList<JigsawJunction> objectlist1 = new ObjectArrayList<>(32);
@@ -981,69 +598,8 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 					j4 = Math.max(0, Math.max(mutableboundingbox.minX - i3, i3 - mutableboundingbox.maxX));
 					k4 = i2 - (mutableboundingbox.minY + (structurepiece instanceof AbstractVillagePiece ? ((AbstractVillagePiece)structurepiece).getGroundLevelDelta() : 0));
 					l4 = Math.max(0, Math.max(mutableboundingbox.minZ - l3, l3 - mutableboundingbox.maxZ));
-=======
-	/**
-	 * Populates chunk with ores etc etc
-	 */
-	@Override
-	public void populate(int x, int z) {
-		BlockFalling.fallInstantly = true;
-		int i = x * 16;
-		int j = z * 16;
-		BlockPos blockpos = new BlockPos(i, 0, j);
-		Biome biome = this.worldObj.getBiome(blockpos.add(16, 0, 16));
-		this.rand.setSeed(this.worldObj.getSeed());
-		long k = this.rand.nextLong() / 2L * 2L + 1L;
-		long l = this.rand.nextLong() / 2L * 2L + 1L;
-		this.rand.setSeed((long)x * k + (long)z * l ^ this.worldObj.getSeed());
-		boolean flag = false;
-		ChunkPos chunkpos = new ChunkPos(x, z);
-
-		//noinspection ConstantConditions
-		net.minecraftforge.event.ForgeEventFactory.onChunkPopulate(true, this, this.worldObj, this.rand, x, z, flag);
-
-		if (this.mapFeaturesEnabled && habitable) {
-			if (this.settings.useMineShafts) {
-				this.mineshaftGenerator.generateStructure(this.worldObj, this.rand, chunkpos);
-			}
-
-			if (this.settings.useVillages) {
-				flag = this.villageGenerator.generateStructure(this.worldObj, this.rand, chunkpos);
-			}
-
-			if (this.settings.useStrongholds) {
-				this.strongholdGenerator.generateStructure(this.worldObj, this.rand, chunkpos);
-			}
-
-			if (this.settings.useTemples) {
-				this.scatteredFeatureGenerator.generateStructure(this.worldObj, this.rand, chunkpos);
-			}
-
-			if (this.settings.useMonuments) {
-				this.oceanMonumentGenerator.generateStructure(this.worldObj, this.rand, chunkpos);
-			}
-		}
-
-		if (false && biome != Biomes.DESERT && biome != Biomes.DESERT_HILLS && this.settings.useWaterLakes && !flag && this.rand.nextInt(this.settings.waterLakeChance) == 0)
-			if (net.minecraftforge.event.terraingen.TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.LAKE)) {
-				int i1 = this.rand.nextInt(16) + 8;
-				int j1 = this.rand.nextInt(256);
-				int k1 = this.rand.nextInt(16) + 8;
-				(new WorldGenLakes(Blocks.WATER)).generate(this.worldObj, this.rand, blockpos.add(i1, j1, k1));
-			}
-
-		if (false && !flag && this.rand.nextInt(this.settings.lavaLakeChance / 10) == 0 && this.settings.useLavaLakes)
-			if (net.minecraftforge.event.terraingen.TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.LAVA)) {
-				int i2 = this.rand.nextInt(16) + 8;
-				int l2 = this.rand.nextInt(this.rand.nextInt(248) + 8);
-				int k3 = this.rand.nextInt(16) + 8;
-
-				if (l2 < this.worldObj.getSeaLevel() || this.rand.nextInt(this.settings.lavaLakeChance / 8) == 0) {
-					(new WorldGenLakes(Blocks.LAVA)).generate(this.worldObj, this.rand, blockpos.add(i2, l2, k3));
->>>>>>> origin/feature/nuclearthermalrockets
 				}
 
-<<<<<<< HEAD
 				objectlistiterator.back(objectlist.size());
 
 				while(objectlistiterator1.hasNext()) {
@@ -1052,18 +608,8 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 					j4 = i2 - jigsawjunction.getSourceGroundY();
 					k4 = l3 - jigsawjunction.getSourceZ();
 					d18 += func_222556_a(k5, j4, k4) * 0.4D;
-=======
-		if (habitable && this.settings.useDungeons)
-			if (net.minecraftforge.event.terraingen.TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.DUNGEON)) {
-				for (int j2 = 0; j2 < this.settings.dungeonChance; ++j2) {
-					int i3 = this.rand.nextInt(16) + 8;
-					int l3 = this.rand.nextInt(256);
-					int l1 = this.rand.nextInt(16) + 8;
-					(new WorldGenDungeons()).generate(this.worldObj, this.rand, blockpos.add(i3, l3, l1));
->>>>>>> origin/feature/nuclearthermalrockets
 				}
 
-<<<<<<< HEAD
 				objectlistiterator1.back(objectlist1.size());
 				BlockState blockstate = this.func_236086_a_(d18, i2);
 				if (blockstate != AIR) {
@@ -1075,26 +621,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 					chunksection.setBlockState(j3, j2, i4, blockstate, false);
 					heightmap.update(j3, i2, i4, blockstate);
 					heightmap1.update(j3, i2, i4, blockstate);
-=======
-		biome.decorate(this.worldObj, this.rand, new BlockPos(i, 0, j));
-		if (net.minecraftforge.event.terraingen.TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.ANIMALS))
-			WorldEntitySpawner.performWorldGenSpawning(this.worldObj, biome, i + 8, j + 8, 16, 16, this.rand);
-		blockpos = blockpos.add(8, 0, 8);
-
-		if (net.minecraftforge.event.terraingen.TerrainGen.populate(this, this.worldObj, this.rand, x, z, flag, net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.ICE)) {
-			for (int k2 = 0; k2 < 16; ++k2) {
-				for (int j3 = 0; j3 < 16; ++j3) {
-					BlockPos blockpos1 = this.worldObj.getPrecipitationHeight(blockpos.add(k2, 0, j3));
-					BlockPos blockpos2 = blockpos1.down();
-
-					if (this.worldObj.canBlockFreezeWater(blockpos2)) {
-						this.worldObj.setBlockState(blockpos2, Blocks.ICE.getDefaultState(), 2);
-					}
-
-					if (this.worldObj.canSnowAt(blockpos1, true)) {
-						this.worldObj.setBlockState(blockpos1, Blocks.SNOW_LAYER.getDefaultState(), 2);
-					}
->>>>>>> origin/feature/nuclearthermalrockets
 				}
 			}
 		}
@@ -1148,7 +674,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		return getDimensionProperties().getSeaLevel();
 	}
 
-<<<<<<< HEAD
 	public List<MobSpawnInfo.Spawners> func_230353_a_(Biome p_230353_1_, StructureManager p_230353_2_, EntityClassification p_230353_3_, BlockPos p_230353_4_) {
 		if (p_230353_2_.getStructureStart(p_230353_4_, true, Structure.SWAMP_HUT).isValid()) {
 			if (p_230353_3_ == EntityClassification.MONSTER) {
@@ -1157,21 +682,9 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 			if (p_230353_3_ == EntityClassification.CREATURE) {
 				return Structure.SWAMP_HUT.getCreatureSpawnList();
-=======
-	@Override
-	public void recreateStructures(Chunk chunkIn, int x, int z) {
-		if (this.mapFeaturesEnabled || !habitable) {
-			if (this.settings.useMineShafts) {
-				this.mineshaftGenerator.generate(this.worldObj, x, z, null);
-			}
-
-			if (this.settings.useVillages) {
-				this.villageGenerator.generate(this.worldObj, x, z, null);
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 		}
 
-<<<<<<< HEAD
 		if (p_230353_3_ == EntityClassification.MONSTER) {
 			if (p_230353_2_.getStructureStart(p_230353_4_, false, Structure.PILLAGER_OUTPOST).isValid()) {
 				return Structure.PILLAGER_OUTPOST.getSpawnList();
@@ -1183,22 +696,9 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 
 			if (p_230353_2_.getStructureStart(p_230353_4_, true, Structure.FORTRESS).isValid()) {
 				return Structure.FORTRESS.getSpawnList();
-=======
-			if (this.settings.useStrongholds) {
-				this.strongholdGenerator.generate(this.worldObj, x, z, null);
-			}
-
-			if (this.settings.useTemples) {
-				this.scatteredFeatureGenerator.generate(this.worldObj, x, z, null);
-			}
-
-			if (this.settings.useMonuments) {
-				this.oceanMonumentGenerator.generate(this.worldObj, x, z, null);
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 		}
 
-<<<<<<< HEAD
 		return super.func_230353_a_(p_230353_1_, p_230353_2_, p_230353_3_, p_230353_4_);
 	}
 
@@ -1211,40 +711,6 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 			SharedSeedRandom sharedseedrandom = new SharedSeedRandom();
 			sharedseedrandom.setDecorationSeed(p_230354_1_.getSeed(), i << 4, j << 4);
 			WorldEntitySpawner.performWorldGenSpawning(p_230354_1_, biome, i, j, sharedseedrandom);
-=======
-	@Override
-	@Nullable
-	public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position, boolean findUnexplored) {
-		if (!this.mapFeaturesEnabled || !habitable) {
-			return null;
-		} else if ("Stronghold".equals(structureName) && this.strongholdGenerator != null) {
-			return this.strongholdGenerator.getNearestStructurePos(worldIn, position, findUnexplored);
-		} else if ("Monument".equals(structureName) && this.oceanMonumentGenerator != null) {
-			return this.oceanMonumentGenerator.getNearestStructurePos(worldIn, position, findUnexplored);
-		} else if ("Village".equals(structureName) && this.villageGenerator != null) {
-			return this.villageGenerator.getNearestStructurePos(worldIn, position, findUnexplored);
-		} else if ("Mineshaft".equals(structureName) && this.mineshaftGenerator != null) {
-			return this.mineshaftGenerator.getNearestStructurePos(worldIn, position, findUnexplored);
-		} else {
-			return "Temple".equals(structureName) && this.scatteredFeatureGenerator != null ? this.scatteredFeatureGenerator.getNearestStructurePos(worldIn, position, findUnexplored) : null;
-		}
-	}
-
-	@Override
-	public boolean isInsideStructure(World worldIn, String structureName, BlockPos pos) {
-		if (!this.mapFeaturesEnabled || !habitable) {
-			return false;
-		} else if ("Stronghold".equals(structureName) && this.strongholdGenerator != null) {
-			return this.strongholdGenerator.isInsideStructure(pos);
-		} else if ("Monument".equals(structureName) && this.oceanMonumentGenerator != null) {
-			return this.oceanMonumentGenerator.isInsideStructure(pos);
-		} else if ("Village".equals(structureName) && this.villageGenerator != null) {
-			return this.villageGenerator.isInsideStructure(pos);
-		} else if ("Mineshaft".equals(structureName) && this.mineshaftGenerator != null) {
-			return this.mineshaftGenerator.isInsideStructure(pos);
-		}	else {
-			return "Temple".equals(structureName) && this.scatteredFeatureGenerator != null && this.scatteredFeatureGenerator.isInsideStructure(pos);
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 	}
 }

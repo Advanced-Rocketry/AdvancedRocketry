@@ -1,14 +1,10 @@
 package zmaster587.advancedRocketry.entity.fx;
 
-<<<<<<< HEAD
-
 import net.minecraft.client.particle.IAnimatedSprite;
 import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
-=======
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -32,14 +28,9 @@ public class InverseTrailFluid extends InverseTrailFx {
 		this.particleRed = (((color >> 16) & 0xFF)/255f) *intensity;
 		this.particleGreen = (((color >> 8) & 0xFF)/255f) *intensity;
 		this.particleBlue = ((color& 0xFF)/255f) *intensity;
-		
-<<<<<<< HEAD
+
         this.maxAge = time;
         this.particleScale = (float) (this.rand.nextFloat() * 0.25F) + 0.75f;
-=======
-        this.particleMaxAge = time;
-        this.particleScale = (this.rand.nextFloat() * 0.25F) + 0.75f;
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 	
 	@Override

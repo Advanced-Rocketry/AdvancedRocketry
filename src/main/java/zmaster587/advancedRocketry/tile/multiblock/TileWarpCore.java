@@ -18,11 +18,8 @@ import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.ZUtils;
-<<<<<<< HEAD
-=======
 
 import javax.annotation.Nonnull;
->>>>>>> origin/feature/nuclearthermalrockets
 
 public class TileWarpCore extends TileMultiBlock {
 	public TileWarpCore() {
@@ -47,17 +44,10 @@ public class TileWarpCore extends TileMultiBlock {
 	};
 
 	private SpaceStationObject getSpaceObject() {
-<<<<<<< HEAD
 		if(station == null && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceStationObject)
 				station = (SpaceStationObject) object;
-=======
-		if(station == null && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
-			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(spaceObject instanceof SpaceStationObject)
-				station = (SpaceStationObject) spaceObject;
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 		return station;
 	}
@@ -79,24 +69,16 @@ public class TileWarpCore extends TileMultiBlock {
 		if(itemInPorts.isEmpty() /*&& !worldObj.isRemote*/) {
 			attemptCompleteStructure(world.getBlockState(pos));
 		}
-		
-<<<<<<< HEAD
+
 		if(getSpaceObject() == null || (getSpaceObject().getMaxFuelAmount() - getSpaceObject().getFuelAmount() < ARConfiguration.getCurrentConfig().fuelPointsPerDilithium.get()))
-=======
-		if(getSpaceObject() == null || (getSpaceObject().getMaxFuelAmount() - getSpaceObject().getFuelAmount()) < ARConfiguration.getCurrentConfig().fuelPointsPerDilithium)
->>>>>>> origin/feature/nuclearthermalrockets
 			return;
 		for(IInventory inv : itemInPorts) {
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				ItemStack stack = inv.getStackInSlot(i).copy();
 				stack.setCount(1);
 				int amt = 0;
-<<<<<<< HEAD
 				if(!stack.isEmpty() && ItemTags.getCollection().getOwningTags(stack.getItem()).stream().anyMatch(value -> { return value.getPath().equalsIgnoreCase("gems/dilithium"); }) ) {
 					int stackSize = stack.getCount();
-=======
-				if(!stack.isEmpty() && ZUtils.isItemInOreDict(stack, "gemDilithium")) {
->>>>>>> origin/feature/nuclearthermalrockets
 					if(!world.isRemote)
 						amt = getSpaceObject().addFuel(ARConfiguration.getCurrentConfig().fuelPointsPerDilithium.get());
 					inv.decrStackSize(i, amt/ARConfiguration.getCurrentConfig().fuelPointsPerDilithium.get());

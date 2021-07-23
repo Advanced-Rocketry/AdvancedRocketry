@@ -38,13 +38,8 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 	public SatelliteBiomeChanger() {
 		super();
 		radius = 4;
-<<<<<<< HEAD
 		toChangeList = new LinkedList<HashedBlockPosition>();
 		discoveredBiomes = new HashSet<ResourceLocation>();
-=======
-		toChangeList = new LinkedList<>();
-		discoveredBiomes = new HashSet<>();
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	public void setBiome(int biomeId) {
@@ -59,14 +54,8 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 		return discoveredBiomes;
 	}
 
-<<<<<<< HEAD
 	public void addBiome(ResourceLocation biome) {
-		
-=======
-	public void addBiome(int biome) {
-		byte byteBiome = (byte)biome;
 
->>>>>>> origin/feature/nuclearthermalrockets
 		if(!AdvancedRocketryBiomes.instance.getBlackListedBiomes().contains(biome))
 			discoveredBiomes.add(biome);
 	}
@@ -92,13 +81,8 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean isAcceptableControllerItemStack(ItemStack stack) {
 		return false; //!stack.isEmpty() && stack.getItem() instanceof ItemBiomeChanger;
-=======
-	public boolean isAcceptableControllerItemStack(@Nonnull ItemStack stack) {
-		return !stack.isEmpty() && stack.getItem() instanceof ItemBiomeChanger;
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 
@@ -110,14 +94,8 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 		if(world != null) {
 
 			for(int i = 0; i < 10; i++) {
-<<<<<<< HEAD
 				if(world.getGameTime() % 1 == 0 && !toChangeList.isEmpty()) {
-					if(battery.extractEnergy(120, true) == 120) {
-=======
-				//TODO: Better imp
-				if(world.getTotalWorldTime() % 1 == 0 && !toChangeList.isEmpty()) {
-					if(battery.extractEnergy(120, false) == 120 ) {
->>>>>>> origin/feature/nuclearthermalrockets
+					if(battery.extractEnergy(120, false) == 120) {
 						HashedBlockPosition pos = toChangeList.remove(world.rand.nextInt(toChangeList.size()));
 
 						BiomeHandler.changeBiome(world, biomeId, pos.getBlockPos());
@@ -226,15 +204,9 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 
 		ListNBT biomeList = nbt.getList("biomeList", NBT.TAG_STRING);
 		discoveredBiomes.clear();
-<<<<<<< HEAD
-		
 		
 		for(int i = 0; i < array.length; i ++) {
 			discoveredBiomes.add(new ResourceLocation(biomeList.getString(i)));
-=======
-		for (int value : array) {
-			discoveredBiomes.add((byte) value);
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 	}
 }

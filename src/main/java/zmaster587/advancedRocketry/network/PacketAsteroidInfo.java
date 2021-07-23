@@ -64,17 +64,8 @@ public class PacketAsteroidInfo extends BasePacket {
 		int size = packetBuffer.readInt();
 		for(int i = 0; i < size; i++)
 		{
-<<<<<<< HEAD
 			asteroid.itemStacks.add(packetBuffer.readItemStack());
-			asteroid.stackProbabilites.add(packetBuffer.readFloat());
-=======
-			try {
-				asteroid.itemStacks.add(packetBuffer.readItemStack());
-				asteroid.stackProbabilities.add(packetBuffer.readFloat());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
->>>>>>> origin/feature/nuclearthermalrockets
+			asteroid.stackProbabilities.add(packetBuffer.readFloat());
 		}
 	}
 

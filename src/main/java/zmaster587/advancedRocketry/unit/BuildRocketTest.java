@@ -41,15 +41,9 @@ public class BuildRocketTest extends BaseTest {
 	 * Check for same position
 	 */
 
-<<<<<<< HEAD
 	BlockPos rocketBuilderPos;
 	ResourceLocation originalWorldId;
 	BlockPos originalPos;
-=======
-	private BlockPos rocketBuilderPos;
-	private int originalWorldId;
-	private BlockPos originalPos;
->>>>>>> origin/feature/nuclearthermalrockets
 	
 	BuildRocketTest()
 	{

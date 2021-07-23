@@ -1,13 +1,8 @@
 package zmaster587.advancedRocketry.tile;
 
 import net.minecraft.block.Block;
-<<<<<<< HEAD
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-=======
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -22,6 +17,7 @@ import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.ZUtils;
@@ -147,13 +143,8 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 		world.addEntity(rocket);
 		CompoundNBT nbtdata = new CompoundNBT();
 
-<<<<<<< HEAD
 		rocket.writeUnlessRemoved(nbtdata);
 		PacketHandler.sendToNearby(new PacketEntity((INetworkEntity)rocket, (byte)0, nbtdata), rocket.world, this.pos, 64);
-=======
-		rocket.writeToNBT(nbtdata);
-		PacketHandler.sendToNearby(new PacketEntity(rocket, (byte)0, nbtdata), rocket.world.provider.getDimension(), this.pos, 64);
->>>>>>> origin/feature/nuclearthermalrockets
 
 		stats.reset();
 		this.status = ErrorCodes.UNSCANNED;
@@ -253,13 +244,9 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 								} else if (block instanceof BlockBipropellantFuelTank) {
 									fuelCapacityBipropellant += (((IFuelTank) block).getMaxFill(world, currPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
 								} else if(block instanceof BlockOxidizerFuelTank) {
-<<<<<<< HEAD
 									fuelCapacityOxidizer += (((IFuelTank) block).getMaxFill(world, currPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
-=======
-									fuelCapacityOxidizer += (((IFuelTank) block).getMaxFill(world, currPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);
 								} else if(block instanceof BlockNuclearFuelTank) {
-									fuelCapacityNuclearWorkingFluid += (((IFuelTank) block).getMaxFill(world, currPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier);
->>>>>>> origin/feature/nuclearthermalrockets
+									fuelCapacityNuclearWorkingFluid += (((IFuelTank) block).getMaxFill(world, currPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
 								}
 							}
 
@@ -326,13 +313,8 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public float getNeededFuel(FuelType fuelType) {
 		return getAcceleration(DimensionManager.getInstance().getDimensionProperties(world).getGravitationalMultiplier()) > 0 ? stats.getFuelRate(fuelType) : 0;
-=======
-	public float getNeededFuel(@Nonnull FuelType fuelType) {
-		return getAcceleration(DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier()) > 0 ? stats.getFuelRate(fuelType) : 0;
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	//No additional scanning is needed

@@ -39,12 +39,7 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 	}
 
 	@Override
-<<<<<<< HEAD
 	public int[] getSlotsForFace(Direction side) {
-=======
-	@Nonnull
-	public int[] getSlotsForFace(@Nullable EnumFacing side) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return new int[] {};
 	}
 
@@ -54,7 +49,6 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 	}
 
 	@Override
-<<<<<<< HEAD
 	public int fill(FluidStack resource, FluidAction doFill) {
 
 		if(canFill(resource.getFluid()))
@@ -63,8 +57,6 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 	}
 
 	@Override
-=======
->>>>>>> origin/feature/nuclearthermalrockets
 	public boolean canFill(Fluid fluid) {
 		return FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.oxygenStill.get()) || FluidUtils.areFluidsSameType(fluid, AdvancedRocketryFluids.hydrogenStill.get());
 	}	
@@ -77,13 +69,8 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 	@Override
 	public boolean canPerformFunction() {
 		if(!world.isRemote) {
-<<<<<<< HEAD
 			for( Object player : this.world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(pos, pos.add(1,2,1)))) {
 				ItemStack stack = ((PlayerEntity)player).getItemStackFromSlot(EquipmentSlotType.CHEST);
-=======
-			for( EntityPlayer player : this.world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos, pos.add(1,2,1)))) {
-				ItemStack stack = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
->>>>>>> origin/feature/nuclearthermalrockets
 
 				if(!stack.isEmpty()) {
 					IFillableArmor fillable = null;
@@ -98,14 +85,9 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 						int amtFluid = fillable.getMaxAir(stack) - fillable.getAirRemaining(stack);
 						FluidStack fluidStack = this.drain(amtFluid, FluidAction.SIMULATE);
 
-<<<<<<< HEAD
 						if(amtFluid > 0 &&
 								fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.oxygenStill.get()) && fluidStack.getAmount() > 0)  {
 							FluidStack fstack = this.drain(amtFluid, FluidAction.EXECUTE);
-=======
-						if(amtFluid > 0 && fluidStack != null && FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.fluidOxygen) && fluidStack.amount > 0)  {
-							FluidStack fstack = this.drain(amtFluid, true);
->>>>>>> origin/feature/nuclearthermalrockets
 							this.markDirty();
 							world.markChunkDirty(getPos(), this);
 							fillable.increment(stack, fstack.getAmount());
@@ -116,11 +98,7 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 
 				//Check for H2 fill (possibly merge with O2 fill
 				//Fix conflict with O2 fill
-<<<<<<< HEAD
 				if(this.tank.getFluid() != null && !FluidUtils.areFluidsSameType(this.tank.getFluid().getFluid(), AdvancedRocketryFluids.oxygenStill.get()) && stack != null && stack.getItem() instanceof IModularArmor) {
-=======
-				if(this.tank.getFluid() != null && !FluidUtils.areFluidsSameType(this.tank.getFluid().getFluid(), AdvancedRocketryFluids.fluidOxygen) && !stack.isEmpty() && stack.getItem() instanceof IModularArmor) {
->>>>>>> origin/feature/nuclearthermalrockets
 					IInventory inv = ((IModularArmor)stack.getItem()).loadModuleInventory(stack);
 
 					FluidStack fluidStack = this.drain(100, FluidAction.SIMULATE);
@@ -160,13 +138,8 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		ArrayList<ModuleBase> modules = new ArrayList<ModuleBase>();
-=======
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		ArrayList<ModuleBase> modules = new ArrayList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 
 		modules.add(new ModuleSlotArray(50, 21, this, 0, 1));
 		modules.add(new ModuleSlotArray(50, 57, this, 1, 2));

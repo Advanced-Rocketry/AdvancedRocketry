@@ -26,11 +26,7 @@ public class TrailFx extends InverseTrailFx {
         this.particleGreen = .4F + chroma;
         this.particleBlue = .4F + chroma;
         this.setSize(0.12F, 0.12F);
-<<<<<<< HEAD
         this.particleScale = this.rand.nextFloat() * 0.6F + 2F;
-=======
-        this.particleScale = this.rand.nextFloat() * 0.6F + 6F;
->>>>>>> origin/feature/nuclearthermalrockets
         this.motionX = motx;
         this.motionY = moty;
         this.motionZ = motz;

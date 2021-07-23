@@ -97,43 +97,29 @@ public class TileFluidTank extends TileFluidHatch {
 	public FluidStack drain(int maxDrain, FluidAction doDrain) {
 		IFluidHandler handler = this.getFluidTankInDirection(Direction.UP);
 
-<<<<<<< HEAD
 		FluidStack stack = null;
-		if(handler != null && handler.getFluidInTank(0) != null && 
-=======
-		FluidStack fStack = null;
-		if(handler != null && handler.getTankProperties()[0].getContents() != null && 
->>>>>>> origin/feature/nuclearthermalrockets
-				fluidTank.getFluid() != null && fluidTank.getFluid().getFluid() ==
+		if(handler != null && !handler.getFluidInTank(0).isEmpty() &&
+				!fluidTank.getFluid().isEmpty() && fluidTank.getFluid().getFluid() ==
 				handler.getFluidInTank(0).getFluid()) {
 
-			fStack = handler.drain(maxDrain, doDrain);
+			stack = handler.drain(maxDrain, doDrain);
 		}
-<<<<<<< HEAD
-		if(stack != null)
+		if(!stack.isEmpty())
 			return stack;
 
 		FluidStack stack2 = super.drain(maxDrain - (stack != null ? stack.getAmount() : 0), doDrain);
 
-		if(stack != null && stack2 != null)
+		if(!stack.isEmpty() && stack2.isEmpty())
 			stack2.setAmount(stack2.getAmount() + stack.getAmount());
 
 		
-		if(stack2 != null && doDrain.execute()) {
-=======
-		if(fStack != null)
-			return fStack;
-
-		FluidStack fStack2 = super.drain(maxDrain, doDrain);
-
-		if(fStack2 != null && doDrain) {
->>>>>>> origin/feature/nuclearthermalrockets
+		if(stack2.isEmpty()) {
 			fluidChanged = true;
 		}
 		checkForUpdate();
 		
 		
-		return fStack2;
+		return stack2;
 	}
 
 	@Override
@@ -154,15 +140,11 @@ public class TileFluidTank extends TileFluidHatch {
 		return null;
 	}
 	
-	private boolean canFill(FluidStack fStack)
+	private boolean canFill(FluidStack stack)
 	{
-		FluidStack fStack2 = fluidTank.getFluid();
-		
-<<<<<<< HEAD
+		FluidStack stack2 = fluidTank.getFluid();
+
 		return stack2.isEmpty() || (stack2.getFluid() == stack.getFluid());
-=======
-		return fStack2 == null || (fStack2.getFluid() == fStack.getFluid());
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override

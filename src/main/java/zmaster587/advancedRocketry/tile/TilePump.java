@@ -78,15 +78,9 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 				TileEntity tile  = world.getTileEntity(newBlock);
 				if(tile != null && tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite()).isPresent())
 				{
-<<<<<<< HEAD
 					IFluidHandler cap = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite()).orElse(null);
 					FluidStack stack =  tank.getFluid().copy();
 					stack.setAmount((int)Math.min(tank.getFluid().getAmount(), 1000));
-=======
-					IFluidHandler cap = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite());
-					FluidStack stack = tank.getFluid().copy();
-					stack.amount = Math.min(tank.getFluid().amount, 1000);
->>>>>>> origin/feature/nuclearthermalrockets
 					//Perform the drain
 					cap.fill(tank.drain(cap.fill(stack, FluidAction.SIMULATE), FluidAction.EXECUTE), FluidAction.EXECUTE);
 					
@@ -115,7 +109,6 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 				return;
 			
 			BlockPos nextPos = getNextBlockLocation();
-<<<<<<< HEAD
 			if(nextPos != null)
 			{
 				if(canFitFluid(nextPos))
@@ -127,21 +120,9 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 					{
 						Fluid stack = ((FlowingFluidBlock)worldBlock).pickupFluid(world, nextPos, state);
 
-						if(stack != null)
+						if(stack.getFluid() != null)
 							tank.fill(new FluidStack(stack, 1000), FluidAction.EXECUTE);
 						int colour = ((FlowingFluidBlock)worldBlock).getFluid().getAttributes().getColor();
-=======
-			if(nextPos != null) {
-				if(canFitFluid(nextPos)) {
-					Block worldBlock = world.getBlockState(nextPos).getBlock();
-					Material mat = world.getBlockState(nextPos).getMaterial();
-					if(worldBlock instanceof IFluidBlock) {
-						FluidStack fStack = ((IFluidBlock)worldBlock).drain(world, nextPos, true);
-
-						if(fStack != null)
-							tank.fill(fStack, true);
-						int colour = ((IFluidBlock)worldBlock).getFluid().getColor();
->>>>>>> origin/feature/nuclearthermalrockets
 						if(mat == Material.LAVA)
 							colour = 0xFFbd3718;
 						
@@ -154,7 +135,6 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 
 	private boolean canFitFluid(BlockPos pos) {
 		Block worldBlock = world.getBlockState(pos).getBlock();
-<<<<<<< HEAD
 		if(worldBlock instanceof FlowingFluidBlock)
 		{
 			// Can we put it into the tank?
@@ -162,11 +142,6 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 			{
 				return true;
 			}
-=======
-		if(worldBlock instanceof IFluidBlock) {
-			// Can we put it into the tank?
-			return tank.getFluid() == null || tank.getFluid().getFluid() == ((IFluidBlock) worldBlock).getFluid();
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 		return false;
 	}
@@ -198,7 +173,6 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 
 		while(!queue.isEmpty()) {
 			BlockPos nextElement = queue.poll();
-<<<<<<< HEAD
 			if(visited.contains(nextElement) || !nextElement.withinDistance(new Vector3i(pos.getX(), nextElement.getY(), pos.getZ()), RANGE) )
 				continue;
 
@@ -208,14 +182,6 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 			{
 				if(fluid.isEquivalentTo(Fluids.EMPTY) || ((FlowingFluidBlock)worldBlock).getFluid().isEquivalentTo(fluid))
 				{
-=======
-			if(visited.contains(nextElement) || nextElement.getDistance(pos.getX(), nextElement.getY(), pos.getZ()) > RANGE)
-				continue;
-
-			Block worldBlock = world.getBlockState(nextElement).getBlock();
-			if(worldBlock instanceof IFluidBlock) {
-				if(fluid == null || ((IFluidBlock)worldBlock).getFluid() == fluid) {
->>>>>>> origin/feature/nuclearthermalrockets
 					//only add drainable fluids, allow chaining along flowing fluid tho
 					if(((FlowingFluidBlock)worldBlock).getFluidState(state).isSource())
 						cache.add(0, nextElement);
@@ -253,15 +219,10 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModuleLiquidIndicator(27, 18, this));
 		return modules;
-=======
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		return new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override

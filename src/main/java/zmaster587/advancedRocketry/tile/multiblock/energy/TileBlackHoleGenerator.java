@@ -130,10 +130,6 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 			attemptFire();
 		}
 
-<<<<<<< HEAD
-=======
-		@Nonnull
->>>>>>> origin/feature/nuclearthermalrockets
 		private ItemStack consumeItem()
 		{
 			for (IInventory i : getItemInPorts())
@@ -150,13 +146,8 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 			}
 			return ItemStack.EMPTY;
 		}
-<<<<<<< HEAD
 
 		private int getTimeFromStack(ItemStack stack)
-=======
-		
-		private int getTimeFromStack(@Nonnull ItemStack stack)
->>>>>>> origin/feature/nuclearthermalrockets
 		{
 			for(Entry<ItemStack, Integer>  i : ARConfiguration.getCurrentConfig().blackHoleGeneratorBlocks.entrySet()) {
 				if(i.getKey().getItem() == stack.getItem() && i.getKey().getDamage() == stack.getDamage())
@@ -216,9 +207,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 				return;
 
 			if(!world.isRemote) {
-				if(isAroundBlackHole())
-				{
-<<<<<<< HEAD
+				if(isAroundBlackHole()) {
 					float energyRecieved = 0;
 
 
@@ -227,16 +216,6 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 
 					energyRecieved = last_usage > this.world.getGameTime() ? 500f : 0f;
 					powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().blackHolePowerMultiplier.get());
-=======
-					float energyReceived;
-					
-					
-					//Check to see if we're ready for another injection
-					attemptFire();
-					
-					energyReceived = last_usage > this.world.getTotalWorldTime() ? 500f : 0f;
-					powerMadeLastTick = (int) (energyReceived*ARConfiguration.getCurrentConfig().blackHolePowerMultiplier);
->>>>>>> origin/feature/nuclearthermalrockets
 
 					if(powerMadeLastTick != prevPowerMadeLastTick) {
 						prevPowerMadeLastTick = powerMadeLastTick;

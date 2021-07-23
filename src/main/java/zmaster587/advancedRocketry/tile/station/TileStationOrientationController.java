@@ -33,11 +33,7 @@ import zmaster587.libVulpes.util.ZUtils;
 import java.util.LinkedList;
 import java.util.List;
 
-<<<<<<< HEAD
 public class TileStationOrientationController extends TileEntity implements ITickableTileEntity, IModularInventory, INetworkMachine, ISliderBar {
-=======
-public class TileStationOrientationController extends TileEntity implements ITickable, IModularInventory, INetworkMachine, ISliderBar, IButtonInventory {
->>>>>>> origin/feature/nuclearthermalrockets
 
 	private int[] progress;
 
@@ -56,13 +52,8 @@ public class TileStationOrientationController extends TileEntity implements ITic
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-=======
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 		modules.add(moduleAngularVelocity);
 		//modules.add(numThrusters);
 		//modules.add(maxAngularAcceleration);
@@ -73,7 +64,6 @@ public class TileStationOrientationController extends TileEntity implements ITic
 
 		modules.add(new ModuleSlider(24, 50, 0, TextureResources.doubleWarningSideBarIndicator, this));
 		modules.add(new ModuleSlider(24, 65, 1, TextureResources.doubleWarningSideBarIndicator, this));
-		modules.add(new ModuleButton(25, 35, 2, LibVulpes.proxy.getLocalizedString("msg.spacelaser.reset"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, 36, 15));
 		//modules.add(new ModuleSlider(24, 35, 2, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
 
 		updateText();
@@ -82,24 +72,14 @@ public class TileStationOrientationController extends TileEntity implements ITic
 
 	private void updateText() {
 		if(world.isRemote) {
-<<<<<<< HEAD
 
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object != null) {
-<<<<<<< HEAD
 				moduleAngularVelocity.setText(String.format("%s%.1f %.1f %.1f", LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.alt"), 72000D*object.getDeltaRotation(Direction.EAST), 72000D*object.getDeltaRotation(Direction.UP), 7200D*object.getDeltaRotation(Direction.NORTH)));
-=======
-				moduleAngularVelocity.setText(String.format("%s%.1f %.1f %.1f", LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.alt"), 72000D * object.getDeltaRotation(EnumFacing.EAST), 72000D * object.getDeltaRotation(EnumFacing.UP), 7200D * object.getDeltaRotation(EnumFacing.NORTH)));
->>>>>>> origin/feature/nuclearthermalrockets
-=======
-			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(spaceObject != null) {
-				moduleAngularVelocity.setText(String.format("%s%.1f %.1f %.1f", LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.alt"), 72000D * spaceObject.getDeltaRotation(EnumFacing.EAST), 72000D * spaceObject.getDeltaRotation(EnumFacing.UP), 7200D * spaceObject.getDeltaRotation(EnumFacing.NORTH)));
->>>>>>> origin/feature/nuclearthermalrockets
 				//maxAngularAcceleration.setText(String.format("Maximum Angular Acceleration: %.1f", 7200D*object.getMaxRotationalAcceleration()));
 
 				//numThrusters.setText("Number Of Thrusters: 0");
-				int[] targetRotationsPerHour = ((SpaceStationObject) spaceObject).targetRotationsPerHour;
+				int[] targetRotationsPerHour = ((SpaceStationObject) object).targetRotationsPerHour;
 				targetRotations.setText(String.format("%s%d %d %d", LibVulpes.proxy.getLocalizedString("msg.stationorientctrl.tgtalt"), targetRotationsPerHour[0], targetRotationsPerHour[1], targetRotationsPerHour[2]));
 			}
 		}
@@ -114,13 +94,8 @@ public class TileStationOrientationController extends TileEntity implements ITic
 
 				if(spaceObject != null) {
 
-<<<<<<< HEAD
 					Direction dirs[] = { Direction.EAST, Direction.UP, Direction.NORTH };
-					int[] targetRotationsPerHour = ((SpaceStationObject) object).targetRotationsPerHour;
-=======
-					EnumFacing[] dirs = { EnumFacing.EAST, EnumFacing.UP, EnumFacing.NORTH };
 					int[] targetRotationsPerHour = ((SpaceStationObject) spaceObject).targetRotationsPerHour;
->>>>>>> origin/feature/nuclearthermalrockets
 					for (int i = 0; i < 3; i++) {
 						setProgress(i, targetRotationsPerHour[i] + (getTotalProgress(i)/2));
 					}
@@ -233,7 +208,6 @@ public class TileStationOrientationController extends TileEntity implements ITic
 	}
 
 	@Override
-<<<<<<< HEAD
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
@@ -246,14 +220,5 @@ public class TileStationOrientationController extends TileEntity implements ITic
 	@Override
 	public GuiHandler.guiId getModularInvType() {
 		return guiId.MODULAR;
-=======
-	public void onInventoryButtonPressed(int i) {
-        if(i == 2) {
-        	setProgress(0, getTotalProgress(0)/2);
-			setProgress(1, getTotalProgress(1)/2);
-			setProgress(2, getTotalProgress(2)/2);
-		}
-        PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 }

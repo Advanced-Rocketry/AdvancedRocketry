@@ -123,17 +123,10 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 			}
 
 			ItemStack outputStack;
-<<<<<<< HEAD
-			SpaceStationObject object = null;
-			if(Constants.INVALID_PLANET.equals(storedId)) {
-				object = new SpaceStationObject();
-				SpaceObjectManager.getSpaceManager().registerSpaceObject(object, Constants.INVALID_PLANET);
-=======
 			SpaceStationObject spaceStationObject = null;
-			if(storedId == null) {
+			if(Constants.INVALID_PLANET.equals(storedId)) {
 				spaceStationObject = new SpaceStationObject();
 				SpaceObjectManager.getSpaceManager().registerSpaceObject(spaceStationObject, Constants.INVALID_PLANET);
->>>>>>> origin/feature/nuclearthermalrockets
 
 				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1);
 				ItemStationChip.setUUID(outputStack, spaceStationObject.getId());
@@ -177,13 +170,8 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-=======
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 
 		modules.add(new ModulePower(160, 30, this));
 
@@ -271,11 +259,7 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 
 
 	@Override
-<<<<<<< HEAD
 	public boolean isUsableByPlayer(PlayerEntity player) {
-=======
-	public boolean isUsableByPlayer(@Nonnull EntityPlayer player) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return inventory.isUsableByPlayer(player);
 	}
 

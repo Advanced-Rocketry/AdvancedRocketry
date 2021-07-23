@@ -31,20 +31,11 @@ public class InverseTrailFx extends SpriteTexturedParticle {
         this.motionZ = -motz;
         
 
-        
-<<<<<<< HEAD
+
         
 		this.prevPosX = this.posX = x + motx*this.maxAge;
 		this.prevPosY = this.posY = y + moty*this.maxAge;
 		this.prevPosZ = this.posZ = z + motz*this.maxAge;
-=======
-		worldRendererIn.pos(f11 - rotationX * f10 - rotationXY * f10, f12 - rotationZ * f10, f13 - rotationYZ * f10 - rotationXZ * f10).tex(1, 1).color(this.particleRed, this.particleGreen, this.particleBlue, 1f).lightmap(j, k).endVertex();
-		worldRendererIn.pos(f11 - rotationX * f10 + rotationXY * f10, f12 + rotationZ * f10, f13 - rotationYZ * f10 + rotationXZ * f10).tex(1, 0).color(this.particleRed, this.particleGreen, this.particleBlue, 1f).lightmap(j, k).endVertex();
-		worldRendererIn.pos(f11 + rotationX * f10 + rotationXY * f10, f12 + rotationZ * f10, f13 + rotationYZ * f10 + rotationXZ * f10).tex(0, 0).color(this.particleRed, this.particleGreen, this.particleBlue, 1f).lightmap(j, k).endVertex();
-		worldRendererIn.pos(f11 + rotationX * f10 - rotationXY * f10, f12 - rotationZ * f10, f13 + rotationYZ * f10 - rotationXZ * f10).tex(0, 1).color(this.particleRed, this.particleGreen, this.particleBlue, 1f).lightmap(j, k).endVertex();
-		Tessellator.getInstance().draw();
-		worldRendererIn.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override

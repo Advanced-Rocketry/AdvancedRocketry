@@ -44,56 +44,14 @@ public class OxygenTraceFX extends SpriteTexturedParticle {
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public void tick() {
-=======
-	public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn,
-			float partialTicks, float rotationX, float rotationZ,
-			float rotationYZ, float rotationXY, float rotationXZ) {
-		//super.renderParticle(worldRendererIn, entityIn, partialTicks, rotationX,
-				//rotationZ, rotationYZ, rotationXY, rotationXZ);
-		
-		float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks - interpPosX);
-		float f12 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks - interpPosY);
-		float f13 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks - interpPosZ);
-		float f10 = 0.25F * this.particleScale;
-		
-        int i = 15728640;
-        int j = i >> 16 & 65535;
-        int k = i & 65535;
-		
-		Minecraft.getMinecraft().getTextureManager().bindTexture(icon);
-        worldRendererIn.finishDrawing();
-        worldRendererIn.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
-        
-		worldRendererIn.pos(f11 - rotationX * f10 - rotationXY * f10, f12 - rotationZ * f10, f13 - rotationYZ * f10 - rotationXZ * f10).tex(1, 1).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		worldRendererIn.pos(f11 - rotationX * f10 + rotationXY * f10, f12 + rotationZ * f10, f13 - rotationYZ * f10 + rotationXZ * f10).tex(1, 0).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		worldRendererIn.pos(f11 + rotationX * f10 + rotationXY * f10, f12 + rotationZ * f10, f13 + rotationYZ * f10 + rotationXZ * f10).tex(0, 0).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		worldRendererIn.pos(f11 + rotationX * f10 - rotationXY * f10, f12 - rotationZ * f10, f13 + rotationYZ * f10 - rotationXZ * f10).tex(0, 1).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-		Tessellator.getInstance().draw();
-		worldRendererIn.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
-	}
-	
-    public boolean shouldDisableDepth()
-    {
-        return true;
-    }
-	
-	@Override
-	public void onUpdate() {
->>>>>>> origin/feature/nuclearthermalrockets
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
         
         //Change color and alpha over lifespan
-<<<<<<< HEAD
         this.particleAlpha = 1f*MathHelper.sin((float)Math.PI*(this.age)/ (float)(this.maxAge));
         this.particleScale = 0.5f*MathHelper.sin((float)Math.PI*(this.age)/ (float)(this.maxAge));
-=======
-        this.particleAlpha = MathHelper.sin((float) Math.PI * (this.particleAge) / (float) (this.particleMaxAge));
-        this.particleScale = 0.5f*MathHelper.sin((float)Math.PI*(this.particleAge)/ (float)(this.particleMaxAge));
->>>>>>> origin/feature/nuclearthermalrockets
         
         this.motionX *= 1.01;
         this.motionY *= 1.01;

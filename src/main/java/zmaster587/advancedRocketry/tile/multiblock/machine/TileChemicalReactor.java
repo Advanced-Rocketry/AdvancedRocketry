@@ -16,14 +16,9 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-<<<<<<< HEAD
 import net.minecraft.world.biome.BiomeColors;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
-=======
-import net.minecraftforge.oredict.OreDictionary;
-import zmaster587.advancedRocketry.api.ARConfiguration;
->>>>>>> origin/feature/nuclearthermalrockets
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;

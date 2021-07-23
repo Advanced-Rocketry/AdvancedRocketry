@@ -161,11 +161,8 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 	 */
 	public static boolean isFullBlock(World world, BlockPos pos, BlockState state)
 	{
-<<<<<<< HEAD
 		AxisAlignedBB bb = state.getCollisionShape(world, pos).getBoundingBox();
-=======
-		AxisAlignedBB bb = state.getCollisionBoundingBox(world, pos);
->>>>>>> origin/feature/nuclearthermalrockets
+
 		
     	if(bb == null)
     		return false;

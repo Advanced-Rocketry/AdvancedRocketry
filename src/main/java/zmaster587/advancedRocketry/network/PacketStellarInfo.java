@@ -48,16 +48,7 @@ public class PacketStellarInfo extends BasePacket {
 		removeStar = in.readBoolean();
 
 		if(!removeStar) {
-<<<<<<< HEAD
 			nbt = packetBuffer.readCompoundTag();
-=======
-			try {
-				nbt = packetBuffer.readCompoundTag();
-			} catch (IOException e) {
-				e.printStackTrace();
-				nbt = null;
-			}
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 	}
 

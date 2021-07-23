@@ -1,11 +1,7 @@
 package zmaster587.advancedRocketry.inventory.modules;
 
 import net.minecraft.client.gui.FontRenderer;
-<<<<<<< HEAD
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-=======
-import net.minecraft.client.gui.inventory.GuiContainer;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.IContainerListener;

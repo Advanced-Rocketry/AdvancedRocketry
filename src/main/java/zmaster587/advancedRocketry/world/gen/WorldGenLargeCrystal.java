@@ -17,16 +17,11 @@ import java.util.Random;
 
 import com.mojang.serialization.Codec;
 
-<<<<<<< HEAD
 public class WorldGenLargeCrystal extends Feature<NoFeatureConfig> {
 
 	BlockState block;
 	public WorldGenLargeCrystal(Codec<NoFeatureConfig> codec) {
 		super(codec);
-=======
-	private IBlockState block;
-	public WorldGenLargeCrystal() {
->>>>>>> origin/feature/nuclearthermalrockets
 		this.block = AdvancedRocketryBlocks.blockCrystal.getDefaultState();
 	}
 
@@ -36,15 +31,11 @@ public class WorldGenLargeCrystal extends Feature<NoFeatureConfig> {
 	}*/
 
 	@Override
-<<<<<<< HEAD
 	public boolean generate(ISeedReader world, ChunkGenerator chunkGen, Random rand,
 			BlockPos pos, NoFeatureConfig config) {
 		
 		if(rand.nextInt() % 18 != 0)
 			return false;
-=======
-	public boolean generate(World world, Random rand, @Nonnull BlockPos pos) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 		BlockState state = world.getBiome(pos).getGenerationSettings().getSurfaceBuilderConfig().getUnder();
 		Block fillerBlock = state.getBlock();

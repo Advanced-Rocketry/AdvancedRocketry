@@ -48,13 +48,8 @@ public class SatelliteMicrowaveEnergy extends SatelliteBase implements IUniversa
 	}
 
 	@Override
-<<<<<<< HEAD
 	public int getEnergyMTU(Direction side) {
-		return (int) ((ARConfiguration.getCurrentConfig().microwaveRecieverMulitplier.get()) * battery.extractEnergy(battery.getMaxEnergyStored(), true));
-=======
-	public int getEnergyMTU(EnumFacing side) {
-		return (int) (ARConfiguration.getCurrentConfig().microwaveRecieverMulitplier * battery.extractEnergy(battery.getMaxEnergyStored(), false));
->>>>>>> origin/feature/nuclearthermalrockets
+		return (int) ((ARConfiguration.getCurrentConfig().microwaveRecieverMulitplier.get()) * battery.extractEnergy(battery.getMaxEnergyStored(), false));
 	}
 
 	@Override

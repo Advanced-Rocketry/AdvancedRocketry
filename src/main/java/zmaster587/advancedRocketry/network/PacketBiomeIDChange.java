@@ -20,14 +20,9 @@ import zmaster587.libVulpes.util.ZUtils;
 public class PacketBiomeIDChange extends BasePacket {
 
 	Chunk chunk;
-<<<<<<< HEAD
 	ResourceLocation worldId;
 	int xPos, zPos;
 	int array[];
-=======
-	int worldId, xPos, zPos;
-	byte[] array;
->>>>>>> origin/feature/nuclearthermalrockets
 	HashedBlockPosition pos;
 	
 	public PacketBiomeIDChange() {

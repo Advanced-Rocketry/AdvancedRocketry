@@ -28,11 +28,7 @@ public class ModuleButtonPlanet extends ModuleButton {
 	@OnlyIn(value=Dist.CLIENT)
 	public List<Button> addButtons(int x, int y) {
 
-<<<<<<< HEAD
 		List<Button> list = new LinkedList<Button>();
-=======
-		List<GuiButton> list = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 
 		button = new GuiPlanetButton(x + offsetX, y + offsetY, sizeX, sizeY, properties);
 
