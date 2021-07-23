@@ -86,7 +86,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 		List<ModuleBase> modules = new LinkedList<>();
 
         DimensionProperties props = DimensionManager.getEffectiveDimId(player.world, new BlockPos(player.getPositionVec()));
-		container = new ModulePlanetSelector((props != null ? props.getStarId() : DimensionManager.getSol().getId()), TextureResources.starryBG, this, true);
+		container = new ModulePlanetSelector((props != null ? props.getStarId() : DimensionManager.getInstance().getStar(new ResourceLocation(Constants.STAR_NAMESPACE, "0")).getId()), TextureResources.starryBG, this, true);
 		container.setOffset(1000, 1000);
 		modules.add(container);
 

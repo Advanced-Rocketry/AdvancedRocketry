@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
+import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -259,7 +260,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	//public ExtendedBiomeProperties biomeProperties;
 	private LinkedList<Biome> allowedBiomes;
 	private LinkedList<Biome> terraformedBiomes;
-	private LinkedList<Biome> craterBiomeWeights;
 	private boolean isRegistered = false;
 	private boolean isTerraformed = false;
 	public boolean hasRings;
@@ -313,7 +313,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		craterOres = new ArrayList<>();
 		allowedBiomes = new LinkedList<>();
 		terraformedBiomes = new LinkedList<>();
-		craterBiomeWeights = new LinkedList<>();
 		satellites = new HashMap<>();
 		requiredArtifacts = new LinkedList<>();
 		tickingSatellites = new HashMap<>();
@@ -1200,7 +1199,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			}
 		}
 
-		int maxBiomesPerPlanet = ARConfiguration.getCurrentConfig().maxBiomesPerPlanet;
+		int maxBiomesPerPlanet = ARConfiguration.getCurrentConfig().maxBiomesPerPlanet.get();
 		if(viableBiomes.size() > maxBiomesPerPlanet) {
 			viableBiomes  = ZUtils.copyRandomElements(viableBiomes, maxBiomesPerPlanet);
 		}
@@ -1209,35 +1208,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			viableBiomes.addAll(AdvancedRocketryBiomes.instance.getHighPressureBiomes());
 
 		return viableBiomes;
-	}
-
-	/**
-	 * Adds a biome and weight to the list for craters
-	 * @param biome biome to be added as viable
-	 * @param frequency frequency, with 100 as max (and default), for craters to spawn in this biome
-	 */
-	public void addCraterBiomeWeight(Biome biome, int frequency) {
-		ArrayList<BiomeEntry> biomes = new ArrayList<>();
-		biomes.add(new BiomeEntry(biome, Math.min(Math.max(0, frequency), 100)));
-		craterBiomeWeights.addAll(biomes);
-	}
-
-	/**
-	 * Gets the list of crater frequency biomes
-	 * @return list of crater biomes + frequency in BiomeEntry format (0-100 weight)
-	 */
-	public List<BiomeEntry> getCraterBiomeWeights() {
-		return craterBiomeWeights;
-	}
-
-	/**
-	 * Adds a biome to the list of biomes allowed to spawn on this planet
-	 * @param biome biome to be added as viable
-	 */
-	public void addBiomeWeighted(Biome biome, int weight) {
-		ArrayList<BiomeEntry> biomes = new ArrayList<>();
-		biomes.add(new BiomeEntry(biome, weight));
-		allowedBiomes.addAll(biomes);
 	}
 	
 	/**
@@ -1504,7 +1474,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(nbt.contains("biomes")) {
 
 			allowedBiomes.clear();
-<<<<<<< HEAD
 			ListNBT biomeIds = nbt.getList("biomes", NBT.TAG_STRING);
 			List<Biome> biomesList = new ArrayList<>();
 
@@ -1512,36 +1481,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			for(int i = 0; i < biomeIds.size(); i++)
 			{
 				biomesList.add(AdvancedRocketryBiomes.getBiomeFromResourceLocation(new ResourceLocation(biomeIds.getString(i))));
-=======
-			int[] biomeIds = nbt.getIntArray("biomes");
-			int[] biomeWeights = nbt.getIntArray("weights");
-			//Old handling
-			if (biomeWeights == null || biomeWeights.length == 0) {
-				biomeWeights = new int[biomeIds.length];
-				Arrays.fill(biomeWeights, 30);
-			}
-			List<BiomeEntry> biomesList = new ArrayList<>();
-
-
-			for(int i = 0; i < biomeIds.length; i++) {
-				biomesList.add(new BiomeEntry(AdvancedRocketryBiomes.instance.getBiomeById(biomeIds[i]), biomeWeights[i]));
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 
 			allowedBiomes.addAll(biomesList);
-		}
-
-		if(nbt.contains("craterBiomes")) {
-
-			craterBiomeWeights.clear();
-			int[] biomeIds = nbt.getIntArray("craterBiomes");
-			int[] biomeWeights = nbt.getIntArray("craterWeights");
-			List<Biome> biomesList = new ArrayList<>();
-			for(int i = 0; i < biomeIds.length; i++) {
-				biomesList.add(new Biome(AdvancedRocketryBiomes.instance.getBiomeById(biomeIds[i]), biomeWeights[i]));
-			}
-
-			craterBiomeWeights.addAll(biomesList);
 		}
 
 		if(nbt.contains("laserDrillOres")) {
@@ -1580,7 +1522,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			list = nbt.getList("artifacts", NBT.TAG_COMPOUND);
 			for(INBT entry : list) {
 				assert entry instanceof CompoundNBT;
-				requiredArtifacts.add(new ItemStack((CompoundNBT) entry));
+				requiredArtifacts.add(new ItemStack((IItemProvider) entry));
 			}
 		}
 
@@ -1750,35 +1692,12 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		}
 
 		if(!allowedBiomes.isEmpty()) {
-<<<<<<< HEAD
-
 
 			ListNBT biomeList = new ListNBT();
 			for(int i = 0; i < allowedBiomes.size(); i++) {
 				biomeList.add(StringNBT.valueOf(AdvancedRocketryBiomes.getBiomeResource(allowedBiomes.get(i)).toString()));
 			}
 			nbt.put("biomes", biomeList);
-=======
-			int[] biomeId = new int[allowedBiomes.size()];
-			int[] weights = new int[allowedBiomes.size()];
-			for(int i = 0; i < allowedBiomes.size(); i++) {
-				biomeId[i] = Biome.getIdForBiome(allowedBiomes.get(i).biome);
-				weights[i] = allowedBiomes.get(i).itemWeight;
-			}
-			nbt.setIntArray("biomes", biomeId);
-			nbt.setIntArray("weights", weights);
-		}
-
-		if(!craterBiomeWeights.isEmpty()) {
-			int[] biomeId = new int[craterBiomeWeights.size()];
-			int[] weights = new int[craterBiomeWeights.size()];
-			for(int i = 0; i < craterBiomeWeights.size(); i++) {
-				biomeId[i] = Biome.getIdForBiome(craterBiomeWeights.get(i).biome);
-				weights[i] = craterBiomeWeights.get(i).itemWeight;
-			}
-			nbt.setIntArray("craterBiomes", biomeId);
-			nbt.setIntArray("craterWeights", weights);
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 
 
@@ -1912,7 +1831,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 						"	          }");
 
 			}
-			if(canGenerateVolcanoes())
+			if(canGenerateVolcanoes)
 			{
 				structures.add("\"advancedrocketry:volcano\"");
 				biomeConditionalStructures.add(

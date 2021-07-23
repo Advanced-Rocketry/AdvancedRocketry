@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
-<<<<<<< HEAD
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -10,12 +9,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
-=======
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -73,7 +66,6 @@ boolean openFullScreen = false;
 	Object[][][] structure =
 		{
 			{
-<<<<<<< HEAD
 				{null,null,null,'P','c','P',null,null,null},
 				{new ResourceLocation("forge", "blocks/steel"),null,null,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),null,null,new ResourceLocation("forge", "blocks/steel")},
 				{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,null},
@@ -84,18 +76,6 @@ boolean openFullScreen = false;
 				{null,new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),null},
 				{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,null},
 				{new ResourceLocation("forge", "blocks/steel"),null,null,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),null,null,new ResourceLocation("forge", "blocks/steel")}
-=======
-				{Blocks.AIR,Blocks.AIR,Blocks.AIR,'P','c','P',Blocks.AIR,Blocks.AIR,Blocks.AIR},
-				{"blockSteel",Blocks.AIR,Blocks.AIR,"slab","slab","slab",Blocks.AIR,Blocks.AIR,"blockSteel"},
-				{Blocks.AIR,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,Blocks.AIR},
-				{Blocks.AIR,"slab",LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,"slab",Blocks.AIR},
-				{"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab"},
-				{"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.motors,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab"},
-				{"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab"},
-				{Blocks.AIR,"slab",LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,"slab",Blocks.AIR},
-				{Blocks.AIR,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,Blocks.AIR},
-				{"blockSteel",Blocks.AIR,Blocks.AIR,"slab","slab","slab",Blocks.AIR,Blocks.AIR,"blockSteel"}
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 		};
 
@@ -119,23 +99,14 @@ boolean openFullScreen = false;
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public void deconstructMultiBlock(World world, BlockPos destroyedPos,
 			boolean blockBroken, BlockState state) {
-=======
-	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken, IBlockState state) {
->>>>>>> origin/feature/nuclearthermalrockets
 		super.deconstructMultiBlock(world, destroyedPos, blockBroken, state);
 		
 		Entity entity = getCapsuleOnLine();
-		
-<<<<<<< HEAD
-		if(e != null)
-			e.remove();
-=======
+
 		if(entity != null)
-			entity.setDead();
->>>>>>> origin/feature/nuclearthermalrockets
+			entity.remove();
 
 
 		World otherPlanet;
@@ -230,13 +201,9 @@ boolean openFullScreen = false;
 		if( buttonId >= BUTTON_ID_OFFSET) {
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)buttonId));
 		}
-<<<<<<< HEAD
 
 
 		super.onInventoryButtonPressed(button);
-=======
-		super.onInventoryButtonPressed(buttonId);
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	public void notifyLanded(EntityElevatorCapsule e) {
@@ -267,7 +234,6 @@ boolean openFullScreen = false;
 		}
 	}
 
-<<<<<<< HEAD
 
 	@Override
 	public void writeDataToNetwork(PacketBuffer out, byte id) {
@@ -283,11 +249,6 @@ boolean openFullScreen = false;
 	@Override
 	public void useNetworkData(PlayerEntity player, Dist side, byte id,
 			CompoundNBT nbt) {
-=======
-	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 		if(id == SUMMON_PACKET) {
 			summonCapsule();
@@ -309,13 +270,8 @@ boolean openFullScreen = false;
 
 		double capsulePosX = getLandingLocationX();
 		double capsulePosZ = getLandingLocationZ();
-<<<<<<< HEAD
 		for (EntityElevatorCapsule e :world.getEntitiesWithinAABB(EntityElevatorCapsule.class, new AxisAlignedBB(capsulePosX - 3, getPos().getY() - 1, capsulePosZ - 3, capsulePosX + 3, EntityElevatorCapsule.MAX_HEIGHT, capsulePosZ + 3))) {
 			if(!e.isInMotion() && e.isAlive())
-=======
-		for (EntityElevatorCapsule e :world.getEntitiesWithinAABB(EntityElevatorCapsule.class, new AxisAlignedBB(capsulePosX - 3, 0, capsulePosZ - 3, capsulePosX + 3, EntityElevatorCapsule.MAX_HEIGHT, capsulePosZ + 3))) {
-			if(!e.isInMotion() && !e.isDead)
->>>>>>> origin/feature/nuclearthermalrockets
 				capsule = e;
 		}
 
@@ -366,13 +322,8 @@ boolean openFullScreen = false;
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
-=======
-	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
-							   EntityPlayer player, World world) {
->>>>>>> origin/feature/nuclearthermalrockets
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, ZUtils.getDimensionIdentifier(world));
 		if(dimBlockPos != null) {
@@ -385,13 +336,8 @@ boolean openFullScreen = false;
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			PlayerEntity player, World myWorld) {
-=======
-	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
-			EntityPlayer player, World myWorld) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 		if(!myWorld.isRemote) {
 
@@ -480,7 +426,6 @@ boolean openFullScreen = false;
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void writeNetworkData(CompoundNBT nbt) {
 
 
@@ -488,16 +433,9 @@ boolean openFullScreen = false;
 		{
 			nbt.putString("dstDimId", dimBlockPos.dimid.toString());
 			nbt.putIntArray("dstPos", new int[] { dimBlockPos.pos.x, dimBlockPos.pos.y, dimBlockPos.pos.z });
+			nbt.putBoolean("tether", isTetherConnected);
 
 		}
-=======
-	public void writeNetworkData(NBTTagCompound nbt) {
-		if(dimBlockPos != null) {
-			nbt.setInteger("dstDimId", dimBlockPos.dimid);
-			nbt.setIntArray("dstPos", new int[] { dimBlockPos.pos.x, dimBlockPos.pos.y, dimBlockPos.pos.z });
-			nbt.setBoolean("tether", isTetherConnected);
-		} else
->>>>>>> origin/feature/nuclearthermalrockets
 
 		super.writeNetworkData(nbt);
 	}
@@ -510,15 +448,10 @@ boolean openFullScreen = false;
 	@Override
 	public void readNetworkData(CompoundNBT nbt) {
 		super.readNetworkData(nbt);
-<<<<<<< HEAD
 
 
 		if(nbt.contains("dstDimId")) {
 			ResourceLocation id = new ResourceLocation(nbt.getString("dstDimId"));
-=======
-		if(nbt.hasKey("dstDimId")) {
-			int id = nbt.getInteger("dstDimId");
->>>>>>> origin/feature/nuclearthermalrockets
 			int[] pos = nbt.getIntArray("dstPos");
 			dimBlockPos = new DimensionBlockPosition(id, new HashedBlockPosition(pos[0], pos[1], pos[2]));
 		}

@@ -93,7 +93,6 @@ public class XMLPlanetLoader {
 	private static final String ELEMENT_GEODE_ORES = "geodeOres";
 	private static final String ELEMENT_CRATER_ORES = "craterOres";
 	private static final String ELEMENT_BIOMEIDS = "biomeIds";
-	private static final String ELEMENT_CRATER_BIOMEIDS = "craterBiomeWeights";
 	private static final String ELEMENT_ARTIFACT = "artifact";
 	private static final String ELEMENT_OCEANBLOCK = "oceanBlock";
 	private static final String ELEMENT_FILLERBLOCK = "fillerBlock";
@@ -234,14 +233,9 @@ public class XMLPlanetLoader {
 				} catch (NumberFormatException e) {
 					AdvancedRocketry.logger.warn("Invalid fog color specified"); //TODO: more detailed error msg
 				}
-<<<<<<< HEAD
 			}
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GAS)) {
-				Fluid f = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(planetPropertyNode.getTextContent()));
-=======
-			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GAS)) {
-				Fluid fluid = FluidRegistry.getFluid(planetPropertyNode.getTextContent());
->>>>>>> origin/feature/nuclearthermalrockets
+				Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(planetPropertyNode.getTextContent()));
 
 				if(fluid == null)
 					AdvancedRocketry.logger.warn( "\"" + planetPropertyNode.getTextContent() + "\" is not a valid fluid"); //TODO: more detailed error msg
@@ -370,7 +364,6 @@ public class XMLPlanetLoader {
 				String biomeList[] = planetPropertyNode.getTextContent().split(",");
 				for(int j = 0; j < biomeList.length; j++) {
 
-<<<<<<< HEAD
 					ResourceLocation location = new ResourceLocation(biomeList[j]);
 					if( AdvancedRocketryBiomes.doesBiomeExist(location)) {
 						Biome biome = AdvancedRocketryBiomes.getBiomeFromResourceLocation(location);
@@ -386,74 +379,7 @@ public class XMLPlanetLoader {
 								AdvancedRocketry.logger.warn(biomeList[j] + " is not a valid biome id"); //TODO: more detailed error msg
 						} catch (NumberFormatException e) {
 							AdvancedRocketry.logger.warn(biomeList[j] + " is not a valid biome id or name"); //TODO: more detailed error msg
-=======
-					int biomeWeight = 30;
-					String[] weightSplit = s.split(";");
-
-					//Try to get a weight out of the semicolon separator
-					if (weightSplit.length > 1) {
-						try {
-							biomeWeight = Integer.parseInt(weightSplit[1]);
-							if (biomeWeight == 0) {
-								AdvancedRocketry.logger.warn("Weight cannot be 0! Setting weight to default");
-								biomeWeight = 30;
-							}
-						} catch (NumberFormatException e) {
-							biomeWeight = 30;
-							AdvancedRocketry.logger.warn(weightSplit[1] + " is not a valid biome weight");
 						}
-					}
-
-					//Check whether we have numeric IDs (bad!) or RL ids
-					ResourceLocation location = new ResourceLocation(weightSplit[0]);
-					if (Biome.REGISTRY.containsKey(location)) {
-						Biome biome = Biome.REGISTRY.getObject(location);
-						if (biome == null)
-							AdvancedRocketry.logger.warn("Error adding " + weightSplit[0]); //TODO: more detailed error msg
-						else
-							properties.addBiomeWeighted(biome, biomeWeight);
-					} else {
-						try {
-							int biome = Integer.parseInt(weightSplit[0]);
-
-							if (!properties.addBiome(biome))
-								AdvancedRocketry.logger.warn(weightSplit[0] + " is not a valid biome id"); //TODO: more detailed error msg
-						} catch (NumberFormatException e) {
-							AdvancedRocketry.logger.warn(weightSplit[0] + " is not a valid biome id or name"); //TODO: more detailed error msg
->>>>>>> origin/feature/nuclearthermalrockets
-						}
-					}
-				}
-			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_CRATER_BIOMEIDS)) {
-
-				String[] biomeList = planetPropertyNode.getTextContent().split(",");
-				for (String s : biomeList) {
-
-					int biomeFrequency = 100;
-					String[] frequencySplit = s.split(";");
-
-					//Try to get a weight out of the semicolon separator
-					if (frequencySplit.length > 1) {
-						try {
-							biomeFrequency = Integer.parseInt(frequencySplit[1]);
-						} catch (NumberFormatException e) {
-							biomeFrequency = 100;
-							AdvancedRocketry.logger.warn(frequencySplit[1] + " is not a valid crater frequency");
-						}
-					} else {
-						AdvancedRocketry.logger.warn("Crater frequency term must exist for all biomes, setting frequency to default 100");
-					}
-
-					//Check whether we have numeric IDs (bad!) or RL ids
-					ResourceLocation location = new ResourceLocation(frequencySplit[0]);
-					if (Biome.REGISTRY.containsKey(location)) {
-						Biome biome = Biome.REGISTRY.getObject(location);
-						if (biome == null)
-							AdvancedRocketry.logger.warn("Error adding " + frequencySplit[0] + ", biome is null");
-						else
-							properties.addCraterBiomeWeight(biome, biomeFrequency);
-					} else {
-						AdvancedRocketry.logger.warn("Error adding " + frequencySplit[0] + ", it is not a biome resource location");
 					}
 				}
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_SPAWNABLE)) {
@@ -496,24 +422,8 @@ public class XMLPlanetLoader {
 					groupMax = groupMin;
 				}
 
-<<<<<<< HEAD
 				
 				EntityType<?> clazz = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(planetPropertyNode.getTextContent()));
-=======
-				Class clazz = EntityList.getClass(new ResourceLocation(planetPropertyNode.getTextContent()));
-
-				//If not using string name maybe it's a class name?
-				if(clazz == null) {
-					try {
-						clazz = Class.forName(planetPropertyNode.getTextContent());
-						if(clazz != null && !Entity.class.isAssignableFrom(clazz))
-							clazz = null;
-
-					} catch (Exception e) {
-						//Fail silently
-					}
-				}
->>>>>>> origin/feature/nuclearthermalrockets
 
 				if(clazz != null) {
 					SpawnListEntryNBT entry = new SpawnListEntryNBT(clazz, weight, groupMin, groupMax);
@@ -556,13 +466,9 @@ public class XMLPlanetLoader {
 				}
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_OREGEN)) {
 				properties.oreProperties = XMLOreLoader.loadOre(planetPropertyNode);
-<<<<<<< HEAD
 			}
 			//TODO
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_LASER_DRILL_ORES) && !properties.isGasGiant()) {
-=======
-			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_LASER_DRILL_ORES) && !properties.isGasGiant()) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 				properties.laserDrillOresRaw = planetPropertyNode.getTextContent();
 
@@ -1062,11 +968,7 @@ public class XMLPlanetLoader {
 			String biomeIds = "";
 			for(Biome biome : properties.getBiomes()) {
 				try {
-<<<<<<< HEAD
 					biomeIds = biomeIds + "," + AdvancedRocketryBiomes.getBiomeResource(biome).toString();//Biome.getIdForBiome(biome.biome);
-=======
-					biomeIds.append(",").append(Biome.REGISTRY.getNameForObject(biome.biome).toString()).append(";").append(biome.itemWeight);//Biome.getIdForBiome(biome.biome);
->>>>>>> origin/feature/nuclearthermalrockets
 				} catch (NullPointerException e) {
 					AdvancedRocketry.logger.warn("Error saving biomes for world, biomes list saved may be incomplete.  World: " + properties.getId());
 				}
@@ -1076,19 +978,6 @@ public class XMLPlanetLoader {
 			else
 				AdvancedRocketry.logger.warn("Dim " + properties.getId() + " has no biomes to save!");
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_BIOMEIDS, biomeIds));
-		}
-
-		if(!properties.getCraterBiomeWeights().isEmpty() && !properties.isGasGiant()) {
-			StringBuilder biomeIds = new StringBuilder();
-			for(BiomeEntry biome : properties.getCraterBiomeWeights()) {
-				try {
-					biomeIds.append(",").append(Biome.REGISTRY.getNameForObject(biome.biome).toString()).append(";").append(biome.itemWeight);//Biome.getIdForBiome(biome.biome);
-				} catch (NullPointerException e) {
-					AdvancedRocketry.logger.warn("Error saving biomes for world, crater biomes list saved may be incomplete.  World: " + properties.getId());
-				}
-			}
-			biomeIds = new StringBuilder(biomeIds.substring(1));
-			nodePlanet.appendChild(createTextNode(doc, ELEMENT_CRATER_BIOMEIDS, biomeIds.toString()));
 		}
 
 		for(ItemStack stack : properties.getRequiredArtifacts()) {
@@ -1152,21 +1041,11 @@ public class XMLPlanetLoader {
 				} catch( NumberFormatException ignored) {}
 			}
 		}
-<<<<<<< HEAD
 		ItemStack stack = null;
 		if(ForgeRegistries.ITEMS.containsKey(name))
 		{
 			Item item = ForgeRegistries.ITEMS.getValue(name);
 			stack = new ItemStack(item, size);
-=======
-
-		ItemStack stack = ItemStack.EMPTY;
-		Block block = Block.getBlockFromName(splitStr[0]);
-		if(block == null) {
-			Item item = Item.getByNameOrId(splitStr[0]);
-			if(item != null)
-				stack = new ItemStack(item, size, meta);
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 
 		return stack;

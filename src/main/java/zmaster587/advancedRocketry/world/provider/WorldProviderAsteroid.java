@@ -9,7 +9,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.client.render.planet.RenderAsteroidSky;
 import zmaster587.advancedRocketry.world.ChunkProviderAsteroids;
 
 public class WorldProviderAsteroid extends WorldProviderPlanet {

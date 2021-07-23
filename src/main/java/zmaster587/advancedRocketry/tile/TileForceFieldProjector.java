@@ -17,12 +17,8 @@ public class TileForceFieldProjector extends TileEntity implements ITickableTile
 	private short extensionRange;
 	private final short MAX_RANGE = 32;
 
-<<<<<<< HEAD
 	public TileForceFieldProjector() {
 		super(AdvancedRocketryTileEntityType.TILE_FORCE_FIELD_PROJECTOR);
-=======
-    public TileForceFieldProjector() {
->>>>>>> origin/feature/nuclearthermalrockets
 		extensionRange = 0;
 	}
 
@@ -38,34 +34,19 @@ public class TileForceFieldProjector extends TileEntity implements ITickableTile
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void tick() {
 
 		if(world.getGameTime() % 5 == 0) {
-=======
-	public void update() {
-		if(world.getTotalWorldTime() % 5 == 0) {
->>>>>>> origin/feature/nuclearthermalrockets
 			if(world.isBlockPowered(getPos())) {
                 if(extensionRange <= MAX_RANGE) {
 					if(extensionRange == 0)
 						extensionRange = 1;
 
-<<<<<<< HEAD
 					BlockState state = world.getBlockState(getPos());
-=======
-					IBlockState state = world.getBlockState(getPos());
-
->>>>>>> origin/feature/nuclearthermalrockets
 					if(state.getBlock() == AdvancedRocketryBlocks.blockForceFieldProjector) {
 						Direction facing = BlockFullyRotatable.getFront(state);
 						BlockPos nextPos = pos.offset(facing, extensionRange);
-<<<<<<< HEAD
 						if(world.getBlockState(nextPos).isReplaceable(Fluids.WATER)) {
-=======
-
-						if(world.getBlockState(nextPos).getBlock().isReplaceable(world, nextPos) ) {
->>>>>>> origin/feature/nuclearthermalrockets
 							world.setBlockState(nextPos, AdvancedRocketryBlocks.blockForceField.getDefaultState());
 						}
 
@@ -76,20 +57,10 @@ public class TileForceFieldProjector extends TileEntity implements ITickableTile
 				}
 			}
 			else if(extensionRange > 0) {
-<<<<<<< HEAD
-
 				BlockState state = world.getBlockState(getPos());
+
 				if(state.getBlock() == AdvancedRocketryBlocks.blockForceFieldProjector) {
 					Direction facing = BlockFullyRotatable.getFront(state);
-					BlockPos nextPos = pos.offset(facing, extensionRange);
-
-					if(world.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField)
-						world.removeBlock(nextPos, false);
-=======
-				IBlockState state = world.getBlockState(getPos());
-
-				if(state.getBlock() == AdvancedRocketryBlocks.blockForceFieldProjector) {
-					EnumFacing facing = BlockFullyRotatable.getFront(state);
 					BlockPos nextPos;
 
 					//check to make sure the force field that was deleted last time stayed deleted
@@ -97,7 +68,7 @@ public class TileForceFieldProjector extends TileEntity implements ITickableTile
 						nextPos = pos.offset(facing, extensionRange + 1);
 
 						if(world.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField) {
-							world.setBlockToAir(nextPos);
+							world.removeBlock(nextPos, false);
 							AdvancedRocketry.logger.warn("Force field projector at " + pos + " found a force field block at " + nextPos + " that didn't stay deleted on retraction! Attempting deletion again.");
 							return;
 						}
@@ -108,10 +79,9 @@ public class TileForceFieldProjector extends TileEntity implements ITickableTile
 					nextPos = pos.offset(facing, extensionRange);
 
 					if(world.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField) {
-						world.setBlockToAir(nextPos);
+						world.removeBlock(nextPos, false);
 					}
 
->>>>>>> origin/feature/nuclearthermalrockets
 					extensionRange--;
 				}
 			}

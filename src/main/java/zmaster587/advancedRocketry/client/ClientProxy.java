@@ -186,41 +186,11 @@ public class ClientProxy extends CommonProxy {
 		//ModelLoader.setCustomMeshDefinition(item, MeshDefinitionFix.create(stack -> modelResourceLocation));
 
 
-<<<<<<< HEAD
 		StateMapperBase ignoreState = new FluidStateMapper(modelResourceLocation);
 
 		ModelLoader.setCustomStateMapper((Block) fluidBlock, ignoreState);
 		ModelBakery.registerItemVariants(item, modelResourceLocation);
 	}*/
-=======
-		@Override
-		protected ModelResourceLocation getModelResourceLocation(@Nullable IBlockState iBlockState) {
-			return location;
-		}
-	}
-
-	private static class FluidItemMeshDefinition implements ItemMeshDefinition {
-		private final ModelResourceLocation location;
-
-		public FluidItemMeshDefinition(ModelResourceLocation fluidLocation) {
-			this.location = fluidLocation;
-		}
-
-		@Override
-		public ModelResourceLocation getModelLocation(@Nonnull ItemStack stack) {
-			return location;
-		}
-}
-
-	@SubscribeEvent
-	public void modelBakeEvent(ModelBakeEvent event) {
-		IBakedModel bakedModel =  event.getModelRegistry().getObject(ModelRocket.resource);
-		if (bakedModel != null) {
-			ModelRocket customModel = new ModelRocket();
-			event.getModelRegistry().putObject(ModelRocket.resource, bakedModel);
-		}
-	}
->>>>>>> origin/feature/nuclearthermalrockets
 
 	@Override
 	public void registerEventHandlers() {
@@ -339,18 +309,12 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void loadUILayout(ARConfiguration config) {
 		/*final String CLIENT = "Client";
 
 		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().lockUI = config.get(CLIENT, "lockUI", true, "If UI is not locked, the middle mouse can be used to drag certain AR UIs around the screen, positions are saved on hitting quit in the menu").getBoolean();
 
 		config.addCustomCategoryComment(CLIENT, "UI locations can by set by clicking and dragging the middle mouse button ingame");
-=======
-	public void loadUILayout(Configuration config) {
-		final String CLIENT = "Client";
-
->>>>>>> origin/feature/nuclearthermalrockets
 		RocketEventHandler.suitPanel.setRawX(config.get(CLIENT, "suitPanelX", 8).getInt());
 		RocketEventHandler.suitPanel.setRawY(config.get(CLIENT, "suitPanelY", 8).getInt());
 		RocketEventHandler.suitPanel.setSizeModeX(config.get(CLIENT, "suitPanelModeX", -1).getInt());
@@ -372,36 +336,6 @@ public class ClientProxy extends CommonProxy {
 		RocketEventHandler.atmBar.setSizeModeY(config.get(CLIENT, "atmBarModeY", 1).getInt());*/
 	}
 
-	@Override
-<<<<<<< HEAD
-	public void saveUILayout(ARConfiguration configuration) {
-		/*final String CLIENT = "Client";
-		configuration.su
-		configuration.get(CLIENT, "suitPanelX", 1).set(RocketEventHandler.suitPanel.getRawX());
-		configuration.get(CLIENT, "suitPanelY", 1).set(RocketEventHandler.suitPanel.getRawY());
-		configuration.get(CLIENT, "suitPanelModeX", 1).set(RocketEventHandler.suitPanel.getSizeModeX());
-		configuration.get(CLIENT, "suitPanelModeY", 1).set(RocketEventHandler.suitPanel.getSizeModeY());
-
-		configuration.get(CLIENT, "oxygenBarX", 1).set(RocketEventHandler.oxygenBar.getRawX());
-		configuration.get(CLIENT, "oxygenBarY", 1).set(RocketEventHandler.oxygenBar.getRawY());
-		configuration.get(CLIENT, "oxygenBarModeX", 1).set(RocketEventHandler.oxygenBar.getSizeModeX());
-		configuration.get(CLIENT, "oxygenBarModeY", 1).set(RocketEventHandler.oxygenBar.getSizeModeY());
-
-		configuration.get(CLIENT, "hydrogenBarX", 1).set(RocketEventHandler.hydrogenBar.getRawX());
-		configuration.get(CLIENT, "hydrogenBarY", 1).set(RocketEventHandler.hydrogenBar.getRawY());
-		configuration.get(CLIENT, "hydrogenBarModeX", 1).set(RocketEventHandler.hydrogenBar.getSizeModeX());
-		configuration.get(CLIENT, "hydrogenBarModeY", 1).set(RocketEventHandler.hydrogenBar.getSizeModeY());
-
-		configuration.get(CLIENT, "atmBarX", 1).set(RocketEventHandler.atmBar.getRawX());
-		configuration.get(CLIENT, "atmBarY", 1).set(RocketEventHandler.atmBar.getRawY());
-		configuration.get(CLIENT, "atmBarModeX", 1).set(RocketEventHandler.atmBar.getSizeModeX());
-		configuration.get(CLIENT, "atmBarModeY", 1).set(RocketEventHandler.atmBar.getSizeModeY());
-		configuration.save();*/
-	}
-
-	@Override
-=======
->>>>>>> origin/feature/nuclearthermalrockets
 	public void displayMessage(String msg, int time) {
 		RocketEventHandler.setOverlay(Minecraft.getInstance().world.getGameTime() + time, msg);
 	}

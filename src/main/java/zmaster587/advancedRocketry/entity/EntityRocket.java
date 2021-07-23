@@ -1,15 +1,10 @@
 package zmaster587.advancedRocketry.entity;
 
 import io.netty.buffer.ByteBuf;
-<<<<<<< HEAD
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PortalInfo;
 import net.minecraft.block.SandBlock;
-=======
-import net.minecraft.block.BlockFire;
-import net.minecraft.block.BlockSand;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
@@ -210,7 +205,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		landingPadDisplayText.setColor(0x00ff00);
 
 		spacePosition = new SpacePosition();
-		spacePosition.star = DimensionManager.getInstance().getSol();
+		spacePosition.star = DimensionManager.getInstance().getStar(new ResourceLocation(Constants.STAR_NAMESPACE, "0"));
 	}
 
 
@@ -330,8 +325,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 
 					ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(vec.x,vec.y,vec.z));
 
-					if(obj != null) {
-						displayStr = " " +  LibVulpes.proxy.getLocalizedString("msg.entity.rocket.station") + " " + obj.getId();
+					if(spaceObject != null) {
+						displayStr = " " +  LibVulpes.proxy.getLocalizedString("msg.entity.rocket.station") + " " + spaceObject.getId();
 
 						StationLandingLocation location = storage.getGuidanceComputer().getLandingLocation(spaceObject.getId());
 
@@ -576,7 +571,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 
 	/**
 	 * Sets the the status of flight of the rocket and updates the datawatcher
-	 * @param inFlight status of flight
+	 * @param inflight status of flight
 	 */
 	public void setInFlight(boolean inflight) {
 		this.isInFlight = inflight;
@@ -604,23 +599,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		}
 	}
 
-<<<<<<< HEAD
 	protected ActionResultType interact(PlayerEntity player) {
-=======
-	protected boolean interact(@Nonnull EntityPlayer player) {
->>>>>>> origin/feature/nuclearthermalrockets
 		//Actual interact code needs to be moved to a packet receive on the server
 
 		ItemStack heldItem = player.getHeldItem(Hand.MAIN_HAND);
 		boolean isHoldingFluidItemOrLinker = false;
-<<<<<<< HEAD
 		//Handle linkers and right-click with fuel
 		if(!heldItem.isEmpty()) {
-			
-			float fuelMult;
-=======
-		if(!heldItem.isEmpty()) {
->>>>>>> origin/feature/nuclearthermalrockets
 			FluidStack fluidStack;
 
 			if(heldItem.getItem() instanceof ItemLinker) {
@@ -631,21 +616,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 
 					if(tile instanceof IInfrastructure) {
 						IInfrastructure infrastructure = (IInfrastructure)tile;
-<<<<<<< HEAD
 						if(Math.sqrt(this.getDistanceSq(ItemLinker.getMasterX(heldItem), this.getPosY(), ItemLinker.getMasterZ(heldItem))) < infrastructure.getMaxLinkDistance() + Math.max(storage.getSizeX(), storage.getSizeZ())) {
-=======
-
-						if(this.getDistance(ItemLinker.getMasterX(heldItem), this.posY, ItemLinker.getMasterZ(heldItem)) < infrastructure.getMaxLinkDistance() + Math.max(storage.getSizeX(), storage.getSizeZ())) {
->>>>>>> origin/feature/nuclearthermalrockets
 							if(!connectedInfrastructure.contains(tile)) {
 								linkInfrastructure(infrastructure);
 
 								if(!world.isRemote) {
-<<<<<<< HEAD
 									player.sendMessage(new StringTextComponent("Linked Sucessfully"), Util.DUMMY_UUID);
-=======
-									player.sendMessage(new TextComponentString("Linked successfully"));
->>>>>>> origin/feature/nuclearthermalrockets
 								}
 								ItemLinker.resetPosition(heldItem);
 
@@ -661,57 +637,29 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 						player.sendMessage(new StringTextComponent("This cannot be linked to a rocket!"), Util.DUMMY_UUID);
 				}
 				else if(!world.isRemote)
-<<<<<<< HEAD
 					player.sendMessage(new StringTextComponent("Nothing to be linked"), Util.DUMMY_UUID);
 				return ActionResultType.PASS;
 			}
 			else if((FluidUtils.containsFluid(heldItem) && FluidUtils.getFluidForItem(heldItem) != null) && ARConfiguration.getCurrentConfig().canBeFueledByHand.get()) {
 				isHoldingFluidItemOrLinker = true;
-=======
-					player.sendMessage(new TextComponentString("Nothing to be linked"));
-
-				return false;
-			} //End of if(heldItem.getItem() instanceof ItemLinker)
-			else if((FluidUtils.containsFluid(heldItem) && FluidUtils.getFluidForItem(heldItem) != null) && ARConfiguration.getCurrentConfig().canBeFueledByHand) {
->>>>>>> origin/feature/nuclearthermalrockets
 				fluidStack = FluidUtils.getFluidForItem(heldItem);
 
 				if ((canRocketFitFluid(fluidStack))) {
 					isHoldingFluidItemOrLinker = true;
 
-<<<<<<< HEAD
-					if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())) {
-						stats.setFuelRate(FuelType.LIQUID_MONOPROPELLANT, (int)(stats.getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT) * FuelRegistry.instance.getMultiplier(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())));
-						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityMonopropellant() - getFuelAmountMonopropellant());
-						FluidUtil.interactWithFluidHandler(player, Hand.MAIN_HAND, rocketFakeTank);
-						this.addFuelAmountMonopropellant(rocketFakeTank.getFluidAmount());
-					} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid())) {
-						stats.setFuelRate(FuelType.LIQUID_BIPROPELLANT, (int)(stats.getBaseFuelRate(FuelType.LIQUID_BIPROPELLANT) * FuelRegistry.instance.getMultiplier(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid())));
-						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityBipropellant() - getFuelAmountBipropellant());
-						FluidUtil.interactWithFluidHandler(player, Hand.MAIN_HAND, rocketFakeTank);
-						this.addFuelAmountBipropellant(rocketFakeTank.getFluidAmount());
-					} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())) {
-						stats.setFuelRate(FuelType.LIQUID_OXIDIZER, (int)(stats.getBaseFuelRate(FuelType.LIQUID_OXIDIZER) * FuelRegistry.instance.getMultiplier(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())));
-						FluidTank rocketFakeTank = new FluidTank(getFuelCapacityBipropellant() - getFuelAmountBipropellant());
-						FluidUtil.interactWithFluidHandler(player, Hand.MAIN_HAND, rocketFakeTank);
-						this.addFuelAmountOxidizer(rocketFakeTank.getFluidAmount());
-					}
-				}
-				return ActionResultType.SUCCESS;
-=======
 					FuelType type = getRocketFuelType();
 					if(type == null)
-						return false;
+						return ActionResultType.FAIL;
 
 					if (getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT && FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid()))
 						type = FuelType.LIQUID_OXIDIZER;
 
 					stats.setFuelRate(type, (int) (stats.getBaseFuelRate(type) * FuelRegistry.instance.getMultiplier(type, fluidStack.getFluid())));
 					FluidTank rocketFakeTank = new FluidTank(getFuelCapacity(type) - getFuelAmount(type));
-					FluidUtil.interactWithFluidHandler(player, EnumHand.MAIN_HAND, rocketFakeTank);
+					FluidUtil.interactWithFluidHandler(player, Hand.MAIN_HAND, rocketFakeTank);
 					this.addFuelAmount(type, rocketFakeTank.getFluidAmount());
 				}
->>>>>>> origin/feature/nuclearthermalrockets
+			    return ActionResultType.SUCCESS;
 			}
 		}
 
@@ -739,22 +687,22 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 	 */
 	public boolean canRocketFitFluid(FluidStack fluidStack) {
 		if (FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, fluidStack.getFluid())) {
-			ActionResultType isCorrectFluid = stats.getFuelFluid().equals("null") || FluidUtils.areFluidsSameType(stats.getFuelFluid(), fluidStack.getFluid());
-			if (stats.getFuelFluid().equals("null") && isCorrectFluid.isSuccess())
-				stats.setFuelFluid(fluidStack.getFluid().getName());
+			boolean isCorrectFluid = stats.getFuelFluid().equals("null") || FluidUtils.areFluidsSameType(stats.getFuelFluid(), fluidStack.getFluid());
+			if (stats.getFuelFluid().equals("null") && isCorrectFluid)
+				stats.setFuelFluid(fluidStack.getFluid().getRegistryName());
 			return isCorrectFluid;
 		} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, fluidStack.getFluid())) {
-			ActionResultType isCorrectFluid = stats.getFuelFluid().equals("null") || FluidUtils.areFluidsSameType(stats.getFuelFluid(), fluidStack.getFluid());
-			if (stats.getFuelFluid().equals("null") && isCorrectFluid.isSuccess())
-				stats.setFuelFluid(fluidStack.getFluid().getName());
+			boolean isCorrectFluid = stats.getFuelFluid().equals("null") || FluidUtils.areFluidsSameType(stats.getFuelFluid(), fluidStack.getFluid());
+			if (stats.getFuelFluid().equals("null") && isCorrectFluid)
+				stats.setFuelFluid(fluidStack.getFluid().getRegistryName());
 			return isCorrectFluid;
 		} else if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, fluidStack.getFluid())) {
-			ActionResultType isCorrectFluid = stats.getOxidizerFluid().equals("null") || FluidUtils.areFluidsSameType(stats.getFuelFluid(), fluidStack.getFluid());
-			if (stats.getOxidizerFluid().equals("null") && isCorrectFluid.isSuccess())
-				stats.setOxidizerFluid(fluidStack.getFluid().getName());
+			boolean isCorrectFluid = stats.getOxidizerFluid().equals("null") || FluidUtils.areFluidsSameType(stats.getFuelFluid(), fluidStack.getFluid());
+			if (stats.getOxidizerFluid().equals("null") && isCorrectFluid)
+				stats.setOxidizerFluid(fluidStack.getFluid().getRegistryName());
 			return isCorrectFluid;
 		}
-		return ActionResultType.FAIL;
+		return false;
 	}
 
 	public void openGui(PlayerEntity player) {
@@ -782,7 +730,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 	 */
 	public boolean isBurningFuel() {
 		FuelType fuelType = getRocketFuelType();
-		return (((fuelType == FuelType.LIQUID_BIPROPELLANT ) ? getFuelAmount(fuelType) > 0 && getFuelAmount(FuelType.LIQUID_OXIDIZER) > 0 : getFuelAmount(fuelType) > 0)  || !ARConfiguration.getCurrentConfig().rocketRequireFuel) && ((!this.getPassengers().isEmpty() && getPassengerMovingForward() > 0) || !isInOrbit());
+		return (((fuelType == FuelType.LIQUID_BIPROPELLANT ) ? getFuelAmount(fuelType) > 0 && getFuelAmount(FuelType.LIQUID_OXIDIZER) > 0 : getFuelAmount(fuelType) > 0)  || !ARConfiguration.getCurrentConfig().rocketRequireFuel.get()) && ((!this.getPassengers().isEmpty() && getPassengerMovingForward() > 0) || !isInOrbit());
 	}
 
 	public float getPassengerMovingForward() {
@@ -1024,7 +972,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			this.dataManager.set(LAUNCH_COUNTER, launchCount);
 			//Just before launch, damage the ground. We'll do it again on the tick that we launch
 			if (ARConfiguration.getCurrentConfig().launchingDestroysBlocks.get() && launchCount <= 100 && launchCount != 0 && this.getFuelCapacity(getRocketFuelType()) > 0)
-				damageGroundBelowRocket(world, (int)this..getPosX(), (int)this.getPosY(), (int)this.getPosZ(), (int)Math.pow(stats.getThrust(), 0.4));
+				damageGroundBelowRocket(world, (int)this.getPosX(), (int)this.getPosY(), (int)this.getPosZ(), (int)Math.pow(stats.getThrust(), 0.4));
 		}
 
 		// When flying around in space
@@ -1192,27 +1140,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			if(burningFuel || descentPhase) {
 				//Burn the rocket fuel
 				if(!world.isRemote && !descentPhase) {
-<<<<<<< HEAD
-					setFuelAmountBipropellant((int) (getFuelAmountBipropellant() - stats.getFuelRate(FuelType.LIQUID_BIPROPELLANT)));
-					setFuelAmountOxidizer((int) (getFuelAmountOxidizer() - stats.getFuelRate(FuelType.LIQUID_OXIDIZER)));
-					setFuelAmountMonoproellant((int) (getFuelAmountMonopropellant() - stats.getFuelRate(FuelType.LIQUID_MONOPROPELLANT)));
-				    if (getFuelAmountBipropellant() == 0 && getFuelAmountMonopropellant() == 0) {
-				    	stats.setFuelFluid(null);
-					}
-					if (getFuelAmountOxidizer() == 0) {
-						stats.setOxidizerFluid(null);
-=======
 					setFuelAmount(getRocketFuelType(), getFuelAmount(getRocketFuelType()) - getFuelConsumptionRate(getRocketFuelType()));
 					if (getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT)
 						setFuelAmount(FuelType.LIQUID_OXIDIZER, getFuelAmount(FuelType.LIQUID_OXIDIZER) - getFuelConsumptionRate(FuelType.LIQUID_OXIDIZER));
 
 				    if (getFuelAmount(getRocketFuelType()) == 0) {
-				    	stats.setFuelFluid("null");
-						stats.setWorkingFluid("null");
+				    	stats.setFuelFluid(null);
+						stats.setWorkingFluid(null);
 					}
 					if (getRocketFuelType() == FuelType.LIQUID_BIPROPELLANT && getFuelAmount(FuelType.LIQUID_OXIDIZER) == 0) {
-						stats.setOxidizerFluid("null");
->>>>>>> origin/feature/nuclearthermalrockets
+						stats.setOxidizerFluid(null);
 					}
 				}
 
@@ -1333,7 +1270,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			runEngines();
 
 		//When we're landing, we should also destroy the blocks below the rocket if they are valid to be destroyed - but overall we do it fewer times than on launch (once instead of twice)
-		if(this.getPosY() < world.getHeight(Type.WORLD_SURFACE, getPosition()).getY() + 5 && this.getPosY() > world.getHeight(Type.WORLD_SURFACE, getPosition()).getY() && ARConfiguration.getCurrentConfig().launchingDestroysBlocks && motionY < -0.1) {
+		if(this.getPosY() < world.getHeight(Type.WORLD_SURFACE, getPosition()).getY() + 5 && this.getPosY() > world.getHeight(Type.WORLD_SURFACE, getPosition()).getY() && ARConfiguration.getCurrentConfig().launchingDestroysBlocks.get() && getMotion().y < -0.1) {
 			damageGroundBelowRocket(world, (int)this.getPosX(), (int)this.getPosX() -1, (int)this.getPosZ(), (int)Math.pow(stats.getThrust(), 0.4));
 		}
 	}
@@ -1496,7 +1433,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				//Make player confirm deorbit if a player is riding the rocket
 				if(hasHumanPassenger()) {
 					setInFlight(false);
-					this.setPositionAndUpdate(this.posX, getEntryHeight(destinationDimId), this.posZ);
+					this.setPositionAndUpdate(this.getPosX(), getEntryHeight(destinationDimId), this.getPosZ());
 
 				}
 				this.setInOrbit(true);
@@ -1566,25 +1503,16 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			}
 
 		}
-<<<<<<< HEAD
 		else
 		{
 			//TODO: maybe add orbit dimension
 			this.setMotion(this.getMotion().x, -this.getMotion().y, this.getMotion().z);
-=======
-		else {
-			this.motionY = -this.motionY;
->>>>>>> origin/feature/nuclearthermalrockets
 			setInOrbit(true);
 			//If going to a station or something make sure to set coords accordingly
 			//If in space land on the planet, if on the planet go to space
 			if((ARConfiguration.GetSpaceDimId().equals(destinationDimId) || (ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world)) && !getInSpaceFlight())) && ZUtils.getDimensionIdentifier(this.world) != destinationDimId) {
 				Vector3F<Float> pos = storage.getDestinationCoordinates(destinationDimId, true);
-<<<<<<< HEAD
 				storage.setDestinationCoordinates(new Vector3F<Float>((float)this.getPosX(), (float)this.getPosY(), (float)this.getPosZ()), ZUtils.getDimensionIdentifier(this.world));
-=======
-				storage.setDestinationCoordinates(new Vector3F<>((float) this.posX, (float) this.posY, (float) this.posZ), this.world.provider.getDimension());
->>>>>>> origin/feature/nuclearthermalrockets
 				if(pos != null) {
 
 					//Make player confirm deorbit if a player is riding the rocket
@@ -1603,11 +1531,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			//if coordinates are overridden, make sure we grab them
 			destPos = storage.getDestinationCoordinates(destinationDimId, true);
 			if(destPos == null)
-<<<<<<< HEAD
 				destPos = new Vector3F<Float>((float)getPosX(), (float)getEntryHeight(destinationDimId), (float)getPosZ());
-=======
-				destPos = new Vector3F<>((float) posX, (float) getEntryHeight(destinationDimId), (float) posZ);
->>>>>>> origin/feature/nuclearthermalrockets
 
 			if(hasHumanPassenger()) {
 				//Make player confirm deorbit if a player is riding the rocket
@@ -1657,29 +1581,20 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				ItemStack stack = tile.getStackInSlot(0);
 				if(!stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemSpaceStation) {
 					StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
-<<<<<<< HEAD
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(stack));
-=======
-					ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(stack));
->>>>>>> origin/feature/nuclearthermalrockets
 
 					//in case of no NBT data or the like
-					if(spaceObject == null) {
+					if(object == null) {
 						tile.setInventorySlotContents(0, ItemStack.EMPTY);
 						continue;
 					}
 
-<<<<<<< HEAD
 					SpaceObjectManager.getSpaceManager().moveStationToBody(object, 
 							DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(this.world), new BlockPos(getPositionVec())).getId() );
-=======
-					SpaceObjectManager.getSpaceManager().moveStationToBody(spaceObject,
-							DimensionManager.getEffectiveDimId(this.world.provider.getDimension(), getPosition()).getId() );
->>>>>>> origin/feature/nuclearthermalrockets
 
 					//Vector3F<Integer> spawn = spaceObject.getSpawnLocation();
 
-					spaceObject.onModuleUnpack(storage);
+					object.onModuleUnpack(storage);
 					tile.setInventorySlotContents(0, ItemStack.EMPTY);
 				}
 			}
@@ -1748,7 +1663,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			//TODO: lock the computer
 			destinationDimId = storage.getDestinationDimId(world, (int)this.getPosX(), (int)this.getPosZ());
 
-<<<<<<< HEAD
 			//TODO: make sure this doesn't break asteriod mining
 			if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (Constants.INVALID_PLANET.equals(destinationDimId) && storage.getSatelliteHatches().size() != 0))) {
 				setError(LibVulpes.proxy.getLocalizedString("error.rocket.cannotgetthere"));
@@ -1758,23 +1672,13 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			ResourceLocation finalDest = destinationDimId;
 			if(ARConfiguration.GetSpaceDimId().equals(destinationDimId)) {
 				ISpaceObject obj = null;
-=======
-			if(!(DimensionManager.getInstance().canTravelTo(destinationDimId) || (destinationDimId == Constants.INVALID_PLANET && storage.getSatelliteHatches().size() != 0))) {
-				setError(LibVulpes.proxy.getLocalizedString("error.rocket.cannotGetThere"));
-				return;
-			}
-
-			int finalDest = destinationDimId;
-			if(destinationDimId == ARConfiguration.getCurrentConfig().spaceDimId) {
-				ISpaceObject spaceObject = null;
->>>>>>> origin/feature/nuclearthermalrockets
 				Vector3F<Float> vec = storage.getDestinationCoordinates(destinationDimId,false);
 
 				if(vec != null)
-					spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(vec.x, vec.y, vec.z));
+					obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(vec.x, vec.y, vec.z));
 
-				if( spaceObject != null)
-					finalDest = spaceObject.getOrbitingPlanetId();
+				if( obj != null)
+					finalDest = obj.getOrbitingPlanetId();
 				else { 
 					setError(LibVulpes.proxy.getLocalizedString("error.rocket.destinationnotexist"));
 					return;
@@ -1783,7 +1687,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 
 
 			//If we're on a space station get the id of the planet, not the station
-<<<<<<< HEAD
 			ResourceLocation thisDimId = ZUtils.getDimensionIdentifier(this.world);
 			if(ARConfiguration.GetSpaceDimId().equals(thisDimId)) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(this.getPositionVec()));
@@ -1792,20 +1695,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			}
 
 			//Check to see if it's possible to reach
-			if(!Constants.INVALID_PLANET.equals(finalDest) && (!storage.hasWarpCore() || !DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId().equals(DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId()) ) && !PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(finalDest, thisDimId)) {
+			if(!Constants.INVALID_PLANET.equals(finalDest) && (!stats.isNuclear() || !DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId().equals(DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId()) ) && !PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(finalDest, thisDimId)) {
 				setError(LibVulpes.proxy.getLocalizedString("error.rocket.notsamesystem"));
-=======
-			int thisDimId = this.world.provider.getDimension();
-			if(this.world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
-				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPosition());
-				if(spaceObject != null)
-					thisDimId = spaceObject.getProperties().getParentProperties().getId();
-			}
-
-			//Check to see if it's possible to reach
-			if(finalDest != Constants.INVALID_PLANET && (!stats.isNuclear() || DimensionManager.getInstance().getDimensionProperties(finalDest).getStarId() != DimensionManager.getInstance().getDimensionProperties(thisDimId).getStarId()) && !PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(finalDest, thisDimId)) {
-				setError(LibVulpes.proxy.getLocalizedString("error.rocket.notSameSystem"));
->>>>>>> origin/feature/nuclearthermalrockets
 				return;
 			}
 		}
@@ -1835,38 +1726,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				}
 			}
 		}
-<<<<<<< HEAD
-		//When we launch, we want to damage blocks a second time if possible
-		if (ARConfiguration.getCurrentConfig().launchingDestroysBlocks.get())
-		    damageGroundBelowRocket(world, (int)getPosX(), (int)getPosY(), (int)getPosZ(), (int)Math.pow(stats.getThrust(), 0.3333));
-=======
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	/**
 	 * Damages the ground beneath the rocket, depending on block type
 	 */
 	private void damageGroundBelowRocket(World world, int x, int y, int z, int radius) {
-<<<<<<< HEAD
-		//Actually, we affect the blocks that are one lower
-		y--;
-		for (int i = 0; i <= radius; i++) {
-			for (int j = 0; j <= radius; j++) {
-				for (int k = 1; k >= -2; k--) {
-					//Set blocks to their damaged variants, the if statements make sure we don't set cardinal directions twice the times we should be
-					setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x + i, y + k, z + j))), world, new BlockPos(x + i, y + k, z + j));
-					if (j != 0)
-					    setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x + i, y + k, z - j))), world, new BlockPos(x + i, y + k, z - j));
-					if (i != 0) {
-						setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y + k, z + j))), world, new BlockPos(x - i, y + k, z + j));
-						if (j != 0)
-						    setDamagedBlock(getDamagedBlock(world.getBlockState(new BlockPos(x - i, y + k, z - j))), world, new BlockPos(x - i, y + k, z - j));
-					}
-					//Set fire above that
-					BlockPos blocksAbove = new BlockPos(x + i, y + k, z + j);
-					if (world.getBlockState(blocksAbove).getMaterial().isReplaceable() || world.getBlockState(blocksAbove).getBlock() == Blocks.AIR) {
-						world.setBlockState(blocksAbove, Blocks.FIRE.getDefaultState());
-=======
 		//Start on the same level as the bottom of the rocket
 		BlockPos center = new BlockPos(x - 1, y, z);
 		for (int i = -radius; i <= radius; i++) {
@@ -1884,28 +1749,21 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 						if ( world.getBlockState(blockAbove).getBlock().isAir(world.getBlockState(blockAbove), world, blockAbove)) {
 							world.setBlockState(blockAbove, AdvancedRocketryBlocks.blockRocketFire.getDefaultState());
 						}
->>>>>>> origin/feature/nuclearthermalrockets
 					}
 				}
 			}
 		}
 	}
 
-<<<<<<< HEAD
-	private static BlockState getDamagedBlock(BlockState blockState) {
-		boolean isRegolith = (blockState.getBlock() == AdvancedRocketryBlocks.blockMoonTurf || blockState.getBlock() == AdvancedRocketryBlocks.blockMoonTurfDark);
-		Material material = blockState.getMaterial();
-		
-		if (ZUtils.isBlockTag(blockState.getBlock(), new ResourceLocation("minecraft:stone"))) {
-=======
 	/**
 	 * @param blockState the blockstate to damage
 	 * @return the blockstate that the input blockstate turns into
 	 */
-	private static IBlockState getDamagedBlock(IBlockState blockState) {
-		ItemStack stack = new ItemStack(blockState.getBlock(), 1, blockState.getBlock().getMetaFromState(blockState));
-		if (ZUtils.isItemInOreDict(stack, "stone") || blockState.getBlock() == Blocks.STONEBRICK || ZUtils.isItemInOreDict(stack, "bricksStone")) {
->>>>>>> origin/feature/nuclearthermalrockets
+	private static BlockState getDamagedBlock(BlockState blockState) {
+		boolean isRegolith = (blockState.getBlock() == AdvancedRocketryBlocks.blockMoonTurf || blockState.getBlock() == AdvancedRocketryBlocks.blockMoonTurfDark);
+		Material material = blockState.getMaterial();
+
+		if (ZUtils.isBlockTag(blockState.getBlock(), new ResourceLocation("minecraft:stone")) || blockState.getBlock() == Blocks.STONE_BRICKS ) {
 			return Blocks.COBBLESTONE.getDefaultState();
 		} else if (ZUtils.isBlockTag(blockState.getBlock(), new ResourceLocation("minecraft:cobblestone")) || ZUtils.isBlockTag(blockState.getBlock(), new ResourceLocation("minecraft:stone"))) {
 			return AdvancedRocketryBlocks.blockBasalt.getDefaultState();
@@ -1915,7 +1773,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			return Blocks.MAGMA_BLOCK.getDefaultState();
 		} else if (blockState.getBlock() == Blocks.MAGMA_BLOCK) {
 			return Blocks.LAVA.getDefaultState();
-<<<<<<< HEAD
 		} else if (blockState.getBlock() == Blocks.GRASS_BLOCK) {
 			return Blocks.DIRT.getDefaultState();
 		} else if (material == Material.EARTH && !isRegolith) {
@@ -1936,22 +1793,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		if (blockState != world.getBlockState(position)) {
 			world.setBlockState(position, blockState);
 		}
-=======
-		} else if (blockState.getMaterial() == Material.GRASS) {
-			return Blocks.DIRT.getDefaultState();
-		} else if (blockState.getMaterial() == Material.GROUND && !(blockState.getBlock() instanceof BlockRegolith)) {
-			return Blocks.SAND.getDefaultState();
-		} else if (blockState.getBlock() instanceof BlockSand || blockState.getBlock() instanceof BlockRegolith || ZUtils.isItemInOreDict(stack, "regolith") || ZUtils.isItemInOreDict(stack, "sandstone")) {
-			return Blocks.GLASS.getDefaultState();
-		} else if (blockState.getMaterial() == Material.ICE || blockState.getMaterial() == Material.PACKED_ICE || ((blockState.getMaterial() == Material.SNOW || blockState.getMaterial() == Material.CRAFTED_SNOW) && blockState.getBlock() != Blocks.SNOW_LAYER )) {
-			return Blocks.WATER.getDefaultState();
-		} else if (blockState.getMaterial() == Material.WATER || blockState.getBlock() == Blocks.SNOW_LAYER) {
-			return Blocks.AIR.getDefaultState();
-		} else if (blockState.getMaterial() == Material.WOOD || blockState.getMaterial() == Material.LEAVES || blockState.getMaterial() == Material.PLANTS || blockState.getMaterial() == Material.GOURD || blockState.getMaterial() == Material.WEB || blockState.getMaterial() == Material.CLOTH || blockState.getMaterial() == Material.CARPET || blockState.getMaterial() == Material.CACTUS || blockState.getMaterial() == Material.SPONGE) {
-			return Blocks.FIRE.getDefaultState();
-		}
-		return null;
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	/**
@@ -2385,7 +2226,6 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 	@Override
 	public void updatePassenger(@Nonnull Entity entity)
 	{
-<<<<<<< HEAD
 		if (entity != null )
 		{
 			//Bind player to the seat
@@ -2422,42 +2262,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			}
 			else
 				entity.setPosition(this.getPosX() , this.getPosY() , this.getPosZ() );
-=======
-		//Bind player to the seat
-		if(this.storage != null) {
-			try {
-				HashedBlockPosition seatPos = stats.getPassengerSeat(this.getPassengers().indexOf(entity));
-				//Conditional b/c for some reason client/server positions do not match
-				float xOffset = this.storage.getSizeX() % 2 == 0 ? 0.5f : 0f;
-				float zOffset = this.storage.getSizeZ() % 2 == 0 ? 0.5f : 0f;
-				float halfy = storage.getSizeY()/2f;
-
-				double xPos = seatPos.x + xOffset;
-				double yPos = seatPos.y  - 0.5f - halfy;
-				double zPos = seatPos.z + zOffset ;
-				float angle = (float)(getRCSRotateProgress()*0.9f*Math.PI/180f);
-
-				double yNew = (yPos)*MathHelper.cos(angle) + (-zPos - 0.5)*MathHelper.sin(angle);
-				double zNew = zPos*MathHelper.cos(angle) + (yPos + 1)*MathHelper.sin(angle);
-				yPos = yNew + this.posY + halfy;
-				zPos = zNew;
-
-				//Now do yaw
-				float yawAngle = (float)(this.rotationYaw*Math.PI/180f);
-				double xNew = (xPos)*MathHelper.cos(-yawAngle) + (zPos)*MathHelper.sin(-yawAngle);
-				zNew = zPos*MathHelper.cos(yawAngle) + (xPos)*MathHelper.sin(yawAngle);
-				xPos = this.posX + xNew ;
-				zPos = this.posZ + zNew;
-
-
-				entity.setPosition(xPos, yPos, zPos );
-			} catch (IndexOutOfBoundsException e) {
-				entity.setPosition(this.posX , this.posY , this.posZ );
-			}
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 		else
-			entity.setPosition(this.posX , this.posY , this.posZ );
+			entity.setPosition(this.getPosX() , this.getPosY() , this.getPosZ() );
 	}
 
 	@Override
@@ -2474,12 +2281,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				modules.add(new ModuleImage(173, 168, new IconResource(98, 168, 78, 3, CommonResources.genericBackground)));
 			}
 
-<<<<<<< HEAD
 			//Fuel
 			modules.add(new ModuleProgress(192, 7, 0, new ProgressBarImage(2, 173, 12, 71, 17, 6, 3, 69, 1, 1, Direction.UP, TextureResources.rocketHud), this));
 
-=======
->>>>>>> origin/feature/nuclearthermalrockets
 			//TODO DEBUG tiles!
 			//Render TEs in a pan-able list y-axis only
 			List<TileEntity> tiles = storage.getGUITiles();
@@ -2488,11 +2292,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				TileEntity tile  = tiles.get(i);
 				BlockState state = storage.getBlockState(tile.getPos());
 				try {
-<<<<<<< HEAD
-					modules.add(new ModuleSlotButton(8 + 18* (i % 9), 17 + 18*(i/9), this, new ItemStack(state.getBlock(), 1), world).setAdditionalData(i + tilebuttonOffset));
-=======
-					panModules.add(new ModuleSlotButton(18 * (i % 9),  18*(i/9), i + tilebuttonOffset, this, new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)), world));
->>>>>>> origin/feature/nuclearthermalrockets
+					panModules.add(new ModuleSlotButton(18 * (i % 9),  18*(i/9), this, new ItemStack(state.getBlock(), 1), world).setAdditionalData(i + tilebuttonOffset));
 				} catch (NullPointerException e) {
 
 				}
@@ -2500,7 +2300,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			modules.add(new ModuleContainerPanYOnly(8, 17, panModules, new LinkedList<>(), null, 171, 40, 0, 0));
 
 			//Fuel
-			modules.add(new ModuleProgress(192, 7, 0, new ProgressBarImage(2, 173, 12, 71, 17, 6, 3, 69, 1, 1, EnumFacing.UP, TextureResources.rocketHud), this));
+			modules.add(new ModuleProgress(192, 7, 0, new ProgressBarImage(2, 173, 12, 71, 17, 6, 3, 69, 1, 1, Direction.UP, TextureResources.rocketHud), this));
 
 
 			//Add buttons
@@ -2522,7 +2322,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				modules.add(new ModuleStellarBackground(0, 0, zmaster587.libVulpes.inventory.TextureResources.starryBG));
 				//modules.add(new ModuleImage(0, 0, icon));
 
-				if(spaceObject == null)
+				if(obj == null)
 					return modules;
 
 				List<ModuleBase> list2 = new LinkedList<>();
@@ -2530,7 +2330,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				list2.add(button);
 
 				int i = 1;
-				for( StationLandingLocation pos : ((SpaceStationObject)spaceObject).getLandingPads())
+				for( StationLandingLocation pos : ((SpaceStationObject)obj).getLandingPads())
 				{
 					button = new ModuleButton(0, i*18, pos.toString(), this, TextureResources.buttonGeneric, 72, 18).setAdditionalData( i + STATION_LOC_OFFSET);
 					list2.add(button);
@@ -2588,11 +2388,11 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 	}
 
 	public double getRelativeHeightFraction() {
-		return (posY - getTopBlock(getPosition()).getY())/(getEntryHeight(dimension) - getTopBlock(getPosition()).getY());
+		return (getPosY() - getTopBlock(getPosition()).getY())/(getEntryHeight(world.getDimensionKey().getLocation()) - getTopBlock(getPosition()).getY());
 	}
 
 	public double getPreviousRelativeHeightFraction() {
-		return (prevPosY - getTopBlock(getPosition()).getY())/(getEntryHeight(dimension) - getTopBlock(getPosition()).getY());
+		return (prevPosY - getTopBlock(getPosition()).getY())/(getEntryHeight(world.getDimensionKey().getLocation()) - getTopBlock(getPosition()).getY());
 	}
 
 	@Override
@@ -2630,13 +2430,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			//Minecraft.getInstance().thePlayer.closeScreen();
 
 			if(buttonId < STATION_LOC_OFFSET) {
-<<<<<<< HEAD
 				//TileEntity tile = storage.getGUItiles().get(buttonId - tilebuttonOffset);
 				//storage.getBlockState(tile.getPos()).getBlock().onBlockActivated( storage.getBlockState(tile.getPos()), storage.world, tile.getPos(), (PlayerEntity)Minecraft.getInstance().player, Hand.MAIN_HAND, new BlockRayTraceResult(new Vector3d(0,0,0), Direction.DOWN, tile.getPos(), false));
-=======
-				TileEntity tile = storage.getGUITiles().get(buttonId - tilebuttonOffset);
-				storage.getBlockState(tile.getPos()).getBlock().onBlockActivated(storage.world, tile.getPos(), storage.getBlockState(tile.getPos()), Minecraft.getMinecraft().player, EnumHand.MAIN_HAND, EnumFacing.DOWN, 0, 0, 0);
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 		}
 	}

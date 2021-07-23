@@ -1,31 +1,32 @@
 package zmaster587.advancedRocketry.tile.station;
 
 import com.google.common.base.Predicate;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-<<<<<<< HEAD
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.advancements.ARAdvancements;
-=======
-import net.minecraftforge.fml.relauncher.Side;
->>>>>>> origin/feature/nuclearthermalrockets
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
+import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -68,18 +69,10 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 	private DimensionProperties dimCache;
 	private SpaceStationObject station;
 	private static final int ARTIFACT_BEGIN_RANGE = 4, ARTIFACT_END_RANGE = 8;
-<<<<<<< HEAD
-	ModulePanetImage srcPlanetImg, dstPlanetImg;
+	ModulePlanetImage srcPlanetImg, dstPlanetImg;
 	ModuleSync sync3;
 	ModuleText srcPlanetText, dstPlanetText, warpFuel, status, warpCapacity;
 	int warpCost = -1;
-=======
-	private ModulePlanetImage srcPlanetImg, dstPlanetImg;
-	private ModuleSync sync1, sync2, sync3;
-	private ModuleText srcPlanetText, dstPlanetText, warpFuel, status, warpCapacity;
-	private int warpCost = -1;
-	private int dstPlanet, srcPlanet;
->>>>>>> origin/feature/nuclearthermalrockets
 	private ModuleTab tabModule;
 	private static final byte TAB_SWITCH = 4, STORE_DATA = 10, LOAD_DATA = 20, SEARCH = 5, PROGRAMFROMCHIP = 6;
 	private MultiData data;
@@ -101,17 +94,10 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 
 
 	private SpaceStationObject getSpaceObject() {
-<<<<<<< HEAD
 		if(station == null && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world))) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceStationObject)
 				station = (SpaceStationObject) object;
-=======
-		if(station == null && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
-			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(spaceObject instanceof SpaceStationObject)
-				station = (SpaceStationObject) spaceObject;
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 		return station;
 	}
@@ -153,7 +139,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 		return Integer.MAX_VALUE;
 	}
 
-	public int getTravelCostToDimension(int destinationID) {
+	public int getTravelCostToDimension(ResourceLocation destinationID) {
 		if(getSpaceObject() != null) {
 			DimensionProperties properties = getSpaceObject().getProperties().getParentProperties();
 
@@ -202,13 +188,8 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-=======
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 
 		if(ID == guiId.MODULARNOINV.ordinal()) {
 
@@ -256,21 +237,12 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 				//Status text
 				modules.add(new ModuleText(baseX, baseY + sizeY + 20, LibVulpes.proxy.getLocalizedString("msg.warpmon.corestatus"), 0x1b1b1b));
 				boolean flag = isOnStation && getSpaceObject().getFuelAmount() >= getTravelCost() && getSpaceObject().hasUsableWarpCore();
-<<<<<<< HEAD
 				flag = flag && !(isOnStation && (Constants.INVALID_PLANET.equals(getSpaceObject().getDestOrbitingBody()) || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()));
 				boolean artifactFlag = (dimCache != null && meetsArtifactReq(dimCache));
 
 				canWarp = new ModuleText(baseX, baseY + sizeY + 30,
 						(getSpaceObject().isAnchored()) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.anchored") :
 						((isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId().equals(getSpaceObject().getDestOrbitingBody()))) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") :
-=======
-				flag = flag && !(getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody());
-				boolean artifactFlag = (dimCache != null && meetsArtifactReq(dimCache));
-
-				canWarp = new ModuleText(baseX, baseY + sizeY + 30,
-						(isOnStation && getSpaceObject().isAnchored()) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.anchored") :
-						((isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody())) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") :
->>>>>>> origin/feature/nuclearthermalrockets
 						(!artifactFlag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.missingart") :
 						(flag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.ready") :
 						LibVulpes.proxy.getLocalizedString("msg.warpmon.notready")))), flag && artifactFlag && !getSpaceObject().isAnchored() ? 0x1baa1b : 0xFF1b1b);
@@ -382,11 +354,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 		boolean flag = isOnStation && getSpaceObject().getFuelAmount() >= warpCost && getSpaceObject().hasUsableWarpCore();
 
 		if(canWarp != null) {
-<<<<<<< HEAD
 			flag = flag && !(isOnStation && (Constants.INVALID_PLANET.equals(getSpaceObject().getDestOrbitingBody()) || getSpaceObject().getOrbitingPlanetId().equals(getSpaceObject().getDestOrbitingBody())));
-=======
-			flag = flag && !(getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody());
->>>>>>> origin/feature/nuclearthermalrockets
 			boolean artifactFlag = (dimCache != null && meetsArtifactReq(dimCache));
 			
 			canWarp.setText(
@@ -511,7 +479,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 
 	@Override
 	public void readDataFromNetwork(PacketBuffer in, byte packetId,
-			CompoundNBT nbt) {
+									CompoundNBT nbt) {
 		if(packetId == 1 || packetId == 3)
 			nbt.putString("id", in.readString());
 		else if(packetId == TAB_SWITCH)
@@ -526,7 +494,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 
 	@Override
 	public void useNetworkData(PlayerEntity player, Dist side, byte id,
-			CompoundNBT nbt) {
+							   CompoundNBT nbt) {
 		if(id == 0) {
 			openFullScreen = true;
 			NetworkHooks.openGui((ServerPlayerEntity) player, this, buf -> {buf.writeInt(GuiHandler.guiId.MODULARFULLSCREEN.ordinal()); buf.writeBlockPos(pos); });
@@ -559,25 +527,14 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 			if(station != null && !station.isAnchored() && station.hasUsableWarpCore() && station.useFuel(getTravelCost()) != 0 && meetsArtifactReq(DimensionManager.getInstance().getDimensionProperties(station.getDestOrbitingBody()))) {
 				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), Math.max(Math.min(getTravelCost()*5, 5000),0));
 
-<<<<<<< HEAD
 				for (PlayerEntity player2 : ((ServerWorld)world).getPlayers(new Predicate<PlayerEntity>() {
 					public boolean apply(PlayerEntity input) {
 						return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos( input.getPositionVec())) == station;
 					};
-=======
-				for (EntityPlayer player2 : world.getPlayers(EntityPlayer.class, new Predicate<EntityPlayer>() {
-					public boolean apply(EntityPlayer input) {
-						return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(input.getPosition()) == station;
-					}
->>>>>>> origin/feature/nuclearthermalrockets
 				})) {
 					ARAdvancements.triggerAchievement(ARAdvancements.ALL_SHE_GOT, (ServerPlayerEntity) player2);
 					if(!DimensionManager.hasReachedWarp)
-<<<<<<< HEAD
 						ARAdvancements.triggerAchievement(ARAdvancements.FLIGHT_OF_PHEONIX, (ServerPlayerEntity)player2);
-=======
-						ARAdvancements.FLIGHT_OF_PHOENIX.trigger((EntityPlayerMP) player2);
->>>>>>> origin/feature/nuclearthermalrockets
 				}
 
 				DimensionManager.hasReachedWarp = true;
@@ -620,28 +577,16 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 	}
 
 	@Override
-<<<<<<< HEAD
 	public CompoundNBT write(CompoundNBT compound) {
 		inv.write(compound);
-=======
-	@Nonnull
-	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		inv.writeToNBT(compound);
->>>>>>> origin/feature/nuclearthermalrockets
 		data.writeToNBT(compound);
 		compound.putInt("progress", progress);
 		return super.write(compound);
 	}
 
 	@Override
-<<<<<<< HEAD
 	public CompoundNBT getUpdateTag() {
 		return write(new CompoundNBT());
-=======
-	@Nonnull
-	public NBTTagCompound getUpdateTag() {
-		return writeToNBT(new NBTTagCompound());
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 	
 	@Override
@@ -850,23 +795,6 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 
 	}
 
-<<<<<<< HEAD
-=======
-
-	@Override
-	@Nonnull
-	public String getName() {
-		return getModularInventoryName();
-	}
-
-
-	@Override
-	public boolean hasCustomName() {
-		return false;
-	}
-
-
->>>>>>> origin/feature/nuclearthermalrockets
 	@Override
 	public void loadData(int id) {
 		ItemStack stack = ItemStack.EMPTY;
@@ -940,20 +868,9 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 		List<ItemStack> list = new LinkedList<>(properties.getRequiredArtifacts());
 		for(int i = ARTIFACT_BEGIN_RANGE; i <= ARTIFACT_END_RANGE; i++) {
 			ItemStack stack2 = getStackInSlot(i);
-<<<<<<< HEAD
-			if(stack2 != null) {
-				Iterator<ItemStack> itr = list.iterator();
-				while(itr.hasNext()) {
-					ItemStack stackInList = itr.next();
-					if(stackInList.getItem().equals(stack2.getItem()) && stackInList.getDamage() == stack2.getDamage()
-							&& ItemStack.areItemStackTagsEqual(stackInList, stack2) && stack2.getCount() >= stackInList.getCount())
-						itr.remove();
-				}
-=======
 			if(!stack2.isEmpty()) {
-				list.removeIf(stackInList -> stackInList.getItem().equals(stack2.getItem()) && stackInList.getItemDamage() == stack2.getItemDamage()
+				list.removeIf(stackInList -> stackInList.getItem().equals(stack2.getItem()) && stackInList.getDamage() == stack2.getDamage()
 						&& ItemStack.areItemStackTagsEqual(stackInList, stack2) && stack2.getCount() >= stackInList.getCount());
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 		}
 		
@@ -969,7 +886,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 		for (ItemStack item : items) {
 			boolean foundArtifact = false;
 			for (ItemStack item2 : list) {
-				if(item.getItem() == item2.getItem() && item.getItemDamage() == item2.getItemDamage() && ItemStack.areItemStackTagsEqual(item, item2) && item.getCount() >= item2.getCount()) {
+				if(item.getItem() == item2.getItem() && item.getDamage() == item2.getDamage() && ItemStack.areItemStackTagsEqual(item, item2) && item.getCount() >= item2.getCount()) {
 	                foundArtifact = true;
 				}
 			}
@@ -984,21 +901,12 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 			progress++;
 			if(progress >= MAX_PROGRESS) {
 				//Do the thing
-<<<<<<< HEAD
 				SpaceStationObject obj = getSpaceObject();
 				if(Math.abs(world.rand.nextInt()) % ARConfiguration.getCurrentConfig().planetDiscoveryChance.get() == 0 && obj != null) {
-=======
-				SpaceStationObject spaceStationObject = getSpaceObject();
-				if(Math.abs(world.rand.nextInt()) % ARConfiguration.getCurrentConfig().planetDiscoveryChance == 0 && spaceStationObject != null) {
->>>>>>> origin/feature/nuclearthermalrockets
 					ItemStack stack = getStackInSlot(PLANETSLOT);
 					if(!stack.isEmpty() && stack.getItem() instanceof ItemPlanetIdentificationChip) {
 						ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)stack.getItem();
-<<<<<<< HEAD
 						List<ResourceLocation> unknownPlanets = new LinkedList<ResourceLocation>();
-=======
-						List<Integer> unknownPlanets = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 						
 						//Check to see if any planets with artifacts can be discovered
 						for(ResourceLocation id : DimensionManager.getInstance().getLoadedDimensions()) {
@@ -1025,7 +933,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 							ResourceLocation newId;
 							newId = unknownPlanets.get(newIndex);
 							item.setDimensionId(stack, newId);
-							spaceStationObject.discoverPlanet(newId);
+							obj.discoverPlanet(newId);
 						}
 					}
 				}

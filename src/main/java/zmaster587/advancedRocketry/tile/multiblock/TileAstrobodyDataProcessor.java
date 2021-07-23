@@ -400,7 +400,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 		int center = 1000/2;
 
 		subModule.add(new ModuleButton(center-solarRadius/2, center-solarRadius/2, 99, "", this, new ResourceLocation[] { TextureResources.locationSunPng}, solarRadius, solarRadius));
-		DimensionProperties properties = DimensionManager.getSol().getPlanets().get(0);
+		DimensionProperties properties = DimensionManager.getInstance().getStar(new ResourceLocation(Constants.STAR_NAMESPACE, "0")).getPlanets().get(0);
 
 		subModule.add(new ModuleButton(center + properties.getMapDisplayPositionX() , center + properties.getMapDisplayPositionY(), 99, "", this, new ResourceLocation[] { properties.getPlanetIcon() }, properties.getName(), properties.getMapDisplayeSize(), properties.getMapDisplayeSize()));
 

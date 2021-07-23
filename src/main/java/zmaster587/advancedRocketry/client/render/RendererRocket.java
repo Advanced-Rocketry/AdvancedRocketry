@@ -3,28 +3,16 @@ package zmaster587.advancedRocketry.client.render;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
-<<<<<<< HEAD
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-=======
-import net.minecraft.client.renderer.chunk.IRenderChunkFactory;
-import net.minecraft.client.renderer.chunk.ListChunkFactory;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.texture.TextureMap;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-<<<<<<< HEAD
 import net.minecraft.util.math.vector.Quaternion;
-=======
-import net.minecraft.world.IBlockAccess;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 import java.lang.reflect.Method;
@@ -36,25 +24,14 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
 
-<<<<<<< HEAD
 public class RendererRocket extends EntityRenderer<EntityRocket> implements IRenderFactory<EntityRocket> {
-=======
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-public class RendererRocket extends Render implements IRenderFactory<EntityRocket> {
->>>>>>> origin/feature/nuclearthermalrockets
 
 	private static BlockRendererDispatcher renderBlocks = Minecraft.getInstance().getBlockRendererDispatcher();
 
 	Class tileEntityBlockChiseled;
 	Method getState;
 
-<<<<<<< HEAD
 	public RendererRocket(EntityRendererManager manager) {
-=======
-	public RendererRocket(@Nonnull RenderManager manager) {
->>>>>>> origin/feature/nuclearthermalrockets
 		super(manager);
 
 		/*try {
@@ -69,14 +46,8 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 
 	//TODO: possibly optimize with GL lists
 	@Override
-<<<<<<< HEAD
 	public void render(EntityRocket entity, float entityYaw, float partialTicks, MatrixStack matrix,
 			IRenderTypeBuffer bufferIn, int packedLightIn) {
-=======
-	public void doRender(@Nonnull Entity entity, double x,
-			double y, double z, float f1,
-			float f2) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 		StorageChunk storage  = entity.storage;
 
@@ -161,28 +132,11 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 			}
 		}
 
-<<<<<<< HEAD
 		//Render tile entities if applicable
 		for(TileEntity tile : storage.getTileEntityList()) {
 			
 				matrix.push();
 				matrix.translate(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ());
-=======
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float)x, (float)y + halfy, (float)z);
-		GL11.glRotatef(((EntityRocket)entity).getRCSRotateProgress()*0.9f, 1f, 0f, 0f);
-		GL11.glRotatef(entity.rotationYaw, 0f, 0f, 1f);
-		GL11.glTranslatef(- halfx, (float)0 - halfy, - halfz);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		GL11.glCallList(storage.world.displayListIndex);
-
-
-
-		//Render tile entities if applicable
-		for(TileEntity tile : storage.getTileEntityList()) {
-			TileEntitySpecialRenderer renderer = TileEntityRendererDispatcher.instance.renderers.get(tile.getClass());
-			if(renderer != null ) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 				if(tileEntityBlockChiseled == null || !tileEntityBlockChiseled.isInstance(tile))
 				{
@@ -242,13 +196,8 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 	}
 
 	@Override
-<<<<<<< HEAD
 	public EntityRenderer<? super EntityRocket> createRenderFor(EntityRendererManager manager) {
 		return new RendererRocket(manager);
-=======
-	protected ResourceLocation getEntityTexture(@Nullable Entity p_110775_1_) {
-		return null;
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override

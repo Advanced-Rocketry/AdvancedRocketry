@@ -219,7 +219,6 @@ public class DimensionManager implements IGalaxy {
 	}
 	
 	/**
-	 * @param satId long id of the satellite
 	 * @return a reference to the satellite object with the supplied ID
 	 */
 	public Collection<SatelliteBase> getSatellites() {
@@ -227,7 +226,7 @@ public class DimensionManager implements IGalaxy {
 		//Hack to allow monitoring stations to properly reload after a server restart
 		//Because there should never be a tile in the world where no planets have been generated load file first
 		//Worst thing that can happen is there is no file and it gets genned later and the monitor does not reconnect
-		if(!hasBeenInitiallized && EffectiveSide.get().isServer() ) {
+		if(!hasBeenInitialized && EffectiveSide.get().isServer() ) {
 			DimensionManager.getInstance().loadDimensions(ServerLifecycleHooks.getCurrentServer().func_240776_a_(new FolderName(DimensionManager.workingPath)).toString());
 		}
 
@@ -485,8 +484,8 @@ public class DimensionManager implements IGalaxy {
 		final File saveDir = ServerLifecycleHooks.getCurrentServer().func_240776_a_(FolderName.DOT).toFile();
 		
 		String fileContents = properties.generateDimJSON();
-		
-		
+
+
 		File file = new File(saveDir, DimensionManager.datapackPath + "/ar_datapack/data/" + properties.getId().getNamespace() + "/dimension/" + properties.getId().getPath() + ".json");
 		File dir = new File(saveDir, DimensionManager.datapackPath + "/ar_datapack/data/" + properties.getId().getNamespace() + "/dimension");
 		File mcMeta = new File(saveDir, DimensionManager.datapackPath + "/ar_datapack/pack.mcmeta");
@@ -508,7 +507,7 @@ public class DimensionManager implements IGalaxy {
 		}
 		if(!file.exists())
 			file.createNewFile();
-		
+
 
 		File tmpFile = File.createTempFile("dimprops", ".DAT", saveDir);
 		FileOutputStream fileString = new FileOutputStream(tmpFile);
@@ -679,7 +678,7 @@ public class DimensionManager implements IGalaxy {
 
 	/**
 	 * 
-	 * @param dimId id of the dimention of which to get the properties
+	 * @param resourceLocation id of the dimention of which to get the properties
 	 * @return DimensionProperties representing the dimId given
 	 */
 	public DimensionProperties getDimensionProperties(ResourceLocation resourceLocation)
@@ -813,9 +812,9 @@ public class DimensionManager implements IGalaxy {
 			bufoutStream.write(xmlOutput.getBytes());
 
 			//Commit to OS, tell OS to commit to disk, release and close stream
-			bufOutStream.flush();
-			bufOutStream.getFD().sync();
-			bufOutStream.close();
+			bufoutStream.flush();
+			bufoutStream.getFD().sync();
+			bufoutStream.close();
 
 			//Temp file was written OK, commit
 			Files.copy(tmpFileXml.toPath(), planetXMLOutput.toPath(), REPLACE_EXISTING);
@@ -962,7 +961,7 @@ public class DimensionManager implements IGalaxy {
 		//Load planet files
 		//Note: loading this modifies dimOffset
 		int dimOffset =0;
-		DimensionPropertyCoupling dimCouplingList = null;
+		XMLPlanetLoader.DimensionPropertyCoupling dimCouplingList = null;
 		XMLPlanetLoader loader = null;
 		boolean loadedFromXML = false;
 		File file;
@@ -1016,7 +1015,6 @@ public class DimensionManager implements IGalaxy {
 			try {
 				if(loader.loadFile(file)) {
 					dimCouplingList = loader.readAllPlanets();
-					DimensionManager.dimOffset += dimCouplingList.dims.size();
 				}
 				else {
 					loadSuccessful = false;
@@ -1156,14 +1154,14 @@ public class DimensionManager implements IGalaxy {
 					dimensionProperties.addBiome(AdvancedRocketryBiomes.moonBiomeDark);
 
 					dimensionProperties.setParentPlanet(DimensionManager.overworldProperties);
-                    dimensionProperties.setStar(DimensionManager.getInstance().getStar(0));
+                    dimensionProperties.setStar(DimensionManager.getInstance().getStar(new ResourceLocation(Constants.STAR_NAMESPACE, "0")));
 					dimensionProperties.isNativeDimension = !ModList.get().isLoaded("GalacticraftCore");
 					dimensionProperties.initDefaultAttributes();
 
 					DimensionManager.getInstance().registerDimNoUpdate(dimensionProperties, !ModList.get().isLoaded("GalacticraftCore"));
 				}
 
-				generateRandomPlanets(DimensionManager.getInstance().getStar(0), numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
+				generateRandomPlanets(DimensionManager.getInstance().getStar(new ResourceLocation(Constants.STAR_NAMESPACE, "0")), numRandomGeneratedPlanets, numRandomGeneratedGasGiants);
 
 				StellarBody star = new StellarBody();
 				star.setTemperature(10);
@@ -1265,7 +1263,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param filePath file path from which to load the information
 	 */
 	public Map<ResourceLocation,IDimensionProperties> loadDimensions(String filePath) {
-		hasBeenInitiallized = true;
+		hasBeenInitialized= true;
 		Map<ResourceLocation,IDimensionProperties> loadedDimProps = new HashMap<>();
 
 		FileInputStream inStream;
