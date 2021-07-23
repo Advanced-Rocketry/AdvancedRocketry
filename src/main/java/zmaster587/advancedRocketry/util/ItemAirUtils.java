@@ -46,17 +46,10 @@ public class ItemAirUtils implements IFillableArmor {
 	 * @param amt amount of air to set the suit to
 	 */
 	@Override
-<<<<<<< HEAD
 	public void setAirRemaining(ItemStack stack, int amt) {
 		CompoundNBT nbt;
 		if(stack.hasTag()) {
 			nbt = stack.getTag();
-=======
-	public void setAirRemaining(@Nonnull ItemStack stack, int amt) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound()) {
-			nbt = stack.getTagCompound();
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 		else {
 			nbt = new CompoundNBT();
@@ -130,7 +123,6 @@ public class ItemAirUtils implements IFillableArmor {
 
 		//Check for enchantment
 		boolean isEnchanted = false;
-<<<<<<< HEAD
 		ListNBT enchList = stack.getEnchantmentTagList();
 		if(enchList != null) {
 			for(int i = 0 ; i < enchList.size(); i++) {
@@ -139,14 +131,6 @@ public class ItemAirUtils implements IFillableArmor {
 				if(isEnchanted)
 					break;
 			}
-=======
-		NBTTagList enchList = stack.getEnchantmentTagList();
-		for(int i = 0 ; i < enchList.tagCount(); i++) {
-			NBTTagCompound compound = enchList.getCompoundTagAt(i);
-			isEnchanted = compound.getShort("id") == Enchantment.getEnchantmentID(AdvancedRocketryAPI.enchantmentSpaceProtection);
-			if(isEnchanted)
-				break;
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 		return isEnchanted;
 	}
@@ -184,16 +168,10 @@ public class ItemAirUtils implements IFillableArmor {
 		}
 
 		@Override
-<<<<<<< HEAD
 		public boolean protectsFromSubstance(IAtmosphere atmosphere,
 				ItemStack stack, boolean commitProtection) {
 			if(stack != null && stack.getItem() instanceof ArmorItem) {
 				if(((ArmorItem) stack.getItem()).getEquipmentSlot() == EquipmentSlotType.CHEST )
-=======
-		public boolean protectsFromSubstance(IAtmosphere atmosphere, @Nonnull ItemStack stack, boolean commitProtection) {
-			if(!stack.isEmpty() && stack.getItem() instanceof ItemArmor) {
-				if(((ItemArmor) stack.getItem()).armorType == EntityEquipmentSlot.CHEST )
->>>>>>> origin/feature/nuclearthermalrockets
 					return decrementAir(stack, 1) == 1;
 				
 				return true;

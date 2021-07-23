@@ -35,17 +35,7 @@ public class TileEnergyPipe extends TilePipe implements IUniversalEnergy {
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
-=======
-	public boolean hasCapability(@Nullable Capability<?> capability, EnumFacing facing) {
-
-		return capability == CapabilityEnergy.ENERGY || TeslaHandler.hasTeslaCapability(this, capability);
-	}
-
-	@Override
-	public <T> T getCapability(@Nullable Capability<T> capability, EnumFacing facing) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 		if(capability == CapabilityEnergy.ENERGY )
 			return LazyOptional.of(() -> new ForgePowerCapability(this)).cast();

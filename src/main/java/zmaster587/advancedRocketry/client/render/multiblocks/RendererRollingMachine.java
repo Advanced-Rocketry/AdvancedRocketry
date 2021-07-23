@@ -17,11 +17,8 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
-<<<<<<< HEAD
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
-=======
->>>>>>> origin/feature/nuclearthermalrockets
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
@@ -29,12 +26,8 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 public class RendererRollingMachine extends TileEntityRenderer<TileRollingMachine> {
 	WavefrontObject model;
 
-<<<<<<< HEAD
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/rollingmachine.png");
 	private static int bodyList;
-=======
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/rollingMachine.png");
->>>>>>> origin/feature/nuclearthermalrockets
 
 	public RendererRollingMachine(TileEntityRendererDispatcher tile) {
 		super(tile);
@@ -43,13 +36,6 @@ public class RendererRollingMachine extends TileEntityRenderer<TileRollingMachin
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}
-<<<<<<< HEAD
-=======
-		int bodyList;
-		GL11.glNewList(bodyList = GL11.glGenLists(1), GL11.GL_COMPILE);
-		model.renderOnly("Hull");
-		GL11.glEndList();
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override

@@ -17,10 +17,7 @@ import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.tile.multiblock.energy.TileSolarArray;
 import zmaster587.libVulpes.block.RotatableBlock;
-<<<<<<< HEAD
 import zmaster587.libVulpes.render.RenderHelper;
-=======
->>>>>>> origin/feature/nuclearthermalrockets
 
 public class RendererSolarArray extends TileEntityRenderer<TileSolarArray> {
 

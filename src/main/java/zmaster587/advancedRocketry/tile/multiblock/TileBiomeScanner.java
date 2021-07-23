@@ -24,6 +24,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 
 import javax.annotation.Nonnull;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -66,13 +67,8 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> list = new LinkedList<ModuleBase>();//super.getModules(ID, player);
-=======
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> list = new LinkedList<>();//super.getModules(ID, player);
->>>>>>> origin/feature/nuclearthermalrockets
 
 		boolean suitable = true;
 		for(int y = this.getPos().getY() - 4; y > 0; y--) {
@@ -99,7 +95,6 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 
 
 					int i = 0;
-<<<<<<< HEAD
 					if(properties.getId() == DimensionManager.overworldProperties.getId()) {
 						Iterator<Biome> itr = AdvancedRocketryBiomes.getAllBiomes();
 						while (itr.hasNext()) {
@@ -113,17 +108,6 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 						while (itr.hasNext()) {
 							Biome biome = itr.next();
 							list2.add(new ModuleText(32, 16 + 12*(i++), AdvancedRocketry.proxy.getNameFromBiome(biome), 0x202020));
-=======
-					if(properties.getId() == 0) {
-						for (Biome biome : Biome.REGISTRY) {
-							if (biome != null)
-								list2.add(new ModuleText(32, 16 + 12 * (i++), AdvancedRocketry.proxy.getNameFromBiome(biome), 0x202020));
-						}
-					}
-					else {
-						for (BiomeEntry biome : properties.getBiomes()) {
-							list2.add(new ModuleText(32, 16 + 12 * (i++), AdvancedRocketry.proxy.getNameFromBiome(biome.biome), 0x202020));
->>>>>>> origin/feature/nuclearthermalrockets
 						}
 					}
 				}

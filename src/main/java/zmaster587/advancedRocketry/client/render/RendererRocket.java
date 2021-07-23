@@ -152,11 +152,7 @@ public class RendererRocket extends EntityRenderer<EntityRocket> implements IRen
 		{
 			TileEntityRendererDispatcher.instance.preDrawBatch();
 			for(TileEntity tile : storage.getTileEntityList()) {
-<<<<<<< HEAD
 				TileEntityRenderer renderer = (TileEntityRenderer)TileEntityRendererDispatcher.instance.renderers.get(tile.getClass());
-=======
-				TileEntitySpecialRenderer renderer = TileEntityRendererDispatcher.instance.renderers.get(tile.getClass());
->>>>>>> origin/feature/nuclearthermalrockets
 				if(renderer != null ) {
 
 					if(tileEntityBlockChiseled.isInstance(tile) && getState != null)
@@ -167,7 +163,6 @@ public class RendererRocket extends EntityRenderer<EntityRocket> implements IRen
 							//Chisel transforms by -TileEntityRendererDispatcher.staticPlayer, we already transformed, so we must negate it
 							matrix.translate(TileEntityRendererDispatcher.staticPlayerX, TileEntityRendererDispatcher.staticPlayerY, TileEntityRendererDispatcher.staticPlayerZ);
 							TileEntityRendererDispatcher.instance.render(tile, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), f1);
-<<<<<<< HEAD
 							matrix.pop();
 						} catch (IllegalAccessException e) {
 							// TODO Auto-generated catch block
@@ -176,10 +171,6 @@ public class RendererRocket extends EntityRenderer<EntityRocket> implements IRen
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} catch (InvocationTargetException e) {
-=======
-							GL11.glPopMatrix();
-						} catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
->>>>>>> origin/feature/nuclearthermalrockets
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}

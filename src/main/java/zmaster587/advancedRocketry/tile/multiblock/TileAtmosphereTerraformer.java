@@ -391,7 +391,6 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 			int requiredN2 = ARConfiguration.getCurrentConfig().terraformliquidRate.get(), requiredO2 =  ARConfiguration.getCurrentConfig().terraformliquidRate.get();
 
 			for(IFluidHandler handler : fluidInPorts) {
-<<<<<<< HEAD
 				FluidStack stack = handler.drain(new FluidStack(AdvancedRocketryFluids.nitrogenStill.get(), requiredN2), FluidAction.EXECUTE);
 
 				if(stack != null)
@@ -401,17 +400,6 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 
 				if(stack != null)
 					requiredO2 -= stack.getAmount();
-=======
-				FluidStack fStack = handler.drain(new FluidStack(AdvancedRocketryFluids.fluidNitrogen, requiredN2), true);
-
-				if(fStack != null)
-					requiredN2 -= fStack.amount;
-
-				fStack = handler.drain(new FluidStack(AdvancedRocketryFluids.fluidOxygen, requiredO2), true);
-
-				if(fStack != null)
-					requiredO2 -= fStack.amount;
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 
 			if(!world.isRemote) {
@@ -441,17 +429,10 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	private boolean hasValidBiomeChanger() {
 		ItemStack biomeChanger = inv.getStackInSlot(0);
 		SatelliteBase satellite;
-<<<<<<< HEAD
 		return false;	
 		/*return biomeChanger != null && (biomeChanger.getItem() instanceof ItemBiomeChanger) && DimensionManager.getInstance().getSatellite(((ItemBiomeChanger)biomeChanger.getItem()).getSatelliteId(biomeChanger)) != null &&
 				(satellite = ((ItemSatelliteIdentificationChip)AdvancedRocketryItems.itemBiomeChanger).getSatellite(biomeChanger)).getDimensionId().get() == ZUtils.getDimensionIdentifier(world) &&
 				satellite instanceof SatelliteBiomeChanger;*/
-=======
-				
-		return !biomeChanger.isEmpty() && (biomeChanger.getItem() instanceof ItemBiomeChanger) && DimensionManager.getInstance().getSatellite(((ItemBiomeChanger)biomeChanger.getItem()).getSatelliteId(biomeChanger)) != null &&
-				(satellite = ((ItemSatelliteIdentificationChip)AdvancedRocketryItems.itemBiomeChanger).getSatellite(biomeChanger)).getDimensionId() == world.provider.getDimension() &&
-				satellite instanceof SatelliteBiomeChanger;
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override

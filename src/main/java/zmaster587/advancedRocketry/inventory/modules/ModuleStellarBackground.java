@@ -23,17 +23,10 @@ public class ModuleStellarBackground extends ModuleBase {
 	public void renderBackground(ContainerScreen<? extends Container> gui, MatrixStack matrix, int x, int y, int mouseX,
 			int mouseY, FontRenderer font) {
 		if(this.icon != null) {
-<<<<<<< HEAD
 			Minecraft.getInstance().getTextureManager().bindTexture(this.icon);
 			gui.blit(matrix, 0, 0, 0, 0, gui.getXSize(),  gui.getYSize());
 			Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.genericStation);
 			gui.blit(matrix, (int)(256), (int)(64), 0, 0, 256, 256);
-=======
-			gui.mc.getTextureManager().bindTexture(this.icon);
-			gui.drawTexturedModalRect(0, 0, 0, 0, gui.width,  gui.height);
-			gui.mc.getTextureManager().bindTexture(TextureResources.genericStation);
-			gui.drawTexturedModalRect(256, 64, 0, 0, 256, 256);
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 	}
 }

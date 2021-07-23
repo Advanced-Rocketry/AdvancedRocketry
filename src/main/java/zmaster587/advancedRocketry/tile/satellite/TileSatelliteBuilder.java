@@ -195,13 +195,8 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-=======
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(new ModuleTexturedLimitedSlotArray(152, 10, this, 0, 1, TextureResources.functionComponent)); //Functional Piece
@@ -299,20 +294,12 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void openInventory(PlayerEntity player) {
-=======
-	public void openInventory(@Nonnull EntityPlayer player) {
->>>>>>> origin/feature/nuclearthermalrockets
 		inventory.openInventory(player);
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void closeInventory(PlayerEntity player) {
-=======
-	public void closeInventory(@Nonnull EntityPlayer player) {
->>>>>>> origin/feature/nuclearthermalrockets
 		inventory.closeInventory(player);
 	}
 
@@ -346,16 +333,6 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	}
 
 	@Override
-<<<<<<< HEAD
-=======
-	@Nullable
-	public String getName() {
-		return null;
-	}
-
-	@Override
-	@Nonnull
->>>>>>> origin/feature/nuclearthermalrockets
 	public ItemStack removeStackFromSlot(int index) {
 		if(index < outputSlot) {
 			ItemStack chassis = getStackInSlot(chassisSlot);

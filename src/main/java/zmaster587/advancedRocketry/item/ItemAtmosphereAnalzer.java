@@ -44,26 +44,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-<<<<<<< HEAD
-=======
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
-import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
-import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.advancedRocketry.event.RocketEventHandler;
-import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.api.IArmorComponent;
-import zmaster587.libVulpes.client.ResourceIcon;
-import zmaster587.libVulpes.render.RenderHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.LinkedList;
-import java.util.List;
->>>>>>> origin/feature/nuclearthermalrockets
+
 
 public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 
@@ -80,13 +64,8 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	private static String no = LibVulpes.proxy.getLocalizedString("msg.no");
 
 	@Override
-<<<<<<< HEAD
 	public void onTick(World world, PlayerEntity player, ItemStack armorStack,
 			IInventory modules, ItemStack componentStack) {
-=======
-	public void onTick(World world, EntityPlayer player, @Nonnull ItemStack armorStack,
-			IInventory modules, @Nonnull ItemStack componentStack) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 	}
 
@@ -110,19 +89,10 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand) {
 		ItemStack stack = playerIn.getHeldItem(hand);
 		if(!worldIn.isRemote) {
 			List<ITextComponent> str = getAtmosphereReadout(stack, (AtmosphereType) AtmosphereHandler.getOxygenHandler(worldIn).getAtmosphereType(playerIn),worldIn);
-=======
-	@Nonnull
-	public ActionResult<ItemStack> onItemRightClick(@Nonnull World worldIn, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand) {
-		ItemStack stack = playerIn.getHeldItem(hand);
-		if(!worldIn.isRemote) {
-			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension());
-			List<ITextComponent> str = getAtmosphereReadout(stack, atmhandler == null ? null : (AtmosphereType) atmhandler.getAtmosphereType(playerIn), worldIn);
->>>>>>> origin/feature/nuclearthermalrockets
 			for(ITextComponent str1 : str)
 				playerIn.sendMessage(str1, Util.DUMMY_UUID);
 		}
@@ -139,37 +109,21 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void onArmorDamaged(LivingEntity entity, ItemStack armorStack,
 			ItemStack componentStack, DamageSource source, int damage) {
-=======
-	public void onArmorDamaged(EntityLivingBase entity, @Nonnull ItemStack armorStack,
-							   @Nonnull ItemStack componentStack, DamageSource source, int damage) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean isAllowedInSlot(ItemStack componentStack, EquipmentSlotType targetSlot) {
 		return targetSlot == EquipmentSlotType.HEAD;
-=======
-	public boolean isAllowedInSlot(@Nonnull ItemStack componentStack, EntityEquipmentSlot targetSlot) {
-		return targetSlot == EntityEquipmentSlot.HEAD;
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 	
 	
 	@OnlyIn(value=Dist.CLIENT)
 	@Override
-<<<<<<< HEAD
 	public void renderScreen(MatrixStack matrix, ItemStack componentStack, List<ItemStack> modules,
 			RenderGameOverlayEvent event, Screen gui) {
-=======
-	@SideOnly(Side.CLIENT)
-	public void renderScreen(@Nonnull ItemStack componentStack, List<ItemStack> modules,
-			RenderGameOverlayEvent event, Gui gui) {
->>>>>>> origin/feature/nuclearthermalrockets
 		
 		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
 		

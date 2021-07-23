@@ -1,11 +1,7 @@
 package zmaster587.advancedRocketry.block;
 
-<<<<<<< HEAD
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-=======
-import net.minecraft.block.state.IBlockState;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
@@ -23,14 +19,8 @@ import java.util.Random;
 
 public class BlockOrbitalLaserDrill extends BlockMultiblockMachine {
 
-<<<<<<< HEAD
 	public BlockOrbitalLaserDrill(Properties properties) {
 		super(properties.tickRandomly(), GuiHandler.guiId.MODULAR);
-=======
-	public BlockOrbitalLaserDrill() {
-		super(TileOrbitalLaserDrill.class, GuiHandler.guiId.MODULAR.ordinal());
-		setTickRandomly(true).setUnlocalizedName("spaceLaser");
->>>>>>> origin/feature/nuclearthermalrockets
 	}
 
 	@Override
@@ -42,7 +32,6 @@ public class BlockOrbitalLaserDrill extends BlockMultiblockMachine {
 	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
-<<<<<<< HEAD
 	
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
@@ -54,12 +43,6 @@ public class BlockOrbitalLaserDrill extends BlockMultiblockMachine {
 	//can happen when lever is flipped... Update the state of the tile
 	@Override
 	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-=======
-
-	//can happen when lever is flipped... Update the state of the tile
-	@Override
-	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
->>>>>>> origin/feature/nuclearthermalrockets
 		if(!(world.getTileEntity(neighbor) instanceof TileOrbitalLaserDrill))
 			((TileOrbitalLaserDrill)world.getTileEntity(pos)).checkCanRun();
 	}
@@ -72,18 +55,12 @@ public class BlockOrbitalLaserDrill extends BlockMultiblockMachine {
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public void onExplosionDestroy(World worldIn, BlockPos pos,
 			Explosion explosionIn) {
 		// TODO Auto-generated method stub
 		super.onExplosionDestroy(worldIn, pos, explosionIn);
-		((TileOrbitalLaserDrill)worldIn.getTileEntity(pos)).onDestroy();
-=======
-	public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn) {
-		super.onBlockDestroyedByExplosion(worldIn, pos, explosionIn);
 		if (worldIn.getTileEntity(pos) instanceof TileOrbitalLaserDrill)
-		    ((TileOrbitalLaserDrill)worldIn.getTileEntity(pos)).onDestroy();
->>>>>>> origin/feature/nuclearthermalrockets
+		((TileOrbitalLaserDrill)worldIn.getTileEntity(pos)).onDestroy();
 	}
 
 	//To check if the laser is jammed

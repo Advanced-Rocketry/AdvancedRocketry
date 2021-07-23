@@ -68,11 +68,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 
 
 	@Override
-<<<<<<< HEAD
 	public boolean onLinkStart(ItemStack item, TileEntity entity, PlayerEntity player, World world) {
-=======
-	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 		ItemLinker.setMasterCoords(item, getPos());
 
@@ -90,11 +86,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean onLinkComplete(ItemStack item, TileEntity entity, PlayerEntity player, World world) {
-=======
-	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
->>>>>>> origin/feature/nuclearthermalrockets
 		BlockPos pos = ItemLinker.getMasterCoords(item);
 
 		TileEntity tile = world.getTileEntity(pos);
@@ -186,13 +178,8 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		LinkedList list = new LinkedList<ModuleBase>();
-=======
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		LinkedList<ModuleBase> list = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 
 		list.add(toggle);
 		list.add(toggleSwitch);
@@ -266,18 +253,10 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	}
 
 	@Override
-<<<<<<< HEAD
 	public CompoundNBT write(CompoundNBT nbt) {
 		nbt.putBoolean("mode", extractMode);
 		nbt.putBoolean("enabled", enabled);
 		nbt.putInt("networkID", networkID);
-=======
-	@Nonnull
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		nbt.setBoolean("mode", extractMode);
-		nbt.setBoolean("enabled", enabled);
-		nbt.setInteger("networkID", networkID);
->>>>>>> origin/feature/nuclearthermalrockets
 		data.writeToNBT(nbt);
 		return super.write(nbt);
 	}

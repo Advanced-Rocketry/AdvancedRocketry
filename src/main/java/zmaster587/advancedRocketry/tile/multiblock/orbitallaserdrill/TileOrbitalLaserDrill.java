@@ -104,17 +104,9 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	}
 
 	private MODE mode;
-<<<<<<< HEAD
 	
 	public TileOrbitalLaserDrill() { 
 		super(AdvancedRocketryTileEntityType.TILE_SPACE_LASER);
-=======
-
-	private Ticket ticket;
-
-	public TileOrbitalLaserDrill() {
-		super();
->>>>>>> origin/feature/nuclearthermalrockets
 		lens = ItemStack.EMPTY;
 		radius = 0;
 		xCenter = 0;
@@ -574,16 +566,6 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 		}
 	}
 
-<<<<<<< HEAD
-=======
-	@Override
-	@Nonnull
-	public String getName() {
-		return LibVulpes.proxy.getLocalizedString("tile.spaceLaser.name");
-	}
-
->>>>>>> origin/feature/nuclearthermalrockets
-
 	@Override
 	public int getInventoryStackLimit() {
 		return 64;
@@ -611,33 +593,20 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	}
 
 	@Override
-<<<<<<< HEAD
 	public int[] getSlotsForFace(Direction side) {
-=======
-	@Nonnull
-	public int[] getSlotsForFace(EnumFacing side) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return new int[] {};
 	}
 
 	
 	@Override
-<<<<<<< HEAD
 	public boolean canInsertItem(int index, ItemStack itemStackIn,
 			Direction direction) {
-=======
-	public boolean canInsertItem(int index, @Nonnull ItemStack itemStackIn, @Nullable EnumFacing direction) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return false;
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public boolean canExtractItem(int index, ItemStack stack,
 			Direction direction) {
-=======
-	public boolean canExtractItem(int index, @Nonnull ItemStack stack, @Nullable EnumFacing direction) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return false;
 	}
 

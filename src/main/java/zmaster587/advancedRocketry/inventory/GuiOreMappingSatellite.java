@@ -25,13 +25,8 @@ import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.render.RenderHelper;
-<<<<<<< HEAD
-=======
-import zmaster587.libVulpes.util.VulpineMath;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
->>>>>>> origin/feature/nuclearthermalrockets
 import java.nio.IntBuffer;
 
 public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingSatellite> {
@@ -121,12 +116,8 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		}
 		else {
 
-<<<<<<< HEAD
 			currentMapping = new Thread(new ItemMapper(this.playerInventory.getStackInSlot(prevSlot).getStack()));
 			currentMapping.setName("Ore Scan");
-=======
-			currentMapping = new Thread(new ItemMapper(inventorySlots.getSlot(prevSlot).getStack()));
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 		currentMapping.setName("Ore Scan");
 		currentMapping.start();
@@ -265,32 +256,18 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		RenderSystem.disableTexture();
 		RenderSystem.color4f(0f, 0.8f, 0f,1f);
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-<<<<<<< HEAD
 		buffer.pos(-21, 82 + fancyScanOffset, (double)this.getBlitOffset()).endVertex();
 		buffer.pos(0, 84 + fancyScanOffset, (double)this.getBlitOffset()).endVertex();
 		buffer.pos(0, 81 + fancyScanOffset, (double)this.getBlitOffset()).endVertex();
 		buffer.pos(-21, 81 + fancyScanOffset, (double)this.getBlitOffset()).endVertex();
-=======
-		buffer.pos(-21, 82 + fancyScanOffset, this.zLevel).endVertex();
-		buffer.pos(0, 84 + fancyScanOffset, this.zLevel).endVertex();
-		buffer.pos(0, 81 + fancyScanOffset, this.zLevel).endVertex();
-		buffer.pos(-21, 81 + fancyScanOffset, this.zLevel).endVertex();
->>>>>>> origin/feature/nuclearthermalrockets
 		Tessellator.getInstance().draw();
 
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-<<<<<<< HEAD
 		buffer.pos(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.getBlitOffset()).endVertex();
 		buffer.pos(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.getBlitOffset()).endVertex();
 		buffer.pos(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.getBlitOffset()).endVertex();
 		buffer.pos(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.getBlitOffset()).endVertex();
-=======
-		buffer.pos(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, this.zLevel).endVertex();
-		buffer.pos(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, this.zLevel).endVertex();
-		buffer.pos(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, this.zLevel).endVertex();
-		buffer.pos(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, this.zLevel).endVertex();
->>>>>>> origin/feature/nuclearthermalrockets
 		Tessellator.getInstance().draw();
 
 
@@ -384,11 +361,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 			RenderSystem.disableTexture();
 			RenderSystem.color4f(0.4f, 1f, 0.4f,1f);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-<<<<<<< HEAD
 			RenderHelper.renderNorthFaceWithUV(matrix, buffer, this.getBlitOffset(), offsetX + 47 + x + SCREEN_SIZE/2 - radius,  offsetY + 20 + y + SCREEN_SIZE/2 - radius, offsetX + 47 + x + SCREEN_SIZE/2 + radius, offsetY + 20 + y + SCREEN_SIZE/2 + radius, 0, 1, 0, 1);
-=======
-			RenderHelper.renderNorthFaceWithUV(buffer, this.zLevel, offsetX + 47 + x + SCREEN_SIZE/2d - radius,  offsetY + 20 + y + SCREEN_SIZE/2d - radius, offsetX + 47 + x + SCREEN_SIZE/2d + radius, offsetY + 20 + y + SCREEN_SIZE/2d + radius, 0, 1, 0, 1);
->>>>>>> origin/feature/nuclearthermalrockets
 			Tessellator.getInstance().draw();
 			RenderSystem.color4f(1, 1, 1,1f);
 			RenderSystem.enableTexture();

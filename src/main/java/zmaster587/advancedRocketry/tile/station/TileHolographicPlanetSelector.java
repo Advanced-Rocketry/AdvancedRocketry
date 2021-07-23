@@ -64,14 +64,9 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 	private boolean stellarMode;
 
 	public TileHolographicPlanetSelector() {
-<<<<<<< HEAD
 		super(AdvancedRocketryTileEntityType.TILE_HOLOGRAM);
 		entities = new LinkedList<EntityUIPlanet>();
 		starEntities = new LinkedList<EntityUIStar>();
-=======
-		entities = new LinkedList<>();
-		starEntities = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 		targetGrav = new ModuleText(6, 45, LibVulpes.proxy.getLocalizedString("msg.planetholo.size"), 0x202020);
 		selectedPlanet = null;
 		stellarMode = false;
@@ -230,30 +225,28 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 		}
 	}
 
-	public void selectSystemWithoutTargeting(int id) {
-		if(id >= EntityUIStar.starIDoffset) {
-			if(stellarMode) {
-				if(selectedId != id) {
-					for(EntityUIStar entity : starEntities) {
-						if(entity.getPlanetID() + EntityUIStar.starIDoffset == id) {
+	public void selectSystemWithoutTargeting(ResourceLocation id) {
+		if (DimensionManager.getInstance().isStar(id)) {
+			if (stellarMode) {
+				if (selectedId != id) {
+					for (EntityUIStar entity : starEntities) {
+						if (entity.getPlanetID() == id) {
 							entity.setSelected(true);
 							selectedPlanet = entity;
-						}
-						else
+						} else
 							entity.setSelected(false);
 					}
 					selectedId = id;
-				}
-				else {
+				} else {
 					stellarMode = false;
-					currentStarBody = DimensionManager.getInstance().getStar(id - EntityUIStar.starIDoffset);
+					currentStarBody = DimensionManager.getInstance().getStar(id);
 					rebuildSystem();
 					selectedId = Constants.INVALID_PLANET;
 				}
 			}
 
-		}
-		else {
+		} else {
+
 			if (selectedPlanet != null && selectedPlanet.getPlanetID() == id) {
 				centeredEntity = selectedPlanet;
 				stellarMode = false;
@@ -268,6 +261,7 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 				}
 		}
 	}
+
 
 	private void rebuildSystem() {
 		onTime = 0;
@@ -288,7 +282,7 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 		}
 
 		if(!stellarMode) {
-			List<IDimensionProperties> planetList = currentStarBody == null ? DimensionManager.getInstance().getStar(0).getPlanets() : currentStarBody.getPlanets();
+			List<IDimensionProperties> planetList = currentStarBody == null ? DimensionManager.getInstance().getStar(new ResourceLocation(Constants.STAR_NAMESPACE, "0")).getPlanets() : currentStarBody.getPlanets();
 			if(centeredEntity != null) {
 				planetList = new LinkedList<>();
 				planetList.add(centeredEntity.getProperties());
@@ -304,7 +298,7 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 			}
 			else {
 				if(currentStarBody == null)
-					currentStarBody = DimensionManager.getInstance().getStar(0);
+					currentStarBody = DimensionManager.getInstance().getStar(new ResourceLocation(Constants.STAR_NAMESPACE, "0"));
 				currentStar = new EntityUIStar(world, currentStarBody, this, this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5);
 				this.getWorld().addEntity(currentStar);
 
@@ -360,13 +354,8 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-=======
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 
 		modules.add(targetGrav);
 		modules.add(new ModuleSlider(6, 60, 0, TextureResources.doubleWarningSideBarIndicator, this));
@@ -430,9 +419,9 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 		updateText();
 	}
 
-	public int getCurrentPlanetID () {return selectedPlanet.dimension;}
+	public ResourceLocation getCurrentPlanetID () {return selectedPlanet.getPlanetID();}
 
-	public int getCurrentStarID() {return currentStar.getPlanetID();}
+	public ResourceLocation getCurrentStarID() {return currentStar.getPlanetID();}
 
 	@Override
 	public void writeDataToNetwork(PacketBuffer out, byte id) {

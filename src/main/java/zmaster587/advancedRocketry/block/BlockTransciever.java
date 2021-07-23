@@ -11,17 +11,10 @@ import zmaster587.libVulpes.inventory.GuiHandler;
 
 public class BlockTransciever extends BlockTile {
 
-<<<<<<< HEAD
 	private static VoxelShape bb[] = {VoxelShapes.create(.25, .25, .75, .75, .75, 1),
 			VoxelShapes.create(.25, .25, 0, .75, .75, 0.25),
 			VoxelShapes.create(.75, .25, .25, 1, .75, .75),
 			VoxelShapes.create(0, .25, .25, 0.25, .75, .75)};
-=======
-	private static AxisAlignedBB[] bb = {new AxisAlignedBB(.25, .25, .75, .75, .75, 1),
-		new AxisAlignedBB(.25, .25, 0, .75, .75, 0.25),
-		new AxisAlignedBB(.75, .25, .25, 1, .75, .75),
-		new AxisAlignedBB(0, .25, .25, 0.25, .75, .75)};
->>>>>>> origin/feature/nuclearthermalrockets
 	
 	public BlockTransciever(Properties properties, GuiHandler.guiId guiId) {
 		super(properties, guiId);

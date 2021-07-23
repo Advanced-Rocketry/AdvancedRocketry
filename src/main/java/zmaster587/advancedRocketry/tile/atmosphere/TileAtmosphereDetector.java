@@ -52,22 +52,12 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 			boolean detectedAtm = false;
 
 			//TODO: Galacticcraft support
-<<<<<<< HEAD
 			if(AtmosphereHandler.getOxygenHandler(ZUtils.getDimensionIdentifier(world)) == null) {
 				detectedAtm = atmosphereToDetect == AtmosphereType.AIR;
 			}
 			else {
 				for(Direction  direction : Direction.values()) {
 					detectedAtm = ((world.getBlockState(pos.offset(direction)).getShape(world, pos.offset(direction)) != VoxelShapes.fullCube()) && atmosphereToDetect == AtmosphereHandler.getOxygenHandler(world).getAtmosphereType(pos.offset(direction)));
-=======
-			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(world.provider.getDimension());
-			if(atmhandler == null) {
-				detectedAtm = atmosphereToDetect == AtmosphereType.AIR;
-			}
-			else {
-				for(EnumFacing  direction : EnumFacing.values()) {
-					detectedAtm = (!world.getBlockState(pos.offset(direction)).isOpaqueCube() && atmosphereToDetect == atmhandler.getAtmosphereType(pos.offset(direction)));
->>>>>>> origin/feature/nuclearthermalrockets
 					if(detectedAtm) break;
 				}
 			}
@@ -79,21 +69,9 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		List<ModuleBase> btns = new LinkedList<ModuleBase>();
-=======
-	public boolean shouldRefresh(World world, BlockPos pos,
-			IBlockState oldState, IBlockState newSate) {
-		return (oldState.getBlock() != newSate.getBlock());
-	}
-
-	@Override
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<>();
-		List<ModuleBase> btns = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 
 		Iterator<IAtmosphere> atmIter = AtmosphereRegister.getInstance().getAtmosphereList().iterator();
 
@@ -115,11 +93,7 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean canInteractWithContainer(PlayerEntity entity) {
-=======
-	public boolean canInteractWithContainer(@Nullable EntityPlayer entity) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return true;
 	}
 

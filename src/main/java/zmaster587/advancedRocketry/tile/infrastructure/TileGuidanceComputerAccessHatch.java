@@ -155,11 +155,7 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public boolean isUsableByPlayer(PlayerEntity player) {
-=======
-	public boolean isUsableByPlayer(@Nullable EntityPlayer player) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return true;
 	}
 
@@ -192,13 +188,8 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
-=======
-	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 		ItemLinker.setMasterCoords(item, this.getPos());
 
@@ -213,13 +204,8 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
-=======
-	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
->>>>>>> origin/feature/nuclearthermalrockets
 		if(player.world.isRemote)
 			Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessage(new TranslationTextComponent("msg.linker.error.firstmachine"));
 		return false;
@@ -282,13 +268,8 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 	}
 
 	@Override
-<<<<<<< HEAD
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-=======
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<>();
->>>>>>> origin/feature/nuclearthermalrockets
 
 		modules.add(new ModuleLimitedSlotArray(15, 15, this, 0, 1));
 		modules.add(redstoneControl);

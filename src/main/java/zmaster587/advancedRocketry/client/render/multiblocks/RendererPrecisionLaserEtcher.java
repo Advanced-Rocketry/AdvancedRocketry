@@ -1,13 +1,9 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
-<<<<<<< HEAD
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.ItemStack;
-=======
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -20,11 +16,8 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
-<<<<<<< HEAD
 import zmaster587.advancedRocketry.tile.multiblock.machine.TilePrecisionLaserEtcher;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
-=======
->>>>>>> origin/feature/nuclearthermalrockets
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;

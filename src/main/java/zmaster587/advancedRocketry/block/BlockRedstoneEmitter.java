@@ -3,18 +3,11 @@ package zmaster587.advancedRocketry.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-<<<<<<< HEAD
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
-=======
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
->>>>>>> origin/feature/nuclearthermalrockets
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -43,7 +36,6 @@ public class BlockRedstoneEmitter extends Block {
 	}
 	
 	@Override
-<<<<<<< HEAD
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder);
 		
@@ -52,26 +44,6 @@ public class BlockRedstoneEmitter extends Block {
 	
 	@Override
 	public boolean hasTileEntity(BlockState state) {
-=======
-	@Nonnull
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, POWERED);
-	}
-	
-	@Override
-	@Nonnull
-	public IBlockState getStateFromMeta(int meta) {
-		return this.getDefaultState().withProperty(POWERED, (meta & 8) == 8);
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(POWERED) ? 8 : 0;
-	}
-	
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return true;
 	}
 	
@@ -96,12 +68,7 @@ public class BlockRedstoneEmitter extends Block {
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-=======
-	@ParametersAreNullableByDefault
-	public TileEntity createTileEntity(World world, IBlockState state) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return new TileAtmosphereDetector();
 	}
 	

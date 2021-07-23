@@ -323,15 +323,10 @@ public class XMLOreLoader {
 		}
 		
 		for(OreEntry ore : gen.getOreEntries()) {
-<<<<<<< HEAD
-			outputString += tabLen + "<ore block=\"" + ore.getBlockState().getBlock().getRegistryName() +
+			outputString.append(tabLen + "<ore block=\"" + ore.getBlockState().getBlock().getRegistryName() +
 							"\" minHeight=\"" +
 							ore.getMinHeight() + "\" maxHeight=\"" + ore.getMaxHeight() + "\" clumpSize=\"" + ore.getClumpSize() + "\"" +
-							" chancePerChunk=\"" + ore.getChancePerChunk() + "\" />\n";
-=======
-			int meta = ore.getBlockState().getBlock().getMetaFromState(ore.getBlockState());
-			outputString.append(tabLen).append("<ore block=\"").append(ore.getBlockState().getBlock().getRegistryName()).append(meta == 0 ? "" : "\" meta=\"" + meta).append("\" minHeight=\"").append(ore.getMinHeight()).append("\" maxHeight=\"").append(ore.getMaxHeight()).append("\" clumpSize=\"").append(ore.getClumpSize()).append("\"").append(" chancePerChunk=\"").append(ore.getChancePerChunk()).append("\" />\n");
->>>>>>> origin/feature/nuclearthermalrockets
+							" chancePerChunk=\"" + ore.getChancePerChunk() + "\" />\n");
 			
 		}
 		
