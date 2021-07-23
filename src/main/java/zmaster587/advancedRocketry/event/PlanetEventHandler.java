@@ -102,32 +102,6 @@ public class PlanetEventHandler {
 	}
 
 	@SubscribeEvent
-<<<<<<< HEAD
-=======
-	public void onCrafting(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent event) {
-		if(!event.crafting.isEmpty()) {
-			Item item = event.crafting.getItem();//TODO Advancments for crafting.
-			//			if(item == LibVulpesItems.itemHoloProjector) 
-			//				event.player.addStat(ARAchivements.holographic);
-			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockRollingMachine))
-			//				event.player.addStat(ARAchivements.rollin);
-			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystallizer))
-			//				event.player.addStat(ARAchivements.crystalline);
-			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockLathe))
-			//				event.player.addStat(ARAchivements.spinDoctor);
-			//			else if(item ==Item.getItemFromBlock(AdvancedRocketryBlocks.blockElectrolyser))
-			//				event.player.addStat(ARAchivements.electrifying);
-			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockArcFurnace))
-			//				event.player.addStat(ARAchivements.feelTheHeat);
-			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockWarpCore))
-			//				event.player.addStat(ARAchivements.warp);
-			//			else if(item == Item.getItemFromBlock(AdvancedRocketryBlocks.blockPlatePress))
-			//				event.player.addStat(ARAchivements.blockPresser);
-		}
-	}
-
-	@SubscribeEvent
->>>>>>> origin/feature/nuclearthermalrockets
 	public void CheckSpawn(LivingSpawnEvent.CheckSpawn event)
 	{
 		IWorld world = event.getWorld();
@@ -177,22 +151,7 @@ public class PlanetEventHandler {
 				event.setResult(Result.DEFAULT);
 			}
 		}
-<<<<<<< HEAD
 	}*/
-=======
-	}
-
-	@SubscribeEvent
-	public void onPickup(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent event) {
-		if(event.getOriginalEntity() != null && !event.getOriginalEntity().getItem().isEmpty()) {
-
-			//TODO pickup advancement
-			//			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.getOriginalEntity().getEntityItem());
-			//			if(mat != null && mat.getUnlocalizedName().contains("Dilithium"))
-			//				event.player.addStat(ARAchievements.dilithiumCrystals);
-		}
-	}
->>>>>>> origin/feature/nuclearthermalrockets
 
 	//Handle gravity
 	@SubscribeEvent
@@ -211,7 +170,6 @@ public class PlanetEventHandler {
 					event.getEntity().getPositionVec().squareDistanceTo(2347,80, 67) < 512 ) {
 				ARAdvancements.triggerAchievement(ARAdvancements.WENT_TO_THE_MOON, (ServerPlayerEntity)event.getEntity());
 			}
-<<<<<<< HEAD
 			if(event.getEntity() instanceof PlayerEntity && ZUtils.getDimensionIdentifier(event.getEntity().world).equals(ARConfiguration.getCurrentConfig().spaceDimId) && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.getEntity().getPosition()) == null) {
 				double distance = 0;
 				HashedBlockPosition teleportPosition = null;
@@ -223,20 +181,6 @@ public class PlanetEventHandler {
 							distance = distanceTo;
 							teleportPosition = station.getSpawnLocation();
 						}
-=======
-		}
-
-		if(event.getEntity() instanceof EntityPlayer && event.getEntity().world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.getEntity().getPosition()) == null && !(event.getEntity().getRidingEntity() instanceof EntityRocket)) {
-			double distance = 0;
-			HashedBlockPosition teleportPosition = null;
-			for (ISpaceObject spaceObject : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
-				if (spaceObject instanceof SpaceStationObject) {
-					SpaceStationObject station = ((SpaceStationObject) spaceObject);
-					double distanceTo = event.getEntity().getPosition().getDistance(station.getSpawnLocation().x, station.getSpawnLocation().y, station.getSpawnLocation().z);
-					if (distanceTo > distance) {
-						distance = distanceTo;
-						teleportPosition = station.getSpawnLocation();
->>>>>>> origin/feature/nuclearthermalrockets
 					}
 				}
 				if (teleportPosition != null) {
@@ -249,42 +193,22 @@ public class PlanetEventHandler {
 	}
 
 	@SubscribeEvent
-<<<<<<< HEAD
 	public void sleepEvent(@Nonnull PlayerSleepInBedEvent event) {
 		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(event.getEntity().getEntityWorld());
 		if(props != DimensionManager.defaultSpaceDimensionProperties) {
 			if (!ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace.get() && AtmosphereHandler.hasAtmosphereHandler(event.getEntity().world) && 
 					!AtmosphereHandler.getOxygenHandler(event.getEntity().world).getAtmosphereType(event.getPos()).isBreathable()) {
-=======
-	public void sleepEvent(@Nonnull PlayerSleepInBedEvent event) {
-
-		if(event.getEntity().world.provider instanceof WorldProviderPlanet) {
-			WorldProvider provider = event.getEntity().world.provider;
-			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(provider.getDimension());
-
-			if (!ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace && AtmosphereHandler.hasAtmosphereHandler(provider.getDimension()) && atmhandler != null &&
-					!atmhandler.getAtmosphereType(event.getPos()).isBreathable()) {
->>>>>>> origin/feature/nuclearthermalrockets
 				event.setResult(SleepResult.OTHER_PROBLEM);
 			}
 		}
 	}
 
 	@SubscribeEvent
-<<<<<<< HEAD
 	public void blockPlacedEvent(BlockEvent.EntityPlaceEvent event)
 	{
 		World world =event.getEntity().getEntityWorld(); 
 		if(!world.isRemote  && AtmosphereHandler.getOxygenHandler(world) != null &&
 				!AtmosphereHandler.getOxygenHandler(world).getAtmosphereType(event.getPos()).allowsCombustion()) {
-=======
-	public void blockPlacedEvent(@Nonnull PlaceEvent event) {
-		WorldProvider provider = event.getWorld().provider;
-		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(provider.getDimension());
-
-		if(!event.getWorld().isRemote  && AtmosphereHandler.getOxygenHandler(provider.getDimension()) != null && atmhandler != null &&
-				!atmhandler.getAtmosphereType(event.getPos()).allowsCombustion()) {
->>>>>>> origin/feature/nuclearthermalrockets
 
 			//TODO: move hardcoded torches to config
 			if(event.getPlacedBlock().getBlock() == Blocks.TORCH) {
@@ -309,7 +233,7 @@ public class PlanetEventHandler {
 	@SubscribeEvent
 	public void blockRightClicked(@Nonnull RightClickBlock event) {
 		Direction direction = event.getFace();
-		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(event.getWorld().getDimension());
+		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(event.getWorld());
 
 		if(!event.getWorld().isRemote && direction != null  && event.getPlayer() != null  && AtmosphereHandler.getOxygenHandler(event.getWorld()) != null && atmhandler != null &&
 				!atmhandler.getAtmosphereType(event.getPos().offset(direction)).allowsCombustion()) {
@@ -404,8 +328,8 @@ public class PlanetEventHandler {
 			PacketHandler.sendToPlayer(new PacketDimInfo(i, DimensionManager.getInstance().getDimensionProperties(i)), mgr);
 		}
 
-		for(ISpaceObject spaceObject : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
-			PacketHandler.sendToDispatcher(new PacketSpaceStationInfo(spaceObject.getId(), spaceObject), mgr);
+		for(ISpaceObject obj : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
+			PacketHandler.sendToPlayer(new PacketSpaceStationInfo(obj.getId(), obj), mgr);
 		}
 	}
 
@@ -447,20 +371,10 @@ public class PlanetEventHandler {
 		World world = entity.world;
 		BlockState state = event.getInfo().getBlockAtCamera();
 
-<<<<<<< HEAD
 		if(state.getMaterial() == Material.WATER)
 			return;
 
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world);
-=======
-		IBlockState state = ActiveRenderInfo.getBlockStateAtEntityViewpoint(event.getEntity().world, event.getEntity(), (float)event.getRenderPartialTicks());
-
-		if(state.getMaterial() == Material.WATER)
-			return;
-
-
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getEntity().dimension);
->>>>>>> origin/feature/nuclearthermalrockets
 		if(properties != null) {
 			float fog = Math.min(properties.getAtmosphereDensityAtHeight(entity.getPosY()), 200);
 
@@ -524,11 +438,7 @@ public class PlanetEventHandler {
 	@OnlyIn(value=Dist.CLIENT)
 	public void fogColor(RenderFogEvent event) {
 
-<<<<<<< HEAD
 		if(event.getInfo().getRenderViewEntity().getEntityWorld() == null || event.getInfo().getRenderViewEntity().getEntityWorld() instanceof WorldDummy)
-=======
-		if(event.getFogMode() == -1) {
->>>>>>> origin/feature/nuclearthermalrockets
 			return;
 
 

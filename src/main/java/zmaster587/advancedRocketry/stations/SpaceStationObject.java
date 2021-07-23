@@ -41,10 +41,6 @@ import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.Map.Entry;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/feature/nuclearthermalrockets
 public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	private int launchPosX, launchPosZ, posX, posZ;
 	private boolean created;
@@ -83,11 +79,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		transitionEta = -1;
 		destinationDimId = DimensionManager.overworldProperties.getId();
 		created = false;
-<<<<<<< HEAD
 		knownPlanetList = new HashSet<ResourceLocation>();
-=======
-		knownPlanetList = new HashSet<>();
->>>>>>> origin/feature/nuclearthermalrockets
 		angularVelocity = new double[3];
 		rotation = new double[3];
 	}
@@ -314,15 +306,9 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		DimensionProperties properties = getOrbitingPlanet();
 		int stationCount = stations.size();
 		int myIndex = stations.indexOf(this);
-<<<<<<< HEAD
 
 		float theta = myIndex*(360/stationCount);
 
-=======
-		
-		float theta = myIndex*(360f / stationCount);
-		
->>>>>>> origin/feature/nuclearthermalrockets
 		return new SpacePosition().getFromSpherical(properties.getRenderSizePlanetView()*2f, theta);
 	}
 
@@ -398,16 +384,11 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	public void setLandingPadAutoLandStatus(int x, int z, boolean status) {
 		HashedBlockPosition pos = new HashedBlockPosition(x, 0, z);
 
-<<<<<<< HEAD
 		Iterator<StationLandingLocation> itr = spawnLocations.iterator();
 
 		while(itr.hasNext()) {
 			StationLandingLocation loc = itr.next();
 			if(loc.getPos().equals(pos))
-=======
-		for (StationLandingLocation loc : spawnLocations) {
-			if (loc.getPos().equals(pos))
->>>>>>> origin/feature/nuclearthermalrockets
 				loc.setAllowedForAutoLand(status);
 		}
 	}
@@ -441,7 +422,6 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	public void removeLandingPad(int x, int z) {
 		HashedBlockPosition pos = new HashedBlockPosition(x, 0, z);
 
-<<<<<<< HEAD
 		Iterator<StationLandingLocation> itr = spawnLocations.iterator();
 
 		while(itr.hasNext()) {
@@ -449,9 +429,6 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 			if(loc.getPos().equals(pos))
 				itr.remove();
 		}
-=======
-		spawnLocations.removeIf(loc -> loc.getPos().equals(pos));
->>>>>>> origin/feature/nuclearthermalrockets
 		//spawnLocations.remove(pos);
 	}
 
@@ -816,18 +793,10 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		nbt.putDouble("deltaRotationZ", angularVelocity[2]);
 
 		//Set known planets
-<<<<<<< HEAD
 		ListNBT planetList = new ListNBT();
 		for(ResourceLocation i : knownPlanetList)
 			planetList.add(StringNBT.valueOf(i.toString()));
 		nbt.put("knownPlanets", planetList);
-=======
-		int[] array = new int[knownPlanetList.size()];
-		int j = 0;
-		for(int i : knownPlanetList)
-			array[j++] = i;
-		nbt.setIntArray("knownPlanets", array);
->>>>>>> origin/feature/nuclearthermalrockets
 
 
 		if(direction != null)
@@ -898,16 +867,9 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 
 		//get known planets
 
-<<<<<<< HEAD
 		ListNBT planetList = nbt.getList("knownPlanets", NBT.TAG_STRING);
 		for( int i =0; i < planetList.size(); i++)
 			knownPlanetList.add( new ResourceLocation(planetList.getString(i)));
-=======
-		int[] array = nbt.getIntArray("knownPlanets");
-		int j = 0;
-		for(int i : array)
-			knownPlanetList.add(i);
->>>>>>> origin/feature/nuclearthermalrockets
 
 		if(nbt.contains("direction"))
 			direction = Direction.values()[nbt.getInt("direction")];
@@ -924,11 +886,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 			StationLandingLocation loc = new StationLandingLocation(pos, tag.getString("name"));
 			spawnLocations.add(loc);
 			loc.setOccupied(tag.getBoolean("occupied"));
-<<<<<<< HEAD
 			loc.setAllowedForAutoLand( tag.contains("occupied") ? tag.getBoolean("occupied") : true);
-=======
-			loc.setAllowedForAutoLand(!tag.hasKey("occupied") || tag.getBoolean("occupied"));
->>>>>>> origin/feature/nuclearthermalrockets
 		}
 
 		list = nbt.getList("warpCorePositions", NBT.TAG_COMPOUND);

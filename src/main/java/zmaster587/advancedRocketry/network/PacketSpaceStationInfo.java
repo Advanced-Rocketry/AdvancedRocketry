@@ -106,38 +106,22 @@ public class PacketSpaceStationInfo extends BasePacket {
 			this.spaceObject = (SpaceStationObject)spaceObject;
 			
 			//Station needs to be created
-<<<<<<< HEAD
-			if( iObject == null ) {
+			if( spaceObject == null ) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getNewSpaceObjectFromIdentifier(clazzId);
 				object.readFromNbt(nbt);
 				object.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
 				((SpaceStationObject)object).setForwardDirection(Direction.values()[direction]);
-=======
-			if( spaceObject == null ) {
-				ISpaceObject newSpaceObject = SpaceObjectManager.getSpaceManager().getNewSpaceObjectFromIdentifier(clazzId);
-				newSpaceObject.readFromNbt(nbt);
-				newSpaceObject.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
-				((SpaceStationObject)newSpaceObject).setForwardDirection(EnumFacing.values()[direction]);
->>>>>>> origin/feature/nuclearthermalrockets
 				
-				SpaceObjectManager.getSpaceManager().registerSpaceObjectClient(newSpaceObject, newSpaceObject.getOrbitingPlanetId(), stationNumber);
-				((SpaceStationObject)newSpaceObject).setFuelAmount(fuelAmt);
-				((SpaceStationObject)newSpaceObject).hasWarpCores = hasWarpCores;
+				SpaceObjectManager.getSpaceManager().registerSpaceObjectClient(object, object.getOrbitingPlanetId(), stationNumber);
+				((SpaceStationObject)object).setFuelAmount(fuelAmt);
+				((SpaceStationObject)object).hasWarpCores = hasWarpCores;
 			}
 			else {
-<<<<<<< HEAD
-				iObject.readFromNbt(nbt);
-				//iObject.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
-				((SpaceStationObject)iObject).setForwardDirection(Direction.values()[direction]);
-				((SpaceStationObject)iObject).setFuelAmount(fuelAmt);
-				((SpaceStationObject)iObject).hasWarpCores = hasWarpCores;
-=======
 				spaceObject.readFromNbt(nbt);
-				//spaceObject.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
-				((SpaceStationObject)spaceObject).setForwardDirection(EnumFacing.values()[direction]);
+				//iObject.setProperties(DimensionProperties.createFromNBT(stationNumber, nbt));
+				((SpaceStationObject)spaceObject).setForwardDirection(Direction.values()[direction]);
 				((SpaceStationObject)spaceObject).setFuelAmount(fuelAmt);
 				((SpaceStationObject)spaceObject).hasWarpCores = hasWarpCores;
->>>>>>> origin/feature/nuclearthermalrockets
 			}
 		}
 			

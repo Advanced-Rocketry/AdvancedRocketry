@@ -38,12 +38,7 @@ public class BlockStationModuleDockingPort extends BlockFullyRotatable {
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-=======
-	@ParametersAreNullableByDefault
-	public TileEntity createTileEntity(World world, IBlockState state) {
->>>>>>> origin/feature/nuclearthermalrockets
 		return new TileDockingPort();
 	}
 	
@@ -60,13 +55,8 @@ public class BlockStationModuleDockingPort extends BlockFullyRotatable {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state,
 			LivingEntity placer, ItemStack stack) {
-=======
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
-			EntityLivingBase placer, @Nonnull ItemStack stack) {
->>>>>>> origin/feature/nuclearthermalrockets
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileDockingPort) {
@@ -75,12 +65,7 @@ public class BlockStationModuleDockingPort extends BlockFullyRotatable {
 	}
 	
 	@Override
-<<<<<<< HEAD
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-=======
-	@ParametersAreNonnullByDefault
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
->>>>>>> origin/feature/nuclearthermalrockets
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileLandingPad) {
 			((TileLandingPad) tile).unregisterTileWithStation(world, pos);
