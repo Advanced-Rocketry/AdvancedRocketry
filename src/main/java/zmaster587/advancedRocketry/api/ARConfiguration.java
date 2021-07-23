@@ -112,8 +112,9 @@ public class ARConfiguration {
 		//Enriched Lava in the centrifuge
 		arConfig.crystalliserMaximumGravity = builder.comment("Maximum gravity the crystallizer can work at. 0 to disable!").define("crystalliserMaximumGravity", 0);
 		arConfig.enableGravityController = builder.comment("If false, the gravity controller cannot be built or used").define("enableGravityMachine", true);
-
-		builder.push(this.CATEGORY_LASERDRILL);
+		builder.pop();
+		
+		builder.push(ARConfiguration.CATEGORY_LASERDRILL);
 		arConfig.enableLaserDrill = builder.comment("Enables the laser drill machine").define("EnableLaserDrill", true);
 		arConfig.spaceLaserPowerMult = builder.comment("Power multiplier for the laser drill machine").define("LaserDrillPowerMultiplier", 1d);
 		List<String> laserOreList = new LinkedList<>();
@@ -127,8 +128,9 @@ public class ARConfiguration {
 		arConfig.laserDrillOresBlackList = builder.comment("True if the ores in laserDrillOres should be a blacklist, false for a whitelist").define("laserDrillOres_blacklist", false);
 		arConfig.laserDrillPlanet = builder.comment("If true, the orbital laser will actually mine blocks on the planet below").define("laserDrillPlanet", false);
 		arConfig.laserBlackListDims= builder.comment("Laser drill will not mine these dimension").defineList("spaceLaserDimIdBlackList", new LinkedList<String>(), (val) -> { return true; });
-
-		builder.push(this.CATEGORY_TERRAFORMING);
+		builder.pop();
+		
+		builder.push(ARConfiguration.CATEGORY_TERRAFORMING);
 		arConfig.enableTerraforming = builder.comment("Enables terraforming items and blocks").define("EnableTerraforming", true);
 		arConfig.allowTerraforming = builder.comment("EXPERIMENTAL: If set to true allows contruction and usage of the terraformer.  This is known to cause strange world generation after successful terraform").define("allowTerraforming", false);
 		arConfig.terraformingBlockSpeed = builder.comment("How many blocks have the biome changed per tick.  Large numbers can slow the server down").define("biomeUpdateSpeed", 1);
@@ -137,8 +139,9 @@ public class ARConfiguration {
 		arConfig.terraformRequiresFluid = builder.define("TerraformerRequiresFluids", true);
 		arConfig.terraformliquidRate = builder.comment("how many millibuckets/t are required to keep the terraformer running").define("TerraformerFluidConsumeRate", 40);
 		arConfig.allowTerraformNonAR = builder.comment("If true, dimensions not added by AR can be terraformed").define("allowTerraformingNonARWorlds", false);
-
-        builder.push(this.CATEGORY_OXYGEN);
+		builder.pop();
+		
+        builder.push(ARConfiguration.CATEGORY_OXYGEN);
 		arConfig.enableOxygen = builder.comment("If true, allows players being hurt due to lack of oxygen and allows effects from non-standard atmosphere types").define("EnableAtmosphericEffects", true);
 		arConfig.scrubberRequiresCartrige = builder.comment("If true, the Oxygen scrubbers require a consumable carbon collection cartridge").define("scrubberRequiresCartrige", true);
 		arConfig.vacuumDamageValue = builder.comment("Amount of damage inflicted with each tick on an entity in a vacuum").defineInRange("vacuumDamage", 1, 0, 100);
@@ -152,22 +155,25 @@ public class ARConfiguration {
 		sealableBlockBlackList = builder.comment("Blocks that are automatically detected as sealable but should not seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"").defineList("sealableBlockBlackList", new LinkedList<String>(), (val) -> { return true; });
 		entityList = builder.comment("list entities which should not be affected by atmosphere properties").defineList("entityAtmBypass", new LinkedList<String>(), (val) -> {return true;});
 		breakableTorches = builder.comment("Mod:Blockname  for example \"minecraft:chest\"").define("torchBlocks", new LinkedList<String>(), (val) -> {return true;});
-
-		builder.push(this.CATEGORY_STATION);
+		builder.pop();
+		
+		builder.push(ARConfiguration.CATEGORY_STATION);
 		arConfig.spaceDimId = builder.comment("Dimension ID to use for space stations, changing this could really break things!").define("spaceStationId", Constants.modId + ":space");
 		arConfig.travelTimeMultiplier = builder.comment("Multiplier for warp travel time").define("warpTravelTime", 1d);
 		arConfig.stationSize = builder.comment("The largest size a space station can be.  Should also be a power of 2 (512)").define("SpaceStationBuildRadius", 1024);
 		arConfig.allowZeroGSpacestations = builder.comment("If true, players will be able to completely disable gravity on spacestation.  It's possible to get stuck and require a teleport").define("allowZeroGSpacestations", false);
 		arConfig.fuelPointsPerDilithium = builder.comment("How many units of fuel should each Dilithium Crystal give to warp ships").define("pointsPerDilithium", 500);
-
-		builder.push(this.CATEGORY_RESOURCE_MISSION);
+		builder.pop();
+		
+		builder.push(ARConfiguration.CATEGORY_RESOURCE_MISSION);
 		arConfig.gasCollectionMult = builder.comment("Multiplier for the amount of time gas collection missions take").define("gasMissionMultiplier", 1.0);
 		arConfig.asteroidMiningTimeMult = builder.comment("Multiplier changing how long a mining mission takes").define("miningMissionTmeMultiplier", 1.0);
 		harvestableGasses =  builder.comment("list of fluid names that can be harvested as Gas").defineList("harvestableGasses",  new LinkedList<String>(), (val) -> {return true;} );
 //Spawnable gasses
+		builder.pop();
 
 
-		builder.push(this.CATEGORY_ENERGY);
+		builder.push(ARConfiguration.CATEGORY_ENERGY);
 		arConfig.solarGeneratorMult = builder.comment("Amount of power per tick the solar generator should produce").define("solarGeneratorMultiplier", 1);
 		arConfig.microwaveRecieverMulitplier = builder.comment("Multiplier for the amount of energy produced by the microwave reciever").define("MicrowaveRecieverMultiplier", 1d);
 		arConfig.blackHolePowerMultiplier = builder.comment("Multiplier for the amount of power per tick the black hole generator should produce").define("blackHoleGeneratorMultiplier", 1f);
@@ -178,8 +184,9 @@ public class ARConfiguration {
 		blackHoleGen.add("minecraft:cobblestone;1");
 		blackHoleGeneratorTiming = builder.comment("minecraft:dirt;1").defineList("blackHoleTimings", blackHoleGen, (val) -> {return true;});
 		arConfig.defaultItemTimeBlackHole = builder.comment("List of blocks and the amount of ticks they can power the black hole generator format: 'modname:block:meta;number_of_ticks'").define("defaultBurnTime", 500);
-
-		builder.push(this.CATEGORY_PLANET);
+		builder.pop();
+		
+		builder.push(ARConfiguration.CATEGORY_PLANET);
 		arConfig.maxBiomesPerPlanet = builder.comment("Maximum unique biomes per planet").define("maxBiomesPerPlanet", 5);
 		arConfig.resetFromXML = builder.comment("setting this to true will force AR to read from the XML file in the config/advRocketry instead of the local data, intended for use pack developers to ensure updates are pushed through").define("resetPlanetsFromXML", false);
 		arConfig.canPlayerRespawnInSpace = builder.comment("If true, players will respawn near beds on planets IF the spawn location is in a breathable atmosphere").define("allowPlanetRespawn", false);
@@ -187,19 +194,20 @@ public class ARConfiguration {
 		arConfig.planetsMustBeDiscovered = builder.comment("If true, planets must be discovered in the warp controller before being visible").define("planetsMustBeDiscovered", false);
 		arConfig.blackListAllVanillaBiomes = builder.comment("Prevents any vanilla biomes from spawning on planets").define("blackListVanillaBiomes", false);
 		arConfig.planetDiscoveryChance = builder.comment("Chance of planet discovery in the warp ship monitor is not all planets are initially discovered").define("planetDiscoveryChance", 5);
-
-		builder.push(this.CATEGORY_CLIENT);
+		builder.pop();
+		
+		builder.push(ARConfiguration.CATEGORY_CLIENT);
 		arConfig.enableNausea = builder.comment("If true, allows players to experience nausea on non-standard atmosphere types").define("EnableAtmosphericNausea", true);
 		arConfig.stationSkyOverride = builder.comment("If true, AR will use a custom skybox on space stations").define("StationSkyOverride", true);
 		arConfig.planetSkyOverride = builder.comment("If true, AR will use a custom skybox on planets").define("PlanetSkyOverride", true);
-		arConfig.skyOverride = builder.define("overworldSkyOverride", true);
 		arConfig.advancedVFX = builder.comment("Advanced visual effects").define("advancedVFX", true);
 
 		builder.push(this.CATEGORY_PERFORMANCE);
 		arConfig.atmosphereHandleBitMask = builder.comment("BitMask: 0: no threading, radius based; 1: threading, radius based; 2: no threading volume based; 3: threading volume based").define("atmosphereCalculationMethod", 3);
 		arConfig.oxygenVentSize = builder.comment("Radius of the O2 vent.  if atmosphereCalculationMethod is 2 or 3 then max volume is calculated from this radius.  WARNING: larger numbers can lead to lag").define("oxygenVentSize", 32);
-
-		builder.push(this.CATEGORY_ROCKET);
+		builder.pop();
+		
+		builder.push(ARConfiguration.CATEGORY_ROCKET);
 		arConfig.orbit = builder.comment("How high the rocket has to go before it reaches orbit").defineInRange("OrbitHeight", 1000, 255, Integer.MAX_VALUE);
 		List<String> fuels = new LinkedList();
 		fuels.add("advancedrocketry:rocket_fuel;2");
@@ -233,8 +241,9 @@ public class ARConfiguration {
 		arConfig.asteroidTBIBurnMult = builder.comment("TBI multiplier for asteroid flights").define("asteroidTBIBurnMult", 1.0);
 		arConfig.transBodyInjection = builder.comment("How long transbody injection is before the rocket can exit").define("transBodyInjection", 0);
 		arConfig.warpTBIBurnMult = builder.comment("TBI multiplier for warp flights").define("warpTBIBurnMult", 10.0);
-
-		builder.push(this.CATEGORY_WORLD_GENERATION);
+		builder.pop();
+		
+		builder.push(ARConfiguration.CATEGORY_WORLD_GENERATION);
 		arConfig.electricPlantsSpawnLightning = builder.comment("Should Electric Mushrooms be able to spawn lightning").define("electricPlantsSpawnLightning", true);
 		List<String> geodeOresList = new LinkedList<>();
 		geodeOresList.add(Blocks.IRON_ORE.getRegistryName().toString());
@@ -258,14 +267,14 @@ public class ARConfiguration {
 		blackListedbiomes.add(Biomes.THE_VOID.getLocation().toString());
 		//blackListedbiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.alienForest).toString());
 
-		arConfig.biomeBlackList = builder.comment("List of Biomes to be blacklisted from spawning as BiomeIds, default is: river, sky, hell, void, alienForest").
+		ARConfiguration.biomeBlackList = builder.comment("List of Biomes to be blacklisted from spawning as BiomeIds, default is: river, sky, hell, void, alienForest").
 				defineList("BlacklistedBiomes", blackListedbiomes, (item) -> { return true; });
 
 
 		LinkedList<String> highPressureBiome = new LinkedList<String>();
 		//highPressureBiome.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.stormLandsBiome).toString());
 		//highPressureBiome.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.swampDeepBiome).toString());
-		arConfig.biomeHighPressure = builder.comment("Biomes that only spawn on worlds with pressures over 125, will override blacklist.").
+		ARConfiguration.biomeHighPressure = builder.comment("Biomes that only spawn on worlds with pressures over 125, will override blacklist.").
 				defineList("HighPressureBiomes", highPressureBiome, (item) -> { return true; });
 
 		LinkedList<String> singleBiomes = new LinkedList<String>();
@@ -278,7 +287,7 @@ public class ARConfiguration {
 		singleBiomes.add(Biomes.TALL_BIRCH_HILLS.getLocation().toString());
 		singleBiomes.add(Biomes.ICE_SPIKES.getLocation().toString());
 
-		arConfig.biomeSingle = builder.comment("Some worlds have a chance of spawning single biomes contained in this list.").
+		ARConfiguration.biomeSingle = builder.comment("Some worlds have a chance of spawning single biomes contained in this list.").
 				defineList("SingleBiomes", singleBiomes, (item) -> { return true; });
 
 		final ConfigValue<Boolean> masterToggle = builder.define("EnableOreGen", true);
@@ -309,7 +318,7 @@ public class ARConfiguration {
 		arConfig.generateRutile = builder.define("GenerateRutile", true);
 		arConfig.rutileClumpSize = builder.define("RutilePerClump", 6);
 		arConfig.rutilePerChunk = builder.define("RutilePerChunk", 6);
-
+		builder.pop();
 
 
 
@@ -1201,9 +1210,6 @@ public class ARConfiguration {
 
 	@ConfigProperty
 	public  ConfigValue<Double> oxygenVentPowerMultiplier;
-
-	@ConfigProperty
-	public  ConfigValue<Boolean> skyOverride;
 
 	@ConfigProperty
 	public  ConfigValue<Boolean> planetSkyOverride;

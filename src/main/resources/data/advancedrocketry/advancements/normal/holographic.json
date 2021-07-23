@@ -1,7 +1,7 @@
 {
     "display": {
         "icon": {
-            "item": "libvulpes:holoprojector"
+            "item": "libvulpes:holo_projector"
         },
         "title": {
             "translate": "advancement.holographic"
@@ -17,7 +17,7 @@
             "conditions": {
                 "items": [
                     {
-                        "item": "libvulpes:holoprojector"
+                        "item": "libvulpes:holo_projector"
                     }
                 ]
             }

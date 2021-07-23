@@ -3,6 +3,9 @@ package zmaster587.advancedRocketry.item.components;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.AttributeModifier.Operation;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
@@ -23,14 +26,13 @@ import zmaster587.libVulpes.client.ResourceIcon;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.UUID;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 public class ItemUpgrade extends Item implements IArmorComponent {
-
-	private int legUpgradeDamage = 2;
-	private int bootsUpgradeDamage = 3;
-	private Field walkSpeed;
+	Field walkSpeed;
+	UUID speedUUID = new UUID(2319, 9001);
 	
 	public ItemUpgrade(Properties props) {
 		super(props);
@@ -41,12 +43,12 @@ public class ItemUpgrade extends Item implements IArmorComponent {
 	public void onTick(World world, PlayerEntity player, ItemStack armorStack,
 			IInventory modules, ItemStack componentStack) {
 
-		if(componentStack.getItem() == AdvancedRocketryItems.itemUpgradeSpeed) {
+		if(componentStack.getItem() == AdvancedRocketryItems.itemUpgradeLegs) {
 			if(player.isSprinting()) {
 				int itemCount = 0;
 				for(int i = 0; i < modules.getSizeInventory(); i++) {
 					ItemStack stackInSlot = modules.getStackInSlot(i);
-					if(!stackInSlot.isEmpty() && stackInSlot.getItem() == this && stackInSlot.getItem() == AdvancedRocketryItems.itemUpgradeSpeed) {
+					if(!stackInSlot.isEmpty() && stackInSlot.getItem() == this && stackInSlot.getItem() == AdvancedRocketryItems.itemUpgradeLegs) {
 						//Avoid extra calculation
 						if(itemCount == 0 && stackInSlot != componentStack)
 							return;
@@ -54,8 +56,12 @@ public class ItemUpgrade extends Item implements IArmorComponent {
 					}
 				}
 				//Walkspeed
+				player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(speedUUID);
+				AttributeModifier speed = new AttributeModifier(speedUUID, "bioniclegs", (itemCount+1)*0.1, Operation.ADDITION);
+				player.getAttribute(Attributes.MOVEMENT_SPEED).applyNonPersistentModifier(speed);
 				player.abilities.setWalkSpeed((itemCount+1)*0.1f);
 			} else
+				player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(speedUUID);
 				player.abilities.setWalkSpeed(0.1f);
 		}
 		else if(componentStack.getItem() == AdvancedRocketryItems.itemUpgradeFallBoots && 
@@ -81,7 +87,7 @@ public class ItemUpgrade extends Item implements IArmorComponent {
 
 	@Override
 	public boolean isAllowedInSlot(ItemStack componentStack, EquipmentSlotType targetSlot) {
-		if(componentStack.getItem() == AdvancedRocketryItems.itemUpgradeSpeed)
+		if(componentStack.getItem() == AdvancedRocketryItems.itemUpgradeLegs)
 			return targetSlot == EquipmentSlotType.LEGS;
 		else if(componentStack.getItem() == AdvancedRocketryItems.itemUpgradeFallBoots)
 			return targetSlot == EquipmentSlotType.FEET;

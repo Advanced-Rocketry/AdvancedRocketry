@@ -8,6 +8,6 @@
         "facing=south,state=true": { "model": "advancedrocketry:block/warpmonitor", "y": 180 },
         "facing=west,state=true":  { "model": "advancedrocketry:block/warpmonitor", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/warpmonitor", "y": 90 },
-        "inventory" : { "model": "advancedrocketry:block/warpMonitor" }
+        "inventory" : { "model": "advancedrocketry:block/warpmonitor" }
     }
 }

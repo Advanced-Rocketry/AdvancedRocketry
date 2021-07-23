@@ -16,6 +16,7 @@ import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.client.render.planet.RenderSpaceSky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.libVulpes.util.ZUtils;
 
 public class ClientHelper {
 
@@ -31,12 +32,28 @@ public class ClientHelper {
 
 		ISkyRenderer renderer =  properties.getSkyRenderer();
 
+		
 		if(renderer == null)
 		{
 			if(properties.isStation())
+			{
+				
+				if(!ARConfiguration.getCurrentConfig().stationSkyOverride.get())
+				{
+					properties.setSkyRenderer(null);
+					return true;
+				}
 				properties.setSkyRenderer(new RenderSpaceSky());
+			}
 			else
+			{	
+				if(!ARConfiguration.getCurrentConfig().planetSkyOverride.get())
+				{
+					properties.setSkyRenderer(null);
+					return true;
+				}
 				properties.setSkyRenderer(new RenderPlanetarySky());
+			}
 			renderer = properties.getSkyRenderer();
 		}
 

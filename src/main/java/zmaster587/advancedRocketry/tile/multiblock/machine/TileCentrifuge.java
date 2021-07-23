@@ -40,16 +40,16 @@ public class TileCentrifuge extends TileMultiblockMachine {
 	public static final Object[][][] structure = {
 
 			{{Blocks.AIR, new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'},
-					{"casingcentrifuge", "casingcentrifuge", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
-					{"casingcentrifuge", "casingcentrifuge", null}},
+					{new ResourceLocation("advancedrocketry","casingcentrifuge"), new ResourceLocation("advancedrocketry","casingcentrifuge"), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+					{new ResourceLocation("advancedrocketry","casingcentrifuge"), new ResourceLocation("advancedrocketry","casingcentrifuge"), null}},
 
 			{{Blocks.AIR, new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'},
-					{"casingcentrifuge", "casingcentrifuge", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
-					{"casingcentrifuge", "casingcentrifuge", 'l'}},
+					{new ResourceLocation("advancedrocketry","casingcentrifuge"), new ResourceLocation("advancedrocketry","casingcentrifuge"), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+					{new ResourceLocation("advancedrocketry","casingcentrifuge"), new ResourceLocation("advancedrocketry","casingcentrifuge"), 'l'}},
 
 			{{'c', new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'},
-					{"casingcentrifuge", "casingcentrifuge", new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
-					{"casingcentrifuge", "casingcentrifuge", 'l'}},
+					{new ResourceLocation("advancedrocketry","casingcentrifuge"), new ResourceLocation("advancedrocketry","casingcentrifuge"), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
+					{new ResourceLocation("advancedrocketry","casingcentrifuge"), new ResourceLocation("advancedrocketry","casingcentrifuge"), 'l'}},
 
 			{   {'P','L', 'l'},
 				{LibVulpesBlocks.motors,'O', new BlockMeta(LibVulpesBlocks.blockStructureBlock)},

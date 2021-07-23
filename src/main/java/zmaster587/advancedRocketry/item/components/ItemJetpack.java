@@ -74,7 +74,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 					if (item.getItem() == AdvancedRocketryItems.itemUpgradeHover)
 						if(stack.getDamage() == 0)
 							allowsHover = true;
-						else if(stack.getItem() == AdvancedRocketryItems.itemUpgradeSpeed)
+						else if(stack.getItem() == AdvancedRocketryItems.itemUpgradeFlightSpeed)
 							speedUpgrades++;
 				}
 			}
@@ -361,8 +361,8 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			Minecraft.getInstance().getTextureManager().bindTexture(background);
 			GL11.glColor3f(1f, 1f, 1f);
 			int width = 83;
-			int screenX = RocketEventHandler.hydrogenBar.getRenderX();
-			int screenY = RocketEventHandler.hydrogenBar.getRenderY();
+			int screenX = Minecraft.getInstance().getMainWindow().getScaledWidth()/2 + RocketEventHandler.hydrogenBar.getRenderX();
+			int screenY = Minecraft.getInstance().getMainWindow().getScaledHeight() + RocketEventHandler.hydrogenBar.getRenderY();
 
 			//Draw BG
 			gui.blit(mat,screenX, screenY, 23, 34, width, 17);

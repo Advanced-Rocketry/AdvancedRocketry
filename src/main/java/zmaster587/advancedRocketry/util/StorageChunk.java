@@ -75,6 +75,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.IWorldInfo;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.items.CapabilityItemHandler;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
@@ -105,6 +106,8 @@ import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 
+import com.mojang.serialization.Lifecycle;
+
 import javax.annotation.Nullable;
 
 public class StorageChunk implements IWorld, IStorageChunk {
@@ -134,7 +137,9 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		liquidTiles = new ArrayList<>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
-		this.chunk = new Chunk((World)world, new ChunkPos(0, 0), new BiomeContainer(null, new ChunkPos(0, 0), new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getLocation()))));
+		SimpleRegistry<Biome> registry = new SimpleRegistry<Biome>(Registry.BIOME_KEY, Lifecycle.stable());
+		SimpleRegistry.register(registry, Biomes.OCEAN.getRegistryName(), AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getLocation()));
+		this.chunk = new Chunk((World)world, new ChunkPos(0, 0), new BiomeContainer(registry, new ChunkPos(0, 0), new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getLocation()))));
 		// Hacky, quick workaround, I need a break
 		world.setChunk(chunk);
 	}
@@ -150,8 +155,8 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		liquidTiles = new ArrayList<>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
-		ObjectIntIdentityMap<Biome> registry = new ObjectIntIdentityMap<>(1);
-		registry.add(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getRegistryName()));
+		SimpleRegistry<Biome> registry = new SimpleRegistry<Biome>(Registry.BIOME_KEY, Lifecycle.stable());
+		SimpleRegistry.register(registry, Biomes.OCEAN.getRegistryName(), AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getLocation()));
 		this.chunk = new Chunk((World)world, new ChunkPos(0, 0), new BiomeContainer(registry, new ChunkPos(0, 0), new SingleBiomeProvider(AdvancedRocketryBiomes.getBiomeFromResourceLocation(Biomes.OCEAN.getLocation()))));
 		// Hacky, quick workaround, I need a break
 		world.setChunk(chunk);

@@ -96,11 +96,9 @@ public class AdvancedRocketryItems {
 	public static Item itemPressureTankMed;
 	public static Item itemPressureTankHigh;
 	public static Item itemPressureTankSuperHigh;
-	public static Item itemHighPressureTank;
 	public static Item itemUpgradeHover;
 	public static Item itemUpgradeFlightSpeed;
 	public static Item itemUpgradeLegs;
-	public static Item itemUpgradeSpeed;
 	public static Item itemUpgradeFallBoots;
 	public static Item itemUpgradeFogGoggles;
 	public static Item itemAtmAnalyser;

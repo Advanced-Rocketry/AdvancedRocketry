@@ -162,24 +162,24 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 					{
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
-							{null,null,null,null,new ResourceLocation("forge","blocks/steel"),null,null,null,null},
-							{null,null,null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("forge","blocks/titanium"),LibVulpesBlocks.blockAdvStructureBlock,null,null,null},
-							{null,null,new ResourceLocation("forge","blocks/steel"),new ResourceLocation("forge","blocks/titanium"),new ResourceLocation("forge","blocks/titanium"),new ResourceLocation("forge","blocks/titanium"),new ResourceLocation("forge","blocks/steel"),null,null},
-							{null,null,null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("forge","blocks/titanium"),LibVulpesBlocks.blockAdvStructureBlock,null,null,null},
-							{null,null,null,null,new ResourceLocation("forge","blocks/steel"),null,null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","storage_blocks/steel"),null,null,null,null},
+							{null,null,null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("forge","storage_blocks/titanium"),LibVulpesBlocks.blockAdvStructureBlock,null,null,null},
+							{null,null,new ResourceLocation("forge","storage_blocks/steel"),new ResourceLocation("forge","storage_blocks/titanium"),new ResourceLocation("forge","storage_blocks/titanium"),new ResourceLocation("forge","storage_blocks/titanium"),new ResourceLocation("forge","storage_blocks/steel"),null,null},
+							{null,null,null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("forge","storage_blocks/titanium"),LibVulpesBlocks.blockAdvStructureBlock,null,null,null},
+							{null,null,null,null,new ResourceLocation("forge","storage_blocks/steel"),null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null}
 					},
 					{
-							{new ResourceLocation("forge","blocks/steel"),null,null,new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab"),null,null,new ResourceLocation("forge","blocks/steel")},
-							{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slab"),'I','c','O',new ResourceLocation("minecraft","slab"),LibVulpesBlocks.blockAdvStructureBlock,null},
-							{null,new ResourceLocation("minecraft","slab"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slab"),null},
-							{new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab")},
-							{new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.motors,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab")},
-							{new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab")},
-							{null,new ResourceLocation("minecraft","slab"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slab"),null},
-							{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slab"),'P','P','P',new ResourceLocation("minecraft","slab"),LibVulpesBlocks.blockAdvStructureBlock,null},
-							{new ResourceLocation("forge","blocks/steel"),null,null,new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab"),new ResourceLocation("minecraft","slab"),null,null,new ResourceLocation("forge","blocks/steel")}
+							{new ResourceLocation("forge","storage_blocks/steel"),null,null,new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),null,null,new ResourceLocation("forge","storage_blocks/steel")},
+							{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slabs"),'I','c','O',new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvStructureBlock,null},
+							{null,new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slabs"),null},
+							{new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs")},
+							{new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.motors,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs")},
+							{new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs")},
+							{null,new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slabs"),null},
+							{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slabs"),'P','P','P',new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvStructureBlock,null},
+							{new ResourceLocation("forge","storage_blocks/steel"),null,null,new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),null,null,new ResourceLocation("forge","storage_blocks/steel")}
 					}
 			};
 
@@ -258,11 +258,13 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	@Override
 	public void onLoad() {
 		super.onLoad();
-		if(!this.world.isRemote)
+		
+		// Causes deadlock for now :/
+		/*if(!this.world.isRemote)
 		{
 			ServerWorld serverworld = (ServerWorld)world;
 			serverworld.forceChunk(new ChunkPos(getPos()).x, new ChunkPos(getPos()).z, true);
-		}
+		}*/
 	}
 
 	@Override

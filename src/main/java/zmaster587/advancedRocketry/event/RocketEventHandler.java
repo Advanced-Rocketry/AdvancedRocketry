@@ -136,7 +136,7 @@ public class RocketEventHandler extends Screen {
 
 	@OnlyIn(value=Dist.CLIENT)
 	public static void destroyOrbitalTextures(World world) {
-		if(!ARConfiguration.getCurrentConfig().skyOverride.get() && !DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(world))) {
+		if(!DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(world))) {
 			DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(world);
 			props.setSkyRenderer(prevRenderHanlder);
 			prevRenderHanlder = null;
@@ -449,8 +449,9 @@ public class RocketEventHandler extends Screen {
 					Minecraft.getInstance().getTextureManager().bindTexture(background);
 					RenderSystem.color4f(1f, 1f, 1f, 1f);
 					int width = 83;
-					int screenX = oxygenBar.getRenderX();//+ 8;
-					int screenY = oxygenBar.getRenderY();//- 57;
+					
+					int screenX = Minecraft.getInstance().getMainWindow().getScaledWidth()/2 + oxygenBar.getRenderX();//+ 8;
+					int screenY = Minecraft.getInstance().getMainWindow().getScaledHeight() + oxygenBar.getRenderY();//- 57;
 
 					//Draw BG
 					this.blit(event.getMatrixStack(), screenX, screenY, 23, 0, width, 17);
@@ -512,7 +513,6 @@ public class RocketEventHandler extends Screen {
 			}
 		}
 	}
-
 	private void renderModuleSlots(ItemStack armorStack, int slot, RenderGameOverlayEvent event) {
 		int index = 1;
 		float color = 0.85f + 0.15F*MathHelper.sin( 2f*(float)Math.PI*((Minecraft.getInstance().world.getGameTime()) % 60)/60f );

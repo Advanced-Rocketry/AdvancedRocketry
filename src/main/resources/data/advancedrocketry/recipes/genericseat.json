@@ -7,12 +7,10 @@
     {
         "x":
         {
-            "tag": "minecraft:wool",
-            "data": 32767
+            "tag": "minecraft:wool"
         },
         "s": {
-            "type": "forge:ore_dict",
-            "ore": "plateSteel"
+            "tag": "forge:plates/steel"
         }
     },
     "result": {

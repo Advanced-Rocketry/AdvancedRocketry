@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -39,6 +40,11 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 		return structure;
 	}
 
+	@Override
+	public boolean shouldHideBlock(World world, BlockPos pos, BlockState tile) {
+		return true;
+	}
+	
 	@Override
 	public void tick() {
 		super.tick();

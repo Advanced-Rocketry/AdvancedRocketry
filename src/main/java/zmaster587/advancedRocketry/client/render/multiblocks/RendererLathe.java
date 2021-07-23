@@ -47,7 +47,7 @@ public class RendererLathe extends TileEntityRenderer<TileLathe> {
 		//Rotate and move the model into position
 		matrix.translate(.5f, 0, 0.5f);
 		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		matrix.rotate(new Quaternion(0, (front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, true));
+		matrix.rotate(new Quaternion(0, ((front.getXOffset() == 1 ? 0 : 180) + front.getZOffset()*90f), 0, true));
 		matrix.translate(-.5f, -1f, -2.5f);
 		IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));
 
@@ -96,7 +96,7 @@ public class RendererLathe extends TileEntityRenderer<TileLathe> {
 			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "Tool");
 			
 			matrix.push();
-			GL11.glTranslatef(0.375f, 0.9375f, 0f);
+			matrix.translate(0.375f, 0.9375f, 0f);
 			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn,  entitySolidBuilder, "Sool");
 			matrix.pop();
 		}

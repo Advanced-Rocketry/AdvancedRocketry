@@ -49,8 +49,6 @@ public class RendererChemicalReactor  extends TileEntityRenderer<TileChemicalRea
 		} else {
 			combinedLightIn = 15728880;
 		}
-		
-		matrix.push();
 
 		
 		//Rotate and move the model into position
@@ -59,9 +57,10 @@ public class RendererChemicalReactor  extends TileEntityRenderer<TileChemicalRea
 		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
 		
 		matrix.rotate(new Quaternion(0,(front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f,0, true));
+		matrix.translate(1.5f, -1.0f, -.5f);
 		IVertexBuilder entityTransparentBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder, "Hull");
-		matrix.translate(1.5f, -1.0f, -.5f);
+		
 		matrix.pop();
 	}
 }

@@ -67,15 +67,15 @@ boolean openFullScreen = false;
 		{
 			{
 				{null,null,null,'P','c','P',null,null,null},
-				{new ResourceLocation("forge", "blocks/steel"),null,null,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),null,null,new ResourceLocation("forge", "blocks/steel")},
-				{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,null},
-				{null,new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),null},
-				{new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab")},
-				{new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.motors,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab")},
-				{new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab")},
-				{null,new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),null},
-				{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),LibVulpesBlocks.blockAdvStructureBlock,null},
-				{new ResourceLocation("forge", "blocks/steel"),null,null,new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),new ResourceLocation("minecraft", "slab"),null,null,new ResourceLocation("forge", "blocks/steel")}
+				{new ResourceLocation("forge", "blocks/steel"),null,null,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),null,null,new ResourceLocation("forge", "blocks/steel")},
+				{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,null},
+				{null,new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),null},
+				{new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs")},
+				{new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.motors,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs")},
+				{new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs")},
+				{null,new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),null},
+				{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,null},
+				{new ResourceLocation("forge", "blocks/steel"),null,null,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),null,null,new ResourceLocation("forge", "blocks/steel")}
 			}
 		};
 
@@ -152,10 +152,12 @@ boolean openFullScreen = false;
 
 
 		if(ID == GuiHandler.guiId.MODULAR.ordinal()) {
-			modules.add(new ModuleButton(50, 47, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.button.summon"), this, TextureResources.buttonBuild, 80, 18));
+			ModuleButton summonButton = new ModuleButton(50, 47, LibVulpes.proxy.getLocalizedString("msg.spaceelevator.button.summon"), this, TextureResources.buttonBuild, 80, 18);
+			summonButton.setAdditionalData(1);
+			modules.add(summonButton);
 			if (isTetherConnected()) {
-				modules.add(new ModuleText(30, 23, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.anchored0"), 0x2d2d2d));
-				modules.add(new ModuleText(30, 35, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.anchored1"), 0x2d2d2d));
+				modules.add(new ModuleText(30, 23, LibVulpes.proxy.getLocalizedString("msg.spaceelevator.warning.anchored0"), 0x2d2d2d));
+				modules.add(new ModuleText(30, 35, LibVulpes.proxy.getLocalizedString("msg.spaceelevator.warning.anchored1"), 0x2d2d2d));
 			} else {
 				modules.add(new ModuleText(30, 32, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.unanchored"), 0x2d2d2d));
 			}
@@ -360,17 +362,17 @@ boolean openFullScreen = false;
 			}
 
 			if(!isDestinationValid(dimPos.dimid, dimPos, new HashedBlockPosition(getPos()), ZUtils.getDimensionIdentifier(myWorld))) {
-				player.sendMessage(new TranslationTextComponent("msg.spaceElevator.linkNotGeostationaryError"), Util.DUMMY_UUID);
+				player.sendMessage(new TranslationTextComponent("msg.spaceelevator.linknotgeostationaryerror"), Util.DUMMY_UUID);
 				return false;
 			}
 
 			if(wouldTetherBreakOnConnect(dimPos.dimid, dimPos, new HashedBlockPosition(getPos()), ZUtils.getDimensionIdentifier(myWorld))) {
-				player.sendMessage(new TranslationTextComponent("msg.spaceElevator.tetherWouldBreakError"), Util.DUMMY_UUID);
+				player.sendMessage(new TranslationTextComponent("msg.spaceelevator.tetherwouldbreakerror"), Util.DUMMY_UUID);
 				return false;
 			}
 
 			if(dimBlockPos != null) {
-				player.sendMessage(new TranslationTextComponent("msg.spaceElevator.linkCannotChangeError"), Util.DUMMY_UUID);
+				player.sendMessage(new TranslationTextComponent("msg.spaceelevator.linkcannotchangeerror"), Util.DUMMY_UUID);
 				return false;
 			}
 
@@ -379,7 +381,7 @@ boolean openFullScreen = false;
 				if(tile instanceof TileSpaceElevator) {
 					updateTetherLinkPosition(new DimensionBlockPosition(ZUtils.getDimensionIdentifier(this.world), new HashedBlockPosition(getPos())), dimPos);
 					((TileSpaceElevator) tile).updateTetherLinkPosition(dimPos, new DimensionBlockPosition(ZUtils.getDimensionIdentifier(this.world), new HashedBlockPosition(getPos())));
-					player.sendMessage(new TranslationTextComponent("msg.spaceElevator.newDstAdded"), Util.DUMMY_UUID);
+					player.sendMessage(new TranslationTextComponent("msg.spaceelevator.newdstadded"), Util.DUMMY_UUID);
 
 					if (capsule != null) {
 						capsule.setDst(dimBlockPos);
@@ -418,7 +420,7 @@ boolean openFullScreen = false;
 	}
 
 	@Override
-	public String getModularInventoryName() { return "tile.spaceElevatorController.name"; }
+	public String getModularInventoryName() { return "block.advancedrocketry.spaceelevatorcontroller"; }
 
 	@Override
 	public boolean isUsableByPlayer(PlayerEntity player) {

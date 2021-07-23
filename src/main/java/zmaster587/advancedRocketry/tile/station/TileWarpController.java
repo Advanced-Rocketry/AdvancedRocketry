@@ -481,7 +481,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 	public void readDataFromNetwork(PacketBuffer in, byte packetId,
 									CompoundNBT nbt) {
 		if(packetId == 1 || packetId == 3)
-			nbt.putString("id", in.readString());
+			nbt.putString("id", in.readString(32767));
 		else if(packetId == TAB_SWITCH)
 			nbt.putShort("tab", in.readShort());
 		else if(packetId >= 10 && packetId < 20) {

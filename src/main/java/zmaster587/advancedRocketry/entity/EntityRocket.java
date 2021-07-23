@@ -2020,7 +2020,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			storage.readFromNetwork(in);
 		}
 		else if(packetId == PacketType.SENDPLANETDATA.ordinal()) {
-			nbt.putString("selection", in.readString());
+			nbt.putString("selection", in.readString(32767));
 		}
 		else if(packetId == PacketType.TURNUPDATE.ordinal()) {
 			nbt.putBoolean("left", in.readBoolean());

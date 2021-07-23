@@ -1,7 +1,7 @@
 {
     "display": {
         "icon": {
-            "item": "libvulpes:productgem"
+            "item": "libvulpes:gemdilithium"
         },
         "title": {
             "translate": "advancement.dilithium"
@@ -17,7 +17,7 @@
             "conditions": {
                 "items": [
                     {
-                        "item": "libvulpes:productgem",
+                        "item": "libvulpes:gemdilithium",
                         "data": 0
                     }
                 ]

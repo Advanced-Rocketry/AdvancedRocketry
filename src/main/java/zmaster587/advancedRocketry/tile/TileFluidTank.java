@@ -1,5 +1,8 @@
 package zmaster587.advancedRocketry.tile;
 
+import javax.annotation.Nonnull;
+
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -94,6 +97,7 @@ public class TileFluidTank extends TileFluidHatch {
 	}
 
 	@Override
+	@Nonnull
 	public FluidStack drain(int maxDrain, FluidAction doDrain) {
 		IFluidHandler handler = this.getFluidTankInDirection(Direction.UP);
 

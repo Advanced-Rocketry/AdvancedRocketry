@@ -21,6 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -132,7 +133,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 	@Override
 	public String getModularInventoryName() {
-		return "item.stationChip.name";
+		return "item.advancedrocketry.chip_station";
 	}
 
 	@Override
@@ -140,7 +141,9 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	public void onInventoryButtonPressed(ModuleButton buttonId) {
 		ItemStack stack = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
 		if(stack != null && stack.getItem() == this) {
-			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getInstance().player, (byte)(buttonId.getAdditionalData())));
+			Integer num = (Integer)buttonId.getAdditionalData();
+			
+			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getInstance().player, num.byteValue()));
 		}
 	}
 
@@ -215,7 +218,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			else if(id == BUTTON_ID_ADD)
 			{
 				// this will be false if on a space station, do not set on space station
-				if(ZUtils.getDimensionIdentifier(player.getEntityWorld()) == dimId) {
+				if(ZUtils.getDimensionIdentifier(player.getEntityWorld()).equals(dimId)) {
 					List<LandingLocation> locs = getLandingLocations(stack, dimId);
 					BlockPos pos = new BlockPos(player.getPositionVec());
 					locs.add(new LandingLocation(nbt.getString(TMPNAME), pos.getX(), pos.getY(), pos.getZ()));
@@ -225,7 +228,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			//Re-open the UI
 			player.closeScreen();
 			
-			NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)stack.getItem(), packetBuffer -> {packetBuffer.writeInt(getModularInvType().ordinal()); packetBuffer.writeBoolean(true);});
+			//NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)stack.getItem(), packetBuffer -> {packetBuffer.writeInt(getModularInvType().ordinal()); packetBuffer.writeBoolean(true);});
 		}
 	}
 
@@ -492,7 +495,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 	@Override
 	public ITextComponent getDisplayName() {
-		return new StringTextComponent(getModularInventoryName());
+		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
