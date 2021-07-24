@@ -246,8 +246,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public boolean isRetrograde;
 	public OreGenProperties oreProperties = null;
 	public List<ItemStack> laserDrillOres;
+	public List<ItemStack> craterOres;
 	public List<String> geodeOres;
-	public List<String> craterOres;
+	public String craterOresRaw;
 	// The parsing of laserOreDrills is destructive of the actual oredict entries, so we keep a copy of the raw data around for XML writing
 	public String laserDrillOresRaw;
 	public String customIcon;
@@ -1510,11 +1511,15 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		if(nbt.contains("craterOres")) {
 			craterOres.clear();
-			list = nbt.getList("craterOres", NBT.TAG_STRING);
+			list = nbt.getList("craterOres", NBT.TAG_COMPOUND);
 			for(INBT entry : list) {
-				assert entry instanceof StringNBT;
-				craterOres.add(((StringNBT) entry).getString());
+				assert entry instanceof CompoundNBT;
+				craterOres.add(ItemStack.read((CompoundNBT) entry));
 			}
+		}
+
+		if(nbt.contains("craterOresRaw")) {
+			craterOresRaw = nbt.getString("craterOresRaw");
 		}
 
 		if(nbt.contains("artifacts")) {
@@ -1725,10 +1730,16 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		if(!craterOres.isEmpty()) {
 			list = new ListNBT();
-			for(String ore : craterOres) {
-				list.add(StringNBT.valueOf(ore));
+			for(ItemStack ore : craterOres) {
+				CompoundNBT entry = new CompoundNBT();
+				ore.write(entry);
+				list.add(entry);
 			}
 			nbt.put("craterOres",list);
+		}
+
+		if(craterOresRaw != null) {
+			nbt.put("craterOresRaw", StringNBT.valueOf(craterOresRaw));
 		}
 
 		if(!requiredArtifacts.isEmpty()) {

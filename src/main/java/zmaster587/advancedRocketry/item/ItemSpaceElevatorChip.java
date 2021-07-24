@@ -56,7 +56,7 @@ public class ItemSpaceElevatorChip extends Item {
 	}
 	
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List list, ITooltipFlag bool) {
 		
 		int numPos = getBlockPositions(stack).size();
 		

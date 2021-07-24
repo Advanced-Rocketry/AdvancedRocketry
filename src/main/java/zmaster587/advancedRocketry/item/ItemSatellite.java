@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.item;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -113,7 +114,7 @@ public class ItemSatellite extends ItemIdWithName {
 
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List list, ITooltipFlag bool) {
 
 		SatelliteProperties properties = SatelliteRegistry.getSatelliteProperty(stack);
 

@@ -168,7 +168,7 @@ public class AdvancedRocketryTileEntityType {
 		TILE_SPACE_ELEVATOR = TileEntityType.Builder.create(TileSpaceElevator::new, AdvancedRocketryBlocks.blockSpaceElevatorController).build(null);
 		TILE_SPACE_LASER = TileEntityType.Builder.create(TileOrbitalLaserDrill::new, AdvancedRocketryBlocks.blockSpaceLaser).build(null);
 		TILE_WARP_CORE = TileEntityType.Builder.create(TileWarpCore::new, AdvancedRocketryBlocks.blockWarpCore).build(null);
-		TILE_CO2_SCRUBBER = TileEntityType.Builder.create(TileCO2Scrubber::new, AdvancedRocketryBlocks.blockOxygenScrubber).build(null);
+		TILE_CO2_SCRUBBER = TileEntityType.Builder.create(TileCO2Scrubber::new, AdvancedRocketryBlocks.blockCO2Scrubber).build(null);
 		TILE_OXYGEN_CHARGER = TileEntityType.Builder.create(TileGasChargePad::new, AdvancedRocketryBlocks.blockOxygenCharger).build(null);
 		TILE_OXYGEN_VENT = TileEntityType.Builder.create(TileOxygenVent::new, AdvancedRocketryBlocks.blockOxygenVent).build(null);
 		//TILE_CHIP_STORAGE = TileEntityType.Builder.create(TileChipStorage::new, AdvancedRocketryBlocks.blockOxygenVent).build(null);
@@ -266,7 +266,7 @@ public class AdvancedRocketryTileEntityType {
 	
 	public static void registerTileEntityTypesToBlocks()
 	{
-		((BlockTile)AdvancedRocketryBlocks.blockOxygenScrubber)._setTile(AdvancedRocketryTileEntityType.TILE_CO2_SCRUBBER);
+		((BlockTile)AdvancedRocketryBlocks.blockCO2Scrubber)._setTile(AdvancedRocketryTileEntityType.TILE_CO2_SCRUBBER);
 
 		((BlockTile)AdvancedRocketryBlocks.blockOrientationController)._setTile(AdvancedRocketryTileEntityType.TILE_ORIENTATION_CONTROLLER);
 		((BlockTile)AdvancedRocketryBlocks.blockGravityController)._setTile(AdvancedRocketryTileEntityType.TILE_STATION_GRAVITY_CONTROLLER);

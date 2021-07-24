@@ -432,19 +432,21 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 	 */
 	public int getFuelAmount(FuelType fuelType) {
 		if(fuelType != null) {
-			int amount;
 
+			int amount = 0;
 			switch(fuelType) {
 				case LIQUID_MONOPROPELLANT:
-					dataManager.set(fuelLevelMonopropellant, amt);
+					amount = dataManager.get(fuelLevelMonopropellant);
+					stats.setFuelAmount(FuelType.LIQUID_MONOPROPELLANT,amount);
 				case LIQUID_BIPROPELLANT:
-					dataManager.set(fuelLevelBipropellant, amt);
+					amount = dataManager.get(fuelLevelBipropellant);
+					stats.setFuelAmount(FuelType.LIQUID_BIPROPELLANT,amount);
 				case LIQUID_OXIDIZER:
-					dataManager.set(fuelLevelOxidizer, amt);
+					amount = dataManager.get(fuelLevelOxidizer);
+					stats.setFuelAmount(FuelType.LIQUID_OXIDIZER,amount);
 				case NUCLEAR_WORKING_FLUID:
-					dataManager.set(fuelLevelNuclearWorkingFluid, amt);
-				default:
-					return 0;
+					amount = dataManager.get(fuelLevelOxidizer);
+					stats.setFuelAmount(FuelType.NUCLEAR_WORKING_FLUID,amount);
 			}
 
 			stats.setFuelAmount(fuelType, amount);
@@ -474,16 +476,12 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 	public void setFuelAmount(@Nonnull FuelType fuelType, int amt) {
 		if (fuelType == FuelType.LIQUID_MONOPROPELLANT) {
 			dataManager.set(fuelLevelMonopropellant, amt);
-			dataManager.setDirty(fuelLevelMonopropellant);
 		} else if (fuelType == FuelType.LIQUID_BIPROPELLANT) {
 			dataManager.set(fuelLevelBipropellant, amt);
-			dataManager.setDirty(fuelLevelBipropellant);
 		} else if (fuelType == FuelType.LIQUID_OXIDIZER) {
 			dataManager.set(fuelLevelOxidizer, amt);
-			dataManager.setDirty(fuelLevelOxidizer);
 		} else if (fuelType == FuelType.NUCLEAR_WORKING_FLUID) {
 			dataManager.set(fuelLevelNuclearWorkingFluid, amt);
-			dataManager.setDirty(fuelLevelNuclearWorkingFluid);
 		}
 	}
 

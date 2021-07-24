@@ -1,5 +1,5 @@
 package zmaster587.advancedRocketry.world.decoration;
-
+/*
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -224,4 +224,4 @@ public class MapGenCraterHuge extends MapGenBase {
 
 		return base + extras;
 	}
-}
+}*/

@@ -151,13 +151,6 @@ repositories {
            name "EnderIO"
            artifactPattern "https://addons-origin.cursecdn.com/files/2238/375/[module]-[revision].[ext]"
        }*/
-    ivy {
-            name "LibVulpes"
-            artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/1.16.5/" + project.libVulpesBuildNum +"/artifact/output/[module]-[revision].[ext]"
-            metadataSources {
-			artifact()
-	    }
-        }
 	flatDir {
 	    dirs 'libs'
 	}

@@ -460,8 +460,8 @@ public class EntityStationDeployedRocket extends EntityRocket {
 
 
 	@Override
-	public void writeMissionPersistantNBT(CompoundNBT nbt) {
-		super.writeMissionPersistantNBT(nbt);
+	public void writeMissionPersistentNBT(CompoundNBT nbt) {
+		super.writeMissionPersistentNBT(nbt);
 		nbt.putInt("fwd", forwardDirection.ordinal());
 
 		nbt.putInt("launchX", launchLocation.x);
@@ -472,8 +472,8 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	}
 
 	@Override
-	public void readMissionPersistantNBT(CompoundNBT nbt) {
-		super.readMissionPersistantNBT(nbt);
+	public void readMissionPersistentNBT(CompoundNBT nbt) {
+		super.readMissionPersistentNBT(nbt);
 		forwardDirection = Direction.values()[nbt.getInt("fwd")];
 
 		launchLocation.x = nbt.getInt("launchX");

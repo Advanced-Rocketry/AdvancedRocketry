@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.Constants;
@@ -31,7 +32,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		return false;
 	}
 
-	public long getSatelliteId(@Nonnull ItemStack stack) {
+	public static long getSatelliteId(@Nonnull ItemStack stack) {
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
 
@@ -138,7 +139,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	}
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag bool) {
 		ResourceLocation worldId = getWorldId(stack);
 		long satId = getSatelliteId(stack);
 

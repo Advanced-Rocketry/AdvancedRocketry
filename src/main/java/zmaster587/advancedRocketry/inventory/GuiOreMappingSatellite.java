@@ -382,13 +382,13 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 
 	public static void drawString(MatrixStack matrix, FontRenderer font, String str, int x, int z, int color)
 	{
-		font.func_243246_a(matrix, new StringTextComponent(str), x, z, 0);
+		font.drawText(matrix, new StringTextComponent(str), x, z, 0);
 	}
 	
 
 	public static void drawCenteredString(MatrixStack matrix, FontRenderer font, String str, int x, int z, int color)
 	{
-		font.func_243246_a(matrix, new StringTextComponent(str), x, z, 0);
+		font.drawText(matrix, new StringTextComponent(str), x, z, 0);
 	}
 	
 	/**

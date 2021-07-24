@@ -46,12 +46,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.event.PlanetEventHandler;
-import zmaster587.advancedRocketry.util.OreGenProperties;
-import zmaster587.advancedRocketry.util.OreGenProperties.OreEntry;
-import zmaster587.advancedRocketry.world.decoration.*;
-import zmaster587.advancedRocketry.world.ore.CustomizableOreGen;
-import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 
 import java.util.List;
 import java.util.Random;
@@ -462,7 +456,7 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 		int i = chunkIn.getPos().getXStart();
 		int j = chunkIn.getPos().getZStart();
 		DimensionSettings dimensionsettings = this.dimensionSettings.get();
-		int k = dimensionsettings.func_236118_f_();
+		int k = dimensionsettings.getBedrockFloorPosition();
 		int l = this.field_236085_x_ - 1 - dimensionsettings.func_236117_e_();
 		int i1 = 5;
 		boolean flag = l + 4 >= 0 && l < this.field_236085_x_;

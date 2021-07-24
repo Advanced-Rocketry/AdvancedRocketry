@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.tile.atmosphere;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
+import zmaster587.libVulpes.tile.IComparatorOverride;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 
 public class TileCO2Scrubber extends TileInventoryHatch implements IComparatorOverride {
@@ -39,7 +40,7 @@ public class TileCO2Scrubber extends TileInventoryHatch implements IComparatorOv
 	public int getComparatorOverride() {
 		ItemStack stack = getStackInSlot(0);
 		if (!stack.isEmpty()) {
-			return (32766 - stack.getItemDamage() + 2184)/2185;
+			return (32766 - stack.getDamage() + 2184)/2185;
 		}
 		return 0;
 	}

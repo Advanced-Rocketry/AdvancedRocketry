@@ -171,7 +171,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(this.world);
 		if(atmhandler != null)
 			atmhandler.unregisterBlob(this);
-		deactivateAdjblocks();
+		deactivateAdjBlocks();
 	}
 
 	@Override
@@ -206,7 +206,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		//IF first tick then register the blob and check for scrubbers
 
 		if(!world.isRemote) {
-			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(this.world.provider.getDimension());
+			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(this.world);
 			if(atmhandler == null)
 				return;
 
@@ -220,7 +220,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 			}
 
 			if(isSealed && atmhandler.getBlobSize(this) == 0) {
-				deactivateAdjblocks();
+				deactivateAdjBlocks();
 				setSealed(false);
 			}
 
@@ -266,7 +266,6 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 				if( (drainedFluid != null && drainedFluid.getAmount() >= amtToDrain) || amtToDrain == 0) {
 					this.drain(amtToDrain, FluidAction.EXECUTE);
-				int amtToDrain = (int)Math.ceil((atmhandler.getBlobSize(this) * getGasUsageMultiplier()));
 					if(!hasFluid) {
 						hasFluid = true;
 

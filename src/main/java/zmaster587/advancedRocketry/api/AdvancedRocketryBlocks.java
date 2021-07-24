@@ -190,7 +190,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockTransciever = new BlockTransciever(machineLineProperties, GuiHandler.guiId.MODULAR);
 	public static Block blockVacuumLaser = new BlockFullyRotatable(machineLineProperties);
 
-	public static Block blockRocketFire = new BlockRocketFire();
+	public static Block blockRocketFire = new BlockRocketFire(AbstractBlock.Properties.create(Material.FIRE, MaterialColor.TNT).doesNotBlockMovement().zeroHardnessAndResistance().setLightLevel((state) -> 15));
 	public static Block blockNuclearEngine = new BlockNuclearRocketMotor(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f));
 	public static Block blockNuclearFuelTank = new BlockNuclearFuelTank(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f));
 	public static Block blockNuclearCore = new BlockNuclearCore(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f));

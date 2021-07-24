@@ -363,7 +363,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 								thrustNuclearReactorLimit += ((IRocketNuclearCore) block).getMaxThrust(world, currBlockPos);
 							}
 
-							if(block instanceof BlockSeat && world.getBlockState(abovePos).getBlock().isPassable(world, abovePos)) {
+							if(block instanceof BlockSeat && !world.getBlockState(abovePos).isSuffocating(world, abovePos)) {
 								stats.addPassengerSeat((int) (x), yCurr - actualMinY, (int) (z));
 							}
 
@@ -902,7 +902,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	public int getData(int id) {
 		switch(id) {
 		case 0:
-			return getRocketStats().getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT);
+			return (int)getRocketStats().getBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT);
 		case 1:
 			return getRocketStats().getWeight();
 		case 2:

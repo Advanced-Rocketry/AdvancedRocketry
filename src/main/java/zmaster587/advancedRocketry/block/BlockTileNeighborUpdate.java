@@ -8,14 +8,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.block.BlockTileComparatorOverride;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 
 public class BlockTileNeighborUpdate extends BlockTileComparatorOverride {
 
-	/**
-	 * @param tileClass must extend IAdjBlockUpdate
-	 */
 	public BlockTileNeighborUpdate(AbstractBlock.Properties properties,
 								   GuiHandler.guiId guiId) {
 		super(properties, guiId);
