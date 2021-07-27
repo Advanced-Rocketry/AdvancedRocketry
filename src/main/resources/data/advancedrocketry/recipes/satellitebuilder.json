@@ -8,13 +8,6 @@
     ],
     "key":
     {
-<<<<<<< HEAD:src/main/resources/data/advancedrocketry/recipes/satellitebuilder.json
-        "s":
-        {
-            "item": "advancedrocketry:item_ui"
-        },
-=======
->>>>>>> origin/feature/nuclearthermalrockets:src/main/resources/assets/advancedrocketry/recipes/satellitebuilder.json
         "c":
         {
             "item": "advancedrocketry:circuit_ic_basic"
@@ -43,12 +36,7 @@
         },
         "s":
         {
-<<<<<<< HEAD:src/main/resources/data/advancedrocketry/recipes/satellitebuilder.json
-	    "item": "advancedrocketry:sawbladeassbly"
-=======
-            "item": "advancedrocketry:sawblade",
-            "data": 0
->>>>>>> origin/feature/nuclearthermalrockets:src/main/resources/assets/advancedrocketry/recipes/satellitebuilder.json
+            "item": "advancedrocketry:sawblade"
         },
         "h":
         {

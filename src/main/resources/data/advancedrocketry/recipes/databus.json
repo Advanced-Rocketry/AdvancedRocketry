@@ -10,12 +10,7 @@
     {
         "c":
         {
-<<<<<<< HEAD:src/main/resources/data/advancedrocketry/recipes/databus.json
             "item": "advancedrocketry:dataunit"
-=======
-            "item": "advancedrocketry:dataunit",
-            "data": 0
->>>>>>> origin/feature/nuclearthermalrockets:src/main/resources/assets/advancedrocketry/recipes/databus.json
         },
 	"m":
         {
