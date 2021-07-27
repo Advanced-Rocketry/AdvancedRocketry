@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.world.decoration;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
@@ -16,26 +17,29 @@ import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.block.BlockMeta;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class StructurePieceGeode extends ScatteredStructurePiece {
 	int chancePerChunk;
 	int radius;
 	int xCenter, zCenter;
 
-	private static List<BlockMeta> ores; // = {new BlockMeta(Blocks.IRON_ORE), new BlockMeta(Blocks.GOLD_ORE), new BlockMeta(Blocks.REDSTONE_ORE), new BlockMeta(Blocks.LAPIS_ORE)};
+	private static List<BlockState> ores; // = {new BlockMeta(Blocks.IRON_ORE), new BlockMeta(Blocks.GOLD_ORE), new BlockMeta(Blocks.REDSTONE_ORE), new BlockMeta(Blocks.LAPIS_ORE)};
 
 	public static void init()
 	{
 		if(ores == null) {
-			ores = new LinkedList<BlockMeta>();
+			ores = new LinkedList<>();
 			for(int i = 0; i < ARConfiguration.getCurrentConfig().standardGeodeOres.size(); i++) {
 				ResourceLocation oreDictName = ARConfiguration.getCurrentConfig().standardGeodeOres.get(i);
-				ores.add(new BlockMeta(ForgeRegistries.BLOCKS.getValue(oreDictName)));
+				ores.add(ForgeRegistries.BLOCKS.getValue(oreDictName).getDefaultState());
 			}
 		}
 	}
@@ -78,7 +82,12 @@ public class StructurePieceGeode extends ScatteredStructurePiece {
 		int xCoord = (chunkX << 4) - xCenter - radius;
 		int zCoord =  (chunkZ << 4) - zCenter - radius;
 
-		BlockPos pos = new BlockPos(chunkX*16, 0, chunkZ*16);
+		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(world.getWorld());
+		ores.addAll(
+				props.craterOres.stream()
+						.map(s-> Block.getBlockFromItem(s.getItem()).getDefaultState())
+						.collect(Collectors.toList())
+		);
 
 		int avgY = (int) 64;
 
@@ -107,7 +116,7 @@ public class StructurePieceGeode extends ScatteredStructurePiece {
 						//Generates ore hanging from the ceiling
 						if( relx % 4 > 0 && relz % 4 > 0) {
 							for(int i = 1; i < size; i++)
-								setBlockState(world, ores.get((relx/4 + relz/4) % ores.size()).getBlockState(), x, avgY + count - i, z, bb);
+								setBlockState(world, ores.get((relx/4 + relz/4) % ores.size()), x, avgY + count - i, z, bb);
 						}
 						else {
 							size -=2;
@@ -119,7 +128,7 @@ public class StructurePieceGeode extends ScatteredStructurePiece {
 						//Generates ore in the floor
 						if( (relx+2) % 4 > 0 && (relz+2) % 4 > 0) {
 							for(int i = 1; i < size; i++)
-								setBlockState(world, ores.get((relx/4 + relz/4) % ores.size()).getBlockState(), x, avgY - count + i, z, bb);
+								setBlockState(world, ores.get((relx/4 + relz/4) % ores.size()), x, avgY - count + i, z, bb);
 						}
 
 					}
