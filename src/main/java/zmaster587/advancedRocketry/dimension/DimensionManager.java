@@ -498,7 +498,7 @@ public class DimensionManager implements IGalaxy {
 			fileString.getFD().sync();
 			tmpFileOut.close();
 
-			Files.copy(tmpFile, file);
+			Files.copy(tmpFile.toPath(), file.toPath());
 			tmpFile.delete();
 
 		} catch(Exception e) {

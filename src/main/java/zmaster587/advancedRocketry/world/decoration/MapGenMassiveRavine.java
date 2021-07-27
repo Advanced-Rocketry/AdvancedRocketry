@@ -3,7 +3,12 @@ package zmaster587.advancedRocketry.world.decoration;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 
+import java.util.Random;
+
 public class MapGenMassiveRavine extends MapGenRavineExt {
+
+    //TODO: this is a stopgap to reduce compiler warnings, it should be coming from MapGenRavineExt or a replacement super class
+    Random rand = new Random(System.currentTimeMillis());
 
     /**
      * Recursively called by generate()

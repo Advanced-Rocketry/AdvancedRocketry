@@ -726,8 +726,5 @@ public class AdvancedRocketry {
 		SpaceObjectManager.getSpaceManager().onServerStopped();
 		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().MoonId = Constants.INVALID_PLANET;
 		((BlockSeal)AdvancedRocketryBlocks.blockPipeSealer).clearMap();
-
-		if(!zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().lockUI.get())
-			proxy.saveUILayout(ARConfiguration.getCurrentConfig());
 	}
 }
