@@ -191,6 +191,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 	private static final DataParameter<Boolean> RCS_MODE =  EntityDataManager.createKey(EntityRocket.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Integer> LAUNCH_COUNTER =  EntityDataManager.createKey(EntityRocket.class, DataSerializers.VARINT);
 
+	public EntityRocket(World world) {
+		this(AdvancedRocketryEntities.ENTITY_ROCKET, world);
+	}
+
 	public EntityRocket(EntityType<?> type, World p_i1582_1_) {
 		super(type, p_i1582_1_);
 		isInOrbit = false;
@@ -210,7 +214,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 
 
 	public EntityRocket(EntityType<?> type, World world, StorageChunk storage, StatsRocket stats, double x, double y, double z) {
-		this(AdvancedRocketryEntities.ENTITY_ROCKET, world);
+		this(type, world);
 		this.stats = stats;
 		this.setPosition(x, y, z);
 		this.storage = storage;

@@ -363,7 +363,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
 		RenderHelper.disableStandardItemLighting();
-		float[] afloat = world.func_239132_a_().func_230492_a_(world.func_242415_f(partialTicks), partialTicks);
+		float[] afloat = world.getDimensionRenderInfo().func_230492_a_(world.func_242415_f(partialTicks), partialTicks);
 		float f7;
 		float f8;
 		float f9;
