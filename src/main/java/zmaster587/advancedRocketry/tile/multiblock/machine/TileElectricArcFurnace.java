@@ -12,6 +12,7 @@ import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 import java.util.List;
@@ -60,8 +61,10 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 	@Override
 	public List<BlockMeta> getAllowableWildCardBlocks() {
 		List<BlockMeta> list = super.getAllowableWildCardBlocks();
-		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 0));
-		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 1));
+		list.addAll(TileMultiBlock.getMapping('O'));
+		list.addAll(TileMultiBlock.getMapping('I'));
+		list.addAll(TileMultiBlock.getMapping('l'));
+		list.addAll(TileMultiBlock.getMapping('L'));
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockBlastBrick, -1));
 		return list;
 	}
