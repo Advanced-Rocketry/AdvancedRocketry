@@ -30,7 +30,11 @@ public abstract class EntityRocketBase extends Entity {
 
 	//Stores other info about the rocket such as fuel and acceleration properties
 	public StatsRocket stats;
-	
+
+	public EntityRocketBase(World world) {
+		this(AdvancedRocketryEntities.ENTITY_ROCKET, world);
+	}
+
 	public EntityRocketBase(EntityType<?> type, World world) {
 		super(type, world);
 	}

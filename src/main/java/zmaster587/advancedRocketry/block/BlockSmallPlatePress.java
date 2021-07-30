@@ -254,7 +254,7 @@ public class BlockSmallPlatePress extends PistonBlock {
 	 * Called on server when World#addBlockEvent is called. If server returns true, then also called on the client. On
 	 * the Server, this may perform additional changes to the world, like pistons replacing the block with an extended
 	 * base. On the client, the update may involve replacing tile entities or effects such as sounds or particles
-	 * @deprecated call via {@link IBlockState#onBlockEventReceived(World,BlockPos,int,int)} whenever possible.
+	 * @deprecated call via {@link BlockState#receiveBlockEvent(World, BlockPos, int, int)} whenever possible.
 	 * Implementing/overriding is fine.
 	 */
 	 public boolean eventReceived(BlockState state, World worldIn, BlockPos pos, int id, int param) {
@@ -289,7 +289,7 @@ public class BlockSmallPlatePress extends PistonBlock {
 			 BlockState blockstate = Blocks.MOVING_PISTON.getDefaultState().with(MovingPistonBlock.FACING, direction).with(MovingPistonBlock.TYPE, PistonType.DEFAULT);
 			 worldIn.setBlockState(pos, blockstate, 20);
 			 worldIn.setTileEntity(pos, MovingPistonBlock.createTilePiston(this.getDefaultState().with(FACING, Direction.byIndex(param & 7)), direction, false, true));
-			 worldIn.func_230547_a_(pos, blockstate.getBlock());
+			 worldIn.updateBlock(pos, blockstate.getBlock());
 			 blockstate.updateNeighbours(worldIn, pos, 2);
 			 worldIn.removeBlock(pos.offset(direction), false);
 
