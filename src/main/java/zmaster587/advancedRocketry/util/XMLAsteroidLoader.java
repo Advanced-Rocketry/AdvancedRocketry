@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 
@@ -51,17 +50,7 @@ public class XMLAsteroidLoader {
 	 * @return  list of singleEntry (order MUST be preserved)
 	 */
 	public List<Asteroid> loadPropertyFile() {
-		Node childNode = doc.getFirstChild();
-
-		while(childNode != null) {
-			if(!childNode.getNodeName().equalsIgnoreCase("asteroids")) {
-				childNode = childNode.getFirstChild();
-				break;
-			}
-
-			childNode = childNode.getNextSibling();
-		}
-
+		Node childNode = doc.getFirstChild().getFirstChild();
 		List<Asteroid> mapping = new LinkedList<>();
 
 		while(childNode != null) {

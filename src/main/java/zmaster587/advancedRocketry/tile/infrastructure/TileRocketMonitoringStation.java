@@ -305,7 +305,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		if(world.isRemote && mission != null)
 			setMissionText();
 		
-		return getProgress(id)/(float)getTotalProgress(id);
+		return Math.min(getProgress(id)/(float)getTotalProgress(id), 1.0f);
 	}
 
 	@Override

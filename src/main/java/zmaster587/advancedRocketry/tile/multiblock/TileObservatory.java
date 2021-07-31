@@ -98,7 +98,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	private HashMap<Integer, String> buttonType  = new HashMap<>();
 	private boolean isOpen;
 	private ModuleTab tabModule;
-	private int dataConsumedPerRefresh = 100;
+	private final int dataConsumedPerRefresh = 100;
 	EmbeddedInventory inv = new EmbeddedInventory(3);
 
 	public TileObservatory() {
@@ -399,15 +399,12 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 			//Relying on a bug, is this safe?
 			if(lastSeed != -1) {
-				ModuleContainerPan pan = new ModuleContainerPan(baseX, baseY, list2, new LinkedList<>(), null, sizeX -2, sizeY, 0, -48, 0, 72);
+				ModuleContainerPanYOnly pan = new ModuleContainerPanYOnly(baseX, baseY, list2, new LinkedList<>(), null, sizeX -2, sizeY, 0, -48, 0, 72);
 				modules.add(pan);
 			}
 
 			//Ore display
 			baseX = 100;
-			baseY = 32;
-			sizeX = 72;
-			sizeY = 46;
 			if(world.isRemote) {
 				//Border
 				modules.add(new ModuleScaledImage(baseX - 3,baseY - 3,3, baseY + sizeY  +6, TextureResources.verticalBar));
@@ -416,7 +413,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 				modules.add(new ModuleScaledImage(baseX, 2*baseY + sizeY ,sizeX,-3, TextureResources.horizontalBar));
 			}
 
-			ModuleContainerPan pan2 = new ModuleContainerPan(baseX, baseY, buttonList, new LinkedList<>(), null, 40, 48, 0, 0, 0, 72);
+			ModuleContainerPanYOnly pan2 = new ModuleContainerPanYOnly(baseX, baseY, buttonList, new LinkedList<>(), null, 40, 48, 0, 0, 0, 72);
 			modules.add(pan2);
 		} else if(tabModule.getTab() == 0) {
 			modules.add(new ModulePower(18, 20, getBatteries()));
@@ -500,6 +497,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 		if(id == -1)
 			storeData(-1);
+		if(id == -2)
+			loadData(-2);
 		else if(id == TAB_SWITCH && !world.isRemote) {
 			tabModule.setTab(nbt.getShort("tab"));
 			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), getWorld(), pos.getX(), pos.getY(), pos.getZ());
@@ -639,7 +638,23 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 	@Override
 	public void loadData(int id) {
+		ItemStack dataChip = inv.getStackInSlot(0);
 
+		if(dataChip != ItemStack.EMPTY && dataChip.getItem() instanceof ItemData && dataChip.getCount() == 1) {
+
+			ItemData dataItem = (ItemData)dataChip.getItem();
+			DataStorage data = dataItem.getDataStorage(dataChip);
+
+			for(TileDataBus tile : dataCables) {
+				data.removeData(tile.addData(data.getMaxData() - data.getData(), data.getDataType(), EnumFacing.UP, true) ,true);
+			}
+
+			dataItem.setData(dataChip, data.getData(), data.getDataType());
+		}
+
+		if(world.isRemote) {
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)-2));
+		}
 	}
 
 	@Override

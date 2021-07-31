@@ -136,6 +136,9 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 				storeData(0);
 			}
 		}
+		inventory.markDirty();
+		markDirty();
+		this.handleUpdateTag(getUpdateTag());
 
 		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
 			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
