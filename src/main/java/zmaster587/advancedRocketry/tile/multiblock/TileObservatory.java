@@ -99,7 +99,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	private boolean isOpen;
 	private ModuleTab tabModule;
 	private final int dataConsumedPerRefresh = 100;
-	EmbeddedInventory inv = new EmbeddedInventory(3);
+	EmbeddedInventory inv = new EmbeddedInventory(5);
 
 	public TileObservatory() {
 		openProgress = 0;
@@ -439,11 +439,11 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			}
 
 			if(compositionStorage.size() > 0 ) {
-				modules.add(new ModuleData(80, 20, 0, this, compositionStorage.toArray(new DataStorage[0])));
+				modules.add(new ModuleData(80, 20, 3, this, compositionStorage.toArray(new DataStorage[0])));
 			}
 
 			if(massStorage.size() > 0 ) {
-				modules.add(new ModuleData(120, 20, 0, this, massStorage.toArray(new DataStorage[0])));
+				modules.add(new ModuleData(120, 20, 4, this, massStorage.toArray(new DataStorage[0])));
 			}
 			
 			modules.add(new ModuleText(10, 90, LibVulpes.proxy.getLocalizedString("msg.observetory.text.observabledistance") + " " + getMaxDistance(), 0x2d2d2d, false));
@@ -638,7 +638,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 	@Override
 	public void loadData(int id) {
-		ItemStack dataChip = inv.getStackInSlot(0);
+		int chipSlot = !inv.getStackInSlot(0).isEmpty() ?0 : !inv.getStackInSlot(3).isEmpty() ? 3 : 4;
+		ItemStack dataChip = !inv.getStackInSlot(0).isEmpty() ? inv.getStackInSlot(0) : !inv.getStackInSlot(3).isEmpty() ? inv.getStackInSlot(3) : inv.getStackInSlot(4);
 
 		if(dataChip != ItemStack.EMPTY && dataChip.getItem() instanceof ItemData && dataChip.getCount() == 1) {
 
@@ -646,10 +647,11 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			DataStorage data = dataItem.getDataStorage(dataChip);
 
 			for(TileDataBus tile : dataCables) {
-				data.removeData(tile.addData(data.getMaxData() - data.getData(), data.getDataType(), EnumFacing.UP, true) ,true);
+				if (doesSlotIndexMatchDataType(data.getDataType(), chipSlot))
+				    dataItem.removeData(dataChip, tile.addData(Math.min(tile.getDataObject().getMaxData() - tile.getData(), data.getMaxData()), data.getDataType(), EnumFacing.UP, true) , DataStorage.DataType.UNDEFINED);
 			}
 
-			dataItem.setData(dataChip, data.getData(), data.getDataType());
+			//dataItem.setData(dataChip, data.getData(), data.getData() != 0 ? data.getDataType() : DataType.UNDEFINED);
 		}
 
 		if(world.isRemote) {
@@ -659,7 +661,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 	@Override
 	public void storeData(int id) {
-		ItemStack dataChip = inv.getStackInSlot(0);
+		int chipSlot = !inv.getStackInSlot(0).isEmpty() ?0 : !inv.getStackInSlot(3).isEmpty() ? 3 : 4;
+		ItemStack dataChip = !inv.getStackInSlot(0).isEmpty() ? inv.getStackInSlot(0) : !inv.getStackInSlot(3).isEmpty() ? inv.getStackInSlot(3) : inv.getStackInSlot(4);
 
 		if(dataChip != ItemStack.EMPTY && dataChip.getItem() instanceof ItemData && dataChip.getCount() == 1) {
 
@@ -668,7 +671,8 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 			for(TileDataBus tile : dataCables) {
 				DataStorage.DataType dataType = tile.getDataObject().getDataType();
-				data.addData(tile.extractData(data.getMaxData() - data.getData(), data.getDataType(), EnumFacing.UP, true), dataType ,true);
+				if (doesSlotIndexMatchDataType(dataType, chipSlot))
+				    data.addData(tile.extractData(data.getMaxData() - data.getData(), data.getDataType(), EnumFacing.UP, true), dataType ,true);
 			}
 
 			dataItem.setData(dataChip, data.getData(), data.getDataType());
@@ -715,5 +719,9 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	public void onModuleUpdated(ModuleBase module) {
 		//ReopenUI on server
 		PacketHandler.sendToServer(new PacketMachine(this, TAB_SWITCH));
+	}
+
+	private boolean doesSlotIndexMatchDataType(DataType type, int slotIndex) {
+		return (type == DataType.DISTANCE && slotIndex == 0) || (type == DataType.COMPOSITION && slotIndex == 3) || (type == DataType.MASS && slotIndex == 4);
 	}
 }
