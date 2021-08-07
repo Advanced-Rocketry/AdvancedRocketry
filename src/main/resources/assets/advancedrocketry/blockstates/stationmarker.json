@@ -14,8 +14,8 @@
         "facing=south": { "model": "minecraft:orientable", "y": 180 },
         "facing=west":  { "model": "minecraft:orientable", "y": 270 },
         "facing=east":  { "model": "minecraft:orientable", "y": 90 },
-        "facing=up":  { "model": "advancedrocketry:stationMarker", "x": -90 },
-        "facing=down":  { "model": "advancedrocketry:stationMarker", "x": 90 },
+        "facing=up":  { "model": "minecraft:orientable", "x": -90 },
+        "facing=down":  { "model": "minecraft:orientable", "x": 90 },
         "inventory" : [{}]
     }
 }
