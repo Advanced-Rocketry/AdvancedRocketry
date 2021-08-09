@@ -294,7 +294,7 @@ public class DimensionManager implements IGalaxy {
 		properties.averageTemperature = AstronomicalBodyHelper.getAverageTemperature(properties.getStar(), properties.getSolarOrbitalDistance(), properties.getAtmosphereDensity());
 
 
-		if( AtmosphereTypes.getAtmosphereTypeFromValue(properties.getAtmosphereDensity()) == AtmosphereTypes.NONE && random.nextInt() % 5 == 0)
+		if( AtmosphereTypes.getAtmosphereTypeFromValue(properties.getAtmosphereDensity()) == AtmosphereTypes.NONE && random.nextInt() % 5 == 0 && !AdvancedRocketryFluids.fluidOxygen.isGaseous())
 		{
 			properties.setOceanBlock(AdvancedRocketryBlocks.blockOxygenFluid.getDefaultState());
 			properties.setSeaLevel(random.nextInt(6) + 72);
