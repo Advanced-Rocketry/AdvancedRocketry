@@ -501,13 +501,6 @@ public class AdvancedRocketry {
 		AdvancedRocketryItems.itemBasicLaserGun = new ItemBasicLaserGun().setUnlocalizedName("basicLaserGun").setCreativeTab(tabAdvRocketry);
 		AdvancedRocketryItems.itemHovercraft = new ItemHovercraft().setUnlocalizedName("hovercraft").setCreativeTab(tabAdvRocketry);
 
-		//Fluids
-		FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidHydrogen);
-		FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidNitrogen);
-		FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidOxygen);
-		FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidRocketFuel);
-		FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidEnrichedLava);
-
 		//Suit Component Registration
 		AdvancedRocketryItems.itemJetpack = new ItemJetpack().setCreativeTab(tabAdvRocketry).setUnlocalizedName("jetPack");
 		AdvancedRocketryItems.itemPressureTank = new ItemPressureTank(4, (int)(1000 * ARConfiguration.getCurrentConfig().suitTankCapacity)).setCreativeTab(tabAdvRocketry).setUnlocalizedName("advancedrocketry:pressureTank");
@@ -755,6 +748,13 @@ public class AdvancedRocketry {
 		AdvancedRocketryBlocks.blockNitrogenFluid = new BlockFluid(AdvancedRocketryFluids.fluidNitrogen, Material.WATER).setUnlocalizedName("nitrogenFluidBlock").setCreativeTab(CreativeTabs.MISC);
 		AdvancedRocketryBlocks.blockFuelFluid = new BlockFluid(AdvancedRocketryFluids.fluidRocketFuel, new MaterialLiquid(MapColor.YELLOW)).setUnlocalizedName("rocketFuelBlock").setCreativeTab(CreativeTabs.MISC);
 		AdvancedRocketryBlocks.blockEnrichedLavaFluid = new BlockEnrichedLava(AdvancedRocketryFluids.fluidEnrichedLava, Material.LAVA).setUnlocalizedName("enrichedLavaBlock").setCreativeTab(CreativeTabs.MISC).setLightLevel(15);
+
+		//Fluids
+		FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidHydrogen);
+		FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidNitrogen);
+		FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidOxygen);
+		FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidRocketFuel);
+		FluidRegistry.addBucketForFluid(AdvancedRocketryFluids.fluidEnrichedLava);
 
 		//Cables
 		//TODO: add back after fixing the cable network
