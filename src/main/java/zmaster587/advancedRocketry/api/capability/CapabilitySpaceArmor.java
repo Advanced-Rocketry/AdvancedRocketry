@@ -33,13 +33,7 @@ public class CapabilitySpaceArmor {
 				IProtectiveArmor instance, EnumFacing side) {
 			return null;
 		}
-			}, new IProtectiveArmor() {
-
-				@Override
-				public boolean protectsFromSubstance(IAtmosphere atmosphere, @Nonnull ItemStack stack, boolean commitProtection) {
-					return false;
-				}
-			}.getClass());
+			}, ((IProtectiveArmor) (atmosphere, stack, commitProtection) -> false).getClass());
 	}
 
 }

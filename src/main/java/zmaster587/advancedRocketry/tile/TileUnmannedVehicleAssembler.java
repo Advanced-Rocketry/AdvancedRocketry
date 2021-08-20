@@ -23,7 +23,6 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 

@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.dimension;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -34,7 +33,6 @@ import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
 import zmaster587.advancedRocketry.util.PlanetaryTravelHelper;
 import zmaster587.advancedRocketry.util.FluidGasGiantGas;
-import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader;
 import zmaster587.advancedRocketry.util.XMLPlanetLoader.DimensionPropertyCoupling;
 import zmaster587.advancedRocketry.world.provider.WorldProviderAsteroid;

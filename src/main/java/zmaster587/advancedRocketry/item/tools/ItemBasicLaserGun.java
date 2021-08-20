@@ -224,13 +224,7 @@ public class ItemBasicLaserGun extends Item {
 		Vec3d vec3d2 = vec3d.addVector(vec3d1.x * reachDistance, vec3d1.y * reachDistance, vec3d1.z * reachDistance);
 
 
-		List<Entity> list = world.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().grow(vec3d1.x * reachDistance, vec3d1.y * reachDistance, vec3d1.z * reachDistance).expand(1.0D, 1.0D, 1.0D), Predicates.and(EntitySelectors.NOT_SPECTATING, new Predicate<Entity>()
-				{
-			public boolean apply(@Nullable Entity p_apply_1_)
-			{
-				return p_apply_1_ != null && p_apply_1_.canBeCollidedWith();
-			}
-				}));
+		List<Entity> list = world.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().grow(vec3d1.x * reachDistance, vec3d1.y * reachDistance, vec3d1.z * reachDistance).expand(1.0D, 1.0D, 1.0D), Predicates.and(EntitySelectors.NOT_SPECTATING, p_apply_1_ -> p_apply_1_ != null && p_apply_1_.canBeCollidedWith()));
 
 		for (Entity value : list) {
 			AxisAlignedBB axisalignedbb = value.getEntityBoundingBox().grow(value.getCollisionBorderSize());

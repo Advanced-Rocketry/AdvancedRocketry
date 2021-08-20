@@ -146,7 +146,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		return null;
 	}
 
-	private List<BlockPos> findFluidAtOrAbove(BlockPos pos, Fluid fluid) {
+	private void findFluidAtOrAbove(BlockPos pos, Fluid fluid) {
 		Queue<BlockPos> queue = new LinkedList<>();
 		Set<BlockPos> visited = new HashSet<>();
 		queue.add(pos);
@@ -171,7 +171,6 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 				}
 			}
 		}
-		return cache;
 	}
 
 	@Override

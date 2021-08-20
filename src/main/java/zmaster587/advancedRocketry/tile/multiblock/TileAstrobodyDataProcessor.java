@@ -181,7 +181,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 		return result;
 	}
 
-	private void incrementDataOnChip(int planetId, int amount, DataStorage.DataType dataType) {
+	private void incrementDataOnChip(int amount, DataStorage.DataType dataType) {
 		ItemStack stack = getStackInSlot(0);
 		if(!stack.isEmpty() && stack.getItem().equals(AdvancedRocketryItems.itemAsteroidChip)) {
 			ItemAsteroidChip item = (ItemAsteroidChip)stack.getItem();
@@ -245,7 +245,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 					atmosphereProgress = -1;
 
 					if(!world.isRemote) {
-						incrementDataOnChip(0, 1, DataType.COMPOSITION);
+						incrementDataOnChip(1, DataType.COMPOSITION);
 						extractData(1, DataStorage.DataType.COMPOSITION, false);
 						//attemptAllResearchStart();
 					}
@@ -260,7 +260,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 					massProgress = -1;
 
 					if(!world.isRemote) {
-						incrementDataOnChip(0, 1, DataType.MASS);
+						incrementDataOnChip(1, DataType.MASS);
 						extractData(1, DataStorage.DataType.MASS, false);
 						//attemptAllResearchStart();
 					}
@@ -273,7 +273,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 				if(distanceProgress == maxResearchTime) {
 					distanceProgress = -1;
 					if(!world.isRemote) {
-						incrementDataOnChip(0, 1, DataType.DISTANCE);
+						incrementDataOnChip(1, DataType.DISTANCE);
 						extractData(1, DataStorage.DataType.DISTANCE, false);
 						//attemptAllResearchStart();
 					}

@@ -423,7 +423,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 		ItemStack biomeChanger = inv.getStackInSlot(0);
 		SatelliteBase satellite;
 				
-		return !biomeChanger.isEmpty() && (biomeChanger.getItem() instanceof ItemBiomeChanger) && DimensionManager.getInstance().getSatellite(((ItemBiomeChanger)biomeChanger.getItem()).getSatelliteId(biomeChanger)) != null &&
+		return !biomeChanger.isEmpty() && (biomeChanger.getItem() instanceof ItemBiomeChanger) && DimensionManager.getInstance().getSatellite(ItemSatelliteIdentificationChip.getSatelliteId(biomeChanger)) != null &&
 				(satellite = ((ItemSatelliteIdentificationChip)AdvancedRocketryItems.itemBiomeChanger).getSatellite(biomeChanger)).getDimensionId() == world.provider.getDimension() &&
 				satellite instanceof SatelliteBiomeChanger;
 	}

@@ -24,6 +24,10 @@ import javax.annotation.Nullable;
 
 public class EntityHoverCraft extends Entity implements IInventory, INetworkEntity {
 
+	private static final int MAX_HEIGHT = 250;
+	private static final double HORIZONTAL_VMAX = 0.75;
+	private static final double VERTICAL_VMAX = 0.1;
+	private static final double MAX_ACCELERATION = 0.05;
 
 	public enum VehicleType {
 		submarine,
@@ -136,29 +140,8 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 		return false;
 	}
 	
-	public ItemStack[] getItemsDropOnDeath()
-	{
+	public ItemStack[] getItemsDropOnDeath() {
 		return new ItemStack[]{ inv.getStackInSlot(0), new ItemStack(AdvancedRocketryItems.itemHovercraft) };
-	}
-
-	public float getMaxHeight()
-	{
-		return 250;
-	}
-
-	public double getMaxVelocity()
-	{
-		return 0.75;
-	}
-
-	public double getMaxVerticalSpeed()
-	{
-		return 0.1D;
-	}
-
-
-	public double getMaxAcceleration() {
-		return 0.05D;
 	}
 
 	@Override
@@ -211,19 +194,19 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 			this.turningDownforWhat = true;
 		
 		this.rotationYaw += (turningRight ? 5 : 0) - (turningLeft ? 5 : 0);
-		double acc = this.getPassengerMovingForward()*getMaxAcceleration();
+		double acc = this.getPassengerMovingForward() * MAX_ACCELERATION;
 		//RCS mode, steer like boat
 		float yawAngle = (float)(this.rotationYaw*Math.PI/180f);
 		this.motionX += acc*MathHelper.sin(-yawAngle);
-		this.motionY += (turningUp ? getMaxAcceleration() : 0) - (turningDownforWhat ? getMaxAcceleration() : 0);
+		this.motionY += (turningUp ? MAX_ACCELERATION : 0) - (turningDownforWhat ? MAX_ACCELERATION : 0);
 		this.motionZ += acc*MathHelper.cos(-yawAngle);
 		this.motionX *= 0.9;
 		this.motionY *= 0.9;
 		this.motionZ *= 0.9;
 		
-		if (this.getPosition().getY() > getMaxHeight()*1.1)
+		if (this.getPosition().getY() > MAX_HEIGHT*1.1)
 			this.motionY = 0;
-		else if (this.getPosition().getY() > getMaxHeight())
+		else if (this.getPosition().getY() > MAX_HEIGHT)
 			this.motionY *= 0.1;
         if (this.getRidingEntity() != null)
 		    this.getRidingEntity().fallDistance = 0;

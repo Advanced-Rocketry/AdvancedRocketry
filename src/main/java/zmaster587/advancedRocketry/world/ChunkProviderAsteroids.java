@@ -7,8 +7,6 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.util.OreGenProperties;
 import zmaster587.advancedRocketry.util.OreGenProperties.OreEntry;
-import zmaster587.advancedRocketry.world.decoration.MapGenHighCaves;
-import zmaster587.advancedRocketry.world.decoration.MapGenMassiveRavine;
 import zmaster587.advancedRocketry.world.ore.CustomizableOreGen;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.state.IBlockState;

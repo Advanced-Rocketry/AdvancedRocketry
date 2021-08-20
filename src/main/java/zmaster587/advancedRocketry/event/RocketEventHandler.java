@@ -25,11 +25,9 @@ import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent.MouseInputEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
@@ -151,109 +149,106 @@ public class RocketEventHandler extends Gui {
 
 		if(thread == null || !thread.isAlive()) {
 
-			thread = new Thread(new Runnable() {
-				@Override
-				public void run() {
+			thread = new Thread(() -> {
 
-					int numChunksLoaded = 0;
+				int numChunksLoaded = 0;
 
-					table = earth.getByteBuffer();
-					outerBoundsTable = outerBounds.getByteBuffer();
+				table = earth.getByteBuffer();
+				outerBoundsTable = outerBounds.getByteBuffer();
 
-					//Get the average of each edge RGB
-					long[] total = new long[]{0, 0, 0};
+				//Get the average of each edge RGB
+				long[] total = new long[]{0, 0, 0};
 
 
-					do {
-						for(int i = 0; i < getImgSize*getImgSize; i++) {
-							//TODO: Optimize
-							int xOffset = (i % getImgSize);
-							int yOffset = (i / getImgSize);
+				do {
+					for(int i = 0; i < getImgSize*getImgSize; i++) {
+						//TODO: Optimize
+						int xOffset = (i % getImgSize);
+						int yOffset = (i / getImgSize);
 
-							int xPosition = (int)entity.posX - (getImgSize/2) + xOffset;
-							int zPosition = (int)entity.posZ - (getImgSize/2) + yOffset;
-							BlockPos thisPos = new BlockPos(xPosition, 0, zPosition);
-							Chunk chunk = worldObj.getChunkFromBlockCoords(thisPos);
+						int xPosition = (int)entity.posX - (getImgSize/2) + xOffset;
+						int zPosition = (int)entity.posZ - (getImgSize/2) + yOffset;
+						BlockPos thisPos = new BlockPos(xPosition, 0, zPosition);
+						Chunk chunk = worldObj.getChunkFromBlockCoords(thisPos);
 
-							if(chunk.isLoaded() && !chunk.isEmpty()) {
-								//Get Xcoord and ZCoords in the chunk
-								numChunksLoaded++;
-								int heightValue = chunk.getHeightValue( xPosition + (chunk.x >= 0 ? - (Math.abs( chunk.x )<< 4) : (Math.abs( chunk.x )<< 4)), zPosition + (chunk.z >= 0 ? - (Math.abs(chunk.z )<< 4) : (Math.abs(chunk.z )<< 4)));
-								MapColor color = MapColor.AIR;
-								int yPosition;
+						if(chunk.isLoaded() && !chunk.isEmpty()) {
+							//Get Xcoord and ZCoords in the chunk
+							numChunksLoaded++;
+							int heightValue = chunk.getHeightValue( xPosition + (chunk.x >= 0 ? - (Math.abs( chunk.x )<< 4) : (Math.abs( chunk.x )<< 4)), zPosition + (chunk.z >= 0 ? - (Math.abs(chunk.z )<< 4) : (Math.abs(chunk.z )<< 4)));
+							MapColor color = MapColor.AIR;
+							int yPosition;
 
-								IBlockState block = null;
+							IBlockState block = null;
 
-								//Get the first non-air block
-								for(yPosition = heightValue; yPosition > 0; yPosition-- ) {
-									block = worldObj.getBlockState(new BlockPos(xPosition, yPosition, zPosition));
-									if((color = block.getMapColor(worldObj, thisPos)) != MapColor.AIR) {
-										break;
-									}
+							//Get the first non-air block
+							for(yPosition = heightValue; yPosition > 0; yPosition-- ) {
+								block = worldObj.getBlockState(new BlockPos(xPosition, yPosition, zPosition));
+								if((color = block.getMapColor(worldObj, thisPos)) != MapColor.AIR) {
+									break;
 								}
-								if(block == null)
-									continue;
-
-								int intColor;
-
-								if(block.getBlock() == Blocks.GRASS || block.getBlock() == Blocks.TALLGRASS) {
-									int color2 = worldObj.getBiome(thisPos).getGrassColorAtPos(thisPos.add(0, yPosition, 0));
-									int r = (color2 & 0xFF);
-									int g = ( (color2 >>> 8) & 0xFF);
-									int b = ( (color2 >>> 16) & 0xFF);
-									intColor = b | (g << 8) | (r << 16);
-								}
-								else if(block.getBlock() == Blocks.LEAVES || block.getBlock() == Blocks.LEAVES2) {
-									int color2 = worldObj.getBiome(thisPos).getFoliageColorAtPos(thisPos.add(0, yPosition, 0));
-									int r = (color2 & 0xFF);
-									int g = ( (color2 >>> 8) & 0xFF);
-									int b = ( (color2 >>> 16) & 0xFF);
-									intColor = b | (g << 8) | (r << 16);
-								}
-								else
-									intColor = ( (color.colorValue & 0xFF) << 16) | ( ( color.colorValue >>> 16 ) & 0xFF ) | ( color.colorValue & 0xFF00 );
-
-								//Put into the table and make opaque
-								table.put(i, intColor | 0xFF000000);
-
-								//Background in case chunk doesnt load
-								total[0] += intColor & 0xFF;
-								total[1] += (intColor & 0xFF00) >>> 8;
-									total[2] += (intColor & 0xFF0000) >>> 16;
-
 							}
+							if(block == null)
+								continue;
+
+							int intColor;
+
+							if(block.getBlock() == Blocks.GRASS || block.getBlock() == Blocks.TALLGRASS) {
+								int color2 = worldObj.getBiome(thisPos).getGrassColorAtPos(thisPos.add(0, yPosition, 0));
+								int r = (color2 & 0xFF);
+								int g = ( (color2 >>> 8) & 0xFF);
+								int b = ( (color2 >>> 16) & 0xFF);
+								intColor = b | (g << 8) | (r << 16);
+							}
+							else if(block.getBlock() == Blocks.LEAVES || block.getBlock() == Blocks.LEAVES2) {
+								int color2 = worldObj.getBiome(thisPos).getFoliageColorAtPos(thisPos.add(0, yPosition, 0));
+								int r = (color2 & 0xFF);
+								int g = ( (color2 >>> 8) & 0xFF);
+								int b = ( (color2 >>> 16) & 0xFF);
+								intColor = b | (g << 8) | (r << 16);
+							}
+							else
+								intColor = ( (color.colorValue & 0xFF) << 16) | ( ( color.colorValue >>> 16 ) & 0xFF ) | ( color.colorValue & 0xFF00 );
+
+							//Put into the table and make opaque
+							table.put(i, intColor | 0xFF000000);
+
+							//Background in case chunk doesnt load
+							total[0] += intColor & 0xFF;
+							total[1] += (intColor & 0xFF00) >>> 8;
+								total[2] += (intColor & 0xFF0000) >>> 16;
+
 						}
-					} while(numChunksLoaded == 0);
-
-					int multiplierGreen = 1;
-					int multiplierBlue = 1;
-
-					//Get the outer layer
-					total[0] =     ZUtils.getAverageColor(total[0], total[1]*multiplierGreen, total[2]* multiplierBlue, numChunksLoaded);
-
-					Random random = new Random(); 
-
-					int randomMax = 0x2A;
-
-					for(int i = 0; i < outerImgSize*outerImgSize; i++) {
-
-						int randR =   randomMax - random.nextInt(randomMax) / 2;
-						int randG = ( randomMax - random.nextInt(randomMax)/2 ) << 8;
-						int randB = ( randomMax - random.nextInt(randomMax) /2 ) << 16;
-
-
-						int color = MathHelper.clamp((int) ( (total[0] & 0xFF) + randR ),0, 0xFF ) |
-								MathHelper.clamp((int)(total[0] & 0xFF00) + randG, 0x0100, 0xFF00)  |
-								MathHelper.clamp( (int)(( total[0] & 0xFF0000) + randB), 0x010000, 0xFF0000);
-
-						outerBoundsTable.put(i, color | 0xff000000);
 					}
+				} while(numChunksLoaded == 0);
 
-					outerBoundsTable.flip();
-					table.flip(); //Yes really
-					mapNeedsBinding = true;
-					mapReady = true;
+				int multiplierGreen = 1;
+				int multiplierBlue = 1;
+
+				//Get the outer layer
+				total[0] =     ZUtils.getAverageColor(total[0], total[1]*multiplierGreen, total[2]* multiplierBlue, numChunksLoaded);
+
+				Random random = new Random();
+
+				int randomMax = 0x2A;
+
+				for(int i = 0; i < outerImgSize*outerImgSize; i++) {
+
+					int randR =   randomMax - random.nextInt(randomMax) / 2;
+					int randG = ( randomMax - random.nextInt(randomMax)/2 ) << 8;
+					int randB = ( randomMax - random.nextInt(randomMax) /2 ) << 16;
+
+
+					int color = MathHelper.clamp((int) ( (total[0] & 0xFF) + randR ),0, 0xFF ) |
+							MathHelper.clamp((int)(total[0] & 0xFF00) + randG, 0x0100, 0xFF00)  |
+							MathHelper.clamp( (int)(( total[0] & 0xFF0000) + randB), 0x010000, 0xFF0000);
+
+					outerBoundsTable.put(i, color | 0xff000000);
 				}
+
+				outerBoundsTable.flip();
+				table.flip(); //Yes really
+				mapNeedsBinding = true;
+				mapReady = true;
 			}, "Planet Texture Creator");
 			thread.start();
 		}

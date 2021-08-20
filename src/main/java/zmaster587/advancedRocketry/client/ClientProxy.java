@@ -68,14 +68,13 @@ import java.util.Objects;
 
 public class ClientProxy extends CommonProxy {
 
-	private static zmaster587.advancedRocketry.dimension.DimensionManager dimensionManagerClient = new zmaster587.advancedRocketry.dimension.DimensionManager();
+	private static final zmaster587.advancedRocketry.dimension.DimensionManager dimensionManagerClient = new zmaster587.advancedRocketry.dimension.DimensionManager();
 	
 	@Override
 	public void registerRenderers() {
 
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileRocketAssemblingMachine.class, new RendererRocketAssemblingMachine());
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileModelRender.class, modelBlock);
 		ClientRegistry.bindTileEntitySpecialRenderer(TilePrecisionAssembler.class, new RendererPrecisionAssembler());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCuttingMachine.class, new RendererCuttingMachine());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrystallizer.class, new RendererCrystallizer());

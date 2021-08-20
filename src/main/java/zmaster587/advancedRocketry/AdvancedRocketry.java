@@ -169,7 +169,7 @@ public class AdvancedRocketry {
 	public static HashMap<AllowedProducts, HashSet<String>> modProducts = new HashMap<>();
 
 
-	private static CreativeTabs tabAdvRocketry = new CreativeTabs("advancedRocketry") {
+	private static final CreativeTabs tabAdvRocketry = new CreativeTabs("advancedRocketry") {
 		@Override
 		@Nonnull
 		public ItemStack getTabIconItem() {

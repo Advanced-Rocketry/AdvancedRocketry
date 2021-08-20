@@ -375,7 +375,6 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 				baseX = 94;
 				baseY = 20;
 				sizeX = 65;
-				sizeY = 65;
 
 				dstPlanetImg = new ModulePlanetImage(baseX + 10,baseY + 10,sizeX - 20, location);
 				dstPlanetText = new ModuleText(baseX + 4, baseY + 56, "", 0xFFFFFF);
@@ -494,11 +493,7 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 			if(station != null && !station.isAnchored() && station.hasUsableWarpCore() && station.useFuel(getTravelCost()) != 0 && meetsArtifactReq(DimensionManager.getInstance().getDimensionProperties(station.getDestOrbitingBody()))) {
 				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), Math.max(Math.min(getTravelCost()*5, 5000),0));
 
-				for (EntityPlayer player2 : world.getPlayers(EntityPlayer.class, new Predicate<EntityPlayer>() {
-					public boolean apply(EntityPlayer input) {
-						return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(input.getPosition()) == station;
-					}
-				})) {
+				for (EntityPlayer player2 : world.getPlayers(EntityPlayer.class, input -> SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(input.getPosition()) == station)) {
 					ARAdvancements.ALL_SHE_GOT.trigger((EntityPlayerMP) player2);
 					if(!DimensionManager.hasReachedWarp)
 						ARAdvancements.FLIGHT_OF_PHOENIX.trigger((EntityPlayerMP) player2);

@@ -9,6 +9,7 @@
     },
     "variants": {
         "normal": [{}],
+        "variant=alien": [{}],
         "inventory": [{}]
     }
 }

@@ -66,25 +66,6 @@ public class BlockLightwoodLeaves extends BlockLeaves {
     		EnumFacing face) {
     	return 50;
     }
-
-    
-    protected void func_150124_c(World world, int x, int y, int z, int p_150124_5_, int p_150124_6_)
-    {
-        if ((p_150124_5_ & 3) == 0 && world.rand.nextInt(p_150124_6_) == 0)
-        {
-            //TODO make drop
-        	//this.dropBlockAsItem(world, x, y, z, new ItemStack(Items.apple, 1, 0));
-        }
-    }
-	
-    /**
-     * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
-     */
-    @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item item, CreativeTabs tab, List list)
-    {
-    	list.add(new ItemStack(item, 1,0));
-    }
     
 	@Nonnull
     public Item getItemDropped(IBlockState state, Random rand, int fortune)

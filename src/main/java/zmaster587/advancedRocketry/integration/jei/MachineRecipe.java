@@ -7,7 +7,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import zmaster587.libVulpes.interfaces.IRecipe;
-import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.recipe.RecipesMachine.ChanceItemStack;
 import zmaster587.libVulpes.recipe.RecipesMachine.Recipe;
 

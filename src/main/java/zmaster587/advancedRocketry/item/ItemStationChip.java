@@ -271,11 +271,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 				}
 
 				for(NBTBase tag : destList) {
-					try {
-						retList.add(LandingLocation.loadFromNBT((NBTTagCompound)tag));
-					} catch (NoSuchAttributeException e) {
-						AdvancedRocketry.logger.warn("Attempting to load a Landing location for planet " + dimid + " but chip appears to have malformed data");
-					}
+					retList.add(LandingLocation.loadFromNBT((NBTTagCompound)tag));
 				}
 			}
 		}
@@ -313,12 +309,6 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	}
 
 	public void setTakeoffCoords(@Nonnull ItemStack stack, float x, float y, float z, int dimid, int slot) {
-		NBTTagCompound nbt;
-
-		if(stack.hasTagCompound()) 
-			nbt = stack.getTagCompound();
-		else 
-			nbt = new NBTTagCompound();
 
 		LandingLocation landingLoc = new LandingLocation("Last", x,y,z);
 
@@ -448,7 +438,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			return String.format("%s: %.0f, %.0f", name, location.x, location.z);
 		}
 
-		static LandingLocation loadFromNBT(NBTTagCompound nbt)  throws NoSuchAttributeException {
+		static LandingLocation loadFromNBT(NBTTagCompound nbt) {
 			String name = nbt.getString("name");
 			Vector3F<Float> vec = new Vector3F<>(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"));
 

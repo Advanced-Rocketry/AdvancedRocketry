@@ -116,7 +116,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 				ItemStack stack = inv.getStackInSlot(i);
 				if(!stack.isEmpty() && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
 					ItemSatelliteIdentificationChip item = (ItemSatelliteIdentificationChip)stack.getItem();
-					list.add(item.getSatelliteId(stack));
+					list.add(ItemSatelliteIdentificationChip.getSatelliteId(stack));
 				}
 			}
 		}

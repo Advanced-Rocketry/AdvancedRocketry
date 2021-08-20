@@ -124,13 +124,13 @@ public class RendererMicrowaveReciever extends TileEntitySpecialRenderer {
 					buffer.pos(- x , -y + 200,  - z).endVertex();
 					buffer.pos(- x, -y + 200, - z).endVertex();
 					buffer.pos(- (radius* Math.cos(i)) + 0.5F, 0,- (radius* Math.sin(i)) + 0.5F).endVertex();
-					buffer.pos(+ (radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).endVertex();
+					buffer.pos((radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).endVertex();
 				}
 
 				for(double i = 0; i < 2*Math.PI; i += Math.PI) {
 					buffer.pos(- x, -y + 200,- z).endVertex();
 					buffer.pos(- x, -y + 200, - z).endVertex();
-					buffer.pos(+ (radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).endVertex();
+					buffer.pos((radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).endVertex();
 					buffer.pos(- (radius* Math.cos(i)) + 0.5F, 0,(radius* Math.sin(i)) + 0.5F).endVertex();
 				}
 			}

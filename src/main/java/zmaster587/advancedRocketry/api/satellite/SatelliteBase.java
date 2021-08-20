@@ -13,7 +13,6 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.ISatelliteIdItem;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
-import zmaster587.advancedRocketry.item.ItemSatellite;
 import zmaster587.libVulpes.util.UniversalBattery;
 
 import javax.annotation.Nonnull;

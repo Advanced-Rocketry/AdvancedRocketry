@@ -155,10 +155,8 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 					rocket.linkInfrastructure(infrastructure);
 				}
 			ItemStack stack = getStackInSlot(0);
-			if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != Constants.INVALID_PLANET &&
-					event.getEntity() instanceof EntityRocket) {
-				((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
-						ItemLinker.getMasterX(stack) + 0.5f, ARConfiguration.getCurrentConfig().orbit, ItemLinker.getMasterZ(stack) + 0.5f);
+			if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != Constants.INVALID_PLANET && event.getEntity() instanceof EntityRocket) {
+				((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), ItemLinker.getMasterX(stack) + 0.5f, ARConfiguration.getCurrentConfig().orbit, ItemLinker.getMasterZ(stack) + 0.5f);
 			}
 		}
 	}

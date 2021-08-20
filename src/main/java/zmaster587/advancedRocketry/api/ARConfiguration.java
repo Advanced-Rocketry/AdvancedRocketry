@@ -86,14 +86,8 @@ public class ARConfiguration {
 		for(Field field : fieldList)
 		{
 			try {
-				if(field.getClass().isAssignableFrom(List.class))
-				{
-					List otherList = (List)field.get(config);
-					List list = otherList.getClass().newInstance();
-					list.addAll(otherList);
-					field.set(this, list);
-				}
-				else if(field.getClass().isAssignableFrom(Map.class))
+				field.getClass().isAssignableFrom(List.class);
+				if(field.getClass().isAssignableFrom(Map.class))
 				{
 					Map otherMap = (Map)field.get(config);
 					Map map = otherMap.getClass().newInstance();
@@ -1054,9 +1048,6 @@ public class ARConfiguration {
 
 	@ConfigProperty(needsSync=true, keyType=String.class, valueType= Asteroid.class)
 	public HashMap<String, Asteroid> asteroidTypes = new HashMap<>();
-
-	@ConfigProperty
-	public HashMap<String, Asteroid> prevAsteroidTypes = new HashMap<>();
 
 	@ConfigProperty
 	public int oxygenVentSize;

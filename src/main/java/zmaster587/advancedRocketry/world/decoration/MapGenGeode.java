@@ -70,10 +70,8 @@ public class MapGenGeode extends MapGenBase {
 
 			for(int x = 15; x >= 0; x--) {
 				for(int z = 15; z >= 0; z--) {
-					int index;
 
 					for(int y = 255; y >= 0; y--) {
-						index = (x * 16 + z) * 256 + y;
 						if(chunkPrimerIn.getBlockState(x, y, z) != Blocks.AIR.getDefaultState())
 							break;
 					}
@@ -86,7 +84,6 @@ public class MapGenGeode extends MapGenBase {
 
 					//Clears air for the ceiling
 					for(int dist = -count; dist < Math.min(count,3); dist++) {
-						index = (x * 16 + z) * 256 + avgY -dist;
 						chunkPrimerIn.setBlockState(x, avgY - dist, z, Blocks.AIR.getDefaultState());
 					}
 
