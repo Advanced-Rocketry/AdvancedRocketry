@@ -31,6 +31,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
+import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
@@ -176,31 +177,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	 * @return boolean on whether the fluid stack was successfully filled from or not, returns false if the stack cannot be extracted from or has no fluid left
 	 */
 	private boolean useBucket(int slot, @Nonnull ItemStack stack) {
-		if(slot == 0 && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
-			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
-			FluidStack fluidStack = fluidItem.getTankProperties()[0].getContents();
-
-			if(fluidStack != null && canFill(fluidStack.getFluid())) {
-
-				FluidStack preTransfer = FluidUtil.tryFluidTransfer(tank, FluidUtil.getFluidHandler(stack), 5000, false);
-				if (preTransfer != null) {
-					FluidUtil.tryFluidTransfer(tank, FluidUtil.getFluidHandler(stack), 5000, true);
-					ItemStack resultContainer = FluidUtil.getFluidHandler(stack).getContainer();
-
-                    if (!resultContainer.isEmpty() && resultContainer.isItemEqual(inventory.getStackInSlot(1)) && inventory.getStackInSlot(1).getMaxStackSize() > inventory.getStackInSlot(1).getCount()) {
-						inventory.getStackInSlot(1).setCount(inventory.getStackInSlot(1).getCount() + 1);
-						super.setInventorySlotContents(0, ItemStack.EMPTY);
-					} else if (!resultContainer.isEmpty() && inventory.getStackInSlot(1).isEmpty()) {
-						super.setInventorySlotContents(1, resultContainer.copy());
-						super.setInventorySlotContents(0, ItemStack.EMPTY);
-					}
-				} else
-					return false;
-			} else
-				return false;
-		} else
-			return false;
-		return false;
+		return FluidUtils.attemptDrainContainerIInv(inventory, tank, stack, 0, 1);
 	}
 
 	@Override
