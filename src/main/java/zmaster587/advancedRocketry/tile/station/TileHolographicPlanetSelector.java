@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
@@ -370,7 +371,7 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.planetHoloSelector.name";
+		return AdvancedRocketryBlocks.blockPlanetHoloSelector.getLocalizedName();
 	}
 
 	@Override

@@ -294,7 +294,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 	@Override
 	public String getMachineName() {
-		return "container.observatory";
+		return AdvancedRocketryBlocks.blockObservatory.getLocalizedName();
 	}
 
 	@Override

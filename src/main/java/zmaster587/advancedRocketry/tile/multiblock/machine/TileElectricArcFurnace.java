@@ -85,7 +85,7 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 
 	@Override
 	public String getMachineName() {
-		return "tile.electricArcFurnace.name";
+		return AdvancedRocketryBlocks.blockArcFurnace.getLocalizedName();
 	}
 
 	@Override

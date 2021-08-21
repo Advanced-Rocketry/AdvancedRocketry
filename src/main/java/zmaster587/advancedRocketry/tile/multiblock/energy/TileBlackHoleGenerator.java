@@ -107,8 +107,10 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 
 		@Override
 		public String getMachineName() {
-			return "tile.blackholegenerator.name";
+			return AdvancedRocketryBlocks.blockBlackHoleGenerator.getLocalizedName();
 		}
+
+
 		public int getPowerMadeLastTick() {
 			return powerMadeLastTick;
 		}

@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -55,7 +56,7 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 
 	@Override
 	public String getModularInventoryName() {
-		return "container.satelliteMonitor";
+		return AdvancedRocketryBlocks.blockSatelliteControlCenter.getLocalizedName();
 	}
 
 	@Override

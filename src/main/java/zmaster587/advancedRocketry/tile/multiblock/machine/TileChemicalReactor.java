@@ -182,6 +182,6 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 
 	@Override
 	public String getMachineName() {
-		return "tile.chemreactor.name";
+		return AdvancedRocketryBlocks.blockChemicalReactor.getLocalizedName();
 	}
 }

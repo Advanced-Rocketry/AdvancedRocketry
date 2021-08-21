@@ -135,10 +135,6 @@ tile.landingfloat.name=Landing Float
 tile.solararray.name=Solar Array
 tile.solararraypanel.name=Solar Array Panel
 
-tile.Dilithium.name=Dilithium Ore
-
-tile.coil.dilithium.name=Dilithium Coil
-
 item.lens.0.name=Basic Lens
 item.wafer.0.name=Silicon Wafer
 item.circuitplate.0.name=Basic Circuit Plate
@@ -164,8 +160,6 @@ item.satellitePrimaryFunction.5.name=Biome Changer
 item.satelliteIdChip.name=Satellite Id Chip
 item.planetIdChip.name=Planet Id Chip
 item.asteroidChip.name=Asteroid Chip
-item.battery.0.name=Small Battery
-item.battery.1.name=2x Small Battery
 item.miscpart.0.name=User Interface
 item.miscpart.1.name=Carbon Brick
 item.station.name=Space Station Container
@@ -189,27 +183,21 @@ item.biomeChanger.name=Biome Changer Remote
 item.basicLaserGun.name=Basic Laser Gun
 item.beaconFinder.name=Beacon Finder
 item.thermite.name=Thermite
-item.hovercraft.name=HoverCraft
-item.hovercraft.tooltip=Long lasting dilithium powersource.  It'll probably outlive you.
+item.hovercraft.name=Hovercraft
+item.hovercraft.tooltip=Long lasting dilithium power source.  It'll probably outlive you.
 
-item.jetPack.name=Jet Pack
+item.jetPack.name=Suit Jetpack
 item.pressureTank.0.name=Low Pressure Tank
 item.pressureTank.1.name=Pressure Tank
 item.pressureTank.2.name=High Pressure Tank
 item.pressureTank.3.name=Super High Pressure Tank
 item.elevatorChip.name=Space Elevator Chip
 
-material.Dilithium.name=Dilithium
-material.TitaniumAluminide.name=Titanium Aluminide
-material.TitaniumIridium.name=Titanium Iridium Alloy
-
-container.crystallizer=Crystallizer
-container.cuttingmachine=Cutting Machine
-container.precisionassemblingmachine=Precision Assembling Machine
-container.observatory=Observatory
 container.satellite=Satellite Bay
 container.monitoringstation=Monitoring Station
-container.satelliteMonitor=Satellite Terminal
+
+material.TitaniumAluminide.name=Titanium Aluminide
+material.TitaniumIridium.name=Titanium Iridium Alloy
 
 enchantment.spaceBreathing=Airtight Seal
 
@@ -231,8 +219,8 @@ mission.asteroidmining.name=Asteroid Mining
 mission.gascollection.name=Gas Collection
 
 error.rocket.cannotGetThere=Destination Unreachable
-error.rocket.destinationNotExist=Cannot launch: destination does not exist
-error.rocket.notSameSystem=Cannot launch: destination is not in the same planet system
+error.rocket.destinationNotExist=Cannot launch: Destination does not exist
+error.rocket.notSameSystem=Cannot launch: Destination is not in the same planet system
 
 advancement.holographic=Holographic
 advancement.holographic.desc=Craft a Holo-Projector
@@ -334,7 +322,7 @@ msg.rocketLoader.allowredstoneinput=Allow redstone input
 msg.rocketLoader.allowredstoneoutput=Allow redstone output
 msg.rocketLoader.none=None
 msg.rocketLoader.link=You program the linker with the rocket loader at: 
-msg.microwaverec.notgenerating=Generating 0 RF/t
+msg.microwaverec.notgenerating=Generating 0 FE/t
 msg.microwaverec.generating=Generating
 msg.abdp.compositionresearch=Composition Research
 msg.abdp.distanceresearch=Distance Research
@@ -396,7 +384,7 @@ msg.warpmon.datareq=100 of each datatype required
 msg.warpmon.artifact=Artifacts
 msg.rocketbuilder.success=Clear for liftoff!
 msg.rocketbuilder.nofuel=Not enough fuel capacity!
-msg.rocketbuilder.noseat=Missing Seat or satellite!
+msg.rocketbuilder.noseat=Missing seat or satellite bay!
 msg.rocketbuilder.noengines=You do not have enough thrust!
 msg.rocketbuilder.noguidance=Missing Guidance Computer
 msg.rocketbuilder.unscanned=Rocket unscanned
@@ -468,12 +456,11 @@ msg.entity.rocket.rcs=RCS Mode
 msg.entity.rocket.none=None Selected
 msg.wirelessTransciever.extract=extract
 
-msg.powerunit.rfpertick=RF/t
+msg.powerunit.rfpertick=FE/t
 msg.linker.error.firstMachine=This must be the first machine to link!
 msg.linker.program=Coordinates programmed into Linker
 msg.linker.success=Linked Sucessfully
 msg.notenoughpower=Not Enough power!
-msg.noOxygen=Warning: No Oxygen detected!
 msg.empty=Empty
 msg.yes=yes
 msg.no=no
@@ -484,9 +471,10 @@ msg.programfail=Programming Failed
 msg.modules=modules
 msg.na=N/A
 msg.entityDeployedRocket.notGasGiant=No Gas Here
-msg.tooHot=Warning: It's too hot!
-msg.tooDense=Warning: Air Pressure too high!
-msg.muchTooDense=Warning: air pressure critically dense, air unbreathable!
+msg.noOxygen=Warning: Atmosphere lacks oxygen!
+msg.tooHot=Warning: Atmosphere too hot!
+msg.tooDense=Warning: Atmosphere pressure too high!
+msg.muchTooDense=Warning: Atmosphere pressure critically dense!
 
 msg.chat.nostation1=You wake up on the space station with a lingering feeling that your far-reaching spacewalk was frowned upon by some elder fox deity, and that it would be foolish to attempt so again and to expect different results
 msg.chat.nostation2=Maybe you should think before overstepping clearly logical and absolute boundaries again then deciding it was a good idea and not your fault if things go wrong

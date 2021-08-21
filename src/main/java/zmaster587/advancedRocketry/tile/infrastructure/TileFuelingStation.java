@@ -154,7 +154,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 
 	@Override
 	public String getModularInventoryName() {
-		return "Fueling Station";
+		return AdvancedRocketryBlocks.blockFuelingStation.getLocalizedName();
 	}
 
 	@Override

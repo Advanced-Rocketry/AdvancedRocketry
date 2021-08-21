@@ -14,6 +14,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.advancements.ARAdvancements;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
@@ -415,7 +416,7 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.stationmonitor.name";
+		return AdvancedRocketryBlocks.blockWarpShipMonitor.getLocalizedName();
 	}
 
 	@Override

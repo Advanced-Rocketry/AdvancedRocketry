@@ -118,7 +118,7 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 
 	@Override
 	public String getMachineName() {
-		return "tile.solararray.name";
+		return AdvancedRocketryBlocks.blockSolarArray.getLocalizedName();
 	}
 
 	@Override

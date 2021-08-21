@@ -98,7 +98,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 
 	@Override
 	public String getMachineName() {
-		return "tile.microwaveReciever.name";
+		return AdvancedRocketryBlocks.blockMicrowaveReciever.getLocalizedName();
 	}
 
 	public int getPowerMadeLastTick() {

@@ -555,7 +555,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 
 	@Override
 	public String getMachineName() {
-		return "tile.atmoshereTerraformer.name";
+		return AdvancedRocketryBlocks.blockAtmosphereTerraformer.getLocalizedName();
 	}
 
 	@Override

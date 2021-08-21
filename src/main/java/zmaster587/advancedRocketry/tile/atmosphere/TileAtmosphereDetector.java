@@ -11,6 +11,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
@@ -87,7 +88,7 @@ public class TileAtmosphereDetector extends TileEntity implements ITickable, IMo
 
 	@Override
 	public String getModularInventoryName() {
-		return "atmosphereDetector";
+		return AdvancedRocketryBlocks.blockOxygenDetection.getLocalizedName();
 	}
 
 	@Override

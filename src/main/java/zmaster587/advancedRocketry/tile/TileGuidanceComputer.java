@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants.NBT;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
@@ -354,6 +355,6 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.guidanceComputer.name";
+		return AdvancedRocketryBlocks.blockGuidanceComputer.getLocalizedName();
 	}
 }

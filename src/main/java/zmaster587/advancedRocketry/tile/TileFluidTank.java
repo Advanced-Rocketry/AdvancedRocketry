@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 
@@ -89,7 +90,7 @@ public class TileFluidTank extends TileFluidHatch {
 	
 	@Override
 	public String getModularInventoryName() {
-		return "tile.pressurizedTank.name";
+		return AdvancedRocketryBlocks.blockPressureTank.getLocalizedName();
 	}
 
 	@Override

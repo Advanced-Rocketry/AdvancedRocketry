@@ -6,6 +6,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -56,6 +57,6 @@ public class TileElectrolyser extends TileMultiblockMachine {
 
 	@Override
 	public String getMachineName() {
-		return "tile.electrolyser.name";
+		return AdvancedRocketryBlocks.blockElectrolyser.getLocalizedName();
 	}
 }
