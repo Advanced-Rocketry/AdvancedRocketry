@@ -22,7 +22,7 @@ import java.util.List;
 
 public class BlockSeat extends Block {
 
-	private static AxisAlignedBB bb = new AxisAlignedBB(0, 0, 0, 1, .125, 1);
+	private static final AxisAlignedBB bb = new AxisAlignedBB(0, 0, 0, 1, .125, 1);
 	
 	public BlockSeat(Material mat) {
 		super(mat);
@@ -45,8 +45,7 @@ public class BlockSeat extends Block {
 	}
 	
     @Nullable
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
-    {
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
         return NULL_AABB;
     }
 	

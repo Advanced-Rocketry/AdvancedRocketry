@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -86,7 +87,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 			return false;
 
 		String satType = SatelliteRegistry.getSatelliteProperty(getStackInSlot(primaryFunctionSlot)).getSatelliteType();
-		SatelliteBase sat = SatelliteRegistry.getSatellite(satType);
+		SatelliteBase sat = SatelliteRegistry.getNewSatellite(satType);
 
 		return sat.isAcceptableControllerItemStack(getStackInSlot(chipSlot));
 	}
@@ -101,7 +102,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 
 		//Get the primary function from slot 0
 		String satType = SatelliteRegistry.getSatelliteProperty(getStackInSlot(primaryFunctionSlot)).getSatelliteType();
-		SatelliteBase sat = SatelliteRegistry.getSatellite(satType);
+		SatelliteBase sat = SatelliteRegistry.getNewSatellite(satType);
 		
 		if(!world.isRemote) {
 			//Grab properties from the items in slots 1-6
@@ -215,7 +216,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 
 	@Override
 	public String getMachineName() {
-		return "tile.satelliteBuilder.name";
+		return AdvancedRocketryBlocks.blockSatelliteBuilder.getLocalizedName();
 	}
 
 	@Override

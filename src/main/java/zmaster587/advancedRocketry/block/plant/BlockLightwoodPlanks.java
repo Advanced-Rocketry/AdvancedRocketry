@@ -19,8 +19,7 @@ public class BlockLightwoodPlanks extends Block  {
 	
 	public static final PropertyEnum<BlockLightwoodPlanks.EnumType> VARIANT = PropertyEnum.create("variant", BlockLightwoodPlanks.EnumType.class);
 	
-    public BlockLightwoodPlanks()
-    {
+    public BlockLightwoodPlanks() {
         super(Material.WOOD);
         this.setLightLevel(4);
         this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockLightwoodPlanks.EnumType.ALIEN));
@@ -36,22 +35,9 @@ public class BlockLightwoodPlanks extends Block  {
     }
 
     /**
-     * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
-     */
-    @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
-    {
-        for (BlockLightwoodPlanks.EnumType BlockAlienPlank$enumtype : BlockLightwoodPlanks.EnumType.values())
-        {
-            list.add(new ItemStack(itemIn, 1, BlockAlienPlank$enumtype.getMetadata()));
-        }
-    }
-
-    /**
      * Convert the given metadata into a BlockState for this Block
      */
-    public IBlockState getStateFromMeta(int meta)
-    {
+    public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(VARIANT, BlockLightwoodPlanks.EnumType.byMetadata(meta));
     }
 
@@ -76,9 +62,8 @@ public class BlockLightwoodPlanks extends Block  {
         return new BlockStateContainer(this, VARIANT);
     }
 
-    public enum EnumType implements IStringSerializable
-    {
-        ALIEN(0, "alien", MapColor.LAPIS);
+    public enum EnumType implements IStringSerializable {
+        ALIEN(0, "alien", "alien", MapColor.LAPIS);
 
         private static final BlockLightwoodPlanks.EnumType[] META_LOOKUP = new BlockLightwoodPlanks.EnumType[values().length];
         private final int meta;
@@ -87,13 +72,7 @@ public class BlockLightwoodPlanks extends Block  {
         /** The color that represents this entry on a map. */
         private final MapColor mapColor;
 
-        EnumType(int metaIn, String nameIn, MapColor mapColorIn)
-        {
-            this(metaIn, nameIn, nameIn, mapColorIn);
-        }
-
-        EnumType(int metaIn, String nameIn, String unlocalizedNameIn, MapColor mapColorIn)
-        {
+        EnumType(int metaIn, String nameIn, String unlocalizedNameIn, MapColor mapColorIn) {
             this.meta = metaIn;
             this.name = nameIn;
             this.unlocalizedName = unlocalizedNameIn;
@@ -118,10 +97,8 @@ public class BlockLightwoodPlanks extends Block  {
             return this.name;
         }
 
-        public static BlockLightwoodPlanks.EnumType byMetadata(int meta)
-        {
-            if (meta < 0 || meta >= META_LOOKUP.length)
-            {
+        public static BlockLightwoodPlanks.EnumType byMetadata(int meta) {
+            if (meta < 0 || meta >= META_LOOKUP.length) {
                 meta = 0;
             }
 
@@ -138,10 +115,8 @@ public class BlockLightwoodPlanks extends Block  {
             return this.unlocalizedName;
         }
 
-        static
-        {
-            for (BlockLightwoodPlanks.EnumType blockalienplank$enumtype : values())
-            {
+        static {
+            for (BlockLightwoodPlanks.EnumType blockalienplank$enumtype : values()) {
                 META_LOOKUP[blockalienplank$enumtype.getMetadata()] = blockalienplank$enumtype;
             }
         }

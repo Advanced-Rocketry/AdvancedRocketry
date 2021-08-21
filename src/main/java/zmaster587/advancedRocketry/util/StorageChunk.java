@@ -131,12 +131,11 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	}
 
 	public List<TileEntity> getGUITiles() {
-		List<TileEntity> list = new LinkedList<>(inventoryTiles);
 
 		/*TileEntity guidanceComputer = getGuidanceComputer();
 		if(guidanceComputer != null)
 			list.add(getGuidanceComputer());*/
-		return list;
+		return new LinkedList<>(inventoryTiles);
 	}
 
 	@Override

@@ -243,7 +243,7 @@ public class MobileAABB extends AxisAlignedBB {
 								AxisAlignedBB aabb = chunk.blocks[deltaX][(int)(aabbIn.minY - this.minY - offset)][deltaZ].getDefaultState().getCollisionBoundingBox(this.chunk.world, new BlockPos(deltaX,(int)(aabbIn.minY - this.minY - offset),deltaZ));
 
 								if(aabb != null) {
-									float offset2 = isRemote ? 1 : 1;
+									float offset2 = 1;
 									double checkVar = aabb.maxY + Math.floor(aabbIn.minY - this.minY) + minY - aabbIn.minY - offset2 - offset;
 									if(maxUp < checkVar)
 										maxUp = checkVar;

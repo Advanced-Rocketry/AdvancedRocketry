@@ -16,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.advancedRocketry.util.GravityHandler;
@@ -248,7 +249,7 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.gravityMachine.name";
+		return AdvancedRocketryBlocks.blockGravityMachine.getLocalizedName();
 	}
 
 	@Override

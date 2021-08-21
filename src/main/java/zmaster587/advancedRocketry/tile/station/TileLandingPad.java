@@ -15,10 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.Constants;
-import zmaster587.advancedRocketry.api.EntityRocketBase;
-import zmaster587.advancedRocketry.api.IInfrastructure;
+import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketDismantleEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
@@ -106,7 +103,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.landingPad.name";
+		return AdvancedRocketryBlocks.blockLandingPad.getLocalizedName();
 	}
 
 	@Override
@@ -155,10 +152,8 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 					rocket.linkInfrastructure(infrastructure);
 				}
 			ItemStack stack = getStackInSlot(0);
-			if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != Constants.INVALID_PLANET &&
-					event.getEntity() instanceof EntityRocket) {
-				((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
-						ItemLinker.getMasterX(stack) + 0.5f, ARConfiguration.getCurrentConfig().orbit, ItemLinker.getMasterZ(stack) + 0.5f);
+			if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != Constants.INVALID_PLANET && event.getEntity() instanceof EntityRocket) {
+				((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), ItemLinker.getMasterX(stack) + 0.5f, ARConfiguration.getCurrentConfig().orbit, ItemLinker.getMasterZ(stack) + 0.5f);
 			}
 		}
 	}

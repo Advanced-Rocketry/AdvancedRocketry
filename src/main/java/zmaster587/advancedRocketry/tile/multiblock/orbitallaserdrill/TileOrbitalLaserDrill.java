@@ -149,7 +149,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	
 	@Override
 	public String getMachineName() {
-		return this.getModularInventoryName();
+		return AdvancedRocketryBlocks.blockSpaceLaser.getLocalizedName();
 	}
 	
 	/*
@@ -562,7 +562,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	@Override
 	@Nonnull
 	public String getName() {
-		return LibVulpes.proxy.getLocalizedString("tile.spaceLaser.name");
+		return getMachineName();
 	}
 
 

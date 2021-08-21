@@ -412,7 +412,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 
 	@Override
 	public String getModularInventoryName() {
-		return "OxygenVent";
+		return AdvancedRocketryBlocks.blockOxygenVent.getLocalizedName();
 	}
 
 	@Override

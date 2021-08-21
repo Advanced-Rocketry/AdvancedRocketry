@@ -17,6 +17,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -159,17 +160,6 @@ public class PlanetEventHandler {
 			default:
 				event.setResult(Result.DEFAULT);
 			}
-		}
-	}
-
-	@SubscribeEvent
-	public void onPickup(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent event) {
-		if(event.getOriginalEntity() != null && !event.getOriginalEntity().getItem().isEmpty()) {
-
-			//TODO pickup advancement
-			//			zmaster587.libVulpes.api.material.Material mat = LibVulpes.materialRegistry.getMaterialFromItemStack( event.getOriginalEntity().getEntityItem());
-			//			if(mat != null && mat.getUnlocalizedName().contains("Dilithium"))
-			//				event.player.addStat(ARAchievements.dilithiumCrystals);
 		}
 	}
 
@@ -492,7 +482,7 @@ public class PlanetEventHandler {
 								int x = (coord & 0xF) + chunk.x*16;
 								int z = (coord >> 4) + chunk.z*16;
 
-								BiomeHandler.changeBiome(event.world, Biome.getIdForBiome(((ChunkManagerPlanet)((WorldProviderPlanet)event.world.provider).chunkMgrTerraformed).getBiomeGenAt(x,z)), x, z);
+								BiomeHandler.changeBiome(event.world, ((ChunkManagerPlanet)((WorldProviderPlanet)event.world.provider).chunkMgrTerraformed).getBiomeGenAt(x,z), new BlockPos(x, 0, z));
 							}
 						}
 					} catch (NullPointerException e) {
@@ -514,14 +504,10 @@ public class PlanetEventHandler {
 		}
 	}
 
-	@SubscribeEvent
-	public void chunkLoadEvent(ChunkEvent.Load event) {
-	}
-
 	public static void modifyChunk(World world ,WorldProviderPlanet provider, Chunk chunk) {
 		for(int x = 0; x < 16; x++) {
 			for(int z = 0; z < 16; z++) {
-				BiomeHandler.changeBiome(world, Biome.getIdForBiome(((ChunkManagerPlanet)((WorldProviderPlanet)world.provider).chunkMgrTerraformed).getBiomeGenAt(x + chunk.x*16,z + chunk.z*16)), chunk, x + chunk.x* 16, z + chunk.z*16);
+				BiomeHandler.changeBiome(world, ((ChunkManagerPlanet)((WorldProviderPlanet)world.provider).chunkMgrTerraformed).getBiomeGenAt(x + chunk.x*16,z + chunk.z*16), new BlockPos(x + chunk.x* 16, 0, z + chunk.z*16));
 			}
 		}
 	}

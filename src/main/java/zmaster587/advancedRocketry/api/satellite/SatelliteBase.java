@@ -13,7 +13,6 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.ISatelliteIdItem;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
-import zmaster587.advancedRocketry.item.ItemSatellite;
 import zmaster587.libVulpes.util.UniversalBattery;
 
 import javax.annotation.Nonnull;
@@ -146,12 +145,19 @@ public abstract class SatelliteBase {
 		}
 		dimId = world;
 	}
-	
+
+	/**
+	 * @return the satellite properties of the satellite
+	 */
+	public SatelliteProperties getProperties() {
+		return satelliteProperties;
+	}
+
 	/**
 	 * @param stack satelliteProperties to assign to this satellite
 	 */
 	public void setProperties(@Nonnull ItemStack stack) {
-		this.satelliteProperties = SatelliteRegistry.getSatelliteProperty(stack);
+		this.satelliteProperties = SatelliteRegistry.getSatelliteProperties(stack);
 		this.battery.setMaxEnergyStored(satelliteProperties.getPowerStorage());
 		this.satellite = stack;
 	}

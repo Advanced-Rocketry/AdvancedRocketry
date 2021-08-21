@@ -678,11 +678,6 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 		readFromNBT(pkt.getNbtCompound());
 	}
 
-	//Creates the effects for building the rocket and changes state to build
-	public void startBuild(int x, int y, int z) {
-
-	}
-
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 		//Used to sync clinet/server

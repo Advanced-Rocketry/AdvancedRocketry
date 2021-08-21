@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
@@ -126,7 +127,7 @@ public class TileStationOrientationController extends TileEntity implements ITic
 	}
 	@Override
 	public String getModularInventoryName() {
-		return "tile.orientationControl.name";
+		return AdvancedRocketryBlocks.blockOrientationController.getLocalizedName();
 	}
 
 	@Override

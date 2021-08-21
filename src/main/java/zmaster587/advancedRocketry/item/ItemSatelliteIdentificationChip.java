@@ -24,17 +24,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		return false;
 	}
 
-	public static long getSatelliteId(@Nonnull ItemStack stack) {
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
-
-			if(nbt != null)
-			    return nbt.getLong("satelliteId");
-		}
-		return -1;
-	}
-
-	public SatelliteBase getSatellite(@Nonnull ItemStack stack) {
+	public static SatelliteBase getSatellite(@Nonnull ItemStack stack) {
 		if(stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
 
@@ -80,7 +70,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	 */
 	public void setSatellite(@Nonnull ItemStack stack, SatelliteProperties satellite) {
 		erase(stack);
-		SatelliteBase satellite2 = SatelliteRegistry.getSatellite(satellite.getSatelliteType());
+		SatelliteBase satellite2 = SatelliteRegistry.getNewSatellite(satellite.getSatelliteType());
 		if(satellite2 != null) {
 			NBTTagCompound nbt;
 			if(stack.hasTagCompound())
@@ -133,7 +123,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	@Override
 	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
 		int worldId = getWorldId(stack);
-		long satId = getSatelliteId(stack);
+		long satId = SatelliteRegistry.getSatelliteId(stack);
 
 		String satelliteName = getSatelliteName(stack);
 

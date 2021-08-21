@@ -62,7 +62,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		FRIGID(175),
 		SNOWBALL(0);
 
-		private int temp;
+		private final int temp;
 		Temps(int i) {
 			temp = i;
 		}
@@ -116,7 +116,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		LOW(25),
 		NONE(0);
 
-		private int value;
+		private final int value;
 
 		AtmosphereTypes(int value) {
 			this.value = value;
@@ -1442,7 +1442,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			int[] biomeIds = nbt.getIntArray("biomes");
 			int[] biomeWeights = nbt.getIntArray("weights");
 			//Old handling
-			if (biomeWeights == null || biomeWeights.length == 0) {
+			if (biomeWeights.length == 0) {
 				biomeWeights = new int[biomeIds.length];
 				Arrays.fill(biomeWeights, 30);
 			}

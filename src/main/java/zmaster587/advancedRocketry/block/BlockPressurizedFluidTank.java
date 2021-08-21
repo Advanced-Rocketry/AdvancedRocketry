@@ -35,7 +35,7 @@ import java.util.List;
 
 public class BlockPressurizedFluidTank extends Block {
 
-	private static AxisAlignedBB bb = new AxisAlignedBB(.0625, 0, 0.0625, 0.9375, 1, 0.9375);
+	private static final AxisAlignedBB bb = new AxisAlignedBB(.0625, 0, 0.0625, 0.9375, 1, 0.9375);
 	
 	public BlockPressurizedFluidTank(Material material) {
 		super(material);

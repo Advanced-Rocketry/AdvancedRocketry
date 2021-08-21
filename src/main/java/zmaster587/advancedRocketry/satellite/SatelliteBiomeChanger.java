@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -20,7 +21,7 @@ import java.util.*;
 
 public class SatelliteBiomeChanger extends SatelliteBase  {
 
-	private int biomeId;
+	private Biome biomeId;
 	private int radius;
 
 	//Stores blocks to be updated
@@ -36,11 +37,11 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 		discoveredBiomes = new HashSet<>();
 	}
 
-	public void setBiome(int biomeId) {
+	public void setBiome(Biome biomeId) {
 		this.biomeId = biomeId;
 	}
 
-	public int getBiome() {
+	public Biome getBiome() {
 		return biomeId;
 	}
 
@@ -48,10 +49,10 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 		return discoveredBiomes;
 	}
 
-	public void addBiome(int biome) {
-		byte byteBiome = (byte)biome;
+	public void addBiome(Biome biome) {
+		byte byteBiome = (byte)Biome.getIdForBiome(biome);
 
-		if(!AdvancedRocketryBiomes.instance.getBlackListedBiomes().contains(biome))
+		if(!AdvancedRocketryBiomes.instance.getBlackListedBiomes().contains(byteBiome))
 			discoveredBiomes.add(byteBiome);
 	}
 
@@ -161,7 +162,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setInteger("biomeId", biomeId);
+		nbt.setInteger("biomeId", Biome.getIdForBiome(biomeId));
 
 		int[] array = new int[toChangeList.size()*3];
 		Iterator<HashedBlockPosition> itr = toChangeList.iterator();
@@ -187,7 +188,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		biomeId = nbt.getInteger("biomeId");
+		biomeId = Biome.getBiome(nbt.getInteger("biomeId"));
 
 		int[] array = nbt.getIntArray("posList");
 

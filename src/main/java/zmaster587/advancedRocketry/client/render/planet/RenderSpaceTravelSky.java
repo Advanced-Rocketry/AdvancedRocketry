@@ -350,22 +350,20 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 			RenderHelper.renderTopFaceWithUV(buffer, 0, -5, -5, 5, 5, 0, 1, 0, 1);
 			Tessellator.getInstance().draw();
 
-			if(true) {
-				GlStateManager.pushMatrix();
-				GlStateManager.disableTexture2D();
-				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-				float[] skyColor = entity.getColor();
-				GlStateManager.color(skyColor[0]*.02f, skyColor[1]*.02f, skyColor[2]*.02f, 1f);
+			GlStateManager.pushMatrix();
+			GlStateManager.disableTexture2D();
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			float[] skyColor = entity.getColor();
+			GlStateManager.color(skyColor[0]*.02f, skyColor[1]*.02f, skyColor[2]*.02f, 1f);
 
-				GlStateManager.scale(7.1f, 7.1f, 7.1f);
-				for(int i = 0; i < 10; i++) {
-					GlStateManager.scale(1.05f, 1.05f, 1.05f);
-					sphere.renderAll();
-				}
-
-				GlStateManager.enableTexture2D();
-				GlStateManager.popMatrix();
+			GlStateManager.scale(7.1f, 7.1f, 7.1f);
+			for(int i = 0; i < 10; i++) {
+				GlStateManager.scale(1.05f, 1.05f, 1.05f);
+				sphere.renderAll();
 			}
+
+			GlStateManager.enableTexture2D();
+			GlStateManager.popMatrix();
 
 			GlStateManager.popMatrix();
 
@@ -691,29 +689,26 @@ public class RenderSpaceTravelSky extends RenderPlanetarySky {
 		GlStateManager.disableTexture2D();
 		GlStateManager.disableFog();
 		float f18 = 1;
-		if (f18 > 0.0F)
-		{
-			GlStateManager.color(f18, f18, f18, f18);
-			GL11.glPushMatrix();
+		GlStateManager.color(f18, f18, f18, f18);
+		GL11.glPushMatrix();
 
-			GL11.glCallList(this.starGLCallList);
-			//Extra stars for low ATM
-			GlStateManager.color(f18, f18, f18, f18/2f);
-			GL11.glPushMatrix();
-			GL11.glRotatef(-90, 0, 1, 0);
-			GL11.glCallList(this.starGLCallList);
-			GL11.glPopMatrix();
+		GL11.glCallList(this.starGLCallList);
+		//Extra stars for low ATM
+		GlStateManager.color(f18, f18, f18, f18/2f);
+		GL11.glPushMatrix();
+		GL11.glRotatef(-90, 0, 1, 0);
+		GL11.glCallList(this.starGLCallList);
+		GL11.glPopMatrix();
 
-			//Extra extra, read all about it!
-			GlStateManager.color(f18, f18, f18, f18/4f);
-			GL11.glPushMatrix();
-			GL11.glRotatef(90, 0, 1, 0);
-			GL11.glCallList(this.starGLCallList);
-			GL11.glPopMatrix();
+		//Extra extra, read all about it!
+		GlStateManager.color(f18, f18, f18, f18/4f);
+		GL11.glPushMatrix();
+		GL11.glRotatef(90, 0, 1, 0);
+		GL11.glCallList(this.starGLCallList);
+		GL11.glPopMatrix();
 
-			GlStateManager.color(f18, f18, f18, f18);
-			GL11.glPopMatrix();
-		}
+		GlStateManager.color(f18, f18, f18, f18);
+		GL11.glPopMatrix();
 
 		// If we're orbitting a world, draw the skybox normally
 		if(spacePosition.world != null) {

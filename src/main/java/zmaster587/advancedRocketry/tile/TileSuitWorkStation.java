@@ -6,6 +6,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.inventory.modules.*;
@@ -44,7 +45,7 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.suitWorkStation.name";
+		return AdvancedRocketryBlocks.blockSuitWorkStation.getLocalizedName();
 	}
 
 	@Override

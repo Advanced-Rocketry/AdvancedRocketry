@@ -1,7 +1,6 @@
 package zmaster587.advancedRocketry.entity;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.BlockFire;
 import net.minecraft.block.BlockSand;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -98,8 +97,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	private String errorStr;
 	private long lastErrorTime = Long.MIN_VALUE;
 	private static long ERROR_DISPLAY_TIME = 100;
-	private static int DESCENT_TIMER = 500;
-	private static int BUTTON_ID_OFFSET = 25;
+	private static final int DESCENT_TIMER = 500;
+	private static final int BUTTON_ID_OFFSET = 25;
 	private static final int STATION_LOC_OFFSET = 50;
 	private static final int ENGINE_IGNITION_CNT = 100;
 	private ModuleText landingPadDisplayText;
@@ -110,7 +109,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	private SatelliteBase satellite;
 	protected int destinationDimId;
 	//Offset for buttons linking to the tileEntityGrid
-	private int tilebuttonOffset = 3;
+	private final int tilebuttonOffset = 3;
 	private int autoDescendTimer;
 	protected ModulePlanetSelector container;
 	boolean acceptedPacket = false;
@@ -592,7 +591,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 					if(tile instanceof IInfrastructure) {
 						IInfrastructure infrastructure = (IInfrastructure)tile;
 
-						if(this.getDistance(ItemLinker.getMasterX(heldItem), this.posY, ItemLinker.getMasterZ(heldItem)) < infrastructure.getMaxLinkDistance() + Math.max(storage.getSizeX(), storage.getSizeZ())) {
+						if(this.getDistance(ItemLinker.getMasterCoords(heldItem).getX(), this.posY, ItemLinker.getMasterCoords(heldItem).getZ()) < infrastructure.getMaxLinkDistance() + Math.max(storage.getSizeX(), storage.getSizeZ())) {
 							if(!connectedInfrastructure.contains(tile)) {
 								linkInfrastructure(infrastructure);
 
@@ -1322,8 +1321,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 
 	private void reachSpaceUnmanned() {
 		TileGuidanceComputer computer = storage.getGuidanceComputer();
-		if(computer != null && computer.getStackInSlot(0) != null &&
-				computer.getStackInSlot(0).getItem() instanceof ItemAsteroidChip) {
+		if(computer != null && computer.getStackInSlot(0).getItem() instanceof ItemAsteroidChip) {
 			//make it 30 minutes with one drill
 			float drillingPower = stats.getDrillingPower();
 

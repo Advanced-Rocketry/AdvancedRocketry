@@ -5,6 +5,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -49,7 +50,7 @@ public class TileBeacon extends TileMultiPowerConsumer {
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.beacon.name";
+		return AdvancedRocketryBlocks.blockBeacon.getLocalizedName();
 	}
 
 	@Override

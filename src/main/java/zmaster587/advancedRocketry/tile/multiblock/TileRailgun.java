@@ -22,6 +22,7 @@ import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 import zmaster587.advancedRocketry.util.AudioRegistry;
@@ -384,7 +385,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 
 	@Override
 	public String getMachineName() {
-		return "tile.railgun.name";
+		return AdvancedRocketryBlocks.blockRailgun.getLocalizedName();
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Biomes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
@@ -14,6 +15,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.network.PacketSatellite;
@@ -64,7 +66,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	@Override
 	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag arg5) {
 
-		SatelliteBase sat = DimensionManager.getInstance().getSatellite(this.getSatelliteId(stack));
+		SatelliteBase sat = SatelliteRegistry.getSatellite(stack);
 
 		SatelliteBiomeChanger mapping = null;
 		if(sat instanceof SatelliteBiomeChanger)
@@ -76,7 +78,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 			list.add(LibVulpes.proxy.getLocalizedString("msg.biomechanger.nosat"));
 		else if(mapping.getDimensionId() == player.provider.getDimension()) {
 			list.add(LibVulpes.proxy.getLocalizedString("msg.connected"));
-			list.add(LibVulpes.proxy.getLocalizedString("msg.biomechanger.selBiome") + Biome.getBiome(mapping.getBiome()).getBiomeName());
+			list.add(LibVulpes.proxy.getLocalizedString("msg.biomechanger.selBiome") + mapping.getBiome().getBiomeName());
 			list.add(LibVulpes.proxy.getLocalizedString("msg.biomechanger.numBiome") + mapping.discoveredBiomes().size());
 		}
 		else
@@ -91,7 +93,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
 		if(!world.isRemote) {
-			SatelliteBase sat = DimensionManager.getInstance().getSatellite(this.getSatelliteId(stack));
+			SatelliteBase sat = SatelliteRegistry.getSatellite(stack);
 			if(sat != null) {
 				if(player.isSneaking()) {
 					if(getSatellite(stack ) != null) {
@@ -112,13 +114,13 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	private int getBiomeId(@Nonnull ItemStack stack) {
 		SatelliteBase sat = getSatellite(stack);
 		if(sat instanceof SatelliteBiomeChanger)
-			return ((SatelliteBiomeChanger)sat).getBiome();
+			return Biome.getIdForBiome(((SatelliteBiomeChanger)sat).getBiome());
 		else
 			return -1;
 	}
 
-	private void setBiomeId(@Nonnull ItemStack stack, int id) {
-		if(Biome.getBiome(id) != null) {
+	private void setBiomeId(@Nonnull ItemStack stack, Biome id) {
+		if(id != null) {
 			SatelliteBase sat = getSatellite(stack);
 			if(sat instanceof SatelliteBiomeChanger) {
 				((SatelliteBiomeChanger)sat).setBiome(id);
@@ -141,7 +143,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	public void onInventoryButtonPressed(int buttonId) {
 		ItemStack stack = Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND);
 		if(!stack.isEmpty() && stack.getItem() == this) {
-			setBiomeId(stack, buttonId);
+			setBiomeId(stack, Biome.getBiomeForId(buttonId));
 			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getMinecraft().player, (byte)(buttonId  == -1 ? -1 : 0)));
 		}
 	}
@@ -162,18 +164,17 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt, @Nonnull ItemStack stack) {
+	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt, @Nonnull ItemStack stack) {
 		if(id == -1) {
 			//If -1 then discover current biome
-			((SatelliteBiomeChanger)getSatellite(stack)).addBiome(Biome.getIdForBiome(player.world.getBiome(new BlockPos((int)player.posX, 0, (int)player.posZ))));
+			((SatelliteBiomeChanger)getSatellite(stack)).addBiome(player.world.getBiome(new BlockPos((int)player.posX, 0, (int)player.posZ)));
 			player.closeScreen();
 		}
 		if(id == 0) {
 			int biomeId = nbt.getInteger("biome");
 
 			
-				setBiomeId(stack, biomeId);
+				setBiomeId(stack, Biome.getBiomeForId(biomeId));
 			player.closeScreen();
 		}
 	}

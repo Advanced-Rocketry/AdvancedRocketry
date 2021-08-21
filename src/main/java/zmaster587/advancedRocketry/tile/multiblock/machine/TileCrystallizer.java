@@ -80,6 +80,6 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 
 	@Override
 	public String getMachineName() {
-		return "container.crystallizer";
+		return AdvancedRocketryBlocks.blockCrystallizer.getLocalizedName();
 	}
 }

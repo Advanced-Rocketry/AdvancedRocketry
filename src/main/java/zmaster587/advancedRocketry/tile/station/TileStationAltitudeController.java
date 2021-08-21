@@ -8,6 +8,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
@@ -141,7 +142,7 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 	}
 	@Override
 	public String getModularInventoryName() {
-		return "tile.altitudeController.name";
+		return AdvancedRocketryBlocks.blockAltitudeController.getLocalizedName();
 	}
 
 	@Override

@@ -119,7 +119,7 @@ public class RenderAsteroidSky extends IRenderHandler {
 		for (int i = 0; i < 200; ++i)
 		{
 			double d0 = random.nextFloat()*2F - 1F;
-			double d1 = random.nextFloat()*1F - .5F;
+			double d1 = random.nextFloat() - .5F;
 			double d2 = random.nextFloat()*2F - 1F;
 			double size = 0.15F + random.nextFloat();
 			double d4 = d0 * d0 + d1 * d1 + d2 * d2;

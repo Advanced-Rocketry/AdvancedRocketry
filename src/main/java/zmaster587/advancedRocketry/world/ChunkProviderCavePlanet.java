@@ -204,7 +204,8 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 				{
 					IBlockState iblockstate2 = primer.getBlockState(k, j1, j);
 
-					if (iblockstate2.getBlock() != null && iblockstate2.getMaterial() != Material.AIR)
+					iblockstate2.getBlock();
+					if (iblockstate2.getMaterial() != Material.AIR)
 					{
 						if (iblockstate2 == fillblock)
 						{
@@ -358,13 +359,6 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 					{
 						double d9 = (float)(k - (p_185938_6_ - 4)) / 3.0F;
 						d8 = d8 * (1.0D - d9) + -10.0D * d9;
-					}
-
-					if ((double)k < 0.0D)
-					{
-						double d10 = (0.0D - (double)k) / 4.0D;
-						d10 = MathHelper.clamp(d10, 0.0D, 1.0D);
-						d8 = d8 * (1.0D - d10) + -10.0D * d10;
 					}
 
 					p_185938_1_[i] = d8;

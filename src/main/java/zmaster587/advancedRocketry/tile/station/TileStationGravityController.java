@@ -9,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
@@ -96,11 +97,9 @@ public class TileStationGravityController extends TileEntity implements IModular
 			if(spaceObject != null) {
 				moduleGrav.setText(String.format("%s%.2f", LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.alt"), spaceObject.getProperties().getGravitationalMultiplier()));
 				maxGravBuildSpeed.setText(String.format("%s%.1f",LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.maxaltrate"), 7200D*spaceObject.getMaxRotationalAcceleration()));
+				targetGrav.setText(String.format("%s%d", LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.tgtalt"), ((SpaceStationObject) spaceObject).targetGravity));
 			}
-
 			//numThrusters.setText("Number Of Thrusters: 0");
-
-			targetGrav.setText(String.format("%s%d", LibVulpes.proxy.getLocalizedString("msg.stationgravctrl.tgtalt"), ((SpaceStationObject) spaceObject).targetGravity));
 		}
 	}
 
@@ -153,7 +152,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 	}
 	@Override
 	public String getModularInventoryName() {
-		return "tile.gravityControl.name";
+		return AdvancedRocketryBlocks.blockGravityController.getLocalizedName();
 	}
 
 	@Override

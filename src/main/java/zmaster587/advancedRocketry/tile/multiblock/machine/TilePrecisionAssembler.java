@@ -9,6 +9,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -131,6 +132,6 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 
 	@Override
 	public String getMachineName() {
-		return "container.precisionassemblingmachine";
+		return AdvancedRocketryBlocks.blockPrecisionAssembler.getLocalizedName();
 	}
 }

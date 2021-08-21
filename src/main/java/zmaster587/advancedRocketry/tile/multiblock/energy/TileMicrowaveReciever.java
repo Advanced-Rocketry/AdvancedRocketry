@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -98,7 +99,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 
 	@Override
 	public String getMachineName() {
-		return "tile.microwaveReciever.name";
+		return AdvancedRocketryBlocks.blockMicrowaveReciever.getLocalizedName();
 	}
 
 	public int getPowerMadeLastTick() {
@@ -115,8 +116,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				ItemStack stack = inv.getStackInSlot(i);
 				if(!stack.isEmpty() && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
-					ItemSatelliteIdentificationChip item = (ItemSatelliteIdentificationChip)stack.getItem();
-					list.add(item.getSatelliteId(stack));
+					list.add(SatelliteRegistry.getSatelliteId(stack));
 				}
 			}
 		}

@@ -7,6 +7,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
@@ -85,7 +86,7 @@ public class TileWarpCore extends TileMultiBlock {
 
 	@Override
 	public String getMachineName() {
-		return "tile.warpCore.name";
+		return AdvancedRocketryBlocks.blockWarpCore.getLocalizedName();
 	}
 	
 	@Override

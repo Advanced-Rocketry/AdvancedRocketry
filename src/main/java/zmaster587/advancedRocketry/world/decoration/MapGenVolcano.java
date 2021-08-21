@@ -50,7 +50,7 @@ public class MapGenVolcano extends MapGenBase {
 					int crackle = rand.nextInt(2);
 
 					double func = 1/(Math.pow(1.028, radius-(size-sizeDeviation)*3)) +
-							+ baseHeight
+                            baseHeight
 							- 8/(Math.pow(1.09, radius-((size-sizeDeviation)/2.6)))
 							-Math.pow(1.7, radius - size*.9);
 					

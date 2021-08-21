@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.ZUtils;
@@ -40,7 +41,7 @@ public class ItemSatellite extends ItemIdWithName {
 
 	public void setSatellite(@Nonnull ItemStack stack, SatelliteProperties properties) {
 
-		SatelliteBase testSatellite = SatelliteRegistry.getSatellite(properties.getSatelliteType());
+		SatelliteBase testSatellite = SatelliteRegistry.getNewSatellite(properties.getSatelliteType());
 		if(testSatellite != null) {
 			//Check to see if we have some NBT already, if so, add to it
 			NBTTagCompound nbt;
@@ -63,38 +64,37 @@ public class ItemSatellite extends ItemIdWithName {
 
 	@Override
 	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
+		if (stack.getItem() instanceof ItemSatellite && SatelliteRegistry.getSatelliteProperties(stack) != null) {
+			SatelliteProperties properties = SatelliteRegistry.getSatelliteProperties(stack);
 
-		SatelliteProperties properties = SatelliteRegistry.getSatelliteProperty(stack);
-
-		if(properties != null) {
 			int dataStorage, powerGeneration, powerStorage;
 
 			list.add(getName(stack));
 			list.add("ID: " + properties.getId());
 
-			if(SatelliteProperties.Property.BATTERY.isOfType(properties.getPropertyFlag())) {
-				if( (powerStorage = properties.getPowerStorage()) > 0)
+			if (SatelliteProperties.Property.BATTERY.isOfType(properties.getPropertyFlag())) {
+				if ((powerStorage = properties.getPowerStorage()) > 0)
 					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatellite.pwr") + powerStorage);
 				else
 					list.add(ChatFormatting.RED + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.nopwr"));
 			}
 
-			if(SatelliteProperties.Property.POWER_GEN.isOfType(properties.getPropertyFlag())) {
-				if( ( powerGeneration=properties.getPowerGeneration() ) > 0)
+			if (SatelliteProperties.Property.POWER_GEN.isOfType(properties.getPropertyFlag())) {
+				if ((powerGeneration = properties.getPowerGeneration()) > 0)
 					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatellite.pwrgen") + powerGeneration);
 				else
 					list.add(ChatFormatting.RED + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.nopwrgen"));
 			}
 
-			if(SatelliteProperties.Property.DATA.isOfType(properties.getPropertyFlag())) {
-				if( (dataStorage = properties.getMaxDataStorage()) > 0 ) 
+			if (SatelliteProperties.Property.DATA.isOfType(properties.getPropertyFlag())) {
+				if ((dataStorage = properties.getMaxDataStorage()) > 0)
 					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatellite.data") + ZUtils.formatNumber(dataStorage));
 				else
 					list.add(ChatFormatting.YELLOW + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.nodata"));
 			}
-		}
-		else {
+		} else {
 			list.add(ChatFormatting.RED + LibVulpes.proxy.getLocalizedString("msg.itemsatellite.empty"));
 		}
+
 	}
 }

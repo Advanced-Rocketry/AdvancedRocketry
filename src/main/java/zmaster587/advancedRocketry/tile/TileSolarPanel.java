@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.tile;
 
 import net.minecraft.entity.player.EntityPlayer;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -72,7 +73,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.solarGenerator.name";
+		return AdvancedRocketryBlocks.blockSolarGenerator.getLocalizedName();
 	}
 
 	@Override

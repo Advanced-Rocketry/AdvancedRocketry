@@ -328,7 +328,7 @@ public class XMLPlanetLoader {
 				}
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_RETROGRADE)) {
 				String text = planetPropertyNode.getTextContent();
-				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true"))
+				if(text != null && text.equalsIgnoreCase("true"))
 					properties.isRetrograde = true;
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_PERIOD)) {
 				try {
@@ -468,7 +468,7 @@ public class XMLPlanetLoader {
 				if(clazz == null) {
 					try {
 						clazz = Class.forName(planetPropertyNode.getTextContent());
-						if(clazz != null && !Entity.class.isAssignableFrom(clazz))
+						if(!Entity.class.isAssignableFrom(clazz))
 							clazz = null;
 
 					} catch (Exception e) {
@@ -607,11 +607,11 @@ public class XMLPlanetLoader {
 				}
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GASGIANT)) {
 				String text = planetPropertyNode.getTextContent();
-				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true"))
+				if(text != null && text.equalsIgnoreCase("true"))
 					properties.setGasGiant(true);
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_ISKNOWN)) {
 				String text = planetPropertyNode.getTextContent();
-				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true")) {
+				if(text != null && text.equalsIgnoreCase("true")) {
 					ARConfiguration.getCurrentConfig().initiallyKnownPlanets.add(properties.getId());
 				}
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(GENERATECRATERS)) {

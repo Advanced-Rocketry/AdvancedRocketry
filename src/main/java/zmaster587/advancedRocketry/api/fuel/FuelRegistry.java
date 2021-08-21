@@ -23,7 +23,7 @@ public class FuelRegistry {
 		//Stores a fuel entry for each type of fuel
 		final HashSet<FuelEntry> fuels;
 		
-		private FuelType() {
+		FuelType() {
 			fuels = new HashSet<>();
 		}
 		

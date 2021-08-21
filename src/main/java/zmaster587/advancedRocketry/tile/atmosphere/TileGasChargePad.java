@@ -9,6 +9,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.util.ItemAirUtils;
@@ -138,7 +139,7 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.oxygenCharger.name";
+		return AdvancedRocketryBlocks.blockOxygenCharger.getLocalizedName();
 	}
 
 	@Override

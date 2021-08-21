@@ -17,6 +17,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
@@ -380,7 +381,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 	}
 
 	@Override
-	public String getModularInventoryName() { return "tile.spaceElevatorController.name"; }
+	public String getModularInventoryName() { return AdvancedRocketryBlocks.blockSpaceElevatorController.getLocalizedName(); }
 
 	@Override
 	public boolean isUsableByPlayer(EntityPlayer player) {

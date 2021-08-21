@@ -212,17 +212,6 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 
 	@Nonnull
 	public ItemStack removeComponent(World world, @Nonnull ItemStack armor, int index) {
-		NBTTagCompound nbt;
-		NBTTagList componentList;
-
-		if(armor.hasTagCompound()) {
-			nbt = armor.getTagCompound();
-			componentList = nbt.getTagList(componentNBTName, NBT.TAG_COMPOUND);
-		}
-		else {
-			return ItemStack.EMPTY;
-		}
-
 		EmbeddedInventory inv = loadEmbeddedInventory(armor);
 		ItemStack stack = inv.getStackInSlot(index);
 		inv.setInventorySlotContents(index, ItemStack.EMPTY);
@@ -241,8 +230,6 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	public List<ItemStack> getComponents(@Nonnull ItemStack armor) {
 
 		List<ItemStack> list = new LinkedList<>();
-		NBTTagCompound nbt;
-		NBTTagList componentList;
 
 		if(armor.hasTagCompound()) {
 			EmbeddedInventory inv = loadEmbeddedInventory(armor);

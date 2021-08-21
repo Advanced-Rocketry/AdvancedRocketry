@@ -119,7 +119,7 @@ public class LiquidNetwork extends CableNetwork {
 						int buffer;
 						
 						//drain sometimes returns a null value even when canDrain returns true
-						if(fluid2 == null || !FluidUtils.areFluidsSameType(fluid, fluid2.getFluid()))
+						if(!FluidUtils.areFluidsSameType(fluid, fluid2.getFluid()))
 							buffer = 0;
 						else {
 							fluidHandleSource.drain(maxFill, true);

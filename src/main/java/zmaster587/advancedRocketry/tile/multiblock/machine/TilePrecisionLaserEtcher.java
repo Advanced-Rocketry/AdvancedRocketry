@@ -114,6 +114,6 @@ public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements I
 
 	@Override
 	public String getMachineName() {
-		return "tile.precisionlaseretcher.name";
+		return AdvancedRocketryBlocks.blockPrecisionLaserEngraver.getLocalizedName();
 	}
 }

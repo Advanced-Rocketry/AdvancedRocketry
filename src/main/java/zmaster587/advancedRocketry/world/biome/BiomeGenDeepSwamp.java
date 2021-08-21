@@ -61,21 +61,16 @@ public class BiomeGenDeepSwamp extends Biome {
 		
 		double d0 = GRASS_COLOR_NOISE.getValue((double)x * 0.25D, (double)z * 0.25D);
 
-        if (d0 > 0.0D)
-        {
+        if (d0 > 0.0D) {
             int i = x & 15;
             int j = z & 15;
 
-            for (int k = 255; k >= 0; --k)
-            {
-                if (chunkPrimerIn.getBlockState(j, k, i).getMaterial() != Material.AIR)
-                {
-                    if (k == 62 && chunkPrimerIn.getBlockState(j, k, i).getBlock() != Blocks.WATER)
-                    {
+            for (int k = 255; k >= 0; --k) {
+                if (chunkPrimerIn.getBlockState(j, k, i).getMaterial() != Material.AIR) {
+                    if (k == 62 && chunkPrimerIn.getBlockState(j, k, i).getBlock() != Blocks.WATER) {
                         chunkPrimerIn.setBlockState(j, k, i, WATER);
 
-                        if (d0 < 0.12D)
-                        {
+                        if (d0 < 0.12D) {
                             chunkPrimerIn.setBlockState(j, k + 1, i, Blocks.WATERLILY.getDefaultState());
                         }
                     }
@@ -92,8 +87,7 @@ public class BiomeGenDeepSwamp extends Biome {
      * Provides the basic grass color based on the biome temperature and rainfall
      */
     @SideOnly(Side.CLIENT)
-    public int getBiomeGrassColor(int x, int y, int z)
-    {
+    public int getBiomeGrassColor(int x, int y, int z) {
     	
     	double d0 = GRASS_COLOR_NOISE.getValue((double)x * 0.25D, (double)z * 0.25D);
         return d0 < -0.1D ? 5011004 : 6975545;
@@ -103,8 +97,7 @@ public class BiomeGenDeepSwamp extends Biome {
      * Provides the basic foliage color based on the biome temperature and rainfall
      */
     @SideOnly(Side.CLIENT)
-    public int getBiomeFoliageColor(int p_150571_1_, int p_150571_2_, int p_150571_3_)
-    {
+    public int getBiomeFoliageColor(int p_150571_1_, int p_150571_2_, int p_150571_3_) {
         return 6975545;
     }
 }
