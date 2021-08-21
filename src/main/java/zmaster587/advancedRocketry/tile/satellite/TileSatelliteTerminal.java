@@ -45,7 +45,7 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 
 
 	//private ModuleText satelliteText;
-	private ModuleSatellite moduleSatellite;
+	private SatelliteBase satellite;
 	private ModuleText moduleText;
 	private DataStorage data;
 
@@ -54,8 +54,6 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 
 		data = new DataStorage();
 		data.setMaxData(1000);
-		
-		moduleSatellite = new ModuleSatellite(152, 10, this, 0);
 	}
 
 	@Override
@@ -107,7 +105,6 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 		}
 		else if( id == 100 ) {
 
-			SatelliteBase satellite = moduleSatellite.getSatellite();
 			if(satellite != null && PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(satellite.getDimensionId().get(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
 				satellite.performAction(player, world, pos);
 			}
@@ -120,14 +117,13 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 	@Override
 	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
-		moduleSatellite.setSatellite(getSatelliteFromSlot(0));
+		satellite = getSatelliteFromSlot(0);
 		updateInventoryInfo();
 	}
 
 	public void updateInventoryInfo() {
 		if(moduleText != null) {
 
-			SatelliteBase satellite = moduleSatellite.getSatellite();
 			if(satellite != null) {
 				if(getUniversalEnergyStored() < getPowerPerOperation()) 
 					moduleText.setText(LibVulpes.proxy.getLocalizedString("msg.notenoughpower"));
@@ -166,6 +162,7 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 		modules.add(new ModuleButton(173, 3, "", this, TextureResources.buttonKill, LibVulpes.proxy.getLocalizedString("msg.satctrlcenter.destroysat"), 24, 24).setAdditionalData(1));
 		modules.add(new ModuleData(28, 20, 1, this, data));
 
+		ModuleSatellite moduleSatellite = new ModuleSatellite(152, 10, this, 0);
 		modules.add(moduleSatellite);
 
 		//Try to assign a satellite ASAP

@@ -24,7 +24,7 @@ public class ItemSatellite extends ItemIdWithName {
 	}
 
 	@Deprecated
-	public SatelliteProperties getSatellite(ItemStack stack) {
+	public static SatelliteProperties getSatellite(ItemStack stack) {
 
 		//return getSatelliteProperties(stack);
 		if(stack.hasTag()) {
@@ -116,7 +116,7 @@ public class ItemSatellite extends ItemIdWithName {
 	@Override
 	public void addInformation(@Nonnull ItemStack stack, World player, List list, ITooltipFlag bool) {
 
-		SatelliteProperties properties = SatelliteRegistry.getSatelliteProperty(stack);
+		SatelliteProperties properties = getSatellite(stack);
 
 		if(properties != null) {
 			int dataStorage, powerGeneration, powerStorage;

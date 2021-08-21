@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.tile.hatch;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
@@ -29,7 +30,7 @@ inventory.setCanExtractSlot(0, true);
 
 		ItemStack itemStack = inventory.getStackInSlot(0);
 		if(!itemStack.isEmpty() && itemStack.getItem() instanceof ItemSatellite) {
-			SatelliteProperties properties = SatelliteRegistry.getSatelliteProperty(itemStack);
+			SatelliteProperties properties = ItemSatellite.getSatellite(itemStack);
 			
 			if(properties == null)
 				return null;
