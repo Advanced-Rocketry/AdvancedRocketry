@@ -1,5 +1,5 @@
 {
     "variants": {
-      "": {"model": "advancedrocketry:block/crystal"}
+        "": { "model": "advancedrocketry:block/crystal" }
     }
 }

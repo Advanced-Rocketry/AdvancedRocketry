@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.block;
 import net.minecraft.block.*;
 import net.minecraft.state.IntegerProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
@@ -110,5 +111,9 @@ public class BlockRocketFire extends AbstractFireBlock {
 
 	protected boolean canFireDie(World worldIn, BlockPos pos) {
 		return worldIn.isRainingAt(pos) || worldIn.isRainingAt(pos.west()) || worldIn.isRainingAt(pos.east()) || worldIn.isRainingAt(pos.north()) || worldIn.isRainingAt(pos.south());
+	}
+
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+		builder.add(AGE);
 	}
 }

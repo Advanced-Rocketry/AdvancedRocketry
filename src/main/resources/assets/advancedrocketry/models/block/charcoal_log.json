@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_column",
+    "textures": {
+        "end": "advancedrocketry:blocks/log_charcoal_top",
+        "side": "advancedrocketry:blocks/log_charcoal"
+    }
+}

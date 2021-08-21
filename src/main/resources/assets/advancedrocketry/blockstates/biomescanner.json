@@ -9,4 +9,5 @@
         "facing=west,state=true":  { "model": "advancedrocketry:block/biomescanner", "y": 270 },
         "facing=east,state=true":  { "model": "advancedrocketry:block/biomescanner", "y": 90 }
     }
+    
 }
