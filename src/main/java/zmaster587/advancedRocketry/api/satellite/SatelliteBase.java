@@ -145,12 +145,19 @@ public abstract class SatelliteBase {
 		}
 		dimId = world;
 	}
-	
+
+	/**
+	 * @return the satellite properties of the satellite
+	 */
+	public SatelliteProperties getProperties() {
+		return satelliteProperties;
+	}
+
 	/**
 	 * @param stack satelliteProperties to assign to this satellite
 	 */
 	public void setProperties(@Nonnull ItemStack stack) {
-		this.satelliteProperties = SatelliteRegistry.getSatelliteProperty(stack);
+		this.satelliteProperties = SatelliteRegistry.getSatelliteProperties(stack);
 		this.battery.setMaxEnergyStored(satelliteProperties.getPowerStorage());
 		this.satellite = stack;
 	}

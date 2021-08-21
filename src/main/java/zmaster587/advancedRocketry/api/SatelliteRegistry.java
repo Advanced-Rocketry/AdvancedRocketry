@@ -4,6 +4,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.item.ItemSatellite;
+import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -74,7 +77,7 @@ public class SatelliteRegistry {
 	 * @return Satellite constructed from the passed NBT
 	 */
 	public static SatelliteBase createFromNBT(NBTTagCompound nbt) {
-		SatelliteBase satellite = getSatellite(nbt.getString("dataType"));
+		SatelliteBase satellite = getNewSatellite(nbt.getString("dataType"));
 
 		satellite.readFromNBT(nbt);
 
@@ -85,7 +88,7 @@ public class SatelliteRegistry {
 	 * @param name String identifier for a satellite
 	 * @return new satellite registered to the String identifier, SatelliteDefunct otherwise
 	 */
-	public static SatelliteBase getSatellite(String name) {
+	public static SatelliteBase getNewSatellite(String name) {
 		Class<? extends SatelliteBase> clazz = registry.get(name);
 
 		if(clazz == null) {
@@ -97,5 +100,48 @@ public class SatelliteRegistry {
 			} catch( Exception e)  {
 				return null;
 			}
+	}
+
+	/**
+	 * @param stack Satellite Chip or Satellite Chassis to get the ID of
+	 * @return ID of the satellite, or -1 if not found
+	 */
+	public static long getSatelliteId(@Nonnull ItemStack stack) {
+		if(stack.hasTagCompound()) {
+			NBTTagCompound nbt = stack.getTagCompound();
+
+			if(nbt != null) {
+				if (stack.getItem() instanceof ItemSatelliteIdentificationChip)
+					return nbt.getLong("satelliteId");
+				else
+					return nbt.getLong("satId");
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * @param stack Satellite Chip or Satellite Chassis to get the SatelliteBase of
+	 * @return SatelliteBase the satellite is, or null if not found
+	 */
+	public static SatelliteBase getSatellite(@Nonnull ItemStack stack) {
+		if (SatelliteRegistry.getSatelliteId(stack) != -1)
+			return DimensionManager.getInstance().getSatellite(SatelliteRegistry.getSatelliteId(stack));
+		return null;
+	}
+
+	public static SatelliteProperties getSatelliteProperties(@Nonnull ItemStack stack) {
+		if (SatelliteRegistry.getSatelliteId(stack) != -1) {
+			NBTTagCompound nbt = stack.getTagCompound();
+
+			if(nbt != null) {
+				if (stack.getItem() instanceof ItemSatellite) {
+					SatelliteProperties properties = new SatelliteProperties(nbt.getInteger("powerGeneration"), nbt.getInteger("powerStorage"), nbt.getString("dataType"), nbt.getInteger("maxData"));
+					properties.setId(SatelliteRegistry.getSatelliteId(stack));
+					return properties;
+				}
+			}
+		}
+		return null;
 	}
 }

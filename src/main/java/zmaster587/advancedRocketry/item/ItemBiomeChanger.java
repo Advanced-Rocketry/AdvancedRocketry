@@ -15,6 +15,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.network.PacketSatellite;
@@ -65,7 +66,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	@Override
 	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag arg5) {
 
-		SatelliteBase sat = DimensionManager.getInstance().getSatellite(getSatelliteId(stack));
+		SatelliteBase sat = SatelliteRegistry.getSatellite(stack);
 
 		SatelliteBiomeChanger mapping = null;
 		if(sat instanceof SatelliteBiomeChanger)
@@ -92,7 +93,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
 		if(!world.isRemote) {
-			SatelliteBase sat = DimensionManager.getInstance().getSatellite(getSatelliteId(stack));
+			SatelliteBase sat = SatelliteRegistry.getSatellite(stack);
 			if(sat != null) {
 				if(player.isSneaking()) {
 					if(getSatellite(stack ) != null) {
