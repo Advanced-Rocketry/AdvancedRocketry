@@ -4,10 +4,10 @@
             "item": "advancedrocketry:crystallizer"
         },
         "title": {
-            "translate": "achievement.crystalline"
+            "translate": "advancement.crystalline"
         },
         "description": {
-            "translate": "achievement.crystalline.desc"
+            "translate": "advancement.crystalline.desc"
         }
     },
     "parent": "advancedrocketry:normal/holographic",

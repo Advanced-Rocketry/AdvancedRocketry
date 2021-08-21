@@ -22,26 +22,28 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.LibVulpes;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.WeakHashMap;
 
 public class ItemBasicLaserGun extends Item {
 
-	int reachDistance = 50;
+	private int reachDistance = 50;
 	private WeakHashMap<EntityLivingBase, BlockPos> posMap;
-	ToolMaterial toolMaterial;
+	private ToolMaterial toolMaterial;
 
 	public ItemBasicLaserGun() {
 		super();
 		toolMaterial = ToolMaterial.DIAMOND;
 		setMaxStackSize(1);
 		setMaxDamage(0);
-		posMap = new WeakHashMap<EntityLivingBase, BlockPos>();
+		posMap = new WeakHashMap<>();
 	}
 
 	@Override
-	public float getStrVsBlock(ItemStack stack, IBlockState state) {
+	public float getStrVsBlock(@Nonnull ItemStack stack, IBlockState state) {
 		return 0;
 	}
 
@@ -66,7 +68,7 @@ public class ItemBasicLaserGun extends Item {
 							if (block != Blocks.REDSTONE_ORE && block != Blocks.LIT_REDSTONE_ORE)
 							{
 								Material material = blockIn.getMaterial();
-								return material == Material.ROCK ? true : (material == Material.IRON ? true : material == Material.ANVIL);
+								return material == Material.ROCK || material == Material.IRON || material == Material.ANVIL;
 							}
 							else
 							{
@@ -106,7 +108,7 @@ public class ItemBasicLaserGun extends Item {
 	}
 
 	@Override
-	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count) {
+	public void onUsingTick(@Nonnull ItemStack stack, EntityLivingBase player, int count) {
 
 		World world = player.getEntityWorld();
 
@@ -130,7 +132,7 @@ public class ItemBasicLaserGun extends Item {
 			player.resetActiveHand();
 			return;
 		}
-		else if(posMap.get(player) == null && rayTrace.getBlockPos() != null) {
+		else if(posMap.get(player) == null) {
 			posMap.put(player, rayTrace.getBlockPos());
 		}
 
@@ -153,7 +155,7 @@ public class ItemBasicLaserGun extends Item {
 	 * How long it takes to use or consume an item
 	 */
 	@Override
-	public int getMaxItemUseDuration(ItemStack stack)
+	public int getMaxItemUseDuration(@Nonnull ItemStack stack)
 	{
 		return 16;
 	}
@@ -184,16 +186,15 @@ public class ItemBasicLaserGun extends Item {
 	 * returns the action that specifies what animation to play when the items is being used
 	 */
 	@Override
-	public EnumAction getItemUseAction(ItemStack stack)
+	@Nonnull
+	public EnumAction getItemUseAction(@Nonnull ItemStack stack)
 	{
 		return EnumAction.NONE;
 	}
 
-
-
-	@Nullable
 	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase entityLiving)
+	@Nonnull
+	public ItemStack onItemUseFinish(@Nonnull ItemStack stack, World world, EntityLivingBase entityLiving)
 	{
 		RayTraceResult rayTrace = rayTrace(world, (EntityPlayer) entityLiving, false);
 
@@ -231,18 +232,12 @@ public class ItemBasicLaserGun extends Item {
 			}
 				}));
 
-		for (int j = 0; j < list.size(); ++j)
-		{
-			Entity entity1 = (Entity)list.get(j);
-			AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().grow((double)entity1.getCollisionBorderSize());
+		for (Entity value : list) {
+			AxisAlignedBB axisalignedbb = value.getEntityBoundingBox().grow(value.getCollisionBorderSize());
 			RayTraceResult raytraceresult = axisalignedbb.calculateIntercept(vec3d, vec3d2);
 
-			if (axisalignedbb.contains(vec3d))
-			{
-			}
-			else if (raytraceresult != null)
-			{
-				raytraceresult.entityHit = entity1;
+			if (!axisalignedbb.contains(vec3d) && raytraceresult != null) {
+				raytraceresult.entityHit = value;
 				return raytraceresult;
 			}
 		}
@@ -253,6 +248,8 @@ public class ItemBasicLaserGun extends Item {
 
 
 	@Override
+	@ParametersAreNonnullByDefault
+	@Nonnull
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand) {
 
 		player.setActiveHand(hand);
@@ -273,10 +270,10 @@ public class ItemBasicLaserGun extends Item {
 			if(world.isRemote)
 				LibVulpes.proxy.playSound(worldIn, player.getPosition(), AudioRegistry.basicLaser, SoundCategory.PLAYERS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.PLAYERS), 1f);
 
-			return new ActionResult(EnumActionResult.PASS, stack);
+			return new ActionResult<>(EnumActionResult.PASS, stack);
 		}
 
-		rayTrace = rayTrace(world, (EntityPlayer) player, false);
+		rayTrace = rayTrace(world, player, false);
 
 		if(rayTrace != null && rayTrace.typeOfHit == Type.BLOCK) {
 			IBlockState state = world.getBlockState(rayTrace.getBlockPos());
@@ -284,8 +281,8 @@ public class ItemBasicLaserGun extends Item {
 			if(world.isRemote)
 				LibVulpes.proxy.playSound(worldIn, player.getPosition(), AudioRegistry.basicLaser, SoundCategory.PLAYERS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.PLAYERS), 1f);
 
-			return new ActionResult(EnumActionResult.PASS, stack);
+			return new ActionResult<>(EnumActionResult.PASS, stack);
 		}
-		return new ActionResult(EnumActionResult.PASS, stack);
+		return new ActionResult<>(EnumActionResult.PASS, stack);
 	}
 }

@@ -52,7 +52,6 @@ public class PacketStellarInfo extends BasePacket {
 			} catch (IOException e) {
 				e.printStackTrace();
 				nbt = null;
-				return;
 			}
 		}
 	}

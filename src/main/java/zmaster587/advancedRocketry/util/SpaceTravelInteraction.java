@@ -63,11 +63,8 @@ public class SpaceTravelInteraction {
 		{
 			SpacePosition worldSpacePosition = properties.getSpacePosition();
 			double distanceSq = spacePosition.distanceToSpacePosition2(worldSpacePosition);
-		
-			if(distanceSq < 200)
-			{
-				return true;
-			}
+
+			return distanceSq < 200;
 		}
 		
 		return false;
@@ -78,8 +75,7 @@ public class SpaceTravelInteraction {
 		if(spacePosition.world != null)
 		{
 			double distanceSq = spacePosition.distanceToSpacePosition2(new SpacePosition());
-			if(distanceSq > 40000*8)
-				return true;
+			return distanceSq > 40000 * 8;
 		}
 		
 		return false;

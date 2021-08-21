@@ -9,12 +9,14 @@ import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
 public class GuidanceComputer implements IInventory, IModularInventory {
 
-	ItemStack inv;
+	private ItemStack inv;
 	private static final String destinationSlot = "destinationSlot";
 	
 	@Override
@@ -23,26 +25,28 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int slot) {
 		return inv;
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int slot, int amount) {
 		
-		if(inv == null)
-			return null;
+		if(inv.isEmpty())
+			return ItemStack.EMPTY;
 		else {
 			ItemStack stack;
 			stack = inv.splitStack(amount);
 			if(inv.getCount() == 0)
-				inv = null;
+				inv = ItemStack.EMPTY;
 			return stack;
 		}
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		inv = stack;
 	}
 
@@ -52,6 +56,7 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 	
 	@Override
+	@Nonnull
 	public String getName() {
 		return getModularInventoryName();
 	}
@@ -72,7 +77,7 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(@Nullable EntityPlayer player) {
 		return true;
 	}
 
@@ -87,12 +92,12 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
+	public boolean isItemValidForSlot(int p_94041_1_, @Nonnull ItemStack p_94041_2_) {
 		return true;
 	}
 	
 	public void writeToNBT(NBTTagCompound nbt) {
-		if(inv != null) {
+		if(!inv.isEmpty()) {
 			NBTTagCompound itemNbt = new NBTTagCompound();
 			inv.writeToNBT(itemNbt);
 			nbt.setTag(destinationSlot, itemNbt);
@@ -106,7 +111,7 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		
 		modules.add(new ModuleSlotArray(8, 17, this, 0, 1));
 		
@@ -119,14 +124,16 @@ public class GuidanceComputer implements IInventory, IModularInventory {
 	}
 
 	@Override
+	@Nullable
 	public ITextComponent getDisplayName() {
 		return null;
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		ItemStack stack = inv;
-		inv = null;
+		inv = ItemStack.EMPTY;
 		return stack;
 	}
 

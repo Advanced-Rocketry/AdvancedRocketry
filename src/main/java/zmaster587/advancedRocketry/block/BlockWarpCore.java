@@ -13,6 +13,8 @@ import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
+import javax.annotation.Nonnull;
+
 public class BlockWarpCore extends BlockMultiblockMachine {
 
 	public BlockWarpCore(Class<? extends TileMultiBlock> tileClass,
@@ -22,7 +24,7 @@ public class BlockWarpCore extends BlockMultiblockMachine {
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
-			EntityLivingBase placer, ItemStack stack) {
+			EntityLivingBase placer, @Nonnull ItemStack stack) {
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
 		
 		if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {

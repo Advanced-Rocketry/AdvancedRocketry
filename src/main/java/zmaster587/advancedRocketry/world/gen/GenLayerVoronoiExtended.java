@@ -32,24 +32,24 @@ public class GenLayerVoronoiExtended extends GenLayer {
 	        for (int k2 = 0; k2 < l1 - 1; ++k2)
 	        {
 	            l2 = 0;
-	            int i3 = aint[l2 + 0 + (k2 + 0) * k1];
+	            int      i3 = aint[l2 + k2 * k1];
 
-	            for (int j3 = aint[l2 + 0 + (k2 + 1) * k1]; l2 < k1 - 1; ++l2)
+	            for (int j3 = aint[l2+(k2 + 1) * k1]; l2 < k1 - 1; ++l2)
 	            {
 	                double d0 = 3.6D;
-	                this.initChunkSeed((long)(l2 + i1 << 2), (long)(k2 + j1 << 2));
+	                this.initChunkSeed((long) l2 + i1 << 2, (long) k2 + j1 << 2);
 	                double d1 = ((double)this.nextInt(1024) / 1024.0D - 0.5D) * 3.6D;
 	                double d2 = ((double)this.nextInt(1024) / 1024.0D - 0.5D) * 3.6D;
-	                this.initChunkSeed((long)(l2 + i1 + 1 << 2), (long)(k2 + j1 << 2));
+	                this.initChunkSeed((long) l2 + i1 + 1 << 2, (long) k2 + j1 << 2);
 	                double d3 = ((double)this.nextInt(1024) / 1024.0D - 0.5D) * 3.6D + 4.0D;
 	                double d4 = ((double)this.nextInt(1024) / 1024.0D - 0.5D) * 3.6D;
-	                this.initChunkSeed((long)(l2 + i1 << 2), (long)(k2 + j1 + 1 << 2));
+	                this.initChunkSeed((long) l2 + i1 << 2, (long) k2 + j1 + 1 << 2);
 	                double d5 = ((double)this.nextInt(1024) / 1024.0D - 0.5D) * 3.6D;
 	                double d6 = ((double)this.nextInt(1024) / 1024.0D - 0.5D) * 3.6D + 4.0D;
-	                this.initChunkSeed((long)(l2 + i1 + 1 << 2), (long)(k2 + j1 + 1 << 2));
+	                this.initChunkSeed((long) l2 + i1 + 1 << 2, (long) k2 + j1 + 1 << 2);
 	                double d7 = ((double)this.nextInt(1024) / 1024.0D - 0.5D) * 3.6D + 4.0D;
 	                double d8 = ((double)this.nextInt(1024) / 1024.0D - 0.5D) * 3.6D + 4.0D;
-	                int k3 = aint[l2 + 1 + (k2 + 0) * k1];
+	                int k3 = aint[l2 + 1 + (k2) * k1];
 	                int l3 = aint[l2 + 1 + (k2 + 1) * k1];
 
 	                for (int i4 = 0; i4 < 4; ++i4)

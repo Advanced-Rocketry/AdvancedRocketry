@@ -14,7 +14,6 @@ import zmaster587.advancedRocketry.tile.multiblock.machine.*;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
-import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
@@ -23,13 +22,13 @@ import java.util.Map.Entry;
 
 public class RecipeHandler {
 	
-	private List<Class<? extends TileMultiblockMachine>> machineList = new ArrayList<Class<? extends TileMultiblockMachine>>();
+	private List<Class<? extends TileMultiblockMachine>> machineList = new ArrayList<>();
 	
 	public void registerMachine(Class<? extends TileMultiblockMachine> clazz) {
 		if(!machineList.contains(clazz))
 		{
 			machineList.add(clazz);
-			RecipesMachine.getInstance().recipeList.put(clazz, new LinkedList<IRecipe>());
+			RecipesMachine.getInstance().recipeList.put(clazz, new LinkedList<>());
 		}
 		
 	}
@@ -60,9 +59,7 @@ public class RecipeHandler {
 		for(Class<? extends TileMultiblockMachine>  clazz : machineList)
 			try {
 				clazz.newInstance().registerRecipes();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
+			} catch (InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
 	}
@@ -226,7 +223,7 @@ public class RecipeHandler {
                         {
 
                             // GT registers rods as sticks
-                            ItemStack stackToAdd = null;
+                            ItemStack stackToAdd;
                             if (OreDictionary.doesOreNameExist("rod" + str)
                                     && OreDictionary.getOres("rod" + str).size() > 0)
                             {

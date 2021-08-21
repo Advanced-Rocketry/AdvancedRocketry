@@ -1,7 +1,15 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:cube_all",
+        "textures": {
+            "all": "advancedrocketry:blocks/atmospheredetector"
+        }
+    },
     "variants": {
-        "powered=false": { "model": "advancedrocketry:oxygenDetection" },
-        "powered=true": { "model": "advancedrocketry:oxygenDetection_on" },
-        "inventory" : { "model": "advancedrocketry:oxygendetection" }
+        "powered=false": [{}],
+        "powered=true": [{"textures": {"all": "advancedrocketry:blocks/atmospheredetector_active"}}],
+        "inventory" : [{}]
     }
 }

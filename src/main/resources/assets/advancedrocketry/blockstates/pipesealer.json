@@ -1,6 +1,14 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:cube_all",
+        "textures": {
+            "all": "advancedrocketry:blocks/seal"
+        }
+    },
     "variants": {
-        "normal": { "model": "advancedrocketry:blockPipeSealer" },
-        "inventory" : { "model": "advancedrocketry:blockpipesealer" }
+        "normal": [{}],
+        "inventory": [{}]
     }
 }

@@ -1,8 +1,3 @@
-/**
- * @author zmaster587
- * 
- */
-
 package zmaster587.advancedRocketry.inventory;
 
 import net.minecraft.client.gui.GuiButton;
@@ -19,14 +14,18 @@ import zmaster587.libVulpes.network.PacketMachine;
 import java.io.IOException;
 import java.util.LinkedList;
 
+/**
+ * @author zmaster587
+ *
+ */
 public class GuiOrbitalLaserDrill extends GuiContainer {
 
 	private ResourceLocation backdrop = new ResourceLocation("advancedrocketry", "textures/gui/LaserTile.png");
 	private TileOrbitalLaserDrill laserTile;
 	private int prevX, prevZ;
 
-	GuiTextField xbox,ybox;
-	GuiImageButton modeUp, modeDown;
+	private GuiTextField xbox,ybox;
+	private GuiImageButton modeUp, modeDown;
 
 	public GuiOrbitalLaserDrill(InventoryPlayer inventoryPlayer, TileOrbitalLaserDrill tile) {
 		super(new ContainerOrbitalLaserDrill(inventoryPlayer, tile));
@@ -56,7 +55,7 @@ public class GuiOrbitalLaserDrill extends GuiContainer {
 		ybox.setEnabled(true);
 
 		modeDown = new GuiImageButton(0, x + 103, y + 20, 5, 8, zmaster587.libVulpes.inventory.TextureResources.buttonLeft);
-		modeUp = new GuiImageButton(1, x + 157, y + 20, 5, 8,  zmaster587.libVulpes.inventory.TextureResources.buttonRight);
+		modeUp = new GuiImageButton(1, x + 157, y + 20, 5, 8, zmaster587.libVulpes.inventory.TextureResources.buttonRight);
 		this.buttonList.add(modeUp);
 		this.buttonList.add(modeDown);
 		this.buttonList.add(new GuiButton(2, x + 103, y + 62, 34,20, "Reset"));
@@ -139,7 +138,7 @@ public class GuiOrbitalLaserDrill extends GuiContainer {
 		int x = (width - xSize) / 2, y = (height - ySize) / 2;
 		
 		if(a > x + 11 && a < x + 27 && b < y + 85 && b > y + 43) {
-			LinkedList<String> text = new LinkedList<String>();
+			LinkedList<String> text = new LinkedList<>();
 			text.add(laserTile.getBatteries().getUniversalEnergyStored()  + " / " + laserTile.getBatteries().getMaxEnergyStored() + " RF");
 			this.drawHoveringText(text, a, b, this.fontRenderer);
 		}
@@ -183,7 +182,7 @@ public class GuiOrbitalLaserDrill extends GuiContainer {
 		}
 
 		//Display status
-		if(laserTile.isFinished() || laserTile.getStackInSlot(0) == null)
+		if(laserTile.isFinished() || laserTile.getStackInSlot(0).isEmpty())
 			this.drawTexturedModalRect(x + 145, y + 64, 32, 171, 16, 16);
 		else if(laserTile.isRunning() || laserTile.isJammed())
 			this.drawTexturedModalRect(x + 145, y + 64, 16, 171, 16, 16);

@@ -6,7 +6,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.biome.Biome.SpawnListEntry;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
@@ -19,15 +18,15 @@ import java.util.logging.Logger;
 
 public class PacketDimInfo extends BasePacket {
 
-	DimensionProperties dimProperties;
-	NBTTagCompound dimNBT;
-	int dimNumber;
-	boolean deleteDim;
-	List<ItemStack> artifacts;
-	String customIcon;
+	private DimensionProperties dimProperties;
+	private NBTTagCompound dimNBT;
+	private int dimNumber;
+	private boolean deleteDim;
+	private List<ItemStack> artifacts;
+	private String customIcon;
 
 	public PacketDimInfo() {
-		artifacts = new LinkedList<ItemStack>();
+		artifacts = new LinkedList<>();
 		customIcon = "";
 	}
 
@@ -135,7 +134,7 @@ public class PacketDimInfo extends BasePacket {
 				dimProperties.getRequiredArtifacts().clear();
 				dimProperties.getRequiredArtifacts().addAll(artifacts);
 				
-				List<SpawnListEntryNBT> list = new LinkedList<SpawnListEntryNBT>(DimensionManager.getInstance().getDimensionProperties(dimNumber).getSpawnListEntries());
+				List<SpawnListEntryNBT> list = new LinkedList<>(DimensionManager.getInstance().getDimensionProperties(dimNumber).getSpawnListEntries());
 				dimProperties.getSpawnListEntries().clear();
 				dimProperties.getSpawnListEntries().addAll(list);
 				

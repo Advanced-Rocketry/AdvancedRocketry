@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
@@ -35,9 +36,9 @@ public class BuildRocketTest extends BaseTest {
 	 * Check for same position
 	 */
 
-	BlockPos rocketBuilderPos;
-	int originalWorldId;
-	BlockPos originalPos;
+	private BlockPos rocketBuilderPos;
+	private int originalWorldId;
+	private BlockPos originalPos;
 	
 	BuildRocketTest()
 	{
@@ -208,14 +209,12 @@ public class BuildRocketTest extends BaseTest {
 	
 	public void FuelRocket(EntityRocket rocket)
 	{
-		rocket.setFuelAmountMonoproellant(rocket.getFuelCapacityMonopropellant());
+		rocket.setFuelAmount(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, rocket.getFuelCapacity(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT));
 	}
 	
 	public EntityRocket findRocketOnPad(World world)
-	{	
-		EntityRocket rocket = finishBuildingRocket(world);
-		
-		return rocket;
+	{
+		return finishBuildingRocket(world);
 	}
 	
 	public EntityRocket finishBuildingRocket(World world)

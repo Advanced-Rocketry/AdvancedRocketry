@@ -12,19 +12,16 @@ import zmaster587.advancedRocketry.inventory.modules.ModuleAutoData;
 import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
-//TODO: allow dataCable connections
 public class TileDataBus extends TileInventoryHatch implements IDataInventory, INetworkMachine {
 
-	int maxData;
 	DataStorage data;
 
 	public TileDataBus() {
@@ -48,15 +45,11 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 
 		ItemStack itemStack = inventory.getStackInSlot(0);
 
-		if(itemStack != null && itemStack.getItem() instanceof ItemData) {
+		if(itemStack != ItemStack.EMPTY && itemStack.getItem() instanceof ItemData) {
 			ItemData itemData = (ItemData)itemStack.getItem();
 			itemData.removeData(itemStack, this.data.addData(itemData.getData(itemStack), itemData.getDataType(itemStack), true), DataStorage.DataType.UNDEFINED);
 
 			inventory.setInventorySlotContents(1, decrStackSize(0, 1));
-		}
-
-		if(world.isRemote) {
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)-2));
 		}
 	}
 
@@ -69,15 +62,11 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	public void storeData(int id) {
 		ItemStack itemStack = inventory.getStackInSlot(0);
 
-		if(itemStack != null && itemStack.getItem() instanceof ItemData && inventory.getStackInSlot(1) == ItemStack.EMPTY) {
+		if(!itemStack.isEmpty() && itemStack.getItem() instanceof ItemData && inventory.getStackInSlot(1) == ItemStack.EMPTY) {
 			ItemData itemData = (ItemData)itemStack.getItem();
 			this.data.removeData(itemData.addData(itemStack, this.data.getData(), this.data.getDataType()), true);
 
 			inventory.setInventorySlotContents(1, decrStackSize(0, 1));
-		}
-
-		if(world.isRemote) {
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)-1));
 		}
 	}
 
@@ -117,7 +106,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
+		LinkedList<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModuleAutoData(40, 20, 0, 1, this, this, data));
 		return modules;
 	}
@@ -135,11 +124,11 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 		ItemStack itemStack = inventory.getStackInSlot(0);
 
-		if(itemStack != ItemStack.EMPTY && itemStack.getItem() instanceof ItemData) {
+		if(itemStack != ItemStack.EMPTY && itemStack.getItem() instanceof ItemData  && inventory.getStackInSlot(1) == ItemStack.EMPTY) {
 			ItemData itemData = (ItemData)itemStack.getItem();
 			if(itemData.getData(itemStack) > 0 && data.getData() != data.getMaxData()) {
 				loadData(0);
@@ -147,18 +136,21 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 				storeData(0);
 			}
 		}
+		inventory.markDirty();
+		markDirty();
+		this.handleUpdateTag(getUpdateTag());
 
 		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
 			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
+	public boolean canExtractItem(int index, @Nonnull ItemStack stack, EnumFacing direction) {
 		return index == 1;
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
+	public boolean canInsertItem(int index, @Nonnull ItemStack itemStackIn, EnumFacing direction) {
 		return index == 0 && isItemValidForSlot(index, itemStackIn);
 	}
 
@@ -176,26 +168,13 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 	
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
-
-	}
+	public void writeDataToNetwork(ByteBuf out, byte id) { }
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
-
-	}
+	public void readDataFromNetwork(ByteBuf in, byte packetId, NBTTagCompound nbt) { }
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
-
-		if(id == -1) {
-			storeData(0);
-		}
-		else if(id == -2)
-			loadData(0);
-	}
+	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt) { }
 
 	@Override
 	public int extractData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {

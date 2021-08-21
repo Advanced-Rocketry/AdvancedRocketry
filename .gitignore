@@ -23,3 +23,7 @@ eclipse
 run
 refresh.bat
 AdvancedRocketry.txt
+changelog.html
+lasthash.txt
+libs
+*.bak

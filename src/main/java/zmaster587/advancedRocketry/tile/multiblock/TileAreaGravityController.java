@@ -56,7 +56,7 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 		//numGravPylons = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
 		textRadius = new ModuleText(6, 82, LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.radius") + "5", 0x202020);
 		targetGrav = new ModuleText(6, 110, LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.targetgrav"), 0x202020);
-		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, new String[] {LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.none"), LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.activeset"), LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.activeadd")});
+		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.none"), LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.activeset"), LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.activeadd"));
 
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, 1, "", this);
 		state = RedstoneState.OFF;
@@ -76,7 +76,7 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 
 	@Override
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();//super.getModules(id, player);
+		List<ModuleBase> modules = new LinkedList<>();//super.getModules(id, player);
 		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(sideSelectorModule);
@@ -84,8 +84,8 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 		modules.add(redstoneControl);
 
 
-		modules.add(new ModuleSlider(6, 120, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
-		modules.add(new ModuleSlider(6, 90, 1, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
+		modules.add(new ModuleSlider(6, 120, 0, TextureResources.doubleWarningSideBarIndicator, this));
+		modules.add(new ModuleSlider(6, 90, 1, TextureResources.doubleWarningSideBarIndicator, this));
 
 		modules.add(new ModuleText(42, 20, LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.targetdir.1") + "\n" + LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.targetdir.2"), 0x202020));
 		modules.add(targetGrav);
@@ -114,6 +114,8 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 	public double getGravityMultiplier() {
 		return currentProgress/2f;
 	}
+
+	public void setGravityMultiplier(double multiplier) {gravity = (int)(multiplier * 100);}
 
 	private void updateText() {
 		if(world.isRemote) {
@@ -144,7 +146,7 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 			}
 			else {
 				SoundEvent str;
-				if(world.isRemote && (str = getSound()) != null) {
+				if((str = getSound()) != null) {
 					playMachineSound(str);
 				}
 			}
@@ -279,7 +281,7 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 			nbt.setShort("radius", in.readShort());
 		}
 		else if(packetId == 4) {
-			byte bytes[] = new byte[6];
+			byte[] bytes = new byte[6];
 			for(int i = 0; i < 6; i++)
 				bytes[i] = in.readByte();
 			nbt.setByteArray("bytes", bytes);
@@ -299,7 +301,7 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 			setProgress(1, nbt.getShort("radius"));
 		}
 		else if(id == 4) {
-			byte bytes[] = nbt.getByteArray("bytes");
+			byte[] bytes = nbt.getByteArray("bytes");
 			for(int i = 0; i < 6; i++)
 				sideSelectorModule.setStateForSide(i, bytes[i]);
 		}

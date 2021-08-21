@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
@@ -40,7 +39,6 @@ import zmaster587.advancedRocketry.block.BlockCrystal;
 import zmaster587.advancedRocketry.block.CrystalColorizer;
 import zmaster587.advancedRocketry.client.model.ModelRocket;
 import zmaster587.advancedRocketry.client.render.*;
-import zmaster587.advancedRocketry.client.render.RenderLaser;
 import zmaster587.advancedRocketry.client.render.entity.*;
 import zmaster587.advancedRocketry.client.render.multiblocks.*;
 import zmaster587.advancedRocketry.common.CommonProxy;
@@ -63,6 +61,10 @@ import zmaster587.advancedRocketry.tile.multiblock.machine.*;
 import zmaster587.libVulpes.entity.fx.FxErrorBlock;
 import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
 import zmaster587.libVulpes.tile.TileSchematic;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Objects;
 
 public class ClientProxy extends CommonProxy {
 
@@ -123,12 +125,12 @@ public class ClientProxy extends CommonProxy {
 
 		//Colorizers
 		CrystalColorizer colorizer = new CrystalColorizer();
-		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)colorizer, new Block[] {AdvancedRocketryBlocks.blockCrystal});
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)colorizer,  Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystal));
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(colorizer, AdvancedRocketryBlocks.blockCrystal);
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(colorizer,  Item.getItemFromBlock(AdvancedRocketryBlocks.blockCrystal));
 
 		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor()
         {
-            public int getColorFromItemstack(ItemStack stack, int tintIndex)
+            public int getColorFromItemstack(@Nonnull ItemStack stack, int tintIndex)
             {
                 return tintIndex > 0 ? -1 : ((ItemArmor)stack.getItem()).getColor(stack);
             }
@@ -154,7 +156,6 @@ public class ClientProxy extends CommonProxy {
 		for(int i = 0; i < BlockCrystal.numMetas; i++)
 			ModelLoader.setCustomModelResourceLocation(blockItem, i, new ModelResourceLocation("advancedrocketry:crystal", "inventory"));
 
-		//TODO fluids
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockOxygenFluid);
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockNitrogenFluid);
 		registerFluidModel((IFluidBlock) AdvancedRocketryBlocks.blockHydrogenFluid);
@@ -269,7 +270,7 @@ public class ClientProxy extends CommonProxy {
 		}
 
 		@Override
-		protected ModelResourceLocation getModelResourceLocation(IBlockState iBlockState) {
+		protected ModelResourceLocation getModelResourceLocation(@Nullable IBlockState iBlockState) {
 			return location;
 		}
 	}
@@ -282,18 +283,17 @@ public class ClientProxy extends CommonProxy {
 		}
 
 		@Override
-		public ModelResourceLocation getModelLocation(ItemStack stack) {
+		public ModelResourceLocation getModelLocation(@Nonnull ItemStack stack) {
 			return location;
 		}
 }
 
 	@SubscribeEvent
 	public void modelBakeEvent(ModelBakeEvent event) {
-		Object object =  event.getModelRegistry().getObject(ModelRocket.resource);
-		if (object instanceof IBakedModel) {
-			IBakedModel existingModel = (IBakedModel)object;
+		IBakedModel bakedModel =  event.getModelRegistry().getObject(ModelRocket.resource);
+		if (bakedModel != null) {
 			ModelRocket customModel = new ModelRocket();
-			event.getModelRegistry().putObject(ModelRocket.resource, existingModel);
+			event.getModelRegistry().putObject(ModelRocket.resource, bakedModel);
 		}
 	}
 
@@ -332,41 +332,51 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void spawnParticle(String particle, World world, double x, double y, double z, double motionX, double motionY, double motionZ) {
-		//WTF how is == working?  Should be .equals
-		if(particle == "rocketFlame") {
-			RocketFx fx = new RocketFx(world, x, y, z, motionX, motionY, motionZ);
-			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+		switch (particle) {
+			case "rocketFlame": {
+				RocketFx fx = new RocketFx(world, x, y, z, motionX, motionY, motionZ);
+				Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+				break;
+			}
+			case "smallRocketFlame": {
+				RocketFx fx = new RocketFx(world, x, y, z, motionX, motionY, motionZ, 0.25f);
+				Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+				break;
+			}
+			case "rocketSmoke": {
+				TrailFx fx = new TrailFx(world, x, y, z, motionX, motionY, motionZ);
+				Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+				break;
+			}
+			case "rocketSmokeInverse": {
+				InverseTrailFx fx = new InverseTrailFx(world, x, y, z, motionX, motionY, motionZ);
+				Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+				break;
+			}
+			case "arc": {
+				FxElectricArc fx = new FxElectricArc(world, x, y, z, motionX);
+				Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+				break;
+			}
+			case "smallLazer": {
+				FxSkyLaser fx = new FxSkyLaser(world, x, y, z);
+				Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+				break;
+			}
+			case "errorBox": {
+				FxErrorBlock fx = new FxErrorBlock(world, x, y, z);
+				Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+				break;
+			}
+			case "gravityEffect": {
+				FxGravityEffect fx = new FxGravityEffect(world, x, y, z, motionX, motionY, motionZ);
+				Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+				break;
+			}
+			default:
+				world.spawnParticle(Objects.requireNonNull(EnumParticleTypes.getByName(particle)), x, y, z, motionX, motionY, motionZ);
+				break;
 		}
-		else if(particle == "smallRocketFlame") {
-			RocketFx fx = new RocketFx(world, x, y, z, motionX, motionY, motionZ, 0.25f);
-			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
-		}
-		else if(particle == "rocketSmoke") {
-			TrailFx fx = new TrailFx(world, x, y, z, motionX, motionY, motionZ);
-			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
-		}
-		else if(particle == "rocketSmokeInverse") {
-			InverseTrailFx fx = new InverseTrailFx(world, x, y, z, motionX, motionY, motionZ);
-			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
-		}
-		else if(particle == "arc") {
-			FxElectricArc fx = new FxElectricArc(world, x, y, z, motionX);
-			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
-		}
-		else if(particle == "smallLazer") {
-			FxSkyLaser fx = new FxSkyLaser(world, x, y, z);
-			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
-		}
-		else if(particle == "errorBox") {
-			FxErrorBlock fx = new FxErrorBlock(world, x, y, z);
-			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
-		}
-		else if(particle.equals("gravityEffect")) {
-			FxGravityEffect fx = new FxGravityEffect(world, x, y, z, motionX, motionY, motionZ);
-			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
-		}
-		else
-			world.spawnParticle(EnumParticleTypes.getByName(particle), x, y, z, motionX, motionY, motionZ);
 	}
 
 	@Override
@@ -412,10 +422,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void loadUILayout(Configuration config) {
 		final String CLIENT = "Client";
-		
-		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().lockUI = config.get(CLIENT, "lockUI", true, "If UI is not locked, the middle mouse can be used to drag certain AR UIs around the screen, positions are saved on hitting quit in the menu").getBoolean();
-		
-		config.addCustomCategoryComment(CLIENT, "UI locations can by set by clicking and dragging the middle mouse button ingame");
+
 		RocketEventHandler.suitPanel.setRawX(config.get(CLIENT, "suitPanelX", 8).getInt());
 		RocketEventHandler.suitPanel.setRawY(config.get(CLIENT, "suitPanelY", 8).getInt());
 		RocketEventHandler.suitPanel.setSizeModeX(config.get(CLIENT, "suitPanelModeX", -1).getInt());
@@ -435,31 +442,6 @@ public class ClientProxy extends CommonProxy {
 		RocketEventHandler.atmBar.setRawY(config.get(CLIENT, "atmBarY", 27).getInt());
 		RocketEventHandler.atmBar.setSizeModeX(config.get(CLIENT, "atmBarModeX", -1).getInt());
 		RocketEventHandler.atmBar.setSizeModeY(config.get(CLIENT, "atmBarModeY", 1).getInt());
-	}
-	
-	@Override
-	public void saveUILayout(Configuration configuration) {
-		final String CLIENT = "Client";
-		configuration.get(CLIENT, "suitPanelX", 1).set(RocketEventHandler.suitPanel.getRawX());
-		configuration.get(CLIENT, "suitPanelY", 1).set(RocketEventHandler.suitPanel.getRawY());
-		configuration.get(CLIENT, "suitPanelModeX", 1).set(RocketEventHandler.suitPanel.getSizeModeX());
-		configuration.get(CLIENT, "suitPanelModeY", 1).set(RocketEventHandler.suitPanel.getSizeModeY());
-		
-		configuration.get(CLIENT, "oxygenBarX", 1).set(RocketEventHandler.oxygenBar.getRawX());
-		configuration.get(CLIENT, "oxygenBarY", 1).set(RocketEventHandler.oxygenBar.getRawY());
-		configuration.get(CLIENT, "oxygenBarModeX", 1).set(RocketEventHandler.oxygenBar.getSizeModeX());
-		configuration.get(CLIENT, "oxygenBarModeY", 1).set(RocketEventHandler.oxygenBar.getSizeModeY());
-		
-		configuration.get(CLIENT, "hydrogenBarX", 1).set(RocketEventHandler.hydrogenBar.getRawX());
-		configuration.get(CLIENT, "hydrogenBarY", 1).set(RocketEventHandler.hydrogenBar.getRawY());
-		configuration.get(CLIENT, "hydrogenBarModeX", 1).set(RocketEventHandler.hydrogenBar.getSizeModeX());
-		configuration.get(CLIENT, "hydrogenBarModeY", 1).set(RocketEventHandler.hydrogenBar.getSizeModeY());
-		
-		configuration.get(CLIENT, "atmBarX", 1).set(RocketEventHandler.atmBar.getRawX());
-		configuration.get(CLIENT, "atmBarY", 1).set(RocketEventHandler.atmBar.getRawY());
-		configuration.get(CLIENT, "atmBarModeX", 1).set(RocketEventHandler.atmBar.getSizeModeX());
-		configuration.get(CLIENT, "atmBarModeY", 1).set(RocketEventHandler.atmBar.getSizeModeY());
-		configuration.save();
 	}
 	
 	@Override

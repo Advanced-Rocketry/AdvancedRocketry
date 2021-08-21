@@ -7,9 +7,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
@@ -18,6 +18,7 @@ import zmaster587.advancedRocketry.api.IMission;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.client.util.IndicatorBarImage;
@@ -27,14 +28,16 @@ import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.IComparatorOverride;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileRocketMonitoringStation extends TileEntity  implements IModularInventory, IAdjBlockUpdate, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory, IProgressBar  {
+public class TileRocketMonitoringStation extends TileEntity  implements IModularInventory, ITickable, IAdjBlockUpdate, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory, IProgressBar, IComparatorOverride {
 
 	EntityRocketBase linkedRocket;
 	IMission mission;
@@ -67,7 +70,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		}
 	}
 	
-	public boolean getEquivilentPower() {
+	public boolean getEquivalentPower() {
 		if(state == RedstoneState.OFF)
 			return false;
 
@@ -80,7 +83,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 
 	@Override
 	public void onAdjacentBlockUpdated() {
-		if(!world.isRemote && getEquivilentPower() && linkedRocket != null) {
+		if(!world.isRemote && getEquivalentPower() && linkedRocket != null) {
 			linkedRocket.prepareLaunch();
 		}
 	}
@@ -91,10 +94,28 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	}
 
 	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
+	public void update() {
+		if (!world.isRemote) {
+			if (linkedRocket instanceof EntityRocket) {
+				if ((int)(15 * ((EntityRocket) linkedRocket).getRelativeHeightFraction()) != (int)(15 * ((EntityRocket) linkedRocket).getPreviousRelativeHeightFraction())) {
+					markDirty();
+				}
+			}
+		}
+	}
 
+
+	@Override
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
 		ItemLinker.setMasterCoords(item, getPos());
+		if(linkedRocket != null) {
+			linkedRocket.unlinkInfrastructure(this);
+			unlinkRocket();
+		}
+		if(mission != null) {
+			mission.unlinkInfrastructure(this);
+			unlinkMission();
+		}
 
 		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("%s %s", new TextComponentTranslation("msg.monitoringStation.link"), ": " + getPos().getX() + " " + getPos().getY() + " " + getPos().getZ()));
@@ -102,8 +123,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	}
 
 	@Override
-	public boolean onLinkComplete(ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
 		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("msg.linker.error.firstMachine"));
 		return false;
@@ -155,7 +175,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		nbt.setByte("redstoneState", (byte) state.ordinal());
 		if(mission != null) {
 			nbt.setLong("missionID", mission.getMissionId());
-			nbt.setInteger("missionDimId", mission.getOriginatingDimention());
+			nbt.setInteger("missionDimId", mission.getOriginatingDimension());
 		}
 		return nbt;
 	}
@@ -210,7 +230,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 
-		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
+		LinkedList<ModuleBase> modules = new LinkedList<>();
 
 		modules.add(new ModuleButton(20, 40, 0, "Launch!", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
 		modules.add(new ModuleProgress(98, 4, 0, new IndicatorBarImage(2, 7, 12, 81, 17, 0, 6, 6, 1, 0, EnumFacing.UP, TextureResources.rocketHud), this));
@@ -285,7 +305,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		if(world.isRemote && mission != null)
 			setMissionText();
 		
-		return getProgress(id)/(float)getTotalProgress(id);
+		return Math.min(getProgress(id)/(float)getTotalProgress(id), 1.0f);
 	}
 
 	@Override
@@ -318,11 +338,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		else if(id == 1)
 			return (int)(linkedRocket.motionY*100);
 		else if (id == 2)
-			if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid()))) {
-				return (linkedRocket.getFuelAmountMonopropellant());
-			} else {
-				return (linkedRocket.getFuelAmountBipropellant() + linkedRocket.getFuelAmountOxidizer());
-			}
+			return (linkedRocket.getRocketFuelType() == FuelRegistry.FuelType.LIQUID_BIPROPELLANT) ? linkedRocket.getFuelAmount(linkedRocket.getRocketFuelType()) + linkedRocket.getFuelAmount(FuelRegistry.FuelType.LIQUID_OXIDIZER) : linkedRocket.getFuelAmount(linkedRocket.getRocketFuelType());
 
 		return 0;
 	}
@@ -336,15 +352,10 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		else if(id == 2)
 			if(world.isRemote)
 				return maxFuelLevel;
-			else
-				if(linkedRocket == null)
-					return 0;
-		    else if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, FluidRegistry.getFluid(linkedRocket.stats.getFuelFluid()))) {
-			    return (linkedRocket.getFuelCapacityMonopropellant());
-		    } else {
-			    return (linkedRocket.getFuelCapacityBipropellant() + linkedRocket.getFuelCapacityOxidizer());
-		}
-
+			else if(linkedRocket == null)
+				return 0;
+		    else
+		    	return (linkedRocket.getRocketFuelType() == FuelRegistry.FuelType.LIQUID_BIPROPELLANT) ? linkedRocket.getFuelCapacity(linkedRocket.getRocketFuelType()) + linkedRocket.getFuelCapacity(FuelRegistry.FuelType.LIQUID_OXIDIZER): linkedRocket.getFuelCapacity(linkedRocket.getRocketFuelType());
 		return 1;
 	}
 
@@ -361,8 +372,8 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	}
 
 	@Override
-	public boolean linkMission(IMission misson) {
-		this.mission = misson;
+	public boolean linkMission(IMission mission) {
+		this.mission = mission;
 		PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), world.provider.getDimension(), getPos(), 16);
 		return true;
 	}
@@ -377,5 +388,13 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	@Override
 	public boolean canRenderConnection() {
 		return false;
+	}
+
+	@Override
+	public int getComparatorOverride() {
+		if (linkedRocket instanceof EntityRocket) {
+			return (int)(15 * ((EntityRocket) linkedRocket).getRelativeHeightFraction());
+		}
+		return 0;
 	}
 }

@@ -9,6 +9,7 @@ import zmaster587.advancedRocketry.util.DimensionBlockPosition;
 import zmaster587.advancedRocketry.util.NBTStorableListList;
 import zmaster587.libVulpes.LibVulpes;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemSpaceElevatorChip extends Item {
@@ -22,7 +23,7 @@ public class ItemSpaceElevatorChip extends Item {
 		return false;
 	}
 	
-	public List<DimensionBlockPosition> getBlockPositions(ItemStack stack) {
+	public List<DimensionBlockPosition> getBlockPositions(@Nonnull ItemStack stack) {
 		NBTStorableListList list = new NBTStorableListList();
 		
 		if(stack.hasTagCompound()) {
@@ -32,7 +33,7 @@ public class ItemSpaceElevatorChip extends Item {
 		return list.getList();
 	}
 	
-	public void setBlockPositions(ItemStack stack, List<DimensionBlockPosition> listToStore) {
+	public void setBlockPositions(@Nonnull ItemStack stack, List<DimensionBlockPosition> listToStore) {
 		NBTStorableListList list = new NBTStorableListList(listToStore);
 		
 		if(stack.hasTagCompound()) {
@@ -52,8 +53,7 @@ public class ItemSpaceElevatorChip extends Item {
 	}
 	
 	@Override
-	public void addInformation(ItemStack stack, World player,
-			List list, ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
 		
 		int numPos = getBlockPositions(stack).size();
 		

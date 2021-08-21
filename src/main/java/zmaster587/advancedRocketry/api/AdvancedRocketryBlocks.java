@@ -7,7 +7,7 @@ import net.minecraft.block.Block;
  *
  */
 public class AdvancedRocketryBlocks {
-	public static Block blockMissionComp;
+	public static Block blockNuclearEngine;
 	public static Block blockSpaceLaser;
 	public static Block blockPrecisionAssembler;
 	public static Block blockArcFurnace;
@@ -29,13 +29,12 @@ public class AdvancedRocketryBlocks {
 	public static Block blockOxidizerFuelTank;
 	public static Block blockFuelingStation;
 	public static Block blockMonitoringStation, blockSatelliteBuilder, blockSatelliteControlCenter;
-	public static Block blockChipStorage;
+	public static Block blockNuclearFuelTank;
 	public static Block blockMoonTurf, blockHotTurf;
-	public static Block blockMultiMineOre;
+	public static Block blockNuclearCore;
 	public static Block blockLightSource;
 	public static Block blockLightwoodWood, sblockLightwoodLeaves, blockLightwoodSapling;
 	public static Block blockGuidanceComputer;
-	public static Block blockLunarAnalyser;
 	public static Block blockPlanetSelector;
 	public static Block blockSawBlade;
 	public static Block blockConcrete;
@@ -50,7 +49,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockFuelFluid;
 	public static Block test;
 	public static Block blockOxygenVent;
-	public static Block blockOxygenScrubber;
+	public static Block blockCO2Scrubber;
 	public static Block blockOxygenCharger;
 	public static Block blockAirLock;
 	public static Block blockLandingPad;
@@ -84,7 +83,6 @@ public class AdvancedRocketryBlocks {
 	public static Block blockDockingPort;
 	public static Block blockAltitudeController;
 	public static Block blockRailgun;
-	public static Block blockAstroBed;
 	public static Block blockAdvEngine;
 	public static Block blockAdvBipropellantEngine;
 	public static Block blockPlanetHoloSelector;
@@ -108,4 +106,5 @@ public class AdvancedRocketryBlocks {
 	public static Block blockLandingFloat;
 	public static Block blockSolarArray;
 	public static Block blockSolarArrayPanel;
+	public static Block blockRocketFire;
 }

@@ -1,13 +1,24 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "advancedrocketry:orientablebottom",
+        "textures": {
+            "top": "advancedrocketry:blocks/solar",
+            "front": "advancedrocketry:blocks/panelside",
+            "side": "advancedrocketry:blocks/panelside",
+            "bottom": "libvulpes:blocks/machinegeneric"
+        }
+    },
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:solarPanel"},
-        "facing=south,state=false": { "model": "advancedrocketry:solarPanel"},
-        "facing=west,state=false":  { "model": "advancedrocketry:solarPanel"},
-        "facing=east,state=false":  { "model": "advancedrocketry:solarPanel"},
-        "facing=north,state=true": { "model": "advancedrocketry:solarPanel"},
-        "facing=south,state=true": { "model": "advancedrocketry:solarPanel"},
-        "facing=west,state=true":  { "model": "advancedrocketry:solarPanel"},
-        "facing=east,state=true":  { "model": "advancedrocketry:solarPanel"},
-        "inventory" : { "model": "advancedrocketry:solarpanel" }
+        "facing=north,state=false": [{}],
+        "facing=south,state=false": { "model": "advancedrocketry:orientablebottom", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:orientablebottom", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:orientablebottom", "y": 90 },
+        "facing=north,state=true": [{}],
+        "facing=south,state=true": { "model": "minecraft:orientable", "y": 180 },
+        "facing=west,state=true":  { "model": "minecraft:orientable", "y": 270 },
+        "facing=east,state=true":  { "model": "minecraft:orientable", "y": 90 },
+        "inventory" : [{}]
     }
 }

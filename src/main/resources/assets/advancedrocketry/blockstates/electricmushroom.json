@@ -1,5 +1,14 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:cross",
+        "textures": {
+            "cross": "advancedrocketry:blocks/mushroom_electric"
+        }
+    },
     "variants": {
-        "normal": { "model": "advancedrocketry:electricMushroom" }
+        "normal": [{}],
+        "inventory": [{}]
     }
 }

@@ -22,13 +22,14 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
 
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class TileAtmosphereDetector extends TileEntity implements ITickable, IModularInventory, IButtonInventory, INetworkMachine {
 
-	IAtmosphere atmosphereToDetect;
+	private IAtmosphere atmosphereToDetect;
 
 	public TileAtmosphereDetector() {
 		atmosphereToDetect = AtmosphereType.AIR;
@@ -42,12 +43,13 @@ public class TileAtmosphereDetector extends TileEntity implements ITickable, IMo
 			boolean detectedAtm = false;
 
 			//TODO: Galacticcraft support
-			if(AtmosphereHandler.getOxygenHandler(world.provider.getDimension()) == null) {
+			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(world.provider.getDimension());
+			if(atmhandler == null) {
 				detectedAtm = atmosphereToDetect == AtmosphereType.AIR;
 			}
 			else {
 				for(EnumFacing  direction : EnumFacing.values()) {
-					detectedAtm = (!world.getBlockState(pos.offset(direction)).isOpaqueCube() && atmosphereToDetect == AtmosphereHandler.getOxygenHandler(world.provider.getDimension()).getAtmosphereType(pos.offset(direction)));
+					detectedAtm = (!world.getBlockState(pos.offset(direction)).isOpaqueCube() && atmosphereToDetect == atmhandler.getAtmosphereType(pos.offset(direction)));
 					if(detectedAtm) break;
 				}
 			}
@@ -66,8 +68,8 @@ public class TileAtmosphereDetector extends TileEntity implements ITickable, IMo
 
 	@Override
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-		List<ModuleBase> btns = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
+		List<ModuleBase> btns = new LinkedList<>();
 
 		Iterator<IAtmosphere> atmIter = AtmosphereRegister.getInstance().getAtmosphereList().iterator();
 
@@ -78,7 +80,7 @@ public class TileAtmosphereDetector extends TileEntity implements ITickable, IMo
 			i++;
 		}
 
-		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<ModuleBase>(), zmaster587.libVulpes.inventory.TextureResources.starryBG, 165, 120, 0, 500);
+		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<>(), zmaster587.libVulpes.inventory.TextureResources.starryBG, 165, 120, 0, 500);
 		modules.add(panningContainer);
 		return modules;
 	}
@@ -89,7 +91,7 @@ public class TileAtmosphereDetector extends TileEntity implements ITickable, IMo
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(@Nullable EntityPlayer entity) {
 		return true;
 	}
 

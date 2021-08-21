@@ -70,7 +70,7 @@ public class RendererPhantomBlock extends TileEntitySpecialRenderer {
 				if(Minecraft.getMinecraft().objectMouseOver != null && movingObjPos.getBlockPos().getX() == tile.getPos().getX() && movingObjPos.getBlockPos().getY() == tile.getPos().getY() && movingObjPos.getBlockPos().getZ() == tile.getPos().getZ()) {
 
 					ItemStack stack = tile.getWorld().getBlockState(tile.getPos()).getBlock().getPickBlock(tile.getWorld().getBlockState(tile.getPos()), movingObjPos, Minecraft.getMinecraft().world, tile.getPos(), Minecraft.getMinecraft().player);
-					if(stack == null)
+					if(stack.isEmpty())
 						RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(movingObjPos.hitVec.x, movingObjPos.hitVec.y, movingObjPos.hitVec.z), "THIS IS AN ERROR, CONTACT THE DEV!!!", x,y,z, 10);
 					else
 						RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(movingObjPos.hitVec.x, movingObjPos.hitVec.y, movingObjPos.hitVec.z), stack.getDisplayName(), x+ 0.5f,y,z+ 0.5f, 10);

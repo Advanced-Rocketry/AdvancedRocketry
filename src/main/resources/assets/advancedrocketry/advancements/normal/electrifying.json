@@ -4,10 +4,10 @@
             "item": "advancedrocketry:electrolyser"
         },
         "title": {
-            "translate": "achievement.electrifying"
+            "translate": "advancement.electrifying"
         },
         "description": {
-            "translate": "achievement.electrifying.desc"
+            "translate": "advancement.electrifying.desc"
         }
     },
     "parent": "advancedrocketry:normal/holographic",

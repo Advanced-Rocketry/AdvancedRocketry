@@ -52,8 +52,8 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 	private static final byte PACKET_WRITE_SRC_INFO = 4;
 
 
-	protected static final DataParameter<Byte> motionDir =  EntityDataManager.<Byte>createKey(EntityElevatorCapsule.class, DataSerializers.BYTE);
-	protected static final DataParameter<Integer> standTimeCounter =  EntityDataManager.<Integer>createKey(EntityElevatorCapsule.class, DataSerializers.VARINT);
+	protected static final DataParameter<Byte> motionDir =  EntityDataManager.createKey(EntityElevatorCapsule.class, DataSerializers.BYTE);
+	protected static final DataParameter<Integer> standTimeCounter =  EntityDataManager.createKey(EntityElevatorCapsule.class, DataSerializers.VARINT);
 
 	public EntityElevatorCapsule(World worldIn) {
 		super(worldIn);
@@ -164,7 +164,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 
 	@Override
 	public Entity changeDimension(int newDimId) {
-		return changeDimension(newDimId, this.posX, (double)ARConfiguration.getCurrentConfig().orbit, this.posZ);
+		return changeDimension(newDimId, this.posX, ARConfiguration.getCurrentConfig().orbit, this.posZ);
 	}
 
 	public void copyDataFromOld(Entity entityIn)
@@ -183,6 +183,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 		{
 			float yaw = this.rotationYaw;
 			float pitch = this.rotationPitch;
+			DimensionBlockPosition destination = this.dstTilePos;
 
 			List<Entity> passengers = getPassengers();
 			int i = this.dimension;
@@ -198,6 +199,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 				return null;
 			
 			entity.setPositionAndRotation(posX, y, posZ, yaw, pitch);
+			((EntityElevatorCapsule)entity).dstTilePos = destination;
 			
 			int timeOffset = 1;
 			for(Entity e : passengers) {
@@ -410,7 +412,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 					srcTile = world.getTileEntity(srcTilePos.pos.getBlockPos());
 				
 				
-				if( srcTile != null && srcTile instanceof TileSpaceElevator && !((TileSpaceElevator)srcTile).getMachineEnabled())
+				if(srcTile instanceof TileSpaceElevator && !((TileSpaceElevator) srcTile).getMachineEnabled())
 					standTime = 0;
 				
 				setStandTime(standTime);
@@ -447,7 +449,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 					srcTile = world.getTileEntity(srcTilePos.pos.getBlockPos());
 				
 				
-				if( srcTile != null && srcTile instanceof TileSpaceElevator && !((TileSpaceElevator)srcTile).getMachineEnabled())
+				if(srcTile instanceof TileSpaceElevator && !((TileSpaceElevator) srcTile).getMachineEnabled())
 					AdvancedRocketry.proxy.displayMessage(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.turnedOff"),5);
 				else if(dstTilePos != null) 
 					AdvancedRocketry.proxy.displayMessage(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.ascentReady") + ": " + (int)((MAX_STANDTIME - getStandTime())/20) + "\nDST " + dstTilePos,5);

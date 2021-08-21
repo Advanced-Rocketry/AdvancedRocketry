@@ -1,8 +1,0 @@
-{
-    "parent": "block/orientable",
-    "textures": {
-        "top": "Advancedrocketry:blocks/BlastBrick",
-        "front": "advancedrocketry:blocks/BlastBrickFront_active",
-        "side": "advancedrocketry:blocks/BlastBrick"
-    }
-}

@@ -25,7 +25,7 @@ public class RendererWarpCore extends TileEntitySpecialRenderer {
 
 	public static WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/warpcore.png");
+	private ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/warpcore.png");
 
 	private final RenderItem dummyItem = Minecraft.getMinecraft().getRenderItem();
 
@@ -77,10 +77,10 @@ public class RendererWarpCore extends TileEntitySpecialRenderer {
 		
 		if(tile.getWorld().provider instanceof WorldProviderSpace) {
 			
-			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(tile.getPos());
-			if(obj instanceof SpaceStationObject && ((SpaceStationObject)obj).getFuelAmount() > 50) {
+			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(tile.getPos());
+			if(spaceObject instanceof SpaceStationObject && ((SpaceStationObject)spaceObject).getFuelAmount() > 50) {
 
-				double speedMult = 1.5;//((DimensionProperties)obj.getProperties()).getParentPlanet() == SpaceObjectManager.WARPDIMID ? 1.5d : 0.1d;
+				double speedMult = 1.5;//((DimensionProperties)spaceObject.getProperties()).getParentPlanet() == SpaceObjectManager.WARPDIMID ? 1.5d : 0.1d;
 				
 				double speedRotate = speedMult*0.25d;
 				

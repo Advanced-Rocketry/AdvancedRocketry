@@ -8,46 +8,41 @@
     ],
     "key":
     {
-        "s":
-        {
-            "item": "advancedrocketry:misc",
-            "data": 0
-        },
         "c":
         {
             "item": "advancedrocketry:ic",
             "data": 0
         },
-	"b":
+        "b":
         {
             "item": "libvulpes:structuremachine"
         },
-	"m":
+        "m":
         {
 	    "type": "forge:ore_dict",
             "ore": "blockMotor"
         },
-	"t":
+        "t":
         {
 	    "type": "forge:ore_dict",
             "ore": "plateTitanium"
         },
-	"d":
+        "d":
         {
 	    "item": "advancedrocketry:dataunit",
 	    "data": 0
         },
-	"a":
+        "a":
         {
 	    "item": "minecraft:anvil",
 	    "data": 0
         },
-	"s":
+        "s":
         {
-	    "item": "advancedrocketry:sawblade",
-	    "data": 0
+            "item": "advancedrocketry:sawblade",
+            "data": 0
         },
-	"h":
+        "h":
         {
 	    "item": "minecraft:hopper"
         }

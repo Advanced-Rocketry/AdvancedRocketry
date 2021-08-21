@@ -1,9 +1,9 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -38,6 +38,7 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TileSpaceElevator extends TileMultiPowerConsumer implements IModularInventory, ILinkableTile, ITickable {
@@ -45,21 +46,22 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 	Object[][][] structure =
 		{
 			{
-				{null,null,null,'P','c','P',null,null,null},
-				{"blockSteel",null,null,"slab","slab","slab",null,null,"blockSteel"},
-				{null,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,null},
-				{null,"slab",LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,"slab",null},
+				{Blocks.AIR,Blocks.AIR,Blocks.AIR,'P','c','P',Blocks.AIR,Blocks.AIR,Blocks.AIR},
+				{"blockSteel",Blocks.AIR,Blocks.AIR,"slab","slab","slab",Blocks.AIR,Blocks.AIR,"blockSteel"},
+				{Blocks.AIR,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,Blocks.AIR},
+				{Blocks.AIR,"slab",LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,"slab",Blocks.AIR},
 				{"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab"},
 				{"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.motors,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab"},
 				{"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab"},
-				{null,"slab",LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,"slab",null},
-				{null,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,null},
-				{"blockSteel",null,null,"slab","slab","slab",null,null,"blockSteel"}
+				{Blocks.AIR,"slab",LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,"slab",Blocks.AIR},
+				{Blocks.AIR,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,Blocks.AIR},
+				{"blockSteel",Blocks.AIR,Blocks.AIR,"slab","slab","slab",Blocks.AIR,Blocks.AIR,"blockSteel"}
 			}
 		};
 
 	EntityElevatorCapsule capsule;
 	boolean firstTick;
+	private boolean isTetherConnected;
 	DimensionBlockPosition dimBlockPos;
 
 	private ModuleText landingPadDisplayText;
@@ -77,14 +79,13 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 	}
 	
 	@Override
-	public void deconstructMultiBlock(World world, BlockPos destroyedPos,
-			boolean blockBroken, IBlockState state) {
+	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken, IBlockState state) {
 		super.deconstructMultiBlock(world, destroyedPos, blockBroken, state);
 		
-		Entity e = getCapsuleOnLine();
+		Entity entity = getCapsuleOnLine();
 		
-		if(e != null)
-			e.setDead();
+		if(entity != null)
+			entity.setDead();
 
 
 		World otherPlanet;
@@ -136,7 +137,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 				modules.add(new ModuleText(30, 23, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.anchored0"), 0x2d2d2d));
 				modules.add(new ModuleText(30, 35, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.anchored1"), 0x2d2d2d));
 			} else {
-				modules.add(new ModuleText(30, 23, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.unanchored"), 0x2d2d2d));
+				modules.add(new ModuleText(30, 32, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.unanchored"), 0x2d2d2d));
 			}
 
 		}
@@ -176,8 +177,6 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 		if( buttonId >= BUTTON_ID_OFFSET) {
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)buttonId));
 		}
-
-
 		super.onInventoryButtonPressed(buttonId);
 	}
 
@@ -210,22 +209,6 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 	}
 
 	@Override
-	public void update() {
-		super.update();
-	}
-
-	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
-		super.writeDataToNetwork(out, id);
-	}
-
-	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
-		super.readDataFromNetwork(in, packetId, nbt);
-	}
-
-	@Override
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
 
@@ -249,7 +232,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 
 		double capsulePosX = getLandingLocationX();
 		double capsulePosZ = getLandingLocationZ();
-		for (EntityElevatorCapsule e :world.getEntitiesWithinAABB(EntityElevatorCapsule.class, new AxisAlignedBB(capsulePosX - 3, getPos().getY() - 1, capsulePosZ - 3, capsulePosX + 3, EntityElevatorCapsule.MAX_HEIGHT, capsulePosZ + 3))) {
+		for (EntityElevatorCapsule e :world.getEntitiesWithinAABB(EntityElevatorCapsule.class, new AxisAlignedBB(capsulePosX - 3, 0, capsulePosZ - 3, capsulePosX + 3, EntityElevatorCapsule.MAX_HEIGHT, capsulePosZ + 3))) {
 			if(!e.isInMotion() && !e.isDead)
 				capsule = e;
 		}
@@ -270,7 +253,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 
 	public void summonCapsule() {
 		//Don't spawn a new capsule if one exists
-		if(getCapsuleOnLine() != null)
+		if(getCapsuleOnLine() != null || !isTetherConnected())
 			return;
 
 		capsule = new EntityElevatorCapsule(world);
@@ -301,8 +284,8 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 	}
 
 	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
+							   EntityPlayer player, World world) {
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, world.provider.getDimension());
 		if(dimBlockPos != null) {
@@ -315,7 +298,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 	}
 
 	@Override
-	public boolean onLinkComplete(ItemStack item, TileEntity entity,
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
 			EntityPlayer player, World myWorld) {
 
 		if(!myWorld.isRemote) {
@@ -363,8 +346,9 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 					if (capsule != null) {
 						capsule.setDst(dimBlockPos);
 					}
-					markDirty();
-					world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
+					this.markDirty();
+					this.world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
+					this.isTetherConnected = true;
 
 					return true;
 				}
@@ -386,13 +370,13 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation( 0, EnumFacing.UP);
 				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation( 0, EnumFacing.NORTH);
 			}
-			SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setIsAnchored( (dimensionBlockPosition == null) ? false : true);
+			SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setIsAnchored(dimensionBlockPosition != null);
 		}
 		dimBlockPos = dimensionBlockPosition;
 	}
 
 	public boolean isTetherConnected() {
-		return dimBlockPos != null;
+		return isTetherConnected;
 	}
 
 	@Override
@@ -405,14 +389,11 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 
 	@Override
 	public void writeNetworkData(NBTTagCompound nbt) {
-
-
-		if(dimBlockPos != null)
-		{
+		if(dimBlockPos != null) {
 			nbt.setInteger("dstDimId", dimBlockPos.dimid);
 			nbt.setIntArray("dstPos", new int[] { dimBlockPos.pos.x, dimBlockPos.pos.y, dimBlockPos.pos.z });
-
-		}
+			nbt.setBoolean("tether", isTetherConnected);
+		} else
 
 		super.writeNetworkData(nbt);
 	}
@@ -425,8 +406,6 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 	@Override
 	public void readNetworkData(NBTTagCompound nbt) {
 		super.readNetworkData(nbt);
-
-
 		if(nbt.hasKey("dstDimId")) {
 			int id = nbt.getInteger("dstDimId");
 			int[] pos = nbt.getIntArray("dstPos");
@@ -434,6 +413,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 		}
 		else
 			dimBlockPos = null;
+		isTetherConnected = nbt.getBoolean("tether");
 
 		landingPadDisplayText.setText(dimBlockPos != null ? dimBlockPos.toString() : LibVulpes.proxy.getLocalizedString("msg.label.noneSelected"));
 	}

@@ -13,13 +13,13 @@ public class MapGenSpaceVillage extends MapGenVillage {
     private int size;
     private int distance;
     private final int minTownSeparation;
-    public static List<Biome> BLACKLIST_VILLAGE_SPAWN_BIOMES = Arrays.<Biome>asList(Biomes.OCEAN, Biomes.DEEP_OCEAN);
+    public static List<Biome> BLACKLIST_VILLAGE_SPAWN_BIOMES = Arrays.asList(Biomes.OCEAN, Biomes.DEEP_OCEAN);
 
     public MapGenSpaceVillage()
     {
     	super();
         this.distance = 32;
-        this.minTownSeparation = 8;
+        minTownSeparation = 8;
     }
 	
     protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ)
@@ -47,12 +47,8 @@ public class MapGenSpaceVillage extends MapGenVillage {
 
         if (i == k && j == l)
         {
-            boolean flag = !this.world.getBiomeProvider().areBiomesViable(i * 16 + 8, j * 16 + 8, 0, BLACKLIST_VILLAGE_SPAWN_BIOMES);
 
-            if (flag)
-            {
-                return true;
-            }
+            return !this.world.getBiomeProvider().areBiomesViable(i * 16 + 8, j * 16 + 8, 0, BLACKLIST_VILLAGE_SPAWN_BIOMES);
         }
 
         return false;

@@ -15,7 +15,7 @@ public class PacketBiomeIDChange extends BasePacket {
 
 	Chunk chunk;
 	int worldId, xPos, zPos;
-	byte array[];
+	byte[] array;
 	HashedBlockPosition pos;
 	
 	public PacketBiomeIDChange() {

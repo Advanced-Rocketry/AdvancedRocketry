@@ -6,20 +6,20 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.util.AsteroidSmall;
+import zmaster587.advancedRocketry.util.Asteroid;
 import zmaster587.libVulpes.network.BasePacket;
 
 import java.io.IOException;
 
 public class PacketAsteroidInfo extends BasePacket {
 
-	AsteroidSmall asteroid;
+	Asteroid asteroid;
 
 	public PacketAsteroidInfo() {
-		asteroid = new AsteroidSmall();
+		asteroid = new Asteroid();
 	}
 
-	public PacketAsteroidInfo(AsteroidSmall asteroid) {
+	public PacketAsteroidInfo(Asteroid asteroid) {
 		this();
 		this.asteroid = asteroid;
 	}
@@ -39,11 +39,11 @@ public class PacketAsteroidInfo extends BasePacket {
 		packetBuffer.writeFloat(asteroid.probability);				//probability of the asteroid spawning
 		packetBuffer.writeFloat(asteroid.timeMultiplier);
 		
-		packetBuffer.writeInt(asteroid.stackProbabilites.size());
-		for(int i = 0; i < asteroid.stackProbabilites.size(); i++)
+		packetBuffer.writeInt(asteroid.stackProbabilities.size());
+		for(int i = 0; i < asteroid.stackProbabilities.size(); i++)
 		{
 			packetBuffer.writeItemStack(asteroid.itemStacks.get(i));
-			packetBuffer.writeFloat(asteroid.stackProbabilites.get(i));
+			packetBuffer.writeFloat(asteroid.stackProbabilities.get(i));
 		}
 	}
 
@@ -66,7 +66,7 @@ public class PacketAsteroidInfo extends BasePacket {
 		{
 			try {
 				asteroid.itemStacks.add(packetBuffer.readItemStack());
-				asteroid.stackProbabilites.add(packetBuffer.readFloat());
+				asteroid.stackProbabilities.add(packetBuffer.readFloat());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

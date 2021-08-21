@@ -18,64 +18,79 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.IComparatorOverride;
 import zmaster587.libVulpes.util.INetworkMachine;
+import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileStationAltitudeController extends TileEntity implements IModularInventory, ITickable, INetworkMachine, ISliderBar {
+public class TileStationAltitudeController extends TileEntity implements IModularInventory, ITickable, INetworkMachine, ISliderBar, IButtonInventory, IComparatorOverride {
 
 	int progress;
+	private RedstoneState state;
 
 	private ModuleText moduleGrav, numGravPylons, maxGravBuildSpeed, targetGrav;
+	private ModuleRedstoneOutputButton redstoneControl;
 
 	public TileStationAltitudeController() {
 		moduleGrav = new ModuleText(6, 15, "Altitude: ", 0xaa2020);
 		//numGravPylons = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
 		maxGravBuildSpeed = new ModuleText(6, 25, LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.maxaltrate"), 0xaa2020);
 		targetGrav = new ModuleText(6, 35, LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.tgtalt"), 0x202020);
+		redstoneControl = new ModuleRedstoneOutputButton(174, 4, -1, "", this);
 	}
 
 	@Override
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		modules.add(moduleGrav);
 		//modules.add(numThrusters);
 		modules.add(maxGravBuildSpeed);
 
 		modules.add(targetGrav);
-		modules.add(new ModuleSlider(6, 60, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
+		modules.add(new ModuleSlider(6, 60, 0, TextureResources.doubleWarningSideBarIndicator, this));
+		modules.add(redstoneControl);
 
 		updateText();
 		return modules;
 	}
 
 	@Override
+	public void onInventoryButtonPressed(int buttonId) {
+		if(buttonId != -1)
+			PacketHandler.sendToServer(new PacketMachine(this, (byte) (buttonId + 100)) );
+		else {
+			state = redstoneControl.getState();
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
+			markDirty();
+		}
+	}
+
+	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbt = writeToNBT(new NBTTagCompound());
-		
 
-		SPacketUpdateTileEntity packet = new SPacketUpdateTileEntity(pos, 0, nbt);
-		return packet;
+
+		return new SPacketUpdateTileEntity(pos, 0, nbt);
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		super.onDataPacket(net, pkt);
-
+		readFromNBT(pkt.getNbtCompound());
 	}
 	
 	private void updateText() {
 		if(world.isRemote) {
-			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(object != null) {
-				moduleGrav.setText(String.format("%s %.0fKm",LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.alt"), object.getOrbitalDistance()*200 + 100 ));
-				maxGravBuildSpeed.setText(String.format("%s%.1f", LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.maxaltrate"), 7200D*object.getMaxRotationalAcceleration()));
+			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+			if(spaceObject != null) {
+				moduleGrav.setText(String.format("%s %.0fKm",LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.alt"), spaceObject.getOrbitalDistance()*200 + 100 ));
+				maxGravBuildSpeed.setText(String.format("%s%.1f", LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.maxaltrate"), 7200D*spaceObject.getMaxRotationalAcceleration()));
+				targetGrav.setText(String.format("%s %d", LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.tgtalt"), ((SpaceStationObject) spaceObject).targetOrbitalDistance * 200 + 100));
 			}
 
 			//numThrusters.setText("Number Of Thrusters: 0");
-
-			targetGrav.setText(String.format("%s %d", LibVulpes.proxy.getLocalizedString("msg.stationaltctrl.tgtalt"), ((SpaceStationObject) object).targetOrbitalDistance * 200 + 100));
 		}
 	}
 
@@ -84,13 +99,18 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 		if(this.world.provider instanceof WorldProviderSpace) {
 
 			if(!world.isRemote) {
-				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
-				if(object != null) {
-					progress = ((SpaceStationObject) object).targetOrbitalDistance;
+				if(spaceObject != null) {
+					if (redstoneControl.getState() == RedstoneState.ON)
+					    ((SpaceStationObject) spaceObject).targetOrbitalDistance = Math.max((world.getStrongPower(pos) * 13) + 4, 190);
+					else if (redstoneControl.getState() == RedstoneState.INVERTED)
+						((SpaceStationObject) spaceObject).targetOrbitalDistance = Math.max(Math.abs(15 - world.getStrongPower(pos)) * 13 + 4, 190);
 
-					double targetGravity = ((SpaceStationObject) object).targetOrbitalDistance;
-					double angVel = object.getOrbitalDistance();
+					progress = ((SpaceStationObject) spaceObject).targetOrbitalDistance;
+
+					double targetGravity = ((SpaceStationObject) spaceObject).targetOrbitalDistance;
+					double angVel = spaceObject.getOrbitalDistance();
 					double acc = 0.1*(getTotalProgress(0) - angVel + 1)/(float)getTotalProgress(0);
 
 					double difference = targetGravity - angVel;
@@ -104,10 +124,11 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 							finalVel = angVel + Math.min(difference, acc);
 						}
 
-						object.setOrbitalDistance((float)finalVel);
+						spaceObject.setOrbitalDistance((float)finalVel);
 						if(!world.isRemote) {
-							//PacketHandler.sendToNearby(new PacketStationUpdate(object, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
-							PacketHandler.sendToAll(new PacketStationUpdate(object, PacketStationUpdate.Type.ALTITUDE_UPDATE));
+							//PacketHandler.sendToNearby(new PacketStationUpdate(spaceObject, PacketStationUpdate.Type.ROTANGLE_UPDATE), this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord, 1024);
+							PacketHandler.sendToAll(new PacketStationUpdate(spaceObject, PacketStationUpdate.Type.ALTITUDE_UPDATE));
+							markDirty();
 						}
 						else
 							updateText();
@@ -129,10 +150,16 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 	}
 
 	@Override
+	public NBTTagCompound getUpdateTag() {
+		return writeToNBT(new NBTTagCompound());
+	}
+
+	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id) {
 		if(id == 0) {
 			out.writeShort(progress);
-		}
+		} else if(id == 2)
+			out.writeByte(state.ordinal());
 	}
 
 	@Override
@@ -140,24 +167,31 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 			NBTTagCompound nbt) {
 		if(packetId == 0) {
 			setProgress(0, in.readShort());
+		} else if(packetId == 2) {
+			nbt.setByte("state", in.readByte());
 		}
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
-
+	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt) {
+		if(id == 2) {
+			state = RedstoneState.values()[nbt.getByte("state")];
+			redstoneControl.setRedstoneState(state);
+		}
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
+		nbt.setByte("redstoneState", (byte) state.ordinal());
 		return nbt;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		state = RedstoneState.values()[nbt.getByte("redstoneState")];
+		redstoneControl.setRedstoneState(state);
 	}
 
 
@@ -188,6 +222,19 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 	@Override
 	public void setTotalProgress(int id, int progress) {
 
+	}
+
+	@Override
+	public int getComparatorOverride() {
+		if(this.world.provider instanceof WorldProviderSpace) {
+			if (!world.isRemote) {
+				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+				if (spaceObject != null) {
+                    return (int)(spaceObject.getOrbitalDistance() + 5)/13;
+				}
+			}
+		}
+		return 0;
 	}
 
 	@Override

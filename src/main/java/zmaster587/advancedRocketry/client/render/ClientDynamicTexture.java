@@ -47,7 +47,7 @@ public class ClientDynamicTexture {
 	 */
 	public void setPixel(int x, int y, int color) {
 		
-		ByteBuffer buffer = BufferUtils.createByteBuffer(image.getHeight() * image.getWidth() * BYTES_PER_PIXEL);;
+		ByteBuffer buffer = BufferUtils.createByteBuffer(image.getHeight() * image.getWidth() * BYTES_PER_PIXEL);
 		
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTextureId());
 		GL11.glGetTexImage(GL11.GL_TEXTURE_2D,0 , GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
@@ -60,7 +60,7 @@ public class ClientDynamicTexture {
 	 * @return IntBuffer containing the pixels for the image
 	 */
 	public IntBuffer getByteBuffer() {
-		ByteBuffer buffer = BufferUtils.createByteBuffer(image.getHeight() * image.getWidth() * BYTES_PER_PIXEL);;
+		ByteBuffer buffer = BufferUtils.createByteBuffer(image.getHeight() * image.getWidth() * BYTES_PER_PIXEL);
 		
 		//GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTextureId());
 		//GL11.glGetTexImage(GL11.GL_TEXTURE_2D,0 , GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);

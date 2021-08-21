@@ -2,7 +2,6 @@ package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -17,6 +16,9 @@ import zmaster587.advancedRocketry.tile.atmosphere.TileAtmosphereDetector;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiHandler;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNullableByDefault;
+
 public class BlockRedstoneEmitter extends Block {
 	
 	public static final PropertyBool POWERED = PropertyBool.create("powered");
@@ -27,11 +29,13 @@ public class BlockRedstoneEmitter extends Block {
 	}
 	
 	@Override
+	@Nonnull
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[]{POWERED});
+		return new BlockStateContainer(this, POWERED);
 	}
 	
 	@Override
+	@Nonnull
 	public IBlockState getStateFromMeta(int meta) {
 		return this.getDefaultState().withProperty(POWERED, (meta & 8) == 8);
 	}
@@ -65,6 +69,7 @@ public class BlockRedstoneEmitter extends Block {
 	}
 	
 	@Override
+	@ParametersAreNullableByDefault
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileAtmosphereDetector();
 	}

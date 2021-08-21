@@ -1,19 +1,21 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:orientable",
+        "textures": {
+            "top": "advancedrocketry:blocks/laserbottom",
+            "front": "advancedrocketry:blocks/machinewarning",
+            "side": "advancedrocketry:blocks/machinewarning"
+        }
+    },
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:drill" },
-        "facing=south,state=false": { "model": "advancedrocketry:drill", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:drill", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:drill", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:drill" },
-        "facing=south,state=true": { "model": "advancedrocketry:drill", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:drill", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:drill", "y": 90 },
-        "facing=north": { "model": "advancedrocketry:drill" },
-        "facing=south": { "model": "advancedrocketry:drill", "y": 180 },
-        "facing=west":  { "model": "advancedrocketry:drill", "y": 270 },
-        "facing=east":  { "model": "advancedrocketry:drill", "y": 90 },
-        "facing=up": { "model": "advancedrocketry:drill" },
-        "facing=down": { "model": "advancedrocketry:drill", "y": 180 },
-        "inventory" : { "model": "advancedrocketry:drill" }
+        "facing=up": [{}],
+        "facing=down": [{}],
+        "facing=north": [{}],
+        "facing=south": { "model": "minecraft:orientable", "y": 180 },
+        "facing=west":  { "model": "minecraft:orientable", "y": 270 },
+        "facing=east":  { "model": "minecraft:orientable", "y": 90 },
+        "inventory" : [{}]
     }
 }

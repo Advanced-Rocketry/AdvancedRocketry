@@ -54,28 +54,10 @@ public class RendererRocketAssemblingMachine extends TileEntitySpecialRenderer {
 			double uMin = 0;
 			double vMin = 0;
 			double uMax = 1;
-			double vMax = 1;
+			double vMax;
 
 			GL11.glPushMatrix();
 			GL11.glTranslated(x,y,z);
-			
-			
-			//Draw Supports
-			GlStateManager.color(0.78f, 0.5f, 0.34f, 1f);
-			bindTexture(girder);
-			GlStateManager.enableDepth();
-			GlStateManager.disableBlend();
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			
-			float size = 0.25f;
-			
-			vMax = yMin/size;
-			
-			RenderHelper.renderCubeWithUV(buffer, xOffset, 0d, zOffset, xOffset + size, yOffset + yLocation, zOffset + size, uMin, uMax, 0d, vMax);
-			RenderHelper.renderCubeWithUV(buffer, xOffset + xSize - size, 0d, zOffset, xOffset  + xSize , yOffset + yLocation, zOffset + size, uMin, uMax, vMin, vMax);
-			RenderHelper.renderCubeWithUV(buffer, xOffset + xSize - size, 0d, zOffset + zSize - size, xOffset  + xSize, yOffset + yLocation, zOffset + zSize, uMin, uMax, vMin, vMax);
-			RenderHelper.renderCubeWithUV(buffer, xOffset, 0d, zOffset + zSize  - size, xOffset + size, yOffset + yLocation, zOffset + zSize, uMin, uMax, vMin, vMax);
-			Tessellator.getInstance().draw();
 			
 			
 			//Draw scanning grid
@@ -162,7 +144,25 @@ public class RendererRocketAssemblingMachine extends TileEntitySpecialRenderer {
 			RenderHelper.renderNorthFaceWithUV(buffer, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax);
 			RenderHelper.renderTopFaceWithUV(buffer, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
 			Tessellator.getInstance().draw();
-			
+
+            //Draw Supports
+			GlStateManager.color(0.78f, 0.5f, 0.34f, 1f);
+			bindTexture(girder);
+			GlStateManager.enableDepth();
+			GlStateManager.disableBlend();
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
+			float size = 0.25f;
+
+			vMax = yMin/size;
+
+			RenderHelper.renderCubeWithUV(buffer, xOffset, 0d, zOffset, xOffset + size, yOffset + yLocation, zOffset + size, uMin, uMax, 0d, vMax);
+			RenderHelper.renderCubeWithUV(buffer, xOffset + xSize - size, 0d, zOffset, xOffset  + xSize , yOffset + yLocation, zOffset + size, uMin, uMax, vMin, vMax);
+			RenderHelper.renderCubeWithUV(buffer, xOffset + xSize - size, 0d, zOffset + zSize - size, xOffset  + xSize, yOffset + yLocation, zOffset + zSize, uMin, uMax, vMin, vMax);
+			RenderHelper.renderCubeWithUV(buffer, xOffset, 0d, zOffset + zSize  - size, xOffset + size, yOffset + yLocation, zOffset + zSize, uMin, uMax, vMin, vMax);
+			Tessellator.getInstance().draw();
+
+
 
 			GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.1f);
 			GlStateManager.enableDepth();

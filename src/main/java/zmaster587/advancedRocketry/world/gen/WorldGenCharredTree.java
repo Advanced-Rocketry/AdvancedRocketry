@@ -50,7 +50,6 @@ public class WorldGenCharredTree extends WorldGenAbstractTree {
                     for (k1 = z - b0; k1 <= z + b0 && flag; ++k1) {
                         if (i1 >= 0 && i1 < 256) {
                         	BlockPos pos2 = new BlockPos(j1, i1, k1);
-                            block = world.getBlockState(pos2).getBlock();
 
                             if (!this.isReplaceable(world, pos2)) {
                                 flag = false;
@@ -73,7 +72,6 @@ public class WorldGenCharredTree extends WorldGenAbstractTree {
                 if (y < 256 - l - 1) {
                 	
                     block2.onPlantGrow(state2, world, pos3, pos3.up());
-                    b0 = 3;
 
                     for (k1 = 0; k1 < l; ++k1) {
                     	
