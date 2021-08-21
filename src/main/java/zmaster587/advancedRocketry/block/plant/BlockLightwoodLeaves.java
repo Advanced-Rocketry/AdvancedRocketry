@@ -11,7 +11,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -50,13 +49,12 @@ public class BlockLightwoodLeaves extends LeavesBlock {
         	//this.dropBlockAsItem(world, x, y, z, new ItemStack(Items.apple, 1, 0));
         }
     }
-    
+
 	
     public Item getItemDropped(BlockState state, Random rand, int fortune)
     {
         return Item.getItemFromBlock(AdvancedRocketryBlocks.blockAlienSapling);
     }
-
     
     @Override
     public List<ItemStack> onSheared(PlayerEntity player, ItemStack item, World world, BlockPos pos, int fortune) {

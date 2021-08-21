@@ -11,10 +11,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.entity.fx.InverseTrailFluid;
-import zmaster587.advancedRocketry.entity.fx.OxygenCloudFX;
-import zmaster587.advancedRocketry.entity.fx.OxygenTraceFX;
 import zmaster587.libVulpes.network.BasePacket;
-import zmaster587.libVulpes.util.HashedBlockPosition;
 
 public class PacketFluidParticle extends BasePacket {
 

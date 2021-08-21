@@ -11,7 +11,7 @@ public class FxSystemElectricArc {
 		//left child = 2*current index
 		//right child = 2*current index + 1
 		// parent = index/2
-		makeNextPosition(world, new Vector3F<Double>(x, y, z), sizeMult, numrecursion);
+		makeNextPosition(world, new Vector3F<>(x, y, z), sizeMult, numrecursion);
 	}
 
 	private static void makeNextPosition(IWorld world, Vector3F<Double> parent, double scale, int numrecursion) {
@@ -22,8 +22,8 @@ public class FxSystemElectricArc {
 		double xOffset = radius* Math.cos(angle);
 		double zOffset = radius* Math.sin(angle);
 		
-		Vector3F<Double> blockPosL = new Vector3F<Double>(parent.x - xOffset, parent.y + scale*4, parent.z + zOffset);
-		Vector3F<Double> blockPosR = new Vector3F<Double>(parent.x + xOffset, parent.y + scale*4, parent.z - zOffset);
+		Vector3F<Double> blockPosL = new Vector3F<>(parent.x - xOffset, parent.y + scale * 4, parent.z + zOffset);
+		Vector3F<Double> blockPosR = new Vector3F<>(parent.x + xOffset, parent.y + scale * 4, parent.z - zOffset);
 		
 
 		int numParticles = (int)(scale*1000/numrecursion);

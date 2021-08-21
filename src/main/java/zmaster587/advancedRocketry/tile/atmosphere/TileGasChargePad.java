@@ -28,6 +28,8 @@ import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.IconResource;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +44,7 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
 		return false;
 	}
 
@@ -148,7 +150,6 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 		modules.add(new ModuleLiquidIndicator(32, 20, this));
 
 		//modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this, TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
-		//TODO add itemStack slots for liqiuid
 		return modules;
 	}
 
@@ -163,14 +164,12 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
 		while(useBucket(0, getStackInSlot(0)));
 	}
-
-	//Yes i was lazy
-	//TODO: make better
-	private boolean useBucket( int slot, ItemStack stack) {
+	
+	private boolean useBucket(int slot, @Nonnull ItemStack stack) {
 		return FluidUtils.attemptDrainContainerIInv(inventory, tank, stack, 0, 1);
 	}
 

@@ -28,7 +28,7 @@ public class BlockSuitWorkstation extends BlockTile {
 			int i1 = 0;
 			ItemStack itemstack = inventory.getStackInSlot(i1);
 
-			if (itemstack != null)
+			if (!itemstack.isEmpty())
 			{
 				float f = world.rand.nextFloat() * 0.8F + 0.1F;
 				float f1 = world.rand.nextFloat() * 0.8F + 0.1F;

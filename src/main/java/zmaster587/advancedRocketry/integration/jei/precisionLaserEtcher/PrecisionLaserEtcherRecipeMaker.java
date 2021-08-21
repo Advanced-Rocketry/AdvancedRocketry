@@ -12,7 +12,7 @@ public class PrecisionLaserEtcherRecipeMaker {
 
 	public static List<PrecisionLaserEtcherWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
 
-		List<PrecisionLaserEtcherWrapper> list = new LinkedList<PrecisionLaserEtcherWrapper>();
+		List<PrecisionLaserEtcherWrapper> list = new LinkedList<>();
 		for(IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
 			list.add(new PrecisionLaserEtcherWrapper(rec));
 		}

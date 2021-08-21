@@ -13,7 +13,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.Constants.NBT;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
-import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.item.ItemBiomeChanger;
@@ -22,6 +21,7 @@ import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class SatelliteBiomeChanger extends SatelliteBase  {
@@ -55,7 +55,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 	}
 
 	public void addBiome(ResourceLocation biome) {
-		
+
 		if(!AdvancedRocketryBiomes.instance.getBlackListedBiomes().contains(biome))
 			discoveredBiomes.add(biome);
 	}
@@ -71,8 +71,9 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 	}
 
 	@Override
-	public ItemStack getContollerItemStack(ItemStack satIdChip,
-			SatelliteProperties properties) {
+	@Nonnull
+	public ItemStack getControllerItemStack(@Nonnull ItemStack satIdChip,
+											SatelliteProperties properties) {
 
 		//ItemBiomeChanger idChipItem = (ItemBiomeChanger)satIdChip.getItem();
 		//idChipItem.setSatellite(satIdChip, properties);
@@ -94,7 +95,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 
 			for(int i = 0; i < 10; i++) {
 				if(world.getGameTime() % 1 == 0 && !toChangeList.isEmpty()) {
-					if(battery.extractEnergy(120, true) == 120) {
+					if(battery.extractEnergy(120, false) == 120) {
 						HashedBlockPosition pos = toChangeList.remove(world.rand.nextInt(toChangeList.size()));
 
 						BiomeHandler.changeBiome(world, biomeId, pos.getBlockPos());
@@ -117,7 +118,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 	public boolean performAction(PlayerEntity player, World world, BlockPos pos) {
 		if(world.isRemote)
 			return false;
-		Set<Chunk> set = new HashSet<Chunk>();
+		Set<Chunk> set = new HashSet<>();
 		radius = 16;
 		MAX_SIZE = 1024;
 		for(int xx = -radius + pos.getX(); xx < radius + pos.getX(); xx++) {
@@ -166,7 +167,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 		super.writeToNBT(nbt);
 		nbt.putInt("biomeId", biomeId);
 
-		int array[] = new int[toChangeList.size()*3];
+		int[] array = new int[toChangeList.size()*3];
 		Iterator<HashedBlockPosition> itr = toChangeList.iterator();
 		for(int i = 0; i < toChangeList.size(); i+=3) {
 			HashedBlockPosition pos = itr.next();
@@ -194,7 +195,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 		super.readFromNBT(nbt);
 		biomeId = nbt.getInt("biomeId");
 
-		int array[] = nbt.getIntArray("posList");
+		int[] array = nbt.getIntArray("posList");
 
 		toChangeList.clear();
 		for(int i = 0; i < array.length; i +=3) {
@@ -204,9 +205,9 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 		ListNBT biomeList = nbt.getList("biomeList", NBT.TAG_STRING);
 		discoveredBiomes.clear();
 		
-		
 		for(int i = 0; i < array.length; i ++) {
 			discoveredBiomes.add(new ResourceLocation(biomeList.getString(i)));
 		}
 	}
 }
+

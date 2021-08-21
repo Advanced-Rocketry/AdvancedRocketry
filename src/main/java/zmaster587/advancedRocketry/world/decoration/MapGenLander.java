@@ -72,8 +72,8 @@ public class MapGenLander {
 
 			position = worldIn.getHeight(Type.WORLD_SURFACE, position.add(10,0,15));
 
-			for(int x = 0; x <= 4; x++ ) 
-				worldIn.setBlockState(position.add(0,x,0), Blocks.IRON_BARS.getDefaultState());
+			for(int y = 0; y <= 4; y++ )
+				worldIn.setBlockState(position.add(0,y,0), Blocks.IRON_BARS.getDefaultState());
 
 			worldIn.setBlockState(position.add(1,4,0), Blocks.IRON_BARS.getDefaultState());
 			worldIn.setBlockState(position.add(2,4,0), Blocks.IRON_BARS.getDefaultState());

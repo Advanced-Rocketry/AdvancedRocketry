@@ -8,41 +8,37 @@
     ],
     "key":
     {
-        "s":
-        {
-            "item": "advancedrocketry:item_ui"
-        },
         "c":
         {
             "item": "advancedrocketry:circuit_ic_basic"
         },
-	"b":
+        "b":
         {
             "item": "libvulpes:structure_machine"
         },
-	"m":
+        "m":
         {
 
             "tag": "forge:motors"
         },
-	"t":
+        "t":
         {
 
             "tag": "forge:plates/titanium"
         },
-	"d":
+        "d":
         {
 	    "item": "advancedrocketry:dataunit"
         },
-	"a":
+        "a":
         {
 	    "item": "minecraft:anvil"
         },
-	"s":
+        "s":
         {
-	    "item": "advancedrocketry:sawbladeassbly"
+            "item": "advancedrocketry:sawbladeassbly"
         },
-	"h":
+        "h":
         {
 	    "item": "minecraft:hopper"
         }

@@ -37,9 +37,9 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.Map.Entry;
-
 
 public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	private int launchPosX, launchPosZ, posX, posZ;
@@ -56,8 +56,8 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	private HashMap<HashedBlockPosition, String> dockingPoints;
 	private long transitionEta;
 	private boolean isAnchored = false;
-	private double rotation[];
-	private double angularVelocity[];
+	private double[] rotation;
+	private double[] angularVelocity;
 	private long lastTimeModification = 0;
 	private DimensionProperties properties;
 	public boolean hasWarpCores = false;
@@ -65,7 +65,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 
 	public int targetOrbitalDistance;
 	public int targetGravity;
-	public int targetRotationsPerHour[];
+	public int[] targetRotationsPerHour;
 
 	public SpaceStationObject() {
 		properties = (DimensionProperties) zmaster587.advancedRocketry.dimension.DimensionManager.defaultSpaceDimensionProperties.clone();
@@ -73,9 +73,9 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		targetOrbitalDistance = 4;
 		targetRotationsPerHour = new int[]{0, 0, 0};
 		targetGravity = 10;
-		spawnLocations = new LinkedList<StationLandingLocation>();
-		warpCoreLocation = new LinkedList<HashedBlockPosition>(); 
-		dockingPoints = new HashMap<HashedBlockPosition, String>();
+		spawnLocations = new LinkedList<>();
+		warpCoreLocation = new LinkedList<>();
+		dockingPoints = new HashMap<>();
 		transitionEta = -1;
 		destinationDimId = DimensionManager.overworldProperties.getId();
 		created = false;
@@ -117,6 +117,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	 * @return dimension properties of the object
 	 */
 	@Override
+	@Nonnull
 	public DimensionProperties getProperties() {
 		return properties;
 	}
@@ -129,7 +130,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	}
 
 	@OnlyIn(value=Dist.CLIENT)
-	public void setProperties(IDimensionProperties properties) {
+	public void setProperties(@Nonnull IDimensionProperties properties) {
 		this.properties = (DimensionProperties)properties;
 	}
 
@@ -433,9 +434,8 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 
 	/**
 	 * Adds a docking location to the station
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param pos
+	 * @param str
 	 */
 	public void addDockingPosition(BlockPos pos, String str) {
 		HashedBlockPosition pos2 = new HashedBlockPosition(pos);
@@ -443,9 +443,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	}
 	/**
 	 * Removes a docking location from the station
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param pos
 	 */
 	public void removeDockingPosition(BlockPos pos) {
 		HashedBlockPosition pos2 = new HashedBlockPosition(pos);
@@ -489,7 +487,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	public StationLandingLocation getPadAtLocation(HashedBlockPosition pos) {
 		pos.y = 0;
 		for(StationLandingLocation loc : spawnLocations) {
-			if(loc.equals(pos))
+			if(loc.getPos().equals(pos))
 				return loc;
 		}
 		return null;
@@ -599,14 +597,14 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 			chunk.pasteInWorld(worldObj, spawnLocation.x - chunk.getSizeX()/2, spawnLocation.y - chunk.getSizeY()/2, spawnLocation.z - chunk.getSizeZ()/2);
 
 			created = true;
-			setLaunchPos((int)posX, (int)posZ);
-			setPos((int)posX, (int)posZ);
+			setLaunchPos(posX, posZ);
+			setPos(posX, posZ);
 		}
 		else {
 			List<TileEntity> tiles = chunk.getTileEntityList();
-			List<String> targetIds = new LinkedList<String>();
-			List<TileEntity> myPoss = new LinkedList<TileEntity>();
-			HashedBlockPosition pos = null;
+			List<String> targetIds = new LinkedList<>();
+			List<TileEntity> myPoss = new LinkedList<>();
+			HashedBlockPosition pos;
 			TileDockingPort destTile = null;
 			TileDockingPort srcTile = null;
 

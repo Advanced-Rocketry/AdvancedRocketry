@@ -5,12 +5,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import zmaster587.advancedRocketry.util.StorageChunk;
 
+import javax.annotation.Nonnull;
+
 public class ItemPackedStructure extends Item {
 
 	public ItemPackedStructure(Properties props) {
 		super(props);
 	}
-	
+
 	public void setStructure(ItemStack stack, StorageChunk chunk) {
 		CompoundNBT nbt;
 		if(stack.hasTag())

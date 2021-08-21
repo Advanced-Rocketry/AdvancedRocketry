@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import zmaster587.libVulpes.interfaces.IRecipe;
+import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.recipe.RecipesMachine.ChanceItemStack;
 import zmaster587.libVulpes.recipe.RecipesMachine.Recipe;
 
@@ -29,19 +30,17 @@ public class MachineRecipe extends Recipe implements IRecipeCategoryExtension {
 
 
 	protected MachineRecipe(IRecipe rec) {
-		//TODO: multiple outputs
 		if(rec instanceof Recipe)
 		{
-			resultChance = new ArrayList<ChanceItemStack>(((Recipe)rec).getChanceOutputs());
+			resultChance = new ArrayList<>(((Recipe) rec).getChanceOutputs());
 			result = new ArrayList<>();
 			
 			int i = -1;
 			float totalChance = 0;
-			this.name = rec.getId();
-			for( ChanceItemStack stack : resultChance )
+			for( ChanceItemStack stack : resultChance)
 				totalChance += stack.chance;
 			
-			for( ChanceItemStack stack : resultChance )
+			for( ChanceItemStack stack : resultChance)
 			{
 				i++;
 				if(stack.chance == 0)
@@ -83,20 +82,15 @@ public class MachineRecipe extends Recipe implements IRecipeCategoryExtension {
 		String powerString = String.format("Power: %d RF/t", energy);
 		FontRenderer fontRendererObj = Minecraft.getInstance().fontRenderer;
 		int stringWidth = fontRendererObj.getStringWidth(powerString);
-		fontRendererObj.func_243246_a(matrixStack, new StringTextComponent(powerString), 0, 55, Color.black.getRGB());
+		fontRendererObj.drawTextWithShadow(matrixStack, new StringTextComponent(powerString), 0, 55, Color.black.getRGB());
 		
 		String timeString = String.format("Time: %d s", time/20);
 		stringWidth = fontRendererObj.getStringWidth(powerString);
-		fontRendererObj.func_243246_a(matrixStack, new StringTextComponent(timeString), recipeWidth - 55, 55, Color.black.getRGB());
+		fontRendererObj.drawTextWithShadow(matrixStack, new StringTextComponent(timeString), recipeWidth - 55, 55, Color.black.getRGB());
 	}
 	
 	@Override
 	public void setIngredients(IIngredients ingredients) {
 		// TODO Auto-generated method stub
-	}
-	
-	@Override
-	public ResourceLocation getId() {
-		return name;
 	}
 }

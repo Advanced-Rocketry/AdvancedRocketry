@@ -12,7 +12,7 @@ public class ArcFurnaceRecipeMaker {
 
 	public static List<ArcFurnaceWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
 		
-		List<ArcFurnaceWrapper> list = new LinkedList<ArcFurnaceWrapper>();
+		List<ArcFurnaceWrapper> list = new LinkedList<>();
 		for(IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
 			list.add(new ArcFurnaceWrapper(rec));
 		}

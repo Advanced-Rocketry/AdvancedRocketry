@@ -39,6 +39,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketItemModifcation;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class ItemBiomeChanger extends Item {//extends ItemSatelliteIdentificatio
 			list.add(new ModuleImage(24, 14, zmaster587.advancedRocketry.inventory.TextureResources.earthCandyIcon));
 		}
 
-		List<ModuleBase> list2 = new LinkedList<ModuleBase>();
+		List<ModuleBase> list2 = new LinkedList<>();
 		int j = 0;
 		for(ResourceLocation biomeByte : sat.discoveredBiomes()) {
 			Biome biome = Biome.getBiome(biomeByte);
@@ -70,7 +71,7 @@ public class ItemBiomeChanger extends Item {//extends ItemSatelliteIdentificatio
 		}
 
 		//Relying on a bug, is this safe?
-		ModuleContainerPan pan = new ModuleContainerPan(32, 16, list2, new LinkedList<ModuleBase>(), null, 128, 128, 0, -64, 0, 1000);
+		ModuleContainerPan pan = new ModuleContainerPan(32, 16, list2, new LinkedList<>(), null, 128, 128, 0, -64, 0, 1000);
 
 		list.add(pan);
 		list.add(new ModuleButton(120, 124, LibVulpes.proxy.getLocalizedString("msg.biomechanger.scan"), this, TextureResources.buttonScan));
@@ -80,8 +81,7 @@ public class ItemBiomeChanger extends Item {//extends ItemSatelliteIdentificatio
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, World player,
-			List list, ITooltipFlag arg5) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag arg5) {
 
 		SatelliteBase sat = DimensionManager.getInstance().getSatellite(this.getSatelliteId(stack));
 
@@ -129,18 +129,18 @@ public class ItemBiomeChanger extends Item {//extends ItemSatelliteIdentificatio
 		return super.onItemRightClick(world, player, hand);
 	}
 
-	private int getBiomeId(ItemStack stack) {
+	private int getBiomeId(@Nonnull ItemStack stack) {
 		SatelliteBase sat = getSatellite(stack);
-		if(sat != null && sat instanceof SatelliteBiomeChanger)
+		if(sat instanceof SatelliteBiomeChanger)
 			return ((SatelliteBiomeChanger)sat).getBiome();
 		else
 			return -1;
 	}
 
-	private void setBiomeId(ItemStack stack, int id) {
+	private void setBiomeId(@Nonnull ItemStack stack, int id) {
 		if(Biome.getBiome(id) != null) {
 			SatelliteBase sat = getSatellite(stack);
-			if(sat != null && sat instanceof SatelliteBiomeChanger) {
+			if(sat instanceof SatelliteBiomeChanger) {
 				((SatelliteBiomeChanger)sat).setBiome(id);
 			}
 		}
@@ -167,7 +167,7 @@ public class ItemBiomeChanger extends Item {//extends ItemSatelliteIdentificatio
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id, ItemStack stack) {
+	public void writeDataToNetwork(ByteBuf out, byte id, @Nonnull ItemStack stack) {
 		if(id == 0) {
 			out.writeInt(getBiomeId(stack));
 		}

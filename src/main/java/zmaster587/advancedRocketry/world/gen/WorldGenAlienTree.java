@@ -21,6 +21,8 @@ import zmaster587.advancedRocketry.api.AdvancedRocktryTrees;
 
 import java.util.LinkedList;
 import java.util.List;
+import javax.annotation.Nonnull;
+
 import java.util.Random;
 import java.util.Set;
 
@@ -30,7 +32,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 public class WorldGenAlienTree extends StraightTrunkPlacer {
 	
    public static final Codec<WorldGenAlienTree> codec = RecordCodecBuilder.create((p_236902_0_) -> {
-	      return func_236915_a_(p_236902_0_).apply(p_236902_0_, WorldGenAlienTree::new);
+	      return getAbstractTrunkCodec(p_236902_0_).apply(p_236902_0_, WorldGenAlienTree::new);
 	   });
 
 	public WorldGenAlienTree(int i, int j, int k)
@@ -254,13 +256,8 @@ public class WorldGenAlienTree extends StraightTrunkPlacer {
 
 		Block block = state.getBlock();
 
-<<<<<<< HEAD
 		if( block.isReplaceable(world, pos) ||  block.isLeaves(state, world, pos) || block == AdvancedRocketryBlocks.blockAlienWood || block == AdvancedRocketryBlocks.blockAlienSapling) {
 			func_236913_a_(world, pos, AdvancedRocketryBlocks.blockAlienWood.getDefaultState().with(BlockLog.LOG_AXIS, BlockLog.EnumAxis.fromFacingAxis(direction.getAxis())));
-=======
-		if( block.isReplaceable(world, pos) ||  block.isLeaves(state, world, pos) || block == AdvancedRocketryBlocks.blockLightwoodWood || block == AdvancedRocketryBlocks.blockLightwoodSapling) {
-			this.setBlockAndNotifyAdequately(world, pos, AdvancedRocketryBlocks.blockLightwoodWood.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.fromFacingAxis(direction.getAxis())));
->>>>>>> origin/1.12
 			return true;
 		}
 		else

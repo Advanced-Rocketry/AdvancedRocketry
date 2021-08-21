@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.Constants;
@@ -14,6 +15,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.libVulpes.LibVulpes;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemSatelliteIdentificationChip extends Item implements ISatelliteIdItem {
@@ -30,20 +32,24 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		return false;
 	}
 
-	public long getSatelliteId(ItemStack stack) {
+	public static long getSatelliteId(@Nonnull ItemStack stack) {
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
 
-			return nbt.getLong("satelliteId");
+			if(nbt != null)
+			    return nbt.getLong("satelliteId");
 		}
 		return -1;
 	}
 
-	public SatelliteBase getSatellite(ItemStack stack) {
+	public SatelliteBase getSatellite(@Nonnull ItemStack stack) {
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
 
-			long satId = nbt.getLong("satelliteId");
+            if(nbt == null)
+                return null;
+
+            long satId = nbt.getLong("satelliteId");
 
 			SatelliteBase satellite = zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getSatellite(satId);
 
@@ -63,7 +69,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		return null;
 	}
 
-	public void setSatellite(ItemStack stack, SatelliteBase satellite) {
+	public void setSatellite(@Nonnull ItemStack stack, SatelliteBase satellite) {
 		CompoundNBT nbt;
 		if(stack.hasTag())
 			nbt = stack.getTag();
@@ -80,7 +86,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	 * @param stack itemStack
 	 * @param satellite properties of satellite to set info with
 	 */
-	public void setSatellite(ItemStack stack, SatelliteProperties satellite) {
+	public void setSatellite(@Nonnull ItemStack stack, SatelliteProperties satellite) {
 		erase(stack);
 		SatelliteBase satellite2 = SatelliteRegistry.getSatellite(satellite.getSatelliteType());
 		if(satellite2 != null) {
@@ -98,11 +104,11 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		}
 	}
 
-	public void erase(ItemStack stack) {
+	public void erase(@Nonnull ItemStack stack) {
 		stack.setTag(null);
 	}
 
-	public void setDim(ItemStack stack, int dimId) {
+	public void setDim(@Nonnull ItemStack stack, int dimId) {
 		CompoundNBT nbt;
 		if(stack.hasTag())
 			nbt = stack.getTag();
@@ -112,7 +118,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		nbt.putInt("dimId", dimId);
 	}
 
-	public String getSatelliteName(ItemStack stack) {
+	public String getSatelliteName(@Nonnull ItemStack stack) {
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
 
@@ -121,7 +127,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		return "";
 	}
 
-	public ResourceLocation getWorldId(ItemStack stack) {
+	public ResourceLocation getWorldId(@Nonnull ItemStack stack) {
 		CompoundNBT nbt;
 
 		if(stack.hasTag() && (nbt = stack.getTag()).contains("dimId") ) {
@@ -133,8 +139,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, World player,
-			List list, ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag bool) {
 		ResourceLocation worldId = getWorldId(stack);
 		long satId = getSatelliteId(stack);
 

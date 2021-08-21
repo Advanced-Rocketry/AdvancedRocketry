@@ -59,6 +59,7 @@ public class BlockOrbitalLaserDrill extends BlockMultiblockMachine {
 			Explosion explosionIn) {
 		// TODO Auto-generated method stub
 		super.onExplosionDestroy(worldIn, pos, explosionIn);
+		if (worldIn.getTileEntity(pos) instanceof TileOrbitalLaserDrill)
 		((TileOrbitalLaserDrill)worldIn.getTileEntity(pos)).onDestroy();
 	}
 

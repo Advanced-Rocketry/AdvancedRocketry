@@ -66,7 +66,7 @@ public class RendererWarpCore extends TileEntityRenderer<TileWarpCore> {
 		
 		
 		if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(tile.getWorld()))) {
-			
+
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(tile.getPos());
 			if(obj instanceof SpaceStationObject && ((SpaceStationObject)obj).getFuelAmount() > 50) {
 				IVertexBuilder entityTranslucentBuilder = buffer.getBuffer(RenderHelper.getTranslucentEntityModelRenderType(texture));

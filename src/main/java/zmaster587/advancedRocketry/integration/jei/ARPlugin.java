@@ -34,6 +34,11 @@ import zmaster587.advancedRocketry.integration.jei.rollingMachine.RollingMachine
 import zmaster587.advancedRocketry.integration.jei.sawmill.SawMillCategory;
 import zmaster587.advancedRocketry.integration.jei.sawmill.SawMillRecipeMaker;
 import zmaster587.advancedRocketry.tile.multiblock.machine.*;
+import zmaster587.libVulpes.inventory.GuiModular;
+
+import javax.annotation.Nonnull;
+import java.awt.*;
+import java.util.List;
 
 @JeiPlugin
 public class ARPlugin implements IModPlugin {
@@ -52,7 +57,7 @@ public class ARPlugin implements IModPlugin {
 	
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry) {
-		
+
 		IGuiHelper guiHelper = registry.getJeiHelpers().getGuiHelper();
 		registry.addRecipeCategories(new RollingMachineCategory(guiHelper, new ItemStack(AdvancedRocketryBlocks.blockRollingMachine)),
 		new LatheCategory(guiHelper, new ItemStack(AdvancedRocketryBlocks.blockLathe)),

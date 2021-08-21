@@ -19,7 +19,7 @@ public interface IGalaxy {
 	 * @param satId long id of the satellite
 	 * @return a reference to the satellite object with the supplied ID
 	 */
-	public SatelliteBase getSatellite(long satId);
+	SatelliteBase getSatellite(long satId);
 	
 	/**
 	 * @param dimId dimension id to check

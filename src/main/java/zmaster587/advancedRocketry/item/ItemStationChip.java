@@ -46,6 +46,8 @@ import zmaster587.libVulpes.network.PacketItemModifcation;
 import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.naming.directory.NoSuchAttributeException;
 import java.util.LinkedList;
 import java.util.List;
@@ -85,9 +87,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 		ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);
 
-		if(stack != null) {
-
-			modules.clear();
+		if(!stack.isEmpty()) {
 			modules.add(new ModuleStellarBackground(0, 0, zmaster587.libVulpes.inventory.TextureResources.starryBG));
 
 
@@ -98,7 +98,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			btnClear.setAdditionalData(BUTTON_ID_CLEAR);
 			ModuleButton btnDelete = new ModuleButton(172-offset_all, 18*3+28, LibVulpes.proxy.getLocalizedString("msg.label.delete"), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
 			btnDelete.setAdditionalData(BUTTON_ID_DELETE);
-			
+
 			modules.add(btnClear);
 			modules.add(btnDelete);
 			modules.add(btnAdd);
@@ -124,7 +124,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 				i++;
 			}
 
-			ModuleContainerPan pan = new ModuleContainerPan(25-offset_all, 50, list2, new LinkedList<ModuleBase>(), null, 512, 256, 0, -48, 258, 256);
+			ModuleContainerPan pan = new ModuleContainerPan(25-offset_all, 50, list2, new LinkedList<>(), null, 512, 256, 0, -48, 258, 256);
 			modules.add(pan);
 		}
 
@@ -148,13 +148,13 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	}
 
 
-	private void setTempName(ItemStack stack, String string)
+	private void setTempName(@Nonnull ItemStack stack, String string)
 	{
 		if(stack.hasTag())
 			stack.getTag().putString(TMPNAME, string);
 	}
 
-	private String getTempName(ItemStack stack)
+	private String getTempName(@Nonnull ItemStack stack)
 	{
 		if(stack.hasTag())
 			return stack.getTag().getString(TMPNAME);
@@ -162,7 +162,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id, ItemStack stack) {
+	public void writeDataToNetwork(ByteBuf out, byte id, @Nonnull ItemStack stack) {
 		if(id == BUTTON_ID_ADD)
 		{
 			String str = getTempName(stack);
@@ -211,7 +211,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			{
 				//Can't delete "Last"
 				List<LandingLocation> locs = getLandingLocations(stack, dimId);
-				List<LandingLocation> locs2 = new LinkedList<LandingLocation>();
+				List<LandingLocation> locs2 = new LinkedList<>();
 				locs2.add(locs.get(0));
 				setLandingLocations(stack, dimId, locs2);
 			}
@@ -264,7 +264,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 	public List<LandingLocation> getLandingLocations(ItemStack stack, ResourceLocation dimid)
 	{
-		List<LandingLocation> retList = new LinkedList<LandingLocation>();
+		List<LandingLocation> retList = new LinkedList<>();
 
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
@@ -360,6 +360,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 	/**
 	 * @param stack
+	 * @param dimid
 	 * @return Vector3F containing the takeoff coords or null if there is none
 	 */
 	public LandingLocation getTakeoffCoords(ItemStack stack, ResourceLocation dimid) {
@@ -461,13 +462,13 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		public LandingLocation(String name, float x, float y, float z)
 		{
 			this.name = name;
-			this.location = new Vector3F<Float>(x,y,z);
+			this.location = new Vector3F<>(x, y, z);
 		}
 
 		public LandingLocation()
 		{
 			this.name = "";
-			this.location = new Vector3F<Float>(0f,0f,0f);
+			this.location = new Vector3F<>(0f, 0f, 0f);
 		}
 
 		@Override
@@ -478,7 +479,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		static LandingLocation loadFromNBT(CompoundNBT nbt) throws NoSuchAttributeException
 		{
 			String name = nbt.getString("name");
-			Vector3F<Float> vec = new Vector3F<Float>(nbt.getFloat("x"), nbt.getFloat("y"),nbt.getFloat("z"));
+			Vector3F<Float> vec = new Vector3F<>(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"));
 
 			return new LandingLocation(name, vec);
 		}

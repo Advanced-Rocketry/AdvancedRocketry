@@ -74,6 +74,8 @@ public class TileElectricArcFurnace extends TileMultiblockMachine implements IMo
 		List<BlockMeta> list = super.getAllowableWildCardBlocks();
 		list.add(new BlockMeta(LibVulpesBlocks.blockItemInputHatch));
 		list.add(new BlockMeta(LibVulpesBlocks.blockItemOutputHatch));
+		list.add(new BlockMeta(LibVulpesBlocks.blockFluidInputHatch));
+		list.add(new BlockMeta(LibVulpesBlocks.blockFluidOutputHatch));
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockBlastBrick));
 		return list;
 	}

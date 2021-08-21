@@ -52,7 +52,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 	public TilePump() {
 		super(AdvancedRocketryTileEntityType.TILE_PUMP, 1000);
 		tank = new FluidTank(16000);
-		cache = new LinkedList<BlockPos>();
+		cache = new LinkedList<>();
 	}
 	
 	public int getPowerPerOperation() {
@@ -103,8 +103,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 	@Override
 	public void performFunction() {
 
-		if(!world.isRemote)
-		{
+		if(!world.isRemote) {
 			//Do we have room?
 			if(tank.getCapacity() - 1000 < tank.getFluidAmount())
 				return;
@@ -121,7 +120,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 					{
 						Fluid stack = ((FlowingFluidBlock)worldBlock).pickupFluid(world, nextPos, state);
 
-						if(stack != null)
+						if(stack.getFluid() != null)
 							tank.fill(new FluidStack(stack, 1000), FluidAction.EXECUTE);
 						int colour = ((FlowingFluidBlock)worldBlock).getFluid().getAttributes().getColor();
 						if(mat == Material.LAVA)
@@ -134,8 +133,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		}
 	}
 
-	private boolean canFitFluid(BlockPos pos)
-	{
+	private boolean canFitFluid(BlockPos pos) {
 		Block worldBlock = world.getBlockState(pos).getBlock();
 		if(worldBlock instanceof FlowingFluidBlock)
 		{
@@ -148,8 +146,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		return false;
 	}
 
-	private BlockPos getNextBlockLocation()
-	{
+	private BlockPos getNextBlockLocation() {
 
 		if(!cache.isEmpty())
 			return cache.remove(0);
@@ -169,14 +166,12 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		return null;
 	}
 
-	private List<BlockPos> findFluidAtOrAbove(BlockPos pos, Fluid fluid)
-	{
-		Queue<BlockPos> queue = new LinkedList<BlockPos>();
-		Set<BlockPos> visited = new HashSet<BlockPos>();
+	private List<BlockPos> findFluidAtOrAbove(BlockPos pos, Fluid fluid) {
+		Queue<BlockPos> queue = new LinkedList<>();
+		Set<BlockPos> visited = new HashSet<>();
 		queue.add(pos);
 
-		while(!queue.isEmpty())
-		{
+		while(!queue.isEmpty()) {
 			BlockPos nextElement = queue.poll();
 			if(visited.contains(nextElement) || !nextElement.withinDistance(new Vector3i(pos.getX(), nextElement.getY(), pos.getZ()), RANGE) )
 				continue;

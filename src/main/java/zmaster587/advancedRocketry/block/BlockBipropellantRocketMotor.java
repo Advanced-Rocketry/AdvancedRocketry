@@ -14,6 +14,8 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.IRocketEngine;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 
+import javax.annotation.Nonnull;
+
 public class BlockBipropellantRocketMotor extends BlockFullyRotatable implements IRocketEngine {
 
 	public BlockBipropellantRocketMotor(Properties mat) {

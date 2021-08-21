@@ -6,6 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants.NBT;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.util.SpacePosition;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class StellarBody {
 	private HashMap<ResourceLocation,IDimensionProperties> planets;
 	int numPlanets;
 	int discoveredPlanets;
-	float color[];
+	float[] color;
 	ResourceLocation id;
 	float size;
 	String name;
@@ -30,9 +31,9 @@ public class StellarBody {
 	StellarBody parentStar;
 
 	public StellarBody() {
-		planets = new HashMap<ResourceLocation,IDimensionProperties>();
+		planets = new HashMap<>();
 		size = 1f;
-		subStars = new LinkedList<StellarBody>();
+		subStars = new LinkedList<>();
 		starSeperation = 5f;
 		isBlackHole = false;
 	}
@@ -43,7 +44,7 @@ public class StellarBody {
 
 	public void addSubStar(StellarBody star) {
 		if(star.name == null)
-			star.setName(name + "-" + String.valueOf(subStars.size()+1));
+			star.setName(name + "-" + (subStars.size() + 1));
 		star.setId(this.id);
 		subStars.add(star);
 		star.parentStar = this;
@@ -169,7 +170,7 @@ public class StellarBody {
 
 
 		//Define
-		float color[] = new float[3];
+		float[] color = new float[3];
 		float temperature = ((getTemperature() * .477f) + 10f); //0 -> 10 100 -> 57.7
 
 		//Find red
@@ -222,7 +223,7 @@ public class StellarBody {
 	 * @return List of {@link DimensionProperties} of planets orbiting this star
 	 */
 	public List<IDimensionProperties> getPlanets() {
-		return new ArrayList<IDimensionProperties>(planets.values());
+		return new ArrayList<>(planets.values());
 	}
 
 	public void writeToNBT(CompoundNBT nbt) {
@@ -274,8 +275,7 @@ public class StellarBody {
 		}
 	}
 	
-	public SpacePosition getSpacePosition()
-	{
+	public SpacePosition getSpacePosition() {
 		//TODO
 		return new SpacePosition();
 	}

@@ -79,7 +79,7 @@ public class PacketStorageTileUpdate extends BasePacket {
 		this.nbt = nbt;
 
 
-		if(ent != null && ent instanceof INetworkEntity) {
+		if(ent instanceof INetworkEntity) {
 			entity = (EntityRocket)ent;
 			this.chunk = entity.storage;
 		}

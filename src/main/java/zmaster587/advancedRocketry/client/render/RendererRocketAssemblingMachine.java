@@ -58,7 +58,7 @@ public class RendererRocketAssemblingMachine extends TileEntityRenderer<TileRock
 
 			matrix.push();
 			
-			
+
 			//Draw Supports
 			IVertexBuilder entitySolidBuilder = buffer.getBuffer(RenderHelper.getSolidTexturedManualRenderType(girder));
 			
@@ -117,7 +117,7 @@ public class RendererRocketAssemblingMachine extends TileEntityRenderer<TileRock
 			RenderHelper.renderSouthFaceWithUV(matrix, round, zMax, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax,1,1,1,1);
 			RenderHelper.renderNorthFaceWithUV(matrix, round, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax,1,1,1,1);
 			RenderHelper.renderTopFaceWithUV(matrix, round, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax,1,1,1,1);
-			
+
 			//Draw scanning grid
 			if(tile.isBuilding())
 			{

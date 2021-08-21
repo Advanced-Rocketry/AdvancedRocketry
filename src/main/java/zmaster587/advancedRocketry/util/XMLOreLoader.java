@@ -27,7 +27,7 @@ import java.util.List;
 
 public class XMLOreLoader {
 
-	Document doc;
+	private Document doc;
 
 	public boolean loadFile(File xmlFile) throws IOException {
 		DocumentBuilder docBuilder;
@@ -52,14 +52,23 @@ public class XMLOreLoader {
 	}
 
 	/**
-	 * Load the propery file looking for combinations of temp and pressure
-	 * @param propertyFile
+	 * Load the property file looking for combinations of temp and pressure
 	 * @return  list of singleEntry (order MUST be preserved)
 	 */
 	public List<SingleEntry<HashedBlockPosition, OreGenProperties>> loadPropertyFile() {
-		Node childNode = doc.getFirstChild().getFirstChild();
-		List<SingleEntry<HashedBlockPosition, OreGenProperties>> mapping = new LinkedList<SingleEntry<HashedBlockPosition, OreGenProperties>>();
-		OreGenProperties properties = new OreGenProperties();
+		Node childNode = doc.getFirstChild();
+
+		while(childNode != null) {
+			if(!childNode.getNodeName().equalsIgnoreCase("oreconfig")) {
+				childNode = childNode.getFirstChild();
+				break;
+			}
+
+			childNode = childNode.getNextSibling();
+		}
+
+		List<SingleEntry<HashedBlockPosition, OreGenProperties>> mapping = new LinkedList<>();
+		OreGenProperties properties;
 
 		while(childNode != null) {
 
@@ -251,11 +260,11 @@ public class XMLOreLoader {
 	
 	public static String writeXML(OreGenProperties gen, int numTabs) {
 		
-		String outputString = "";
+		String outputString;
 		
-		String tabLen = "";
+		StringBuilder tabLen = new StringBuilder();
 		for(int i = 0; i < numTabs; i++) {
-			tabLen += "\t";
+			tabLen.append("\t");
 		}
 		
 		outputString = tabLen + "<oreGen ";
@@ -306,21 +315,21 @@ public class XMLOreLoader {
 	
 	public static String writeOreEntryXML(OreGenProperties gen, int numTabs) {
 		
-		String outputString = "";
+		StringBuilder outputString = new StringBuilder();
 		
-		String tabLen = "";
+		StringBuilder tabLen = new StringBuilder();
 		for(int i = 0; i < numTabs; i++) {
-			tabLen += "\t";
+			tabLen.append("\t");
 		}
 		
 		for(OreEntry ore : gen.getOreEntries()) {
-			outputString += tabLen + "<ore block=\"" + ore.getBlockState().getBlock().getRegistryName() +
+			outputString.append(tabLen + "<ore block=\"" + ore.getBlockState().getBlock().getRegistryName() +
 							"\" minHeight=\"" +
 							ore.getMinHeight() + "\" maxHeight=\"" + ore.getMaxHeight() + "\" clumpSize=\"" + ore.getClumpSize() + "\"" +
-							" chancePerChunk=\"" + ore.getChancePerChunk() + "\" />\n";
+							" chancePerChunk=\"" + ore.getChancePerChunk() + "\" />\n");
 			
 		}
 		
-		return outputString;
+		return outputString.toString();
 	}
 }

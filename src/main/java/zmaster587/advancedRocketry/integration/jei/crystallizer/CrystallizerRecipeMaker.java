@@ -11,7 +11,7 @@ public class CrystallizerRecipeMaker {
 
 	public static List<CrystallizerWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
 		
-		List<CrystallizerWrapper> list = new LinkedList<CrystallizerWrapper>();
+		List<CrystallizerWrapper> list = new LinkedList<>();
 		for(IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
 			list.add(new CrystallizerWrapper(rec));
 		}

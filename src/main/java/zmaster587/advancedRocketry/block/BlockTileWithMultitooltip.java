@@ -15,6 +15,7 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.inventory.GuiHandler;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class BlockTileWithMultitooltip extends BlockTile {

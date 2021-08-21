@@ -23,6 +23,7 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.client.ResourceIcon;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
@@ -47,7 +48,7 @@ public class ItemUpgrade extends Item implements IArmorComponent {
 				int itemCount = 0;
 				for(int i = 0; i < modules.getSizeInventory(); i++) {
 					ItemStack stackInSlot = modules.getStackInSlot(i);
-					if(stackInSlot != null && stackInSlot.getItem() == this && stackInSlot.getItem() == AdvancedRocketryItems.itemUpgradeLegs) {
+					if(!stackInSlot.isEmpty() && stackInSlot.getItem() == this && stackInSlot.getItem() == AdvancedRocketryItems.itemUpgradeLegs) {
 						//Avoid extra calculation
 						if(itemCount == 0 && stackInSlot != componentStack)
 							return;
@@ -69,12 +70,12 @@ public class ItemUpgrade extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public boolean onComponentAdded(World world, ItemStack armorStack) {
+	public boolean onComponentAdded(World world, @Nonnull ItemStack armorStack) {
 		return true;
 	}
 
 	@Override
-	public void onComponentRemoved(World world, ItemStack armorStack) {
+	public void onComponentRemoved(World world, @Nonnull ItemStack armorStack) {
 
 	}
 
@@ -94,7 +95,7 @@ public class ItemUpgrade extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public ResourceIcon getComponentIcon(ItemStack armorStack) {
+	public ResourceIcon getComponentIcon(@Nonnull ItemStack armorStack) {
 		return null;
 	}
 

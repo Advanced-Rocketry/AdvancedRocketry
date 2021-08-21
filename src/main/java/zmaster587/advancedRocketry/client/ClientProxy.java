@@ -43,7 +43,6 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryParticleTypes;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.client.render.*;
-import zmaster587.advancedRocketry.client.render.RenderLaser;
 import zmaster587.advancedRocketry.client.render.entity.*;
 import zmaster587.advancedRocketry.client.render.multiblocks.*;
 import zmaster587.advancedRocketry.common.CommonProxy;
@@ -67,6 +66,10 @@ import zmaster587.libVulpes.api.LibVulpesTileEntityTypes;
 import zmaster587.libVulpes.entity.fx.FxErrorBlock;
 import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
 import zmaster587.libVulpes.tile.TileSchematic;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Objects;
 
 public class ClientProxy extends CommonProxy {
 
@@ -139,7 +142,7 @@ public class ClientProxy extends CommonProxy {
 		Minecraft.getInstance().getItemColors().register(new IItemColor()
 		{
 			@Override
-			public int getColor(ItemStack stack, int tintIndex) {
+			public int getColor(@Nonnull ItemStack stack, int tintIndex) {
 				return tintIndex > 0 ? -1 : ((IDyeableArmorItem)stack.getItem()).getColor(stack);
 			}
 		}, AdvancedRocketryItems.itemSpaceSuit_Boots, AdvancedRocketryItems.itemSpaceSuit_Chest, AdvancedRocketryItems.itemSpaceSuit_Helmet, AdvancedRocketryItems.itemSpaceSuit_Leggings);
@@ -333,33 +336,6 @@ public class ClientProxy extends CommonProxy {
 		RocketEventHandler.atmBar.setSizeModeY(config.get(CLIENT, "atmBarModeY", 1).getInt());*/
 	}
 
-	@Override
-	public void saveUILayout(ARConfiguration configuration) {
-		/*final String CLIENT = "Client";
-		configuration.su
-		configuration.get(CLIENT, "suitPanelX", 1).set(RocketEventHandler.suitPanel.getRawX());
-		configuration.get(CLIENT, "suitPanelY", 1).set(RocketEventHandler.suitPanel.getRawY());
-		configuration.get(CLIENT, "suitPanelModeX", 1).set(RocketEventHandler.suitPanel.getSizeModeX());
-		configuration.get(CLIENT, "suitPanelModeY", 1).set(RocketEventHandler.suitPanel.getSizeModeY());
-
-		configuration.get(CLIENT, "oxygenBarX", 1).set(RocketEventHandler.oxygenBar.getRawX());
-		configuration.get(CLIENT, "oxygenBarY", 1).set(RocketEventHandler.oxygenBar.getRawY());
-		configuration.get(CLIENT, "oxygenBarModeX", 1).set(RocketEventHandler.oxygenBar.getSizeModeX());
-		configuration.get(CLIENT, "oxygenBarModeY", 1).set(RocketEventHandler.oxygenBar.getSizeModeY());
-
-		configuration.get(CLIENT, "hydrogenBarX", 1).set(RocketEventHandler.hydrogenBar.getRawX());
-		configuration.get(CLIENT, "hydrogenBarY", 1).set(RocketEventHandler.hydrogenBar.getRawY());
-		configuration.get(CLIENT, "hydrogenBarModeX", 1).set(RocketEventHandler.hydrogenBar.getSizeModeX());
-		configuration.get(CLIENT, "hydrogenBarModeY", 1).set(RocketEventHandler.hydrogenBar.getSizeModeY());
-
-		configuration.get(CLIENT, "atmBarX", 1).set(RocketEventHandler.atmBar.getRawX());
-		configuration.get(CLIENT, "atmBarY", 1).set(RocketEventHandler.atmBar.getRawY());
-		configuration.get(CLIENT, "atmBarModeX", 1).set(RocketEventHandler.atmBar.getSizeModeX());
-		configuration.get(CLIENT, "atmBarModeY", 1).set(RocketEventHandler.atmBar.getSizeModeY());
-		configuration.save();*/
-	}
-
-	@Override
 	public void displayMessage(String msg, int time) {
 		RocketEventHandler.setOverlay(Minecraft.getInstance().world.getGameTime() + time, msg);
 	}

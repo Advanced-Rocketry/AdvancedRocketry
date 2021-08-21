@@ -72,7 +72,6 @@ public class AdvancedRocketryItems {
 	public static Item itemSensorBiomeChanger;
 	public static Item itemOreScanner;
 	public static Item itemQuartzCrucible;
-	public static Item itemSaplingBlue; 
 	public static Item itemDataUnit;
 	public static Item itemSatellite;
 	public static Item itemSatelliteIdChip;
@@ -104,7 +103,6 @@ public class AdvancedRocketryItems {
 	public static Item itemUpgradeFogGoggles;
 	public static Item itemAtmAnalyser;
 	public static Item itemBiomeChanger;
-	public static Item itemAstroBed;
 	public static Item itemBasicLaserGun;
 	public static Item itemSpaceElevatorChip;
 	public static Item itemBeaconFinder;
@@ -413,7 +411,7 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemElectrolyser = new BlockItem(AdvancedRocketryBlocks.blockElectrolyser, typicalBlockProperties);
 		AdvancedRocketryItems.itemChemicalReactor = new BlockItem(AdvancedRocketryBlocks.blockChemicalReactor, typicalBlockProperties);
 		AdvancedRocketryItems.itemOxygenVent = new BlockItem(AdvancedRocketryBlocks.blockOxygenVent, typicalBlockProperties);
-		AdvancedRocketryItems.itemOxygenScrubber = new BlockItem(AdvancedRocketryBlocks.blockOxygenScrubber, typicalBlockProperties);
+		AdvancedRocketryItems.itemOxygenScrubber = new BlockItem(AdvancedRocketryBlocks.blockCO2Scrubber, typicalBlockProperties);
 		AdvancedRocketryItems.itemOxygenCharger = new BlockItem(AdvancedRocketryBlocks.blockOxygenCharger, typicalBlockProperties);
 		AdvancedRocketryItems.itemAirLock = new BlockItem(AdvancedRocketryBlocks.blockAirLock, typicalBlockProperties);
 		AdvancedRocketryItems.itemLandingPad = new BlockItem(AdvancedRocketryBlocks.blockLandingPad, typicalBlockProperties);

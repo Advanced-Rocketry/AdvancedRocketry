@@ -82,7 +82,7 @@ public class ChemicalReactorCategory extends MachineCategoryTemplate<MachineReci
 
 		if(isArmorRecipe)
 		{
-			List<ItemStack> outputStacks = new LinkedList<ItemStack>();
+			List<ItemStack> outputStacks = new LinkedList<>();
 			for(ItemStack stacks : ingredients.getInputs(VanillaTypes.ITEM).get(0)) {
 				outputStacks.add(new ItemStack( ingredients.getOutputs(VanillaTypes.ITEM).get(0).get(0).getItem() ,1));
 			}

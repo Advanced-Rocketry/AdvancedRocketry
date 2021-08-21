@@ -45,6 +45,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+
 public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 
 	public ItemAtmosphereAnalzer(Properties properties) {
@@ -65,12 +69,12 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 
 	}
 
-	private List<ITextComponent> getAtmosphereReadout(ItemStack stack, AtmosphereType atm, World world) {
+	private List<ITextComponent> getAtmosphereReadout(@Nonnull ItemStack stack, @Nullable AtmosphereType atm, @Nonnull World world) {
 		if(atm == null)
 			atm = AtmosphereType.AIR;
 		
 
-		List<ITextComponent> str = new LinkedList<ITextComponent>();
+		List<ITextComponent> str = new LinkedList<>();
 		
 		str.add(new TranslationTextComponent("%s %s %s",
 				new TranslationTextComponent("msg.atmanal.atmtype"),
@@ -96,12 +100,12 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public boolean onComponentAdded(World world, ItemStack armorStack) {
+	public boolean onComponentAdded(World world, @Nonnull ItemStack armorStack) {
 		return true;
 	}
 
 	@Override
-	public void onComponentRemoved(World world, ItemStack armorStack) {
+	public void onComponentRemoved(World world, @Nonnull ItemStack armorStack) {
 	}
 
 	@Override
@@ -136,7 +140,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 		GL11.glPushMatrix();
 		Minecraft.getInstance().getTextureManager().bindTexture(eyeCandySpinner);
 		GL11.glTranslatef(screenX + 12, screenY + 8, 0);
-		GL11.glRotatef(( System.currentTimeMillis() / 100 ) % 360, 0, 0, 1);
+		GL11.glRotatef(( System.currentTimeMillis() / 100f ) % 360, 0, 0, 1);
 		
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		
@@ -155,7 +159,7 @@ public class ItemAtmosphereAnalzer extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public ResourceIcon getComponentIcon(ItemStack armorStack) {
+	public ResourceIcon getComponentIcon(@Nonnull ItemStack armorStack) {
 		return null;
 	}
 

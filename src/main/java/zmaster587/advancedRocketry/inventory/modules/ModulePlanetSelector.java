@@ -41,7 +41,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 
 	//Closest thing i can get to a struct :/
-	private class PlanetRenderProperties {
+	private static class PlanetRenderProperties {
 		int radius;
 		int posX;
 		int posY;
@@ -168,7 +168,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			ModuleButton button;
 
 			if(star.getSubStars() != null && !star.getSubStars().isEmpty()) {
-				float phaseInc = 360/star.getSubStars().size();
+				float phaseInc = 360f / star.getSubStars().size();
 				float phase = 0;
 				for(StellarBody star2 : star.getSubStars()) {
 					displaySize = (int)(planetSizeMultiplier*star2.getDisplayRadius());
@@ -209,7 +209,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		ModuleButton button;
 
 		if(star.getSubStars() != null && !star.getSubStars().isEmpty()) {
-			float phaseInc = 360/star.getSubStars().size();
+			float phaseInc = 360f / star.getSubStars().size();
 			float phase = 0;
 			for(StellarBody star2 : star.getSubStars()) {
 				displaySize = (int)(planetSizeMultiplier*star2.getDisplayRadius());
@@ -335,9 +335,9 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		int offsetY = -currentPosY;
 		setOffset2(0,0);
 		for(int i = 0; i< planetList.size(); i++) {
-			ModuleBase module = planetList.get(i);
+			ModuleButton module = planetList.get(i);
 			if(planetList.contains(module))
-				this.buttonList.remove(((ModuleButton)module).button);
+				this.buttonList.remove(module.button);
 		}
 
 		this.moduleList.removeAll(planetList);
@@ -352,7 +352,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 				renderStarSystem(DimensionManager.getInstance().getStar(currentSystem), size/2, size/2, 1f*(float) zoom, (float)zoom*.5f);
 		}
 		else
-			renderGalaxyMap(DimensionManager.getInstance(), size/2, size/2, 1f*(float) zoom, (float)zoom*.25f);
+			renderGalaxyMap(DimensionManager.getInstance(), size/2, size/2, (float) zoom, (float)zoom*.25f);
 
 
 		int x = currentPosX - size/2, y = currentPosY - size/2;
@@ -401,7 +401,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 	@Override
 	protected void moveContainerInterior(int deltaX, int deltaY) {
-		super.moveContainerInterior((int)(deltaX), (int)(deltaY));
+		super.moveContainerInterior(deltaX, deltaY);
 	}
 
 	@Override
@@ -426,8 +426,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		//Render orbits
 		if(!stellarView) {
 			for(int ii = 1; ii < 10; ii++) {
-				int radius = ii*80;
-				float x2 = radius;
+				float x2 /*aka radius*/ = ii*80;
 				float y2 = 0;
 				float t;
 				GL11.glPushMatrix();
@@ -465,11 +464,11 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			GL11.glPushMatrix();
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			float radius = currentlySelectedPlanet.radius/2;
+			float radius = currentlySelectedPlanet.radius / 2f;
 
 			if(renderPropertiesMap.containsKey(selectedSystem)) {
 				PlanetRenderProperties base = renderPropertiesMap.get(selectedSystem);
-				GL11.glTranslatef(base.posX + currentPosX + base.radius/2, base.posY + currentPosY + base.radius/2, 0);
+				GL11.glTranslatef(base.posX + currentPosX + base.radius/ 2f, base.posY + currentPosY + base.radius/ 2f, 0);
 			}
 			else 
 				GL11.glTranslatef(currentlySelectedPlanet.posX + currentPosX + radius, currentlySelectedPlanet.posY  + currentPosY + radius, 0);
@@ -634,7 +633,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 			offY = clickablePlanetList.getScrollY();
 		}
 
-		clickablePlanetList = new ModuleContainerPan(0, 128, list2, new LinkedList<ModuleBase>(), null, 512, 256, 0, 0, 258, 8192);
+		clickablePlanetList = new ModuleContainerPan(0, 128, list2, new LinkedList<>(), null, 512, 256, 0, 0, 258, 8192);
 		staticModuleList.add(clickablePlanetList);
 		clickablePlanetList.addButtons(0, 0);
 

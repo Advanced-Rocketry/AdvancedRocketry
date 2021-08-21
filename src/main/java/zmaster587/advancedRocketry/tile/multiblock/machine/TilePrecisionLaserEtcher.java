@@ -23,6 +23,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
+import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.List;
 
@@ -94,6 +95,7 @@ public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements I
 	}
 
 	@Override
+	@Nonnull
 	public AxisAlignedBB getRenderBoundingBox() {
 
 		return new AxisAlignedBB(pos.add(-3,-2,-3),pos.add(3,2,3));

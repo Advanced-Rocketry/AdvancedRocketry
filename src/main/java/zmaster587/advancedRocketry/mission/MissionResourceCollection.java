@@ -39,13 +39,13 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 	protected LinkedList<HashedBlockPosition> infrastructureCoords;
 
 	public MissionResourceCollection(){
-		infrastructureCoords = new LinkedList<HashedBlockPosition>();
+		infrastructureCoords = new LinkedList<>();
 	}
 
 	public MissionResourceCollection(long duration, EntityRocket entity, LinkedList<IInfrastructure> infrastructureCoords) {
 		super();
 		missionPersistantNBT = new CompoundNBT();
-		entity.writeMissionPersistantNBT(missionPersistantNBT);
+		entity.writeMissionPersistentNBT(missionPersistantNBT);
 		
 		satelliteProperties.setId(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getNextSatelliteId());
 
@@ -59,7 +59,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 		z = entity.getPosZ();
 		worldId = ZUtils.getDimensionIdentifier(entity.world);
 
-		this.infrastructureCoords = new LinkedList<HashedBlockPosition>();
+		this.infrastructureCoords = new LinkedList<>();
 
 		for(IInfrastructure tile : infrastructureCoords)
 			this.infrastructureCoords.add(new HashedBlockPosition(((TileEntity)tile).getPos()));

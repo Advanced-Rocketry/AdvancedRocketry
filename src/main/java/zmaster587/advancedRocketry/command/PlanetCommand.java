@@ -170,9 +170,9 @@ public class PlanetCommand {
 		
 		ItemStack stack;
 		if(sender.getEntity() != null ) {
-			stack = ((PlayerEntity)sender.asPlayer()).getHeldItem(Hand.MAIN_HAND);
+			stack = sender.asPlayer().getHeldItem(Hand.MAIN_HAND);
 
-			if(stack != null && stack.getItem() instanceof ItemData) {
+			if(!stack.isEmpty() && stack.getItem() instanceof ItemData) {
 				ItemData item = (ItemData) stack.getItem();
 				int dataAmount = item.getMaxData(stack);
 				DataType dataType = null;
@@ -182,10 +182,10 @@ public class PlanetCommand {
 						dataType = DataType.valueOf(dataTypeStr.toUpperCase(Locale.ENGLISH));
 					} catch (IllegalArgumentException e) {
 						sender.sendFeedback(new StringTextComponent("Not a valid datatype"), false);
-						String value = "";
+						StringBuilder value = new StringBuilder();
 						for(DataType data : DataType.values())
 							if(!data.name().equals("UNDEFINED"))
-								value += data.name().toLowerCase() + ", ";
+								value.append(data.name().toLowerCase()).append(", ");
 
 						sender.sendFeedback(new StringTextComponent("Try " + value), false);
 
@@ -204,7 +204,7 @@ public class PlanetCommand {
 				}
 				sender.sendFeedback(new StringTextComponent("Data filled!"), false);
 			}
-			else if(stack != null && stack.getItem() instanceof ItemMultiData) {
+			else if(stack.isEmpty() && stack.getItem() instanceof ItemMultiData) {
 				ItemMultiData item = (ItemMultiData) stack.getItem();
 				int dataAmount = item.getMaxData(stack);
 				DataType dataType = null;

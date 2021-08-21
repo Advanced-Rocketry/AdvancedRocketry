@@ -29,7 +29,7 @@ public class EnergyNetwork extends CableNetwork implements IUniversalEnergy {
 
 		int id = random.nextInt();
 
-		while(usedIds.contains(id)){ id = random.nextInt(); };
+		while(usedIds.contains(id)){ id = random.nextInt(); }
 
 		EnergyNetwork net = new EnergyNetwork();
 		usedIds.add(id);
@@ -68,7 +68,7 @@ public class EnergyNetwork extends CableNetwork implements IUniversalEnergy {
 
 		while(sinkItr.hasNext()) {
 			//Get tile and key
-			Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sinkItr.next();
+			Entry<TileEntity,Direction> obj = sinkItr.next();
 			LazyOptional<IEnergyStorage> dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
 
 			demand += dataHandlerSink.orElse(null).receiveEnergy(amount, true);
@@ -76,7 +76,7 @@ public class EnergyNetwork extends CableNetwork implements IUniversalEnergy {
 
 		while(sourceItr.hasNext()) {
 			//Get tile and key
-			Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sourceItr.next();
+			Entry<TileEntity,Direction> obj = sourceItr.next();
 			LazyOptional<IEnergyStorage> dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
 
 			supply += dataHandlerSink.orElse(null).extractEnergy(amount, true);
@@ -89,7 +89,7 @@ public class EnergyNetwork extends CableNetwork implements IUniversalEnergy {
 
 
 			//Get tile and key
-			Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sinkItr.next();
+			Entry<TileEntity,Direction> obj = sinkItr.next();
 			LazyOptional<IEnergyStorage> dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
 
 
@@ -102,7 +102,7 @@ public class EnergyNetwork extends CableNetwork implements IUniversalEnergy {
 		sourceItr = sources.iterator();
 		while(sourceItr.hasNext()) {
 			//Get tile and key
-			Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sourceItr.next();
+			Entry<TileEntity,Direction> obj = sourceItr.next();
 			LazyOptional<IEnergyStorage> dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
 
 			amountMoved -= dataHandlerSink.orElse(null).extractEnergy(amountMoved, false);

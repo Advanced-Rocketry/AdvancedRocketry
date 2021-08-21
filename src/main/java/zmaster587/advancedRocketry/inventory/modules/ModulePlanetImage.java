@@ -17,12 +17,12 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 
-public class ModulePanetImage extends ModuleBase {
+public class ModulePlanetImage extends ModuleBase {
 
 	DimensionProperties properties;
 	float width;
 
-	public ModulePanetImage(int locX, int locY, float size, DimensionProperties icon) {
+	public ModulePlanetImage(int locX, int locY, float size, DimensionProperties icon) {
 		super(locX, locY);
 		width = size;
 	}
@@ -44,7 +44,7 @@ public class ModulePanetImage extends ModuleBase {
 		//GL11.glTranslatef(xPosition, 100 + this.zLevel, yPosition);
 		float newWidth = width/2f;
 
-		RenderPlanetarySky.renderPlanetPubHelper(vertexbuffer, matrix, properties.getPlanetIcon(), (int)(x + this.offsetX + newWidth), (int)(y + this.offsetY + newWidth), (double)-0.1, newWidth, 1f, properties.getSolarTheta(), properties.hasAtmosphere(), properties.skyColor, properties.ringColor, properties.isGasGiant(), properties.hasRings(), properties.hasDecorators());
+		RenderPlanetarySky.renderPlanetPubHelper(vertexbuffer, matrix, properties.getPlanetIcon(), (int)(x + this.offsetX + newWidth), (int)(y + this.offsetY + newWidth), (double)-0.1, newWidth, 1f, properties.getSolarTheta(), properties.hasAtmosphere(), properties.skyColor, properties.ringColor, properties.isGasGiant(), properties.hasRings(), properties.hasDecorators(), new float[]{0, 0, 0});
 		matrix.pop();
 	}
 	

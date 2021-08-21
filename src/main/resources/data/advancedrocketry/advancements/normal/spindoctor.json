@@ -4,10 +4,10 @@
             "item": "advancedrocketry:lathe"
         },
         "title": {
-            "translate": "achievement.spinDoctor"
+            "translate": "advancement.spinDoctor"
         },
         "description": {
-            "translate": "achievement.spinDoctor.desc"
+            "translate": "advancement.spinDoctor.desc"
         }
     },
     "parent": "advancedrocketry:normal/holographic",

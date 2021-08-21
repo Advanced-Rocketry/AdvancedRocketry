@@ -35,7 +35,7 @@ public class RocketInventoryHelper {
 		
 		return !canPlayerBypassInvChecks((PlayerEntity)tile);
 	}
-	
+
 	public static boolean canPlayerBypassInvChecks(PlayerEntity player) {
 		Iterator<WeakReference<PlayerEntity>> iter = inventoryCheckPlayerBypassMap.iterator();
 		while(iter.hasNext()) {
@@ -45,7 +45,7 @@ public class RocketInventoryHelper {
 		}
 		return false;
 	}
-	
+
 	public static void removePlayerFromInventoryBypass(PlayerEntity player) {
 		Iterator<WeakReference<PlayerEntity>> iter = inventoryCheckPlayerBypassMap.iterator();
 

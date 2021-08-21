@@ -29,45 +29,45 @@ import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 
 public class ChunkProviderAsteroids extends ChunkGenerator {
 
-	
-	public ChunkProviderAsteroids(BiomeProvider p_i231887_1_, long p_i231887_4_,
-			Supplier<DimensionSettings> settings,  DimensionProperties properties) {
-		this(p_i231887_1_, p_i231887_1_, p_i231887_4_, settings, properties);
-	}
-	
-	public ChunkProviderAsteroids(BiomeProvider p_i231887_1_, BiomeProvider p_i231887_2_, long p_i231887_4_,
-			Supplier<DimensionSettings> settings,  DimensionProperties properties) {
-		super(p_i231887_1_, p_i231887_2_, settings.get().getStructures(), p_i231887_4_);
-	}
 
-	@Override
-	protected Codec<? extends ChunkGenerator> func_230347_a_() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public ChunkProviderAsteroids(BiomeProvider p_i231887_1_, long p_i231887_4_,
+                                  Supplier<DimensionSettings> settings,  DimensionProperties properties) {
+        this(p_i231887_1_, p_i231887_1_, p_i231887_4_, settings, properties);
+    }
 
-	@Override
-	public ChunkGenerator func_230349_a_(long p_230349_1_) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public ChunkProviderAsteroids(BiomeProvider p_i231887_1_, BiomeProvider p_i231887_2_, long p_i231887_4_,
+                                  Supplier<DimensionSettings> settings,  DimensionProperties properties) {
+        super(p_i231887_1_, p_i231887_2_, settings.get().getStructures(), p_i231887_4_);
+    }
 
-	@Override
-	public void generateSurface(WorldGenRegion p_225551_1_, IChunk p_225551_2_) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    protected Codec<? extends ChunkGenerator> func_230347_a_() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public void func_230352_b_(IWorld p_230352_1_, StructureManager p_230352_2_, IChunk p_230352_3_) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public ChunkGenerator func_230349_a_(long p_230349_1_) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public int getHeight(int x, int z, Type heightmapType) {
-		return 0;
-	}
+    @Override
+    public void generateSurface(WorldGenRegion p_225551_1_, IChunk p_225551_2_) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void func_230352_b_(IWorld p_230352_1_, StructureManager p_230352_2_, IChunk p_230352_3_) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public int getHeight(int x, int z, Type heightmapType) {
+        return 0;
+    }
 
 	/*@Override
 	public int func_222529_a(int p_222529_1_, int p_222529_2_, Type heightmapType) {
@@ -75,10 +75,10 @@ public class ChunkProviderAsteroids extends ChunkGenerator {
 		return 0;
 	}*/
 
-	@Override
-	public IBlockReader func_230348_a_(int p_230348_1_, int p_230348_2_) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public IBlockReader func_230348_a_(int p_230348_1_, int p_230348_2_) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

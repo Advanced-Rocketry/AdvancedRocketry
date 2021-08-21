@@ -12,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.tileentity.PistonTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -31,6 +32,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -128,20 +131,20 @@ public class BlockSmallPlatePress extends PistonBlock {
 
 	private ItemStack getRecipe(World world, BlockPos pos, BlockState state) {
 		if(world.isAirBlock(pos.add(0, -1, 0)))
-			return null;
+			return ItemStack.EMPTY;
 
 		BlockState state2 = world.getBlockState(pos.add(0, -1, 0));
 		Block block = state2.getBlock();
 
 		Item item = Item.getItemFromBlock(block);
-		if(item == null)
+		if(item.equals(Items.AIR))
 			return null;
 
 
 		ItemStack stackInWorld =  block.getItem(world, pos.add(0, -1, 0), state2);
 
 		List<IRecipe> recipes = RecipesMachine.getInstance().getRecipes(this.getClass());
-		ItemStack stack = null;
+		ItemStack stack = ItemStack.EMPTY;
 
 		for(IRecipe recipe : recipes) {
 			for(ItemStack stack2 : recipe.getPossibleIngredients().get(0))
@@ -155,12 +158,12 @@ public class BlockSmallPlatePress extends PistonBlock {
 		if(world.getBlockState(pos.add(0,-2,0)).getBlock() == Blocks.OBSIDIAN)
 			return stack;
 
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	private boolean doMove(World worldIn, BlockPos pos, Direction directionIn, boolean extending) {
 		BlockPos blockpos = pos.offset(directionIn);
-		if (!extending && worldIn.getBlockState(blockpos).isIn(Blocks.PISTON_HEAD)) {
+		if (!extending && worldIn.getBlockState(blockpos).getBlock() == (Blocks.PISTON_HEAD)) {
 			worldIn.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 20);
 		}
 
@@ -251,7 +254,7 @@ public class BlockSmallPlatePress extends PistonBlock {
 	 * Called on server when World#addBlockEvent is called. If server returns true, then also called on the client. On
 	 * the Server, this may perform additional changes to the world, like pistons replacing the block with an extended
 	 * base. On the client, the update may involve replacing tile entities or effects such as sounds or particles
-	 * @deprecated call via {@link IBlockState#onBlockEventReceived(World,BlockPos,int,int)} whenever possible.
+	 * @deprecated call via {@link BlockState#receiveBlockEvent(World, BlockPos, int, int)} whenever possible.
 	 * Implementing/overriding is fine.
 	 */
 	 public boolean eventReceived(BlockState state, World worldIn, BlockPos pos, int id, int param) {
@@ -286,7 +289,7 @@ public class BlockSmallPlatePress extends PistonBlock {
 			 BlockState blockstate = Blocks.MOVING_PISTON.getDefaultState().with(MovingPistonBlock.FACING, direction).with(MovingPistonBlock.TYPE, PistonType.DEFAULT);
 			 worldIn.setBlockState(pos, blockstate, 20);
 			 worldIn.setTileEntity(pos, MovingPistonBlock.createTilePiston(this.getDefaultState().with(FACING, Direction.byIndex(param & 7)), direction, false, true));
-			 worldIn.func_230547_a_(pos, blockstate.getBlock());
+			 worldIn.updateBlock(pos, blockstate.getBlock());
 			 blockstate.updateNeighbours(worldIn, pos, 2);
 			 worldIn.removeBlock(pos.offset(direction), false);
 

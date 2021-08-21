@@ -64,8 +64,8 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-
 import java.lang.reflect.Field;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -218,10 +218,10 @@ public class AdvancedRocketryBiomes {
 	   
 	public static void initFeature()
 	{
-		CRYSTAL_FEATURE = new WorldGenLargeCrystal(NoFeatureConfig.field_236558_a_);
+		CRYSTAL_FEATURE = new WorldGenLargeCrystal(NoFeatureConfig.CODEC);
 
-		ALIEN_TREE = registerTree("alientree", Feature.TREE.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(AdvancedRocketryBlocks.blockAlienWood.getDefaultState()), new SimpleBlockStateProvider(AdvancedRocketryBlocks.blockAlienLeaves.getDefaultState()), new BlobFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(0), 3), new WorldGenAlienTree(4, 2, 0), new TwoLayerFeature(1, 0, 1))).setIgnoreVines().build()));
-		CHARRED_TREE = registerTree("charredtree", Feature.TREE.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(AdvancedRocketryBlocks.blockCharcoalLog.getDefaultState()), new SimpleBlockStateProvider(Blocks.AIR.getDefaultState()), new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0), new WorldGenCharredTree(4, 2, 0, 0), new TwoLayerFeature(1, 0, 1))).setIgnoreVines().build()));
+		ALIEN_TREE = registerTree("alientree", Feature.TREE.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(AdvancedRocketryBlocks.blockAlienWood.getDefaultState()), new SimpleBlockStateProvider(AdvancedRocketryBlocks.blockAlienLeaves.getDefaultState()), new BlobFoliagePlacer(FeatureSpread.create(2), FeatureSpread.create(0), 3), new WorldGenAlienTree(4, 2, 0), new TwoLayerFeature(1, 0, 1))).setIgnoreVines().build()));
+		CHARRED_TREE = registerTree("charredtree", Feature.TREE.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(AdvancedRocketryBlocks.blockCharcoalLog.getDefaultState()), new SimpleBlockStateProvider(Blocks.AIR.getDefaultState()), new BlobFoliagePlacer(FeatureSpread.create(0), FeatureSpread.create(0), 0), new WorldGenCharredTree(4, 2, 0, 0), new TwoLayerFeature(1, 0, 1))).setIgnoreVines().build()));
 		CRYSTAL_SPIRE = registerTree("crystal", CRYSTAL_FEATURE.withConfiguration(NoFeatureConfig.NO_FEATURE_CONFIG));		
 	}
 	
@@ -256,15 +256,15 @@ public class AdvancedRocketryBiomes {
 	public static void registerBiomeGenerationSettings()
 	{
 		configureSurfaceBuilders();
-		barren = createBuilder(MOON_LUNAR_LIGHT_CONFIG, true).withCarver(Carving.AIR, ConfiguredCarvers.field_243767_a).build();
-		barrenDark = createBuilder(MOON_LUNAR_DARK_CONFIG, true).withCarver(Carving.AIR, ConfiguredCarvers.field_243767_a).build();
+		barren = createBuilder(MOON_LUNAR_LIGHT_CONFIG, true).withCarver(Carving.AIR, ConfiguredCarvers.CAVE).build();
+		barrenDark = createBuilder(MOON_LUNAR_DARK_CONFIG, true).withCarver(Carving.AIR, ConfiguredCarvers.CAVE).build();
 		hotDry = createBuilder(HOTDRY_CONFIG, true).build();
-		genalienForest = createBuilder(ConfiguredSurfaceBuilders.field_244178_j, false).withFeature(Decoration.VEGETAL_DECORATION, ALIEN_TREE).build();
+		genalienForest = createBuilder(ConfiguredSurfaceBuilders.GRASS, false).withFeature(Decoration.VEGETAL_DECORATION, ALIEN_TREE).build();
 		spaceBiomeGen = new BiomeGenerationSettings.Builder().withSurfaceBuilder(SPACE_CONFIG).build();
-		genCharredLand = createBuilder(ConfiguredSurfaceBuilders.field_244178_j, false).withFeature(Decoration.VEGETAL_DECORATION, CHARRED_TREE).build();
-		genCrystalLandscape = createBuilder(ConfiguredSurfaceBuilders.field_244180_l, false).withFeature(Decoration.SURFACE_STRUCTURES, CRYSTAL_SPIRE).build();
+		genCharredLand = createBuilder(ConfiguredSurfaceBuilders.GRASS, false).withFeature(Decoration.VEGETAL_DECORATION, CHARRED_TREE).build();
+		genCrystalLandscape = createBuilder(ConfiguredSurfaceBuilders.ICE_SPIKES, false).withFeature(Decoration.SURFACE_STRUCTURES, CRYSTAL_SPIRE).build();
 		
-		Builder swampBuilder = createBuilder(ConfiguredSurfaceBuilders.field_244178_j, false).withCarver(Carving.AIR, CONFIGURED_BIG_TREE).withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Features.SEAGRASS_SWAMP);
+		Builder swampBuilder = createBuilder(ConfiguredSurfaceBuilders.SWAMP, false).withCarver(Carving.AIR, CONFIGURED_BIG_TREE).withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Features.SEAGRASS_SWAMP);
 		DefaultBiomeFeatures.withSwampVegetation(swampBuilder);
 		genSwamp = swampBuilder.build();
 		
@@ -295,7 +295,7 @@ public class AdvancedRocketryBiomes {
 		DefaultBiomeFeatures.withPassiveMobs(mobspawninfo$builder);
 		DefaultBiomeFeatures.withBatsAndHostiles(mobspawninfo$builder);
 		mobspawninfo$builder.withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(EntityType.SLIME, 1, 1, 1));
-		BiomeGenerationSettings.Builder biomegenerationsettings$builder = (new BiomeGenerationSettings.Builder()).withSurfaceBuilder(ConfiguredSurfaceBuilders.field_244189_u);
+		BiomeGenerationSettings.Builder biomegenerationsettings$builder = (new BiomeGenerationSettings.Builder()).withSurfaceBuilder(ConfiguredSurfaceBuilders.SWAMP);
 		if (!p_244236_2_) {
 			biomegenerationsettings$builder.withStructure(StructureFeatures.SWAMP_HUT);
 		}
@@ -323,7 +323,7 @@ public class AdvancedRocketryBiomes {
 		}
 
 		DefaultBiomeFeatures.withFrozenTopLayer(biomegenerationsettings$builder);
-		return (new Biome.Builder()).precipitation(Biome.RainType.RAIN).category(Biome.Category.SWAMP).setEffects((new BiomeAmbience.Builder()).setWaterColor(6388580).setWaterFogColor(2302743).setFogColor(12638463).withSkyColor(getHue(0.8F)).withFoliageColor(6975545).withGrassColorModifier(BiomeAmbience.GrassColorModifier.SWAMP).setMoodSound(MoodSoundAmbience.DEFAULT_CAVE).build()).withMobSpawnSettings(mobspawninfo$builder.copy()).withGenerationSettings(biomegenerationsettings$builder.build());
+		return (new Biome.Builder()).precipitation(Biome.RainType.RAIN).category(Biome.Category.SWAMP).setEffects((new BiomeAmbience.Builder()).setWaterColor(6388580).setWaterFogColor(2302743).setFogColor(12638463).withSkyColor(getHue(0.8F)).withFoliageColor(6975545).withGrassColorModifier(BiomeAmbience.GrassColorModifier.SWAMP).setMoodSound(MoodSoundAmbience.DEFAULT_CAVE).build()).withMobSpawnSettings(mobspawninfo$builder.build()).withGenerationSettings(biomegenerationsettings$builder.build());
 	}
 
 	private static int getHue(float p_244206_0_) {
@@ -352,10 +352,10 @@ public class AdvancedRocketryBiomes {
 
 
 	private AdvancedRocketryBiomes() {
-		registeredBiomes = new ArrayList<Biome>();
-		registeredHighPressureBiomes = new LinkedList<Biome>();
-		blackListedBiomeIds = new ArrayList<ResourceLocation>();
-		registeredSingleBiome = new ArrayList<Biome>();
+		registeredBiomes = new ArrayList<>();
+		registeredHighPressureBiomes = new LinkedList<>();
+		blackListedBiomeIds = new ArrayList<>();
+		registeredSingleBiome = new ArrayList<>();
 	}
 
 	
@@ -381,7 +381,7 @@ public class AdvancedRocketryBiomes {
 		
 		registerBiomeGenerationSettings();
 		BiomeAmbience noAmbience = new BiomeAmbience.Builder().withSkyColor(/*sky color*/ getSkyColor(0.6F)).setWaterColor(/*water color*/  4159204).setWaterFogColor(/*water fog color*/ 329011).setFogColor( /*fog color*/ 12638463).build();
-		MobSpawnInfo noMobs = new MobSpawnInfo.Builder().copy();
+		MobSpawnInfo noMobs = new MobSpawnInfo.Builder().build();
 		
 		moonBiome = (new Biome.Builder()).category(Category.NONE).precipitation(RainType.NONE).depth(1f).downfall(0).scale(0.02f).temperature(0.3f).withGenerationSettings(barren).setEffects(noAmbience).withMobSpawnSettings(noMobs).build();
 		hotDryBiome = new Biome.Builder().category(Category.NONE).precipitation(RainType.NONE).depth(1f).scale(0.01f).downfall(0).temperature(0.9f).withGenerationSettings(hotDry).setEffects(noAmbience).withMobSpawnSettings(noMobs).build();

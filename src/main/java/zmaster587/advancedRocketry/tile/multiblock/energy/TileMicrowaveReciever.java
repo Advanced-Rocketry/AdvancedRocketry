@@ -21,6 +21,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -116,12 +117,12 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	public void onInventoryUpdated() {
 		super.onInventoryUpdated();
 
-		List list = new LinkedList<Long>();
+		List<Long> list = new LinkedList<>();
 
 		for(IInventory inv : itemInPorts) {
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				ItemStack stack = inv.getStackInSlot(i);
-				if(stack != null && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
+				if(!stack.isEmpty() && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
 					ItemSatelliteIdentificationChip item = (ItemSatelliteIdentificationChip)stack.getItem();
 					list.add(item.getSatelliteId(stack));
 				}
@@ -180,26 +181,26 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 			}
 		}
 
-		DimensionProperties properties;
+		IDimensionProperties properties;
 		ResourceLocation dimid = ZUtils.getDimensionIdentifier(world);
         SpaceStationObject spaceStation = (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos);
 		if(!world.isRemote && (DimensionManager.getInstance().isDimensionCreated(dimid) || ZUtils.getDimensionIdentifier(world) == DimensionManager.overworldProperties.getId())) {
 			//This way we check to see if it's on a station, and if so, if it has any satellites in orbit around the planet the station is around to pull from
 			properties = (spaceStation != null) ? spaceStation.getOrbitingPlanet() : DimensionManager.getInstance().getDimensionProperties(dimid);
-			int energyRecieved = 0;
+			int energyReceived = 0;
 			if(enabled) {
 				for(long lng : connectedSatellites) {
 					SatelliteBase satellite =  properties.getSatellite(lng);
 
 					if(satellite instanceof IUniversalEnergyTransmitter) {
-						energyRecieved += ((IUniversalEnergyTransmitter)satellite).transmitEnergy(Direction.UP, false);
+						energyReceived += ((IUniversalEnergyTransmitter)satellite).transmitEnergy(Direction.UP, false);
 					}
 				}
 
 				//Multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency, and by insolation mult for solar stuff
-				energyRecieved *= 2 * insolationPowerMultiplier;
+				energyReceived *= 2 * insolationPowerMultiplier;
 			}
-			powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().microwaveRecieverMulitplier.get());
+			powerMadeLastTick = energyReceived;
 
 			if(powerMadeLastTick != prevPowerMadeLastTick) {
 				prevPowerMadeLastTick = powerMadeLastTick;
@@ -209,7 +210,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 			producePower(powerMadeLastTick);
 		}
 		if(world.isRemote)
-			textModule.setText(LibVulpes.proxy.getLocalizedString("msg.microwaverec.generating") + powerMadeLastTick + " " + LibVulpes.proxy.getLocalizedString("msg.powerunit.rfpertick"));
+			textModule.setText(LibVulpes.proxy.getLocalizedString("msg.microwaverec.generating") + " " + powerMadeLastTick + " " + LibVulpes.proxy.getLocalizedString("msg.powerunit.rfpertick"));
 	}
 
 	@Override
@@ -281,12 +282,11 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	public CompoundNBT write(CompoundNBT nbt) {
 		super.write(nbt);
 
-		int[] intArray = new int[connectedSatellites.size()*2];
+		int[] intArray = new int[connectedSatellites.size() * 2];
 
-		for( int i =0; i < connectedSatellites.size()*2; i += 2 ) {
-			connectedSatellites.get(i/2);
-			intArray[i] = (int) (connectedSatellites.get(i/2) & 0xFFFFFFFF);
-			intArray[i+1] = (int) ((connectedSatellites.get(i/2) >>> 32) & 0xFFFFFFFF);
+		for( int i = 0; i < connectedSatellites.size() * 2; i += 2 ) {
+			intArray[i] = (connectedSatellites.get(i / 2)).intValue();
+			intArray[i + 1] = (int) ((connectedSatellites.get(i / 2) >>> 32));
 		}
 
 		nbt.putIntArray("satilliteList", intArray);
@@ -298,10 +298,10 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	public void read(BlockState state, CompoundNBT nbt) {
 		super.read(state, nbt);
 
-		int intArray[] = nbt.getIntArray("satilliteList");
+		int[] intArray = nbt.getIntArray("satilliteList");
 		connectedSatellites.clear();
-		for( int i =0; i < intArray.length/2; i+=2 ) {
-			connectedSatellites.add(intArray[i] | (((long)intArray[i+1]) << 32));
+		for( int i = 0; i < intArray.length / 2; i += 2 ) {
+			connectedSatellites.add(intArray[i] | (((long)intArray[i + 1]) << 32));
 		}
 
 	}

@@ -54,7 +54,7 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
 				double u = 256/distance;
 				double resolution = (int)u;
 
-				double yLoc[][] = new double[(int)resolution][(int)resolution];
+				double[][] yLoc = new double[(int)resolution][(int)resolution];
 
 				for(int i = 0; i < (int)resolution; i++) {
 					for(int g = 0; g < (int)resolution; g++) {
@@ -96,7 +96,7 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
 		
 		RenderHelper.renderCube(matrix, entitySolidSideManualColor, -2, 0.99, -2, -1.9, 1.1, 3, 1,1,1,1);
 		RenderHelper.renderCube(matrix, entitySolidSideManualColor, -2, 0.99, -2, 3, 1.1, -1.9,1,1,1,1);
-		
+
 		RenderHelper.renderCube(matrix, entitySolidSideManualColor, -1.9, 0.99, 2.9, 3, 1.1, 3, 1,1,1,1);
 		RenderHelper.renderCube(matrix, entitySolidSideManualColor, 2.9, 0.99, -1.9, 3, 1.1, 3, 1,1,1,1);
 

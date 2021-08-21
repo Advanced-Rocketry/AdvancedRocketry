@@ -22,19 +22,17 @@ public class GuiHandler {
 			ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);
 			
 			//If there is latency or some desync odd things can happen so check for that
-			if(stack == null || !(stack.getItem() instanceof IModularInventory)) {
+			if(stack.isEmpty() || !(stack.getItem() instanceof IModularInventory)) {
 				return null;
 			}
 			
 			tile = player.getHeldItem(Hand.MAIN_HAND).getItem();
 		}
-		else
-			tile = world.getEntityByID(x);
 
 		if(ID == guiId.OreMappingSatellite.ordinal()) {
 			SatelliteBase satellite = DimensionManager.getInstance().getSatellite(y);
 			
-			if(satellite == null || !(satellite instanceof SatelliteOreMapping) || satellite.getDimensionId() != world.provider.getDimension())
+			if(!(satellite instanceof SatelliteOreMapping) || satellite.getDimensionId() != world.provider.getDimension())
 				satellite = null;
 			
 			return new ContainerOreMappingSatellite((SatelliteOreMapping) satellite, player.inventory);
@@ -54,20 +52,18 @@ public class GuiHandler {
 			ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);
 			
 			//If there is latency or some desync odd things can happen so check for that
-			if(stack == null || !(stack.getItem() instanceof IModularInventory)) {
+			if(stack.isEmpty() || !(stack.getItem() instanceof IModularInventory)) {
 				return null;
 			}
-			
+
 			tile = player.getHeldItem(Hand.MAIN_HAND).getItem();
 		}
-		else
-			tile = world.getEntityByID(x);
 
 		if(ID == guiId.OreMappingSatellite.ordinal()) {
 			
 			SatelliteBase satellite = DimensionManager.getInstance().getSatellite(y);
 			
-			if(satellite == null || !(satellite instanceof SatelliteOreMapping) || satellite.getDimensionId() != world.provider.getDimension())
+			if(!(satellite instanceof SatelliteOreMapping) || satellite.getDimensionId() != world.provider.getDimension())
 				satellite = null;
 			
 			return new GuiOreMappingSatellite((SatelliteOreMapping) satellite, player);

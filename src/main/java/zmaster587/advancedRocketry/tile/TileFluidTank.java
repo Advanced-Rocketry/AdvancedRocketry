@@ -15,6 +15,8 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 
+import javax.annotation.Nonnull;
+
 public class TileFluidTank extends TileFluidHatch {
 
 	private long lastUpdateTime;
@@ -100,8 +102,8 @@ public class TileFluidTank extends TileFluidHatch {
 		IFluidHandler handler = this.getFluidTankInDirection(Direction.UP);
 
 		FluidStack stack = null;
-		if(handler != null && !handler.getFluidInTank(0).isEmpty() && 
-				fluidTank.getFluid() != null && fluidTank.getFluid().getFluid() ==
+		if(handler != null && !handler.getFluidInTank(0).isEmpty() &&
+				!fluidTank.getFluid().isEmpty() && fluidTank.getFluid().getFluid() ==
 				handler.getFluidInTank(0).getFluid()) {
 
 			stack = handler.drain(maxDrain, doDrain);
@@ -111,11 +113,11 @@ public class TileFluidTank extends TileFluidHatch {
 
 		FluidStack stack2 = super.drain(maxDrain - (stack != null ? stack.getAmount() : 0), doDrain);
 
-		if(!stack.isEmpty() && !stack2.isEmpty())
+		if(!stack.isEmpty() && stack2.isEmpty())
 			stack2.setAmount(stack2.getAmount() + stack.getAmount());
 
 		
-		if(!stack2.isEmpty() && doDrain.execute()) {
+		if(stack2.isEmpty()) {
 			fluidChanged = true;
 		}
 		checkForUpdate();
@@ -145,7 +147,7 @@ public class TileFluidTank extends TileFluidHatch {
 	private boolean canFill(FluidStack stack)
 	{
 		FluidStack stack2 = fluidTank.getFluid();
-		
+
 		return stack2.isEmpty() || (stack2.getFluid() == stack.getFluid());
 	}
 
@@ -163,7 +165,7 @@ public class TileFluidTank extends TileFluidHatch {
 	}
 
 	@Override
-	protected boolean useBucket(int slot, ItemStack stack) {
+	protected boolean useBucket(int slot, @Nonnull ItemStack stack) {
 		boolean bucketUsed = super.useBucket(slot, stack);
 
 		if(bucketUsed) {

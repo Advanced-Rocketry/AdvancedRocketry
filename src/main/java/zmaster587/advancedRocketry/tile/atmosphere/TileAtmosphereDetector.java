@@ -30,13 +30,14 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class TileAtmosphereDetector extends TileEntity implements ITickableTileEntity, IModularInventory, IButtonInventory, INetworkMachine {
 
-	IAtmosphere atmosphereToDetect;
+	private IAtmosphere atmosphereToDetect;
 
 	public TileAtmosphereDetector() {
 		super(AdvancedRocketryTileEntityType.TILE_ATM_DETECTOR);
@@ -81,7 +82,7 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 			i++;
 		}
 
-		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<ModuleBase>(), zmaster587.libVulpes.inventory.TextureResources.starryBG, 165, 120, 0, 500);
+		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<>(), zmaster587.libVulpes.inventory.TextureResources.starryBG, 165, 120, 0, 500);
 		modules.add(panningContainer);
 		return modules;
 	}

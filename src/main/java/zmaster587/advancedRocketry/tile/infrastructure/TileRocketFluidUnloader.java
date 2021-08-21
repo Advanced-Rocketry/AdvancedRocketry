@@ -105,7 +105,7 @@ public class TileRocketFluidUnloader extends TileFluidOutputHatch implements IIn
 
 				if(isAllowToOperate) {
 					FluidStack stack = fluidTank.getFluid();
-					if(stack == null) {
+					if(!stack.isEmpty()) {
 						this.fill(handler.drain(fluidTank.getCapacity(), FluidAction.EXECUTE), FluidAction.EXECUTE);
 					}
 					else {

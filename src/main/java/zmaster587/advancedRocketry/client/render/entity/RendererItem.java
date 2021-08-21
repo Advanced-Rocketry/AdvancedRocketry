@@ -1,7 +1,3 @@
-/**
- * Yeah, i know, this is litterally a copy of the item renderer, other option was asm the class responsible for render distance
- */
-
 package zmaster587.advancedRocketry.client.render.entity;
 
 import net.minecraft.client.Minecraft;
@@ -16,6 +12,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 import com.mojang.blaze3d.matrix.MatrixStack;

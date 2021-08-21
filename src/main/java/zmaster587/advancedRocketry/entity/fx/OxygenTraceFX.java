@@ -29,7 +29,7 @@ public class OxygenTraceFX extends SpriteTexturedParticle {
         this.particleGreen = .7F + chroma;
         this.particleBlue = .9f;
         this.setSize(0.001F, 0.001F);
-        this.particleScale = (float)(this.rand.nextFloat() * 0.6F + 6F);
+        this.particleScale = this.rand.nextFloat() * 0.6F + 6F;
         this.motionX = motx;
         this.motionY = moty;
         this.motionZ = motz;

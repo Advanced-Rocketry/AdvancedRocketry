@@ -32,7 +32,7 @@ public class ItemSealDetector extends Item
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand) {
-		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
+		return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
 	}
 	
 	@Override

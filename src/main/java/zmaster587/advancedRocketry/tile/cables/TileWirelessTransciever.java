@@ -43,6 +43,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -98,9 +99,9 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 				return true;
 			}
 
-			int othernetworkid = ((TileWirelessTransciever)tile).networkID;
+			int otherNetworkId = ((TileWirelessTransciever)tile).networkID;
 
-			if(networkID == -1 && othernetworkid == -1)
+			if(networkID == -1 && otherNetworkId == -1)
 			{
 				networkID = NetworkRegistry.dataNetwork.getNewNetworkID();
 				((TileWirelessTransciever)tile).networkID = networkID;
@@ -108,15 +109,15 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 			}
 			else if(networkID == -1)
 			{
-				networkID = othernetworkid;
+				networkID = otherNetworkId;
 			}
-			else if(othernetworkid == -1)
+			else if(otherNetworkId == -1)
 			{
 				((TileWirelessTransciever)tile).networkID = networkID;
 			}
 			else
 			{
-				networkID = NetworkRegistry.dataNetwork.mergeNetworks(othernetworkid, networkID);
+				networkID = NetworkRegistry.dataNetwork.mergeNetworks(otherNetworkId, networkID);
 				((TileWirelessTransciever)tile).networkID = networkID;
 			}
 			addToNetwork();

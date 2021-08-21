@@ -29,6 +29,7 @@ import zmaster587.advancedRocketry.inventory.ContainerRegistry;
 import zmaster587.advancedRocketry.item.ItemOreScanner;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -38,7 +39,7 @@ public class SatelliteOreMapping extends SatelliteBase implements INamedContaine
 	int blockCenterX, blockCenterZ;
 	public static ArrayList<Item> oreList = new ArrayList<Item>();
 
-	int selectedSlot = -1;
+	private int selectedSlot = -1;
 
 	public SatelliteOreMapping() {
 		super();
@@ -53,19 +54,20 @@ public class SatelliteOreMapping extends SatelliteBase implements INamedContaine
 		return "Operational";
 	}
 
-	public boolean acceptsItemInConstruction(ItemStack item) {
+	public boolean acceptsItemInConstruction(@Nonnull ItemStack item) {
 		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
 		return super.acceptsItemInConstruction(item) || SatelliteProperties.Property.DATA.isOfType(flag);
 	}
 
 	@Override
-	public boolean isAcceptableControllerItemStack(ItemStack stack) {
+	public boolean isAcceptableControllerItemStack(@Nonnull ItemStack stack) {
 		return !stack.isEmpty() && stack.getItem() instanceof ItemOreScanner;
 	}
 
 	@Override
-	public ItemStack getContollerItemStack(ItemStack satIdChip,
-			SatelliteProperties properties) {
+	@Nonnull
+	public ItemStack getControllerItemStack(@Nonnull ItemStack satIdChip,
+											SatelliteProperties properties) {
 		ItemStack stack = new ItemStack(AdvancedRocketryItems.itemOreScanner);
 		ItemOreScanner scanner = (ItemOreScanner)AdvancedRocketryItems.itemOreScanner;
 
@@ -84,7 +86,7 @@ public class SatelliteOreMapping extends SatelliteBase implements INamedContaine
 		return battery.extractEnergy(1000, true) == 1000;
 	}
 
-	public int[][] scanChunk(World world, int offsetX, int offsetZ, int radius, int blocksPerPixel, ItemStack block, int zoomLevel) {
+	public int[][] scanChunk(World world, int offsetX, int offsetZ, int radius, int blocksPerPixel, @Nonnull ItemStack block, int zoomLevel) {
 		blocksPerPixel = Math.max(blocksPerPixel, 1);
 		int[][] ret = new int[(radius*2)/blocksPerPixel][(radius*2)/blocksPerPixel];
 
@@ -115,13 +117,16 @@ public class SatelliteOreMapping extends SatelliteBase implements INamedContaine
 								List<ItemStack> drops;
 								BlockState state = world.getBlockState(pos);
 
-								if((drops = state.getDrops(new Builder((ServerWorld) world))) != null)
-									for(ItemStack stack : drops) {
-										if(stack.getItem() == block.getItem() && stack.getDamage() == block.getDamage()) {
+                                if (!state.getDrops(new Builder((ServerWorld) world)).isEmpty()) {
+									drops = state.getDrops(new Builder((ServerWorld) world));
+									for (ItemStack stack : drops) {
+										if (stack.getItem() == block.getItem() && stack.getDamage() == block.getDamage()) {
 											oreCount++;
 											found = true;
 										}
 									}
+
+								}
 
 								if (!found)
 									otherCount++;
@@ -145,9 +150,10 @@ public class SatelliteOreMapping extends SatelliteBase implements INamedContaine
 	 * Note: array returned will be [radius/blocksPerPixel][radius/blocksPerPixel]
 	 * @param world
 	 * @param offsetX
-	 * @param offsetY
+	 * @param offsetZ
 	 * @param radius in blocks
 	 * @param blocksPerPixel number of blocks squared (n*n) that take up one pixel
+	 * @param zoomLevel
 	 * @return array of ore vs other block values
 	 */
 	public int[][] scanChunk(World world, int offsetX, int offsetZ, int radius, int blocksPerPixel, int zoomLevel) {

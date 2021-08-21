@@ -23,6 +23,9 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNullableByDefault;
+
 public class BlockRedstoneEmitter extends Block {
 	
 	public static final BooleanProperty POWERED = BooleanProperty.create("powered");

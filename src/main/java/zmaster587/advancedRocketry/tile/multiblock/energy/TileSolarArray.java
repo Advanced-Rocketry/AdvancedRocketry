@@ -162,6 +162,7 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickableT
 	public SUpdateTileEntityPacket getUpdatePacket() {
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putInt("amtPwr", powerMadeLastTick);
+
 		writeNetworkData(nbt);
 		return new SUpdateTileEntityPacket(pos, 0, nbt);
 	}
@@ -171,6 +172,7 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickableT
 		CompoundNBT nbt = pkt.getNbtCompound();
 
 		powerMadeLastTick = nbt.getInt("amtPwr");
+		this.canRender = nbt.getBoolean("canRender");
 		readNetworkData(nbt);
 	}
 	
@@ -179,6 +181,7 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickableT
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putInt("powerMadeLastTick", powerMadeLastTick);
 		nbt.putInt("numPanels", numPanels);
+		nbt.putBoolean("canRender", this.canRender);
 		write(nbt);
 		return nbt;
 	}
@@ -233,4 +236,5 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickableT
 		super.readNetworkData(nbt);
 		this.numPanels = nbt.getInt("numPanels");
 	}
+
 }

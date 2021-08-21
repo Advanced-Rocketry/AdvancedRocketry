@@ -21,6 +21,10 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.ParametersAreNullableByDefault;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -54,9 +58,7 @@ public class BlockTorchUnlit extends TorchBlock {
 			Hand handIn, BlockRayTraceResult hit) {
 		if(player.getHeldItem(Hand.MAIN_HAND) != null) {
 			Item item = player.getHeldItem(Hand.MAIN_HAND).getItem();
-			if(!world.isRemote && item != null && AtmosphereHandler.getOxygenHandler(world).getAtmosphereType(pos).allowsCombustion() && (item == Item.getItemFromBlock(Blocks.TORCH) || 
-					item == Items.FLINT_AND_STEEL || 
-					item == Items.FIRE_CHARGE)) {
+			if(!world.isRemote && item != null && AtmosphereHandler.getOxygenHandler(world).getAtmosphereType(pos).allowsCombustion() && (item == Item.getItemFromBlock(Blocks.TORCH) || item == Items.FLINT_AND_STEEL || item == Items.FIRE_CHARGE)) {
 
 				world.setBlockState(pos, Blocks.TORCH.getDefaultState());
 

@@ -9,10 +9,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemIdWithName extends Item {
-	
+
 	public ItemIdWithName(Properties properties) {
 		super(properties);
 	}

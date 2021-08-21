@@ -15,19 +15,16 @@ import zmaster587.advancedRocketry.inventory.modules.ModuleAutoData;
 import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
-//TODO: allow dataCable connections
 public class TileDataBus extends TileInventoryHatch implements IDataInventory, INetworkMachine {
 
-	int maxData;
 	DataStorage data;
 
 	public TileDataBus() {
@@ -52,15 +49,11 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 
 		ItemStack itemStack = inventory.getStackInSlot(0);
 
-		if(itemStack != null && itemStack.getItem() instanceof ItemData) {
+		if(itemStack != ItemStack.EMPTY && itemStack.getItem() instanceof ItemData) {
 			ItemData itemData = (ItemData)itemStack.getItem();
 			itemData.removeData(itemStack, this.data.addData(itemData.getData(itemStack), itemData.getDataType(itemStack), true), DataStorage.DataType.UNDEFINED);
 
 			inventory.setInventorySlotContents(1, decrStackSize(0, 1));
-		}
-
-		if(world.isRemote) {
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)-2));
 		}
 	}
 
@@ -73,15 +66,11 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	public void storeData(int id) {
 		ItemStack itemStack = inventory.getStackInSlot(0);
 
-		if(itemStack != null && itemStack.getItem() instanceof ItemData && inventory.getStackInSlot(1) == ItemStack.EMPTY) {
+		if(!itemStack.isEmpty() && itemStack.getItem() instanceof ItemData && inventory.getStackInSlot(1) == ItemStack.EMPTY) {
 			ItemData itemData = (ItemData)itemStack.getItem();
 			this.data.removeData(itemData.addData(itemStack, this.data.getData(), this.data.getDataType()), true);
 
 			inventory.setInventorySlotContents(1, decrStackSize(0, 1));
-		}
-
-		if(world.isRemote) {
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)-1));
 		}
 	}
 
@@ -139,11 +128,11 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 		ItemStack itemStack = inventory.getStackInSlot(0);
 
-		if(itemStack != ItemStack.EMPTY && itemStack.getItem() instanceof ItemData) {
+		if(itemStack != ItemStack.EMPTY && itemStack.getItem() instanceof ItemData  && inventory.getStackInSlot(1) == ItemStack.EMPTY) {
 			ItemData itemData = (ItemData)itemStack.getItem();
 			if(itemData.getData(itemStack) > 0 && data.getData() != data.getMaxData()) {
 				loadData(0);
@@ -193,12 +182,6 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	@Override
 	public void useNetworkData(PlayerEntity player, Dist side, byte id,
 			CompoundNBT nbt) {
-
-		if(id == -1) {
-			storeData(0);
-		}
-		else if(id == -2)
-			loadData(0);
 	}
 
 	@Override

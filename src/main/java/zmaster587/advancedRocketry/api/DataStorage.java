@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.api;
 
 import net.minecraft.nbt.CompoundNBT;
 
+import javax.annotation.Nonnull;
 import java.util.Locale;
 
 public class DataStorage {
@@ -17,7 +18,7 @@ public class DataStorage {
 
 		public String toString() {
 			return "data." + name().toLowerCase(Locale.ENGLISH);
-		};
+		}
 	}
 
 	private int data, maxData;
@@ -129,7 +130,7 @@ public class DataStorage {
 		nbt.putBoolean("locked", locked);
 	}
 
-	public void readFromNBT(CompoundNBT nbt) {
+	public void readFromNBT(@Nonnull CompoundNBT nbt) {
 		data = nbt.getInt("Data");
 		maxData = nbt.getInt("maxData");
 		try {

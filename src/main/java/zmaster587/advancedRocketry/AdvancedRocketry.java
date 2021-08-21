@@ -56,7 +56,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import zmaster587.advancedRocketry.achievements.ARAdvancements;
+import zmaster587.advancedRocketry.advancements.ARAdvancements;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
@@ -64,7 +64,6 @@ import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.block.*;
 import zmaster587.advancedRocketry.capability.CapabilityProtectiveArmor;
 import zmaster587.advancedRocketry.common.CommonProxy;
-import zmaster587.advancedRocketry.compat.Compat;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes;
@@ -110,6 +109,10 @@ import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.api.material.MixedMaterial;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
+import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
+import zmaster587.libVulpes.inventory.GuiHandler;
+import zmaster587.libVulpes.items.ItemBlockMeta;
 import zmaster587.libVulpes.items.ItemProjector;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketItemModifcation;
@@ -121,6 +124,7 @@ import zmaster587.libVulpes.util.SingleEntry;
 import zmaster587.advancedRocketry.client.ClientProxy;
 import zmaster587.advancedRocketry.command.PlanetCommand;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.nio.file.FileSystem;
 import java.util.*;
@@ -156,11 +160,12 @@ public class AdvancedRocketry {
 
 	public static MaterialRegistry materialRegistry = new MaterialRegistry(); 
 
-	public static HashMap<AllowedProducts, HashSet<String>> modProducts = new HashMap<AllowedProducts, HashSet<String>>();
+	public static HashMap<AllowedProducts, HashSet<String>> modProducts = new HashMap<>();
 
 
 	public static ItemGroup tabAdvRocketry = new ItemGroup("advancedRocketry") {
 		@Override
+		@Nonnull
 		public ItemStack createIcon() {
 			return new ItemStack(AdvancedRocketryItems.itemSatelliteIdChip);
 		}
@@ -576,7 +581,7 @@ public class AdvancedRocketry {
 			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {MinecraftForge.EVENT_BUS.register(eventHandler);} );
 				
 		}
-		Compat.isSpongeInstalled = ModList.get().isLoaded("sponge");
+		CompatibilityMgr.isSpongeInstalled = ModList.get().isLoaded("sponge");
 		// End compat stuff
 
 		MinecraftForge.EVENT_BUS.register(SpaceObjectManager.getSpaceManager());
@@ -626,18 +631,27 @@ public class AdvancedRocketry {
 		if(!file.exists()) {
 			logger.info(file.getAbsolutePath() + " not found, generating");
 			try {
-
 				file.createNewFile();
 				BufferedWriter stream;
 				stream = new BufferedWriter(new FileWriter(file));
-				stream.write("<Asteroids>\n\t<asteroid name=\"Small Asteroid\" distance=\"10\" mass=\"100\" massVariability=\"0.5\" minLevel=\"0\" probability=\"10\" richness=\"0.2\" richnessVariability=\"0.5\">"
+				stream.write("<Asteroids>"
+						+ "\n\t<asteroid name=\"Small Asteroid\" distance=\"10\" mass=\"200\" massVariability=\"0.5\" minLevel=\"0\" probability=\"20\" richness=\"0.3\" richnessVariability=\"0.5\">"
 						+ "\n\t\t<ore itemStack=\"minecraft:iron_ore\" chance=\"15\" />"
 						+ "\n\t\t<ore itemStack=\"minecraft:gold_ore\" chance=\"10\" />"
 						+ "\n\t\t<ore itemStack=\"minecraft:redstone_ore\" chance=\"10\" />"
 						+ "\n\t</asteroid>"
-						+ "\n\t<asteroid name=\"Iridium Enriched asteroid\" distance=\"100\" mass=\"25\" massVariability=\"0.5\" minLevel=\"0\" probability=\"0.75\" richness=\"0.2\" richnessVariability=\"0.3\">"
+						+ "\n\t<asteroid name=\"Light Asteroid\" distance=\"60\" mass=\"200\" massVariability=\"0.5\" minLevel=\"0\" probability=\"15\" richness=\"0.2\" richnessVariability=\"0.5\">"
+						+ "\n\t\t<ore itemStack=\"libvulpes:ore0;9\" chance=\"20\" />"
+						+ "\n\t\t<ore itemStack=\"libvulpes:ore0;8\" chance=\"10\" />"
+						+ "\n\t\t<ore itemStack=\"minecraft:quartz_block\" chance=\"5\" />"
+						+ "\n\t</asteroid>"
+						+ "\n\t<asteroid name=\"Iridium Enriched asteroid\" distance=\"100\" mass=\"75\" massVariability=\"0.5\" minLevel=\"0\" probability=\"2\" richness=\"0.2\" richnessVariability=\"0.3\">"
 						+ "\n\t\t<ore itemStack=\"minecraft:iron_ore\" chance=\"25\" />"
 						+ "\n\t\t<ore itemStack=\"libvulpes:ore0 10\" chance=\"5\" />"
+						+ "\n\t</asteroid>"
+						+ "\n\t<asteroid name=\"Strange Asteroid\" distance=\"120\" mass=\"50\" massVariability=\"0.5\" minLevel=\"0\" probability=\"1\" richness=\"0.2\" richnessVariability=\"0.5\">"
+						+ "\n\t\t<ore itemStack=\"libvulpes:ore0;0\" chance=\"20\" />"
+						+ "\n\t\t<ore itemStack=\"minecraft:emerald_ore\" chance=\"5\" />"
 						+ "\n\t</asteroid>"
 						+ "\n</Asteroids>");
 				stream.close();
@@ -648,15 +662,16 @@ public class AdvancedRocketry {
 
 		XMLAsteroidLoader load = new XMLAsteroidLoader();
 		try {
-			load.loadFile(file);
-			for(AsteroidSmall asteroid : load.loadPropertyFile()) {
-				zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().asteroidTypes.put(asteroid.ID, asteroid);
+			if(load.loadFile(file)) {
+				for (Asteroid asteroid : load.loadPropertyFile()) {
+					zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().asteroidTypes.put(asteroid.ID, asteroid);
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		// End load asteroids from XML
-		
+
 		
 		file = new File("./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/oreConfig.xml");
 		logger.info("Checking for ore config at " + file.getAbsolutePath());
@@ -676,29 +691,24 @@ public class AdvancedRocketry {
 		else {
 			XMLOreLoader oreLoader = new XMLOreLoader();
 			try {
-				oreLoader.loadFile(file);
+				if(oreLoader.loadFile(file)) {
+					List<SingleEntry<HashedBlockPosition, OreGenProperties>> mapping = oreLoader.loadPropertyFile();
 
-				List<SingleEntry<HashedBlockPosition, OreGenProperties>> mapping = oreLoader.loadPropertyFile();
+					for (Entry<HashedBlockPosition, OreGenProperties> entry : mapping) {
+						int pressure = entry.getKey().x;
+						int temp = entry.getKey().y;
 
-				for(Entry<HashedBlockPosition, OreGenProperties> entry : mapping) {
-					int pressure = entry.getKey().x;
-					int temp = entry.getKey().y;
-
-					if(pressure == -1) {
-						if(temp != -1) {
-							OreGenProperties.setOresForTemperature(Temps.values()[temp], entry.getValue());
-						}
-					}
-					else if(temp == -1) {
-						if(pressure != -1) {
+						if (pressure == -1) {
+							if (temp != -1) {
+								OreGenProperties.setOresForTemperature(Temps.values()[temp], entry.getValue());
+							}
+						} else if (temp == -1) {
 							OreGenProperties.setOresForPressure(AtmosphereTypes.values()[pressure], entry.getValue());
+						} else {
+							OreGenProperties.setOresForPressureAndTemp(AtmosphereTypes.values()[pressure], Temps.values()[temp], entry.getValue());
 						}
-					}
-					else {
-						OreGenProperties.setOresForPressureAndTemp(AtmosphereTypes.values()[pressure], Temps.values()[temp], entry.getValue());
 					}
 				}
-
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -706,7 +716,6 @@ public class AdvancedRocketry {
 		//End open and load ore files
 
 		DimensionManager.getInstance().createAndLoadDimensions(resetFromXml);
-		
 	}
 
 
@@ -717,8 +726,5 @@ public class AdvancedRocketry {
 		SpaceObjectManager.getSpaceManager().onServerStopped();
 		zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().MoonId = Constants.INVALID_PLANET;
 		((BlockSeal)AdvancedRocketryBlocks.blockPipeSealer).clearMap();
-		
-		if(!zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().lockUI.get())
-			proxy.saveUILayout(ARConfiguration.getCurrentConfig());
 	}
 }

@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -24,6 +25,7 @@ import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.util.FluidUtils;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -31,7 +33,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 public class ItemPressureTank extends Item implements IArmorComponent {
 
 	ResourceIcon icon;
-	
+
 	int capacity;
 	public ItemPressureTank(Properties props, int capacity) {
 		super(props);
@@ -39,8 +41,7 @@ public class ItemPressureTank extends Item implements IArmorComponent {
 	}
 	
 	@Override
-	public void addInformation(ItemStack stack, World player, List list,
-            ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag bool) {
 		super.addInformation(stack, player, list, bool);
 		
 		FluidStack fluidStack = FluidUtils.getFluidForItem(stack);
@@ -60,12 +61,12 @@ public class ItemPressureTank extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public boolean onComponentAdded(World world, ItemStack armorStack) {
+	public boolean onComponentAdded(World world, @Nonnull ItemStack armorStack) {
 		return true;
 	}
 
 	@Override
-	public void onComponentRemoved(World world, ItemStack armorStack) {
+	public void onComponentRemoved(World world, @Nonnull ItemStack armorStack) {
 		
 	}
 
@@ -80,7 +81,7 @@ public class ItemPressureTank extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public ResourceIcon getComponentIcon(ItemStack armorStack) {
+	public ResourceIcon getComponentIcon(@Nonnull ItemStack armorStack) {
 		return null;
 	}
 	
@@ -98,7 +99,7 @@ public class ItemPressureTank extends Item implements IArmorComponent {
 	@Override
 	public void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event,
 			Screen gui) {
-		
+
 	}
 
 }

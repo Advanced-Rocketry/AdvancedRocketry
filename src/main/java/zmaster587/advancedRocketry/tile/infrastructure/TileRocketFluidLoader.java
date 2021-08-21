@@ -34,6 +34,7 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastructure,  ITickableTileEntity,  IButtonInventory, INetworkMachine, IGuiCallback {
@@ -44,8 +45,8 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	ModuleRedstoneOutputButton inputRedstoneControl;
 	RedstoneState inputstate;
 	ModuleBlockSideSelector sideSelectorModule;
-	
-	private static int ALLOW_REDSTONEOUT = 2;
+
+	private final static int ALLOW_REDSTONEOUT = 2;
 
 	public TileRocketFluidLoader(TileEntityType<?> type) {
 		super(type);
@@ -227,7 +228,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	}
 
 	@Override
-	public boolean linkMission(IMission misson) {
+	public boolean linkMission(IMission mission) {
 		return false;
 	}
 
@@ -291,7 +292,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 		nbt.putByte("state", in.readByte());
 		nbt.putByte("inputstate", in.readByte());
 
-		byte bytes[] = new byte[6];
+		byte[] bytes = new byte[6];
 		for(int i = 0; i < 6; i++)
 			bytes[i] = in.readByte();
 		nbt.putByteArray("bytes", bytes);
@@ -303,7 +304,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 		state = RedstoneState.values()[nbt.getByte("state")];
 		inputstate = RedstoneState.values()[nbt.getByte("inputstate")];
 
-		byte bytes[] = nbt.getByteArray("bytes");
+		byte[] bytes = nbt.getByteArray("bytes");
 		for(int i = 0; i < 6; i++)
 			sideSelectorModule.setStateForSide(i, bytes[i]);
 

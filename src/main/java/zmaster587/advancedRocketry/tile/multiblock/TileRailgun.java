@@ -46,15 +46,17 @@ import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.ZUtils;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class TileRailgun extends TileMultiPowerConsumer implements IInventory, ILinkableTile, IGuiCallback {
 	private EmbeddedInventory inv;
 	public long recoil;
-	int minStackTransferSize = 1;
-	ModuleNumericTextbox textBox;
-	RedstoneState state;
-	ModuleRedstoneOutputButton redstoneControl;
+	private int minStackTransferSize = 1;
+	private ModuleNumericTextbox textBox;
+	private RedstoneState state;
+	private ModuleRedstoneOutputButton redstoneControl;
 
 	static final Object[][][] structure = new Object[][][]
 			{
@@ -212,7 +214,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	 */
 	private ResourceLocation getDestDimId() {
 		ItemStack stack = inv.getStackInSlot(0);
-		if(stack != null && stack.getItem() instanceof ItemLinker) {
+		if(!stack.isEmpty() && stack.getItem() instanceof ItemLinker) {
 			return ItemLinker.getDimId(stack);
 		}
 		return Constants.INVALID_PLANET;
@@ -223,7 +225,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	 */
 	private BlockPos getDestPosition() {
 		ItemStack stack = inv.getStackInSlot(0);
-		if(stack != null && stack.getItem() instanceof ItemLinker && ItemLinker.isSet(stack)) {
+		if(!stack.isEmpty() && stack.getItem() instanceof ItemLinker && ItemLinker.isSet(stack)) {
 			return ItemLinker.getMasterCoords(stack);
 		}
 		return null;
@@ -322,7 +324,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		if(world.isRemote)
 			return false;
 
-		ItemStack tfrStack = null;
+		ItemStack tfrStack = ItemStack.EMPTY;
 		IInventory inv2 = null;
 		int index = 0;
 		//BlockPos invPos;
@@ -330,7 +332,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		out:
 			for(IInventory inv : this.itemInPorts) {
 				for(int i = inv.getSizeInventory() - 1; i >= 0 ; i--) {
-					if((tfrStack = inv.getStackInSlot(i)) != null && inv.getStackInSlot(i).getCount() >= minStackTransferSize) {
+					if(!(tfrStack = inv.getStackInSlot(i)).isEmpty() && inv.getStackInSlot(i).getCount() >= minStackTransferSize) {
 						inv2 = inv;
 						index = i;
 
@@ -338,11 +340,11 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 
 						break out;
 					}
-					else tfrStack = null;
+					else tfrStack = ItemStack.EMPTY;
 				}
 			}
 
-		if(tfrStack != null) {
+		if(!tfrStack.isEmpty()) {
 			BlockPos pos = getDestPosition();
 			if(pos != null) {
 				ResourceLocation dimId;
@@ -353,12 +355,12 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 					World world = ZUtils.getWorld(dimId);
 					TileEntity tile;
 
-					if(world != null && (tile = world.getTileEntity(pos)) instanceof TileRailgun && ((TileRailgun)tile).canRecieveCargo(tfrStack) &&
+					if(world != null && (tile = world.getTileEntity(pos)) instanceof TileRailgun && ((TileRailgun)tile).canReceiveCargo(tfrStack) &&
 							(PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(ZUtils.getDimensionIdentifier(this.world),
 									DimensionManager.getEffectiveDimId(world, pos).getId()) ||
 									DimensionManager.getEffectiveDimId(world, pos).getId() == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(this.world, this.pos).getId()) ) {
 
-						((TileRailgun)tile).onRecieveCargo(tfrStack);
+						((TileRailgun)tile).onReceiveCargo(tfrStack);
 						inv2.setInventorySlotContents(index, ItemStack.EMPTY);
 						inv2.markDirty();
 						world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
@@ -376,7 +378,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		return false;
 	}
 
-	public boolean canRecieveCargo(ItemStack stack) {
+	public boolean canReceiveCargo(@Nonnull ItemStack stack) {
 		for(IInventory inv : this.itemOutPorts) {
 			if(ZUtils.numEmptySlots(inv) > 0)
 				return true;
@@ -385,7 +387,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		return false;
 	}
 
-	public void onRecieveCargo(ItemStack stack) {
+	public void onReceiveCargo(@Nonnull ItemStack stack) {
 		for(IInventory inv : this.itemOutPorts) {
 			if(ZUtils.doesInvHaveRoom(stack, inv)) {
 				ZUtils.mergeInventory(stack, inv);
@@ -400,6 +402,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
+	@Nonnull
 	public AxisAlignedBB getRenderBoundingBox() {
 		return new AxisAlignedBB(this.pos.getX() -5, this.pos.getY(), this.pos.getZ() - 5, this.pos.getX() + 5, this.pos.getY() +10, this.pos.getZ() + 5);
 	}
@@ -410,18 +413,20 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int i) {
 		return inv.getStackInSlot(i);
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int i, int j) {
 		return inv.decrStackSize(i, j);
 	}
 
 
 	@Override
-	public void setInventorySlotContents(int i, ItemStack j) {
+	public void setInventorySlotContents(int i, @Nonnull ItemStack j) {
 		inv.setInventorySlotContents(i, j);
 
 	}
@@ -452,8 +457,8 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int i, ItemStack stack) {
-		return stack == null || stack.getItem() instanceof ItemLinker;
+	public boolean isItemValidForSlot(int i, @Nonnull ItemStack stack) {
+		return stack.isEmpty() || stack.getItem() instanceof ItemLinker;
 	}
 
 	@Override
@@ -560,6 +565,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		return inv.removeStackFromSlot(index);
 	}

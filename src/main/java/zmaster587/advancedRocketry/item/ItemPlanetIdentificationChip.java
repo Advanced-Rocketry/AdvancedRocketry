@@ -4,6 +4,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -12,6 +13,7 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.LibVulpes;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemPlanetIdentificationChip extends ItemIdWithName {
@@ -35,7 +37,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 */
 	public DimensionProperties getDimension(ItemStack stack) {
 		if(stack.hasTag()) {
-			return DimensionManager.getInstance().getDimensionProperties( new ResourceLocation( stack.getTag().getString(dimensionIdIdentifier)));
+			return (DimensionProperties) DimensionManager.getInstance().getDimensionProperties( new ResourceLocation( stack.getTag().getString(dimensionIdIdentifier)));
 		}
 		return null;
 	}
@@ -44,7 +46,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 * @param stack ItemStack to check against
 	 * @return true of the dimension stored on the stack exists and is valid
 	 */
-	public boolean hasValidDimension(ItemStack stack) {
+	public boolean hasValidDimension(@Nonnull ItemStack stack) {
 
 		if(stack.hasTag()) {
 			ResourceLocation dimId = new ResourceLocation(stack.getTag().getString(dimensionIdIdentifier));
@@ -76,7 +78,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 			return;
 		}
 
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimensionId);
+		DimensionProperties properties = (DimensionProperties) DimensionManager.getInstance().getDimensionProperties(dimensionId);
 		if(properties == null) {
 			erase(stack);
 			return;
@@ -109,7 +111,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 */
 	public DimensionProperties getDimensionProperties(ItemStack stack) {
 		if(stack.hasTag())
-			return DimensionManager.getInstance().getDimensionProperties(new ResourceLocation(stack.getTag().getString(dimensionIdIdentifier)));
+			return (DimensionProperties) DimensionManager.getInstance().getDimensionProperties(new ResourceLocation(stack.getTag().getString(dimensionIdIdentifier)));
 		return null;
 	}
 
@@ -131,8 +133,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, World player, List list,
-            ITooltipFlag bool){
+	public void addInformation(@Nonnull ItemStack stack, World player, List list, ITooltipFlag bool){
 
 		if(!stack.hasTag()) {
 			list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.unprogrammed")));
@@ -142,7 +143,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 		}
 		else {
 			if(stack.getDamage()  == 0) {
-				DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(getDimensionId(stack));
+				DimensionProperties props = (DimensionProperties) DimensionManager.getInstance().getDimensionProperties(getDimensionId(stack));
 
 				String unknown = TextFormatting.YELLOW + "???";
 				String dimName = stack.getTag().getString(dimensionNameIdentifier);

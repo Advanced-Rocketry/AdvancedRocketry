@@ -2,15 +2,9 @@ package zmaster587.advancedRocketry.atmosphere;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import zmaster587.advancedRocketry.api.EntityRocketBase;
-import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
-import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
 import zmaster587.advancedRocketry.network.PacketOxygenState;
-import zmaster587.advancedRocketry.util.ItemAirUtils;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.network.PacketHandler;
 

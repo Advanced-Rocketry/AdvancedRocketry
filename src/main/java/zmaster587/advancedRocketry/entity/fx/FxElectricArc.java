@@ -30,7 +30,6 @@ public class FxElectricArc extends SpriteTexturedParticle {
 		this.maxAge = 5;
 	}
 
-
 	public IParticleRenderType getRenderType() {
 		return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 	}

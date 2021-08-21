@@ -23,6 +23,10 @@ import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.ParametersAreNullableByDefault;
+
 public class BlockStationModuleDockingPort extends BlockFullyRotatable {
 
 	public BlockStationModuleDockingPort(Properties par2Material) {
@@ -64,7 +68,7 @@ public class BlockStationModuleDockingPort extends BlockFullyRotatable {
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileLandingPad) {
-			((TileDockingPort) tile).unregisterTileWithStation(world, pos);
+			((TileLandingPad) tile).unregisterTileWithStation(world, pos);
 		}
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}

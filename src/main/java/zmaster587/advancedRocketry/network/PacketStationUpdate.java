@@ -42,7 +42,7 @@ public class PacketStationUpdate extends BasePacket {
 	public PacketStationUpdate() {}
 
 	public PacketStationUpdate(ISpaceObject dimProperties, Type type) {
-		this.spaceObject = (SpaceStationObject)dimProperties;
+		this.spaceObject = dimProperties;
 		this.stationNumber = dimProperties.getId();
 		this.type = type;
 	}

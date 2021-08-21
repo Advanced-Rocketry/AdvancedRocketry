@@ -18,7 +18,7 @@ public class LiquidNetwork extends CableNetwork {
 
 	private final int MAX_TRANSFER = 100;
 
-	/**
+    /**
 	 * Create a new network and get an ID
 	 * @return ID of this new network
 	 */
@@ -27,7 +27,7 @@ public class LiquidNetwork extends CableNetwork {
 
 		int id = random.nextInt();
 
-		while(usedIds.contains(id)){ id = random.nextInt(); };
+		while(usedIds.contains(id)){ id = random.nextInt(); }
 
 		LiquidNetwork net = new LiquidNetwork();
 
@@ -41,7 +41,7 @@ public class LiquidNetwork extends CableNetwork {
 	@Override
 	public void tick() {
 
-		int amount = MAX_TRANSFER;
+        int amount = MAX_TRANSFER;
 
 		//Return if there is nothing to do
 		if(sinks.isEmpty() || sources.isEmpty())
@@ -54,7 +54,7 @@ public class LiquidNetwork extends CableNetwork {
 		while(sinkItr.hasNext()) {
 
 			//Get tile and key
-			Entry<TileEntity,Direction> obj = (Entry<TileEntity, Direction>)sinkItr.next();
+			Entry<TileEntity,Direction> obj = sinkItr.next();
 			IFluidHandler fluidHandleSink = (IFluidHandler)obj.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
 			Direction dir = obj.getValue();
 
@@ -64,7 +64,7 @@ public class LiquidNetwork extends CableNetwork {
 
 			if(fluidHandleSink == null) {
 				sinkItr.remove();
-				AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos().toString() + " is added as a sink but has no fluid capabilities on the side connected");
+				AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos() + " is added as a sink but has no fluid capabilities on the side connected");
 				continue;
 			}
 			
@@ -80,12 +80,12 @@ public class LiquidNetwork extends CableNetwork {
 			if(fluid == null) {
 				out:
 					while(sourceItr.hasNext()) {
-						Entry<TileEntity,Direction> objSource = (Entry<TileEntity, Direction>)sourceItr.next();
+						Entry<TileEntity,Direction> objSource = sourceItr.next();
 						IFluidHandler fluidHandleSource = (IFluidHandler)objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
 
 						if(fluidHandleSource == null) {
 							sourceItr.remove();
-							AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos().toString() + " is added as a source but has no fluid capabilities on the side connected");
+							AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos() + " is added as a source but has no fluid capabilities on the side connected");
 							continue;
 						}
 						
@@ -111,7 +111,7 @@ public class LiquidNetwork extends CableNetwork {
 				int maxFill = Math.min(fluidHandleSink.fill(new FluidStack(fluid, amount), FluidAction.SIMULATE), amount);
 				int actualFill = 0;
 				while(sourceItr.hasNext()) {
-					Entry<TileEntity,Direction> objSource = (Entry<TileEntity, Direction>)sourceItr.next();
+					Entry<TileEntity,Direction> objSource = sourceItr.next();
 					IFluidHandler fluidHandleSource = (IFluidHandler)objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
 					
 					FluidStack fluid2;

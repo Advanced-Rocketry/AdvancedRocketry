@@ -5,12 +5,14 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.api.DataStorage;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemData extends Item {
@@ -22,27 +24,27 @@ public class ItemData extends Item {
 	}
 
 	public int getMaxData(ItemStack stack) {
-		return 1000;
+		return stack.getDamage() == 0 ? 1000 : 0;
 	}
 
 	@Override
-	public int getItemStackLimit(ItemStack stack) {
+	public int getItemStackLimit(@Nonnull ItemStack stack) {
 		return getData(stack) == 0 ? super.getItemStackLimit(stack) : 1;
 	}
 	
-	public int getData(ItemStack stack) {
+	public int getData(@Nonnull ItemStack stack) {
 		return getDataStorage(stack).getData();
 	}
 	
-	public DataStorage.DataType getDataType(ItemStack stack) {
+	public DataStorage.DataType getDataType(@Nonnull ItemStack stack) {
 		return getDataStorage(stack).getDataType();
 	}
 	
-	public DataStorage getDataStorage(ItemStack item) {
+	public DataStorage getDataStorage(@Nonnull ItemStack item) {
 
 		DataStorage data = new DataStorage();
 
-		if(!item.hasTag()) {
+		if(!item.hasTag() || item.getTag() == null) {
 			data.setMaxData(getMaxData(item));
 			CompoundNBT nbt = new CompoundNBT();
 			data.writeToNBT(nbt);
@@ -53,7 +55,7 @@ public class ItemData extends Item {
 		return data;
 	}
 
-	public int addData(ItemStack item, int amount, DataStorage.DataType dataType) {
+	public int addData(@Nonnull ItemStack item, int amount, DataStorage.DataType dataType) {
 		DataStorage data = getDataStorage(item);
 
 		int amt = data.addData(amount, dataType, true);
@@ -65,7 +67,7 @@ public class ItemData extends Item {
 		return amt;
 	}
 
-	public int removeData(ItemStack item, int amount, DataStorage.DataType dataType) {
+	public int removeData(@Nonnull ItemStack item, int amount, DataStorage.DataType dataType) {
 		DataStorage data = getDataStorage(item);
 
 		int amt = data.removeData(amount, true);
@@ -77,7 +79,7 @@ public class ItemData extends Item {
 		return amt;
 	}
 
-	public void setData(ItemStack item, int amount, DataStorage.DataType dataType) {
+	public void setData(@Nonnull ItemStack item, int amount, DataStorage.DataType dataType) {
 		DataStorage data = getDataStorage(item);
 
 		data.setData(amount, dataType);
@@ -89,14 +91,13 @@ public class ItemData extends Item {
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void addInformation(ItemStack stack, World player,
-			List list, ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag bool) {
 		super.addInformation(stack, player, list, bool);
 
 		DataStorage data = getDataStorage(stack);
 
 		list.add(new StringTextComponent(data.getData() + " / " + data.getMaxData() + " Data"));
-		list.add(new StringTextComponent(I18n.format(data.getDataType().toString(), new Object[0])));
+		list.add(new StringTextComponent(I18n.format(data.getDataType().toString())));
 
 	}
 

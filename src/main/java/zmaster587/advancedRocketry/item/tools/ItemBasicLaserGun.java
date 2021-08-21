@@ -26,7 +26,9 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.LibVulpes;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.WeakHashMap;
 
@@ -63,7 +65,7 @@ public class ItemBasicLaserGun extends Item {
 							if (block != Blocks.REDSTONE_ORE && block != Blocks.REDSTONE_ORE)
 							{
 								Material material = blockIn.getMaterial();
-								return material == Material.ROCK ? true : (material == Material.IRON ? true : material == Material.ANVIL);
+								return material == Material.ROCK || material == Material.IRON || material == Material.ANVIL;
 							}
 							else
 							{
@@ -141,7 +143,6 @@ public class ItemBasicLaserGun extends Item {
 	}
 
 
-	
 	protected RayTraceResult rayTrace(World worldIn, PlayerEntity playerIn,
 			boolean useLiquids) {
 		float f = playerIn.rotationPitch;
@@ -163,9 +164,6 @@ public class ItemBasicLaserGun extends Item {
 		return worldIn.rayTraceBlocks(new RayTraceContext(vec3d, vec3d1, BlockMode.COLLIDER, FluidMode.NONE, null));
 	}
 
-
-
-	@Nullable
 	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World world, LivingEntity entityLiving)
 	{

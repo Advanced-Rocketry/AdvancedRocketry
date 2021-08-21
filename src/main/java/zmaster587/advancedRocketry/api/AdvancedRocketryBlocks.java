@@ -22,38 +22,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
-import zmaster587.advancedRocketry.block.BlockAdvancedRocketMotor;
-import zmaster587.advancedRocketry.block.BlockBeacon;
-import zmaster587.advancedRocketry.block.BlockBipropellantFuelTank;
-import zmaster587.advancedRocketry.block.BlockBipropellantRocketMotor;
-import zmaster587.advancedRocketry.block.BlockElectricMushroom;
-import zmaster587.advancedRocketry.block.BlockForceField;
-import zmaster587.advancedRocketry.block.BlockForceFieldProjector;
-import zmaster587.advancedRocketry.block.BlockFuelTank;
-import zmaster587.advancedRocketry.block.BlockHalfTile;
-import zmaster587.advancedRocketry.block.BlockIntake;
-import zmaster587.advancedRocketry.block.BlockLandingPad;
-import zmaster587.advancedRocketry.block.BlockLightSource;
-import zmaster587.advancedRocketry.block.BlockLinkedHorizontalTexture;
-import zmaster587.advancedRocketry.block.BlockMiningDrill;
-import zmaster587.advancedRocketry.block.BlockOrbitalLaserDrill;
-import zmaster587.advancedRocketry.block.BlockPressurizedFluidTank;
-import zmaster587.advancedRocketry.block.BlockQuartzCrucible;
-import zmaster587.advancedRocketry.block.BlockRedstoneEmitter;
-import zmaster587.advancedRocketry.block.BlockRocketMotor;
-import zmaster587.advancedRocketry.block.BlockSeal;
-import zmaster587.advancedRocketry.block.BlockSeat;
-import zmaster587.advancedRocketry.block.BlockSmallPlatePress;
-import zmaster587.advancedRocketry.block.BlockStationModuleDockingPort;
-import zmaster587.advancedRocketry.block.BlockSuitWorkstation;
-import zmaster587.advancedRocketry.block.BlockTileNeighborUpdate;
-import zmaster587.advancedRocketry.block.BlockTileRedstoneEmitter;
-import zmaster587.advancedRocketry.block.BlockTileWithMultitooltip;
-import zmaster587.advancedRocketry.block.BlockTorchUnlit;
-import zmaster587.advancedRocketry.block.BlockTorchUnlitWall;
-import zmaster587.advancedRocketry.block.BlockTransciever;
-import zmaster587.advancedRocketry.block.BlockWarpController;
-import zmaster587.advancedRocketry.block.BlockWarpCore;
+import zmaster587.advancedRocketry.block.*;
 import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
 import zmaster587.advancedRocketry.world.tree.AlienTree;
 import zmaster587.libVulpes.block.BlockAlphaTexture;
@@ -98,7 +67,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockAirLock = new DoorBlock(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f, 8f));
 	public static Block blockLandingPad = new BlockLandingPad(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f,3f));
 	public static Block blockOxygenDetection = new BlockRedstoneEmitter(machineLineProperties,"advancedrocketry:atmosphereDetector_active");
-	public static Block blockOxygenScrubber = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockCO2Scrubber = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
 	public static Block blockUnlitTorch = new BlockTorchUnlit(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().zeroHardnessAndResistance().hardnessAndResistance(0));
 	public static Block blockUnlitTorchWall = new BlockTorchUnlitWall(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().zeroHardnessAndResistance().hardnessAndResistance(0));
 
@@ -220,6 +189,11 @@ public class AdvancedRocketryBlocks {
 	public static Block blockLandingFloat = new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(1,1));
 	public static Block blockTransciever = new BlockTransciever(machineLineProperties, GuiHandler.guiId.MODULAR);
 	public static Block blockVacuumLaser = new BlockFullyRotatable(machineLineProperties);
+
+	public static Block blockRocketFire = new BlockRocketFire(AbstractBlock.Properties.create(Material.FIRE, MaterialColor.TNT).doesNotBlockMovement().zeroHardnessAndResistance().setLightLevel((state) -> 15));
+	public static Block blockNuclearEngine = new BlockNuclearRocketMotor(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f));
+	public static Block blockNuclearFuelTank = new BlockNuclearFuelTank(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f));
+	public static Block blockNuclearCore = new BlockNuclearCore(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f));
 	
 	
 	//Configurable stuff
@@ -290,7 +264,7 @@ public class AdvancedRocketryBlocks {
 				AdvancedRocketryBlocks.blockStationBuilder.setRegistryName("stationbuilder"),
 				AdvancedRocketryBlocks.blockElectrolyser.setRegistryName("electrolyser"),
 				AdvancedRocketryBlocks.blockChemicalReactor.setRegistryName("chemicalreactor"),
-				AdvancedRocketryBlocks.blockOxygenScrubber.setRegistryName("oxygenscrubber"),
+				AdvancedRocketryBlocks.blockCO2Scrubber.setRegistryName("oxygenscrubber"),
 				AdvancedRocketryBlocks.blockOxygenVent.setRegistryName("oxygenvent"),
 				AdvancedRocketryBlocks.blockOxygenCharger.setRegistryName("oxygencharger"),
 				AdvancedRocketryBlocks.blockAirLock.setRegistryName("airlock_door"),
@@ -352,7 +326,11 @@ public class AdvancedRocketryBlocks {
 				AdvancedRocketryBlocks.blockBasalt.setRegistryName("basalt"),
 				AdvancedRocketryBlocks.blockLandingFloat.setRegistryName("landingfloat"),
 				AdvancedRocketryBlocks.blockSolarArray.setRegistryName("solararray"),
-				AdvancedRocketryBlocks.blockSolarArrayPanel.setRegistryName("solararraypanel"));
+				AdvancedRocketryBlocks.blockSolarArrayPanel.setRegistryName("solararraypanel"),
+				AdvancedRocketryBlocks.blockRocketFire.setRegistryName("rocketfire"),
+				AdvancedRocketryBlocks.blockNuclearCore.setRegistryName("nuclearcore"),
+				AdvancedRocketryBlocks.blockNuclearEngine.setRegistryName("nuclearengine"),
+				AdvancedRocketryBlocks.blockNuclearFuelTank.setRegistryName("nucleartank"));
 
 		//if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableGravityController.get())
 		evt.getRegistry().register(AdvancedRocketryBlocks.blockGravityMachine.setRegistryName("gravitymachine"));

@@ -16,6 +16,8 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+
 public class BlockWarpCore extends BlockMultiblockMachine {
 
 	public BlockWarpCore(Properties property,

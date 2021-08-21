@@ -16,10 +16,10 @@ public class RenderLaser extends EntityRenderer<EntityLaserNode> implements IRen
 
 	private static final ResourceLocation flare = new ResourceLocation("advancedrocketry", "textures/entity/flare.png");
 
-	float color[];
-	float flareColor[];
+	float[] color;
+	float[] flareColor;
 	//float flareColo
-	double size;
+	private double size;
 	
 	public RenderLaser(double size, float[] flarecolor, float[] color) {
 		super(Minecraft.getInstance().getRenderManager());
@@ -68,7 +68,7 @@ public class RenderLaser extends EntityRenderer<EntityLaserNode> implements IRen
 		}
 	}
 
-	@Override
+    @Override
 	public EntityRenderer<? super EntityLaserNode> createRenderFor(EntityRendererManager manager) {
 		return this;
 	}

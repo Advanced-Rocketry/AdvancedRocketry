@@ -2,7 +2,7 @@
     "type": "minecraft:crafting_shaped",
     "pattern":
     [
-	"gdg",
+	"udg",
 	"dsd",
 	"ada"
     ],
@@ -12,20 +12,20 @@
         {
             "item": "advancedrocketry:circuit_ic_adv"
         },
-	"g":
+        "u":
         {
             "item": "advancedrocketry:item_ui"
         },
-	"s":
+        "s":
         {
             "item": "advancedrocketry:rocketassembler"
         },
-	"d":
+        "d":
         {
 
             "tag": "forge:dusts/dilithium"
         },
-	"g":
+        "g":
         {
 
             "tag": "forge:gears/titanium"

@@ -23,6 +23,7 @@ import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.render.RenderHelper;
 
+import javax.annotation.Nonnull;
 import java.nio.IntBuffer;
 
 @OnlyIn(value=Dist.CLIENT)
@@ -231,12 +232,12 @@ public class ModuleOreMapper extends ModuleBase {
 		//TODO replace with thing
 		//gui.drawVerticalLine((int)(32*VulpineMath.log2(scanSize-1)/8F) + 199 + x, 34 + y, 45 + y, 0xFFC00F0F);
 
-		font.func_243246_a(matrix, new StringTextComponent("Zoom"), 198 + x, 22 + y, 0xF0F0F0);
+		font.drawTextWithShadow(matrix, new StringTextComponent("Zoom"), 198 + x, 22 + y, 0xF0F0F0);
 
-		font.func_243246_a(matrix, new StringTextComponent("X: " + xSelected), 6 + x, 33 + y, 0xF0F0F0);
-		font.func_243246_a(matrix, new StringTextComponent("Z: " + zSelected), 6 + x, 49 + y, 0xF0F0F0);
-		font.func_243246_a(matrix, new StringTextComponent("Value: "), 6 + x, 65 + y, 0xF0F0F0);
-		font.func_243246_a(matrix, new StringTextComponent(String.valueOf(mouseValue)), 6 + x, 79 + y, 0xF0F0F0);
+		font.drawTextWithShadow(matrix, new StringTextComponent("X: " + xSelected), 6 + x, 33 + y, 0xF0F0F0);
+		font.drawTextWithShadow(matrix, new StringTextComponent("Z: " + zSelected), 6 + x, 49 + y, 0xF0F0F0);
+		font.drawTextWithShadow(matrix, new StringTextComponent("Value: "), 6 + x, 65 + y, 0xF0F0F0);
+		font.drawTextWithShadow(matrix, new StringTextComponent(String.valueOf(mouseValue)), 6 + x, 79 + y, 0xF0F0F0);
 	}
 	
 }

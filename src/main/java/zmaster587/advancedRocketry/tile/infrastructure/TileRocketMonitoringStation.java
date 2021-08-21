@@ -9,6 +9,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -26,6 +27,7 @@ import zmaster587.advancedRocketry.api.IMission;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
@@ -38,14 +40,16 @@ import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.IComparatorOverride;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileRocketMonitoringStation extends TileEntity  implements IModularInventory, IAdjBlockUpdate, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory, IProgressBar  {
+public class TileRocketMonitoringStation extends TileEntity  implements IModularInventory, ITickableTileEntity, IAdjBlockUpdate, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory, IProgressBar, IComparatorOverride {
 
 	EntityRocketBase linkedRocket;
 	IMission mission;
@@ -79,7 +83,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		}
 	}
 	
-	public boolean getEquivilentPower() {
+	public boolean getEquivalentPower() {
 		if(state == RedstoneState.OFF)
 			return false;
 
@@ -92,7 +96,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 
 	@Override
 	public void onAdjacentBlockUpdated() {
-		if(!world.isRemote && getEquivilentPower() && linkedRocket != null) {
+		if(!world.isRemote && getEquivalentPower() && linkedRocket != null) {
 			linkedRocket.prepareLaunch();
 		}
 	}
@@ -102,9 +106,21 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		return 300000;
 	}
 
+
+	public void tick() {
+		if (!world.isRemote) {
+			if (linkedRocket instanceof EntityRocket) {
+				if ((int)(15 * ((EntityRocket) linkedRocket).getRelativeHeightFraction()) != (int)(15 * ((EntityRocket) linkedRocket).getPreviousRelativeHeightFraction())) {
+					markDirty();
+				}
+			}
+		}
+	}
+
+
 	@Override
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
-			PlayerEntity player, World world) {
+							   PlayerEntity player, World world) {
 
 		ItemLinker.setMasterCoords(item, getPos());
 
@@ -222,7 +238,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 
-		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
+		LinkedList<ModuleBase> modules = new LinkedList<>();
 
 		modules.add(new ModuleButton(20, 40, "Launch!", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
 		modules.add(new ModuleProgress(98, 4, 0, new IndicatorBarImage(2, 7, 12, 81, 17, 0, 6, 6, 1, 0, Direction.UP, TextureResources.rocketHud), this));
@@ -261,6 +277,11 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	public void onInventoryButtonPressed(ModuleButton buttonId) {
 		
 		if(buttonId == redstoneControl) {
+			state = redstoneControl.getState();
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
+		}
+		else
+			PacketHandler.sendToServer(new PacketMachine(this, (byte)100) );if(buttonId == redstoneControl) {
 			state = redstoneControl.getState();
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
 		}
@@ -331,11 +352,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		else if(id == 1)
 			return (int)(linkedRocket.getMotion().y*100);
 		else if (id == 2)
-			if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, ForgeRegistries.FLUIDS.getValue(linkedRocket.stats.getFuelFluid()))) {
-				return (linkedRocket.getFuelAmountMonopropellant());
-			} else {
-				return (linkedRocket.getFuelAmountBipropellant() + linkedRocket.getFuelAmountOxidizer());
-			}
+			return (linkedRocket.getRocketFuelType() == FuelRegistry.FuelType.LIQUID_BIPROPELLANT) ? linkedRocket.getFuelAmount(linkedRocket.getRocketFuelType()) + linkedRocket.getFuelAmount(FuelRegistry.FuelType.LIQUID_OXIDIZER) : linkedRocket.getFuelAmount(linkedRocket.getRocketFuelType());
 
 		return 0;
 	}
@@ -349,15 +366,10 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		else if(id == 2)
 			if(world.isRemote)
 				return maxFuelLevel;
-			else
-				if(linkedRocket == null)
-					return 0;
-		    else if (FuelRegistry.instance.isFuel(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, ForgeRegistries.FLUIDS.getValue(linkedRocket.stats.getFuelFluid()))) {
-			    return (linkedRocket.getFuelCapacityMonopropellant());
-		    } else {
-			    return (linkedRocket.getFuelCapacityBipropellant() + linkedRocket.getFuelCapacityOxidizer());
-		}
-
+			else if(linkedRocket == null)
+				return 0;
+		    else
+		    	return (linkedRocket.getRocketFuelType() == FuelRegistry.FuelType.LIQUID_BIPROPELLANT) ? linkedRocket.getFuelCapacity(linkedRocket.getRocketFuelType()) + linkedRocket.getFuelCapacity(FuelRegistry.FuelType.LIQUID_OXIDIZER): linkedRocket.getFuelCapacity(linkedRocket.getRocketFuelType());
 		return 1;
 	}
 
@@ -404,6 +416,13 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 
 	@Override
 	public GuiHandler.guiId getModularInvType() {
-		return GuiHandler.guiId.MODULARNOINV;
-	}
+					return GuiHandler.guiId.MODULARNOINV;
+				}
+				public int getComparatorOverride() {
+					if (linkedRocket instanceof EntityRocket) {
+						return (int)(15 * ((EntityRocket) linkedRocket).getRelativeHeightFraction());
+					}
+					return 0;
+				}
+
 }

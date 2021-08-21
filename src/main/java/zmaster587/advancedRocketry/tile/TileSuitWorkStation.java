@@ -21,13 +21,15 @@ import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
 public class TileSuitWorkStation extends TileEntity implements IModularInventory, IInventory {
 
-	EmbeddedInventory inventory;
-	ModuleTexturedLimitedSlotArray slotArray[];
+	private EmbeddedInventory inventory;
+	private ModuleTexturedLimitedSlotArray[] slotArray;
 
 	public TileSuitWorkStation() {
 		super(AdvancedRocketryTileEntityType.TILE_WORK_STATION);
@@ -67,6 +69,7 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int slot) {
 		if(slot == 0) {
 			return inventory.getStackInSlot(slot);
@@ -78,6 +81,7 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int slot, int amt) {
 		if(slot == 0) {
 			return inventory.decrStackSize(slot, amt);
@@ -92,9 +96,9 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack contents) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack contents) {
 		if(slot == 0) {
-			if(contents != null && contents.getItem() instanceof IModularArmor) {
+			if(!contents.isEmpty() && contents.getItem() instanceof IModularArmor) {
 				
 				for(ModuleTexturedLimitedSlotArray slot2 : slotArray) {
 					slot2.setEnabled(false);
@@ -186,9 +190,10 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		// TODO Auto-generated method stub
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override

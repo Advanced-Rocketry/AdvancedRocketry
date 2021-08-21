@@ -31,7 +31,7 @@ public class InverseTrailFx extends SpriteTexturedParticle {
         this.motionZ = -motz;
         
 
-        
+
         
 		this.prevPosX = this.posX = x + motx*this.maxAge;
 		this.prevPosY = this.posY = y + moty*this.maxAge;

@@ -4,10 +4,10 @@
             "item": "piston"
         },
         "title": {
-            "translate": "achievement.flattening"
+            "translate": "advancement.flattening"
         },
         "description": {
-            "translate": "achievement.flattening.desc"
+            "translate": "advancement.flattening.desc"
         }
     },
     "parent": "advancedrocketry:normal/root",

@@ -2,8 +2,6 @@ package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.FenceBlock;
-import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer.Builder;
@@ -24,24 +22,24 @@ public class BlockFuelTank extends Block implements IFuelTank{
 
 	public final static EnumProperty<TankStates> TANKSTATES = EnumProperty.create("tankstates", TankStates.class);
 
-	public BlockFuelTank(Properties mat) {
-		super(mat);
+	public BlockFuelTank(Properties machineLineProperties) {
+		super(machineLineProperties);
 		this.setDefaultState(this.stateContainer.getBaseState().with(TANKSTATES, TankStates.MIDDLE));
 	}
-	
+
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder);
 		builder.add(TANKSTATES);
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		
+
 		World world = context.getWorld();
 		BlockPos pos = context.getPos();
-		
-		
+
+
 		int i = world.getBlockState(pos.add(0,1,0)).getBlock() == this ? 1 : 0;
 		i += world.getBlockState(pos.add(0,-1,0)).getBlock() == this ? 2 : 0;
 
@@ -51,35 +49,35 @@ public class BlockFuelTank extends Block implements IFuelTank{
 		}
 		//If there is no tank above this one
 		else if( i == 2 ) {
-			 return this.getDefaultState().with(TANKSTATES, TankStates.TOP);
+			return this.getDefaultState().with(TANKSTATES, TankStates.TOP);
 		}
 		//If there is a tank above and below this one
 		else {
 			return this.getDefaultState().with(TANKSTATES, TankStates.MIDDLE);
 		}
 	}
-	
+
 	@Override
 	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return VoxelShapes.empty();
 	}
-	
+
 	@Override
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world,
-			BlockPos currentPos, BlockPos facingPos) {
+										  BlockPos currentPos, BlockPos facingPos) {
 
 		if(!(facing == Direction.UP || facing == Direction.DOWN))
 			return super.updatePostPlacement(stateIn, facing, facingState, world, currentPos, facingPos);
-		
+
 		if(facingState.getBlock() == this)
 		{
-			
+
 			if(stateIn.get(TANKSTATES) == TankStates.TOP && facing == Direction.UP)
 				return this.getDefaultState().with(TANKSTATES, TankStates.MIDDLE);
 			if(stateIn.get(TANKSTATES) == TankStates.BOTTOM && facing == Direction.DOWN)
 				return this.getDefaultState().with(TANKSTATES, TankStates.MIDDLE);
 			return super.updatePostPlacement(stateIn, facing, facingState, world, currentPos, facingPos);
-			
+
 		}
 		else
 		{
@@ -87,13 +85,13 @@ public class BlockFuelTank extends Block implements IFuelTank{
 				return this.getDefaultState().with(TANKSTATES, TankStates.TOP);
 			if(stateIn.get(TANKSTATES) == TankStates.MIDDLE && facing == Direction.DOWN)
 				return this.getDefaultState().with(TANKSTATES, TankStates.BOTTOM);
-			
+
 			if(stateIn.get(TANKSTATES) == TankStates.BOTTOM && facing == Direction.UP || stateIn.get(TANKSTATES) == TankStates.TOP && facing == Direction.DOWN)
 				return this.getDefaultState().with(TANKSTATES, TankStates.MIDDLE);
 			return stateIn;
 		}
 	}
-	
+
 	public void updateMyState(World world, BlockPos pos)
 	{
 		int i = world.getBlockState(pos.add(0,1,0)).getBlock() == this ? 1 : 0;
@@ -112,7 +110,7 @@ public class BlockFuelTank extends Block implements IFuelTank{
 			world.setBlockState(pos, this.getDefaultState().with(TANKSTATES, TankStates.MIDDLE),2);
 		}
 	}
-	
+
 	@Override
 	public BlockState getStateAtViewpoint(BlockState state, IBlockReader world, BlockPos pos, Vector3d viewpoint) {
 		int i = world.getBlockState(pos.add(0,1,0)).getBlock() == this ? 1 : 0;

@@ -15,6 +15,7 @@ out
 
 # gradle
 build
+output
 .gradle
 
 # other
@@ -27,3 +28,6 @@ debug.log
 libs/
 logs/
 output/
+lasthash.txt
+libs
+*.bak

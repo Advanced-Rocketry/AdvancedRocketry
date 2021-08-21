@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.item;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -13,6 +14,7 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemSatellite extends ItemIdWithName {
@@ -68,7 +70,7 @@ public class ItemSatellite extends ItemIdWithName {
 		return null;
 	}
 
-	public EmbeddedInventory readInvFromNBT(ItemStack stackIn) {
+	public EmbeddedInventory readInvFromNBT(@Nonnull ItemStack stackIn) {
 		EmbeddedInventory inv = new EmbeddedInventory(7);
 		if(!stackIn.hasTag() || !stackIn.getTag().contains("inv"))
 			return inv;
@@ -77,7 +79,7 @@ public class ItemSatellite extends ItemIdWithName {
 		return inv;
 	}
 
-	public void writeInvToNBT(ItemStack stackIn, EmbeddedInventory inv) {
+	public void writeInvToNBT(@Nonnull ItemStack stackIn, EmbeddedInventory inv) {
 		CompoundNBT nbt = new CompoundNBT();
 		if(!stackIn.hasTag())
 			stackIn.setTag(nbt);
@@ -89,7 +91,7 @@ public class ItemSatellite extends ItemIdWithName {
 		nbt.put("inv", tag);
 	}
 
-	public void setSatellite(ItemStack stack, SatelliteProperties properties) {
+	public void setSatellite(@Nonnull ItemStack stack, SatelliteProperties properties) {
 
 		SatelliteBase testSatellite = SatelliteRegistry.getSatellite(properties.getSatelliteType());
 		if(testSatellite != null) {
@@ -112,10 +114,9 @@ public class ItemSatellite extends ItemIdWithName {
 
 
 	@Override
-	public void addInformation(ItemStack stack, World player, List list,
-            ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List list, ITooltipFlag bool) {
 
-		SatelliteProperties properties = getSatellite(stack);
+		SatelliteProperties properties = SatelliteRegistry.getSatelliteProperty(stack);
 
 		if(properties != null) {
 			int dataStorage, powerGeneration, powerStorage;

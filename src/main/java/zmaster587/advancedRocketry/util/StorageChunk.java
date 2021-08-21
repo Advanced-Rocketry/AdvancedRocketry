@@ -85,12 +85,13 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.IStorageChunk;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
-import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -117,11 +118,11 @@ public class StorageChunk implements IWorld, IStorageChunk {
 	public Chunk chunk;
 
 
-	ArrayList<TileEntity> tileEntities;
+	private ArrayList<TileEntity> tileEntities;
 
 	//To store inventories (All inventories)
-	ArrayList<TileEntity> inventoryTiles;
-	ArrayList<TileEntity> liquidTiles;
+	private ArrayList<TileEntity> inventoryTiles;
+	private ArrayList<TileEntity> liquidTiles;
 
 	public WorldDummy world;
 	private Entity entity;
@@ -131,9 +132,9 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		sizeX = 0;
 		sizeY = 0;
 		sizeZ = 0;
-		tileEntities = new ArrayList<TileEntity>();
-		inventoryTiles = new ArrayList<TileEntity>();
-		liquidTiles = new ArrayList<TileEntity>();
+		tileEntities = new ArrayList<>();
+		inventoryTiles = new ArrayList<>();
+		liquidTiles = new ArrayList<>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
 		SimpleRegistry<Biome> registry = new SimpleRegistry<Biome>(Registry.BIOME_KEY, Lifecycle.stable());
@@ -149,9 +150,9 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		sizeY = ySize;
 		sizeZ = zSize;
 
-		tileEntities = new ArrayList<TileEntity>();
-		inventoryTiles = new ArrayList<TileEntity>();
-		liquidTiles = new ArrayList<TileEntity>();
+		tileEntities = new ArrayList<>();
+		inventoryTiles = new ArrayList<>();
+		liquidTiles = new ArrayList<>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
 		SimpleRegistry<Biome> registry = new SimpleRegistry<Biome>(Registry.BIOME_KEY, Lifecycle.stable());
@@ -194,8 +195,8 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		return inventoryTiles;
 	}
 
-	public List<TileEntity> getGUItiles() {
-		List<TileEntity> list = new LinkedList<TileEntity>(inventoryTiles);
+	public List<TileEntity> getGUITiles() {
+		List<TileEntity> list = new LinkedList<>(inventoryTiles);
 
 		/*TileEntity guidanceComputer = getGuidanceComputer();
 		if(guidanceComputer != null)
@@ -374,36 +375,24 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		HashedBlockPosition out = new HashedBlockPosition(0, 0, 0);
 
 		switch(dir) {
-		case DOWN:
-			out.x = in.z;
-			out.y = in.y;
-			out.z = in.x;
-			break;
-		case UP:
-			out.x = in.z;
-			out.y = in.y;
-			out.z = in.x;
-			break;
-		case NORTH:
-			out.x = in.y;
-			out.y = (short)(in.x);
-			out.z = in.z;
-			break;
-		case SOUTH:
-			out.x = in.y;
-			out.y = (short)in.x;
-			out.z = in.z;
-			break;
-		case EAST:
-			out.x = in.x;
-			out.y = (short)(in.z);
-			out.z = in.y;
-			break;
-		case WEST:
-			out.x = in.x;
-			out.y = (short)in.z;
-			out.z = in.y;
-			break;
+			case DOWN:
+			case UP:
+				out.x = in.z;
+				out.y = in.y;
+				out.z = in.x;
+				break;
+			case NORTH:
+			case SOUTH:
+				out.x = in.y;
+				out.y = (short)(in.x);
+				out.z = in.z;
+				break;
+			case EAST:
+			case WEST:
+				out.x = in.x;
+				out.y = (short)(in.z);
+				out.z = in.y;
+				break;
 		}
 
 		return out;
@@ -590,9 +579,6 @@ public class StorageChunk implements IWorld, IStorageChunk {
 			}
 		}
 
-
-		bb = new AxisAlignedBB(actualMinX, actualMinY, actualMinZ, actualMaxX, actualMaxY, actualMaxZ);
-
 		StorageChunk ret = new StorageChunk((actualMaxX - actualMinX + 1), (actualMaxY - actualMinY + 1), (actualMaxZ - actualMinZ + 1));
 
 
@@ -690,7 +676,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 
 
 	@Override
-	public TileEntity getTileEntity(BlockPos pos) {
+	public TileEntity getTileEntity(@Nonnull BlockPos pos) {
 		for(TileEntity tileE : tileEntities) {
 			if( tileE.getPos().compareTo(pos) == 0)
 				return tileE;
@@ -743,12 +729,9 @@ public class StorageChunk implements IWorld, IStorageChunk {
 
 
 	public List<TileSatelliteHatch> getSatelliteHatches() {
-		LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<TileSatelliteHatch>();
-		Iterator<TileEntity> iterator = getTileEntityList().iterator();
-		while(iterator.hasNext()) {
-			TileEntity tile = iterator.next();
-
-			if(tile instanceof TileSatelliteHatch) {
+		LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<>();
+		for (TileEntity tile : getTileEntityList()) {
+			if (tile instanceof TileSatelliteHatch) {
 				satelliteHatches.add((TileSatelliteHatch) tile);
 			}
 		}
@@ -758,13 +741,10 @@ public class StorageChunk implements IWorld, IStorageChunk {
 
 	@Deprecated
 	public List<SatelliteBase> getSatellites() {
-		LinkedList<SatelliteBase> satellites = new LinkedList<SatelliteBase>();
-		LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<TileSatelliteHatch>();
-		Iterator<TileEntity> iterator = getTileEntityList().iterator();
-		while(iterator.hasNext()) {
-			TileEntity tile = iterator.next();
-
-			if(tile instanceof TileSatelliteHatch) {
+		LinkedList<SatelliteBase> satellites = new LinkedList<>();
+		LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<>();
+		for (TileEntity tile : getTileEntityList()) {
+			if (tile instanceof TileSatelliteHatch) {
 				satelliteHatches.add((TileSatelliteHatch) tile);
 			}
 		}
@@ -778,31 +758,14 @@ public class StorageChunk implements IWorld, IStorageChunk {
 		return satellites;
 	}
 
-	@Deprecated
 	public TileGuidanceComputer getGuidanceComputer() {
-		Iterator<TileEntity> iterator = getTileEntityList().iterator();
-		while(iterator.hasNext()) {
-			TileEntity tile = iterator.next();
-
-			if(tile instanceof TileGuidanceComputer) {
-				return (TileGuidanceComputer)tile;
+		for (TileEntity tile : getTileEntityList()) {
+			if (tile instanceof TileGuidanceComputer) {
+				return (TileGuidanceComputer) tile;
 			}
 		}
 
 		return null;
-	}
-
-	public boolean hasWarpCore() {
-		Iterator<TileEntity> iterator = getTileEntityList().iterator();
-		while(iterator.hasNext()) {
-			TileEntity tile = iterator.next();
-
-			if(tile instanceof TileWarpCore) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	/**
@@ -1041,6 +1004,5 @@ public class StorageChunk implements IWorld, IStorageChunk {
 
 	@Override
 	public void playEvent(PlayerEntity player, int type, BlockPos pos, int data) {
-
 	}
 }

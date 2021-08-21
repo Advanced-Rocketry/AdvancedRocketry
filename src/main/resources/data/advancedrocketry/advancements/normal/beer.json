@@ -4,10 +4,10 @@
             "item": "tnt"
         },
         "title": {
-            "translate": "beerOnTheSun.warp"
+            "translate": "advancement.beerOnTheSun"
         },
         "description": {
-            "translate": "beerOnTheSun.warp.desc"
+            "translate": "advancement.beerOnTheSun.desc"
         },
         "hidden": true
     },

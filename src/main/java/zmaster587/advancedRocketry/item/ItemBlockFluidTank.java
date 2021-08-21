@@ -11,6 +11,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,6 +21,9 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import zmaster587.advancedRocketry.tile.TileFluidTank;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class ItemBlockFluidTank extends BlockItem {
@@ -29,14 +33,14 @@ public class ItemBlockFluidTank extends BlockItem {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, World player,
-			List list, ITooltipFlag bool) {
-		super.addInformation(stack, player, list, bool);
+	@ParametersAreNonnullByDefault
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag bool) {
+		super.addInformation(stack, world, list, bool);
 
 		FluidStack fluidStack = getFluid(stack);
 
 		if(fluidStack == null) {
-			list.add("Empty");
+			list.add(new StringTextComponent("Empty"));
 		}
 		else {
 			list.add(new StringTextComponent(fluidStack.getDisplayName() + ": " + fluidStack.getAmount() + "/64000mb"));
@@ -54,6 +58,7 @@ public class ItemBlockFluidTank extends BlockItem {
 		
 		if(tile != null && tile instanceof TileFluidTank) {
 			IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.DOWN).orElse(null);
+
 			ItemStack stack2 = stack.copy();
 			stack2.setCount(1);
 			handler.fill(drain(stack2, Integer.MAX_VALUE), FluidAction.EXECUTE);
@@ -62,7 +67,7 @@ public class ItemBlockFluidTank extends BlockItem {
 		return true;
 	}
 	
-	public void fill(ItemStack stack, FluidStack fluid) {
+	public void fill(@Nonnull ItemStack stack, FluidStack fluid) {
 		
 		CompoundNBT nbt;
 		FluidTank tank = new FluidTank(640000);
@@ -78,7 +83,7 @@ public class ItemBlockFluidTank extends BlockItem {
 		tank.writeToNBT(nbt);
 		stack.setTag(nbt);
 	}
-	
+
 	public FluidStack drain(ItemStack stack, int amt) {
 		CompoundNBT nbt;
 		FluidTank tank = new FluidTank(640000);
@@ -96,7 +101,7 @@ public class ItemBlockFluidTank extends BlockItem {
 		
 		return stack2;
 	}
-	
+
 	public FluidStack getFluid(ItemStack stack) {
 		CompoundNBT nbt;
 		FluidTank tank = new FluidTank(640000);
@@ -104,8 +109,6 @@ public class ItemBlockFluidTank extends BlockItem {
 			nbt = stack.getTag();
 			tank.readFromNBT(nbt);
 		}
-		else
-			nbt = new CompoundNBT();
 		
 		return tank.getFluid();
 	}

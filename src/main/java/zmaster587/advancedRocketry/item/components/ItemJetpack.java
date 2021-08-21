@@ -36,13 +36,14 @@ import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.InputSyncHandler;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
 	private static enum MODES {
 		NORMAL,
-		HOVER;
+		HOVER
 	}
 
 	public ItemJetpack(Properties props) {
@@ -67,7 +68,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		if(helm != null && helm.getItem() instanceof IModularArmor) {
 			List<ItemStack> helmInv = ((IModularArmor)helm.getItem()).getComponents(helm);
 			for(ItemStack stack : helmInv) {
-				if(stack != null) {
+				if(!stack.isEmpty()) {
 					Item item = stack.getItem();
 
 					if (item.getItem() == AdvancedRocketryItems.itemUpgradeHover)
@@ -132,12 +133,12 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
 
 	@Override
-	public boolean onComponentAdded(World world, ItemStack armorStack) {
+	public boolean onComponentAdded(World world, @Nonnull ItemStack armorStack) {
 		return true;
 	}
 
 	@Override
-	public void onComponentRemoved(World world, ItemStack armorStack) {
+	public void onComponentRemoved(World world, @Nonnull ItemStack armorStack) {
 
 	}
 
@@ -288,6 +289,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			stack.setTag(nbt);
 			flagModeSwitched(stack);
 		}
+		flagModeSwitched(stack);
 
 		if(mode == MODES.HOVER.ordinal())
 			setHeight(stack, (float)player.getPosY() + player.getHeight());

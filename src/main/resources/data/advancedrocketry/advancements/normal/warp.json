@@ -4,10 +4,10 @@
             "item": "advancedrocketry:warpcore"
         },
         "title": {
-            "translate": "achievement.warp"
+            "translate": "advancement.warp"
         },
         "description": {
-            "translate": "achievement.warp.desc"
+            "translate": "advancement.warp.desc"
         }
     },
     "parent": "advancedrocketry:normal/dilithium",

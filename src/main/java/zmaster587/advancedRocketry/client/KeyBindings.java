@@ -105,7 +105,7 @@ public class KeyBindings {
 	static KeyBinding turnRocketUp		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnrocketup"), GLFW.GLFW_KEY_Z, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
 	static KeyBinding turnRocketDown		= new KeyBinding(LibVulpes.proxy.getLocalizedString("key.turnrocketdown"), GLFW.GLFW_KEY_X, LibVulpes.proxy.getLocalizedString("key.controls." + Constants.modId));
 
-	public static final void init() {
+	public static void init() {
 		//ClientRegistry.registerKeyBinding(launch);
 		ClientRegistry.registerKeyBinding(toggleJetpack);
 		ClientRegistry.registerKeyBinding(openRocketUI);

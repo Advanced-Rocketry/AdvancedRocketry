@@ -11,7 +11,7 @@ public class ChemicalReactorRecipeMaker {
 
 	public static List<ChemicalReactorlWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
 		
-		List<ChemicalReactorlWrapper> list = new LinkedList<ChemicalReactorlWrapper>();
+		List<ChemicalReactorlWrapper> list = new LinkedList<>();
 		for(IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
 			list.add(new ChemicalReactorlWrapper(rec));
 		}

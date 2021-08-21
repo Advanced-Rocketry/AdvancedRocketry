@@ -7,14 +7,14 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 import java.util.*;
 
 public class RecipeHandler {
-	
+
 	private List<Class<?>> machineList = new ArrayList<Class<?>>();
 	
 	public void registerMachine(Class<?> clazz) {
 		if(!machineList.contains(clazz))
 		{
 			machineList.add(clazz);
-			RecipesMachine.getInstance().recipeList.put(clazz, new LinkedList<IRecipe>());
+			RecipesMachine.getInstance().recipeList.put(clazz, new LinkedList<>());
 		}
 		
 	}

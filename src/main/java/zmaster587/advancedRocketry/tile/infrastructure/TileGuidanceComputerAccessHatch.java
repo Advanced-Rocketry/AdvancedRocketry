@@ -46,6 +46,8 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,7 +55,7 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 
 	private static final int buttonAutoEject = 0, buttonSatellite = 1, buttonPlanet = 2, buttonStation = 3, redstoneState = 4;
 	private ModuleToggleSwitch module_autoEject, module_satellite, module_planet, module_station;
-	private boolean buttonState[];
+	private boolean[] buttonState;
 	private boolean chipEjected;
 	EntityRocket rocket;
 	ModuleRedstoneOutputButton redstoneControl;
@@ -110,6 +112,7 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int index) {
 		TileGuidanceComputer guidanceComputer;
 		if(rocket != null && (guidanceComputer = rocket.storage.getGuidanceComputer()) != null) {
@@ -119,6 +122,7 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int index, int count) {
 		TileGuidanceComputer guidanceComputer;
 		if(rocket != null && (guidanceComputer = rocket.storage.getGuidanceComputer()) != null) {
@@ -128,6 +132,7 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		TileGuidanceComputer guidanceComputer;
 		if(rocket != null && (guidanceComputer = rocket.storage.getGuidanceComputer()) != null) {
@@ -137,7 +142,7 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 	}
 
 	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) {
+	public void setInventorySlotContents(int index, @Nonnull ItemStack stack) {
 		TileGuidanceComputer guidanceComputer;
 		if(rocket != null && (guidanceComputer = rocket.storage.getGuidanceComputer()) != null) {
 			guidanceComputer.setInventorySlotContents(index, stack);
@@ -165,7 +170,7 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
+	public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
 		TileGuidanceComputer guidanceComputer;
 		if(rocket != null && (guidanceComputer = rocket.storage.getGuidanceComputer()) != null) {
 			return guidanceComputer.isItemValidForSlot(index, stack);
@@ -334,7 +339,7 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 	}
 
 	@Override
-	public boolean linkMission(IMission misson) {
+	public boolean linkMission(IMission mission) {
 		return false;
 	}
 

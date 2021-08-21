@@ -39,11 +39,7 @@ public class RendererRocket extends EntityRenderer<EntityRocket> implements IRen
 			getState = tileEntityBlockChiseled.getMethod("getRenderState", IBlockAccess.class);
 			AdvancedRocketry.logger.info("Chisel and bits support HAS BEEN loaded");
 		}
-		catch(ClassNotFoundException e) {
-			AdvancedRocketry.logger.info("Chisel and bits support NOT loaded");
-		}
-		catch(NoSuchMethodException e)
-		{
+		catch(ClassNotFoundException | NoSuchMethodException e) {
 			AdvancedRocketry.logger.info("Chisel and bits support NOT loaded");
 		}*/
 	}

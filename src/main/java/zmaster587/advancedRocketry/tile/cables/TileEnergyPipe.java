@@ -14,6 +14,8 @@ import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.cap.ForgePowerCapability;
 import zmaster587.libVulpes.cap.TeslaHandler;
 
+import javax.annotation.Nullable;
+
 public class TileEnergyPipe extends TilePipe implements IUniversalEnergy {
 	
 	public TileEnergyPipe() {

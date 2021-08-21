@@ -15,7 +15,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.SectionPos;
 import net.minecraft.util.registry.DynamicRegistries;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Blockreader;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
@@ -46,6 +45,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+
 import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
@@ -67,14 +67,13 @@ import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 public class ChunkProviderPlanet extends ChunkGenerator {
 	public static final Logger logger = LogManager.getLogger();
 	public static final Codec<ChunkProviderPlanet> planetCodec = RecordCodecBuilder.create((p_236091_0_) -> {
-		return p_236091_0_.group(BiomeProvider.CODEC.fieldOf("biome_source").forGetter((p_236096_0_) -> {
-			return p_236096_0_.biomeProvider;
-		}), Codec.LONG.fieldOf("seed").stable().forGetter((p_236093_0_) -> {
+		return p_236091_0_.group(BiomeProvider.CODEC.fieldOf("biome_source").forGetter(ChunkGenerator::getBiomeProvider),
+			Codec.LONG.fieldOf("seed").stable().forGetter((ChunkProviderPlanet p_236093_0_) -> {
 			return p_236093_0_.seed;
-		}), DimensionSettings.field_236098_b_.fieldOf("settings").forGetter((p_236090_0_) -> {
+		}), DimensionSettings.DIMENSION_SETTINGS_CODEC.fieldOf("settings").forGetter((p_236090_0_) -> {
 			return p_236090_0_.dimensionSettings;
 		}),
-				StructureFeature.field_242770_c.promotePartial(Util.func_240982_a_("Structure start: ", logger::error)).fieldOf("starts").forGetter((p_242488_0_) -> {
+				StructureFeature.field_242770_c.promotePartial(Util.prefixString("Structure start: ", logger::error)).fieldOf("starts").forGetter((p_242488_0_) -> {
 					return p_242488_0_.starts;
 				}),
 				Codec.STRING.fieldOf("dimension_props").forGetter((p_236090_0_) -> {
@@ -97,7 +96,6 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 				p_236092_0_[i + 2 + (j + 2) * 5] = f;
 			}
 		}
-
 	});
 	private static final BlockState AIR = Blocks.AIR.getDefaultState();
 	private final int verticalNoiseGranularity;
@@ -456,8 +454,8 @@ public class ChunkProviderPlanet extends ChunkGenerator {
 		int i = chunkIn.getPos().getXStart();
 		int j = chunkIn.getPos().getZStart();
 		DimensionSettings dimensionsettings = this.dimensionSettings.get();
-		int k = dimensionsettings.func_236118_f_();
-		int l = this.field_236085_x_ - 1 - dimensionsettings.func_236117_e_();
+		int k = dimensionsettings.getBedrockFloorPosition();
+		int l = this.field_236085_x_ - 1 - dimensionsettings.getBedrockRoofPosition();
 		int i1 = 5;
 		boolean flag = l + 4 >= 0 && l < this.field_236085_x_;
 		boolean flag1 = k + 4 >= 0 && k < this.field_236085_x_;

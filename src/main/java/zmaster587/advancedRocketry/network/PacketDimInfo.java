@@ -27,7 +27,7 @@ public class PacketDimInfo extends BasePacket {
 	String customIcon;
 
 	public PacketDimInfo() {
-		artifacts = new LinkedList<ItemStack>();
+		artifacts = new LinkedList<>();
 		customIcon = "";
 	}
 
@@ -128,7 +128,7 @@ public class PacketDimInfo extends BasePacket {
 				dimProperties.getRequiredArtifacts().clear();
 				dimProperties.getRequiredArtifacts().addAll(artifacts);
 				
-				List<SpawnListEntryNBT> list = new LinkedList<SpawnListEntryNBT>(DimensionManager.getInstance().getDimensionProperties(dimNumber).getSpawnListEntries());
+				List<SpawnListEntryNBT> list = new LinkedList<>(DimensionManager.getInstance().getDimensionProperties(dimNumber).getSpawnListEntries());
 				dimProperties.getSpawnListEntries().clear();
 				dimProperties.getSpawnListEntries().addAll(list);
 				

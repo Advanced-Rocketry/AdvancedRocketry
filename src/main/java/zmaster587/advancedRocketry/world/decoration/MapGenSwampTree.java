@@ -187,7 +187,6 @@ public class MapGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 
 			}
 
-
 			//Generate the hangy things
 			if(rand.nextInt(4) == 0) {
 

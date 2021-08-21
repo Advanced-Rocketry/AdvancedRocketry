@@ -76,7 +76,7 @@ public class RendererLathe extends TileEntityRenderer<TileLathe> {
 
 			int color;
 			//Check for rare bug when outputs is null, usually occurs if player opens machine within 1st tick
-			if(tile.getOutputs() != null && (outputStack = tile.getOutputs().get(0)) != null)
+			if(tile.getOutputs() != null && !(outputStack = tile.getOutputs().get(0)).isEmpty())
 				color = MaterialRegistry.getColorFromItemMaterial(outputStack);
 			else
 				color = 0;

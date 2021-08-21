@@ -39,6 +39,10 @@ import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.FluidUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.ParametersAreNullableByDefault;
 import java.util.LinkedList;
 import java.util.List;
 

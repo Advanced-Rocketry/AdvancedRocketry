@@ -17,7 +17,7 @@ public class CableNetwork {
 
 	int networkID;
 
-	protected static HashSet<Integer> usedIds = new HashSet<Integer>();
+	protected static HashSet<Integer> usedIds = new HashSet<>();
 
 	CopyOnWriteArraySet<Entry<TileEntity, Direction>> sources;
 
@@ -27,8 +27,8 @@ public class CableNetwork {
 
 	protected CableNetwork() {
 
-		sources = new CopyOnWriteArraySet<Entry<TileEntity, Direction>>();
-		sinks = new CopyOnWriteArraySet<Entry<TileEntity, Direction>>();
+		sources = new CopyOnWriteArraySet<>();
+		sinks = new CopyOnWriteArraySet<>();
 	}
 
 	public Set<Entry<TileEntity, Direction>> getSources() {
@@ -41,42 +41,36 @@ public class CableNetwork {
 
 	public void addSource(TileEntity tile, Direction dir) {
 
-		Iterator<Entry<TileEntity, Direction>> iter = sources.iterator();
-
-		while(iter.hasNext()) {
-			Entry<TileEntity, Direction> entry = iter.next();
-			TileEntity tile2 =  entry.getKey();
-			if(tile2.equals(tile)) {
+		for (Entry<TileEntity, Direction> entry : sources) {
+			TileEntity tile2 = entry.getKey();
+			if (tile2.equals(tile)) {
 				return;
 			}
-			if(tile2.getPos().compareTo(tile.getPos()) == 0) {
+			if (tile2.getPos().compareTo(tile.getPos()) == 0) {
 				sources.remove(entry);
 				//iter.remove();
 				break;
 			}
 		}
 
-		sources.add(new SingleEntry<TileEntity, Direction>(tile, dir));
+		sources.add(new SingleEntry<>(tile, dir));
 	}
 
 	public void addSink(TileEntity tile, Direction dir) {
 
-		Iterator<Entry<TileEntity, Direction>> iter = sinks.iterator();
-
-		while(iter.hasNext()) {
-			Entry<TileEntity, Direction> entry = iter.next();
+		for (Entry<TileEntity, Direction> entry : sinks) {
 			TileEntity tile2 = entry.getKey();
-			if(tile2.equals(tile)) {
+			if (tile2.equals(tile)) {
 				return;
 			}
-			if(tile2.getPos().compareTo(tile.getPos()) == 0) {
+			if (tile2.getPos().compareTo(tile.getPos()) == 0) {
 				sinks.remove(entry);
 				//iter.remove();
 				break;
 			}
 		}
 
-		sinks.add(new SingleEntry<TileEntity, Direction>(tile, dir));
+		sinks.add(new SingleEntry<>(tile, dir));
 	}
 
 	public void writeToNBT(CompoundNBT nbt) {
@@ -100,7 +94,7 @@ public class CableNetwork {
 
 		int id = random.nextInt();
 
-		while(usedIds.contains(id)){ id = random.nextInt(); };
+		while(usedIds.contains(id)){ id = random.nextInt(); }
 
 		CableNetwork net = new CableNetwork();
 
@@ -141,16 +135,16 @@ public class CableNetwork {
 	public String toString() {
 		String output = "NumCables:   " + numCables + "     Sources: ";
 		for(Entry<TileEntity, Direction> obj : sources) {
-			TileEntity tile = (TileEntity)obj.getKey();
+			TileEntity tile = obj.getKey();
 			output += tile.getPos().getX() + "," + tile.getPos().getY() + "," + tile.getPos().getZ() + " ";
 		}
 
 		output += "    Sinks: ";
 		for(Entry<TileEntity, Direction> obj : sinks) {
-			TileEntity tile = (TileEntity)obj.getKey();
+			TileEntity tile = obj.getKey();
 			output += tile.getPos().getX() + "," + tile.getPos().getY() + "," + tile.getPos().getZ() + " ";
 		}
-		return output;
+		return output.toString();
 	}
 
 	/**
@@ -164,28 +158,28 @@ public class CableNetwork {
 			boolean canMerge = true;
 			for(Entry<TileEntity, Direction> obj2 : sinks) {
 				if(obj.getKey().getPos().compareTo(obj2.getKey().getPos()) == 0 && obj.getValue() == obj2.getValue()) {
-					canMerge = false;
+					//canMerge = false;
 					return false;
 				}
 			}
 
-			if(canMerge) {
+			//if(canMerge) {
 				sinks.add(obj);
-			}
+			//}
 		}
 
 		for(Entry<TileEntity, Direction> obj : cableNetwork.getSources()) {
 			boolean canMerge = true;
 			for(Entry<TileEntity, Direction> obj2 : sources) {
 				if(obj.getKey().getPos().compareTo(obj2.getKey().getPos()) == 0 && obj.getValue() == obj2.getValue()) {
-					canMerge = false;
+					//canMerge = false;
 					return false;
 				}
 			}
 
-			if(canMerge) {
+			//if(canMerge) {
 				sources.add(obj);
-			}
+			//}
 		}
 		return true;
 	}

@@ -27,6 +27,8 @@ import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,8 +40,7 @@ public class ItemOreScanner extends Item {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, World player,
-			List list, ITooltipFlag arg5) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag arg5) {
 		
 		SatelliteBase sat = DimensionManager.getInstance().getSatellite(this.getSatelliteID(stack));
 		
@@ -62,7 +63,7 @@ public class ItemOreScanner extends Item {
 		super.addInformation(stack, player, list, arg5);
 	}
 	
-	public void setSatelliteID(ItemStack stack, long id) {
+	public void setSatelliteID(@Nonnull ItemStack stack, long id) {
 		CompoundNBT nbt;
 		if(!stack.hasTag())
 			nbt = new CompoundNBT();
@@ -73,7 +74,7 @@ public class ItemOreScanner extends Item {
 		stack.setTag(nbt);
 	}
 
-	public long getSatelliteID(ItemStack stack) {
+	public long getSatelliteID(@Nonnull ItemStack stack) {
 		CompoundNBT nbt;
 		if(!stack.hasTag())
 			return -1;
@@ -84,6 +85,8 @@ public class ItemOreScanner extends Item {
 	}
 	
 	@Override
+	@Nonnull
+	@ParametersAreNonnullByDefault
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand) {
 		ItemStack stack = playerIn.getHeldItem(hand);
 		if(!playerIn.world.isRemote && !stack.isEmpty())
@@ -91,8 +94,8 @@ public class ItemOreScanner extends Item {
 			int satelliteId = (int)getSatelliteID(stack);
 			
 			SatelliteBase satellite = DimensionManager.getInstance().getSatellite(satelliteId);
-			
-			if(satellite != null && (satellite instanceof SatelliteOreMapping) && satellite.getDimensionId().get() == ZUtils.getDimensionIdentifier(worldIn))
+
+			if((satellite instanceof SatelliteOreMapping) && satellite.getDimensionId().get() == ZUtils.getDimensionIdentifier(worldIn))
 				satellite.performAction(playerIn, worldIn, new BlockPos(playerIn.getPositionVec()));
 		}
 			
@@ -100,6 +103,7 @@ public class ItemOreScanner extends Item {
 	}
 	
 	@Override
+	@Nonnull
 	public ActionResultType onItemUse(ItemUseContext context) {
 		PlayerEntity playerIn = context.getPlayer();
 		Hand hand = context.getHand();
@@ -113,8 +117,8 @@ public class ItemOreScanner extends Item {
 				int satelliteId = (int)getSatelliteID(stack);
 				
 				SatelliteBase satellite = DimensionManager.getInstance().getSatellite(satelliteId);
-				
-				if(satellite != null && (satellite instanceof SatelliteOreMapping) && satellite.getDimensionId().get() == ZUtils.getDimensionIdentifier(worldIn))
+
+				if((satellite instanceof SatelliteOreMapping) && satellite.getDimensionId().get() == ZUtils.getDimensionIdentifier(worldIn))
 					satellite.performAction(playerIn, worldIn, new BlockPos(playerIn.getPositionVec()));
 
 			}
@@ -127,9 +131,8 @@ public class ItemOreScanner extends Item {
 		satellite.performAction(player, world, pos);
 	}
 
-	
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		//modules.add(new ModuleOreMapper(0, 0));
 		return modules;
 	}

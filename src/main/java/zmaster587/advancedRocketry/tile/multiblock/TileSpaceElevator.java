@@ -55,6 +55,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkableTile, IModularInventory, ITickableTileEntity {
@@ -80,6 +81,7 @@ boolean openFullScreen = false;
 
 	EntityElevatorCapsule capsule;
 	boolean firstTick;
+	private boolean isTetherConnected;
 	DimensionBlockPosition dimBlockPos;
 
 	private ModuleText landingPadDisplayText;
@@ -101,10 +103,10 @@ boolean openFullScreen = false;
 			boolean blockBroken, BlockState state) {
 		super.deconstructMultiBlock(world, destroyedPos, blockBroken, state);
 		
-		Entity e = getCapsuleOnLine();
-		
-		if(e != null)
-			e.remove();
+		Entity entity = getCapsuleOnLine();
+
+		if(entity != null)
+			entity.remove();
 
 
 		World otherPlanet;
@@ -157,7 +159,7 @@ boolean openFullScreen = false;
 				modules.add(new ModuleText(30, 23, LibVulpes.proxy.getLocalizedString("msg.spaceelevator.warning.anchored0"), 0x2d2d2d));
 				modules.add(new ModuleText(30, 35, LibVulpes.proxy.getLocalizedString("msg.spaceelevator.warning.anchored1"), 0x2d2d2d));
 			} else {
-				modules.add(new ModuleText(30, 23, LibVulpes.proxy.getLocalizedString("msg.spaceelevator.warning.unanchored"), 0x2d2d2d));
+				modules.add(new ModuleText(30, 32, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.unanchored"), 0x2d2d2d));
 			}
 		}
 
@@ -291,7 +293,7 @@ boolean openFullScreen = false;
 
 	public void summonCapsule() {
 		//Don't spawn a new capsule if one exists
-		if(getCapsuleOnLine() != null)
+		if(getCapsuleOnLine() != null || !isTetherConnected())
 			return;
 
 		capsule = new EntityElevatorCapsule(world);
@@ -384,8 +386,9 @@ boolean openFullScreen = false;
 					if (capsule != null) {
 						capsule.setDst(dimBlockPos);
 					}
-					markDirty();
-					world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
+					this.markDirty();
+					this.world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
+					this.isTetherConnected = true;
 
 					return true;
 				}
@@ -407,13 +410,13 @@ boolean openFullScreen = false;
 				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation( 0, Direction.UP);
 				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation( 0, Direction.NORTH);
 			}
-			SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setIsAnchored( (dimensionBlockPosition == null) ? false : true);
+			SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setIsAnchored(dimensionBlockPosition != null);
 		}
 		dimBlockPos = dimensionBlockPosition;
 	}
 
 	public boolean isTetherConnected() {
-		return dimBlockPos != null;
+		return isTetherConnected;
 	}
 
 	@Override
@@ -432,6 +435,7 @@ boolean openFullScreen = false;
 		{
 			nbt.putString("dstDimId", dimBlockPos.dimid.toString());
 			nbt.putIntArray("dstPos", new int[] { dimBlockPos.pos.x, dimBlockPos.pos.y, dimBlockPos.pos.z });
+			nbt.putBoolean("tether", isTetherConnected);
 
 		}
 
@@ -455,6 +459,7 @@ boolean openFullScreen = false;
 		}
 		else
 			dimBlockPos = null;
+		isTetherConnected = nbt.getBoolean("tether");
 
 		landingPadDisplayText.setText(dimBlockPos != null ? dimBlockPos.toString() : LibVulpes.proxy.getLocalizedString("msg.label.noneselected"));
 	}

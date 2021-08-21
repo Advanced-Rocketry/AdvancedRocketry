@@ -4,7 +4,6 @@ import net.minecraft.client.audio.EntityTickableSound;
 import net.minecraft.client.audio.Sound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 
 public class SoundRocketEngine extends EntityTickableSound {

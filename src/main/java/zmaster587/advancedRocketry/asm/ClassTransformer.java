@@ -7,8 +7,6 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 
 /*public class ClassTransformer implements IClassTransformer {
 
@@ -18,18 +16,9 @@ import java.util.List;
 	private static final String CLASS_KEY_ENTITYLIVINGRENDERER = "net.minecraft.client.renderer.entity.RenderLivingEntity";
 	private static final String CLASS_KEY_ENTITY = "net.minecraft.entity.Entity";
 	private static final String CLASS_KEY_ENTITY_PLAYER_SP = "net.minecraft.client.entity.EntityPlayerSP";
-<<<<<<< HEAD
 	private static final String CLASS_KEY_ENTITY_PLAYER_MP = "net.minecraft.client.entity.ServerPlayerEntity";
 	private static final String CLASS_KEY_ENTITY_PLAYER = "net.minecraft.entity.player.PlayerEntity";
 	private static final String CLASS_KEY_ENTITY_ITEM = "net.minecraft.entity.ItemEntity";
-=======
-	private static final String CLASS_KEY_ENTITY_PLAYER_MP = "net.minecraft.client.entity.EntityPlayerMP";
-	private static final String CLASS_KEY_ENTITY_PLAYER = "net.minecraft.entity.player.EntityPlayer";
-	private static final String CLASS_KEY_ENTITY_ITEM = "net.minecraft.entity.EntityItem";
-	private static final String CLASS_KEY_ENTITY_FALLING_BLOCK = "net.minecraft.entity.item.EntityFallingBlock";
-	private static final String CLASS_KEY_ENTITY_MINECART = "net.minecraft.entity.item.EntityMinecart";
-	private static final String CLASS_KEY_ENTITY_TNT = "net.minecraft.entity.item.EntityTNTPrimed";
->>>>>>> origin/1.12
 	private static final String CLASS_KEY_NETHANDLERPLAYSERVER = "net.minecraft.network.NetHandlerPlayServer";
 	private static final String CLASS_KEY_C03PACKETPLAYER = "net.minecraft.network.play.client.C03PacketPlayer";
 	private static final String CLASS_KEY_WORLD = "net.minecraft.world.World";
@@ -69,7 +58,7 @@ import java.util.List;
 	private static final String FIELD_RIDINGENTITY = "net.minecraft.entity.Entity.ridingEntity";
 	private static final String FIELD_PROVIDER = CLASS_KEY_WORLD + "provider";
 
-	private static final HashMap<String, SimpleEntry<String, String>> entryMap = new HashMap<String, SimpleEntry<String, String>>();
+	private static final HashMap<String, SimpleEntry<String, String>> entryMap = new HashMap<>();
 
 
 
@@ -96,10 +85,10 @@ import java.util.List;
 		//entryMap.put(CLASS_KEY_ENTITYRENDERER, new SimpleEntry<String, String>("net/minecraft/client/renderer/EntityRenderer", "blt"));
 		entryMap.put(CLASS_KEY_ENTITYLIVEINGBASE, new SimpleEntry<String, String>("net/minecraft/entity/LivingEntity", "vp"));
 		//entryMap.put(CLASS_KEY_ENTITYLIVINGRENDERER, new SimpleEntry<String, String>("net/minecraft/client/renderer/entity/RendererLivingEntity", ""));
-		entryMap.put(CLASS_KEY_ENTITY, new SimpleEntry<String, String>("net/minecraft/entity/Entity","vg"));
-		entryMap.put(CLASS_KEY_ENTITY_FALLING_BLOCK, new SimpleEntry<String, String>("net/minecraft/entity/item/EntityFallingBlock","ack"));
-		entryMap.put(CLASS_KEY_ENTITY_MINECART, new SimpleEntry<String, String>("net/minecraft/entity/item/EntityMinecart","afe"));
-		entryMap.put(CLASS_KEY_ENTITY_TNT, new SimpleEntry<String, String>("net/minecraft/entity/item/EntityTNTPrimed","acm"));
+		entryMap.put(CLASS_KEY_ENTITY, new SimpleEntry<>("net/minecraft/entity/Entity", "vg"));
+		entryMap.put(CLASS_KEY_ENTITY_FALLING_BLOCK, new SimpleEntry<>("net/minecraft/entity/item/EntityFallingBlock", "ack"));
+		entryMap.put(CLASS_KEY_ENTITY_MINECART, new SimpleEntry<>("net/minecraft/entity/item/EntityMinecart", "afe"));
+		entryMap.put(CLASS_KEY_ENTITY_TNT, new SimpleEntry<>("net/minecraft/entity/item/EntityTNTPrimed", "acm"));
 		//entryMap.put(CLASS_KEY_ENTITY_PLAYER_SP, new SimpleEntry<String, String>("net/minecraft/client/entity/EntityPlayerSP",""));
 		entryMap.put(CLASS_KEY_ENTITY_PLAYER_MP, new SimpleEntry<String, String>("net/minecraft/entity/player/ServerPlayerEntity","oq"));
 		entryMap.put(CLASS_KEY_ENTITY_PLAYER, new SimpleEntry<String, String>("net/minecraft/entity/player/PlayerEntity","aed"));
@@ -127,13 +116,13 @@ import java.util.List;
 		//entryMap.put(METHOD_KEY_TRAVEL, new SimpleEntry<String, String>("travel","g"));
 		//entryMap.put(METHOD_KEY_MOVEFLYING, new SimpleEntry<String, String>("moveFlying",""));
 		//entryMap.put(METHOD_KEY_ONLIVINGUPDATE, new SimpleEntry<String, String>("onLivingUpdate","e"));
-		entryMap.put(METHOD_KEY_ONUPDATE, new SimpleEntry<String, String>("onUpdate","B_"));
+		entryMap.put(METHOD_KEY_ONUPDATE, new SimpleEntry<>("onUpdate", "B_"));
 		//entryMap.put(METHOD_KEY_MOUNTENTITY, new SimpleEntry<String, String>("mountEntity", "a"));
 		//entryMap.put(METHOD_KEY_JUMP, new SimpleEntry<String, String>("jump",""));
-		entryMap.put(METHOD_KEY_SETBLOCKSTATE, new SimpleEntry<String, String>("setBlockState", "a"));
+		entryMap.put(METHOD_KEY_SETBLOCKSTATE, new SimpleEntry<>("setBlockState", "a"));
 		//entryMap.put(METHOD_KEY_SETBLOCKMETADATAWITHNOTIFY, new SimpleEntry<String, String>("setBlockMetadataWithNotify", "a"));
-		entryMap.put(METHOD_KEY_SETUPTERRAIN, new SimpleEntry<String, String>("setupTerrain", "a"));
-		entryMap.put(METHOD_KEY_ONBLOCKACTIVATED, new SimpleEntry<String, String>("onBlockActivated", "a"));
+		entryMap.put(METHOD_KEY_SETUPTERRAIN, new SimpleEntry<>("setupTerrain", "a"));
+		entryMap.put(METHOD_KEY_ONBLOCKACTIVATED, new SimpleEntry<>("onBlockActivated", "a"));
 
 		//entryMap.put(FIELD_YAW, new SimpleEntry<String, String>("rotationYaw", "blt"));
 		//entryMap.put(FIELD_PITCH, new SimpleEntry <String, String>("rotationPitch", "blt"));
@@ -142,7 +131,7 @@ import java.util.List;
 		//entryMap.put(FIELD_PLAYERENTITY, new SimpleEntry<String, String>("playerEntity", ""));
 		//entryMap.put(FIELD_HASMOVED, new SimpleEntry<String, String>("hasMoved", ""));
 		//entryMap.put(FIELD_RIDINGENTITY, new SimpleEntry<String,String>("ridingEntity", "m"));
-		entryMap.put(FIELD_PROVIDER, new SimpleEntry<String,String>("provider", "s"));
+		entryMap.put(FIELD_PROVIDER, new SimpleEntry<>("provider", "s"));
 	}
 
 	@Override
@@ -593,12 +582,12 @@ import java.util.List;
 				final InsnList nodeAdd = new InsnList();
 
 				AbstractInsnNode pos1 = null;
-				AbstractInsnNode pos3 = null;
+				AbstractInsnNode pos3;
 				AbstractInsnNode pos2 = null;
 
 				int ifnull = 3;
 				int aload = 3;
-				int indexPos1 = 0;;
+				int indexPos1 = 0;
 
 				for(int i = setupTerrain.instructions.size() - 1; i >= 0; i--) {
 					AbstractInsnNode ain = setupTerrain.instructions.get(i);
@@ -650,7 +639,7 @@ import java.util.List;
 			if(onUpdate != null) {
 				final InsnList nodeAdd = new InsnList();
 				LabelNode label = new LabelNode();
-				AbstractInsnNode pos = null;
+				AbstractInsnNode pos;
 				AbstractInsnNode ain = null;
 				int numSpec = 1;
 				int numAload = 7;
@@ -693,7 +682,7 @@ import java.util.List;
 			if(onUpdate != null) {
 				final InsnList nodeAdd = new InsnList();
 				LabelNode label = new LabelNode();
-				AbstractInsnNode pos = null;
+				AbstractInsnNode pos;
 				AbstractInsnNode ain = null;
 				int numSpec = 1;
 				int numAload = 7;
@@ -742,7 +731,7 @@ import java.util.List;
 
 			if(onUpdate != null) {
 				final InsnList nodeAdd = new InsnList();
-				AbstractInsnNode pos = null;
+				AbstractInsnNode pos;
 				int lastReturnIndex = 0;
 				AbstractInsnNode ain;
 

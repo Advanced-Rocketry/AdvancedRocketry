@@ -29,8 +29,8 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 	static final int textureOffsetX = 0;
 	static final int textureOffsetY = 215;
 
-	DataStorage data[];
-	int prevData[];
+	DataStorage[] data;
+	int[] prevData;
 	int prevDataType;
 	int slot;
 	IDataInventory chipStorage;
@@ -135,9 +135,9 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 				totalMaxData += datum.getMaxData();
 			}
 
-			List<String> list = new LinkedList<String>();
+			List<String> list = new LinkedList<>();
 			list.add(totalData + " / " + totalMaxData + " Data");
-			list.add("Type: " +  I18n.format(data[0].getDataType().toString(), new Object[0]));
+			list.add("Type: " +  I18n.format(data[0].getDataType().toString()));
 			this.drawTooltip(gui, matrix, list, mouseX, mouseY, zLevel, font);
 		}
 

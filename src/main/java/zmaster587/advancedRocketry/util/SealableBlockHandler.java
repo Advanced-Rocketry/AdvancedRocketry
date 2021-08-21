@@ -18,6 +18,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.atmosphere.IAtmosphereSealHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -30,17 +31,17 @@ import java.util.List;
 public final class SealableBlockHandler implements IAtmosphereSealHandler
 {
 	/** List of blocks not allowed. */
-	private List<Block> blockBanList = new ArrayList();
+	private List<Block> blockBanList = new ArrayList<>();
 	/** List of blocks that are allowed regardless of properties. */
-	private List<Block> blockAllowList = new ArrayList();
+	private List<Block> blockAllowList = new ArrayList<>();
 	/** List of block materials not allowed. */
-	private List<Material> materialBanList = new ArrayList();
+	private List<Material> materialBanList = new ArrayList<>();
 	/** List of block materials that are allowed regardless of properties. */
-	private List<Material> materialAllowList = new ArrayList();
+	private List<Material> materialAllowList = new ArrayList<>();
 	
-	private HashSet<HashedBlockPosition> doorPositions = new HashSet<HashedBlockPosition>();
+	private HashSet<HashedBlockPosition> doorPositions = new HashSet<>();
 	//TODO add meta support
-	//TODO add complex logic support threw API interface
+	//TODO add complex logic support through API interface
 	//TODO add complex logic handler for integration support
 
 	/** INSTANCE */
@@ -55,7 +56,7 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 	 * @return
 	 */
 	@Override
-	public boolean isBlockSealed(World world, BlockPos pos)
+	public boolean isBlockSealed(@Nonnull World world, @Nonnull BlockPos pos)
 	{
 		//Ensure we are not checking outside of the map
 		if(pos.getY() >= 0 && pos.getY() <= 256)
@@ -114,10 +115,7 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 		{
 			blockBanList.add(block);
 		}
-		if (blockAllowList.contains(block))
-		{
-			blockAllowList.remove(block);
-		}
+		blockAllowList.remove(block);
 	}
 
 	@Override
@@ -127,13 +125,10 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 		{
 			blockAllowList.add(block);
 		}
-		if (blockBanList.contains(block))
-		{
-			blockBanList.remove(block);
-		}
+		blockBanList.remove(block);
 	}
 	
-	public List<Block> getOverridenSealableBlocks()
+	public List<Block> getOverriddenSealableBlocks()
 	{
 		return blockAllowList;
 	}
@@ -159,12 +154,15 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 	 * have a 3D model that doesn't look a full block in size. There
 	 * is no way around this other than to make a black list check.
 	 *
-	 * @param block - block to compare
+	 * @param world
+	 * @param pos block to compare
+	 * @param state
 	 * @return true if full block
 	 */
 	public static boolean isFullBlock(World world, BlockPos pos, BlockState state)
 	{
-		AxisAlignedBB bb = state.getCollisionShape( world, pos).getBoundingBox();
+		AxisAlignedBB bb = state.getCollisionShape(world, pos).getBoundingBox();
+
 		
     	if(bb == null)
     		return false;

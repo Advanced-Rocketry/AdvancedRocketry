@@ -138,7 +138,7 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 					}
 					else {
 						if(!starEntities.isEmpty()) {
-							float phaseInc = 4*360/starEntities.size();
+							float phaseInc = 4 * 360f / starEntities.size();
 							float phase = 0;
 							for(EntityUIStar entity : starEntities) {
 								double deltaX, deltaY;
@@ -225,6 +225,44 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 		}
 	}
 
+	public void selectSystemWithoutTargeting(ResourceLocation id) {
+		if (DimensionManager.getInstance().isStar(id)) {
+			if (stellarMode) {
+				if (selectedId != id) {
+					for (EntityUIStar entity : starEntities) {
+						if (entity.getPlanetID() == id) {
+							entity.setSelected(true);
+							selectedPlanet = entity;
+						} else
+							entity.setSelected(false);
+					}
+					selectedId = id;
+				} else {
+					stellarMode = false;
+					currentStarBody = DimensionManager.getInstance().getStar(id);
+					rebuildSystem();
+					selectedId = Constants.INVALID_PLANET;
+				}
+			}
+
+		} else {
+
+			if (selectedPlanet != null && selectedPlanet.getPlanetID() == id) {
+				centeredEntity = selectedPlanet;
+				stellarMode = false;
+				rebuildSystem();
+			} else
+				for (EntityUIPlanet entity : entities) {
+					if (entity.getPlanetID() == id) {
+						entity.setSelected(true);
+						selectedPlanet = entity;
+					} else
+						entity.setSelected(false);
+				}
+		}
+	}
+
+
 	private void rebuildSystem() {
 		onTime = 0;
 		for(EntityUIPlanet entity : entities)
@@ -244,9 +282,9 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 		}
 
 		if(!stellarMode) {
-			List<IDimensionProperties> planetList = currentStarBody == null ? DimensionManager.getSol().getPlanets() : currentStarBody.getPlanets();
+			List<IDimensionProperties> planetList = currentStarBody == null ? DimensionManager.getInstance().getStar(new ResourceLocation(Constants.STAR_NAMESPACE, "0")).getPlanets() : currentStarBody.getPlanets();
 			if(centeredEntity != null) {
-				planetList = new LinkedList<IDimensionProperties>();
+				planetList = new LinkedList<>();
 				planetList.add(centeredEntity.getProperties());
 
 				for(ResourceLocation id : centeredEntity.getProperties().getChildPlanets())
@@ -260,13 +298,13 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 			}
 			else {
 				if(currentStarBody == null)
-					currentStarBody = DimensionManager.getSol();
+					currentStarBody = DimensionManager.getInstance().getStar(new ResourceLocation(Constants.STAR_NAMESPACE, "0"));
 				currentStar = new EntityUIStar(world, currentStarBody, this, this.pos.getX() + .5, this.pos.getY() + 1, this.pos.getZ() + .5);
 				this.getWorld().addEntity(currentStar);
 
 				//Spawn substars
 				if(currentStarBody.getSubStars() != null && !currentStarBody.getSubStars().isEmpty()) {
-					float phaseInc = 360/currentStarBody.getSubStars().size();
+					float phaseInc = 360f / currentStarBody.getSubStars().size();
 					float phase = 0;
 					int count = 0;
 					Collection<StellarBody> starList = currentStarBody.getSubStars();
@@ -320,7 +358,7 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 
 		modules.add(targetGrav);
-		modules.add(new ModuleSlider(6, 60, 0, TextureResources.doubleWarningSideBarIndicator, (ISliderBar)this));
+		modules.add(new ModuleSlider(6, 60, 0, TextureResources.doubleWarningSideBarIndicator, this));
 		modules.add(redstoneControl);
 
 		updateText();
@@ -359,14 +397,11 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 	}
 
 	@Override
-	public void setProgress(int id, int progress) {
-		size = progress/100f;
-
-	}
+	public void setProgress(int id, int progress) { size = progress/100f; }
 
 	@Override
 	public int getProgress(int id) {
-		return (int)(size*100);
+		return (int)(size * 100);
 	}
 
 	@Override
@@ -375,9 +410,7 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 	}
 
 	@Override
-	public void setTotalProgress(int id, int progress) {
-
-	}
+	public void setTotalProgress(int id, int progress) { }
 
 	@Override
 	public void setProgressByUser(int id, int progress) {
@@ -385,6 +418,10 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 		PacketHandler.sendToServer(new PacketMachine(this, SCALEPACKET));
 		updateText();
 	}
+
+	public ResourceLocation getCurrentPlanetID () {return selectedPlanet.getPlanetID();}
+
+	public ResourceLocation getCurrentStarID() {return currentStar.getPlanetID();}
 
 	@Override
 	public void writeDataToNetwork(PacketBuffer out, byte id) {
@@ -433,7 +470,7 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 		}
 		else if(buttonId == 1) {
 			state = redstoneControl.getState();
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)STATEUPDATE));
+			PacketHandler.sendToServer(new PacketMachine(this, STATEUPDATE));
 		}
 	}
 

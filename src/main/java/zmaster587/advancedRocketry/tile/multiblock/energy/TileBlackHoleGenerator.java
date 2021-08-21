@@ -39,6 +39,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiPowerProducer;
 import zmaster587.libVulpes.util.MultiBattery;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -70,9 +71,9 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 			{null, null, null}
 		}};
 
-		int powerMadeLastTick, prevPowerMadeLastTick;
-		ModuleText textModule;
-		boolean initialCheck;
+		private int powerMadeLastTick, prevPowerMadeLastTick;
+		private ModuleText textModule;
+		private boolean initialCheck;
 		private long last_usage;
 
 		public TileBlackHoleGenerator() {
@@ -182,10 +183,10 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 
 			if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world)))
 			{
-				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos);
-				if(obj != null)
+				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos);
+				if(spaceObject != null)
 				{
-					DimensionProperties properties = (DimensionProperties) obj.getProperties().getParentProperties();
+					DimensionProperties properties = (DimensionProperties) spaceObject.getProperties().getParentProperties();
 					return properties != null && (properties.isStar() && properties.getStarData().isBlackHole());
 				}
 			}
@@ -206,8 +207,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 				return;
 
 			if(!world.isRemote) {
-				if(isAroundBlackHole())
-				{
+				if(isAroundBlackHole()) {
 					float energyRecieved = 0;
 
 

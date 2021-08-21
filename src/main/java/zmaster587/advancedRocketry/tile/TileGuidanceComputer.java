@@ -32,34 +32,45 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class TileGuidanceComputer extends TileInventoryHatch implements IModularInventory {
 
-	ResourceLocation destinationId;
-	Vector3F<Float> landingPos;
-	Map<ResourceLocation, HashedBlockPosition> landingLoc;
+	private ResourceLocation destinationId;
+	private Vector3F<Float> landingPos;
+	private Map<ResourceLocation, HashedBlockPosition> landingLoc;
 
 	public TileGuidanceComputer() {
 		super( AdvancedRocketryTileEntityType.TILE_GUIDANCE_COMPUTER, 1);
 		inventory.setCanInsertSlot(0, true);
 		inventory.setCanExtractSlot(0, true);
-		landingPos = new Vector3F<Float>(0f, 0f, 0f);
+		landingPos = new Vector3F<>(0f, 0f, 0f);
 		destinationId = Constants.INVALID_PLANET;
-		landingLoc = new HashMap<ResourceLocation, HashedBlockPosition>();
+		landingLoc = new HashMap<>();
 	}
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		List<ModuleBase> modules = super.getModules(ID, player);
-
-		return modules;
+		return super.getModules(ID, player);
 	}
 
 	@Override
 	public int getInventoryStackLimit() {
 		return 1;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack itemStack) {
+		Item item = itemStack.getItem();
+
+		return slot == 0 &&
+				(item instanceof ItemPlanetIdentificationChip ||
+				item instanceof ItemStationChip ||
+				item instanceof ItemAsteroidChip ||
+				item instanceof ItemSatelliteIdentificationChip ||
+				item == LibVulpesItems.itemLinker);
 	}
 
 	public void setLandingLocation(ResourceLocation stationId, StationLandingLocation loc) {
@@ -72,8 +83,8 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	public StationLandingLocation getLandingLocation(ResourceLocation stationId) {
 		
 		//Due to the fact that stations are not guaranteed to be loaded on startup, we get a real reference now
-		ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStation(stationId);
-		if(obj == null) {
+		ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStation(stationId);
+		if(spaceObject == null) {
 			landingLoc.remove(stationId);
 			return null;
 		}
@@ -83,13 +94,13 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		if(myLoc == null)
 			return null;
 		
-		return ((SpaceStationObject)obj).getPadAtLocation(myLoc);
+		return ((SpaceStationObject)spaceObject).getPadAtLocation(myLoc);
 	}
 
 	public long getTargetSatellite() {
 		ItemStack stack = getStackInSlot(0);
 		if(!stack.isEmpty() && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
-			return ((ItemSatelliteIdentificationChip)stack.getItem()).getSatelliteId(stack);
+			return ItemSatelliteIdentificationChip.getSatelliteId(stack);
 		}
 		return -1;
 	}
@@ -101,7 +112,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	public ResourceLocation getDestinationDimId(ResourceLocation currentDimension, BlockPos pos) {
 		ItemStack stack = getStackInSlot(0);
 
-		if(!stack.isEmpty()){
+		if(!stack.isEmpty()) {
 			Item itemType = stack.getItem();
 			if (itemType instanceof ItemPlanetIdentificationChip) {
 				ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)itemType;
@@ -110,10 +121,10 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			}
 			else if(itemType instanceof ItemStationChip) {
 				if(ARConfiguration.GetSpaceDimId().equals(currentDimension)) {
-					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-					if(object != null) {
-						if(ItemStationChip.getUUID(stack).equals(object.getId()))
-							return object.getOrbitingPlanetId();
+					ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+					if(spaceObject != null) {
+						if(ItemStationChip.getUUID(stack).equals(spaceObject.getId()))
+							return spaceObject.getOrbitingPlanetId();
 					}
 					else
 						return Constants.INVALID_PLANET;
@@ -124,13 +135,13 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				destinationId = currentDimension;
 
 				//Caution Side-Effect: Updates landingPos.
-				landingPos = new Vector3F<Float>((float)pos.getX(), (float)pos.getY(), (float)pos.getZ());
+				landingPos = new Vector3F<>((float) pos.getX(), (float) pos.getY(), (float) pos.getZ());
 				return currentDimension;
 			}
 			else if(itemType instanceof ItemSatelliteIdentificationChip) {
-				long l = getTargetSatellite();
-				if(l != Constants.INVALID_SAT) {
-					SatelliteBase sat = DimensionManager.getInstance().getSatellite(l);
+				long satelliteId = getTargetSatellite();
+				if(satelliteId != Constants.INVALID_SAT) {
+					SatelliteBase sat = DimensionManager.getInstance().getSatellite(satelliteId);
 					
 					if(sat != null)
 						return sat.getDimensionId().get();
@@ -167,8 +178,8 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				ItemStationChip chip = (ItemStationChip)stack.getItem();
 				if(ARConfiguration.GetSpaceDimId().equals(landingDimension)) {
 					//TODO: handle Exception
-					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(stack));
-					return getStationLocation(object, commit);
+					ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(stack));
+					return getStationLocation(spaceObject, commit);
 				}
 				else {
 					LandingLocation loc = chip.getTakeoffCoords(stack, landingDimension);
@@ -191,7 +202,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 			{
 				//Use the destination the Linker in the Guidance computer directs.
 				BlockPos landingBlock = ItemLinker.getMasterCoords(stack);
-				return new Vector3F<Float>(landingBlock.getX() + 0.5f, (float)ARConfiguration.getCurrentConfig().orbit.get(), landingBlock.getZ() + 0.5f);
+				return new Vector3F<>(landingBlock.getX() + 0.5f, (float)ARConfiguration.getCurrentConfig().orbit.get(), landingBlock.getZ() + 0.5f);
 			}
 
 		}		
@@ -205,32 +216,32 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		return null;
 	}
 	
-	private Vector3F<Float> getStationLocation(ISpaceObject object, boolean commit)
+	private Vector3F<Float> getStationLocation(ISpaceObject spaceObject, boolean commit)
 	{
 		HashedBlockPosition vec = null;
-		if(object instanceof SpaceStationObject) {
-			if(landingLoc.get(object.getId()) != null) {
-				vec = landingLoc.get(object.getId());
+		if(spaceObject instanceof SpaceStationObject) {
+			if(landingLoc.get(spaceObject.getId()) != null) {
+				vec = landingLoc.get(spaceObject.getId());
 
 				if(commit)
-					((SpaceStationObject)object).getPadAtLocation(landingLoc.get(object.getId())).setOccupied(true);
+					((SpaceStationObject)spaceObject).getPadAtLocation(landingLoc.get(spaceObject.getId())).setOccupied(true);
 			}
 			else
-				vec = ((SpaceStationObject)object).getNextLandingPad(commit);
+				vec = spaceObject.getNextLandingPad(commit);
 		}
 
-		if(object == null)
+		if(spaceObject == null)
 			return null;
 
 		if(vec == null)
-			vec = object.getSpawnLocation();
+			vec = spaceObject.getSpawnLocation();
 
-		return new Vector3F<Float>(new Float(vec.x), new Float(vec.y), new Float(vec.z));
+		return new Vector3F<>((float) vec.x, (float) vec.y, (float) vec.z);
 	}
 	
-	public void overrideLandingStation(ISpaceObject object)
+	public void overrideLandingStation(ISpaceObject spaceObject)
 	{
-		setFallbackDestination(ARConfiguration.GetSpaceDimId(), getStationLocation(object, true));
+		setFallbackDestination(ARConfiguration.GetSpaceDimId(), getStationLocation(spaceObject, true));
 	}
 	
 	public String getDestinationName(ResourceLocation landingDimension)
@@ -323,7 +334,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 
 		for(int i = 0; i < stationList.size(); i++) {
 			CompoundNBT tag = stationList.getCompound(i);
-			int pos[];
+			int[] pos;
 			pos = tag.getIntArray("pos");
 			ResourceLocation id = new ResourceLocation(tag.getString("id"));
 			landingLoc.put(id, new HashedBlockPosition(pos[0], pos[1], pos[2]));
@@ -331,7 +342,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
 
 		//If the item in the slot is modified then reset dimid

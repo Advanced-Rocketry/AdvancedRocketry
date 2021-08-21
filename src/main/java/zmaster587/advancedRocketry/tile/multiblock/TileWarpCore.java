@@ -19,6 +19,8 @@ import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+
 public class TileWarpCore extends TileMultiBlock {
 	public TileWarpCore() {
 		super(AdvancedRocketryTileEntityType.TILE_WARP_CORE);
@@ -67,12 +69,13 @@ public class TileWarpCore extends TileMultiBlock {
 		if(itemInPorts.isEmpty() /*&& !worldObj.isRemote*/) {
 			attemptCompleteStructure(world.getBlockState(pos));
 		}
-		
+
 		if(getSpaceObject() == null || (getSpaceObject().getMaxFuelAmount() - getSpaceObject().getFuelAmount() < ARConfiguration.getCurrentConfig().fuelPointsPerDilithium.get()))
 			return;
 		for(IInventory inv : itemInPorts) {
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
-				ItemStack stack = inv.getStackInSlot(i);
+				ItemStack stack = inv.getStackInSlot(i).copy();
+				stack.setCount(1);
 				int amt = 0;
 				if(!stack.isEmpty() && ItemTags.getCollection().getOwningTags(stack.getItem()).stream().anyMatch(value -> { return value.getPath().equalsIgnoreCase("gems/dilithium"); }) ) {
 					int stackSize = stack.getCount();
@@ -95,6 +98,7 @@ public class TileWarpCore extends TileMultiBlock {
 	}
 	
 	@Override
+	@Nonnull
 	public AxisAlignedBB getRenderBoundingBox() {
 		
 		return new AxisAlignedBB(pos.add(-2,-2,-2),pos.add(2,2,2));

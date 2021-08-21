@@ -20,8 +20,6 @@ import zmaster587.libVulpes.render.RenderHelper;
 
 public class RenderJetPack extends BipedModel {
 
-
-
 	BipedModel biped;
 	float scale;
 

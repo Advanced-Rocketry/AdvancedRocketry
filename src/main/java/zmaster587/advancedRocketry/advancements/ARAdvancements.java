@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.achievements;
+package zmaster587.advancedRocketry.advancements;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.entity.player.ServerPlayerEntity;

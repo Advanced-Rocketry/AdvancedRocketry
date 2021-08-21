@@ -52,10 +52,9 @@ public class Face
 
         if ((textureCoordinates != null) && (textureCoordinates.length > 0))
         {
-            for (int i = 0; i < textureCoordinates.length; ++i)
-            {
-                averageU += textureCoordinates[i].u;
-                averageV += textureCoordinates[i].v;
+            for (TextureCoordinate textureCoordinate : textureCoordinates) {
+                averageU += textureCoordinate.u;
+                averageV += textureCoordinate.v;
             }
 
             averageU = averageU / textureCoordinates.length;
@@ -178,7 +177,7 @@ public class Face
 
     public Vertex calculateFaceNormal()
     {
-    	
+
         Vector3d v1 = new Vector3d(vertices[1].x - vertices[0].x, vertices[1].y - vertices[0].y, vertices[1].z - vertices[0].z);
         Vector3d v2 = new Vector3d(vertices[2].x - vertices[0].x, vertices[2].y - vertices[0].y, vertices[2].z - vertices[0].z);
         Vector3d normalVector = null;
