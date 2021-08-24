@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.tile.multiblock;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
@@ -48,11 +49,11 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 				{null, null, null, null, null},
 				{null, null, null, null, null}},
 
-				{	{null,"blockAluminum","blockAluminum","blockAluminum",null},
-					{"blockAluminum", "blockAluminum", AdvancedRocketryBlocks.blockStructureTower, "blockAluminum", "blockAluminum"},
-					{"blockAluminum", AdvancedRocketryBlocks.blockStructureTower, LibVulpesBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureTower, "blockAluminum"},
-					{"blockAluminum", "blockAluminum", AdvancedRocketryBlocks.blockStructureTower, "blockAluminum", "blockAluminum"},
-					{null,"blockAluminum","blockAluminum","blockAluminum",null}},
+				{	{null,new ResourceLocation("forge", "storage_blocks/aluminum"),new ResourceLocation("forge", "storage_blocks/aluminum"),new ResourceLocation("forge", "storage_blocks/aluminum"),null},
+					{new ResourceLocation("forge", "storage_blocks/aluminum"), new ResourceLocation("forge", "storage_blocks/aluminum"), AdvancedRocketryBlocks.blockStructureTower, new ResourceLocation("forge", "storage_blocks/aluminum"), new ResourceLocation("forge", "storage_blocks/aluminum")},
+					{new ResourceLocation("forge", "storage_blocks/aluminum"), AdvancedRocketryBlocks.blockStructureTower, LibVulpesBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureTower, new ResourceLocation("forge", "storage_blocks/aluminum")},
+					{new ResourceLocation("forge", "storage_blocks/aluminum"), new ResourceLocation("forge", "storage_blocks/aluminum"), AdvancedRocketryBlocks.blockStructureTower, new ResourceLocation("forge", "storage_blocks/aluminum"), new ResourceLocation("forge", "storage_blocks/aluminum")},
+					{null,new ResourceLocation("forge", "storage_blocks/aluminum"),new ResourceLocation("forge", "storage_blocks/aluminum"),new ResourceLocation("forge", "storage_blocks/aluminum"),null}},
 
 					{	{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR}, 
 						{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},
