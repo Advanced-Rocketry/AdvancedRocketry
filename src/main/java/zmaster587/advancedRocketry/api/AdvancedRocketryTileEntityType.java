@@ -195,6 +195,7 @@ public class AdvancedRocketryTileEntityType {
 		TILE_STATION_DEPLOYED_ASSEMBLER = TileEntityType.Builder.create(TileUnmannedVehicleAssembler::new, AdvancedRocketryBlocks.blockDeployableRocketBuilder).build(null);
 		TILE_GUIDANCE_COMPUTER = TileEntityType.Builder.create(TileGuidanceComputer::new, AdvancedRocketryBlocks.blockGuidanceComputer).build(null);
 		TILE_SATELLITE_HATCH = TileEntityType.Builder.create(TileSatelliteHatch::new, AdvancedRocketryBlocks.blockSatelliteHatch).build(null);
+		TILE_SOLAR_ARRAY = TileEntityType.Builder.create(TileSolarArray::new, AdvancedRocketryBlocks.blockSolarArray).build(null);
 		
 		IForgeRegistry<TileEntityType<?>> r = evt.getRegistry();
 		r.registerAll(
@@ -256,7 +257,8 @@ public class AdvancedRocketryTileEntityType {
 				TILE_SEAL.setRegistryName("seal"),
 				TILE_STATION_DEPLOYED_ASSEMBLER.setRegistryName("deployed_assembler"),
 				TILE_GUIDANCE_COMPUTER.setRegistryName("guidance_computer"),
-				TILE_SATELLITE_HATCH.setRegistryName("satellite_hatch")
+				TILE_SATELLITE_HATCH.setRegistryName("satellite_hatch"),
+				TILE_SOLAR_ARRAY.setRegistryName("solar_array")
 				);
 		
 		
@@ -330,5 +332,7 @@ public class AdvancedRocketryTileEntityType {
 		((BlockTile)AdvancedRocketryBlocks.blockGravityMachine)._setTile(AdvancedRocketryTileEntityType.TILE_GRAVITY_CONTROLLER);
 		
 		((BlockTile)AdvancedRocketryBlocks.blockSpaceLaser)._setTile(AdvancedRocketryTileEntityType.TILE_SPACE_LASER);
+
+		((BlockTile)AdvancedRocketryBlocks.blockSolarArray)._setTile(AdvancedRocketryTileEntityType.TILE_SOLAR_ARRAY);
 	}
 }

@@ -226,6 +226,8 @@ public class AdvancedRocketryItems {
 	public static Item itemCentrifuge;
 	public static Item itemBasalt;
 	public static Item itemLandingFloat;
+	public static Item itemSolarArray;
+	public static Item itemSolarArrayPanel;
 
 	public static void registerItems(Register<Item> evt) {
 		//Items -------------------------------------------------------------------------------------
@@ -476,6 +478,8 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemCentrifuge = new BlockItem(AdvancedRocketryBlocks.blockCentrifuge, typicalBlockProperties);
 		AdvancedRocketryItems.itemBasalt = new BlockItem(AdvancedRocketryBlocks.blockBasalt, typicalBlockProperties);
 		AdvancedRocketryItems.itemLandingFloat = new BlockItem(AdvancedRocketryBlocks.blockLandingFloat, typicalBlockProperties);
+		AdvancedRocketryItems.itemSolarArray = new BlockItem(AdvancedRocketryBlocks.blockSolarArray, typicalBlockProperties);
+		AdvancedRocketryItems.itemSolarArrayPanel = new BlockItem(AdvancedRocketryBlocks.blockSolarArrayPanel, typicalBlockProperties);
 		
 		evt.getRegistry().registerAll(AdvancedRocketryItems.itemLaunchpad.setRegistryName("launchpad"),
 				AdvancedRocketryItems.itemRocketBuilder.setRegistryName("rocketassembler"),
@@ -577,6 +581,8 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemCentrifuge.setRegistryName("centrifuge"),
 				AdvancedRocketryItems.itemBasalt.setRegistryName("basalt"),
 				AdvancedRocketryItems.itemLandingFloat.setRegistryName("landingfloat"),
+				AdvancedRocketryItems.itemSolarArray.setRegistryName("solararray"),
+				AdvancedRocketryItems.itemSolarArrayPanel.setRegistryName("solararraypanel"),
 				AdvancedRocketryItems.itemSpaceLaser.setRegistryName("spacelaser"));
 	}
 }
