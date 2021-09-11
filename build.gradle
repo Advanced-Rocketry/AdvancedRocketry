@@ -131,10 +131,19 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-        maven {
+    maven {
             name = "mezz.jei"
             url = "https://dvs1.progwml6.com/files/maven"
         }
+    ivy {
+        url "http://65.78.115.159:8080/"
+        layout 'pattern', {
+            artifact "/job/LibVulpes/job/libVulpes/job/1.16.5/" + project.libVulpesBuildNum +"/artifact/output/[module]-[revision].[ext]"
+        }
+        metadataSources {
+            artifact()
+        }
+    }
     ivy {
             name "industrialcraft-2"
             artifactPattern "http://jenkins.ic2.player.to/job/IC2_111/39/artifact/build/libs/[module]-[revision].[ext]"
