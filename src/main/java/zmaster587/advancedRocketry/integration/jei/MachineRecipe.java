@@ -1,7 +1,7 @@
 package zmaster587.advancedRocketry.integration.jei;
 
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
@@ -14,7 +14,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MachineRecipe extends BlankRecipeWrapper {
+public class MachineRecipe implements IRecipeWrapper {
 	
 	private List<List<ItemStack>> ingredients;
 	private ArrayList<ItemStack> result;
@@ -25,18 +25,17 @@ public class MachineRecipe extends BlankRecipeWrapper {
 
 
 	protected MachineRecipe(IRecipe rec) {
-		//TODO: multiple outputs
 		if(rec instanceof Recipe)
 		{
-			resultChance = new ArrayList<ChanceItemStack>(((Recipe)rec).getChanceOutputs());
+			resultChance = new ArrayList<>(((Recipe) rec).getChanceOutputs());
 			result = new ArrayList<>();
 			
 			int i = -1;
 			float totalChance = 0;
-			for( ChanceItemStack stack : resultChance )
+			for( ChanceItemStack stack : resultChance)
 				totalChance += stack.chance;
 			
-			for( ChanceItemStack stack : resultChance )
+			for( ChanceItemStack stack : resultChance)
 			{
 				i++;
 				if(stack.chance == 0)
@@ -86,11 +85,9 @@ public class MachineRecipe extends BlankRecipeWrapper {
 		
 			String powerString = String.format("Power: %d RF/t", energy);
 			FontRenderer fontRendererObj = minecraft.fontRenderer;
-			int stringWidth = fontRendererObj.getStringWidth(powerString);
 			fontRendererObj.drawString(powerString, 0, 55, Color.black.getRGB());
 			
 			String timeString = String.format("Time: %d s", time/20);
-			stringWidth = fontRendererObj.getStringWidth(powerString);
 			fontRendererObj.drawString(timeString, recipeWidth - 55, 55, Color.black.getRGB());
 			
 	}

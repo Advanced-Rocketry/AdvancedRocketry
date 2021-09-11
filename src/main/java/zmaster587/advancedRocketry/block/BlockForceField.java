@@ -48,7 +48,7 @@ public class BlockForceField extends Block {
         IBlockState iblockstate = blockAccess.getBlockState(pos.offset(side));
         Block block = iblockstate.getBlock();
 
-        return block == this ? false : super.shouldSideBeRendered(blockState, blockAccess, pos, side);
+        return block != this && super.shouldSideBeRendered(blockState, blockAccess, pos, side);
     }
 
 }

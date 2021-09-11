@@ -43,9 +43,10 @@ public class RendererElectrolyser extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix();
 
 		//Rotate and move the model into position
-		GL11.glTranslated(x+.5f, y, z + 0.5f);
+		GL11.glTranslated(x + 0.5, y, z + 0.5);
 		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
 		GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) - front.getFrontOffsetX()*90f, 0, 1, 0);
+		GL11.glTranslated(1.5f, 0f, -0.5f);
 
 		bindTexture(texture);
 		model.renderAll();
@@ -69,8 +70,8 @@ public class RendererElectrolyser extends TileEntitySpecialRenderer {
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
 			GlStateManager.color(.64f, 0.64f, 1f, 0.4f);
-			double xMin = -0.3f;
-			double xMax = -.15f;
+			double xMin = -1.8f;
+			double xMax = -1.65f;
 			double zMin = 1f;
 			double zMax = 1;
 			RenderHelper.renderCrossXZ(buffer, width, xMin, yPos, zMin, xMax, yPos + ySkew, zMax  + xSkew);

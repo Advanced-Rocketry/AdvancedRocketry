@@ -8,7 +8,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
@@ -26,14 +25,10 @@ import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent.MouseInputEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.RocketEvent;
@@ -51,6 +46,7 @@ import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
 import java.nio.IntBuffer;
 import java.util.List;
 import java.util.Random;
@@ -88,7 +84,7 @@ public class RocketEventHandler extends Gui {
 			//So fix that...
 			ForgeHooksClient.getSkyBlendColour(event.world, event.getEntity().getPosition());
 
-			if(ARConfiguration.getCurrentConfig().planetSkyOverride && !(event.world.provider instanceof IPlanetaryProvider)) {
+			if(ARConfiguration.getCurrentConfig().planetSkyOverride && !DimensionManager.getInstance().getDimensionProperties(event.world.provider.getDimension()).skyRenderOverride && !(event.world.provider instanceof IPlanetaryProvider)) {
 				prevRenderHanlder = event.world.provider.getSkyRenderer();
 				event.world.provider.setSkyRenderer(new RenderPlanetarySky());
 			}
@@ -103,7 +99,7 @@ public class RocketEventHandler extends Gui {
 	
 	@SubscribeEvent
 	public void onRocketLaunch(RocketEvent.RocketLaunchEvent event) {
-		if(ARConfiguration.getCurrentConfig().planetSkyOverride && event.world.isRemote && !event.getEntity().getPassengers().isEmpty() && event.getEntity().getPassengers().contains(Minecraft.getMinecraft().player)) {
+		if(ARConfiguration.getCurrentConfig().planetSkyOverride && !DimensionManager.getInstance().getDimensionProperties(event.world.provider.getDimension()).skyRenderOverride && event.world.isRemote && !event.getEntity().getPassengers().isEmpty() && event.getEntity().getPassengers().contains(Minecraft.getMinecraft().player)) {
 			prepareOrbitalMap(event);
 			prevRenderHanlder = event.world.provider.getSkyRenderer();
 			event.world.provider.setSkyRenderer(new RenderPlanetarySky());
@@ -153,110 +149,106 @@ public class RocketEventHandler extends Gui {
 
 		if(thread == null || !thread.isAlive()) {
 
-			thread = new Thread(new Runnable() {
-				@Override
-				public void run() {
+			thread = new Thread(() -> {
 
-					int numChunksLoaded = 0;
+				int numChunksLoaded = 0;
 
-					table = earth.getByteBuffer();
-					outerBoundsTable = outerBounds.getByteBuffer();
+				table = earth.getByteBuffer();
+				outerBoundsTable = outerBounds.getByteBuffer();
 
-					//Get the average of each edge RGB
-					long topEdge[], bottomEdge[], leftEdge[], rightEdge[], total[];
-					total = topEdge = bottomEdge = leftEdge = rightEdge = new long[] {0,0,0};
+				//Get the average of each edge RGB
+				long[] total = new long[]{0, 0, 0};
 
 
-					do {
-						for(int i = 0; i < getImgSize*getImgSize; i++) {
-							//TODO: Optimize
-							int xOffset = (i % getImgSize);
-							int yOffset = (i / getImgSize);
+				do {
+					for(int i = 0; i < getImgSize*getImgSize; i++) {
+						//TODO: Optimize
+						int xOffset = (i % getImgSize);
+						int yOffset = (i / getImgSize);
 
-							int xPosition = (int)entity.posX - (getImgSize/2) + xOffset;
-							int zPosition = (int)entity.posZ - (getImgSize/2) + yOffset;
-							BlockPos thisPos = new BlockPos(xPosition, 0, zPosition);
-							Chunk chunk = worldObj.getChunkFromBlockCoords(thisPos);
+						int xPosition = (int)entity.posX - (getImgSize/2) + xOffset;
+						int zPosition = (int)entity.posZ - (getImgSize/2) + yOffset;
+						BlockPos thisPos = new BlockPos(xPosition, 0, zPosition);
+						Chunk chunk = worldObj.getChunkFromBlockCoords(thisPos);
 
-							if(chunk.isLoaded() && !chunk.isEmpty()) {
-								//Get Xcoord and ZCoords in the chunk
-								numChunksLoaded++;
-								int heightValue = chunk.getHeightValue( xPosition + (chunk.x >= 0 ? - (Math.abs( chunk.x )<< 4) : (Math.abs( chunk.x )<< 4)), zPosition + (chunk.z >= 0 ? - (Math.abs(chunk.z )<< 4) : (Math.abs(chunk.z )<< 4)));
-								MapColor color = MapColor.AIR;
-								int yPosition;
+						if(chunk.isLoaded() && !chunk.isEmpty()) {
+							//Get Xcoord and ZCoords in the chunk
+							numChunksLoaded++;
+							int heightValue = chunk.getHeightValue( xPosition + (chunk.x >= 0 ? - (Math.abs( chunk.x )<< 4) : (Math.abs( chunk.x )<< 4)), zPosition + (chunk.z >= 0 ? - (Math.abs(chunk.z )<< 4) : (Math.abs(chunk.z )<< 4)));
+							MapColor color = MapColor.AIR;
+							int yPosition;
 
-								IBlockState block = null;
+							IBlockState block = null;
 
-								//Get the first non-air block
-								for(yPosition = heightValue; yPosition > 0; yPosition-- ) {
-									block = worldObj.getBlockState(new BlockPos(xPosition, yPosition, zPosition));
-									if((color = block.getMapColor(worldObj, thisPos)) != MapColor.AIR) {
-										break;
-									}
+							//Get the first non-air block
+							for(yPosition = heightValue; yPosition > 0; yPosition-- ) {
+								block = worldObj.getBlockState(new BlockPos(xPosition, yPosition, zPosition));
+								if((color = block.getMapColor(worldObj, thisPos)) != MapColor.AIR) {
+									break;
 								}
-								if(block == null)
-									continue;
-
-								int intColor;
-
-								if(block.getBlock() == Blocks.GRASS || block.getBlock() == Blocks.TALLGRASS) {
-									int color2 = worldObj.getBiome(thisPos).getGrassColorAtPos(thisPos.add(0, yPosition, 0));
-									int r = (color2 & 0xFF);
-									int g = ( (color2 >>> 8) & 0xFF);
-									int b = ( (color2 >>> 16) & 0xFF);
-									intColor = b | (g << 8) | (r << 16);
-								}
-								else if(block.getBlock() == Blocks.LEAVES || block.getBlock() == Blocks.LEAVES2) {
-									int color2 = worldObj.getBiome(thisPos).getFoliageColorAtPos(thisPos.add(0, yPosition, 0));
-									int r = (color2 & 0xFF);
-									int g = ( (color2 >>> 8) & 0xFF);
-									int b = ( (color2 >>> 16) & 0xFF);
-									intColor = b | (g << 8) | (r << 16);
-								}
-								else
-									intColor = ( (color.colorValue & 0xFF) << 16) | ( ( color.colorValue >>> 16 ) & 0xFF ) | ( color.colorValue & 0xFF00 );
-
-								//Put into the table and make opaque
-								table.put(i, intColor | 0xFF000000);
-
-								//Background in case chunk doesnt load
-								total[0] += intColor & 0xFF;
-								total[1] += (intColor & 0xFF00) >>> 8;
-									total[2] += (intColor & 0xFF0000) >>> 16;
-
 							}
+							if(block == null)
+								continue;
+
+							int intColor;
+
+							if(block.getBlock() == Blocks.GRASS || block.getBlock() == Blocks.TALLGRASS) {
+								int color2 = worldObj.getBiome(thisPos).getGrassColorAtPos(thisPos.add(0, yPosition, 0));
+								int r = (color2 & 0xFF);
+								int g = ( (color2 >>> 8) & 0xFF);
+								int b = ( (color2 >>> 16) & 0xFF);
+								intColor = b | (g << 8) | (r << 16);
+							}
+							else if(block.getBlock() == Blocks.LEAVES || block.getBlock() == Blocks.LEAVES2) {
+								int color2 = worldObj.getBiome(thisPos).getFoliageColorAtPos(thisPos.add(0, yPosition, 0));
+								int r = (color2 & 0xFF);
+								int g = ( (color2 >>> 8) & 0xFF);
+								int b = ( (color2 >>> 16) & 0xFF);
+								intColor = b | (g << 8) | (r << 16);
+							}
+							else
+								intColor = ( (color.colorValue & 0xFF) << 16) | ( ( color.colorValue >>> 16 ) & 0xFF ) | ( color.colorValue & 0xFF00 );
+
+							//Put into the table and make opaque
+							table.put(i, intColor | 0xFF000000);
+
+							//Background in case chunk doesnt load
+							total[0] += intColor & 0xFF;
+							total[1] += (intColor & 0xFF00) >>> 8;
+								total[2] += (intColor & 0xFF0000) >>> 16;
+
 						}
-					} while(numChunksLoaded == 0);
-
-					int multiplierGreen = 1;
-					int multiplierBlue = 1;
-
-					//Get the outer layer
-					total[0] =     ZUtils.getAverageColor(total[0], total[1]*multiplierGreen, total[2]* multiplierBlue, numChunksLoaded);
-
-					Random random = new Random(); 
-
-					int randomMax = 0x2A;
-
-					for(int i = 0; i < outerImgSize*outerImgSize; i++) {
-
-						int randR =   randomMax - random.nextInt(randomMax) / 2;
-						int randG = ( randomMax - random.nextInt(randomMax)/2 ) << 8;
-						int randB = ( randomMax - random.nextInt(randomMax) /2 ) << 16;
-
-
-						int color = (int)( MathHelper.clamp((int) ( (total[0] & 0xFF) + randR ),0, 0xFF ) |
-								MathHelper.clamp((int)(total[0] & 0xFF00) + randG, 0x0100, 0xFF00)  | 
-								MathHelper.clamp( (int)(( total[0] & 0xFF0000) + randB), 0x010000, 0xFF0000) );
-
-						outerBoundsTable.put(i, color | 0xff000000);
 					}
+				} while(numChunksLoaded == 0);
 
-					outerBoundsTable.flip();
-					table.flip(); //Yes really
-					mapNeedsBinding = true;
-					mapReady = true;
+				int multiplierGreen = 1;
+				int multiplierBlue = 1;
+
+				//Get the outer layer
+				total[0] =     ZUtils.getAverageColor(total[0], total[1]*multiplierGreen, total[2]* multiplierBlue, numChunksLoaded);
+
+				Random random = new Random();
+
+				int randomMax = 0x2A;
+
+				for(int i = 0; i < outerImgSize*outerImgSize; i++) {
+
+					int randR =   randomMax - random.nextInt(randomMax) / 2;
+					int randG = ( randomMax - random.nextInt(randomMax)/2 ) << 8;
+					int randB = ( randomMax - random.nextInt(randomMax) /2 ) << 16;
+
+
+					int color = MathHelper.clamp((int) ( (total[0] & 0xFF) + randR ),0, 0xFF ) |
+							MathHelper.clamp((int)(total[0] & 0xFF00) + randG, 0x0100, 0xFF00)  |
+							MathHelper.clamp( (int)(( total[0] & 0xFF0000) + randB), 0x010000, 0xFF0000);
+
+					outerBoundsTable.put(i, color | 0xff000000);
 				}
+
+				outerBoundsTable.flip();
+				table.flip(); //Yes really
+				mapNeedsBinding = true;
+				mapReady = true;
 			}, "Planet Texture Creator");
 			thread.start();
 		}
@@ -369,7 +361,7 @@ public class RocketEventHandler extends Gui {
 				this.drawTexturedModalRect(3, 94 + (int)(69*(0.5 - (MathHelper.clamp((float) (rocket.motionY), -1f, 1f)/2f))), 17, 0, 6, 6); //94 to 161
 
 				//Draw fuel indicator
-				int size = (int)(68*(rocket.getFuelAmount() /(float)rocket.getFuelCapacity()));
+				int size = (int)(68 * rocket.getNormallizedProgress(0));
 				this.drawTexturedModalRect(3, 242 - size, 17, 75 - size, 3, size); //94 to 161
 
 				GlStateManager.disableBlend();
@@ -401,7 +393,7 @@ public class RocketEventHandler extends Gui {
 			}
 
 			//Draw the O2 Bar if needed
-			if(!Minecraft.getMinecraft().player.capabilities.isCreativeMode) {
+			if(!(Minecraft.getMinecraft().player.capabilities.isCreativeMode || Minecraft.getMinecraft().player.isSpectator())) {
 				ItemStack chestPiece = Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 				IFillableArmor fillable = null;
 				if(!chestPiece.isEmpty() && chestPiece.getItem() instanceof IFillableArmor)
@@ -426,7 +418,7 @@ public class RocketEventHandler extends Gui {
 			}
 
 			//Draw module icons
-			if(!Minecraft.getMinecraft().player.capabilities.isCreativeMode && Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD) != null && Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof IModularArmor) {
+			if(!(Minecraft.getMinecraft().player.capabilities.isCreativeMode || Minecraft.getMinecraft().player.isSpectator()) && !Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty() && Minecraft.getMinecraft().player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof IModularArmor) {
 				for(EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
 					renderModuleSlots(Minecraft.getMinecraft().player.getItemStackFromSlot(slot), 4-slot.getIndex(), event);
 				}
@@ -480,49 +472,7 @@ public class RocketEventHandler extends Gui {
 		}
 	}
 
-	@SubscribeEvent
-	public void mouseInputEvent(MouseInputEvent event) {
-		if(!ARConfiguration.getCurrentConfig().lockUI && !Mouse.isGrabbed()) {
-
-			if(Mouse.isButtonDown(2)) {
-				ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
-				int i = scaledresolution.getScaledWidth();
-				int j = scaledresolution.getScaledHeight();
-				int mouseX =  Mouse.getX() * i / Minecraft.getMinecraft().displayWidth;
-				int mouseY = j - Mouse.getY() * j / Minecraft.getMinecraft().displayHeight - 1;
-
-				if(currentlySelectedBox == null && mouseX >= suitPanel.getX(i) && mouseX < suitPanel.getX(i) + suitPanel.sizeX &&
-						mouseY >= suitPanel.getY(j) && mouseY < suitPanel.getY(j) + suitPanel.sizeY) {
-					currentlySelectedBox = suitPanel;
-				}
-
-				if(currentlySelectedBox == null && mouseX >= oxygenBar.getX(i) && mouseX < oxygenBar.getX(i) + oxygenBar.sizeX &&
-						mouseY >= oxygenBar.getY(j) && mouseY < oxygenBar.getY(j) + oxygenBar.sizeY) {
-					currentlySelectedBox = oxygenBar;
-				}
-
-				if(currentlySelectedBox == null && mouseX >= hydrogenBar.getX(i) && mouseX < hydrogenBar.getX(i) + hydrogenBar.sizeX &&
-						mouseY >= hydrogenBar.getY(j) && mouseY < hydrogenBar.getY(j) + hydrogenBar.sizeY) {
-					currentlySelectedBox = hydrogenBar;
-				}
-				
-				if(currentlySelectedBox == null && mouseX >= atmBar.getX(i) && mouseX < atmBar.getX(i) + atmBar.sizeX &&
-						mouseY >= atmBar.getY(j) && mouseY < atmBar.getY(j) + atmBar.sizeY) {
-					currentlySelectedBox = atmBar;
-				}
-				
-				if(currentlySelectedBox != null) {
-
-					currentlySelectedBox.setRenderX(mouseX, i);
-					currentlySelectedBox.setRenderY(mouseY, j);
-				}
-			}
-			else
-				currentlySelectedBox = null;
-		}
-	}
-
-	private void renderModuleSlots(ItemStack armorStack, int slot, RenderGameOverlayEvent event) {
+	private void renderModuleSlots(@Nonnull ItemStack armorStack, int slot, RenderGameOverlayEvent event) {
 		int index = 1;
 		float color = 0.85f + 0.15F*MathHelper.sin( 2f*(float)Math.PI*((Minecraft.getMinecraft().world.getTotalWorldTime()) % 60)/60f );
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
@@ -532,7 +482,7 @@ public class RocketEventHandler extends Gui {
 		float alpha = 0.6f;
 
 
-		if( armorStack != null ) {
+		if( !armorStack.isEmpty() ) {
 
 			boolean modularArmorFlag = armorStack.getItem() instanceof IModularArmor;
 
@@ -656,33 +606,31 @@ public class RocketEventHandler extends Gui {
 		}
 
 		public void setRenderX(int x, double scaleX) {
-			double i = scaleX;
-			if(x < i/3) {
+			if(x < scaleX /3) {
 				modeX = -1;
 				this.setRawX(x); 
 			}
-			else if(x > i*2/3) {
-				this.setRawX((int) (i - x));
+			else if(x > scaleX *2/3) {
+				this.setRawX((int) (scaleX - x));
 				modeX = 1;
 			}
 			else {
-				this.setRawX((int)(i/2 - x));
+				this.setRawX((int)(scaleX /2 - x));
 				modeX = 0;
 			}
 		}
 
 		public void setRenderY(int y, double scaleY) {
-			double i = scaleY;
-			if(y < i/3) {
+			if(y < scaleY /3) {
 				modeY = -1;
 				this.setRawY(y); 
 			}
-			else if(y > i*2/3) {
-				this.setRawY((int) (i - y));
+			else if(y > scaleY *2/3) {
+				this.setRawY((int) (scaleY - y));
 				modeY = 1;
 			}
 			else {
-				this.setRawY((int)(i/2 - y));
+				this.setRawY((int)(scaleY /2 - y));
 				modeY = 0;
 			}
 		}

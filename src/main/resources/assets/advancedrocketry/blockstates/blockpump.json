@@ -1,18 +1,24 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "advancedrocketry:orientablebottom",
+        "textures": {
+            "bottom": "advancedrocketry:blocks/pumpbottom",
+            "front": "advancedrocketry:blocks/pumpside",
+            "side": "advancedrocketry:blocks/pumpside",
+            "top": "libvulpes:blocks/machinegeneric"
+        }
+    },
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:blockpump" },
-        "facing=south,state=false": { "model": "advancedrocketry:blockpump", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:blockpump", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:blockpump", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:blockpump" },
-        "facing=south,state=true": { "model": "advancedrocketry:blockpump", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:blockpump", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:blockpump", "y": 90 },
-        "facing=north": { "model": "advancedrocketry:blockpump" },
-        "facing=south": { "model": "advancedrocketry:blockpump", "y": 180 },
-        "facing=west":  { "model": "advancedrocketry:blockpump", "y": 270 },
-        "facing=east":  { "model": "advancedrocketry:blockpump", "y": 90 },
-        "facing=up": { "model": "advancedrocketry:blockpump" },
-        "facing=down": { "model": "advancedrocketry:blockpump", "y": 180 }
+        "facing=north,state=false": [{}],
+        "facing=south,state=false": { "model": "advancedrocketry:orientablebottom", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:orientablebottom", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:orientablebottom", "y": 90 },
+        "facing=north,state=true": [{}],
+        "facing=south,state=true": { "model": "advancedrocketry:orientablebottom", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:orientablebottom", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:orientablebottom", "y": 90 },
+        "inventory" : [{}]
     }
 }

@@ -15,6 +15,7 @@ public class TileRocketFluidUnloader extends TileRocketFluidLoader implements II
 
 	public TileRocketFluidUnloader() {
 		super();
+		this.setOutputOnly(true);
 	}
 
 	public TileRocketFluidUnloader(int size) {
@@ -45,16 +46,16 @@ public class TileRocketFluidUnloader extends TileRocketFluidLoader implements II
 					rocketContainsItems = true;
 
 				if(isAllowToOperate) {
-					FluidStack stack = fluidTank.getFluid();
-					if(stack == null) {
+					FluidStack fStack = fluidTank.getFluid();
+					if(fStack == null) {
 						this.fill(handler.drain(fluidTank.getCapacity(), true), true);
 					}
 					else {
-						stack = stack.copy();
-						stack.amount = fluidTank.getCapacity() - fluidTank.getFluidAmount();
+						fStack = fStack.copy();
+						fStack.amount = fluidTank.getCapacity() - fluidTank.getFluidAmount();
 
-						if(stack.amount != 0) {
-							this.fill(handler.drain( stack, true), true);
+						if(fStack.amount != 0) {
+							this.fill(handler.drain( fStack, true), true);
 						}
 					}
 				}

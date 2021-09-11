@@ -3,14 +3,14 @@ package zmaster587.advancedRocketry.entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
+import zmaster587.advancedRocketry.tile.station.TileHolographicPlanetSelector;
 
 public class EntityUIButton extends EntityUIPlanet {
 
 	int id;
-	TilePlanetaryHologram tile;
+	TileHolographicPlanetSelector tile;
 	
-	public EntityUIButton(World worldIn, int id, TilePlanetaryHologram tile) {
+	public EntityUIButton(World worldIn, int id, TileHolographicPlanetSelector tile) {
 		this(worldIn);
 		this.id = id;
 		this.tile = tile;

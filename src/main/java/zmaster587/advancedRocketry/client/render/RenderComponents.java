@@ -15,7 +15,7 @@ public class RenderComponents {
 		//RenderJet pack
 		//RenderJetPack pack = new RenderJetPack();
 		ItemStack chest = event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-		if(chest != null && chest.getItem() instanceof IModularArmor) {
+		if(!chest.isEmpty() && chest.getItem() instanceof IModularArmor) {
 			for(ItemStack stack : ((IModularArmor)chest.getItem()).getComponents(chest)) {
 				if(stack.getItem() == AdvancedRocketryItems.itemJetpack) {
 					GL11.glPushMatrix();

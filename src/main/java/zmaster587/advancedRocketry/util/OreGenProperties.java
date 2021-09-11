@@ -20,7 +20,7 @@ public class OreGenProperties {
 	private static OreGenProperties[][] oreGenPropertyMap = new OreGenProperties[DimensionProperties.AtmosphereTypes.values().length][DimensionProperties.Temps.values().length];
 	
 	public OreGenProperties() {
-		oreEntries = new LinkedList<OreGenProperties.OreEntry>();
+		oreEntries = new LinkedList<>();
 	}
 	
 	public void addEntry(IBlockState state, int minHeight, int maxHeight, int clumpSize, int chancePerChunk) {

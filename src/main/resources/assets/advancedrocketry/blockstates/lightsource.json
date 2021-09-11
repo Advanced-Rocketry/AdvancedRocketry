@@ -1,5 +1,14 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:cube_all",
+        "textures": {
+            "all": "advancedrocketry:blocks/clear"
+        }
+    },
     "variants": {
-        "normal": { "model": "advancedrocketry:lightSource" }
+        "normal": [{}],
+        "inventory": [{}]
     }
 }

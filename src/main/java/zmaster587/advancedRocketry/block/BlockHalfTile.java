@@ -8,7 +8,7 @@ import net.minecraft.world.IBlockAccess;
 import zmaster587.libVulpes.block.BlockTile;
 
 public class BlockHalfTile  extends BlockTile{
-	private static AxisAlignedBB bb = new AxisAlignedBB(0, 0, 0, 1, .5f, 1);
+	private static final AxisAlignedBB bb = new AxisAlignedBB(0, 0, 0, 1, .5f, 1);
 	public BlockHalfTile(Class<? extends TileEntity> tileClass, int guiId) {
 		super(tileClass, guiId);
 	}

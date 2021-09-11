@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -36,12 +37,13 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.IStorageChunk;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
 import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
-import zmaster587.advancedRocketry.tile.multiblock.TileWarpCore;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -49,29 +51,29 @@ import java.util.List;
 
 public class StorageChunk implements IBlockAccess, IStorageChunk {
 
-	Block blocks[][][];
-	short metas[][][];
+	Block[][][] blocks;
+	private short[][][] metas;
 	int sizeX, sizeY, sizeZ;
 	public Chunk chunk;
 
 
-	ArrayList<TileEntity> tileEntities;
+	private ArrayList<TileEntity> tileEntities;
 
 	//To store inventories (All inventories)
-	ArrayList<TileEntity> inventoryTiles;
-	ArrayList<TileEntity> liquidTiles;
+	private ArrayList<TileEntity> inventoryTiles;
+	private ArrayList<TileEntity> liquidTiles;
 
 	public WorldDummy world;
 	private Entity entity;
-	public boolean finalized = false; // Mkae sure we are ready to render
+	public boolean finalized = false; // Make sure we are ready to render
 
 	public StorageChunk() {
 		sizeX = 0;
 		sizeY = 0;
 		sizeZ = 0;
-		tileEntities = new ArrayList<TileEntity>();
-		inventoryTiles = new ArrayList<TileEntity>();
-		liquidTiles = new ArrayList<TileEntity>();
+		tileEntities = new ArrayList<>();
+		inventoryTiles = new ArrayList<>();
+		liquidTiles = new ArrayList<>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
 		world.init();
@@ -86,9 +88,9 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		sizeY = ySize;
 		sizeZ = zSize;
 
-		tileEntities = new ArrayList<TileEntity>();
-		inventoryTiles = new ArrayList<TileEntity>();
-		liquidTiles = new ArrayList<TileEntity>();
+		tileEntities = new ArrayList<>();
+		inventoryTiles = new ArrayList<>();
+		liquidTiles = new ArrayList<>();
 
 		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
 		world.init();
@@ -128,24 +130,22 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		return inventoryTiles;
 	}
 
-	public List<TileEntity> getGUItiles() {
-		List<TileEntity> list = new LinkedList<TileEntity>(inventoryTiles);
+	public List<TileEntity> getGUITiles() {
 
 		/*TileEntity guidanceComputer = getGuidanceComputer();
 		if(guidanceComputer != null)
 			list.add(getGuidanceComputer());*/
-		return list;
+		return new LinkedList<>(inventoryTiles);
 	}
 
 	@Override
+	@Nonnull
 	public IBlockState getBlockState(BlockPos pos) {
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();
 		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ || blocks[x][y][z] == null)
 			return Blocks.AIR.getDefaultState();
-		if(blocks[x][y][z] != Blocks.AIR)
-			return blocks[x][y][z].getStateFromMeta(metas[x][y][z]);
 		return blocks[x][y][z].getStateFromMeta(metas[x][y][z]);
 	}
 
@@ -188,7 +188,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 			for(int y = 0; y < sizeY; y++) {
 				for(int z = 0; z < sizeZ; z++) {
 					blockId[z + (sizeZ*y) + (sizeZ*sizeY*x)] = Block.getIdFromBlock(blocks[x][y][z]);
-					metasId[z + (sizeZ*y) + (sizeZ*sizeY*x)] = (int)metas[x][y][z];
+					metasId[z + (sizeZ*y) + (sizeZ*sizeY*x)] = metas[x][y][z];
 				}
 			}
 		}
@@ -242,8 +242,8 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		HashedBlockPosition newerSize = remapCoord(newSizes, dir);
 		newSizes = remapCoord(newSizes, dir);
 
-		Block blocks[][][] = new Block[newSizes.x][newSizes.y][newSizes.z];
-		short metas[][][] = new short[newSizes.x][newSizes.y][newSizes.z];
+		Block[][][] blocks = new Block[newSizes.x][newSizes.y][newSizes.z];
+		short[][][] metas = new short[newSizes.x][newSizes.y][newSizes.z];
 
 		for(int y = 0; y < getSizeY(); y++) {
 			for(int z = 0; z < getSizeZ(); z++) {
@@ -273,36 +273,24 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		HashedBlockPosition out = new HashedBlockPosition(0, 0, 0);
 
 		switch(dir) {
-		case DOWN:
-			out.x = in.z;
-			out.y = in.y;
-			out.z = in.x;
-			break;
-		case UP:
-			out.x = in.z;
-			out.y = in.y;
-			out.z = in.x;
-			break;
-		case NORTH:
-			out.x = in.y;
-			out.y = (short)(in.x);
-			out.z = in.z;
-			break;
-		case SOUTH:
-			out.x = in.y;
-			out.y = (short)in.x;
-			out.z = in.z;
-			break;
-		case EAST:
-			out.x = in.x;
-			out.y = (short)(in.z);
-			out.z = in.y;
-			break;
-		case WEST:
-			out.x = in.x;
-			out.y = (short)in.z;
-			out.z = in.y;
-			break;
+			case DOWN:
+			case UP:
+				out.x = in.z;
+				out.y = in.y;
+				out.z = in.x;
+				break;
+			case NORTH:
+			case SOUTH:
+				out.x = in.y;
+				out.y = (short)(in.x);
+				out.z = in.z;
+				break;
+			case EAST:
+			case WEST:
+				out.x = in.x;
+				out.y = (short)(in.z);
+				out.z = in.y;
+				break;
 		}
 
 		return out;
@@ -485,9 +473,6 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 			}
 		}
 
-
-		bb = new AxisAlignedBB(actualMinX, actualMinY, actualMinZ, actualMaxX, actualMaxY, actualMaxZ);
-
 		StorageChunk ret = new StorageChunk((actualMaxX - actualMinX + 1), (actualMaxY - actualMinY + 1), (actualMaxZ - actualMinZ + 1));
 
 
@@ -581,7 +566,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 
 	@Override
-	public TileEntity getTileEntity(BlockPos pos) {
+	public TileEntity getTileEntity(@Nonnull BlockPos pos) {
 		for(TileEntity tileE : tileEntities) {
 			if( tileE.getPos().compareTo(pos) == 0)
 				return tileE;
@@ -598,13 +583,14 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	}
 
 	@Override
-	public Biome getBiome(BlockPos pos) {
+	@Nonnull
+	public Biome getBiome(@Nullable BlockPos pos) {
 		//Don't care, gen ocean
-		return Biome.getBiome(0);
+		return Biomes.OCEAN;
 	}
 
 	@Override
-	public boolean isSideSolid(BlockPos pos, EnumFacing side, boolean _default) {
+	public boolean isSideSolid(BlockPos pos, @Nonnull EnumFacing side, boolean _default) {
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();
@@ -639,8 +625,8 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		}
 
 		//Carpenter's block's dupe
-		for(Object entity : worldObj.getEntitiesWithinAABB(EntityItem.class, bb.grow(5, 5, 5)) ) {
-			((Entity)entity).setDead();
+		for(Entity entity : worldObj.getEntitiesWithinAABB(EntityItem.class, bb.grow(5, 5, 5)) ) {
+			entity.setDead();
 		}
 
 		return chunk;
@@ -649,12 +635,9 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 
 	public List<TileSatelliteHatch> getSatelliteHatches() {
-		LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<TileSatelliteHatch>();
-		Iterator<TileEntity> iterator = getTileEntityList().iterator();
-		while(iterator.hasNext()) {
-			TileEntity tile = iterator.next();
-
-			if(tile instanceof TileSatelliteHatch) {
+		LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<>();
+		for (TileEntity tile : getTileEntityList()) {
+			if (tile instanceof TileSatelliteHatch) {
 				satelliteHatches.add((TileSatelliteHatch) tile);
 			}
 		}
@@ -664,13 +647,10 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 	@Deprecated
 	public List<SatelliteBase> getSatellites() {
-		LinkedList<SatelliteBase> satellites = new LinkedList<SatelliteBase>();
-		LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<TileSatelliteHatch>();
-		Iterator<TileEntity> iterator = getTileEntityList().iterator();
-		while(iterator.hasNext()) {
-			TileEntity tile = iterator.next();
-
-			if(tile instanceof TileSatelliteHatch) {
+		LinkedList<SatelliteBase> satellites = new LinkedList<>();
+		LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<>();
+		for (TileEntity tile : getTileEntityList()) {
+			if (tile instanceof TileSatelliteHatch) {
 				satelliteHatches.add((TileSatelliteHatch) tile);
 			}
 		}
@@ -684,43 +664,23 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 		return satellites;
 	}
 
-	@Deprecated
 	public TileGuidanceComputer getGuidanceComputer() {
-		Iterator<TileEntity> iterator = getTileEntityList().iterator();
-		while(iterator.hasNext()) {
-			TileEntity tile = iterator.next();
-
-			if(tile instanceof TileGuidanceComputer) {
-				return (TileGuidanceComputer)tile;
+		for (TileEntity tile : getTileEntityList()) {
+			if (tile instanceof TileGuidanceComputer) {
+				return (TileGuidanceComputer) tile;
 			}
 		}
 
 		return null;
 	}
 
-	public boolean hasWarpCore() {
-		Iterator<TileEntity> iterator = getTileEntityList().iterator();
-		while(iterator.hasNext()) {
-			TileEntity tile = iterator.next();
-
-			if(tile instanceof TileWarpCore) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	/**
 	 * @return destination ID or Constants.INVALID_PLANET if none
 	 */
 	public int getDestinationDimId(int currentDimId, int x, int z) {
-		Iterator<TileEntity> iterator = getTileEntityList().iterator();
-		while(iterator.hasNext()) {
-			TileEntity tile = iterator.next();
-
-			if(tile instanceof TileGuidanceComputer) {
-				return ((TileGuidanceComputer)tile).getDestinationDimId(currentDimId, new BlockPos(x,0,z));
+		for (TileEntity tile : getTileEntityList()) {
+			if (tile instanceof TileGuidanceComputer) {
+				return ((TileGuidanceComputer) tile).getDestinationDimId(currentDimId, new BlockPos(x, 0, z));
 			}
 		}
 
@@ -728,33 +688,27 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	}
 
 	public Vector3F<Float> getDestinationCoordinates(int destDimID, boolean commit) {
-		Iterator<TileEntity> iterator = getTileEntityList().iterator();
-		while(iterator.hasNext()) {
-			TileEntity tile = iterator.next();
-			if(tile instanceof TileGuidanceComputer) {
-				return ((TileGuidanceComputer)tile).getLandingLocation(destDimID, commit);
+		for (TileEntity tile : getTileEntityList()) {
+			if (tile instanceof TileGuidanceComputer) {
+				return ((TileGuidanceComputer) tile).getLandingLocation(destDimID, commit);
 			}
 		}
 		return null;
 	}
 	
 	public String getDestinationName(int destDimID) {
-		Iterator<TileEntity> iterator = getTileEntityList().iterator();
-		while(iterator.hasNext()) {
-			TileEntity tile = iterator.next();
-			if(tile instanceof TileGuidanceComputer) {
-				return ((TileGuidanceComputer)tile).getDestinationName(destDimID);
+		for (TileEntity tile : getTileEntityList()) {
+			if (tile instanceof TileGuidanceComputer) {
+				return ((TileGuidanceComputer) tile).getDestinationName(destDimID);
 			}
 		}
 		return "";
 	}
 
 	public void setDestinationCoordinates(Vector3F<Float> vec, int dimid) {
-		Iterator<TileEntity> iterator = getTileEntityList().iterator();
-		while(iterator.hasNext()) {
-			TileEntity tile = iterator.next();
-			if(tile instanceof TileGuidanceComputer) {
-				((TileGuidanceComputer)tile).setReturnPosition(vec, dimid);
+		for (TileEntity tile : getTileEntityList()) {
+			if (tile instanceof TileGuidanceComputer) {
+				((TileGuidanceComputer) tile).setReturnPosition(vec, dimid);
 			}
 		}
 	}
@@ -851,16 +805,17 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	}
 
 	@Override
-	public int getCombinedLight(BlockPos pos, int lightValue) {
+	public int getCombinedLight(@Nullable BlockPos pos, int lightValue) {
 		return lightValue;
 	}
 
 	@Override
-	public int getStrongPower(BlockPos pos, EnumFacing direction) {
+	public int getStrongPower(@Nullable BlockPos pos, @Nullable EnumFacing direction) {
 		return 0;
 	}
 
 	@Override
+	@Nonnull
 	public WorldType getWorldType() {
 		return WorldType.CUSTOMIZED;
 	}

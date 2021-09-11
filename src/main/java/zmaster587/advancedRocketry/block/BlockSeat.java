@@ -5,6 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -14,20 +15,28 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.entity.EntityDummy;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNullableByDefault;
 import java.util.List;
 
 public class BlockSeat extends Block {
 
-	private static AxisAlignedBB bb = new AxisAlignedBB(0, 0, 0, 1, .125, 1);
+	private static final AxisAlignedBB bb = new AxisAlignedBB(0, 0, 0, 1, .125, 1);
 	
 	public BlockSeat(Material mat) {
 		super(mat);
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
+	}
+
+	@Override
+	@Nonnull
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.CUTOUT;
 	}
 	
 	@Override
@@ -36,12 +45,12 @@ public class BlockSeat extends Block {
 	}
 	
     @Nullable
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
-    {
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
         return NULL_AABB;
     }
 	
 	@Override
+	@ParametersAreNullableByDefault
 	public boolean isSideSolid(IBlockState base_state, IBlockAccess world,
 			BlockPos pos, EnumFacing side) {
 		return side == EnumFacing.DOWN;
@@ -51,20 +60,20 @@ public class BlockSeat extends Block {
 	@Override
 	public void onBlockDestroyedByExplosion(World world, BlockPos pos,
 			Explosion explosionIn) {
-		// TODO Auto-generated method stub
 		super.onBlockDestroyedByExplosion(world, pos, explosionIn);
 		
 		List<EntityDummy> list = world.getEntitiesWithinAABB(EntityDummy.class, new AxisAlignedBB(pos, pos.add(1,1,1)));
 
 		//We only expect one but just be sure
-		for(EntityDummy e : list) {
-			if(e instanceof EntityDummy) {
-				e.setDead();
+		for(EntityDummy entityDummy : list) {
+			if(entityDummy != null) {
+				entityDummy.setDead();
 			}
 		}
 	}
 	
 	@Override
+	@Nonnull
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source,
 			BlockPos pos) {
 		return bb;

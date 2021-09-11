@@ -1,5 +1,15 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:cube_all",
+        "textures": {
+            "all": "advancedrocketry:blocks/plank_blue"
+        }
+    },
     "variants": {
-        "variant=alien": { "model": "advancedrocketry:lightwoodPlanks" }
+        "normal": [{}],
+        "variant=alien": [{}],
+        "inventory": [{}]
     }
 }

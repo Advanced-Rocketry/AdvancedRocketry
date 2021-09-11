@@ -1,12 +1,23 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:orientable",
+        "textures": {
+            "top": "advancedrocketry:blocks/solar",
+            "front": "libvulpes:blocks/machinegeneric",
+            "side": "libvulpes:blocks/machinegeneric"
+        }
+    },
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:microwaveReciever" },
-        "facing=south,state=false": { "model": "advancedrocketry:microwaveReciever", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:microwaveReciever", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:microwaveReciever", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:microwaveReciever" },
-        "facing=south,state=true": { "model": "advancedrocketry:microwaveReciever", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:microwaveReciever", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:microwaveReciever", "y": 90 }
+        "facing=north,state=false": [{}],
+        "facing=south,state=false": { "model": "minecraft:orientable", "y": 180 },
+        "facing=west,state=false":  { "model": "minecraft:orientable", "y": 270 },
+        "facing=east,state=false":  { "model": "minecraft:orientable", "y": 90 },
+        "facing=north,state=true": [{}],
+        "facing=south,state=true": { "model": "minecraft:orientable", "y": 180 },
+        "facing=west,state=true":  { "model": "minecraft:orientable", "y": 270 },
+        "facing=east,state=true":  { "model": "minecraft:orientable", "y": 90 },
+        "inventory" : [{}]
     }
 }

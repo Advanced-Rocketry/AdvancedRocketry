@@ -13,7 +13,9 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.ISatelliteIdItem;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
-import zmaster587.advancedRocketry.item.ItemSatellite;
+import zmaster587.libVulpes.util.UniversalBattery;
+
+import javax.annotation.Nonnull;
 
 public abstract class SatelliteBase {
 	
@@ -23,17 +25,24 @@ public abstract class SatelliteBase {
 	protected ItemStack satellite;
 
 	private boolean isDead;
+
+	//Satellite energy storage
+	protected UniversalBattery battery;
 	
 	public SatelliteBase() {
 		satelliteProperties = new SatelliteProperties();
 		satelliteProperties.setSatelliteType(SatelliteRegistry.getKey(this.getClass()));
 		isDead = false;
 		satellite = ItemStack.EMPTY;
+
+		//Satellite energy storage
+		battery = new UniversalBattery(this.satelliteProperties.getPowerStorage());
+
 	}
 	
-	public boolean acceptsItemInConstruction(ItemStack item) {
+	public boolean acceptsItemInConstruction(@Nonnull ItemStack item) {
 		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
-		return SatelliteProperties.Property.MAIN.isOfType(flag);
+		return SatelliteProperties.Property.MAIN.isOfType(flag) || SatelliteProperties.Property.POWER_GEN.isOfType(flag) || SatelliteProperties.Property.BATTERY.isOfType(flag);
 	}
 	
 	/**
@@ -50,7 +59,9 @@ public abstract class SatelliteBase {
 	
 	/**
 	 * Actually does something with the satellite.  Normally called when the player rightclicks the master block
-	 * @param Player interacting with the satellite
+	 * @param player interacting with the satellite
+	 * @param world
+	 * @param pos
 	 * @return whether the player has successfully interacted with the satellite
 	 */
 	public abstract boolean performAction(EntityPlayer player, World world, BlockPos pos);
@@ -60,11 +71,19 @@ public abstract class SatelliteBase {
 	 * @return chance from 0 to 1 of failing this tick
 	 */
 	public abstract double failureChance();
-	
+
+	/**
+	 * @return the power per tick the satellite produces
+	 */
+	public int getPowerPerTick() {
+		return satelliteProperties.getPowerGeneration();
+	}
+
 	/**
 	 * @return an item that can be used to control the satellite, normally a satellite ID chip but can be something else
 	 */
-	public ItemStack getContollerItemStack(ItemStack satIdChip, SatelliteProperties properties) {
+	@Nonnull
+	public ItemStack getControllerItemStack(@Nonnull ItemStack satIdChip, SatelliteProperties properties) {
 		ISatelliteIdItem idChipItem = (ISatelliteIdItem)satIdChip.getItem();
 		idChipItem.setSatellite(satIdChip, properties);
 		return satIdChip;
@@ -74,7 +93,7 @@ public abstract class SatelliteBase {
 	 * @param stack stack to check (can be null)
 	 * @return true if the item stack is a valid controller for the satellite
 	 */
-	public boolean isAcceptableControllerItemStack(ItemStack stack) {
+	public boolean isAcceptableControllerItemStack(@Nonnull ItemStack stack) {
 		return !stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemSatelliteIdChip;
 	}
 	
@@ -82,13 +101,16 @@ public abstract class SatelliteBase {
 	 * @return true if the satellite can tick
 	 */
 	public boolean canTick() {
-		return false;
+		return true;
 	}
 	
 	/**
 	 * called every tick if satellite can tick
 	 */
-	public void tickEntity() {}
+	public void tickEntity() {
+		//Base power consumption is 1 energy per tick. Think of it like a communications & positioning upkeep amount. Some satellites may end up overriding this
+		battery.acceptEnergy(getPowerPerTick() - 1, false);
+	}
 	
 	/**
 	 * @return the long id of the satellite, used to get a satellite from the main list
@@ -118,21 +140,29 @@ public abstract class SatelliteBase {
 	}
 	
 	public void setDimensionId(int world) {
-		int newId = world;
 		if(dimId != Constants.INVALID_PLANET) {
 			//TODO: handle dim change
 		}
-		dimId = newId;
+		dimId = world;
 	}
-	
+
 	/**
-	 * @param satelliteProperties satelliteProperties to assign to this satellite
+	 * @return the satellite properties of the satellite
 	 */
-	public void setProperties(ItemStack stack) {
-		this.satelliteProperties = ((ItemSatellite)stack.getItem()).getSatellite(stack);
+	public SatelliteProperties getProperties() {
+		return satelliteProperties;
+	}
+
+	/**
+	 * @param stack satelliteProperties to assign to this satellite
+	 */
+	public void setProperties(@Nonnull ItemStack stack) {
+		this.satelliteProperties = SatelliteRegistry.getSatelliteProperties(stack);
+		this.battery.setMaxEnergyStored(satelliteProperties.getPowerStorage());
 		this.satellite = stack;
 	}
-	
+
+	@Nonnull
 	public ItemStack getItemStackFromSatellite() {
 		return satellite;
 	}
@@ -154,6 +184,7 @@ public abstract class SatelliteBase {
 		satelliteProperties.writeToNBT(properties);
 		nbt.setTag("properties", properties);
 		nbt.setInteger("dimId", dimId);
+		battery.writeToNBT(nbt);
 		
 		NBTTagCompound itemNBT = new NBTTagCompound();
 		//Transition
@@ -167,6 +198,11 @@ public abstract class SatelliteBase {
 		satelliteProperties.readFromNBT(nbt.getCompoundTag("properties"));
 		dimId = nbt.getInteger("dimId");
 		satellite = new ItemStack(nbt.getCompoundTag("item"));
+		battery.readFromNBT(nbt);
+		if (satelliteProperties.getPowerStorage() == 0) {
+			satelliteProperties.setPowerStorage(720);
+			battery = new UniversalBattery(720);
+		}
 	}
 	
 	public void writeDataToNetwork(ByteBuf out, byte packetId) {
@@ -189,7 +225,7 @@ public abstract class SatelliteBase {
 		return 0;
 	}
 	
-	public void onChangeRecieved(int slot, int value) {
+	public void onChangeReceived(int slot, int value) {
 
 	}
 	

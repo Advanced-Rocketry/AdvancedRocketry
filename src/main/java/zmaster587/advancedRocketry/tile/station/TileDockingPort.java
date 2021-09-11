@@ -11,9 +11,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -43,7 +44,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 
 	@Override
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModuleText(20, 50, LibVulpes.proxy.getLocalizedString("msg.dockingport.target"), 0x2a2a2a));
 		if(world.isRemote) {
 			myId = new ModuleTextBox(this, 20, 30, 60, 12, 9);
@@ -141,7 +142,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.stationMarker.name";
+		return AdvancedRocketryBlocks.blockDockingPort.getLocalizedName();
 	}
 
 

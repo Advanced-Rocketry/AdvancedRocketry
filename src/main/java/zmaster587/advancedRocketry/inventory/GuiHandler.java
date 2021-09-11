@@ -3,7 +3,6 @@ package zmaster587.advancedRocketry.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -27,28 +26,22 @@ public class GuiHandler implements IGuiHandler {
 
 		Object tile;
 
-		if(y > -1)
-			tile = world.getTileEntity(new BlockPos(x, y, z));
-		else if(x == -1) {
+		if(x == -1 && y < -1) {
 			ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
 			
 			//If there is latency or some desync odd things can happen so check for that
-			if(stack == null || !(stack.getItem() instanceof IModularInventory)) {
+			if(stack.isEmpty() || !(stack.getItem() instanceof IModularInventory)) {
 				return null;
 			}
-			
-			tile = player.getHeldItem(EnumHand.MAIN_HAND).getItem();
 		}
-		else
-			tile = world.getEntityByID(x);
 
 		if(ID == guiId.OreMappingSatellite.ordinal()) {
 			SatelliteBase satellite = DimensionManager.getInstance().getSatellite(y);
 			
-			if(satellite == null || !(satellite instanceof SatelliteOreMapping) || satellite.getDimensionId() != world.provider.getDimension())
+			if(!(satellite instanceof SatelliteOreMapping) || satellite.getDimensionId() != world.provider.getDimension())
 				satellite = null;
 			
-			return new ContainerOreMappingSatallite((SatelliteOreMapping) satellite, player.inventory);
+			return new ContainerOreMappingSatellite((SatelliteOreMapping) satellite, player.inventory);
 		}
 		return null;
 	}
@@ -57,28 +50,20 @@ public class GuiHandler implements IGuiHandler {
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world,
 			int x, int y, int z) {
 
-		Object tile;
-		
-		if(y > -1)
-			tile = world.getTileEntity(new BlockPos(x, y, z));
-		else if(x == -1) {
+		if(x == -1 && y < -1) {
 			ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
 			
 			//If there is latency or some desync odd things can happen so check for that
-			if(stack == null || !(stack.getItem() instanceof IModularInventory)) {
+			if(stack.isEmpty() || !(stack.getItem() instanceof IModularInventory)) {
 				return null;
 			}
-			
-			tile = player.getHeldItem(EnumHand.MAIN_HAND).getItem();
 		}
-		else
-			tile = world.getEntityByID(x);
 
 		if(ID == guiId.OreMappingSatellite.ordinal()) {
 			
 			SatelliteBase satellite = DimensionManager.getInstance().getSatellite(y);
 			
-			if(satellite == null || !(satellite instanceof SatelliteOreMapping) || satellite.getDimensionId() != world.provider.getDimension())
+			if(!(satellite instanceof SatelliteOreMapping) || satellite.getDimensionId() != world.provider.getDimension())
 				satellite = null;
 			
 			return new GuiOreMappingSatellite((SatelliteOreMapping) satellite, player);

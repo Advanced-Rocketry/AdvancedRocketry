@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.item.ItemSatellite;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 
@@ -15,6 +16,8 @@ public class TileSatelliteHatch extends TileInventoryHatch {
 
 	public TileSatelliteHatch(int i) {
 		super(1);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanExtractSlot(0, true);
 	}
 
 	@Override
@@ -25,13 +28,13 @@ public class TileSatelliteHatch extends TileInventoryHatch {
 	public SatelliteBase getSatellite() {
 
 		ItemStack itemStack = inventory.getStackInSlot(0);
-		if(!itemStack.isEmpty() && itemStack.getItem() instanceof ItemSatellite) {
-			SatelliteProperties properties = ((ItemSatellite)itemStack.getItem()).getSatellite(itemStack);
+		if(!itemStack.isEmpty() && itemStack.getItem() instanceof ItemSatellite && SatelliteRegistry.getSatelliteProperties(itemStack) != null) {
+			SatelliteProperties properties = SatelliteRegistry.getSatelliteProperties(itemStack);
 			
 			if(properties == null)
 				return null;
 
-			SatelliteBase satellite = SatelliteRegistry.getSatallite(properties.getSatelliteType());
+			SatelliteBase satellite = SatelliteRegistry.getNewSatellite(properties.getSatelliteType());
 
 			if(satellite == null)
 				return null;

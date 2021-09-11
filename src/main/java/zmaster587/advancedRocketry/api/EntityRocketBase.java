@@ -3,9 +3,12 @@ package zmaster587.advancedRocketry.api;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -30,15 +33,8 @@ public abstract class EntityRocketBase extends Entity {
 	}
 
 	/**
-	 * AttempTs to add amt fuel points to the rocket
-	 * @param amt
-	 * @return the amount of fuel actually added to the rocket
-	 */
-	public abstract int addFuelAmount(int amt);
-
-	/**
 	 * Unlinks the given infrastructure
-	 * @param infrastructure
+	 * @param tile
 	 */
 	public void unlinkInfrastructure(IInfrastructure tile) {
 		connectedInfrastructure.remove(tile);
@@ -64,14 +60,49 @@ public abstract class EntityRocketBase extends Entity {
 	public abstract void launch();
 
 	/**
-	 * @return the amount of fuel points in the rocket
+	 * @param fuelType
+	 * @return the amount of fuel stored in the rocket
 	 */
-	public abstract int getFuelAmount();
+	public abstract int getFuelAmount(@Nullable FuelRegistry.FuelType fuelType);
 
 	/**
-	 * @return the total fuel capacity of the rocket
+	 * Adds fuel and updates the datawatcher
+	 * @param fuelType
+	 * @param amount amount of fuel to add
+	 * @return the amount of fuel added
 	 */
-	public abstract int getFuelCapacity();
+	public abstract int addFuelAmount(@Nonnull FuelRegistry.FuelType fuelType, int amount);
+
+	/**
+	 * Updates the data option
+	 * @param fuelType
+	 * @param amt sets the amount of monopropellant fuel in the rocket
+	 */
+	public abstract void setFuelAmount(@Nonnull FuelRegistry.FuelType fuelType, int amt);
+
+	/**
+	 * @param fuelType sets the type of fuel to set a rate for
+	 * @param rate sets the rate of fuel in the rocket
+	 */
+	public abstract void setFuelConsumptionRate(@Nonnull FuelRegistry.FuelType fuelType, int rate);
+
+	/**
+	 * @param fuelType is the fuel type to get
+	 * @return gets the fuel capacity of the rocket
+	 */
+	public abstract int getFuelCapacity(@Nullable FuelRegistry.FuelType fuelType);
+
+	/**
+	 * @param fuelType is the fuel type to get
+	 * @return the rate of fuel consumption for the rocket
+	 */
+	public abstract int getFuelConsumptionRate(@Nullable FuelRegistry.FuelType fuelType);
+
+	/**
+	 * @return the fuel type that this rocket uses, null if the rocket does not use any
+	 */
+	@Nullable
+	public abstract FuelRegistry.FuelType getRocketFuelType();
 
 	/**
 	 * @return the location of the rocket in the world
@@ -99,8 +130,8 @@ public abstract class EntityRocketBase extends Entity {
 		if(this.world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject station = AdvancedRocketryAPI.spaceObjectManager.getSpaceStationFromBlockCoords(this.getPosition());
 			
-			if(station instanceof ISpaceObject) {
-				((ISpaceObject)station).setPadStatus((int)Math.floor(this.posX), (int)Math.floor(this.posZ), false);
+			if(station != null) {
+				station.setPadStatus((int)Math.floor(this.posX), (int)Math.floor(this.posZ), false);
 			}
 		}
 	}

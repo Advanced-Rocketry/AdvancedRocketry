@@ -16,14 +16,16 @@ import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.libVulpes.render.RenderHelper;
 
+import javax.annotation.Nullable;
+
 public class RenderLaser extends Render implements IRenderFactory<EntityLaserNode> {
 
 	private static final ResourceLocation flare = new ResourceLocation("advancedrocketry", "textures/entity/Flare.png");
 
-	float color[];
-	float flareColor[];
+	float[] color;
+	float[] flareColor;
 	//float flareColo
-	double size;
+	private double size;
 	
 	public RenderLaser(double size, float[] flarecolor, float[] color) {
 		super(Minecraft.getMinecraft().getRenderManager());
@@ -33,7 +35,7 @@ public class RenderLaser extends Render implements IRenderFactory<EntityLaserNod
 	}
 	
 	@Override
-	public void doRender(Entity entity, double x, double y, double z,
+	public void doRender(@Nullable Entity entity, double x, double y, double z,
 			float f, float f1) {
 
 		GL11.glPushMatrix();
@@ -70,13 +72,13 @@ public class RenderLaser extends Render implements IRenderFactory<EntityLaserNod
 				buffer.pos(- x , -y + 200,  - z).endVertex();
 				buffer.pos(- x, -y + 200, - z).endVertex();
 				buffer.pos(- (radius* Math.cos(i)) + 0.5F, 0,- (radius* Math.sin(i)) + 0.5F).endVertex();
-				buffer.pos(+ (radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).endVertex();
+				buffer.pos((radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).endVertex();
 			}
 
 			for(double i = 0; i < 2*Math.PI; i += Math.PI) {
 				buffer.pos(- x, -y + 200,- z).endVertex();
 				buffer.pos(- x, -y + 200, - z).endVertex();
-				buffer.pos(+ (radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).endVertex();
+				buffer.pos((radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).endVertex();
 				buffer.pos(- (radius* Math.cos(i)) + 0.5F, 0,(radius* Math.sin(i)) + 0.5F).endVertex();
 			}
 		}
@@ -130,13 +132,13 @@ public class RenderLaser extends Render implements IRenderFactory<EntityLaserNod
 				buffer.pos(- x , -y + 200,  - z).endVertex();
 				buffer.pos(- x, -y + 200, - z).endVertex();
 				buffer.pos(- (radius* Math.cos(i)) + 0.5F, 0,- (radius* Math.sin(i)) + 0.5F).endVertex();
-				buffer.pos(+ (radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).endVertex();
+				buffer.pos((radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).endVertex();
 			}
 
 			for(double i = 0; i < 2*Math.PI; i += Math.PI) {
 				buffer.pos(- x, -y + 200,- z).endVertex();
 				buffer.pos(- x, -y + 200, - z).endVertex();
-				buffer.pos(+ (radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).endVertex();
+				buffer.pos((radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).endVertex();
 				buffer.pos(- (radius* Math.cos(i)) + 0.5F, 0,(radius* Math.sin(i)) + 0.5F).endVertex();
 			}
 		}
@@ -163,7 +165,7 @@ public class RenderLaser extends Render implements IRenderFactory<EntityLaserNod
 	}
 	
 	@Override
-	protected ResourceLocation getEntityTexture(Entity entity) {
+	protected ResourceLocation getEntityTexture(@Nullable Entity entity) {
 		return null;
 	}
 

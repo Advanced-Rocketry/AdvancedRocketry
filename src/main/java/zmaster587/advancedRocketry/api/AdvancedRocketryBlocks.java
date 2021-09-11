@@ -7,7 +7,7 @@ import net.minecraft.block.Block;
  *
  */
 public class AdvancedRocketryBlocks {
-	public static Block blockMissionComp;
+	public static Block blockNuclearEngine;
 	public static Block blockSpaceLaser;
 	public static Block blockPrecisionAssembler;
 	public static Block blockArcFurnace;
@@ -23,16 +23,18 @@ public class AdvancedRocketryBlocks {
 	public static Block blockRocketBuilder;
 	public static Block blockGenericSeat;
 	public static Block blockEngine;
+	public static Block blockBipropellantEngine;
 	public static Block blockFuelTank;
+	public static Block blockBipropellantFuelTank;
+	public static Block blockOxidizerFuelTank;
 	public static Block blockFuelingStation;
 	public static Block blockMonitoringStation, blockSatelliteBuilder, blockSatelliteControlCenter;
-	public static Block blockChipStorage;
+	public static Block blockNuclearFuelTank;
 	public static Block blockMoonTurf, blockHotTurf;
-	public static Block blockMultiMineOre;
+	public static Block blockNuclearCore;
 	public static Block blockLightSource;
-	public static Block blockAlienWood, blockAlienLeaves, blockAlienSapling;
+	public static Block blockLightwoodWood, sblockLightwoodLeaves, blockLightwoodSapling;
 	public static Block blockGuidanceComputer;
-	public static Block blockLunarAnalyser;
 	public static Block blockPlanetSelector;
 	public static Block blockSawBlade;
 	public static Block blockConcrete;
@@ -43,10 +45,10 @@ public class AdvancedRocketryBlocks {
 	public static Block blockOxygenFluid;
 	public static Block blockHydrogenFluid;
 	public static Block blockChemicalReactor;
+	public static Block blockPrecisionLaserEngraver;
 	public static Block blockFuelFluid;
-	public static Block test;
 	public static Block blockOxygenVent;
-	public static Block blockOxygenScrubber;
+	public static Block blockCO2Scrubber;
 	public static Block blockOxygenCharger;
 	public static Block blockAirLock;
 	public static Block blockLandingPad;
@@ -80,17 +82,18 @@ public class AdvancedRocketryBlocks {
 	public static Block blockDockingPort;
 	public static Block blockAltitudeController;
 	public static Block blockRailgun;
-	public static Block blockAstroBed;
 	public static Block blockAdvEngine;
+	public static Block blockAdvBipropellantEngine;
 	public static Block blockPlanetHoloSelector;
 	public static Block blockLens;
 	public static Block blockForceField;
 	public static Block blockForceFieldProjector;
+	public static Block blockVacuumLaser;
 	public static Block blockGravityMachine;
 	public static Block blockPipeSealer;
 	public static Block blockSpaceElevatorController;
 	public static Block blockBeacon;
-	public static Block blockAlienPlanks;
+	public static Block blockLightwoodPlanks;
 	public static Block blockThermiteTorch;
 	public static Block blockTransciever;
 	public static Block blockMoonTurfDark;
@@ -100,4 +103,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockCentrifuge;
 	public static Block blockBasalt;
 	public static Block blockLandingFloat;
+	public static Block blockSolarArray;
+	public static Block blockSolarArrayPanel;
+	public static Block blockRocketFire;
 }

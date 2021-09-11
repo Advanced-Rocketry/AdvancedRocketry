@@ -187,14 +187,11 @@ public class MobileAABB extends AxisAlignedBB {
 
 	@Override
 	public double calculateYOffset(AxisAlignedBB aabbIn, double var2) {
-		if (aabbIn.maxX > this.minX && aabbIn.minX < this.maxX)
-		{
-			if (aabbIn.maxZ > this.minZ && aabbIn.minZ < this.maxZ)
-			{
+		if (aabbIn.maxX > this.minX && aabbIn.minX < this.maxX) {
+			if (aabbIn.maxZ > this.minZ && aabbIn.minZ < this.maxZ) {
 				double d1;
 
-				if (var2 > 0.0D && aabbIn.maxY <= this.minY)
-				{
+				if (var2 > 0.0D && aabbIn.maxY <= this.minY) {
 
 					d1 = this.minY - aabbIn.maxY;
 
@@ -202,9 +199,7 @@ public class MobileAABB extends AxisAlignedBB {
 					{
 						var2 = d1;
 					}
-				}
-				else if(var2 > 0.0D && aabbIn.maxY < this.maxY)
-				{
+				} else if(var2 > 0.0D && aabbIn.maxY < this.maxY) {
 
 					double maxUp = 256;
 					for(int deltaX = (int) Math.floor(aabbIn.minX - this.minX ); deltaX <= Math.ceil(aabbIn.maxX - this.minX ); deltaX++) {
@@ -229,17 +224,14 @@ public class MobileAABB extends AxisAlignedBB {
 						var2 = d1;
 				}
 
-				if (var2 < 0.0D && aabbIn.minY >= this.maxY)
-				{
+				if (var2 < 0.0D && aabbIn.minY >= this.maxY) {
 					d1 = this.maxY - aabbIn.minY;
 
 					if (d1 > var2)
 					{
 						var2 = d1;
 					}
-				}
-				else if(var2 < 0.0D && aabbIn.minY > this.minY)
-				{
+				} else if(var2 < 0.0D && aabbIn.minY > this.minY) {
 
 					double maxUp = -256;
 					for(int deltaX = (int) Math.floor(aabbIn.minX - this.minX ); deltaX <= Math.ceil(aabbIn.maxX - this.minX ); deltaX++) {
@@ -251,7 +243,7 @@ public class MobileAABB extends AxisAlignedBB {
 								AxisAlignedBB aabb = chunk.blocks[deltaX][(int)(aabbIn.minY - this.minY - offset)][deltaZ].getDefaultState().getCollisionBoundingBox(this.chunk.world, new BlockPos(deltaX,(int)(aabbIn.minY - this.minY - offset),deltaZ));
 
 								if(aabb != null) {
-									float offset2 = isRemote ? 1 : 1;
+									float offset2 = 1;
 									double checkVar = aabb.maxY + Math.floor(aabbIn.minY - this.minY) + minY - aabbIn.minY - offset2 - offset;
 									if(maxUp < checkVar)
 										maxUp = checkVar;
@@ -265,17 +257,9 @@ public class MobileAABB extends AxisAlignedBB {
 						var2 = d1;
 				}
 
-				return var2;
-			}
-			else
-			{
-				return var2;
 			}
 		}
-		else
-		{
-			return var2;
-		}
+		return var2;
 	}
 
 	@Override

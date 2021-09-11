@@ -19,7 +19,7 @@ import java.util.List;
 public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 	WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/precAssembler.png");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/precisionassembler.png");
 
 	//private final RenderItem dummyItem = Minecraft.getMinecraft().getRenderItem();
 	
@@ -32,7 +32,7 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 	
 	public RendererPrecisionAssembler() {
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/precAssembler.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/precisionassembler.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}
@@ -87,18 +87,16 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 			
 			process *= 6;
 			if(process > 2 && process < 4){
+				// 0 -> -.25
 				if(process < 3) {
 					process-=2;
-					GL11.glTranslatef(0, -.25f*process, 0); // 0 -> -.25
-					model.renderPart("ProcessA");
-					GL11.glTranslatef(0, .25f*process, 0);
 				}
-				else if(process < 4) {
+				else {
 					process = -process + 4;
-					GL11.glTranslatef(0, -.25f*process, 0); // 0 -> -.25
-					model.renderPart("ProcessA");
-					GL11.glTranslatef(0, .25f*process, 0);
 				}
+				GL11.glTranslatef(0, -.25f*process, 0); // 0 -> -.25
+				model.renderPart("ProcessA");
+				GL11.glTranslatef(0, .25f*process, 0);
 			}
 			else
 				model.renderPart("ProcessA");
@@ -107,18 +105,16 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 			
 			process -= 6;
 			if(process > 2 && process < 4){
+				// 0 -> -.25
 				if(process < 3) {
 					process-=2;
-					GL11.glTranslatef(0, -.25f*process, 0); // 0 -> -.25
-					model.renderPart("ProcessB");
-					GL11.glTranslatef(0, .25f*process, 0);
 				}
-				else if(process < 4) {
+				else {
 					process = -process + 4;
-					GL11.glTranslatef(0, -.25f*process, 0); // 0 -> -.25
-					model.renderPart("ProcessB");
-					GL11.glTranslatef(0, .25f*process, 0);
 				}
+				GL11.glTranslatef(0, -.25f*process, 0); // 0 -> -.25
+				model.renderPart("ProcessB");
+				GL11.glTranslatef(0, .25f*process, 0);
 			}
 			else
 				model.renderPart("ProcessB");
@@ -127,22 +123,16 @@ public class RendererPrecisionAssembler extends TileEntitySpecialRenderer {
 			if(process > 1 && process < 3){
 				if(process < 2) {
 					process-=1;
-					
-					GL11.glTranslated(1.55, 1.47, 0);
-					GL11.glRotatef(90*process, 0, 0, 1);
-					GL11.glTranslated(-1.55, -1.47, 0);
-					
-					model.renderPart("ProcessC");
+
 				}
-				else if(process < 3) {
+				else {
 					process = -process + 3;
-					
-					GL11.glTranslated(1.55, 1.47, 0);
-					GL11.glRotatef(90*process, 0, 0, 1);
-					GL11.glTranslated(-1.55, -1.47, 0);
-					
-					model.renderPart("ProcessC");
+
 				}
+				GL11.glTranslated(1.55, 1.47, 0);
+				GL11.glRotatef(90*process, 0, 0, 1);
+				GL11.glTranslated(-1.55, -1.47, 0);
+				model.renderPart("ProcessC");
 			}
 			else
 				model.renderPart("ProcessC");

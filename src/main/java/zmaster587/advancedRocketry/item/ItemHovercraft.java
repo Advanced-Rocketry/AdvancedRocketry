@@ -1,12 +1,8 @@
 package zmaster587.advancedRocketry.item;
 
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -23,30 +19,31 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.entity.EntityHoverCraft;
 import zmaster587.libVulpes.LibVulpes;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
+
 public class ItemHovercraft extends Item {
     
 	public ItemHovercraft() {
         super();
         this.maxStackSize = 1;
 	}
-	
-    protected boolean canTriggerWalking()
-    {
-        return false;
-    }
-    
+
     /**
      * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
      */
+    @ParametersAreNonnullByDefault
+    @Nonnull
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
         float f = 1.0F;
-        float f1 = playerIn.prevRotationPitch + (playerIn.rotationPitch - playerIn.prevRotationPitch) * 1.0F;
-        float f2 = playerIn.prevRotationYaw + (playerIn.rotationYaw - playerIn.prevRotationYaw) * 1.0F;
-        double d0 = playerIn.prevPosX + (playerIn.posX - playerIn.prevPosX) * 1.0D;
-        double d1 = playerIn.prevPosY + (playerIn.posY - playerIn.prevPosY) * 1.0D + (double)playerIn.getEyeHeight();
-        double d2 = playerIn.prevPosZ + (playerIn.posZ - playerIn.prevPosZ) * 1.0D;
+        float f1 = playerIn.prevRotationPitch + (playerIn.rotationPitch - playerIn.prevRotationPitch);
+        float f2 = playerIn.prevRotationYaw + (playerIn.rotationYaw - playerIn.prevRotationYaw);
+        double d0 = playerIn.prevPosX + (playerIn.posX - playerIn.prevPosX);
+        double d1 = playerIn.prevPosY + (playerIn.posY - playerIn.prevPosY) + (double)playerIn.getEyeHeight();
+        double d2 = playerIn.prevPosZ + (playerIn.posZ - playerIn.prevPosZ);
         Vec3d vec3d = new Vec3d(d0, d1, d2);
         float f3 = MathHelper.cos(-f2 * 0.017453292F - (float)Math.PI);
         float f4 = MathHelper.sin(-f2 * 0.017453292F - (float)Math.PI);
@@ -60,7 +57,7 @@ public class ItemHovercraft extends Item {
 
         if (raytraceresult == null)
         {
-            return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
+            return new ActionResult<>(EnumActionResult.PASS, itemstack);
         }
         else
         {
@@ -68,16 +65,11 @@ public class ItemHovercraft extends Item {
             boolean flag = false;
             List<Entity> list = worldIn.getEntitiesWithinAABBExcludingEntity(playerIn, playerIn.getEntityBoundingBox().expand(vec3d2.x * 5.0D, vec3d2.y * 5.0D, vec3d2.z * 5.0D).grow(1.0D));
 
-            for (int i = 0; i < list.size(); ++i)
-            {
-                Entity entity = list.get(i);
+            for (Entity entity : list) {
+                if (entity.canBeCollidedWith()) {
+                    AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(entity.getCollisionBorderSize());
 
-                if (entity.canBeCollidedWith())
-                {
-                    AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow((double)entity.getCollisionBorderSize());
-
-                    if (axisalignedbb.contains(vec3d))
-                    {
+                    if (axisalignedbb.contains(vec3d)) {
                         flag = true;
                     }
                 }
@@ -85,11 +77,11 @@ public class ItemHovercraft extends Item {
 
             if (flag)
             {
-                return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
+                return new ActionResult<>(EnumActionResult.PASS, itemstack);
             }
             else if (raytraceresult.typeOfHit != RayTraceResult.Type.BLOCK)
             {
-                return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
+                return new ActionResult<>(EnumActionResult.PASS, itemstack);
             }
             else
             {
@@ -100,7 +92,7 @@ public class ItemHovercraft extends Item {
 
                 if (!worldIn.getCollisionBoxes(entityboat, entityboat.getEntityBoundingBox().grow(-0.1D)).isEmpty())
                 {
-                    return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
+                    return new ActionResult<>(EnumActionResult.FAIL, itemstack);
                 }
                 else
                 {
@@ -115,14 +107,14 @@ public class ItemHovercraft extends Item {
                     }
 
                     playerIn.addStat(StatList.getObjectUseStats(this));
-                    return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
+                    return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
                 }
             }
         }
     }
     
     @Override
-    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(@Nonnull ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
     	tooltip.add(LibVulpes.proxy.getLocalizedString("item.hovercraft.tooltip"));
     }
 }

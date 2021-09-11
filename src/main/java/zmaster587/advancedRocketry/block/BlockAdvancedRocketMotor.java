@@ -17,6 +17,6 @@ public class BlockAdvancedRocketMotor extends BlockRocketMotor {
 	
 	@Override
 	public int getFuelConsumptionRate(World world, int x, int y, int z) {
-		return 2;
+		return 3;
 	}
 }

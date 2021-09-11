@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"sSs",
+	"p p",
+	"s s"
+    ],
+    "key":
+    {
+        "s":
+        {
+            "type": "forge:ore_dict",
+            "ore": "stickSteel"
+        },
+        "S":
+        {
+            "type": "forge:ore_dict",
+            "ore": "sheetSteel"
+        },
+	"p":
+        {
+            "type": "forge:ore_dict",
+            "ore": "plateSteel"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:oxidizerfueltank",
+        "count": 1
+    }
+}

@@ -8,7 +8,6 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.commons.lang3.ArrayUtils;
-
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -68,7 +67,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 
                 DimensionProperties props = DimensionManager.getEffectiveDimId(player.world, player.getPosition());
 		container = new ModulePlanetSelector((props != null ? props.getStarId() : 0), TextureResources.starryBG, this, true);
@@ -112,7 +111,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 
 				ItemStack stack = ((ITilePlanetSystemSelectable)getMasterBlock()).getChipWithId(container.getSelectedSystem());
 
-				if(stack != null) {
+				if(!stack.isEmpty()) {
 
 					DataType data;
 					if(id == 0)

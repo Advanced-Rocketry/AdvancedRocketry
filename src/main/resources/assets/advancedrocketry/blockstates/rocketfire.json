@@ -1,0 +1,60 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "textures": {
+      "fire0": "minecraft:blocks/fire_layer_0",
+      "fire1": "minecraft:blocks/fire_layer_1"
+    }
+  },
+  "variants": {
+    "level=0" : [
+      { "model": "advancedrocketry:ar_empty" }
+    ],
+    "level=1" : [
+      { "model": "advancedrocketry:fire" }
+    ],
+    "level=2" : [
+      { "model": "advancedrocketry:ar_empty" }
+    ],
+    "level=3" : [
+      { "model": "advancedrocketry:ar_empty" }
+    ],
+    "level=4" : [
+      { "model": "advancedrocketry:fire" }
+    ],
+    "level=5" : [
+      { "model": "advancedrocketry:ar_empty" }
+    ],
+    "level=6" : [
+      { "model": "advancedrocketry:ar_empty" }
+    ],
+    "level=7" : [
+      { "model": "advancedrocketry:fire" }
+    ],
+    "level=8" : [
+      { "model": "advancedrocketry:ar_empty" }
+    ],
+    "level=9" : [
+      { "model": "advancedrocketry:fire" }
+    ],
+    "level=10" : [
+      { "model": "advancedrocketry:ar_empty" }
+    ],
+    "level=11" : [
+      { "model": "advancedrocketry:fire" }
+    ],
+    "level=12" : [
+      { "model": "advancedrocketry:ar_empty" }
+    ],
+    "level=13" : [
+      { "model": "advancedrocketry:ar_empty" }
+    ],
+    "level=14" : [
+      { "model": "advancedrocketry:ar_empty" }
+    ],
+    "level=15" : [
+      { "model": "advancedrocketry:fire" }
+    ]
+  }
+}

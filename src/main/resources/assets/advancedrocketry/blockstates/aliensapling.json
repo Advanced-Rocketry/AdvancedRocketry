@@ -1,6 +1,15 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:cross",
+        "textures": {
+            "cross": "advancedrocketry:blocks/sapling_blueTree"
+        }
+    },
     "variants": {
-        "stage=0": { "model": "advancedrocketry:alienSapling" },
-        "stage=1": { "model": "advancedrocketry:alienSapling" }
+        "stage=0": [{}],
+        "stage=1": [{}],
+        "inventory": [{}]
     }
 }

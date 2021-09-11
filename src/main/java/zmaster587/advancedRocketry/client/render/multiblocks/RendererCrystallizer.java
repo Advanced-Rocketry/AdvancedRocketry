@@ -19,13 +19,13 @@ public class RendererCrystallizer extends TileEntitySpecialRenderer {
 
 	WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/crystallizer.png");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/crystalliser.png");
 
 
 	public RendererCrystallizer() {
 
 		try {
-			model =  new WavefrontObject(new ResourceLocation("advancedrocketry:models/crystallizer.obj"));
+			model =  new WavefrontObject(new ResourceLocation("advancedrocketry:models/crystalliser.obj"));
 		} catch (ModelFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

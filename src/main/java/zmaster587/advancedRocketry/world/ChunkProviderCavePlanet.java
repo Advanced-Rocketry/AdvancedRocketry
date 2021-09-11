@@ -5,13 +5,10 @@ import java.util.Random;
 
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.world.decoration.MapGenCaveExt;
 import zmaster587.advancedRocketry.world.decoration.MapGenHighCaves;
 import zmaster587.advancedRocketry.world.decoration.MapGenMassiveRavine;
-import zmaster587.advancedRocketry.world.decoration.MapGenRavineExt;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.block.state.pattern.BlockMatcher;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -21,26 +18,15 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.gen.ChunkGeneratorSettings;
-import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.MapGenCavesHell;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
-import net.minecraft.world.gen.feature.WorldGenBush;
-import net.minecraft.world.gen.feature.WorldGenFire;
-import net.minecraft.world.gen.feature.WorldGenGlowStone1;
-import net.minecraft.world.gen.feature.WorldGenGlowStone2;
-import net.minecraft.world.gen.feature.WorldGenHellLava;
-import net.minecraft.world.gen.feature.WorldGenMinable;
-import net.minecraft.world.gen.feature.WorldGenerator;
-import net.minecraft.world.gen.structure.MapGenNetherBridge;
 
 public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 
 	protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
 	protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
 	private final World world;
-	private final boolean generateStructures;
 	private final Random rand;
 	/** Holds the noise used to determine whether slowsand can be generated at a location */
 	private double[] slowsandNoise = new double[256];
@@ -72,7 +58,6 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 	{
 		super(worldIn, seed, p_i45637_2_, p_i46668_5_);
 		this.world = worldIn;
-		this.generateStructures = p_i45637_2_;
 		this.rand = new Random(seed);
 		this.lperlinNoise1 = new NoiseGeneratorOctaves(this.rand, 16);
 		this.lperlinNoise2 = new NoiseGeneratorOctaves(this.rand, 16);
@@ -137,13 +122,13 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 				for (int l1 = 0; l1 < 16; ++l1)
 				{
 					double d0 = 0.125D;
-					double d1 = this.buffer[((j1 + 0) * 5 + k1 + 0) * 17 + l1 + 0];
-					double d2 = this.buffer[((j1 + 0) * 5 + k1 + 1) * 17 + l1 + 0];
-					double d3 = this.buffer[((j1 + 1) * 5 + k1 + 0) * 17 + l1 + 0];
-					double d4 = this.buffer[((j1 + 1) * 5 + k1 + 1) * 17 + l1 + 0];
-					double d5 = (this.buffer[((j1 + 0) * 5 + k1 + 0) * 17 + l1 + 1] - d1) * 0.125D;
-					double d6 = (this.buffer[((j1 + 0) * 5 + k1 + 1) * 17 + l1 + 1] - d2) * 0.125D;
-					double d7 = (this.buffer[((j1 + 1) * 5 + k1 + 0) * 17 + l1 + 1] - d3) * 0.125D;
+					double d1 =  this.buffer[(j1 * 5 + k1) * 17 + l1];
+					double d2 =  this.buffer[(j1 * 5 + k1 + 1) * 17 + l1];
+					double d3 = this.buffer[((j1 + 1) * 5 + k1) * 17 + l1];
+					double d4 =  this.buffer[((j1 + 1) * 5 + k1 + 1) * 17 + l1];
+					double d5 = (this.buffer[((j1) * 5 + k1) * 17 + l1 + 1] - d1) * 0.125D;
+					double d6 = (this.buffer[(j1 * 5 + k1 + 1) * 17 + l1 + 1] - d2) * 0.125D;
+					double d7 = (this.buffer[((j1 + 1) * 5 + k1) * 17 + l1 + 1] - d3) * 0.125D;
 					double d8 = (this.buffer[((j1 + 1) * 5 + k1 + 1) * 17 + l1 + 1] - d4) * 0.125D;
 
 					for (int i2 = 0; i2 < 8; ++i2)
@@ -219,7 +204,8 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 				{
 					IBlockState iblockstate2 = primer.getBlockState(k, j1, j);
 
-					if (iblockstate2.getBlock() != null && iblockstate2.getMaterial() != Material.AIR)
+					iblockstate2.getBlock();
+					if (iblockstate2.getMaterial() != Material.AIR)
 					{
 						if (iblockstate2 == fillblock)
 						{
@@ -288,13 +274,9 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 		this.genNetherCaves.generate(this.world, x, z, chunkprimer);
 		this.genHighCaves.generate(this.world, x, z, chunkprimer);
 		this.genRavines.generate(this.world, x, z, chunkprimer);
-		
-		if (this.generateStructures)
-		{
-		}
-		
+
 		Chunk chunk = new Chunk(this.world, chunkprimer, x, z);
-		Biome[] abiome = this.world.getBiomeProvider().getBiomes((Biome[])null, x * 16, z * 16, 16, 16);
+		Biome[] abiome = this.world.getBiomeProvider().getBiomes(null, x * 16, z * 16, 16, 16);
 		byte[] abyte = chunk.getBiomeArray();
 
 		for (int i = 0; i < abyte.length; ++i)
@@ -330,11 +312,11 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 		for (int j = 0; j < p_185938_6_; ++j)
 		{
 			adouble[j] = Math.cos((double)j * Math.PI * 6.0D / (double)p_185938_6_) * 2.0D;
-			double d2 = (double)j;
+			double d2 = j;
 
 			if (j > p_185938_6_ / 2)
 			{
-				d2 = (double)(p_185938_6_ - 1 - j);
+				d2 = p_185938_6_ - 1 - j;
 			}
 
 			if (d2 < 4.0D)
@@ -375,15 +357,8 @@ public class ChunkProviderCavePlanet extends ChunkProviderPlanet {
 
 					if (k > p_185938_6_ - 4)
 					{
-						double d9 = (double)((float)(k - (p_185938_6_ - 4)) / 3.0F);
+						double d9 = (float)(k - (p_185938_6_ - 4)) / 3.0F;
 						d8 = d8 * (1.0D - d9) + -10.0D * d9;
-					}
-
-					if ((double)k < 0.0D)
-					{
-						double d10 = (0.0D - (double)k) / 4.0D;
-						d10 = MathHelper.clamp(d10, 0.0D, 1.0D);
-						d8 = d8 * (1.0D - d10) + -10.0D * d10;
 					}
 
 					p_185938_1_[i] = d8;

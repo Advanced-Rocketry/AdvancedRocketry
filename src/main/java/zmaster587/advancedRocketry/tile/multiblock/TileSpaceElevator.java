@@ -1,11 +1,9 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -13,100 +11,66 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
-import zmaster587.advancedRocketry.inventory.modules.ModuleStellarBackground;
-import zmaster587.advancedRocketry.item.ItemSpaceElevatorChip;
+import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.util.DimensionBlockPosition;
+import zmaster587.advancedRocketry.util.PlanetaryTravelHelper;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.TextureResources;
-import zmaster587.libVulpes.inventory.modules.*;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
-import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
-import java.util.LinkedList;
+import javax.annotation.Nonnull;
 import java.util.List;
 
-public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkableTile, IInventory, ITickable {
+public class TileSpaceElevator extends TileMultiPowerConsumer implements IModularInventory, ILinkableTile, ITickable {
 
 	Object[][][] structure =
 		{
 			{
-				{null,null,null,null,null,null,null},
-				{null,Blocks.REDSTONE_LAMP,null,Blocks.AIR,null,Blocks.REDSTONE_LAMP,null},
-				{null,null,Blocks.AIR,Blocks.AIR,Blocks.AIR,null,null},
-				{null,Blocks.AIR,Blocks.AIR,Blocks.AIR,Blocks.AIR,Blocks.AIR,null},
-				{null,null,Blocks.AIR,Blocks.AIR,Blocks.AIR,null,null},
-				{null,Blocks.REDSTONE_LAMP,null,Blocks.AIR,null,Blocks.REDSTONE_LAMP,null},
-				{null,null,null,null,null,null,null},
-			},
-			{
-				{null,null,'*','*','*',null,null},
-				{null,'*','*','*','*','*',null},
-				{'*','*',Blocks.AIR,Blocks.AIR,Blocks.AIR,'*','*'},
-				{'*','*',Blocks.AIR,Blocks.AIR,Blocks.AIR,'*','*'},
-				{'*','*',Blocks.AIR,Blocks.AIR,Blocks.AIR,'*','*'},
-				{null,'*','*','*','*','*',null},
-				{null,null,'*','*','*',null,null},
-			},
-			{
-				{null,'*','*',null,'c','*',null},
-				{'*','*','*',null,'*','*','*'},
-				{'*','*',Blocks.AIR,Blocks.AIR,Blocks.AIR,'*','*'},
-				{'*','*',Blocks.AIR,Blocks.AIR,Blocks.AIR,'*','*'},
-				{'*','*',Blocks.AIR,Blocks.AIR,Blocks.AIR,'*','*'},
-				{'*','*','*','*','*','*','*'},
-				{null,'*','*','*','*','*',null},
-			},
-			{
-				{'*','*','*',null,'*','*','*'},
-				{'*','*','*',null,'*','*','*'},
-				{'*','*',Blocks.AIR,Blocks.AIR,Blocks.AIR,'*','*'},
-				{'*','*',Blocks.AIR,Blocks.AIR,Blocks.AIR,'*','*'},
-				{'*','*',Blocks.AIR,Blocks.AIR,Blocks.AIR,'*','*'},
-				{'*','*','*','*','*','*','*'},
-				{'*','*','*','*','*','*','*'},
-			},
-			{
-				{ '*', '*', '*', '*', '*', '*', '*' },
-				{ '*', '*', "blockCoil", "blockCoil", "blockCoil", '*', '*' },
-				{ LibVulpesBlocks.motors, "blockCoil", Blocks.AIR, Blocks.AIR, Blocks.AIR, "blockCoil", LibVulpesBlocks.motors },
-				{ 'P', "blockCoil", Blocks.AIR, Blocks.AIR, Blocks.AIR, "blockCoil", 'P' },
-				{ LibVulpesBlocks.motors, "blockCoil", Blocks.AIR, Blocks.AIR, Blocks.AIR, "blockCoil", LibVulpesBlocks.motors },
-				{ '*', '*', "blockCoil", "blockCoil", "blockCoil", '*', '*' },
-				{ '*', '*', LibVulpesBlocks.motors, 'P', LibVulpesBlocks.motors, '*', '*' },
+				{Blocks.AIR,Blocks.AIR,Blocks.AIR,'P','c','P',Blocks.AIR,Blocks.AIR,Blocks.AIR},
+				{"blockSteel",Blocks.AIR,Blocks.AIR,"slab","slab","slab",Blocks.AIR,Blocks.AIR,"blockSteel"},
+				{Blocks.AIR,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,Blocks.AIR},
+				{Blocks.AIR,"slab",LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,"slab",Blocks.AIR},
+				{"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab"},
+				{"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.motors,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab"},
+				{"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab"},
+				{Blocks.AIR,"slab",LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,"slab",Blocks.AIR},
+				{Blocks.AIR,LibVulpesBlocks.blockAdvStructureBlock,"slab","slab","slab","slab","slab",LibVulpesBlocks.blockAdvStructureBlock,Blocks.AIR},
+				{"blockSteel",Blocks.AIR,Blocks.AIR,"slab","slab","slab",Blocks.AIR,Blocks.AIR,"blockSteel"}
 			}
 		};
 
-	EmbeddedInventory inv;
 	EntityElevatorCapsule capsule;
 	boolean firstTick;
+	private boolean isTetherConnected;
 	DimensionBlockPosition dimBlockPos;
 
 	private ModuleText landingPadDisplayText;
 	private static final byte SUMMON_PACKET = 2;
-	private static final byte SELECT_DST = 3;
 	private static final int BUTTON_ID_OFFSET = 5;
 
 	public TileSpaceElevator() {
 		super();
-		inv = new EmbeddedInventory(1);
 		capsule = null;
 		firstTick = true;
 
@@ -116,14 +80,29 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	}
 	
 	@Override
-	public void deconstructMultiBlock(World world, BlockPos destroyedPos,
-			boolean blockBroken, IBlockState state) {
+	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken, IBlockState state) {
 		super.deconstructMultiBlock(world, destroyedPos, blockBroken, state);
 		
-		Entity e = getCapsuleOnLine();
+		Entity entity = getCapsuleOnLine();
 		
-		if(e != null)
-			e.setDead();
+		if(entity != null)
+			entity.setDead();
+
+
+		World otherPlanet;
+		if((otherPlanet = DimensionManager.getWorld(dimBlockPos.dimid)) == null) {
+			DimensionManager.initDimension(dimBlockPos.dimid);
+			otherPlanet = DimensionManager.getWorld(dimBlockPos.dimid);
+		}
+
+		if(otherPlanet != null) {
+			TileEntity tile = otherPlanet.getTileEntity(dimBlockPos.pos.getBlockPos());
+			if(tile instanceof TileSpaceElevator) {
+				((TileSpaceElevator) tile).updateTetherLinkPosition(dimBlockPos, null);
+				updateTetherLinkPosition(new DimensionBlockPosition(world.provider.getDimension(), new HashedBlockPosition(getPos())), null);
+			}
+		}
+
 	}
 
 	@Override
@@ -133,13 +112,18 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 	@Override
 	public String getMachineName() {
-		return "tile.spaceElevatorController.name";
+		return getModularInventoryName();
 	}
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		
-		return new AxisAlignedBB(pos.add(-5,-3,-5),pos.add(5,3000,5));
+		return new AxisAlignedBB(pos.add(-5,-300,-5),pos.add(5,3000,5));
+	}
+
+	@Override
+	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
+		return true;
 	}
 
 	@Override
@@ -150,52 +134,32 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 		if(ID == GuiHandler.guiId.MODULAR.ordinal()) {
 			modules.add(new ModuleButton(50, 47, 1, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.button.summon"), this, TextureResources.buttonBuild, 80, 18));
-			modules.add(new ModuleButton(50, 67, 2, LibVulpes.proxy.getLocalizedString("msg.label.selectDst"), this, TextureResources.buttonBuild, 80, 18));
-			modules.add(new ModuleTexturedSlotArray(50, 20, this, 0, 1, zmaster587.advancedRocketry.inventory.TextureResources.idChip));
-			modules.add(new ModuleText(70, 23, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.label.chip"), 0x2d2d2d));
-		}
-		else {
-			modules.clear();
-			modules.add(new ModuleStellarBackground(0, 0, zmaster587.libVulpes.inventory.TextureResources.starryBG));
-
-			List<ModuleBase> list2 = new LinkedList<ModuleBase>();
-			ModuleButton button = new ModuleButton(0, 0, BUTTON_ID_OFFSET, LibVulpes.proxy.getLocalizedString("msg.label.clear"), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 256, 18);
-			list2.add(button);
-
-			ItemStack stack = getChip();
-
-			if(stack != null) {
-				List<DimensionBlockPosition> list;
-				list = ((ItemSpaceElevatorChip)AdvancedRocketryItems.itemSpaceElevatorChip).getBlockPositions(stack);
-
-				int i = 1;
-				for( DimensionBlockPosition pos : list) 
-				{
-					button = new ModuleButton(0, i*18, i + BUTTON_ID_OFFSET, pos.toString(), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 256, 18);
-					list2.add(button);
-
-					if(!isDstValid(world, pos, new HashedBlockPosition(getPos())))
-						button.setColor(0xFFFF2222);
-
-					i++;
-				}
+			if (isTetherConnected()) {
+				modules.add(new ModuleText(30, 23, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.anchored0"), 0x2d2d2d));
+				modules.add(new ModuleText(30, 35, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.anchored1"), 0x2d2d2d));
+			} else {
+				modules.add(new ModuleText(30, 32, LibVulpes.proxy.getLocalizedString("msg.spaceElevator.warning.unanchored"), 0x2d2d2d));
 			}
 
-			ModuleContainerPan pan = new ModuleContainerPan(25, 25, list2, new LinkedList<ModuleBase>(), null, 512, 256, 0, -48, 258, 256);
-			modules.add(pan);
-
-			landingPadDisplayText.setText(dimBlockPos != null ? dimBlockPos.toString() : LibVulpes.proxy.getLocalizedString("msg.label.noneSelected"));
-			modules.add(landingPadDisplayText);
 		}
 
 		return modules;
 	}
 
-	public static boolean isDstValid(World worldObj, DimensionBlockPosition pos, HashedBlockPosition myPos) {
-		if(pos == null || pos.pos == null)
+	public static boolean isDestinationValid(int destinationDimensionID, DimensionBlockPosition pos, HashedBlockPosition myPos, int myDimensionID) {
+		if (pos == null || pos.pos == null)
 			return false;
-		
-		return worldObj.provider.getDimension() != pos.dimid && zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().areDimensionsInSamePlanetMoonSystem(zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(pos.dimid, pos.pos.getBlockPos()).getId(), zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(worldObj, myPos.getBlockPos()).getId()) ;
+		if (myDimensionID == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPos.getBlockPos()) != null) {
+			return PlanetaryTravelHelper.isTravelWithinGeostationaryOrbit((SpaceStationObject)SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPos.getBlockPos()), pos.dimid);
+		} else if (pos.dimid == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos.pos.getBlockPos()) != null) {
+			return PlanetaryTravelHelper.isTravelWithinGeostationaryOrbit((SpaceStationObject)SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos.pos.getBlockPos()), myDimensionID);
+		}
+		return false;
+	}
+
+	public static boolean wouldTetherBreakOnConnect(int destinationDimensionID, DimensionBlockPosition pos, HashedBlockPosition myPos, int myDimensionID) {
+		SpaceStationObject spaceStation = (myDimensionID == ARConfiguration.getCurrentConfig().spaceDimId) ? (SpaceStationObject) SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPos.getBlockPos()) : (SpaceStationObject)SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos.pos.getBlockPos());
+        return spaceStation != null && spaceStation.wouldStationBreakTether();
 	}
 
 	public boolean attemptLaunch() {
@@ -211,14 +175,9 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		if(buttonId == 1) {
 			PacketHandler.sendToServer(new PacketMachine(this, SUMMON_PACKET));
 		}
-		else if(buttonId == 2) {
-			PacketHandler.sendToServer(new PacketMachine(this, SELECT_DST));
-		}
 		if( buttonId >= BUTTON_ID_OFFSET) {
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)buttonId));
 		}
-
-
 		super.onInventoryButtonPressed(buttonId);
 	}
 
@@ -230,7 +189,9 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			capsule.setSourceTile(new DimensionBlockPosition(world.provider.getDimension(), new HashedBlockPosition(pos)));
 			capsule.setDst(dimBlockPos);
 		}
-		capsule.setPosition(getLandingLocationX(), getPos().getY() - 1, getLandingLocationZ());
+
+		int yOffset = (isAnchorOnSpaceStation()) ? - 5 : 1;
+		capsule.setPosition(getLandingLocationX(), getPos().getY() + yOffset, getLandingLocationZ());
 
 		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
 		switch(facing) {
@@ -249,31 +210,11 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 	}
 
 	@Override
-	public void update() {
-		super.update();
-	}
-
-	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
-		super.writeDataToNetwork(out, id);
-	}
-
-	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
-		super.readDataFromNetwork(in, packetId, nbt);
-	}
-
-	@Override
 	public void useNetworkData(EntityPlayer player, Side side, byte id,
 			NBTTagCompound nbt) {
 
 		if(id == SUMMON_PACKET) {
 			summonCapsule();
-		}
-		else if (id == SELECT_DST) {
-			player.closeScreen();
-			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARFULLSCREEN.ordinal(), player.world, this.pos.getX(), this.pos.getY(), this.pos.getZ());
 		}
 		else if(id == BUTTON_ID_OFFSET) {
 			dimBlockPos = null;
@@ -282,47 +223,6 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 			markDirty();
 			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 		}
-		else if(id > BUTTON_ID_OFFSET) {
-			ItemStack stack = inv.getStackInSlot(0);
-
-			if(stack != null && stack.getItem() instanceof ItemSpaceElevatorChip) {
-				List<DimensionBlockPosition> list;
-				list = ((ItemSpaceElevatorChip)AdvancedRocketryItems.itemSpaceElevatorChip).getBlockPositions(stack);
-
-				try {
-					DimensionBlockPosition dstpos = list.get(id - BUTTON_ID_OFFSET - 1);
-					if(isDstValid(world,dstpos, new HashedBlockPosition(getPos()))) {
-
-						dimBlockPos = dstpos;
-						World world;
-						if((world = DimensionManager.getWorld(dimBlockPos.dimid)) == null) {
-							DimensionManager.initDimension(dimBlockPos.dimid);
-							world = DimensionManager.getWorld(dimBlockPos.dimid);
-						}
-
-						if(world != null) {
-							TileEntity tile = world.getTileEntity(dimBlockPos.pos.getBlockPos());
-
-							if(tile instanceof TileSpaceElevator) {
-
-								summonCapsule();
-
-								capsule.setDst(dimBlockPos);
-								capsule.setSourceTile(new DimensionBlockPosition(this.getWorld().provider.getDimension(), new HashedBlockPosition(getPos())));
-								markDirty();
-								this.world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
-								return;
-							}
-						}
-					}
-				} catch (IndexOutOfBoundsException e) {
-					AdvancedRocketry.logger.warn("Space Elevator at location " + this.pos + " recieved invalid button press!");
-					//Sigh...
-				}
-				dimBlockPos = null;
-			}
-		}
-
 		super.useNetworkData(player, side, id, nbt);
 	}
 
@@ -333,7 +233,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 		double capsulePosX = getLandingLocationX();
 		double capsulePosZ = getLandingLocationZ();
-		for (EntityElevatorCapsule e :world.getEntitiesWithinAABB(EntityElevatorCapsule.class, new AxisAlignedBB(capsulePosX - 3, getPos().getY() - 1, capsulePosZ - 3, capsulePosX + 3, EntityElevatorCapsule.MAX_HEIGHT, capsulePosZ + 3))) {
+		for (EntityElevatorCapsule e :world.getEntitiesWithinAABB(EntityElevatorCapsule.class, new AxisAlignedBB(capsulePosX - 3, 0, capsulePosZ - 3, capsulePosX + 3, EntityElevatorCapsule.MAX_HEIGHT, capsulePosZ + 3))) {
 			if(!e.isInMotion() && !e.isDead)
 				capsule = e;
 		}
@@ -343,18 +243,18 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 	public double getLandingLocationX() {
 		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
-		return getPos().getX() + facing.getFrontOffsetX()*-3 - facing.getFrontOffsetZ() + 0.5;
+		return getPos().getX() + facing.getFrontOffsetX()*-5 - facing.getFrontOffsetZ()*2 + 0.5;
 	}
 
 	public double getLandingLocationZ() {
 		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
-		return getPos().getZ() + facing.getFrontOffsetX()*1 + facing.getFrontOffsetZ()*-3 + 0.5;
+		return getPos().getZ() + facing.getFrontOffsetX()*2 + facing.getFrontOffsetZ()*-5 + 0.5;
 	}
 
 
 	public void summonCapsule() {
 		//Don't spawn a new capsule if one exists
-		if(getCapsuleOnLine() != null)
+		if(getCapsuleOnLine() != null || !isTetherConnected())
 			return;
 
 		capsule = new EntityElevatorCapsule(world);
@@ -375,37 +275,31 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 
 		double capsulePosX = getLandingLocationX();
 		double capsulePosZ = getLandingLocationZ();
-		capsule.setPosition(capsulePosX, getPos().getY() - 1, capsulePosZ);
+		int yOffset = (isAnchorOnSpaceStation()) ? - 4 : 1;
+		capsule.setPosition(capsulePosX, getPos().getY() + yOffset, capsulePosZ);
 
+		capsule.setDst(dimBlockPos);
 		capsule.setSourceTile(new DimensionBlockPosition(world.provider.getDimension(), new HashedBlockPosition(this.getPos())));
 
 		world.spawnEntity(capsule);
 	}
 
 	@Override
-	public List<BlockMeta> getAllowableWildCardBlocks() {
-		List<BlockMeta> list = super.getAllowableWildCardBlocks();
-		list.add(new BlockMeta(Blocks.STONE));
-		list.add(new BlockMeta(Blocks.SANDSTONE));
-		list.add(new BlockMeta(Blocks.IRON_BLOCK));
-		list.add(new BlockMeta(LibVulpesBlocks.blockStructureBlock));
-		list.add(new BlockMeta(LibVulpesBlocks.blockAdvStructureBlock));
-
-		return list;
-	}
-
-	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity,
-			EntityPlayer player, World world) {
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
+							   EntityPlayer player, World world) {
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, world.provider.getDimension());
+		if(dimBlockPos != null) {
+			player.sendMessage(new TextComponentTranslation("msg.spaceElevator.linkCannotChangeError"));
+			return false;
+		}
 		if(!world.isRemote)
 			player.sendMessage(new TextComponentTranslation("msg.linker.program"));
 		return true;
 	}
 
 	@Override
-	public boolean onLinkComplete(ItemStack item, TileEntity entity,
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
 			EntityPlayer player, World myWorld) {
 
 		if(!myWorld.isRemote) {
@@ -421,175 +315,98 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 				return false;
 			}
 
+
 			World world;
 			if((world = DimensionManager.getWorld(dimPos.dimid)) == null) {
 				DimensionManager.initDimension(dimPos.dimid);
 				world = DimensionManager.getWorld(dimPos.dimid);
 			}
 
+			if(!isDestinationValid(dimPos.dimid, dimPos, new HashedBlockPosition(getPos()), myWorld.provider.getDimension())) {
+				player.sendMessage(new TextComponentTranslation("msg.spaceElevator.linkNotGeostationaryError"));
+				return false;
+			}
+
+			if(wouldTetherBreakOnConnect(dimPos.dimid, dimPos, new HashedBlockPosition(getPos()), myWorld.provider.getDimension())) {
+				player.sendMessage(new TextComponentTranslation("msg.spaceElevator.tetherWouldBreakError"));
+				return false;
+			}
+
+			if(dimBlockPos != null) {
+				player.sendMessage(new TextComponentTranslation("msg.spaceElevator.linkCannotChangeError"));
+				return false;
+			}
+
 			if(world != null) {
 				TileEntity tile = world.getTileEntity(dimPos.pos.getBlockPos());
 				if(tile instanceof TileSpaceElevator) {
+					updateTetherLinkPosition(new DimensionBlockPosition(this.world.provider.getDimension(), new HashedBlockPosition(getPos())), dimPos);
+					((TileSpaceElevator) tile).updateTetherLinkPosition(dimPos, new DimensionBlockPosition(this.world.provider.getDimension(), new HashedBlockPosition(getPos())));
+					player.sendMessage(new TextComponentTranslation("msg.spaceElevator.newDstAdded"));
 
-					boolean flag = getChip() != null && ((TileSpaceElevator) tile).getChip() != null;
-					if(flag) {
-						addEntryToList(dimPos);
-						addEntryToList(new DimensionBlockPosition(this.world.provider.getDimension(), new HashedBlockPosition(getPos())));
-						((TileSpaceElevator) tile).addEntryToList(new DimensionBlockPosition(this.world.provider.getDimension(), new HashedBlockPosition(getPos())));
-						((TileSpaceElevator) tile).addEntryToList(dimPos);
-						
-						player.sendMessage(new TextComponentTranslation("msg.spaceElevator.newDstAdded"));
-						return true;
+					if (capsule != null) {
+						capsule.setDst(dimBlockPos);
 					}
-					else
-					{
-						player.sendMessage(new TextComponentTranslation("msg.spaceElevator.noChipError"));
-						return false;
-					}
+					this.markDirty();
+					this.world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
+					this.isTetherConnected = true;
+
+					return true;
 				}
 			}
+
 		}
 
 		return false;
 	}
 
-	private ItemStack getChip() {
-		if(inv.getStackInSlot(0) != null && inv.getStackInSlot(0).getItem() instanceof ItemSpaceElevatorChip)
-			return inv.getStackInSlot(0);
-		return null;
+	public boolean isAnchorOnSpaceStation() {
+		return world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId;
 	}
 
-	private boolean addEntryToList(DimensionBlockPosition pos) {
-		ItemStack chip = getChip();
-		if(chip != null) {
-			List<DimensionBlockPosition> list = ((ItemSpaceElevatorChip)AdvancedRocketryItems.itemSpaceElevatorChip).getBlockPositions(chip);
-
-			if(!list.contains(pos))
-				list.add(pos);
-
-			((ItemSpaceElevatorChip)AdvancedRocketryItems.itemSpaceElevatorChip).setBlockPositions(chip, list);
-			return true;
+	public void updateTetherLinkPosition(DimensionBlockPosition myPosition, DimensionBlockPosition dimensionBlockPosition) {
+		if (myPosition.dimid == ARConfiguration.getCurrentConfig().spaceDimId && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()) != null) {
+			if (dimensionBlockPosition != null) {
+				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation(0, EnumFacing.EAST);
+				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation( 0, EnumFacing.UP);
+				SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setDeltaRotation( 0, EnumFacing.NORTH);
+			}
+			SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(myPosition.pos.getBlockPos()).setIsAnchored(dimensionBlockPosition != null);
 		}
-		return false;
+		dimBlockPos = dimensionBlockPosition;
+	}
+
+	public boolean isTetherConnected() {
+		return isTetherConnected;
 	}
 
 	@Override
-	public String getName() {
-		return getModularInventoryName();
-	}
-
-	@Override
-	public boolean hasCustomName() {
-		return false;
-	}
-
-	@Override
-	public int getSizeInventory() {
-		return inv.getSizeInventory();
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int index) {
-		return inv.getStackInSlot(index);
-	}
-
-	@Override
-	public ItemStack decrStackSize(int index, int count) {
-		return inv.decrStackSize(index, count);
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int index) {
-		return inv.removeStackFromSlot(index);
-	}
-
-	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) {
-		inv.setInventorySlotContents(index, stack);
-	}
-
-	@Override
-	public int getInventoryStackLimit() {
-		return inv.getInventoryStackLimit();
-	}
+	public String getModularInventoryName() { return AdvancedRocketryBlocks.blockSpaceElevatorController.getLocalizedName(); }
 
 	@Override
 	public boolean isUsableByPlayer(EntityPlayer player) {
 		return true;
 	}
-	
-	@Override
-	public boolean isEmpty() {
-		return inv.isEmpty();
-	}
-
-	@Override
-	public void openInventory(EntityPlayer player) {
-		inv.openInventory(player);
-	}
-
-	@Override
-	public void closeInventory(EntityPlayer player) {
-		inv.closeInventory(player);
-
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		return inv.isItemValidForSlot(index, stack);
-	}
-
-	@Override
-	public int getField(int id) {
-		return inv.getField(id);
-	}
-
-	@Override
-	public void setField(int id, int value) {
-		inv.setField(id, value);
-	}
-
-	@Override
-	public int getFieldCount() {
-		return inv.getFieldCount();
-	}
-
-	@Override
-	public void clear() {
-		inv.clear();
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		inv.writeToNBT(nbt);
-		return super.writeToNBT(nbt);
-	}
 
 	@Override
 	public void writeNetworkData(NBTTagCompound nbt) {
-
-
-		if(dimBlockPos != null)
-		{
+		if(dimBlockPos != null) {
 			nbt.setInteger("dstDimId", dimBlockPos.dimid);
 			nbt.setIntArray("dstPos", new int[] { dimBlockPos.pos.x, dimBlockPos.pos.y, dimBlockPos.pos.z });
-
-		}
+			nbt.setBoolean("tether", isTetherConnected);
+		} else
 
 		super.writeNetworkData(nbt);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		inv.readFromNBT(nbt);
 		super.readFromNBT(nbt);
 	}
 
 	@Override
 	public void readNetworkData(NBTTagCompound nbt) {
 		super.readNetworkData(nbt);
-
-
 		if(nbt.hasKey("dstDimId")) {
 			int id = nbt.getInteger("dstDimId");
 			int[] pos = nbt.getIntArray("dstPos");
@@ -597,6 +414,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkab
 		}
 		else
 			dimBlockPos = null;
+		isTetherConnected = nbt.getBoolean("tether");
 
 		landingPadDisplayText.setText(dimBlockPos != null ? dimBlockPos.toString() : LibVulpes.proxy.getLocalizedString("msg.label.noneSelected"));
 	}

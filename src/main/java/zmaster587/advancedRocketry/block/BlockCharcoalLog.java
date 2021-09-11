@@ -1,19 +1,18 @@
 package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.BlockLog;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Random;
 
 public class BlockCharcoalLog extends BlockLog {
@@ -25,9 +24,10 @@ public class BlockCharcoalLog extends BlockLog {
 	}
 
 	@Override
+	@Nonnull
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {LOG_AXIS});
+		return new BlockStateContainer(this, LOG_AXIS);
 	}
 
 	@Override
@@ -36,21 +36,16 @@ public class BlockCharcoalLog extends BlockLog {
 	}
 	
 	@Override
-	public ItemStack getPickBlock(IBlockState state, RayTraceResult target,
-			World world, BlockPos pos, EntityPlayer player) {
-		// TODO Auto-generated method stub
-		return super.getPickBlock(state, target, world, pos, player);
-	}
-	
-	@Override
-	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+	@Nonnull
+	public ItemStack getItem(World worldIn, BlockPos pos, @Nullable IBlockState state) {
         Item item = Item.getItemFromBlock(this);
-        return item == null ? null : new ItemStack(item, 1, 0);
+        return item.equals(Items.AIR) ? ItemStack.EMPTY : new ItemStack(item, 1, 0);
 	}
 	
 	
 	
-    public IBlockState getStateFromMeta(int meta)
+    @Nonnull
+	public IBlockState getStateFromMeta(int meta)
     {
         IBlockState iblockstate = this.getDefaultState();
 
@@ -76,7 +71,7 @@ public class BlockCharcoalLog extends BlockLog {
 	public int getMetaFromState(IBlockState state)
 	{
 		int i = 0;
-		switch ((BlockLog.EnumAxis)state.getValue(LOG_AXIS))
+		switch (state.getValue(LOG_AXIS))
 		{
 		case X:
 			i |= 4;
@@ -92,6 +87,7 @@ public class BlockCharcoalLog extends BlockLog {
 	}
 
 	@Override
+	@Nonnull
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 		return Items.COAL;
 	}
@@ -101,7 +97,7 @@ public class BlockCharcoalLog extends BlockLog {
 		return 1;
 	}
 
-	public int quantityDroppedWithBonus(int i, Random rand)
+	public int quantityDroppedWithBonus(int i, @Nonnull Random rand)
 	{
 		return this.quantityDropped(rand) + (i > 0 ? rand.nextInt(i) : 0);
 	}

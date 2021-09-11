@@ -1,0 +1,144 @@
+{
+    "ambientocclusion": false,
+    "textures": {
+        "generic": "libvulpes:blocks/machineGeneric",
+        "solar": "advancedrocketry:blocks/solar",
+        "support": "advancedrocketry:blocks/smallconnector",
+        "panel": "advancedrocketry:blocks/panelSide",
+        "particle": "advancedrocketry:blocks/solar"
+    },
+    "elements": [
+
+
+        {
+            "name": "BottomL1",
+            "from": [ 0, 6, 0 ],
+            "to": [ 16, 6, 16 ],
+            "faces": {
+                "down": { "texture": "#solar", "uv": [ 0, 0, 16, 16 ] }
+            }
+        },
+        {
+            "name": "TopL1",
+            "from": [ 0, 7, 0 ],
+            "to": [ 16, 7, 16 ],
+            "faces": {
+                "up": { "texture": "#generic", "uv": [ 0, 0, 16, 16 ] }
+            }
+        },
+        {
+            "name": "BottomL2",
+            "from": [ 0, 9, 0 ],
+            "to": [ 16, 9, 16 ],
+            "faces": {
+                "down": { "texture": "#generic", "uv": [ 0, 0, 16, 16 ] }
+            }
+        },
+        {
+            "name": "TopL2",
+            "from": [ 0, 10, 0 ],
+            "to": [ 16, 10, 16 ],
+            "faces": {
+                "up": { "texture": "#solar", "uv": [ 0, 0, 16, 16 ] }
+            }
+        },
+        {
+            "name": "NorthL1",
+            "from": [ 0, 6, 0 ],
+            "to": [ 16, 7, 0 ],
+            "faces": {
+                "north": { "texture": "#panel", "uv": [ 0, 0, 16, 1 ] }
+            }
+        },
+        {
+            "name": "SouthL1",
+            "from": [ 0, 6, 16 ],
+            "to": [ 16, 7, 16 ],
+            "faces": {
+                "south": { "texture": "#panel", "uv": [ 0, 0, 16, 1 ] }
+            }
+        },
+        {
+            "name": "EastL1",
+            "from": [ 16, 6, 0 ],
+            "to": [ 16, 7, 16 ],
+            "faces": {
+                "east": { "texture": "#panel", "uv": [ 0, 0, 16, 1 ] }
+            }
+        },
+        {
+            "name": "WestL1",
+            "from": [ 0, 6, 0 ],
+            "to": [ 0, 7, 16 ],
+            "faces": {
+                "west": { "texture": "#panel", "uv": [ 0, 0, 16, 1 ] }
+            }
+        },
+        {
+            "name": "NorthL2",
+            "from": [ 0, 9, 0 ],
+            "to": [ 16, 10, 0 ],
+            "faces": {
+                "north": { "texture": "#panel", "uv": [ 0, 0, 16, 1 ] }
+            }
+        },
+        {
+            "name": "SouthL2",
+            "from": [ 0, 9, 16 ],
+            "to": [ 16, 10, 16 ],
+            "faces": {
+                "south": { "texture": "#panel", "uv": [ 0, 0, 16, 1 ] }
+            }
+        },
+        {
+            "name": "EastL2",
+            "from": [ 16, 9, 0 ],
+            "to": [ 16, 10, 16 ],
+            "faces": {
+                "east": { "texture": "#panel", "uv": [ 0, 0, 16, 1 ] }
+            }
+        },
+        {
+            "name": "WestL2",
+            "from": [ 0, 9, 0 ],
+            "to": [ 0, 10, 16 ],
+            "faces": {
+                "west": { "texture": "#panel", "uv": [ 0, 0, 16, 1 ] }
+            }
+        },
+
+
+        {
+            "name": "NorthMiddle",
+            "from": [ 4, 7, 4 ],
+            "to": [ 12, 9, 4 ],
+            "faces": {
+                "north": { "texture": "#support", "uv": [ 4, 7, 12, 9 ] }
+            }
+        },
+        {
+            "name": "SouthMiddle",
+            "from": [ 4, 7, 12 ],
+            "to": [ 12, 9, 12 ],
+            "faces": {
+                "south": { "texture": "#support", "uv": [ 4, 7, 12, 9 ] }
+            }
+        },
+        {
+            "name": "EastMiddle",
+            "from": [ 12, 7, 4 ],
+            "to": [ 12, 9, 12 ],
+            "faces": {
+                "east": { "texture": "#support", "uv": [ 4, 7, 12, 9 ] }
+            }
+        },
+        {
+            "name": "WestMiddle",
+            "from": [ 4, 7, 4 ],
+            "to": [ 4, 9, 12 ],
+            "faces": {
+                "west": { "texture": "#support", "uv": [ 4, 7, 12, 9 ] }
+            }
+        }
+    ]
+}

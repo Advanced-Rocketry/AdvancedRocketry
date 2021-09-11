@@ -16,14 +16,12 @@ public class AdvancedRocketryItems {
 	public static final ArmorMaterial spaceSuit = EnumHelper.addArmorMaterial("spaceSuit", "", ArmorMaterial.DIAMOND.getDurability(EntityEquipmentSlot.CHEST), new int[] {1,1,1,1}, 0, new SoundEvent(new ResourceLocation("")), 0);
 	
 	public static Item itemWafer;
-	public static Item itemAnthracene;
 	public static Item itemCircuitPlate;
 	public static Item itemIC;
 	public static Item itemSatellitePowerSource;
 	public static Item itemSatellitePrimaryFunction;
 	public static Item itemOreScanner;
 	public static Item itemQuartzCrucible;
-	public static Item itemSaplingBlue; 
 	public static Item itemDataUnit;
 	public static Item itemSatellite;
 	public static Item itemSatelliteIdChip;
@@ -36,7 +34,6 @@ public class AdvancedRocketryItems {
 	public static Item itemSpaceSuit_Chest;
 	public static Item itemSpaceSuit_Leggings;
 	public static Item itemSpaceSuit_Boots;
-	public static Item itemBucketRocketFuel;
 	public static Item itemSmallAirlockDoor;
 	public static Item itemCarbonScrubberCartridge;
 	public static Item itemSealDetector;
@@ -48,15 +45,9 @@ public class AdvancedRocketryItems {
 	public static Item itemUpgrade;
 	public static Item itemAtmAnalyser;
 	public static Item itemBiomeChanger;
-	public static Item itemBucketNitrogen;
-	public static Item itemBucketHydrogen;
-
-	public static Item itemBucketOxygen;
-	public static Item itemAstroBed;
 	public static Item itemBasicLaserGun;
 	public static Item itemSpaceElevatorChip;
 	public static Item itemBeaconFinder;
 	public static Item itemThermite;
-	public static Item itemBucketEnrichedLava;
 	public static Item itemHovercraft;
 }

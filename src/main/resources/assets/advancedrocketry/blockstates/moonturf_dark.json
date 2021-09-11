@@ -1,5 +1,14 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:cube_all",
+        "textures": {
+            "all": "advancedrocketry:blocks/moon_turf_dark"
+        }
+    },
     "variants": {
-        "normal": { "model": "advancedrocketry:moon_turf_dark" }
+        "normal": [{}],
+        "inventory": [{}]
     }
 }

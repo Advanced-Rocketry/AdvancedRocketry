@@ -1,10 +1,10 @@
 package zmaster587.advancedRocketry.api.atmosphere;
 
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 /** Interface used to talk to the internal seal handler for advanced rocketry.
  *
@@ -42,5 +42,5 @@ public interface IAtmosphereSealHandler
     /**
      * Returns a list of blocks that can have been forced to be sealable
      */
-    List<Block> getOverridenSealableBlocks();
+    List<Block> getOverriddenSealableBlocks();
 }

@@ -1,16 +1,13 @@
 package zmaster587.advancedRocketry.world.biome;
 
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 
 public class BiomeGenHotDryRock extends Biome {
 
-	public BiomeGenHotDryRock() {
-		super(new BiomeProperties("HotDryRock").setRainDisabled().setBaseHeight(1f).setHeightVariation(0.01f).setRainfall(0).setTemperature(0.9f));
-		
-        this.setRegistryName(new ResourceLocation("advancedrocketry:HotDryRock"));
-		
+	public BiomeGenHotDryRock(BiomeProperties properties) {
+		super(properties);
+
 		//hot and stinks
 		this.decorator.generateFalls=false;
 		this.decorator.flowersPerChunk=0;

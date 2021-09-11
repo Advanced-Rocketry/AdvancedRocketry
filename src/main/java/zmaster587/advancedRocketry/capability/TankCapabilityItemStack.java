@@ -7,13 +7,15 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 
+import javax.annotation.Nonnull;
+
 public class TankCapabilityItemStack implements ICapabilityProvider {
 	
-	ItemStack stack;
-	FluidHandlerItemStack fluidHandler;
+	private ItemStack stack;
+	private FluidHandlerItemStack fluidHandler;
 	
 	
-	public TankCapabilityItemStack(ItemStack stack, int capacity) {
+	public TankCapabilityItemStack(@Nonnull ItemStack stack, int capacity) {
 		fluidHandler = new FluidHandlerItemStack(stack, capacity);
 	}
 	

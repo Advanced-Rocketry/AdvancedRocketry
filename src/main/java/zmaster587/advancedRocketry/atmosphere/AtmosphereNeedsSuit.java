@@ -9,6 +9,8 @@ import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
 import zmaster587.advancedRocketry.util.ItemAirUtils;
 
+import javax.annotation.Nonnull;
+
 public class AtmosphereNeedsSuit extends AtmosphereType {
 	
 	public AtmosphereNeedsSuit(boolean canTick, boolean isBreathable, boolean allowsCombustion, String name) {
@@ -39,7 +41,7 @@ public class AtmosphereNeedsSuit extends AtmosphereType {
 				( ( (!onlyNeedsMask() && protectsFrom(leg) && protectsFrom(feet) ) || onlyNeedsMask() ) && protectsFrom(helm) && protectsFrom(chest) );
 		}
 
-	protected boolean protectsFrom(ItemStack stack) {
+	protected boolean protectsFrom(@Nonnull ItemStack stack) {
 		return (ItemAirUtils.INSTANCE.isStackValidAirContainer(stack) && new ItemAirUtils.ItemAirWrapper(stack).protectsFromSubstance(this, stack, true) ) || (!stack.isEmpty() && stack.hasCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null) &&
 				stack.getCapability(CapabilitySpaceArmor.PROTECTIVEARMOR, null).protectsFromSubstance(this, stack, true));
 	}

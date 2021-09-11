@@ -17,7 +17,7 @@ public class CableNetwork {
 
 	int networkID;
 
-	protected static HashSet<Integer> usedIds = new HashSet<Integer>();
+	protected static HashSet<Integer> usedIds = new HashSet<>();
 
 	CopyOnWriteArraySet<Entry<TileEntity, EnumFacing>> sources;
 
@@ -27,8 +27,8 @@ public class CableNetwork {
 
 	protected CableNetwork() {
 
-		sources = new CopyOnWriteArraySet<Entry<TileEntity, EnumFacing>>();
-		sinks = new CopyOnWriteArraySet<Entry<TileEntity, EnumFacing>>();
+		sources = new CopyOnWriteArraySet<>();
+		sinks = new CopyOnWriteArraySet<>();
 	}
 
 	public Set<Entry<TileEntity, EnumFacing>> getSources() {
@@ -41,42 +41,36 @@ public class CableNetwork {
 
 	public void addSource(TileEntity tile, EnumFacing dir) {
 
-		Iterator<Entry<TileEntity, EnumFacing>> iter = sources.iterator();
-
-		while(iter.hasNext()) {
-			Entry<TileEntity, EnumFacing> entry = iter.next();
-			TileEntity tile2 =  entry.getKey();
-			if(tile2.equals(tile)) {
+		for (Entry<TileEntity, EnumFacing> entry : sources) {
+			TileEntity tile2 = entry.getKey();
+			if (tile2.equals(tile)) {
 				return;
 			}
-			if(tile2.getPos().compareTo(tile.getPos()) == 0) {
+			if (tile2.getPos().compareTo(tile.getPos()) == 0) {
 				sources.remove(entry);
 				//iter.remove();
 				break;
 			}
 		}
 
-		sources.add(new SingleEntry<TileEntity, EnumFacing>(tile, dir));
+		sources.add(new SingleEntry<>(tile, dir));
 	}
 
 	public void addSink(TileEntity tile, EnumFacing dir) {
 
-		Iterator<Entry<TileEntity, EnumFacing>> iter = sinks.iterator();
-
-		while(iter.hasNext()) {
-			Entry<TileEntity, EnumFacing> entry = iter.next();
+		for (Entry<TileEntity, EnumFacing> entry : sinks) {
 			TileEntity tile2 = entry.getKey();
-			if(tile2.equals(tile)) {
+			if (tile2.equals(tile)) {
 				return;
 			}
-			if(tile2.getPos().compareTo(tile.getPos()) == 0) {
+			if (tile2.getPos().compareTo(tile.getPos()) == 0) {
 				sinks.remove(entry);
 				//iter.remove();
 				break;
 			}
 		}
 
-		sinks.add(new SingleEntry<TileEntity, EnumFacing>(tile, dir));
+		sinks.add(new SingleEntry<>(tile, dir));
 	}
 
 	public void writeToNBT(NBTTagCompound nbt) {
@@ -100,7 +94,7 @@ public class CableNetwork {
 
 		int id = random.nextInt();
 
-		while(usedIds.contains(id)){ id = random.nextInt(); };
+		while(usedIds.contains(id)){ id = random.nextInt(); }
 
 		CableNetwork net = new CableNetwork();
 
@@ -139,18 +133,18 @@ public class CableNetwork {
 
 	@Override 
 	public String toString() {
-		String output = "NumCables:   " + numCables + "     Sources: ";
+		StringBuilder output = new StringBuilder("NumCables:   " + numCables + "     Sources: ");
 		for(Entry<TileEntity, EnumFacing> obj : sources) {
-			TileEntity tile = (TileEntity)obj.getKey();
-			output += tile.getPos().getX() + "," + tile.getPos().getY() + "," + tile.getPos().getZ() + " ";
+			TileEntity tile = obj.getKey();
+			output.append(tile.getPos().getX()).append(",").append(tile.getPos().getY()).append(",").append(tile.getPos().getZ()).append(" ");
 		}
 
-		output += "    Sinks: ";
+		output.append("    Sinks: ");
 		for(Entry<TileEntity, EnumFacing> obj : sinks) {
-			TileEntity tile = (TileEntity)obj.getKey();
-			output += tile.getPos().getX() + "," + tile.getPos().getY() + "," + tile.getPos().getZ() + " ";
+			TileEntity tile = obj.getKey();
+			output.append(tile.getPos().getX()).append(",").append(tile.getPos().getY()).append(",").append(tile.getPos().getZ()).append(" ");
 		}
-		return output;
+		return output.toString();
 	}
 
 	/**
@@ -161,31 +155,31 @@ public class CableNetwork {
 		sinks.addAll(cableNetwork.getSinks());
 
 		for(Entry<TileEntity, EnumFacing> obj : cableNetwork.getSinks()) {
-			boolean canMerge = true;
+			//boolean canMerge = true;
 			for(Entry<TileEntity, EnumFacing> obj2 : sinks) {
 				if(obj.getKey().getPos().compareTo(obj2.getKey().getPos()) == 0 && obj.getValue() == obj2.getValue()) {
-					canMerge = false;
+					//canMerge = false;
 					return false;
 				}
 			}
 
-			if(canMerge) {
+			//if(canMerge) {
 				sinks.add(obj);
-			}
+			//}
 		}
 
 		for(Entry<TileEntity, EnumFacing> obj : cableNetwork.getSources()) {
-			boolean canMerge = true;
+			//boolean canMerge = true;
 			for(Entry<TileEntity, EnumFacing> obj2 : sources) {
 				if(obj.getKey().getPos().compareTo(obj2.getKey().getPos()) == 0 && obj.getValue() == obj2.getValue()) {
-					canMerge = false;
+					//canMerge = false;
 					return false;
 				}
 			}
 
-			if(canMerge) {
+			//if(canMerge) {
 				sources.add(obj);
-			}
+			//}
 		}
 		return true;
 	}

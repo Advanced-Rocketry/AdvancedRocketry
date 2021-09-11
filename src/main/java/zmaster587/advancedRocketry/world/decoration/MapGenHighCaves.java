@@ -20,9 +20,9 @@ public class MapGenHighCaves extends MapGenCaveExt {
 
         for (int j = 0; j < i; ++j)
         {
-            double d0 = (double)(chunkX * 16 + this.rand.nextInt(16));
+            double d0 = chunkX * 16 + this.rand.nextInt(16);
             double d1 = (double)this.rand.nextInt(this.rand.nextInt(64) + 8) + 90;
-            double d2 = (double)(chunkZ * 16 + this.rand.nextInt(16));
+            double d2 = chunkZ * 16 + this.rand.nextInt(16);
             int k = 1;
 
             if (this.rand.nextInt(4) == 0)

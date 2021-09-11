@@ -1,12 +1,42 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:orientable",
+        "textures": {
+            "top": "advancedrocketry:blocks/blastbrick",
+            "front": "advancedrocketry:blocks/blastbrickfront",
+            "side": "advancedrocketry:blocks/blastbrick"
+        }
+    },
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:arcFurnace" },
-        "facing=south,state=false": { "model": "advancedrocketry:arcFurnace", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:arcFurnace", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:arcFurnace", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:arcFurnace_on" },
-        "facing=south,state=true": { "model": "advancedrocketry:arcFurnace_on", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:arcFurnace_on", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:arcFurnace_on", "y": 90 }
+        "facing=north,state=false": [{}],
+        "facing=south,state=false": { "model": "minecraft:orientable", "y": 180 },
+        "facing=west,state=false":  { "model": "minecraft:orientable", "y": 270 },
+        "facing=east,state=false":  { "model": "minecraft:orientable", "y": 90 },
+        "facing=north,state=true": {
+            "model": "minecraft:orientable",
+            "textures": {
+                "front": "advancedrocketry:blocks/blastbrickfront_active"
+            }
+        },
+        "facing=south,state=true": {
+            "model": "minecraft:orientable", "y": 180,
+            "textures": {
+                "front": "advancedrocketry:blocks/blastbrickfront_active"
+            }},
+        "facing=west,state=true":  {
+            "model": "minecraft:orientable", "y": 270,
+            "textures": {
+                "front": "advancedrocketry:blocks/blastbrickfront_active"
+            }
+        },
+        "facing=east,state=true":  {
+            "model": "minecraft:orientable", "y": 90,
+            "textures": {
+                "front": "advancedrocketry:blocks/blastbrickfront_active"
+            }
+        },
+        "inventory" : [{}]
     }
 }

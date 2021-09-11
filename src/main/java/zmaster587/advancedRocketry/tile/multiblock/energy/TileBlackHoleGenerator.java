@@ -1,40 +1,24 @@
 package zmaster587.advancedRocketry.tile.multiblock.energy;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.api.IUniversalEnergyTransmitter;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -44,8 +28,10 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerProducer;
 import zmaster587.libVulpes.util.MultiBattery;
-import zmaster587.libVulpes.util.Vector3F;
-import zmaster587.libVulpes.util.ZUtils;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class TileBlackHoleGenerator extends TileMultiPowerProducer implements ITickable {
 	static final Object[][][] structure = new Object[][][] {
@@ -75,9 +61,9 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 			{null, null, null}
 		}};
 
-		int powerMadeLastTick, prevPowerMadeLastTick;
-		ModuleText textModule;
-		boolean initialCheck;
+		private int powerMadeLastTick, prevPowerMadeLastTick;
+		private ModuleText textModule;
+		private boolean initialCheck;
 		private long last_usage;
 
 		public TileBlackHoleGenerator() {
@@ -121,8 +107,10 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 
 		@Override
 		public String getMachineName() {
-			return "tile.blackholegenerator.name";
+			return AdvancedRocketryBlocks.blockBlackHoleGenerator.getLocalizedName();
 		}
+
+
 		public int getPowerMadeLastTick() {
 			return powerMadeLastTick;
 		}
@@ -132,7 +120,8 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 			super.onInventoryUpdated();
 			attemptFire();
 		}
-		
+
+		@Nonnull
 		private ItemStack consumeItem()
 		{
 			for (IInventory i : getItemInPorts())
@@ -150,7 +139,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 			return ItemStack.EMPTY;
 		}
 		
-		private int getTimeFromStack(ItemStack stack)
+		private int getTimeFromStack(@Nonnull ItemStack stack)
 		{
 			for(Entry<ItemStack, Integer>  i : ARConfiguration.getCurrentConfig().blackHoleGeneratorBlocks.entrySet()) {
 				if(i.getKey().getItem() == stack.getItem() && i.getKey().getItemDamage() == stack.getItemDamage())
@@ -186,10 +175,10 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 			
 			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId)
 			{
-				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos);
-				if(obj != null)
+				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos);
+				if(spaceObject != null)
 				{
-					DimensionProperties properties = (DimensionProperties) obj.getProperties().getParentProperties();
+					DimensionProperties properties = (DimensionProperties) spaceObject.getProperties().getParentProperties();
 					return properties != null && (properties.isStar() && properties.getStarData().isBlackHole());
 				}
 			}
@@ -212,14 +201,14 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 			if(!world.isRemote) {
 				if(isAroundBlackHole())
 				{
-					float energyRecieved = 0;
+					float energyReceived;
 					
 					
 					//Check to see if we're ready for another injection
 					attemptFire();
 					
-					energyRecieved = last_usage > this.world.getTotalWorldTime() ? 500f : 0f;
-					powerMadeLastTick = (int) (energyRecieved*ARConfiguration.getCurrentConfig().blackHolePowerMultiplier);
+					energyReceived = last_usage > this.world.getTotalWorldTime() ? 500f : 0f;
+					powerMadeLastTick = (int) (energyReceived*ARConfiguration.getCurrentConfig().blackHolePowerMultiplier);
 
 					if(powerMadeLastTick != prevPowerMadeLastTick) {
 						prevPowerMadeLastTick = powerMadeLastTick;

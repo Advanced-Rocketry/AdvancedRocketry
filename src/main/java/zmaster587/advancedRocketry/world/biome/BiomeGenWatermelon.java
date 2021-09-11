@@ -24,6 +24,6 @@ public class BiomeGenWatermelon extends Biome {
 	
 	@Override
 	public float getSpawningChance() {
-		return 1f; //Nothing spawns
+		return 0.7f; //Nothing spawns
 	}
 }

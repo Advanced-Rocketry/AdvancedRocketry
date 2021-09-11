@@ -1,0 +1,46 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"psp",
+	"abc",
+	"rrr"
+    ],
+    "key":
+    {
+        "r":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 2
+        },
+        "s":
+        {
+            "item": "advancedrocketry:misc",
+            "data": 0
+        },
+	"a":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 4
+        },
+	"b":
+        {
+            "item": "libvulpes:structuremachine"
+        },
+	"c":
+        {
+            "item": "advancedrocketry:ic",
+            "data": 3
+        },
+	"p":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "plateGold"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:precisionlaseretcher",
+        "count": 1
+    }
+}

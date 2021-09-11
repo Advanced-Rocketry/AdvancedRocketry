@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -20,7 +21,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleImage;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 
-import java.util.Iterator;
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,11 +41,11 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 				{null, null, null, null, null},
 				{null, null, null, null, null}},
 
-				{	{null,Blocks.IRON_BLOCK,Blocks.IRON_BLOCK,Blocks.IRON_BLOCK,null}, 
-					{Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK},
-					{Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK},
-					{Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK, Blocks.IRON_BLOCK},
-					{null,Blocks.IRON_BLOCK,Blocks.IRON_BLOCK,Blocks.IRON_BLOCK,null}},
+				{	{null,"blockAluminum","blockAluminum","blockAluminum",null},
+					{"blockAluminum", "blockAluminum", AdvancedRocketryBlocks.blockStructureTower, "blockAluminum", "blockAluminum"},
+					{"blockAluminum", AdvancedRocketryBlocks.blockStructureTower, LibVulpesBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureTower, "blockAluminum"},
+					{"blockAluminum", "blockAluminum", AdvancedRocketryBlocks.blockStructureTower, "blockAluminum", "blockAluminum"},
+					{null,"blockAluminum","blockAluminum","blockAluminum",null}},
 
 					{	{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR}, 
 						{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},
@@ -60,7 +61,7 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> list = new LinkedList<ModuleBase>();//super.getModules(ID, player);
+		List<ModuleBase> list = new LinkedList<>();//super.getModules(ID, player);
 
 		boolean suitable = true;
 		for(int y = this.getPos().getY() - 4; y > 0; y--) {
@@ -78,7 +79,7 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 			if(suitable && SpaceObjectManager.WARPDIMID != spaceObject.getOrbitingPlanetId()) {
 
 				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(spaceObject.getOrbitingPlanetId());
-				List<ModuleBase> list2 = new LinkedList<ModuleBase>();
+				List<ModuleBase> list2 = new LinkedList<>();
 				if(properties.isGasGiant()) {
 					list2.add(new ModuleText(32, 16, LibVulpes.proxy.getLocalizedString("msg.biomescanner.gas"), 0x202020));
 				} 
@@ -89,23 +90,19 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 
 					int i = 0;
 					if(properties.getId() == 0) {
-						Iterator<Biome> itr = Biome.REGISTRY.iterator();
-						while (itr.hasNext()) {
-							Biome biome = itr.next();
-							if(biome != null)
-								list2.add(new ModuleText(32, 16 + 12*(i++), AdvancedRocketry.proxy.getNameFromBiome(biome), 0x202020));
+						for (Biome biome : Biome.REGISTRY) {
+							if (biome != null)
+								list2.add(new ModuleText(32, 16 + 12 * (i++), AdvancedRocketry.proxy.getNameFromBiome(biome), 0x202020));
 						}
 					}
 					else {
-						Iterator<BiomeEntry> itr = properties.getBiomes().iterator();
-						while (itr.hasNext()) {
-							BiomeEntry biome = itr.next();
-							list2.add(new ModuleText(32, 16 + 12*(i++), AdvancedRocketry.proxy.getNameFromBiome(biome.biome), 0x202020));
+						for (BiomeEntry biome : properties.getBiomes()) {
+							list2.add(new ModuleText(32, 16 + 12 * (i++), AdvancedRocketry.proxy.getNameFromBiome(biome.biome), 0x202020));
 						}
 					}
 				}
 				//Relying on a bug, is this safe?
-				ModuleContainerPan pan = new ModuleContainerPan(0, 16, list2, new LinkedList<ModuleBase>(), null, 148, 110, 0, -64, 0, 1000);
+				ModuleContainerPan pan = new ModuleContainerPan(0, 16, list2, new LinkedList<>(), null, 148, 110, 0, -64, 0, 1000);
 				list.add(pan);
 			}
 			else
@@ -116,6 +113,7 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 	}
 
 	@Override
+	@Nonnull
 	public AxisAlignedBB getRenderBoundingBox() {
 
 		return new AxisAlignedBB(pos.add(-5,-3,-5),pos.add(5,3,5));
@@ -123,6 +121,6 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 
 	@Override
 	public String getMachineName() {
-		return "tile.biomeScanner.name";
+		return AdvancedRocketryBlocks.blockBiomeScanner.getLocalizedName();
 	}
 }

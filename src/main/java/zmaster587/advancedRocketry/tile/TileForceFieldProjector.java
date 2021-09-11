@@ -6,15 +6,16 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 
 public class TileForceFieldProjector extends TileEntity implements ITickable {
 
 	private short extensionRange;
-	private static short MAX_RANGE = 32;
+	private final short MAX_RANGE = 32;
 
-	public TileForceFieldProjector() {
+    public TileForceFieldProjector() {
 		extensionRange = 0;
 	}
 
@@ -31,35 +32,54 @@ public class TileForceFieldProjector extends TileEntity implements ITickable {
 
 	@Override
 	public void update() {
-
 		if(world.getTotalWorldTime() % 5 == 0) {
 			if(world.isBlockPowered(getPos())) {
-				if(extensionRange < MAX_RANGE) {
+                if(extensionRange <= MAX_RANGE) {
 					if(extensionRange == 0)
 						extensionRange = 1;
 
 					IBlockState state = world.getBlockState(getPos());
+
 					if(state.getBlock() == AdvancedRocketryBlocks.blockForceFieldProjector) {
 						EnumFacing facing = BlockFullyRotatable.getFront(state);
 						BlockPos nextPos = pos.offset(facing, extensionRange);
+
 						if(world.getBlockState(nextPos).getBlock().isReplaceable(world, nextPos) ) {
 							world.setBlockState(nextPos, AdvancedRocketryBlocks.blockForceField.getDefaultState());
-							extensionRange++;
-						} else if(world.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField) {
+						}
+
+						if(world.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField) {
 							extensionRange++;
 						}
 					}
 				}
 			}
 			else if(extensionRange > 0) {
-
 				IBlockState state = world.getBlockState(getPos());
+
 				if(state.getBlock() == AdvancedRocketryBlocks.blockForceFieldProjector) {
 					EnumFacing facing = BlockFullyRotatable.getFront(state);
-					BlockPos nextPos = pos.offset(facing, extensionRange);
+					BlockPos nextPos;
 
-					if(world.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField)
+					//check to make sure the force field that was deleted last time stayed deleted
+					if(extensionRange < MAX_RANGE) {
+						nextPos = pos.offset(facing, extensionRange + 1);
+
+						if(world.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField) {
+							world.setBlockToAir(nextPos);
+							AdvancedRocketry.logger.warn("Force field projector at " + pos + " found a force field block at " + nextPos + " that didn't stay deleted on retraction! Attempting deletion again.");
+							return;
+						}
+					}
+					else if(extensionRange > MAX_RANGE)
+						extensionRange = MAX_RANGE;
+
+					nextPos = pos.offset(facing, extensionRange);
+
+					if(world.getBlockState(nextPos).getBlock() == AdvancedRocketryBlocks.blockForceField) {
 						world.setBlockToAir(nextPos);
+					}
+
 					extensionRange--;
 				}
 			}

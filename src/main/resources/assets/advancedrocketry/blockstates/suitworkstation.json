@@ -1,12 +1,24 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "advancedrocketry:orientablebottom",
+        "textures": {
+            "bottom": "libvulpes:blocks/machinegeneric",
+            "front": "advancedrocketry:blocks/panelsideworkstation",
+            "side": "advancedrocketry:blocks/panelsideworkstation",
+            "top": "advancedrocketry:blocks/suitworkstation"
+        }
+    },
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:suitWorkStation" },
-        "facing=south,state=false": { "model": "advancedrocketry:suitWorkStation", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:suitWorkStation", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:suitWorkStation", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:suitWorkStation" },
-        "facing=south,state=true": { "model": "advancedrocketry:suitWorkStation", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:suitWorkStation", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:suitWorkStation", "y": 90 }
+        "facing=north,state=false": [{}],
+        "facing=south,state=false": { "model": "advancedrocketry:orientablebottom", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:orientablebottom", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:orientablebottom", "y": 90 },
+        "facing=north,state=true": [{}],
+        "facing=south,state=true": { "model": "minecraft:orientable", "y": 180 },
+        "facing=west,state=true":  { "model": "minecraft:orientable", "y": 270 },
+        "facing=east,state=true":  { "model": "minecraft:orientable", "y": 90 },
+        "inventory" : [{}]
     }
 }

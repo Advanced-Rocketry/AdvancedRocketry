@@ -7,43 +7,53 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.MapGenBase;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.ARConfiguration;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.block.BlockMeta;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MapGenGeode extends MapGenBase {
 	int chancePerChunk;
 
-	private static  List<BlockMeta> ores; // = {new BlockMeta(Blocks.IRON_ORE), new BlockMeta(Blocks.GOLD_ORE), new BlockMeta(Blocks.REDSTONE_ORE), new BlockMeta(Blocks.LAPIS_ORE)};
+	private List<BlockMeta> ores; // = {new BlockMeta(Blocks.IRON_ORE), new BlockMeta(Blocks.GOLD_ORE), new BlockMeta(Blocks.REDSTONE_ORE), new BlockMeta(Blocks.LAPIS_ORE)};
 
 	public MapGenGeode(int chancePerChunk) {
 		this.chancePerChunk = chancePerChunk;
 
-		if(ores == null) {
-			ores = new LinkedList<BlockMeta>();
-			for(int i = 0; i < ARConfiguration.getCurrentConfig().standardGeodeOres.size(); i++) {
-				String oreDictName = ARConfiguration.getCurrentConfig().standardGeodeOres.get(i);
-				List<ItemStack> ores2 = OreDictionary.getOres(oreDictName);
+		ores = new ArrayList<>();
+		for(int i = 0; i < ARConfiguration.getCurrentConfig().standardGeodeOres.size(); i++) {
+			String oreDictName = ARConfiguration.getCurrentConfig().standardGeodeOres.get(i);
+			List<ItemStack> ores2 = OreDictionary.getOres(oreDictName);
 
-				if(ores2 != null && !ores2.isEmpty()) {
-					Block block = Block.getBlockFromItem(ores2.get(0).getItem());
-					if(block != null)
-						ores.add(new BlockMeta(block, ores2.get(0).getItemDamage()));
-				}
+			if(ores2 != null && !ores2.isEmpty()) {
+				Block block = Block.getBlockFromItem(ores2.get(0).getItem());
+				ores.add(new BlockMeta(block, ores2.get(0).getItemDamage()));
 			}
 		}
 	}
 
 	@Override
-	protected void recursiveGenerate(World world, int chunkX,
-			int chunkZ, int p_180701_4_, int p_180701_5_,
-			ChunkPrimer chunkPrimerIn) {
+	protected void recursiveGenerate(World world, int chunkX, int chunkZ, int p_180701_4_, int p_180701_5_, ChunkPrimer chunkPrimerIn) {
 
-		if(rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk || rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk) {
+		int dimid = world.provider.getDimension();
+		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(dimid);
+		ores.addAll(
+				props.geodeOres.stream()
+						.filter(OreDictionary::doesOreNameExist)
+						.map(s->OreDictionary.getOres(s).get(0))
+						.map(itemStack-> new BlockMeta(Block.getBlockFromItem(itemStack.getItem()),itemStack.getItemDamage()))
+						.filter(block -> !ores.contains(block))
+						.collect(Collectors.toSet())
+		);
+
+		if((rand.nextInt(chancePerChunk) == Math.abs(chunkX) % chancePerChunk || rand.nextInt(chancePerChunk) == Math.abs(chunkZ) % chancePerChunk) && canGeodeGenerate(world, chunkX * 16, chunkZ * 16)) {
 
 			int radius = rand.nextInt(ARConfiguration.getCurrentConfig().geodeVariation) + ARConfiguration.getCurrentConfig().geodeBaseSize - (ARConfiguration.getCurrentConfig().geodeVariation/2); //24; 24 -> 48
 
@@ -56,14 +66,12 @@ public class MapGenGeode extends MapGenBase {
 
 			BlockPos pos = new BlockPos(chunkX*16, 0, chunkZ*16);
 
-			int avgY = (int) 64;
+			int avgY = 64;
 
 			for(int x = 15; x >= 0; x--) {
 				for(int z = 15; z >= 0; z--) {
-					int index;
 
 					for(int y = 255; y >= 0; y--) {
-						index = (x * 16 + z) * 256 + y;
 						if(chunkPrimerIn.getBlockState(x, y, z) != Blocks.AIR.getDefaultState())
 							break;
 					}
@@ -76,7 +84,6 @@ public class MapGenGeode extends MapGenBase {
 
 					//Clears air for the ceiling
 					for(int dist = -count; dist < Math.min(count,3); dist++) {
-						index = (x * 16 + z) * 256 + avgY -dist;
 						chunkPrimerIn.setBlockState(x, avgY - dist, z, Blocks.AIR.getDefaultState());
 					}
 
@@ -111,5 +118,10 @@ public class MapGenGeode extends MapGenBase {
 				}
 			}
 		}
+	}
+
+	//Geodes should absolutely not be generating on top of liquid. That they could before was a huge oversight
+	private static boolean canGeodeGenerate(World world, int x, int z) {
+		return !BiomeDictionary.hasType(world.getBiome(new BlockPos(x, 0, z)), BiomeDictionary.Type.OCEAN) && !BiomeDictionary.hasType(world.getBiome(new BlockPos(x, 0, z)), BiomeDictionary.Type.RIVER) && !BiomeDictionary.hasType(world.getBiome(new BlockPos(x, 0, z)), BiomeDictionary.Type.BEACH);
 	}
 }

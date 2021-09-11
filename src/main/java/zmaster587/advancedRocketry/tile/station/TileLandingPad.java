@@ -10,23 +10,19 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.Constants;
-import zmaster587.advancedRocketry.api.EntityRocketBase;
-import zmaster587.advancedRocketry.api.IInfrastructure;
+import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketDismantleEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLandedEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.entity.EntityRocket;
-import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
+import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.util.StationLandingLocation;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesItems;
@@ -43,6 +39,7 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
 
+import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,8 +52,10 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 	public TileLandingPad() {
 		super(1);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanExtractSlot(0, true);
 		MinecraftForge.EVENT_BUS.register(this);
-		blockPos = new LinkedList<HashedBlockPosition>();
+		blockPos = new LinkedList<>();
 		moduleNameTextbox = new ModuleTextBox(this, 40, 30, 60, 12, 9);
 		name = "";
 	}
@@ -95,7 +94,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity,
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		ItemLinker.setMasterCoords(item, getPos());
 		ItemLinker.setDimId(item, world.provider.getDimension());
@@ -104,11 +103,11 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.landingPad.name";
+		return AdvancedRocketryBlocks.blockLandingPad.getLocalizedName();
 	}
 
 	@Override
-	public boolean onLinkComplete(ItemStack item, TileEntity entity,
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 
 		TileEntity tile = world.getTileEntity(ItemLinker.getMasterCoords(item));
@@ -153,10 +152,8 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 					rocket.linkInfrastructure(infrastructure);
 				}
 			ItemStack stack = getStackInSlot(0);
-			if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != Constants.INVALID_PLANET &&
-					event.getEntity() instanceof EntityRocket) {
-				((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), 
-						ItemLinker.getMasterX(stack) + 0.5f, ARConfiguration.getCurrentConfig().orbit, ItemLinker.getMasterZ(stack) + 0.5f);
+			if(stack.getItem() == LibVulpesItems.itemLinker && ItemLinker.getDimId(stack) != Constants.INVALID_PLANET && event.getEntity() instanceof EntityRocket) {
+				((EntityRocket)rocket).setOverriddenCoords(ItemLinker.getDimId(stack), ItemLinker.getMasterX(stack) + 0.5f, ARConfiguration.getCurrentConfig().orbit, ItemLinker.getMasterZ(stack) + 0.5f);
 			}
 		}
 	}
@@ -207,7 +204,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 				AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
 				List<EntityRocketBase> rockets = world.getEntitiesWithinAABB(EntityRocketBase.class, bbCache);
 
-				if(rockets != null && !rockets.isEmpty())
+				if(!rockets.isEmpty())
 					((SpaceStationObject)spaceObj).setPadStatus(pos, true);
 			}
 		}
@@ -232,7 +229,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
 
 		if(!stack.isEmpty()) {
@@ -268,19 +265,19 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
 		return stack.getItem() == LibVulpesItems.itemLinker;
 	}
 
 	public List<IInfrastructure> getConnectedInfrastructure() {
-		List<IInfrastructure> infrastructure = new LinkedList<IInfrastructure>();
+		List<IInfrastructure> infrastructure = new LinkedList<>();
 
 		Iterator<HashedBlockPosition> iter = blockPos.iterator();
 
 		while(iter.hasNext()) {
 			HashedBlockPosition position = iter.next();
 			TileEntity tile = world.getTileEntity(position.getBlockPos());
-			if((tile = world.getTileEntity(position.getBlockPos())) instanceof IInfrastructure) {
+			if(tile instanceof IInfrastructure) {
 				infrastructure.add((IInfrastructure)tile);
 			}
 			else
@@ -357,7 +354,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 		super.readFromNBT(nbt);
 		blockPos.clear();
 		if(nbt.hasKey("infrastructureLocations")) {
-			int array[] = nbt.getIntArray("infrastructureLocations");
+			int[] array = nbt.getIntArray("infrastructureLocations");
 
 			for(int counter = 0; counter < array.length; counter += 3) {
 				blockPos.add(new HashedBlockPosition(array[counter], array[counter+1], array[counter+2]));

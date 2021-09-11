@@ -5,6 +5,7 @@ import zmaster587.advancedRocketry.api.DataStorage;
 public class SatelliteMassScanner extends SatelliteData {
 
 	public SatelliteMassScanner() {
+		super();
 		data = new DataStorage(DataStorage.DataType.MASS);
 		data.lockDataType(DataStorage.DataType.MASS);
 	}

@@ -1,9 +1,11 @@
 {
+    "forge_marker": 1,
     "defaults": {
         "textures": {
             "#None": "advancedrocketry:/models/combustion"
         },
-        "model": "advancedrocketry:models/rocketmotor.obj"
+        "model": "advancedrocketry:models/rocketmotor.obj",
+        "transform": "forge:default-block"
     },
     "variants": {
         "facing=north": { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png", "x": 90 },
@@ -14,7 +16,6 @@
         "facing=down":  { "model": "advancedrocketry:models/rocketmotor.obj", "texture": "advancedrocketry:textures/models/combustion.png" },
         "inventory": {
             "model": "advancedrocketry:models/rocketmotor.obj",
-            "transform": "forge:default-block",
             "textures": {
                 "layer0": "advancedrocketry:textures/models/combustion.png"
             }

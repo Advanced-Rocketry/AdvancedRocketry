@@ -8,22 +8,20 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
-import zmaster587.advancedRocketry.inventory.modules.ModuleData;
+import zmaster587.advancedRocketry.inventory.modules.ModuleAutoData;
 import zmaster587.advancedRocketry.item.ItemData;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
-//TODO: allow dataCable connections
 public class TileDataBus extends TileInventoryHatch implements IDataInventory, INetworkMachine {
 
-	int maxData;
 	DataStorage data;
 
 	public TileDataBus() {
@@ -34,26 +32,24 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	public TileDataBus(int number) {
 		super(number);
 		data = new DataStorage(DataStorage.DataType.UNDEFINED);
-
 		data.setMaxData(2000);
+
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanInsertSlot(1, false);
+		inventory.setCanExtractSlot(0, false);
+		inventory.setCanExtractSlot(1, true);
 	}
 
 	@Override
 	public void loadData(int id) {
-		
+
 		ItemStack itemStack = inventory.getStackInSlot(0);
-		
-		if(itemStack != null && itemStack.getItem() instanceof ItemData) {
+
+		if(itemStack != ItemStack.EMPTY && itemStack.getItem() instanceof ItemData) {
 			ItemData itemData = (ItemData)itemStack.getItem();
-			
-			itemData.removeData(itemStack, 
-					this.data.addData(itemData.getData(itemStack), itemData.getDataType(itemStack), true), DataStorage.DataType.UNDEFINED);
+			itemData.removeData(itemStack, this.data.addData(itemData.getData(itemStack), itemData.getDataType(itemStack), true), DataStorage.DataType.UNDEFINED);
 
-			//this.data.removeData(itemData.removeData(inv[0], this.data.getData(), this.data.getDataType()));
-		}
-
-		if(world.isRemote) {
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)-2));
+			inventory.setInventorySlotContents(1, decrStackSize(0, 1));
 		}
 	}
 
@@ -65,17 +61,15 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	@Override
 	public void storeData(int id) {
 		ItemStack itemStack = inventory.getStackInSlot(0);
-		
-		if(itemStack != null && itemStack.getItem() instanceof ItemData && itemStack.getCount() == 1) {
+
+		if(!itemStack.isEmpty() && itemStack.getItem() instanceof ItemData && inventory.getStackInSlot(1) == ItemStack.EMPTY) {
 			ItemData itemData = (ItemData)itemStack.getItem();
-
 			this.data.removeData(itemData.addData(itemStack, this.data.getData(), this.data.getDataType()), true);
-		}
 
-		if(world.isRemote) {
-			PacketHandler.sendToServer(new PacketMachine(this, (byte)-1));
+			inventory.setInventorySlotContents(1, decrStackSize(0, 1));
 		}
 	}
+
 
 	public void setData(int data, DataStorage.DataType dataType) {
 		this.data.setData(data, dataType);
@@ -112,8 +106,8 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
-		modules.add(new ModuleData(40, 20, 0, this, data));
+		LinkedList<ModuleBase> modules = new LinkedList<>();
+		modules.add(new ModuleAutoData(40, 20, 0, 1, this, this, data));
 		return modules;
 	}
 
@@ -128,7 +122,38 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 	}
-	
+
+	@Override
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
+		inventory.setInventorySlotContents(slot, stack);
+		ItemStack itemStack = inventory.getStackInSlot(0);
+
+		if(itemStack != ItemStack.EMPTY && itemStack.getItem() instanceof ItemData  && inventory.getStackInSlot(1) == ItemStack.EMPTY) {
+			ItemData itemData = (ItemData)itemStack.getItem();
+			if(itemData.getData(itemStack) > 0 && data.getData() != data.getMaxData()) {
+				loadData(0);
+			} else if (data.getData() != 0 && 1000 > itemData.getData(itemStack) ) {
+				storeData(0);
+			}
+		}
+		inventory.markDirty();
+		markDirty();
+		this.handleUpdateTag(getUpdateTag());
+
+		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
+			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
+	}
+
+	@Override
+	public boolean canExtractItem(int index, @Nonnull ItemStack stack, EnumFacing direction) {
+		return index == 1;
+	}
+
+	@Override
+	public boolean canInsertItem(int index, @Nonnull ItemStack itemStackIn, EnumFacing direction) {
+		return index == 0 && isItemValidForSlot(index, itemStackIn);
+	}
+
 	@Override
 	protected NBTTagCompound writeToNBTHelper(NBTTagCompound nbtTagCompound) {
 		super.writeToNBTHelper(nbtTagCompound);
@@ -143,26 +168,13 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 	
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
-
-	}
+	public void writeDataToNetwork(ByteBuf out, byte id) { }
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
-
-	}
+	public void readDataFromNetwork(ByteBuf in, byte packetId, NBTTagCompound nbt) { }
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
-
-		if(id == -1) {
-			storeData(0);
-		}
-		else if(id == -2)
-			loadData(0);
-	}
+	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt) { }
 
 	@Override
 	public int extractData(int maxAmount, DataType type, EnumFacing dir, boolean commit) {

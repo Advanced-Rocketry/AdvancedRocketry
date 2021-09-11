@@ -14,11 +14,11 @@ public class RenderBiomeScanner extends TileEntitySpecialRenderer {
 
 	WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/biomeScanner.jpg");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/biomescanner.png");
 
 	public RenderBiomeScanner(){
 		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/biomeScanner.obj"));
+			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/biomescanner.obj"));
 		} catch (ModelFormatException e) {
 			e.printStackTrace();
 		}
@@ -38,7 +38,7 @@ public class RenderBiomeScanner extends TileEntitySpecialRenderer {
 
 		//Rotate and move the model into position
 		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glTranslated(x + .5, y, z + .5);
+		GL11.glTranslated(x, y, z + 1);
 
 		bindTexture(texture);
 		

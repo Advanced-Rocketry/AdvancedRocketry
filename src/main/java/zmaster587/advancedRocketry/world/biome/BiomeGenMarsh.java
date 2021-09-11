@@ -1,21 +1,19 @@
 package zmaster587.advancedRocketry.world.biome;
 
 import net.minecraft.init.Blocks;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenShrub;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class BiomeGenMarsh extends Biome {
 
-	public BiomeGenMarsh() {
-		super(new BiomeProperties("Marsh").setBaseHeight(-0.4f).setHeightVariation(0f));
-
-        this.setRegistryName(new ResourceLocation("advancedrocketry:Marsh"));
+	public BiomeGenMarsh(BiomeProperties properties) {
+		super(properties);
 		
 		this.decorator.clayPerChunk = 10;
 		this.decorator.flowersPerChunk = 0;
@@ -39,7 +37,7 @@ public class BiomeGenMarsh extends Biome {
 		if (d1 > 0.2D)
 		{
 			chunkPrimerIn.setBlockState(x, 62, z, Blocks.GRASS.getDefaultState());
-			for(int y = (int)(61); y > 1; y--) {
+			for(int y = 61; y > 1; y--) {
 				
 				if(!chunkPrimerIn.getBlockState(x, y, z).isOpaqueCube())
 					chunkPrimerIn.setBlockState(x, y, z, Blocks.GRASS.getDefaultState());
@@ -50,6 +48,7 @@ public class BiomeGenMarsh extends Biome {
 	}
 	
 	@Override
+	@Nonnull
 	public WorldGenAbstractTree getRandomTreeFeature(Random rand) {
 		return new WorldGenShrub(Blocks.LOG.getDefaultState(), Blocks.LEAVES.getDefaultState());
 	}

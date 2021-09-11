@@ -2,7 +2,6 @@ package zmaster587.advancedRocketry.entity;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,7 +12,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -54,8 +52,8 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 	private static final byte PACKET_WRITE_SRC_INFO = 4;
 
 
-	protected static final DataParameter<Byte> motionDir =  EntityDataManager.<Byte>createKey(EntityElevatorCapsule.class, DataSerializers.BYTE);
-	protected static final DataParameter<Integer> standTimeCounter =  EntityDataManager.<Integer>createKey(EntityElevatorCapsule.class, DataSerializers.VARINT);
+	protected static final DataParameter<Byte> motionDir =  EntityDataManager.createKey(EntityElevatorCapsule.class, DataSerializers.BYTE);
+	protected static final DataParameter<Integer> standTimeCounter =  EntityDataManager.createKey(EntityElevatorCapsule.class, DataSerializers.VARINT);
 
 	public EntityElevatorCapsule(World worldIn) {
 		super(worldIn);
@@ -166,7 +164,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 
 	@Override
 	public Entity changeDimension(int newDimId) {
-		return changeDimension(newDimId, this.posX, (double)ARConfiguration.getCurrentConfig().orbit, this.posZ);
+		return changeDimension(newDimId, this.posX, ARConfiguration.getCurrentConfig().orbit, this.posZ);
 	}
 
 	public void copyDataFromOld(Entity entityIn)
@@ -185,6 +183,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 		{
 			float yaw = this.rotationYaw;
 			float pitch = this.rotationPitch;
+			DimensionBlockPosition destination = this.dstTilePos;
 
 			List<Entity> passengers = getPassengers();
 			int i = this.dimension;
@@ -200,6 +199,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 				return null;
 			
 			entity.setPositionAndRotation(posX, y, posZ, yaw, pitch);
+			((EntityElevatorCapsule)entity).dstTilePos = destination;
 			
 			int timeOffset = 1;
 			for(Entity e : passengers) {
@@ -217,7 +217,6 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 
 	@Override
 	public void onEntityUpdate() {
-		// TODO Auto-generated method stub
 		super.onEntityUpdate();
 
 		//Make sure to update client
@@ -244,6 +243,113 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 				}
 
 				if(this.posY > MAX_HEIGHT) {
+					setCapsuleMotion(1);
+					double landingLocX, landingLocZ;
+					World world;
+
+					if((world = DimensionManager.getWorld(dstTilePos.dimid)) == null) {
+						DimensionManager.initDimension(dstTilePos.dimid);
+						world = DimensionManager.getWorld(dstTilePos.dimid);
+					}
+
+					if(world != null) {
+						TileEntity tile = world.getTileEntity(dstTilePos.pos.getBlockPos());
+
+						if(tile instanceof TileSpaceElevator) {
+							landingLocX = ((TileSpaceElevator)tile).getLandingLocationX();
+							landingLocZ = ((TileSpaceElevator)tile).getLandingLocationZ();
+						}
+						else {
+							setDead();
+							return;
+						}
+					}
+					else {
+						dstTilePos = srcTilePos;
+						world = this.getEntityWorld();
+
+						TileEntity tile = world.getTileEntity(dstTilePos.pos.getBlockPos());
+
+						if(tile instanceof TileSpaceElevator) {
+							landingLocX = ((TileSpaceElevator)tile).getLandingLocationX();
+							landingLocZ = ((TileSpaceElevator)tile).getLandingLocationZ();
+						}
+						else {
+							setDead();
+							return;
+						}
+					}
+
+					changeDimension(dstTilePos.dimid, landingLocX, 10, landingLocZ);
+
+					MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDeOrbitingEvent(this));
+				}
+			}
+
+			if(this.posY >= dstTilePos.pos.y -4 && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+				setCapsuleMotion(0);
+
+
+				setPosition(dstTilePos.pos.x, dstTilePos.pos.y - 5, dstTilePos.pos.z);
+
+				TileEntity e;
+
+				if((e = world.getTileEntity(dstTilePos.pos.getBlockPos())) instanceof TileSpaceElevator) {
+					((TileSpaceElevator)e).notifyLanded(this);
+					standTime = 0;
+				}
+				else
+					this.setDead();
+
+				//Dismount rider after being put in final place
+				for(Entity ent : this.getPassengers()) {
+					ent.dismountRidingEntity();
+				}
+			}
+
+			this.move(MoverType.SELF,0, this.motionY, 0);
+		}
+		else if(isDescending()) {
+			
+			this.onGround = false;
+			
+			if(this.posY > 255)
+				this.motionY = -2.85;
+			else
+				this.motionY = -0.85;
+
+			if(!world.isRemote) {
+
+				//Send packet to player for deorbit a bit delayed
+				if(this.ticksExisted == 20)
+					PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, PACKET_DEORBIT), this);
+
+				List<EntityPlayer> list = world.getEntitiesWithinAABB(EntityPlayer.class, getEntityBoundingBox());
+				for(Entity ent : list) {
+					if(this.getRidingEntity() == null)
+						ent.startRiding(this);
+				}
+
+				if(this.posY <= dstTilePos.pos.y + 1 && world.provider.getDimension() != ARConfiguration.getCurrentConfig().spaceDimId) {
+					setCapsuleMotion(0);
+
+
+					setPosition(dstTilePos.pos.x, dstTilePos.pos.y + 1, dstTilePos.pos.z);
+
+					TileEntity e;
+
+					if((e = world.getTileEntity(dstTilePos.pos.getBlockPos())) instanceof TileSpaceElevator) {
+						((TileSpaceElevator)e).notifyLanded(this);
+						standTime = 0;
+					}
+					else
+						this.setDead();
+
+					//Dismount rider after being put in final place
+					for(Entity ent : this.getPassengers()) {
+						ent.dismountRidingEntity();
+					}
+				} else if(this.posY <= 15 && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 					setCapsuleMotion(-1);
 					double landingLocX, landingLocZ;
 					World world;
@@ -285,51 +391,6 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 
 					MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketDeOrbitingEvent(this));
 				}
-			}
-
-			this.move(MoverType.SELF,0, this.motionY, 0);
-		}
-		else if(isDescending()) {
-			
-			this.onGround = false;
-			
-			if(this.posY > 255)
-				this.motionY = -2.85;
-			else
-				this.motionY = -0.85;
-
-			if(!world.isRemote) {
-
-				//Send packet to player for deorbit a bit delayed
-				if(this.ticksExisted == 20)
-					PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, PACKET_DEORBIT), this);
-
-				List<EntityPlayer> list = world.getEntitiesWithinAABB(EntityPlayer.class, getEntityBoundingBox());
-				for(Entity ent : list) {
-					if(this.getRidingEntity() == null)
-						ent.startRiding(this);
-				}
-
-				if(this.posY <= dstTilePos.pos.y) {
-					setCapsuleMotion(0);
-
-
-					setPosition(dstTilePos.pos.x, dstTilePos.pos.y, dstTilePos.pos.z);
-
-					TileEntity e;
-
-					if((e = world.getTileEntity(dstTilePos.pos.getBlockPos())) instanceof TileSpaceElevator) {
-						((TileSpaceElevator)e).notifyLanded(this);
-						standTime = 0;
-					}
-					else
-						this.setDead();
-
-					//Dismount rider after being put in final place
-					for(Entity ent : this.getPassengers()) {
-						ent.dismountRidingEntity();
-					}
-				}
 				else
 					this.move(MoverType.SELF,0, this.motionY, 0);
 			}
@@ -344,14 +405,14 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 				TileEntity srcTile = null;
 				if(list.isEmpty())
 					standTime = 0;
-				else if(dstTilePos != null && dstTilePos.dimid != world.provider.getDimension() && TileSpaceElevator.isDstValid(getEntityWorld(), dstTilePos, new HashedBlockPosition(getPosition())))
+				else if(dstTilePos != null  && TileSpaceElevator.isDestinationValid(dstTilePos.dimid, dstTilePos, new HashedBlockPosition(getPosition()), world.provider.getDimension()))
 					standTime++;
 
 				if(srcTilePos != null && srcTilePos.pos != null)
 					srcTile = world.getTileEntity(srcTilePos.pos.getBlockPos());
 				
 				
-				if( srcTile != null && srcTile instanceof TileSpaceElevator && !((TileSpaceElevator)srcTile).getMachineEnabled())
+				if(srcTile instanceof TileSpaceElevator && !((TileSpaceElevator) srcTile).getMachineEnabled())
 					standTime = 0;
 				
 				setStandTime(standTime);
@@ -364,7 +425,11 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 
 						if(srcTile instanceof TileSpaceElevator && ((TileSpaceElevator)srcTile).attemptLaunch()) {
 
-							setCapsuleMotion(1);
+							if (world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+								setCapsuleMotion(-1);
+							} else {
+								setCapsuleMotion(1);
+							}
 							//Make sure we mount player before takeoff
 							List<EntityPlayer> list2 = world.getEntitiesWithinAABB(EntityPlayer.class, getEntityBoundingBox());
 
@@ -384,7 +449,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 					srcTile = world.getTileEntity(srcTilePos.pos.getBlockPos());
 				
 				
-				if( srcTile != null && srcTile instanceof TileSpaceElevator && !((TileSpaceElevator)srcTile).getMachineEnabled())
+				if(srcTile instanceof TileSpaceElevator && !((TileSpaceElevator) srcTile).getMachineEnabled())
 					AdvancedRocketry.proxy.displayMessage(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.turnedOff"),5);
 				else if(dstTilePos != null) 
 					AdvancedRocketry.proxy.displayMessage(LibVulpes.proxy.getLocalizedString("msg.spaceElevator.ascentReady") + ": " + (int)((MAX_STANDTIME - getStandTime())/20) + "\nDST " + dstTilePos,5);
@@ -399,11 +464,6 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 	@Override
 	public double getMountedYOffset() {
 		return 0.3;
-	}
-
-	@Override
-	public AxisAlignedBB getEntityBoundingBox() {
-		return super.getEntityBoundingBox();//new AxisAlignedBB(-10,-20,-10, 10,10,10);
 	}
 
 	@Override

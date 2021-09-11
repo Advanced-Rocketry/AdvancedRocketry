@@ -1,13 +1,21 @@
 {
-    "variants": {
-        "facing=north": { "model": "advancedrocketry:stationMarker" },
-        "facing=south": {  "model": "advancedrocketry:stationMarker",  "y": 180 },
-        "facing=west":  { "model": "advancedrocketry:stationMarker", "y": 270 },
-        "facing=east":  { "model": "advancedrocketry:stationMarker", "y": 90 },
-        "facing=up":  { "model": "advancedrocketry:stationMarker", "x": -90 },
-        "facing=down":  { "model": "advancedrocketry:stationMarker", "x": 90 },
-        "inventory": {
-            "model": "advancedrocketry:stationMarker"
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:orientable",
+        "textures": {
+            "top": "libvulpes:blocks/machinegeneric",
+            "front": "advancedrocketry:blocks/satellitebay",
+            "side": "libvulpes:blocks/machinegeneric"
         }
+    },
+    "variants": {
+        "facing=north": [{}],
+        "facing=south": { "model": "minecraft:orientable", "y": 180 },
+        "facing=west":  { "model": "minecraft:orientable", "y": 270 },
+        "facing=east":  { "model": "minecraft:orientable", "y": 90 },
+        "facing=up":  { "model": "minecraft:orientable", "x": -90 },
+        "facing=down":  { "model": "minecraft:orientable", "x": 90 },
+        "inventory" : [{}]
     }
 }

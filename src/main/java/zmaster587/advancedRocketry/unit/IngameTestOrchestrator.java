@@ -1,11 +1,5 @@
 package zmaster587.advancedRocketry.unit;
 
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -13,9 +7,15 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 public class IngameTestOrchestrator {
 	
-	static final Map<Long, PlayerMapping> eventScheduler = new HashMap<Long, PlayerMapping>();
+	static final Map<Long, PlayerMapping> eventScheduler = new HashMap<>();
 	public static String name;
 	public static boolean registered = false;
 	public static IngameTestOrchestrator instance = new IngameTestOrchestrator();

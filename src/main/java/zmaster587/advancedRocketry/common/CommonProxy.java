@@ -15,7 +15,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 
 public class CommonProxy {
 
-	private static zmaster587.advancedRocketry.dimension.DimensionManager dimensionManagerServer = new zmaster587.advancedRocketry.dimension.DimensionManager();
+	private static final zmaster587.advancedRocketry.dimension.DimensionManager dimensionManagerServer = new zmaster587.advancedRocketry.dimension.DimensionManager();
 	
 	public void registerRenderers() {
 
@@ -79,13 +79,7 @@ public class CommonProxy {
 		
 	}
 
-	public void saveUILayout(
-			net.minecraftforge.common.config.Configuration configuration) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	public void displayMessage(String msg, int time) {
+    public void displayMessage(String msg, int time) {
 		
 	}
 

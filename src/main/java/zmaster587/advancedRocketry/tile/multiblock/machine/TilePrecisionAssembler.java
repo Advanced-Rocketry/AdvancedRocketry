@@ -3,25 +3,19 @@ package zmaster587.advancedRocketry.tile.multiblock.machine;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.api.LibVulpesItems;
-import zmaster587.libVulpes.api.material.Material;
-import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.inventory.modules.*;
-import zmaster587.libVulpes.recipe.NumberedOreDictStack;
-import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 import zmaster587.libVulpes.util.IconResource;
@@ -30,7 +24,7 @@ import java.util.List;
 
 public class TilePrecisionAssembler extends TileMultiblockMachine implements IModularInventory, IProgressBar {
 
-	public static final Object structure[][][] = new Object[][][]{ {{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock}, 
+	public static final Object[][][] structure = new Object[][][]{ {{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock},
 		{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock},
 		{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock}},
 
@@ -46,23 +40,7 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 	public Object[][][] getStructure() {
 		return structure;
 	}
-	
-	@Override
-	public float getTimeMultiplierForBlock(IBlockState state, TileEntity tile) {
 
-		Material material = MaterialRegistry.getMaterialFromItemStack(new ItemStack(state.getBlock(),1, state.getBlock().getMetaFromState(state)));
-		if(material == MaterialRegistry.getMaterialFromName("Gold"))
-			return 0.9f;
-		else if(material == MaterialRegistry.getMaterialFromName("Aluminum"))
-			return 0.8f;
-		else if(material == MaterialRegistry.getMaterialFromName("Titanium"))
-			return 0.75f;
-		else if(material == MaterialRegistry.getMaterialFromName("Iridium"))
-			return 0.5f;
-
-		return super.getTimeMultiplierForBlock(state, tile);
-	}
-	
 	@Override
 	public List<BlockMeta> getAllowableWildCardBlocks() {
 		List<BlockMeta> list = super.getAllowableWildCardBlocks();
@@ -128,7 +106,13 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 	public SoundEvent getSound() {
 		return AudioRegistry.precAss;
 	}
-	
+
+	@Override
+	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
+		TileEntity tileEntity = world.getTileEntity(pos);
+		return tileEntity instanceof TilePrecisionAssembler;
+	}
+
 	@Override
 	public void setTotalProgress(int id, int progress) {
 		if(id == 0)
@@ -148,6 +132,6 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 
 	@Override
 	public String getMachineName() {
-		return "container.precisionassemblingmachine";
+		return AdvancedRocketryBlocks.blockPrecisionAssembler.getLocalizedName();
 	}
 }

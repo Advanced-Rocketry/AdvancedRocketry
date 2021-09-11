@@ -1,12 +1,5 @@
 package zmaster587.advancedRocketry.tile;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
-
-import io.netty.handler.codec.http2.Http2FrameLogger.Direction;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,14 +15,14 @@ import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import zmaster587.advancedRocketry.network.PacketAirParticle;
 import zmaster587.advancedRocketry.network.PacketFluidParticle;
 import zmaster587.libVulpes.cap.FluidCapability;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.tile.TileEntityRFConsumer;
-import zmaster587.libVulpes.util.HashedBlockPosition;
+
+import java.util.*;
 
 public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IModularInventory {
 
@@ -40,7 +33,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 	public TilePump() {
 		super(1000);
 		tank = new FluidTank(16000);
-		cache = new LinkedList<BlockPos>();
+		cache = new LinkedList<>();
 	}
 	
 	public int getPowerPerOperation() {
@@ -75,7 +68,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 				{
 					IFluidHandler cap = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite());
 					FluidStack stack = tank.getFluid().copy();
-					stack.amount = (int)Math.min(tank.getFluid().amount, 1000);
+					stack.amount = Math.min(tank.getFluid().amount, 1000);
 					//Perform the drain
 					cap.fill(tank.drain(cap.fill(stack, false), true), true);
 					
@@ -98,25 +91,21 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 	@Override
 	public void performFunction() {
 
-		if(!world.isRemote)
-		{
+		if(!world.isRemote) {
 			//Do we have room?
 			if(tank.getCapacity() - 1000 < tank.getFluidAmount())
 				return;
 			
 			BlockPos nextPos = getNextBlockLocation();
-			if(nextPos != null)
-			{
-				if(canFitFluid(nextPos))
-				{
+			if(nextPos != null) {
+				if(canFitFluid(nextPos)) {
 					Block worldBlock = world.getBlockState(nextPos).getBlock();
 					Material mat = world.getBlockState(nextPos).getMaterial();
-					if(worldBlock instanceof IFluidBlock)
-					{
-						FluidStack stack = ((IFluidBlock)worldBlock).drain(world, nextPos, true);
+					if(worldBlock instanceof IFluidBlock) {
+						FluidStack fStack = ((IFluidBlock)worldBlock).drain(world, nextPos, true);
 
-						if(stack != null)
-							tank.fill(stack, true);
+						if(fStack != null)
+							tank.fill(fStack, true);
 						int colour = ((IFluidBlock)worldBlock).getFluid().getColor();
 						if(mat == Material.LAVA)
 							colour = 0xFFbd3718;
@@ -128,22 +117,16 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		}
 	}
 
-	private boolean canFitFluid(BlockPos pos)
-	{
+	private boolean canFitFluid(BlockPos pos) {
 		Block worldBlock = world.getBlockState(pos).getBlock();
-		if(worldBlock instanceof IFluidBlock)
-		{
+		if(worldBlock instanceof IFluidBlock) {
 			// Can we put it into the tank?
-			if(tank.getFluid() == null || tank.getFluid().getFluid() == ((IFluidBlock)worldBlock).getFluid())
-			{
-				return true;
-			}
+			return tank.getFluid() == null || tank.getFluid().getFluid() == ((IFluidBlock) worldBlock).getFluid();
 		}
 		return false;
 	}
 
-	private BlockPos getNextBlockLocation()
-	{
+	private BlockPos getNextBlockLocation() {
 
 		if(!cache.isEmpty())
 			return cache.remove(0);
@@ -163,23 +146,19 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		return null;
 	}
 
-	private List<BlockPos> findFluidAtOrAbove(BlockPos pos, Fluid fluid)
-	{
-		Queue<BlockPos> queue = new LinkedList<BlockPos>();
-		Set<BlockPos> visited = new HashSet<BlockPos>();
+	private void findFluidAtOrAbove(BlockPos pos, Fluid fluid) {
+		Queue<BlockPos> queue = new LinkedList<>();
+		Set<BlockPos> visited = new HashSet<>();
 		queue.add(pos);
 
-		while(!queue.isEmpty())
-		{
+		while(!queue.isEmpty()) {
 			BlockPos nextElement = queue.poll();
-			if(visited.contains(nextElement) || nextElement.getDistance(pos.getX(), nextElement.getY(), pos.getZ()) > RANGE )
+			if(visited.contains(nextElement) || nextElement.getDistance(pos.getX(), nextElement.getY(), pos.getZ()) > RANGE)
 				continue;
 
 			Block worldBlock = world.getBlockState(nextElement).getBlock();
-			if(worldBlock instanceof IFluidBlock)
-			{
-				if(fluid == null || ((IFluidBlock)worldBlock).getFluid() == fluid)
-				{
+			if(worldBlock instanceof IFluidBlock) {
+				if(fluid == null || ((IFluidBlock)worldBlock).getFluid() == fluid) {
 					//only add drainable fluids, allow chaining along flowing fluid tho
 					if(((IFluidBlock)worldBlock).canDrain(world, nextElement))
 						cache.add(0, nextElement);
@@ -192,7 +171,6 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 				}
 			}
 		}
-		return cache;
 	}
 
 	@Override
@@ -223,8 +201,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 
 	@Override
 	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-		return modules;
+		return new LinkedList<>();
 	}
 
 	@Override

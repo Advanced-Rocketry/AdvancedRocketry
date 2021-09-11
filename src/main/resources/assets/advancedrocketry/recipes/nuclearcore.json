@@ -1,0 +1,29 @@
+{
+    "type": "advancedrocketry:precisionassembler",
+    "itemingredients":
+    [
+      {
+        "item": "libvulpes:advstructuremachine"
+      },
+      {
+        "item": "advancedrocketry:ic",
+        "data": 2
+      },
+        {
+	    "type": "forge:ore_dict",
+            "ore": "plateSteel",
+            "count": 8
+        },
+	{
+	    "type": "forge:ore_dict",
+            "ore": "gemDilithium",
+            "count" : 32
+        }
+    ],
+    "time": 2000,
+    "energy": 250,
+    "itemresults":
+    {
+	"item": "advancedrocketry:nuclearcore"
+    }
+}

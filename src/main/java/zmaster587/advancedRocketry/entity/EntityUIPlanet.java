@@ -12,18 +12,20 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.tile.station.TilePlanetaryHologram;
+import zmaster587.advancedRocketry.tile.station.TileHolographicPlanetSelector;
+
+import javax.annotation.Nullable;
 
 public class EntityUIPlanet extends Entity {
 
 	DimensionProperties properties;
-	protected TilePlanetaryHologram tile;
-	protected static final DataParameter<Integer> planetID =  EntityDataManager.<Integer>createKey(EntityUIPlanet.class, DataSerializers.VARINT);
-	protected static final DataParameter<Float> scale =  EntityDataManager.<Float>createKey(EntityUIPlanet.class, DataSerializers.FLOAT);
-	protected static final DataParameter<Boolean> selected =  EntityDataManager.<Boolean>createKey(EntityUIPlanet.class, DataSerializers.BOOLEAN);
+	protected TileHolographicPlanetSelector tile;
+	protected static final DataParameter<Integer> planetID =  EntityDataManager.createKey(EntityUIPlanet.class, DataSerializers.VARINT);
+	protected static final DataParameter<Float> scale =  EntityDataManager.createKey(EntityUIPlanet.class, DataSerializers.FLOAT);
+	protected static final DataParameter<Boolean> selected =  EntityDataManager.createKey(EntityUIPlanet.class, DataSerializers.BOOLEAN);
 	
 	
-	public EntityUIPlanet(World worldIn, DimensionProperties properties, TilePlanetaryHologram tile, double x, double y, double z) {
+	public EntityUIPlanet(World worldIn, DimensionProperties properties, TileHolographicPlanetSelector tile, double x, double y, double z) {
 		this(worldIn);
 		setPosition(x, y, z);
 		setProperties(properties);
@@ -36,7 +38,7 @@ public class EntityUIPlanet extends Entity {
 	}
 	
 	public float getScale() {
-		float scale = this.dataManager.get(this.scale);
+		float scale = this.dataManager.get(EntityUIPlanet.scale);
 		setSize(0.1f*scale, 0.1f*scale);
 		return scale;
 	}
@@ -47,6 +49,7 @@ public class EntityUIPlanet extends Entity {
 	}
 
 	@Override
+	@Nullable
 	public NBTTagCompound writeToNBT(NBTTagCompound p_189511_1_) {
 		//DO not save
 		return null;
@@ -85,7 +88,7 @@ public class EntityUIPlanet extends Entity {
 	}
 
 	@Override
-	public boolean writeToNBTOptional(NBTTagCompound compound) {
+	public boolean writeToNBTOptional(@Nullable NBTTagCompound compound) {
 		return false;
 	}
 	

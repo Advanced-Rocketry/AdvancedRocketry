@@ -1,12 +1,21 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "minecraft:cube_all",
+        "textures": {
+            "all": "advancedrocketry:blocks/warpcore"
+        }
+    },
     "variants": {
-        "facing=north,state=false": { "model": "advancedrocketry:warpCore" },
-        "facing=south,state=false": { "model": "advancedrocketry:warpCore", "y": 180 },
-        "facing=west,state=false":  { "model": "advancedrocketry:warpCore", "y": 270 },
-        "facing=east,state=false":  { "model": "advancedrocketry:warpCore", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:warpCore" },
-        "facing=south,state=true": { "model": "advancedrocketry:warpCore", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:warpCore", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:warpCore", "y": 90 }
+        "facing=north,state=false": [{}],
+        "facing=south,state=false": { "model": "minecraft:cube_all", "y": 180 },
+        "facing=west,state=false":  { "model": "minecraft:cube_all", "y": 270 },
+        "facing=east,state=false":  { "model": "minecraft:cube_all", "y": 90 },
+        "facing=north,state=true": [{}],
+        "facing=south,state=true": { "model": "minecraft:cube_all", "y": 180 },
+        "facing=west,state=true":  { "model": "minecraft:cube_all", "y": 270 },
+        "facing=east,state=true":  { "model": "minecraft:cube_all", "y": 90 },
+        "inventory" : [{}]
     }
 }

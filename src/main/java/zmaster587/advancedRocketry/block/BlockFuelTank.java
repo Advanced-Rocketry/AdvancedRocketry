@@ -2,7 +2,6 @@ package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -12,6 +11,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.IFuelTank;
 
+import javax.annotation.Nonnull;
 import java.util.Locale;
 
 public class BlockFuelTank extends Block implements IFuelTank{
@@ -24,6 +24,7 @@ public class BlockFuelTank extends Block implements IFuelTank{
 	}
 
 	@Override
+	@Nonnull
 	public IBlockState getStateFromMeta(int meta) {
 		return this.getDefaultState().withProperty(TANKSTATES, TankStates.values()[meta]);
 	}
@@ -34,36 +35,14 @@ public class BlockFuelTank extends Block implements IFuelTank{
 	}
 	
 	@Override
+	@Nonnull
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[]{TANKSTATES});
+		return new BlockStateContainer(this, TANKSTATES);
 	}
-	
-	/*@Override
-	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
-
-
-		int i = world.getBlockState(pos.add(0,1,0)).getBlock() == this ? 1 : 0;
-		i += world.getBlockState(pos.add(0,-1,0)).getBlock() == this ? 2 : 0;
-
-		//If there is no tank below this one
-		if( i == 1 ) {
-			world.setBlockState(pos, this.getDefaultState().withProperty(TANKSTATES, TankStates.BOTTOM),2);
-			((TileModelRender)world.getTileEntity(pos)).setType(TileModelRender.models.TANKEND);
-		}
-		//If there is no tank above this one
-		else if( i == 2 ) {
-			world.setBlockState(pos, this.getDefaultState().withProperty(TANKSTATES, TankStates.TOP),2);
-			((TileModelRender)world.getTileEntity(pos)).setType(TileModelRender.models.TANKTOP);
-		}
-		//If there is a tank above and below this one
-		else {
-			world.setBlockState(pos, this.getDefaultState().withProperty(TANKSTATES, TankStates.MIDDLE),2);
-			((TileModelRender)world.getTileEntity(pos)).setType(TileModelRender.models.TANKMIDDLE);
-		}
-	}*/
 
 	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world,
+	@Nonnull
+	public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess world,
 			BlockPos pos) {
 		int i = world.getBlockState(pos.add(0,1,0)).getBlock() == this ? 1 : 0;
 		i += world.getBlockState(pos.add(0,-1,0)).getBlock() == this ? 2 : 0;

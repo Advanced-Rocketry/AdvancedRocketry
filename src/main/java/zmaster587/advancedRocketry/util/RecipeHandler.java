@@ -9,13 +9,11 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.GameData;
-import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
-import zmaster587.advancedRocketry.block.BlockPress;
+import zmaster587.advancedRocketry.block.BlockSmallPlatePress;
 import zmaster587.advancedRocketry.tile.multiblock.machine.*;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
-import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
@@ -24,13 +22,13 @@ import java.util.Map.Entry;
 
 public class RecipeHandler {
 	
-	private List<Class<? extends TileMultiblockMachine>> machineList = new ArrayList<Class<? extends TileMultiblockMachine>>();
+	private List<Class<? extends TileMultiblockMachine>> machineList = new ArrayList<>();
 	
 	public void registerMachine(Class<? extends TileMultiblockMachine> clazz) {
 		if(!machineList.contains(clazz))
 		{
 			machineList.add(clazz);
-			RecipesMachine.getInstance().recipeList.put(clazz, new LinkedList<IRecipe>());
+			RecipesMachine.getInstance().recipeList.put(clazz, new LinkedList<>());
 		}
 		
 	}
@@ -51,7 +49,9 @@ public class RecipeHandler {
 		LibVulpes.instance.loadXMLRecipe(TileElectricArcFurnace.class);
 		LibVulpes.instance.loadXMLRecipe(TileLathe.class);
 		LibVulpes.instance.loadXMLRecipe(TileRollingMachine.class);
-		LibVulpes.instance.loadXMLRecipe(BlockPress.class);
+		LibVulpes.instance.loadXMLRecipe(BlockSmallPlatePress.class);
+		LibVulpes.instance.loadXMLRecipe(TileCentrifuge.class);
+		LibVulpes.instance.loadXMLRecipe(TilePrecisionLaserEtcher.class);
 	}
 	
 	public void registerAllMachineRecipes() {
@@ -59,9 +59,7 @@ public class RecipeHandler {
 		for(Class<? extends TileMultiblockMachine>  clazz : machineList)
 			try {
 				clazz.newInstance().registerRecipes();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
+			} catch (InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
 	}
@@ -109,7 +107,7 @@ public class RecipeHandler {
 					if(OreDictionary.doesOreNameExist(AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + oreDictNames)) {
 						RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, ore.getProduct(AllowedProducts.getProductByName("PLATE")), 300, 20, AllowedProducts.getProductByName("INGOT").name().toLowerCase(Locale.ENGLISH) + oreDictNames, new FluidStack(FluidRegistry.WATER, 100));
 						if(AllowedProducts.getProductByName("BLOCK").isOfType(ore.getAllowedProducts()) || ore.isVanilla())
-							RecipesMachine.getInstance().addRecipe(BlockPress.class, ore.getProduct(AllowedProducts.getProductByName("PLATE"),4), 0, 0, AllowedProducts.getProductByName("BLOCK").name().toLowerCase(Locale.ENGLISH) + oreDictNames);
+							RecipesMachine.getInstance().addRecipe(BlockSmallPlatePress.class, ore.getProduct(AllowedProducts.getProductByName("PLATE"),4), 0, 0, AllowedProducts.getProductByName("BLOCK").name().toLowerCase(Locale.ENGLISH) + oreDictNames);
 					}
 				}
 			}
@@ -162,7 +160,7 @@ public class RecipeHandler {
                     {
                         ItemStack stack = ore.getProduct(AllowedProducts.getProductByName("DUST"));
                         stack.setCount(2);
-                        RecipesMachine.getInstance().addRecipe(BlockPress.class, stack, 0, 0,
+                        RecipesMachine.getInstance().addRecipe(BlockSmallPlatePress.class, stack, 0, 0,
                                 AllowedProducts.getProductByName("ORE").name().toLowerCase(Locale.ENGLISH) + str);
                     }
                     if (AllowedProducts.getProductByName("INGOT").isOfType(ore.getAllowedProducts()) || ore.isVanilla())
@@ -225,7 +223,7 @@ public class RecipeHandler {
                         {
 
                             // GT registers rods as sticks
-                            ItemStack stackToAdd = null;
+                            ItemStack stackToAdd;
                             if (OreDictionary.doesOreNameExist("rod" + str)
                                     && OreDictionary.getOres("rod" + str).size() > 0)
                             {
