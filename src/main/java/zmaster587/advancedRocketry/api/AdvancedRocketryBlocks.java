@@ -202,7 +202,7 @@ public class AdvancedRocketryBlocks {
 
 	public static Block blockSpaceLaser = new BlockOrbitalLaserDrill(machineLineProperties);
 	public static Block blockSolarArray = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockSolarArrayPanel = new Block(machineLineProperties);
+	public static Block blockSolarArrayPanel = new BlockAlphaTexture(machineLineProperties);
 
 
 	@SubscribeEvent(priority=EventPriority.HIGH)
