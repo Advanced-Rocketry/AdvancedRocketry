@@ -17,6 +17,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.ISpaceObjectManager;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
@@ -308,7 +309,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 		if((nextStationTransitionTick != -1 && worldTime >= nextStationTransitionTick && spaceStationOrbitMap.get(WARPDIMID) != null) || (nextStationTransitionTick == -1 && spaceStationOrbitMap.get(WARPDIMID) != null && !spaceStationOrbitMap.get(WARPDIMID).isEmpty())) {
 			long newNextTransitionTick = -1;
 			for(ISpaceObject spaceObject : spaceStationOrbitMap.get(WARPDIMID)) {
-				if(spaceObject.getTransitionTime() <= worldTime) {
+				if(spaceObject.getTransitionTime() <= AdvancedRocketry.proxy.getWorldTimeUniversal()) {
 					moveStationToBody(spaceObject, spaceObject.getDestOrbitingBody());
 					spaceStationOrbitMap.get(WARPDIMID).remove(spaceObject);
 				}
@@ -411,7 +412,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 
 
 		((DimensionProperties)station.getProperties()).setAtmosphereDensityDirect(0);
-		nextStationTransitionTick = (int)(ARConfiguration.getCurrentConfig().travelTimeMultiplier.get()*timeDelta) + ZUtils.getWorld(ARConfiguration.GetSpaceDimId()).getGameTime();
+		nextStationTransitionTick = (int)(ARConfiguration.getCurrentConfig().travelTimeMultiplier.get()*timeDelta) + AdvancedRocketry.proxy.getWorldTimeUniversal();
 		station.beginTransition(nextStationTransitionTick);
 		
 	}
