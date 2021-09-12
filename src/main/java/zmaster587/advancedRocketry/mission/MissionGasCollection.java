@@ -8,6 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -44,14 +45,10 @@ public class MissionGasCollection extends MissionResourceCollection {
 	public void onMissionComplete() {
 
 		if((int)rocketStats.getStatTag("intakePower") > 0 && gasFluid != null) {
-			int amountOfGas = Integer.MAX_VALUE;
 			Fluid type = gasFluid;//FluidRegistry.getFluid("hydrogen");
 			//Fill gas tanks
 			for(TileEntity tile : this.rocketStorage.getFluidTiles()) {
-				amountOfGas -= ((IFluidHandler)tile).fill(new FluidStack(type, amountOfGas), FluidAction.EXECUTE);
-
-				if(amountOfGas == 0)
-					break;
+				tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).resolve().get().fill(new FluidStack(type, 64000), FluidAction.EXECUTE);
 			}
 		}
 
