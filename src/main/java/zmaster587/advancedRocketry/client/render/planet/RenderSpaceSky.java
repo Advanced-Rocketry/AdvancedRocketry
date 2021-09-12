@@ -195,6 +195,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
 				mc.getTextureManager().bindTexture(DimensionProperties.getAtmosphereLEOResource());
+				RenderSystem.color4f(atmColor[0], atmColor[1], atmColor[2], 0.5f);
 
 				double dist = -5D - 4*(planetOrbitalDistance)/200D;
 				double scalingMult = 1D - 0.9*(planetOrbitalDistance)/200D;
@@ -211,8 +212,6 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 					g = .4f*(i/6f);
 					b = 1f;
 					a = 0.4f;
-					RenderSystem.color4f(0.05f*(maxAmt-i/6f), .4f*(i/6f), 1f, 0.4f);
-
 					//IDK it looks pretty
 					Xoffset = lng*(i-(maxAmt/4f));
 					float Yoffset = -lng*i;
