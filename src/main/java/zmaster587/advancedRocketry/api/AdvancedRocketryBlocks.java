@@ -60,6 +60,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockAdvEngine = new BlockAdvancedRocketMotor(machineLineProperties);
 	public static Block blockFuelTank = new BlockFuelTank(machineLineProperties);
 	public static Block blockBipropellantFuelTank = new BlockBipropellantFuelTank(machineLineProperties);
+	public static Block blockOxidizerFuelTank = new BlockOxidizerFuelTank(machineLineProperties);
 	public static Block blockSawBlade = new BlockMotor(machineLineProperties,1f);
 
 	public static Block blockConcrete = new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2f, 16f));
@@ -227,6 +228,7 @@ public class AdvancedRocketryBlocks {
 				AdvancedRocketryBlocks.blockBipropellantEngine.setRegistryName("bipropellantrocketmotor"),
 				AdvancedRocketryBlocks.blockFuelTank.setRegistryName("fueltank"),
 				AdvancedRocketryBlocks.blockBipropellantFuelTank.setRegistryName("bipropellantfueltank"),
+				AdvancedRocketryBlocks.blockOxidizerFuelTank.setRegistryName("oxidizerfueltank"),
 				AdvancedRocketryBlocks.blockFuelingStation.setRegistryName("fuelingstation"),
 				AdvancedRocketryBlocks.blockMonitoringStation.setRegistryName("monitoringstation"),
 				AdvancedRocketryBlocks.blockSatelliteBuilder.setRegistryName("satellitebuilder"),
