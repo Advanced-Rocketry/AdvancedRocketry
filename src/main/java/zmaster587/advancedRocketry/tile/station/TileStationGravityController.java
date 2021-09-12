@@ -30,7 +30,7 @@ import java.util.List;
 public class TileStationGravityController extends TileEntity implements IModularInventory, ITickable, INetworkMachine, ISliderBar, IButtonInventory, IComparatorOverride {
 
 	private int progress;
-	private RedstoneState state;
+	private RedstoneState state = RedstoneState.OFF;
 
 	private static int minGravity = 10;
 
