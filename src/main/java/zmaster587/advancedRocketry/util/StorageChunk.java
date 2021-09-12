@@ -28,6 +28,7 @@ import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import zmaster587.advancedRocketry.AdvancedRocketry;
@@ -342,7 +343,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	}
 
 	private static boolean isLiquidContainerBlock(TileEntity tile) {
-		return tile instanceof IFluidHandler;
+		return tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 	}
 
 	public void readFromNBT(NBTTagCompound nbt) {
