@@ -117,7 +117,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 
 				//See if we have anything to fill because redstone output
 				FluidStack rocketFluid = handler.drain(1, false);
-				if(rocketFluid == null || handler.fill(rocketFluid, false) > 0)
+				if(handler.fill(rocketFluid, false) > 0)
 					rocketFluidFull = true;
 
 				if(isAllowToOperate) {
