@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import net.minecraft.item.BlockItem;
@@ -21,6 +22,7 @@ import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
 
@@ -33,7 +35,7 @@ public class OreGen {
 	public static final ConfiguredFeature<?, ?> DILITHIUM_ORE = register("ore_dilithium", Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD, ((BlockItem)MaterialRegistry.getMaterialFromName("dilithium").getProduct(AllowedProducts.getProductByName("ORE")).getItem()).getBlock().getDefaultState(), ARConfiguration.getCurrentConfig().dilithiumClumpSize.get() /*clump size*/ )).range(80 /*max height */).square().count(20 /*min height */).chance(ARConfiguration.getCurrentConfig().dilithiumPerChunk.get()));
 
 	private static <FC extends IFeatureConfig> ConfiguredFeature<FC, ?> register(String p_243968_0_, ConfiguredFeature<FC, ?> p_243968_1_) {
-		return Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, p_243968_0_, p_243968_1_);
+		return Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Constants.modId, p_243968_0_), p_243968_1_);
 	}
 
 	private static final int UNDERGROUND_ORES = GenerationStage.Decoration.UNDERGROUND_ORES.ordinal();
