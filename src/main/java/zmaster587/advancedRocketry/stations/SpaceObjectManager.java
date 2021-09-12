@@ -300,7 +300,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 		if((nextStationTransitionTick != -1 && worldTime >= nextStationTransitionTick && spaceStationOrbitMap.get(WARPDIMID) != null) || (nextStationTransitionTick == -1 && spaceStationOrbitMap.get(WARPDIMID) != null && !spaceStationOrbitMap.get(WARPDIMID).isEmpty())) {
 			long newNextTransitionTick = -1;
 			for(ISpaceObject spaceObject : spaceStationOrbitMap.get(WARPDIMID)) {
-				if(spaceObject.getTransitionTime() <= worldTime) {
+				if(spaceObject.getTransitionTime() <= AdvancedRocketry.proxy.getWorldTimeUniversal(0)) {
 					moveStationToBody(spaceObject, spaceObject.getDestOrbitingBody());
 					spaceStationOrbitMap.get(WARPDIMID).remove(spaceObject);
 				}
@@ -403,7 +403,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 
 
 		((DimensionProperties)station.getProperties()).setAtmosphereDensityDirect(0);
-		nextStationTransitionTick = (int)(ARConfiguration.getCurrentConfig().travelTimeMultiplier*timeDelta) + DimensionManager.getWorld(ARConfiguration.getCurrentConfig().spaceDimId).getTotalWorldTime();
+		nextStationTransitionTick = (int)(ARConfiguration.getCurrentConfig().travelTimeMultiplier*timeDelta) + AdvancedRocketry.proxy.getWorldTimeUniversal(0);
 		station.beginTransition(nextStationTransitionTick);
 		
 	}
