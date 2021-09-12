@@ -301,7 +301,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 		if(vec == null)
 			return super.getSkyColor(cameraEntity, partialTicks);
 		else {
-			Vec3d skyColorVec = super.getSkyColor(cameraEntity, partialTicks);
+			Vec3d skyColorVec = getDimensionProperties(new BlockPos((int)cameraEntity.posX, 0, (int)cameraEntity.posZ)).colorOverride ? new Vec3d(1.0, 1.0, 1.0) : super.getSkyColor(cameraEntity, partialTicks);
 			return new Vec3d(vec[0] * skyColorVec.x, vec[1] * skyColorVec.y, vec[2] * skyColorVec.z) ;
 		}
 	}
@@ -310,11 +310,11 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	@SideOnly(Side.CLIENT)
 	@Nonnull
 	public Vec3d getFogColor(float p_76562_1_, float p_76562_2_) {
+        Entity cameraEntity = Minecraft.getMinecraft().player;
 
-		Vec3d superVec = super.getFogColor(p_76562_1_, p_76562_2_);
-		//float multiplier = getAtmosphereDensityFromHeight(Minecraft.getMinecraft().renderViewEntity.posY);
+		Vec3d superVec = getDimensionProperties(new BlockPos((int)cameraEntity.posX, 0, (int)cameraEntity.posZ)).colorOverride ? new Vec3d(1.0, 1.0, 1.0) : super.getFogColor(p_76562_1_, p_76562_2_);
 
-		float[] vec = getDimensionProperties(new BlockPos((int)Minecraft.getMinecraft().player.posX, 0, (int)Minecraft.getMinecraft().player.posZ)).fogColor;
+		float[] vec = getDimensionProperties(new BlockPos((int)cameraEntity.posX, 0, (int)cameraEntity.posZ)).fogColor;
 		return new Vec3d(vec[0] * superVec.x, vec[1] * superVec.y, vec[2] * superVec.z);
 	}
 

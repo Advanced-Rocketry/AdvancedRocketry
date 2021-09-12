@@ -222,6 +222,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public float gravitationalMultiplier;
 	public int orbitalDist;
 	public boolean hasOxygen;
+	public boolean colorOverride;
 	private int originalAtmosphereDensity;
 	//Used in solar panels
 	public double peakInsolationMultiplier;
@@ -315,6 +316,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		isNativeDimension = true;
 		skyRenderOverride = false;
 		hasOxygen = true;
+		colorOverride = false;
 		peakInsolationMultiplier = -1;
 		peakInsolationMultiplierWithoutAtmosphere = -1;
 		isGasGiant = false;
@@ -1517,6 +1519,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		rotationalPhi = nbt.getDouble("rotationalPhi");
 		isRetrograde = nbt.getBoolean("isRetrograde");
 		hasOxygen = nbt.getBoolean("hasOxygen");
+		colorOverride = nbt.getBoolean("colorOverride");
 		atmosphereDensity = nbt.getInteger("atmosphereDensity");
 
 		if(nbt.hasKey("originalAtmosphereDensity"))
@@ -1742,6 +1745,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		nbt.setDouble("rotationalPhi", rotationalPhi);
 		nbt.setBoolean("isRetrograde", isRetrograde);
 		nbt.setBoolean("hasOxygen", hasOxygen);
+		nbt.setBoolean("colorOverride", colorOverride);
 		nbt.setInteger("atmosphereDensity", atmosphereDensity);
 		nbt.setInteger("originalAtmosphereDensity", originalAtmosphereDensity);
  		nbt.setDouble("peakInsolationMultiplier", peakInsolationMultiplier);
