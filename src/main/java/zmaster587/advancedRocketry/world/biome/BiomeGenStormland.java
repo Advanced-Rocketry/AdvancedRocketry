@@ -43,7 +43,7 @@ public class BiomeGenStormland extends Biome {
 	
 	@Override
 	public float getSpawningChance() {
-		return 1.0f;
+		return 0f; //Nothing spawns
 	}
 	
 	
