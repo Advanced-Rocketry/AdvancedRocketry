@@ -298,7 +298,7 @@ public class XMLPlanetLoader {
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_HASOXYGEN))
 				properties.hasOxygen = Boolean.parseBoolean(planetPropertyNode.getTextContent());
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_COLOR_OVERRIDE))
-				properties.hasOxygen = Boolean.parseBoolean(planetPropertyNode.getTextContent());
+				properties.colorOverride = Boolean.parseBoolean(planetPropertyNode.getTextContent());
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_SKYOVERRIDE))
 				properties.skyRenderOverride = Boolean.parseBoolean(planetPropertyNode.getTextContent());
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_ATMDENSITY)) {
@@ -928,6 +928,8 @@ public class XMLPlanetLoader {
 
 		if(!properties.hasOxygen)
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_HASOXYGEN, "false"));
+		if(properties.colorOverride)
+			nodePlanet.appendChild(createTextNode(doc, ELEMENT_COLOR_OVERRIDE, "true"));
 		if(properties.skyRenderOverride)
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_SKYOVERRIDE, "true"));
 

@@ -297,13 +297,11 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	@Override
 	@Nonnull
 	public Vec3d getSkyColor(@Nonnull Entity cameraEntity, float partialTicks) {
-		float[] vec = getDimensionProperties(new BlockPos((int)cameraEntity.posX, 0, (int)cameraEntity.posZ)).skyColor;
-		if(vec == null)
-			return super.getSkyColor(cameraEntity, partialTicks);
-		else {
-			Vec3d skyColorVec = getDimensionProperties(new BlockPos((int)cameraEntity.posX, 0, (int)cameraEntity.posZ)).colorOverride ? new Vec3d(1.0, 1.0, 1.0) : super.getSkyColor(cameraEntity, partialTicks);
-			return new Vec3d(vec[0] * skyColorVec.x, vec[1] * skyColorVec.y, vec[2] * skyColorVec.z) ;
-		}
+		//Multiplied by brightness value to make dark atmospheres actually dark
+		float[] vec = operateFloatOnTriFloatArray(getDimensionProperties(new BlockPos((int)cameraEntity.posX, 0, (int)cameraEntity.posZ)).skyColor, cameraEntity.world.getSunBrightness(partialTicks));
+
+		Vec3d skyColorVec = getDimensionProperties(new BlockPos((int)cameraEntity.posX, 0, (int)cameraEntity.posZ)).colorOverride ? new Vec3d(1.0, 1.0, 1.0) : super.getSkyColor(cameraEntity, partialTicks);
+		return new Vec3d(vec[0] * skyColorVec.x, vec[1] * skyColorVec.y, vec[2] * skyColorVec.z) ;
 	}
 
 	@Override
@@ -314,7 +312,9 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 		Vec3d superVec = getDimensionProperties(new BlockPos((int)cameraEntity.posX, 0, (int)cameraEntity.posZ)).colorOverride ? new Vec3d(1.0, 1.0, 1.0) : super.getFogColor(p_76562_1_, p_76562_2_);
 
-		float[] vec = getDimensionProperties(new BlockPos((int)cameraEntity.posX, 0, (int)cameraEntity.posZ)).fogColor;
+		//Multiplied by brightness value to make dark atmospheres actually dark
+		float[] vec = operateFloatOnTriFloatArray(getDimensionProperties(new BlockPos((int)cameraEntity.posX, 0, (int)cameraEntity.posZ)).fogColor, cameraEntity.world.getSunBrightness(p_76562_2_));
+
 		return new Vec3d(vec[0] * superVec.x, vec[1] * superVec.y, vec[2] * superVec.z);
 	}
 
@@ -440,5 +440,9 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	@Nonnull
 	public DimensionType getDimensionType() {
 		return DimensionManager.PlanetDimensionType;
+	}
+
+	private float[] operateFloatOnTriFloatArray(float[] array, float f) {
+		return new float[] {array[0] * f, array[1] * f, array[2] * f};
 	}
 }
