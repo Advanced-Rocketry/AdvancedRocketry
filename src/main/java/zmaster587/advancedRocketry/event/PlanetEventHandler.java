@@ -436,13 +436,11 @@ public class PlanetEventHandler {
 
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getEntity().dimension);
 		if(properties != null) {
-			float fog = Math.min(properties.getAtmosphereDensityAtHeight(event.getEntity().posY), 200);
-
 			if(event.getEntity().world.provider instanceof IPlanetaryProvider) {
-				Vec3d color = event.getEntity().world.provider.getSkyColor(event.getEntity(), 0f);
-				event.setRed((float) Math.min(color.x*1.4f,1f));
-				event.setGreen((float) Math.min(color.y*1.4f, 1f));
-				event.setBlue((float) Math.min(color.z*1.4f, 1f));
+				Vec3d color = event.getEntity().world.provider.getFogColor((float)event.getEntity().posY, 0f);
+				event.setRed((float) Math.min(color.x,1f));
+				event.setGreen((float) Math.min(color.y, 1f));
+				event.setBlue((float) Math.min(color.z, 1f));
 			}
 
 			if(endTime > 0) {
@@ -456,10 +454,6 @@ public class PlanetEventHandler {
 					event.setBlue((float) amt);
 				}
 
-			} else {
-				event.setRed(event.getRed()* fog);
-				event.setGreen(event.getGreen()* fog);
-				event.setBlue(event.getBlue()* fog);
 			}
 		}
 	}
@@ -523,8 +517,6 @@ public class PlanetEventHandler {
 		}
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getEntity().dimension);
 		if(properties != null && event.getState().getBlock() != Blocks.WATER && event.getState().getBlock() != Blocks.LAVA) {//& properties.atmosphereDensity > 125) {
-			float fog = Math.min(properties.getAtmosphereDensityAtHeight(event.getEntity().posY), 200);
-			//GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
 			GlStateManager.setFog(GlStateManager.FogMode.LINEAR);
 
 

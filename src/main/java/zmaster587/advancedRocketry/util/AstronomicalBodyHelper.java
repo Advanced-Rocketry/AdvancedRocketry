@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.util;
 
+import org.lwjgl.Sys;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 
@@ -21,9 +22,8 @@ public class AstronomicalBodyHelper {
 	 * @return the orbital period in MC Days (24000 ticks)
 	 */
 	public static double getOrbitalPeriod(int orbitalDistance, float solarSize) {
-		//Gives output in MC Days, uses 40 for Orbital Mechanics G
 		//One MC Year is 48 MC days (16 IRL Hours), one month is 8 MC Days
-		return 48d*Math.pow((Math.pow((orbitalDistance/100d), 3)*Math.pow(Math.PI, 2))/(Math.pow(solarSize, 3)*10d), 0.5d);
+		return 48d*Math.pow(Math.pow((orbitalDistance/(100d * solarSize)), 3), 0.5d);
 	}
 
 	/**
@@ -33,8 +33,9 @@ public class AstronomicalBodyHelper {
 	 * @return the orbital period in MC Days (24000 ticks)
 	 */
 	public static double getMoonOrbitalPeriod(float orbitalDistance, float planetaryMass) {
+		//One (lunar) MC month is 8 MC days, so the moon orbits in 8
 		//The same a the function for planets, but since gravity is directly correlated with mass uses the gravity of the plant for mass
-		return 48d*Math.pow((Math.pow((orbitalDistance/100d), 3)*Math.pow(Math.PI, 2))/(planetaryMass*10d), 0.5d);
+		return 8d*Math.pow(Math.pow((orbitalDistance/100d), 3)/planetaryMass, 0.5d);
 	}
 
 	/**
@@ -57,9 +58,28 @@ public class AstronomicalBodyHelper {
 	 */
 	public static double getMoonOrbitalTheta(int orbitalDistance, float parentGravitationalMultiplier) {
 		//Because the function is still in AU and solar mass, some correctional factors to convert to those units
-		double orbitalPeriod = getMoonOrbitalPeriod(orbitalDistance * 0.0025f, parentGravitationalMultiplier * 0.000003f);
+		double orbitalPeriod = getMoonOrbitalPeriod(orbitalDistance, parentGravitationalMultiplier);
 		//Returns angle, relative to 0, of a moon at any given time
 		return ((AdvancedRocketry.proxy.getWorldTimeUniversal(0) % (24000d*orbitalPeriod))/(24000d*orbitalPeriod))*(2d*Math.PI);
+	}
+
+	/**
+	 * Returns the visual orbital theta for a body at a given distance around its parent planet, at this current moment, as a value from 0 - 360
+	 * @param rotationalPeriod the rotational period of the moon we are rendering from
+	 * @param orbitalDistance the distance from the parent body
+	 * @param parentGravitationalMultiplier the distance from the parent body
+	 * @param currentOrbitalTheta the orbital theta of the moon we are rendering from
+	 * @param baseOrbitalTheta the base orbital theta of the planet in question
+	 * @return the current angle around the planet normalized 0 - 360, for GL calls
+	 */
+	public static float getParentPlanetThetaFromMoon(int rotationalPeriod, int orbitalDistance, float parentGravitationalMultiplier, double currentOrbitalTheta, double baseOrbitalTheta) {
+		//Convert from radians to degrees for easier math
+		float degreeOrbitalTheta = (float)(currentOrbitalTheta * 180/Math.PI);
+		//Computer the number of rotations per revolution and use that for how fast the planet would seem to orbit from the moon
+		//Planet will not move at all if it is tidally locked
+		float planetPositionTheta = (((float)(AstronomicalBodyHelper.getMoonOrbitalPeriod(orbitalDistance, parentGravitationalMultiplier) * 24000)/rotationalPeriod) - 1) * degreeOrbitalTheta;
+		//Add the base orbital theta so the planet is in the correct place
+		return (planetPositionTheta + (float)(baseOrbitalTheta * 180/Math.PI)) % 360;
 	}
 
 	/**

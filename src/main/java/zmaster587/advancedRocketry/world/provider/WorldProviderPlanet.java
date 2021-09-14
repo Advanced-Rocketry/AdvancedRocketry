@@ -185,12 +185,13 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float[] calcSunriseSunsetColors(float p_76560_1_, float p_76560_2_) {
-
+		Entity cameraEntity = Minecraft.getMinecraft().player;
 		float[] colors = getDimensionProperties(new BlockPos((int)Minecraft.getMinecraft().player.posX,0 , (int)Minecraft.getMinecraft().player.posZ)).sunriseSunsetColors;
 
 		if(colors == null)
 			return super.calcSunriseSunsetColors(p_76560_1_, p_76560_2_);
 
+		float[] intermediateColors = new float[3];
 		float[] finalColors = new float[4];
 
 		float f2 = 0.4F;
@@ -202,9 +203,14 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 			float f5 = (f3 - f4) / f2 * 0.5F + 0.5F;
 			float f6 = 1.0F - (1.0F - MathHelper.sin(f5 * (float)Math.PI)) * 0.99F;
 			f6 *= f6;
-			finalColors[0] = f5 * 0.3F + colors[0];
-			finalColors[1] = f5 * f5 * 0.7F + colors[1];
-			finalColors[2] = f5 * f5 * 0.1F + colors[2];
+			intermediateColors[0] = f5 * 0.3F + colors[0];
+			intermediateColors[1] = f5 * f5 * 0.7F + colors[1];
+			intermediateColors[2] = f5 * f5 * 0.1F + colors[2];
+			intermediateColors = operateFloatOnTriFloatArray(intermediateColors, cameraEntity.world.getSunBrightness(p_76560_2_));
+
+			finalColors[0] = intermediateColors[0];
+			finalColors[1] = intermediateColors[1];
+			finalColors[2] = intermediateColors[2];
 			finalColors[3] = f6 * (getAtmosphereDensityFromHeight(Minecraft.getMinecraft().getRenderViewEntity().posY, new BlockPos((int)Minecraft.getMinecraft().player.posX, 0, (int)Minecraft.getMinecraft().player.posZ)));
 			return finalColors;
 		}
