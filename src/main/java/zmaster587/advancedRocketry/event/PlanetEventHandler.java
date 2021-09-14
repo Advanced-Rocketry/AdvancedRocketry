@@ -437,10 +437,17 @@ public class PlanetEventHandler {
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getEntity().dimension);
 		if(properties != null) {
 			if(event.getEntity().world.provider instanceof IPlanetaryProvider) {
-				Vec3d color = event.getEntity().world.provider.getFogColor((float)event.getEntity().posY, 0f);
+				Vec3d color = event.getEntity().world.provider.getFogColor(event.getEntity().world.getCelestialAngle((float)event.getRenderPartialTicks()), (float)event.getRenderPartialTicks());
 				event.setRed((float) Math.min(color.x,1f));
 				event.setGreen((float) Math.min(color.y, 1f));
 				event.setBlue((float) Math.min(color.z, 1f));
+
+				//Make sure fog doesn't happen on zero atmospheres
+				if (properties.getAtmosphereDensity() == 0) {
+					event.setRed(0);
+					event.setGreen(0);
+					event.setBlue(0);
+				}
 			}
 
 			if(endTime > 0) {

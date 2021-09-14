@@ -97,22 +97,19 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 	Minecraft mc = Minecraft.getMinecraft();
 
-	private void renderStars()
-	{
+	private void renderStars() {
 		Random random = new Random(10842L);
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
-		for (int i = 0; i < 2000; ++i)
-		{
+		for (int i = 0; i < 2000; ++i) {
 			double d0 = random.nextFloat() * 2.0F - 1.0F;
 			double d1 = random.nextFloat() * 2.0F - 1.0F;
 			double d2 = random.nextFloat() * 2.0F - 1.0F;
 			double d3 = 0.15F + random.nextFloat() * 0.1F;
 			double d4 = d0 * d0 + d1 * d1 + d2 * d2;
 
-			if (d4 < 1.0D && d4 > 0.01D)
-			{
+			if (d4 < 1.0D && d4 > 0.01D) {
 				d4 = 1.0D / Math.sqrt(d4);
 				d0 *= d4;
 				d1 *= d4;
@@ -130,8 +127,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 				double d15 = Math.sin(d14);
 				double d16 = Math.cos(d14);
 
-				for (int j = 0; j < 4; ++j)
-				{
+				for (int j = 0; j < 4; ++j) {
 					double d17 = 0.0D;
 					double d18 = (double)((j & 2) - 1) * d3;
 					double d19 = (double)((j + 1 & 2) - 1) * d3;
@@ -217,8 +213,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			primaryStar = properties.getStar();
 			if (primaryStar != null) {
 				sunSize = properties.getStar().getSize();
-			}
-			else
+			} else
 				primaryStar = DimensionManager.getInstance().getStar(0);
 			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
@@ -227,8 +222,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 					travelDirection = station.getForwardDirection();
 				}
 			}
-		}
-		else if(DimensionManager.getInstance().isDimensionCreated(mc.world.provider.getDimension())) {
+		} else if(DimensionManager.getInstance().isDimensionCreated(mc.world.provider.getDimension())) {
 
 			properties = DimensionManager.getInstance().getDimensionProperties(mc.world.provider.getDimension());
 
@@ -265,8 +259,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			primaryStar = properties.getStar();
 			if (primaryStar != null) {
 				sunSize = properties.getStar().getSize();
-			}
-			else
+			} else
 				primaryStar = DimensionManager.getInstance().getStar(0);
 			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
@@ -275,8 +268,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 					travelDirection = station.getForwardDirection();
 				}
 			}
-		}
-		else {
+		} else {
 			children = new LinkedList<>();
 			isMoon = false;
 			atmosphere = DimensionManager.overworldProperties.getAtmosphereDensityAtHeight(mc.getRenderViewEntity().posY);
@@ -293,8 +285,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		float f3 = (float)vec3.z;
 		float f6;
 
-		if (this.mc.gameSettings.anaglyph)
-		{
+		if (this.mc.gameSettings.anaglyph) {
 			float f4 = (f1 * 30.0F + f2 * 59.0F + f3 * 11.0F) / 100.0F;
 			float f5 = (f1 * 30.0F + f2 * 70.0F) / 100.0F;
 			f6 = (f1 * 30.0F + f3 * 70.0F) / 100.0F;
@@ -303,10 +294,12 @@ public class RenderPlanetarySky extends IRenderHandler {
 			f3 = f6;
 		}
 
-		//Simulate atmospheric thickness
-		f1 = (float)Math.pow(f1, Math.sqrt(atmosphere));
-		f2 = (float)Math.pow(f2, Math.sqrt(atmosphere));
-		f3 = (float)Math.pow(f3, Math.sqrt(atmosphere));
+		//Simulate atmospheric thickness, vaugely
+		//This is done like this to prevent problems with superbright atmospheres on low-atmosphere planets
+		//Plus you couldn't see stars during the day anyway
+		f1 = properties.getAtmosphereDensity() < 1 ? 0 : (float) Math.pow(f1, Math.sqrt(Math.max(atmosphere, 0.81)));
+		f2 = properties.getAtmosphereDensity() < 1 ? 0 : (float) Math.pow(f2, Math.sqrt(Math.max(atmosphere, 0.81)));
+		f3 = properties.getAtmosphereDensity() < 1 ? 0 : (float) Math.pow(f3, Math.sqrt(Math.max(atmosphere, 0.81)));
 
 
 		GlStateManager.color(f1, f2, f3);
@@ -440,13 +433,12 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 
 		GlStateManager.disableTexture2D();
-		float f18 = mc.world.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
+		float f18 = mc.world.getStarBrightness(partialTicks) * f6 + ((atmosphere == 0 || (f1 < 0.09 && f2 < 0.09 && f3 < 0.09)) ? 1 : 0) - (atmosphere > 1 ? atmosphere - 1 : 0);
 
 		if(mc.world.isRainingAt(mc.player.getPosition().add(0, 199, 0)))
 			f18 *= 1-mc.world.getRainStrength(partialTicks);
 
-		if (f18 > 0.0F)
-		{
+		if (f18 > 0.0F) {
 			GlStateManager.color(f18, f18, f18, f18);
 			GL11.glPushMatrix();
 			if(isWarp) {
@@ -629,8 +621,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		
 		double d0 = this.mc.player.getPositionEyes(partialTicks).y - mc.world.getHorizon();
 
-		if (d0 < 0.0D)
-		{
+		if (d0 < 0.0D) {
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0.0F, 12.0F, 0.0F);
 			GL11.glCallList(this.glSkyList2);

@@ -36,7 +36,6 @@ import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
-import zmaster587.advancedRocketry.item.components.ItemUpgrade;
 import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
 import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderCavePlanet;
@@ -335,7 +334,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 		float[] vec = getDimensionProperties(new BlockPos((int) cameraEntity.posX, 0, (int) cameraEntity.posZ)).fogColor;
 		if (cameraEntity.world.provider instanceof WorldProviderPlanet) {
 			WorldProviderPlanet world = ((WorldProviderPlanet)cameraEntity.world.provider);
-			vec = operateFloatOnTriFloatArray(vec, world.getSunBrightness(p_76562_2_));
+			vec = operateFloatOnTriFloatArray(vec, world.getSunBrightness(Minecraft.getMinecraft().getRenderPartialTicks()));
 		}
 
 		return new Vec3d(vec[0] * superVec.x, vec[1] * superVec.y, vec[2] * superVec.z);
