@@ -220,8 +220,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 				g = random.nextFloat()*0.1f + .9f;
 				b = random.nextFloat()*0.1f + .9f;
 
-				for (int j = 0; j < 4; ++j)
-				{
+				for (int j = 0; j < 4; ++j) {
 					double d17 = 0.0D;
 					double d18 = (double)((j & 2) - 1) * size;
 					double d19 = (double)((j + 1 & 2) - 1) * size;
@@ -313,8 +312,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			primaryStar = properties.getStar();
 			if (primaryStar != null) {
 				sunSize = properties.getStar().getSize();
-			}
-			else
+			} else
 				primaryStar = DimensionManager.getInstance().getStar(new ResourceLocation(Constants.STAR_NAMESPACE, "0"));
 			if(properties.isStation()) {
 				isWarp = SpaceObjectManager.WARPDIMID.equals(properties.getParentPlanet());
@@ -323,8 +321,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 					travelDirection = station.getForwardDirection();
 				}
 			}
-		}
-		else {
+		} else {
 			children = new LinkedList<>();
 			isMoon = false;
 			hasAtmosphere = DimensionManager.overworldProperties.hasAtmosphere();
@@ -343,9 +340,9 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 		float f6;
 
 		//Simulate atmospheric thickness
-		f1 = (float)Math.pow(f1, Math.sqrt(atmosphere));
-		f2 = (float)Math.pow(f2, Math.sqrt(atmosphere));
-		f3 = (float)Math.pow(f3, Math.sqrt(atmosphere));
+		f1 = properties.getAtmosphereDensity() < 1 ? 0 : (float) Math.pow(f1, Math.sqrt(Math.max(atmosphere, 0.81)));
+		f2 = properties.getAtmosphereDensity() < 1 ? 0 : (float) Math.pow(f2, Math.sqrt(Math.max(atmosphere, 0.81)));
+		f3 = properties.getAtmosphereDensity() < 1 ? 0 : (float) Math.pow(f3, Math.sqrt(Math.max(atmosphere, 0.81)));
 
 
 		RenderSystem.color3f(f1, f2, f3);
@@ -474,13 +471,12 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 
 		RenderSystem.disableTexture();
-		float f18 = mc.world.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
+		float f18 = mc.world.getStarBrightness(partialTicks) * f6 + ((atmosphere == 0 || (f1 < 0.09 && f2 < 0.09 && f3 < 0.09)) ? 1 : 0) - (atmosphere > 1 ? atmosphere - 1 : 0);
 
 		if(mc.world.isRainingAt(playerPos.add(0, 199, 0)))
 			f18 *= 1-mc.world.getRainStrength(partialTicks);
 
-		if (f18 > 0.0F)
-		{
+		if (f18 > 0.0F) {
 			RenderSystem.color4f(f18, f18, f18, f18);
 
 			matrix.push();
@@ -674,8 +670,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 		RenderSystem.enableTexture();
 
-		if(properties.isAsteroid())
-		{
+		if(properties.isAsteroid()) {
 			mc.getTextureManager().bindTexture(asteroid1);
 			RenderSystem.color3f(1, 1, 1);
 			glSkyList3.bindBuffer();
