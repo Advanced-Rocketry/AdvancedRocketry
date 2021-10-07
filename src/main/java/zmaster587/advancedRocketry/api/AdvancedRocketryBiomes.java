@@ -130,7 +130,7 @@ public class AdvancedRocketryBiomes {
 	public static ConfiguredSurfaceBuilder<SurfaceBuilderConfig> BASALT_CONFIG;
 
 	private static <SC extends ISurfaceBuilderConfig> ConfiguredSurfaceBuilder<SC> registerSurfaceBuilder(String p_244192_0_, ConfiguredSurfaceBuilder<SC> p_244192_1_) {
-		return  WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_SURFACE_BUILDER, p_244192_0_, p_244192_1_);
+		return  WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_SURFACE_BUILDER, new ResourceLocation(Constants.modId, p_244192_0_), p_244192_1_);
 	}
 
 	public static void configureSurfaceBuilders()
@@ -205,7 +205,7 @@ public class AdvancedRocketryBiomes {
 	}
 
 	private static <WC extends ICarverConfig> ConfiguredCarver<WC> configureCarver(String p_243773_0_, ConfiguredCarver<WC> p_243773_1_) {
-		return WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_CARVER, p_243773_0_, p_243773_1_);
+		return WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_CARVER, new ResourceLocation(Constants.modId, p_243773_0_), p_243773_1_);
 	}
 	// End Carver config
 
@@ -234,7 +234,7 @@ public class AdvancedRocketryBiomes {
 	}
 
 	private static <FC extends IFeatureConfig> ConfiguredFeature<FC, ?> registerTree(String p_243968_0_, ConfiguredFeature<FC, ?> p_243968_1_) {
-		return Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, p_243968_0_, p_243968_1_);
+		return Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Constants.modId, p_243968_0_), p_243968_1_);
 	}
 
 	//
