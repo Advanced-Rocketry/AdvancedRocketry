@@ -297,9 +297,10 @@ public class RenderPlanetarySky extends IRenderHandler {
 		//Simulate atmospheric thickness, vaugely
 		//This is done like this to prevent problems with superbright atmospheres on low-atmosphere planets
 		//Plus you couldn't see stars during the day anyway
-		f1 = properties.getAtmosphereDensity() < 1 ? 0 : (float) Math.pow(f1, Math.sqrt(Math.max(atmosphere, 0.81)));
-		f2 = properties.getAtmosphereDensity() < 1 ? 0 : (float) Math.pow(f2, Math.sqrt(Math.max(atmosphere, 0.81)));
-		f3 = properties.getAtmosphereDensity() < 1 ? 0 : (float) Math.pow(f3, Math.sqrt(Math.max(atmosphere, 0.81)));
+		int atmosphereInt = properties.getAtmosphereDensity();
+		f1 = atmosphereInt < 1 ? 0 : (float) Math.pow(f1, Math.sqrt(Math.max(atmosphere, 0.81)));
+		f2 = atmosphereInt < 1 ? 0 : (float) Math.pow(f2, Math.sqrt(Math.max(atmosphere, 0.81)));
+		f3 = atmosphereInt < 1 ? 0 : (float) Math.pow(f3, Math.sqrt(Math.max(atmosphere, 0.81)));
 
 
 		GlStateManager.color(f1, f2, f3);
@@ -433,6 +434,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 
 		GlStateManager.disableTexture2D();
+		//This determines whether stars should come out regardless of thickness of atmosphere, as that is factored in later
+		// - it checks if the colors of the sky are so close to black that you'd see stars, or if the atmosphere is zero and so no one gives a damn
 		float f18 = mc.world.getStarBrightness(partialTicks) * f6 + ((atmosphere == 0 || (f1 < 0.09 && f2 < 0.09 && f3 < 0.09)) ? 1 : 0) - (atmosphere > 1 ? atmosphere - 1 : 0);
 
 		if(mc.world.isRainingAt(mc.player.getPosition().add(0, 199, 0)))
