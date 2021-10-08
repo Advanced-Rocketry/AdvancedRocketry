@@ -442,15 +442,21 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				case LIQUID_MONOPROPELLANT:
 					amount = dataManager.get(fuelLevelMonopropellant);
 					stats.setFuelAmount(FuelType.LIQUID_MONOPROPELLANT,amount);
+					break;
 				case LIQUID_BIPROPELLANT:
 					amount = dataManager.get(fuelLevelBipropellant);
 					stats.setFuelAmount(FuelType.LIQUID_BIPROPELLANT,amount);
+					break;
 				case LIQUID_OXIDIZER:
 					amount = dataManager.get(fuelLevelOxidizer);
 					stats.setFuelAmount(FuelType.LIQUID_OXIDIZER,amount);
+					break;
 				case NUCLEAR_WORKING_FLUID:
 					amount = dataManager.get(fuelLevelOxidizer);
 					stats.setFuelAmount(FuelType.NUCLEAR_WORKING_FLUID,amount);
+					break;
+				default:
+					break;
 			}
 
 			stats.setFuelAmount(fuelType, amount);
