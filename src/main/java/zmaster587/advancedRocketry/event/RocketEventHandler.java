@@ -283,7 +283,8 @@ public class RocketEventHandler extends Gui {
 
 		double deltaY = (Minecraft.getMinecraft().getRenderViewEntity().posY - Minecraft.getMinecraft().getRenderViewEntity().lastTickPosY)*partialTicks;
 
-		double size = (getImgSize*5/(72-(Minecraft.getMinecraft().getRenderViewEntity().posY * 1000 / ARConfiguration.getCurrentConfig().orbit)));
+		// todo fix
+		double size = (getImgSize/(5 * Minecraft.getMinecraft().getRenderViewEntity().posY * (1000f / ARConfiguration.getCurrentConfig().orbit)));
 
 
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
@@ -292,7 +293,7 @@ public class RocketEventHandler extends Gui {
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		GlStateManager.bindTexture(outerBounds.getTextureId());
-		double size2 = size*16;
+		double size2 = size*400;
 		float brightness2 =brightness*.43f;
 		GlStateManager.color(brightness2, brightness2, brightness2, MathHelper.clamp(((float)Minecraft.getMinecraft().getRenderViewEntity().posY -200f)/50f, 0f, 1f));
 		RenderHelper.renderTopFaceWithUV(buffer, -10.1, size2, size2, -size2, -size2, 0, 1, 0, 1);
