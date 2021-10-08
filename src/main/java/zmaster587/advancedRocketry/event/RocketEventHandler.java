@@ -315,12 +315,12 @@ public class RocketEventHandler extends Screen {
 		RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		float brightness = 16;
-		
+
 		if(Minecraft.getInstance().getRenderViewEntity() != null && Minecraft.getInstance().getRenderViewEntity().world != null)
 			brightness = Minecraft.getInstance().getRenderViewEntity().world.getBrightness(new BlockPos( Minecraft.getInstance().getRenderViewEntity().getPositionVec()));
 
 		double deltaY = (Minecraft.getInstance().getRenderViewEntity().getPosY() - Minecraft.getInstance().getRenderViewEntity().lastTickPosY)*partialTicks;
-		double size = (getImgSize*5/(72-(Minecraft.getInstance().getRenderViewEntity().getPosY() * 1000 / ARConfiguration.getCurrentConfig().orbit.get())));
+		double size = (getImgSize/(5 * Minecraft.getInstance().getRenderViewEntity().getPosY() * (1000f / ARConfiguration.getCurrentConfig().orbit.get())));
 		
 		
 		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(Minecraft.getInstance().getRenderViewEntity().world);
@@ -332,7 +332,7 @@ public class RocketEventHandler extends Screen {
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
 		//RenderSystem.bindTexture(outerBounds.getTextureId());
 		Minecraft.getInstance().textureManager.bindTexture(props.getPlanetIconLEO());
-		double size2 = size*16;
+		double size2 = size*400;
 		float brightness2 =brightness;
 		RenderHelper.renderTopFaceWithUV(matrix, buffer, -10.1, size2, size2, -size2, -size2, 0, 1, 0, 1, brightness2, brightness2, brightness2, MathHelper.clamp(((float)Minecraft.getInstance().getRenderViewEntity().getPosY() -400f)/50f, 0f, 1f));
 		Tessellator.getInstance().draw();

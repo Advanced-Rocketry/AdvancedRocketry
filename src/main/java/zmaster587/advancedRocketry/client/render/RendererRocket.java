@@ -46,8 +46,7 @@ public class RendererRocket extends EntityRenderer<EntityRocket> implements IRen
 
 	//TODO: possibly optimize with GL lists
 	@Override
-	public void render(EntityRocket entity, float entityYaw, float partialTicks, MatrixStack matrix,
-			IRenderTypeBuffer bufferIn, int packedLightIn) {
+	public void render(EntityRocket entity, float entityYaw, float partialTicks, MatrixStack matrix, IRenderTypeBuffer bufferIn, int packedLightIn) {
 
 		StorageChunk storage  = entity.storage;
 
@@ -59,11 +58,9 @@ public class RendererRocket extends EntityRenderer<EntityRocket> implements IRen
 		float halfy = storage.getSizeY()/2f;
 		float halfz = storage.getSizeZ()/2f;
 
-		/*if(entity.getPassengers().contains(Minecraft.getInstance().player)) {
-			float angle = (float)(((EntityRocket)entity).getRCSRotateProgress()*0.9f*Math.PI/180f);
-			y = ((EntityRocket)entity).stats.getSeatY();
-			y= (0.5-((EntityRocket)entity).stats.getSeatY())*MathHelper.cos(angle) + (0)*MathHelper.sin(angle);
-			//y = +0.5 -((EntityRocket)entity).stats.getSeatY();
+        //NONAPPLICABLE FIX FROM 1.12 THESE THREE LINES
+		/*if(Minecraft.getMinecraft().player != null && entity.getPassengers().contains(Minecraft.getMinecraft().player)) {
+			y = -((EntityRocket)entity).stats.getSeatY();
 		}*/
 
 		/*matrix.push();
