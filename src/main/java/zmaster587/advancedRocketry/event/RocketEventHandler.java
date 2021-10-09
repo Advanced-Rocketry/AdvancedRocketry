@@ -282,8 +282,6 @@ public class RocketEventHandler extends Gui {
 			brightness = Minecraft.getMinecraft().getRenderViewEntity().world.getSunBrightness(partialTicks);
 
 		double deltaY = (Minecraft.getMinecraft().getRenderViewEntity().posY - Minecraft.getMinecraft().getRenderViewEntity().lastTickPosY)*partialTicks;
-
-		// todo fix
 		double size = (getImgSize/(5 * Minecraft.getMinecraft().getRenderViewEntity().posY * (1000f / ARConfiguration.getCurrentConfig().orbit)));
 
 
