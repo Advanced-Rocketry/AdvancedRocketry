@@ -74,6 +74,7 @@ import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.IWorldInfo;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -444,7 +445,7 @@ public class StorageChunk implements IWorld, IStorageChunk {
 	}
 
 	private static boolean isLiquidContainerBlock(TileEntity tile) {
-		return tile instanceof IFluidHandler;
+		return tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).isPresent();
 	}
 
 	public void readFromNBT(CompoundNBT nbt) {

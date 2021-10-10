@@ -8,6 +8,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
@@ -260,9 +262,8 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 
 							TileEntity tile= world.getTileEntity(currPos);
 
-							if(tile instanceof IFluidHandler) {
-								for(int i = 0; i < ((IFluidHandler)tile).getTanks(); i++)
-									fluidCapacity += ((IFluidHandler)tile).getTankCapacity(i);
+							if(tile != null && tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).isPresent()) {
+									fluidCapacity += tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).resolve().get().getTankCapacity(0);
 							}
 						}
 					}

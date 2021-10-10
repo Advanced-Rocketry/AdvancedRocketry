@@ -203,7 +203,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		connectedInfrastructure = new LinkedList<>();
 		infrastructureCoords = new HashSet<>();
 
-		lastWorldTickTicked = p_i1582_1_.getGameTime();
+		lastWorldTickTicked = p_i1582_1_ != null ? p_i1582_1_.getGameTime() : 0;
 		autoDescendTimer = 5000;
 		landingPadDisplayText = new ModuleText(256, 16, "", 0x00FF00, 2f);
 		landingPadDisplayText.setColor(0x00ff00);

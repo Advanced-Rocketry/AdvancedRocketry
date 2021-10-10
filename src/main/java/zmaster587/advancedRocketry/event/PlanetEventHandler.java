@@ -376,12 +376,17 @@ public class PlanetEventHandler {
 
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world);
 		if(properties != null) {
-			float fog = Math.min(properties.getAtmosphereDensityAtHeight(entity.getPosY()), 200);
-
-			float[] color =  properties.getSkyColor();
+			float[] color =  properties.fogColor;
 			event.setRed((float) Math.min(event.getRed()*color[0]*1.0f,1f));
 			event.setGreen((float) Math.min(event.getGreen()*color[1]*1.0f, 1f));
 			event.setBlue((float) Math.min(event.getBlue()*color[2]*1.0f, 1f));
+
+			//Make sure fog doesn't happen on zero atmospheres
+			if (properties.getAtmosphereDensity() == 0) {
+				event.setRed(0);
+				event.setGreen(0);
+				event.setBlue(0);
+			}
 
 			if(endTime > 0) {
 				double amt = (endTime - Minecraft.getInstance().world.getGameTime()) / (double)duration;
@@ -394,10 +399,6 @@ public class PlanetEventHandler {
 					event.setBlue((float) amt);
 				}
 
-			} else {
-				event.setRed(event.getRed()* fog);
-				event.setGreen(event.getGreen()* fog);
-				event.setBlue(event.getBlue()* fog);
 			}
 		}
 	}
@@ -441,10 +442,8 @@ public class PlanetEventHandler {
 		if(event.getInfo().getRenderViewEntity().getEntityWorld() == null || event.getInfo().getRenderViewEntity().getEntityWorld() instanceof WorldDummy)
 			return;
 
-
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getInfo().getRenderViewEntity().getEntityWorld());
 		if(properties != null && event.getInfo().getBlockAtCamera().getBlock() != Blocks.WATER && event.getInfo().getBlockAtCamera().getBlock() != Blocks.LAVA) {//& properties.atmosphereDensity > 125) {
-			float fog = Math.min(properties.getAtmosphereDensityAtHeight(event.getInfo().getRenderViewEntity().getPosY()), 200);
 			//GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
 			GlStateManager.fogMode(GlStateManager.FogMode.LINEAR.param);
 

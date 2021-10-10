@@ -136,8 +136,12 @@ public class AdvancedRocketryItems {
 	public static Item itemGenericSeat;
 	public static Item itemEngine;
 	public static Item itemBiPropellantEngine;
+	public static Item itemNuclearEngine;
+	public static Item itemNuclearCore;
 	public static Item itemFuelTank;
 	public static Item itemBiPropellantFuelTank;
+	public static Item itemOxidizerFuelTank;
+	public static Item itemNuclearWorkingFluidTank;
 	public static Item itemFuelingStation;
 	public static Item itemMonitoringStation;
 	public static Item itemSatelliteBuilder;
@@ -388,8 +392,12 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemGenericSeat = new BlockItem(AdvancedRocketryBlocks.blockGenericSeat, typicalBlockProperties);
 		AdvancedRocketryItems.itemEngine = new BlockItem(AdvancedRocketryBlocks.blockEngine, typicalBlockProperties);
 		AdvancedRocketryItems.itemBiPropellantEngine = new BlockItem(AdvancedRocketryBlocks.blockBipropellantEngine, typicalBlockProperties);
+		AdvancedRocketryItems.itemNuclearEngine = new BlockItem(AdvancedRocketryBlocks.blockNuclearEngine, typicalBlockProperties);
+		AdvancedRocketryItems.itemNuclearCore = new BlockItem(AdvancedRocketryBlocks.blockNuclearCore, typicalBlockProperties);
 		AdvancedRocketryItems.itemFuelTank = new BlockItem(AdvancedRocketryBlocks.blockFuelTank, typicalBlockProperties);
 		AdvancedRocketryItems.itemBiPropellantFuelTank = new BlockItem(AdvancedRocketryBlocks.blockBipropellantFuelTank, typicalBlockProperties);
+		AdvancedRocketryItems.itemOxidizerFuelTank = new BlockItem(AdvancedRocketryBlocks.blockOxidizerFuelTank, typicalBlockProperties);
+		AdvancedRocketryItems.itemNuclearWorkingFluidTank = new BlockItem(AdvancedRocketryBlocks.blockNuclearFuelTank, typicalBlockProperties);
 		AdvancedRocketryItems.itemFuelingStation = new BlockItem(AdvancedRocketryBlocks.blockFuelingStation, typicalBlockProperties);
 		AdvancedRocketryItems.itemMonitoringStation = new BlockItem(AdvancedRocketryBlocks.blockMonitoringStation, typicalBlockProperties);
 		AdvancedRocketryItems.itemSatelliteBuilder = new BlockItem(AdvancedRocketryBlocks.blockSatelliteBuilder, typicalBlockProperties);
@@ -488,7 +496,11 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemEngine.setRegistryName("rocketmotor"),
 				AdvancedRocketryItems.itemBiPropellantEngine.setRegistryName("bipropellantrocketmotor"),
 				AdvancedRocketryItems.itemAdvEngine.setRegistryName("advrocketmotor"),
+				AdvancedRocketryItems.itemNuclearEngine.setRegistryName("nuclearengine"),
+				AdvancedRocketryItems.itemNuclearCore.setRegistryName("nuclearcore"),
 				AdvancedRocketryItems.itemFuelTank.setRegistryName("fueltank"),
+				AdvancedRocketryItems.itemOxidizerFuelTank.setRegistryName("oxidizerfueltank"),
+				AdvancedRocketryItems.itemNuclearWorkingFluidTank.setRegistryName("nucleartank"),
 				AdvancedRocketryItems.itemBiPropellantFuelTank.setRegistryName("bipropellantfueltank"),
 				AdvancedRocketryItems.itemFuelingStation.setRegistryName("fuelingstation"),
 				AdvancedRocketryItems.itemMonitoringStation.setRegistryName("monitoringstation"),
