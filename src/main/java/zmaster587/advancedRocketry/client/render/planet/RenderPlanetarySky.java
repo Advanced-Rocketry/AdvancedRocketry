@@ -97,22 +97,19 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 	Minecraft mc = Minecraft.getMinecraft();
 
-	private void renderStars()
-	{
+	private void renderStars() {
 		Random random = new Random(10842L);
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
-		for (int i = 0; i < 2000; ++i)
-		{
+		for (int i = 0; i < 2000; ++i) {
 			double d0 = random.nextFloat() * 2.0F - 1.0F;
 			double d1 = random.nextFloat() * 2.0F - 1.0F;
 			double d2 = random.nextFloat() * 2.0F - 1.0F;
 			double d3 = 0.15F + random.nextFloat() * 0.1F;
 			double d4 = d0 * d0 + d1 * d1 + d2 * d2;
 
-			if (d4 < 1.0D && d4 > 0.01D)
-			{
+			if (d4 < 1.0D && d4 > 0.01D) {
 				d4 = 1.0D / Math.sqrt(d4);
 				d0 *= d4;
 				d1 *= d4;
@@ -130,8 +127,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 				double d15 = Math.sin(d14);
 				double d16 = Math.cos(d14);
 
-				for (int j = 0; j < 4; ++j)
-				{
+				for (int j = 0; j < 4; ++j) {
 					double d17 = 0.0D;
 					double d18 = (double)((j & 2) - 1) * d3;
 					double d19 = (double)((j + 1 & 2) - 1) * d3;
@@ -217,8 +213,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			primaryStar = properties.getStar();
 			if (primaryStar != null) {
 				sunSize = properties.getStar().getSize();
-			}
-			else
+			} else
 				primaryStar = DimensionManager.getInstance().getStar(0);
 			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
@@ -227,8 +222,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 					travelDirection = station.getForwardDirection();
 				}
 			}
-		}
-		else if(DimensionManager.getInstance().isDimensionCreated(mc.world.provider.getDimension())) {
+		} else if(DimensionManager.getInstance().isDimensionCreated(mc.world.provider.getDimension())) {
 
 			properties = DimensionManager.getInstance().getDimensionProperties(mc.world.provider.getDimension());
 
@@ -265,8 +259,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 			primaryStar = properties.getStar();
 			if (primaryStar != null) {
 				sunSize = properties.getStar().getSize();
-			}
-			else
+			} else
 				primaryStar = DimensionManager.getInstance().getStar(0);
 			if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				isWarp = properties.getParentPlanet() == SpaceObjectManager.WARPDIMID;
@@ -275,8 +268,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 					travelDirection = station.getForwardDirection();
 				}
 			}
-		}
-		else {
+		} else {
 			children = new LinkedList<>();
 			isMoon = false;
 			atmosphere = DimensionManager.overworldProperties.getAtmosphereDensityAtHeight(mc.getRenderViewEntity().posY);
@@ -293,8 +285,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		float f3 = (float)vec3.z;
 		float f6;
 
-		if (this.mc.gameSettings.anaglyph)
-		{
+		if (this.mc.gameSettings.anaglyph) {
 			float f4 = (f1 * 30.0F + f2 * 59.0F + f3 * 11.0F) / 100.0F;
 			float f5 = (f1 * 30.0F + f2 * 70.0F) / 100.0F;
 			f6 = (f1 * 30.0F + f3 * 70.0F) / 100.0F;
@@ -303,10 +294,14 @@ public class RenderPlanetarySky extends IRenderHandler {
 			f3 = f6;
 		}
 
-		//Simulate atmospheric thickness
-		f1 *= atmosphere;
-		f2 *= atmosphere;
-		f3 *= atmosphere;
+		//Simulate atmospheric thickness, vaugely
+		//This is done like this to prevent problems with superbright atmospheres on low-atmosphere planets
+		//Plus you couldn't see stars during the day anyway
+		int atmosphereInt = properties.getAtmosphereDensity();
+		f1 = atmosphereInt < 1 ? 0 : (float) Math.pow(f1, Math.sqrt(Math.max(atmosphere, 0.81)));
+		f2 = atmosphereInt < 1 ? 0 : (float) Math.pow(f2, Math.sqrt(Math.max(atmosphere, 0.81)));
+		f3 = atmosphereInt < 1 ? 0 : (float) Math.pow(f3, Math.sqrt(Math.max(atmosphere, 0.81)));
+
 
 		GlStateManager.color(f1, f2, f3);
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
@@ -329,7 +324,6 @@ public class RenderPlanetarySky extends IRenderHandler {
 		if (afloat != null) {
 			GlStateManager.disableTexture2D();
 			GlStateManager.shadeModel(GL11.GL_SMOOTH);
-			shadowColorMultiplier = afloat;
 			GL11.glPushMatrix();
 			GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef(MathHelper.sin(mc.world.getCelestialAngleRadians(partialTicks)) < 0.0F ? 180.0F : 0.0F, 0.0F, 0.0F, 1.0F);
@@ -366,9 +360,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 			Tessellator.getInstance().draw();
 			GL11.glPopMatrix();
 			GlStateManager.shadeModel(GL11.GL_FLAT);
-		} else if (world.isDaytime()) {
-			shadowColorMultiplier = new float[]{f1, f2, f3};
 		}
+		shadowColorMultiplier = new float[]{f1, f2, f3};
 
 		GlStateManager.enableTexture2D();
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
@@ -441,13 +434,14 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 
 		GlStateManager.disableTexture2D();
-		float f18 = mc.world.getStarBrightness(partialTicks) * f6 * (atmosphere) + (1-atmosphere);
+		//This determines whether stars should come out regardless of thickness of atmosphere, as that is factored in later
+		// - it checks if the colors of the sky are so close to black that you'd see stars, or if the atmosphere is zero and so no one gives a damn
+		float f18 = mc.world.getStarBrightness(partialTicks) * f6 + ((atmosphere == 0 || (f1 < 0.09 && f2 < 0.09 && f3 < 0.09)) ? 1 : 0) - (atmosphere > 1 ? atmosphere - 1 : 0);
 
 		if(mc.world.isRainingAt(mc.player.getPosition().add(0, 199, 0)))
 			f18 *= 1-mc.world.getRainStrength(partialTicks);
 
-		if (f18 > 0.0F)
-		{
+		if (f18 > 0.0F) {
 			GlStateManager.color(f18, f18, f18, f18);
 			GL11.glPushMatrix();
 			if(isWarp) {
@@ -490,85 +484,133 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 		}
 
-		//Render the parent planet
-		if(isMoon) {
-			GL11.glPushMatrix();
+		//Useful celestial angle for the next renders
+		float celestialAngleDegrees = 360 * celestialAngle;
 
-			GL11.glRotatef((float)myPhi, 0f, 0f, 1f);
-			GL11.glRotatef((float)((partialTicks*myTheta + ((1-partialTicks)*myPrevOrbitalTheta)) * 180F/Math.PI), 1f, 0f, 0f);
-
-			float phiAngle = (float)((myPhi) * Math.PI/180f);
-
-			//Close enough approximation, I missed something but seems to off by no more than 30*
-			//Nobody will look
-			double x = MathHelper.sin(phiAngle)*MathHelper.cos((float)myTheta);
-			double y = -MathHelper.sin((float)myTheta);
-			double rotation = -Math.PI/2f + Math.atan2(x, y) - (myTheta - Math.PI )*MathHelper.sin(phiAngle);
-
-			//Draw Rings
-			if(parentHasRings) {
-				GL11.glPushMatrix();
-				GL11.glRotatef(90f, 0f, 1f, 0f);
-
-				f10 = 100;
-				double ringDist = 0;
-				mc.renderEngine.bindTexture(DimensionProperties.planetRings);
-
-				GL11.glRotated(70, 1, 0, 0);
-				GL11.glTranslated(0, -10, 50);
-
-				GlStateManager.color(parentRingColor[0], parentRingColor[1], parentRingColor[2],multiplier);
-				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
-				buffer.pos(f10, ringDist, -f10).tex(1.0D, 0.0D).endVertex();
-				buffer.pos(-f10, ringDist, -f10).tex(0.0D, 0.0D).endVertex();
-				buffer.pos(-f10, ringDist, f10).tex(0.0D, 1.0D).endVertex();
-				buffer.pos(f10, ringDist, f10).tex(1.0D, 1.0D).endVertex();
-				Tessellator.getInstance().draw();
-				GL11.glPopMatrix();
-
-				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		//For these parts only render if the atmosphere is below a certain threshold (SHP atmosphere)
+		if (DimensionProperties.AtmosphereTypes.SUPERHIGHPRESSURE.denserThan(DimensionProperties.AtmosphereTypes.getAtmosphereTypeFromValue((int)(100 * atmosphere)))) {
+			//Render the parent planet
+			if (isMoon) {
 				GL11.glPushMatrix();
 
-				GL11.glRotatef(90f, 0f, 1f, 0f);
-				GL11.glRotated(70, 1, 0, 0);
-				GL11.glTranslated(0, -10, 50);
+				//Do a whole lotta math to figure out where the parent planet is supposed to be
+				//That 0.3054325f is there because we need to do adjustments for some ^$%^$% reason and it's consistently off by 17.5 degrees
+				float planetPositionTheta = AstronomicalBodyHelper.getParentPlanetThetaFromMoon(properties.rotationalPeriod, properties.orbitalDist, parentProperties.gravitationalMultiplier, myTheta, properties.baseOrbitTheta);
 
-				mc.renderEngine.bindTexture(DimensionProperties.planetRingShadow);
-				GlStateManager.color(0f, 0f, 0f,1);
-				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);	
-				buffer.pos(f10, ringDist, -f10).tex(1.0D, 0.0D).endVertex();
-				buffer.pos(-f10, ringDist, -f10).tex(0.0D, 0.0D).endVertex();
-				buffer.pos(-f10, ringDist, f10).tex(0.0D, 1.0D).endVertex();
-				buffer.pos(f10, ringDist, f10).tex(1.0D, 1.0D).endVertex();
-				Tessellator.getInstance().draw();
+				GL11.glRotatef((float) myPhi, 0f, 0f, 1f);
+				GL11.glRotatef(planetPositionTheta, 1f, 0f, 0f);
+				rotateAroundAntiAxis();
+
+				float phiAngle = (float) ((myPhi) * Math.PI / 180f);
+
+				//Close enough approximation, I missed something but seems to off by no more than 30*
+				//Nobody will look
+				double x = MathHelper.sin(phiAngle) * MathHelper.cos((float) myTheta);
+				double y = -MathHelper.sin((float) myTheta);
+				double rotation = -Math.PI / 2f + Math.atan2(x, y) - (myTheta - Math.PI) * MathHelper.sin(phiAngle);
+
+				//Draw Rings
+				//Technically these should be BEFORE the planet position theta rotate call, with their own, but it keeps crashing due to something dumb and I don't want to bother
+				//So we have the hacky internal stuff
+				if (parentHasRings) {
+					GL11.glPushMatrix();
+
+					//Semihacky rotation stuff to keep rings synced to a different rotation than planet in the sky
+					GL11.glRotatef(-planetPositionTheta + ((float) (myTheta * 180f / Math.PI) % 360f), 1f, 0f, 0f);
+
+					GL11.glRotatef(90f, 0f, 1f, 0f);
+
+					f10 = 100;
+					double ringDist = 0;
+					mc.renderEngine.bindTexture(DimensionProperties.planetRings);
+
+					GL11.glRotated(70, 1, 0, 0);
+					GL11.glTranslated(0, -10, 50);
+
+					GlStateManager.color(parentRingColor[0], parentRingColor[1], parentRingColor[2], multiplier);
+					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+					buffer.pos(f10, ringDist, -f10).tex(1.0D, 0.0D).endVertex();
+					buffer.pos(-f10, ringDist, -f10).tex(0.0D, 0.0D).endVertex();
+					buffer.pos(-f10, ringDist, f10).tex(0.0D, 1.0D).endVertex();
+					buffer.pos(f10, ringDist, f10).tex(1.0D, 1.0D).endVertex();
+					Tessellator.getInstance().draw();
+					GL11.glPopMatrix();
+
+					GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+					GL11.glPushMatrix();
+
+					//Semihacky rotation stuff to keep rings synced to a different rotation than planet in the sky
+					GL11.glRotatef(-planetPositionTheta + ((float) (myTheta * 180f / Math.PI) % 360f), 1f, 0f, 0f);
+
+					GL11.glRotatef(90f, 0f, 1f, 0f);
+					GL11.glRotated(70, 1, 0, 0);
+					GL11.glTranslated(0, -10, 50);
+
+					mc.renderEngine.bindTexture(DimensionProperties.planetRingShadow);
+					GlStateManager.color(0f, 0f, 0f, 1);
+					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+					buffer.pos(f10, ringDist, -f10).tex(1.0D, 0.0D).endVertex();
+					buffer.pos(-f10, ringDist, -f10).tex(0.0D, 0.0D).endVertex();
+					buffer.pos(-f10, ringDist, f10).tex(0.0D, 1.0D).endVertex();
+					buffer.pos(f10, ringDist, f10).tex(1.0D, 1.0D).endVertex();
+					Tessellator.getInstance().draw();
+					GL11.glPopMatrix();
+
+					GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+
+				}
+
+				float flippedPlanetPositionTheta = 360 - planetPositionTheta;
+
+				//This is for non-sunset stuff
+				float alpha2 = atmosphere >= 2 ? 0 : 1;
+				//Color sunset planets in the sunset zone by fog and atmosphere color
+				//This math is one hell of a trip. Very very annoying to play with. Don't touch without knowledge of what it's doing
+				if (afloat != null && ((180 < celestialAngleDegrees && celestialAngleDegrees < flippedPlanetPositionTheta) || (180 > celestialAngleDegrees && celestialAngleDegrees < flippedPlanetPositionTheta)))
+					shadowColorMultiplier = new float[]{f1, f2, f3};
+				else if (afloat != null && (planetPositionTheta < 105 || planetPositionTheta > 255)) {
+					shadowColorMultiplier = afloat;
+					shadowColorMultiplier = new float[]{shadowColorMultiplier[0] * (1 - multiplier) + f1 * multiplier, shadowColorMultiplier[1] * (1 - multiplier) + f2 * multiplier, shadowColorMultiplier[2] * (1 - multiplier) + f3 * multiplier};
+				}
+
+				renderPlanet(buffer, parentProperties, planetOrbitalDistance, multiplier, rotation, false, false, (float) Math.pow(parentProperties.getGravitationalMultiplier(), 0.4), shadowColorMultiplier, alpha2);
 				GL11.glPopMatrix();
-
-				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 			}
 
+			//This needs to exist specifically for init purposes
+			//The overworld literally breaks without it
+			shadowColorMultiplier[0] = 1.000001f * shadowColorMultiplier[0];
 
-			assert(parentProperties != null);
-			renderPlanet(buffer, parentProperties, planetOrbitalDistance, multiplier, rotation, false, false, (float)Math.pow(parentProperties.getGravitationalMultiplier(), 0.4), shadowColorMultiplier);
-			GL11.glPopMatrix();
-		}
+			for (DimensionProperties moons : children) {
+				GL11.glPushMatrix();
 
-		for(DimensionProperties moons : children) {
-			GL11.glPushMatrix();
+				float planetPositionTheta = (float)((partialTicks * moons.orbitTheta + ((1 - partialTicks) * moons.prevOrbitalTheta)) * 180F / Math.PI);
+				float flippedPlanetPositionTheta = 360 - planetPositionTheta;
 
-			double rot = ((partialTicks*moons.orbitTheta + ((1-partialTicks)*moons.prevOrbitalTheta)) * 180F/Math.PI);
+				GL11.glRotatef((float) moons.orbitalPhi, 0f, 0f, 1f);
+				GL11.glRotated(planetPositionTheta, 1f, 0f, 0f);
 
-			GL11.glRotatef((float)moons.orbitalPhi, 0f, 0f, 1f);
-			GL11.glRotated(rot, 1f, 0f, 0f);
+				//Close enough approximation, I missed something but seems to off by no more than 30*
+				//Nobody will look
+				float phiAngle = (float) ((moons.orbitalPhi) * Math.PI / 180f);
+				double x = -MathHelper.sin(phiAngle) * MathHelper.cos((float) moons.orbitTheta);
+				double y = MathHelper.sin((float) moons.orbitTheta);
+				double rotation = (-Math.PI / 2f + Math.atan2(x, y) - (moons.orbitTheta - Math.PI) * MathHelper.sin(phiAngle)) + Math.PI;
 
-			//Close enough approximation, I missed something but seems to off by no more than 30*
-			//Nobody will look
-			float phiAngle = (float)((moons.orbitalPhi) * Math.PI/180f);
-			double x = -MathHelper.sin(phiAngle)*MathHelper.cos((float)moons.orbitTheta);
-			double y = MathHelper.sin((float)moons.orbitTheta);
-			double rotation = -Math.PI/2f + Math.atan2(x, y) - (moons.orbitTheta - Math.PI)*MathHelper.sin(phiAngle);
+				//This is for non-sunset stuff
+				float alpha2 = atmosphere >= 2 ? 0 : 1;
+				//Color sunset planets in the sunset zone by fog and atmosphere color
+				//This math is one hell of a trip. Very very annoying to play with. Don't touch without knowledge of what it's doing
+				if (afloat != null && ((180 < celestialAngleDegrees && celestialAngleDegrees < flippedPlanetPositionTheta) || (180 > celestialAngleDegrees && celestialAngleDegrees < flippedPlanetPositionTheta)))
+					shadowColorMultiplier = new float[]{f1, f2, f3};
+				else if (afloat != null && (planetPositionTheta < 105 || planetPositionTheta > 255)) {
+					shadowColorMultiplier = afloat;
+					shadowColorMultiplier = new float[]{shadowColorMultiplier[0] * (1 - multiplier) + f1 * multiplier, shadowColorMultiplier[1] * (1 - multiplier) + f2 * multiplier, shadowColorMultiplier[2] * (1 - multiplier) + f3 * multiplier};
+				}
 
-			renderPlanet(buffer, moons, moons.getParentOrbitalDistance(), multiplier, rotation, moons.hasAtmosphere(), moons.hasRings, (float)Math.pow(moons.gravitationalMultiplier, 0.4), shadowColorMultiplier);
-			GL11.glPopMatrix();
+				renderPlanet(buffer, moons, moons.getParentOrbitalDistance(), multiplier, rotation, moons.hasAtmosphere(), moons.hasRings, (float) Math.pow(moons.gravitationalMultiplier, 0.4), shadowColorMultiplier, alpha2);
+				GL11.glPopMatrix();
+			}
 		}
 
 		GlStateManager.enableFog();
@@ -582,8 +624,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		
 		double d0 = this.mc.player.getPositionEyes(partialTicks).y - mc.world.getHorizon();
 
-		if (d0 < 0.0D)
-		{
+		if (d0 < 0.0D) {
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0.0F, 12.0F, 0.0F);
 			GL11.glCallList(this.glSkyList2);
@@ -638,24 +679,29 @@ public class RenderPlanetarySky extends IRenderHandler {
 		return EnumFacing.EAST;
 	}
 
-	protected void renderPlanet(BufferBuilder buffer, DimensionProperties properties, float planetOrbitalDistance, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, boolean hasRing, float gravitationalMultiplier, float[] shadowColorMultiplier) {
-		renderPlanet2(buffer, properties, 20f*AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance) * gravitationalMultiplier, alphaMultiplier, shadowAngle, hasRing, shadowColorMultiplier);
+	protected void renderPlanet(BufferBuilder buffer, DimensionProperties properties, float planetOrbitalDistance, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, boolean hasRing, float gravitationalMultiplier, float[] shadowColorMultiplier, float alphaMultiplier2) {
+		renderPlanet2(buffer, properties, 20f*AstronomicalBodyHelper.getBodySizeMultiplier(planetOrbitalDistance) * gravitationalMultiplier, alphaMultiplier, shadowAngle, hasRing, shadowColorMultiplier, alphaMultiplier2);
 	}
 
-	protected void renderPlanet2(BufferBuilder buffer, DimensionProperties properties, float size, float alphaMultiplier, double shadowAngle, boolean hasRing, float[] shadowColorMultiplier) {
+	protected void renderPlanet2(BufferBuilder buffer, DimensionProperties properties, float size, float alphaMultiplier, double shadowAngle, boolean hasRing, float[] shadowColorMultiplier, float alphaMultiplier2) {
 		ResourceLocation icon = getTextureForPlanet(properties);
 		boolean hasAtmosphere = properties.hasAtmosphere();
-		boolean gasGiant = properties.isGasGiant();
 		boolean hasDecorators = properties.hasDecorators();
+		boolean gasGiant = properties.isGasGiant();
 		float[] skyColor = properties.skyColor;
 		float[] ringColor = properties.skyColor;
 
-		renderPlanetPubHelper(buffer, icon, 0, 0, -20, size*0.2f, alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing, hasDecorators, shadowColorMultiplier);
+		renderPlanetPubHelper(buffer, icon, 0, 0, -20, size*0.2f, alphaMultiplier, shadowAngle, hasAtmosphere, skyColor, ringColor, gasGiant, hasRing, hasDecorators, shadowColorMultiplier, alphaMultiplier2);
 	}
 
 	protected void rotateAroundAxis() {
 		Vector3F<Float> axis = getRotateAxis();
 		GL11.glRotatef(getSkyRotationAmount() * 360.0F, axis.x, axis.y, axis.z);
+	}
+
+	protected void rotateAroundAntiAxis() {
+		Vector3F<Float> axis = getRotateAxis();
+		GL11.glRotatef(-getSkyRotationAmount() * 360.0F, axis.x, axis.y, axis.z);
 	}
 
 	protected float getSkyRotationAmount() {
@@ -666,7 +712,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 		return axis;
 	}
 
-	public static void renderPlanetPubHelper(BufferBuilder buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing, boolean hasDecorators, float[] shadowColorMultiplier) {
+	public static void renderPlanetPubHelper(BufferBuilder buffer, ResourceLocation icon, int locationX, int locationY, double zLevel, float size, float alphaMultiplier, double shadowAngle, boolean hasAtmosphere, float[] skyColor, float[] ringColor, boolean gasGiant, boolean hasRing, boolean hasDecorators, float[] shadowColorMultiplier, float alphaMultiplier2) {
 		GlStateManager.enableBlend();
 
 		//int k = mc.theWorld.getMoonPhase();
@@ -765,7 +811,8 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 			Minecraft.getMinecraft().world.getCelestialAngle(0);
 			//Draw Shadow
-			GlStateManager.color(shadowColorMultiplier[0], shadowColorMultiplier[1], shadowColorMultiplier[2], 1);
+			GlStateManager.clearColor(1f, 1f, 1f, 1f);
+			GlStateManager.color(shadowColorMultiplier[0], shadowColorMultiplier[1], shadowColorMultiplier[2], alphaMultiplier2);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.getShadowResource());
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

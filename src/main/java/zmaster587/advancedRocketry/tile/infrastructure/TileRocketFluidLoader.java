@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -33,6 +34,7 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import javax.annotation.Nonnull;
+import java.util.Calendar;
 import java.util.List;
 
 public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastructure,  ITickable,  IButtonInventory, INetworkMachine, IGuiCallback {
@@ -101,32 +103,32 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	
 	@Override
 	public void update() {
-		//Move a stack of items
+		//Move fluids
 		if(!world.isRemote && rocket != null) {
 
 			boolean isAllowToOperate = (inputstate == RedstoneState.OFF || isStateActive(inputstate, getStrongPowerForSides(world, getPos())));
 
 			List<TileEntity> tiles = rocket.storage.getFluidTiles();
-			boolean rocketContainsItems = false;
+			boolean rocketFluidFull = false;
 
 			//Function returns if something can be moved
 			for(TileEntity tile : tiles) {
-				IFluidHandler handler = (IFluidHandler)tile;
+				IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 
 				//See if we have anything to fill because redstone output
-				FluidStack fStack = handler.drain(1, false);
-				if(fStack == null || handler.fill(fStack, false) > 0)
-					rocketContainsItems = true;
+				FluidStack rocketFluid = handler.drain(1, false);
+				if(handler.fill(rocketFluid, false) > 0)
+					rocketFluidFull = true;
 
 				if(isAllowToOperate) {
-					fStack = fluidTank.drain(fluidTank.getCapacity(), false);
-					if(fStack != null && fStack.amount > 0)
-						fluidTank.drain(handler.fill(fStack, true), true);
+					rocketFluid = fluidTank.drain(fluidTank.getCapacity(), false);
+					if(rocketFluid != null && rocketFluid.amount > 0)
+						fluidTank.drain(handler.fill(rocketFluid, true), true);
 				}
 			}
 
 			//Update redstone state
-			setRedstoneState(!rocketContainsItems);
+			setRedstoneState(!rocketFluidFull);
 
 		}
 	}

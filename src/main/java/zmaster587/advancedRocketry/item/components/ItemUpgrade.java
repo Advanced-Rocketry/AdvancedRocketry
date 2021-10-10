@@ -24,8 +24,9 @@ import java.util.List;
 
 public class ItemUpgrade extends ItemIngredient implements IArmorComponent {
 
-	private int legUpgradeDamage = 2;
-	private int bootsUpgradeDamage = 3;
+	private final int legUpgradeDamage = 2;
+	private final int bootsUpgradeDamage = 3;
+	private final int speedUpgradeDamage = 1;
 	private Field walkSpeed;
 	
 	public ItemUpgrade(int num) {
@@ -90,7 +91,7 @@ public class ItemUpgrade extends ItemIngredient implements IArmorComponent {
 
 	@Override
 	public boolean isAllowedInSlot(@Nonnull ItemStack componentStack, EntityEquipmentSlot targetSlot) {
-		if(componentStack.getItemDamage() == legUpgradeDamage)
+		if(componentStack.getItemDamage() == legUpgradeDamage || componentStack.getItemDamage() == speedUpgradeDamage)
 			return targetSlot == EntityEquipmentSlot.LEGS;
 		else if(componentStack.getItemDamage() == bootsUpgradeDamage)
 			return targetSlot == EntityEquipmentSlot.FEET;
