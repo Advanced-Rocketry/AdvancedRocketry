@@ -286,7 +286,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity {
 				}
 			}
 
-			if(this.posY >= dstTilePos.pos.y -4 && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+			if(dstTilePos != null && dstTilePos.pos != null && this.posY >= dstTilePos.pos.y -4 && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 				setCapsuleMotion(0);
 
 
