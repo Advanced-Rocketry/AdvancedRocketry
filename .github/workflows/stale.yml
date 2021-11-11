@@ -1,3 +1,4 @@
+/*
 name: "Close stale issues"
 on:
   schedule:
@@ -18,3 +19,4 @@ jobs:
         exempt-pr-labels: 'awaiting-approval,work-in-progress,PrExempt'
         days-before-stale: 60
         days-before-close: 90
+*/
