@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.infrastructure;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,13 +18,9 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
@@ -51,6 +46,7 @@ import zmaster587.libVulpes.util.IconResource;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,15 +90,15 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 				//Check to see if we should set the rocket fuel
 				if (linkedRocket.stats.getFuelFluid() == null) {
 					if ((FuelRegistry.instance.isFuel(FuelType.LIQUID_MONOPROPELLANT, currentFluid) && linkedRocket.getFuelCapacity(FuelType.LIQUID_MONOPROPELLANT) > 0) || (FuelRegistry.instance.isFuel(FuelType.LIQUID_BIPROPELLANT, currentFluid) && linkedRocket.getFuelCapacity(FuelType.LIQUID_BIPROPELLANT) > 0))
-						linkedRocket.stats.setFuelFluid(currentFluid.getRegistryName());
+						linkedRocket.stats.setFuelFluid(currentFluid);
 				}
 				if (linkedRocket.stats.getOxidizerFluid() == null) {
 					if (FuelRegistry.instance.isFuel(FuelType.LIQUID_OXIDIZER, currentFluid))
-						linkedRocket.stats.setOxidizerFluid(currentFluid.getRegistryName());
+						linkedRocket.stats.setOxidizerFluid(currentFluid);
 				}
 				if (linkedRocket.stats.getWorkingFluid() == null) {
 					if (FuelRegistry.instance.isFuel(FuelType.NUCLEAR_WORKING_FLUID, currentFluid))
-						linkedRocket.stats.setWorkingFluid(currentFluid.getRegistryName());
+						linkedRocket.stats.setWorkingFluid(currentFluid);
 				}
 
 				//Actually fill the fuel if that is the case
@@ -230,8 +226,8 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity,
-			PlayerEntity player, World world) {
+	@ParametersAreNonnullByDefault
+	public boolean onLinkStart(ItemStack item, TileEntity entity, PlayerEntity player, World world) {
 
 		ItemLinker.setMasterCoords(item, pos);
 
@@ -257,14 +253,16 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
-	public boolean onLinkComplete(ItemStack item, TileEntity entity,
-			PlayerEntity player, World world) {
+	@ParametersAreNonnullByDefault
+	public boolean onLinkComplete(ItemStack item, TileEntity entity, PlayerEntity player, World world) {
 		if(player.world.isRemote)
 			Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessage(new TranslationTextComponent("msg.linker.error.firstmachine"));
 		return false;
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public int[] getSlotsForFace(Direction side) {
 		if(side == Direction.DOWN)
 			return  new int[]{1};
@@ -273,7 +271,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		List<ModuleBase> list = new ArrayList<ModuleBase>();
+		List<ModuleBase> list = new ArrayList<>();
 
 		list.add(new ModulePower(156, 12, this));
 		list.add(new ModuleSlotArray(45, 18, this, 0, 1));
@@ -383,12 +381,14 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 		return inventory.isEmpty();
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}

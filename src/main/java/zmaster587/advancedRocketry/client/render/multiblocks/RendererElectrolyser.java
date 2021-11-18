@@ -1,20 +1,14 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
 
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Quaternion;
-
-import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -24,7 +18,8 @@ import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileElectrolyser;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
-import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class RendererElectrolyser extends TileEntityRenderer<TileElectrolyser> {
 
@@ -43,11 +38,10 @@ public class RendererElectrolyser extends TileEntityRenderer<TileElectrolyser> {
 	}
 	
 	@Override
-	public void render(TileElectrolyser tile, float partialTicks, MatrixStack matrix,
-			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn){
-		TileMultiblockMachine multiBlockTile = (TileMultiblockMachine)tile;
+	@ParametersAreNonnullByDefault
+	public void render(TileElectrolyser tile, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn){
 
-		if(!multiBlockTile.canRender())
+		if(!tile.canRender())
 			return;
 
 		if (tile.getWorld() != null) {
@@ -69,7 +63,7 @@ public class RendererElectrolyser extends TileEntityRenderer<TileElectrolyser> {
 
 		//Lightning effect
 
-		if(multiBlockTile.isRunning()) {
+		if(tile.isRunning()) {
 			matrix.push();
 			matrix.translate(-1.5, 0.05f, 0.5f);
 			double width = 0.01;

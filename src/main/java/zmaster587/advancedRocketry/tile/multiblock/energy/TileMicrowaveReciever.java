@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.multiblock.energy;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,7 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.api.distmarker.Dist;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
@@ -63,7 +61,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	ModuleText textModule;
 	public TileMicrowaveReciever() {
 		super(AdvancedRocketryTileEntityType.TILE_MICROWAVE_RECIEVER);
-		connectedSatellites = new LinkedList<Long>();
+		connectedSatellites = new LinkedList<>();
 		initialCheck = false;
 		insolationPowerMultiplier = 0;
 		textModule = new ModuleText(40, 20, LibVulpes.proxy.getLocalizedString("msg.microwaverec.notgenerating"), 0x2b2b2b);
@@ -123,8 +121,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				ItemStack stack = inv.getStackInSlot(i);
 				if(!stack.isEmpty() && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
-					ItemSatelliteIdentificationChip item = (ItemSatelliteIdentificationChip)stack.getItem();
-					list.add(item.getSatelliteId(stack));
+					list.add(ItemSatelliteIdentificationChip.getSatelliteId(stack));
 				}
 			}
 		}
@@ -174,7 +171,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 					if(pos2.getY() > this.getPos().getY()) {
 						if(!world.isAirBlock(pos2.add(0,1,0))) {
 							world.removeBlock(pos2, false);
-							world.playSound((double)pos2.getX(), (double)pos2.getY(), (double)pos2.getZ(), new SoundEvent(new ResourceLocation("fire.fire")), SoundCategory.BLOCKS, 1f, 3f, false);
+							world.playSound(pos2.getX(), pos2.getY(), pos2.getZ(), new SoundEvent(new ResourceLocation("fire.fire")), SoundCategory.BLOCKS, 1f, 3f, false);
 						}
 					}
 				}

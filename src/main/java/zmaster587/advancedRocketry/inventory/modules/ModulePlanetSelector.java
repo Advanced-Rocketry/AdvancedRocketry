@@ -35,8 +35,6 @@ import zmaster587.libVulpes.render.RenderHelper;
 
 import java.util.*;
 
-import javax.swing.ButtonModel;
-
 public class ModulePlanetSelector extends ModuleContainerPan implements IButtonInventory {
 
 
@@ -85,10 +83,10 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		int center = size/2;
 		zoom = 1.0;
 
-		planetList = new ArrayList<ModuleButton>();
-		moduleList = new ArrayList<ModuleBase>();
-		staticModuleList = new ArrayList<ModuleBase>();
-		renderPropertiesMap = new HashMap<ResourceLocation, PlanetRenderProperties>();
+		planetList = new ArrayList<>();
+		moduleList = new ArrayList<>();
+		staticModuleList = new ArrayList<>();
+		renderPropertiesMap = new HashMap<>();
 		currentlySelectedPlanet = new PlanetRenderProperties();
 		currentSystem = Constants.INVALID_STAR;
 		selectedSystem = Constants.INVALID_PLANET;
@@ -349,7 +347,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 				renderPlanetarySystem(properties, size/2, size/2, 1f,3f*properties.getPathLengthToStar());
 			}
 			else
-				renderStarSystem(DimensionManager.getInstance().getStar(currentSystem), size/2, size/2, 1f*(float) zoom, (float)zoom*.5f);
+				renderStarSystem(DimensionManager.getInstance().getStar(currentSystem), size/2, size/2, (float) zoom, (float)zoom*.5f);
 		}
 		else
 			renderGalaxyMap(DimensionManager.getInstance(), size/2, size/2, (float) zoom, (float)zoom*.25f);
@@ -557,13 +555,13 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 	@OnlyIn(value=Dist.CLIENT)
 	private void refreshSideBar(boolean planetChanged, ResourceLocation selectedPlanet) {
-		List<ModuleBase> list2 = new LinkedList<ModuleBase>();
+		List<ModuleBase> list2 = new LinkedList<>();
 
 		if(!stellarView) {
 			if(!DimensionManager.getInstance().isStar(currentSystem)) {
 				DimensionProperties parent = DimensionManager.getInstance().getDimensionProperties(currentSystem);
 
-				List<ResourceLocation> propertyList = new LinkedList<ResourceLocation>(parent.getChildPlanets());
+				List<ResourceLocation> propertyList = new LinkedList<>(parent.getChildPlanets());
 				propertyList.add(parent.getId());
 				int i = 0;
 				for( ResourceLocation childId :  propertyList) 
@@ -592,7 +590,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 					if(planetDefiner != null && !planetDefiner.isPlanetKnown(properties))
 						continue;
 
-					if(!properties.isMoon() && !ARConfiguration.GetSpaceDimId().equals(properties.getId())) {
+					if(!properties.isMoon() && !ARConfiguration.getSpaceDimId().equals(properties.getId())) {
 						ModuleButton button = new ModuleButton(0, i*18, properties.getName(), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
 						button.setAdditionalData(properties.getId());
 						list2.add(button);

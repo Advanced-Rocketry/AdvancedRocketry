@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.ParticleStatus;
@@ -81,7 +80,7 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 
 	@Override
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();//super.getModules(id, player);
+		List<ModuleBase> modules = new LinkedList<>();//super.getModules(id, player);
 		modules.add(toggleSwitch);
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(sideSelectorModule);

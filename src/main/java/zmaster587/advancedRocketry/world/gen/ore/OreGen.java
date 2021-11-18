@@ -76,9 +76,7 @@ public class OreGen {
 	public static <T> T getValue(Field f, Object instance) {
 		try {
 			return (T) f.get(instance);
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		} catch (IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
 
@@ -87,14 +85,10 @@ public class OreGen {
 	public static void setValue(Field f, Object instance, Object value) {
 		try {
 			f.set(instance, value);
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		} catch (IllegalArgumentException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return;
 	}
 
 	/** Retrieves the current set of features in the ore phase. */

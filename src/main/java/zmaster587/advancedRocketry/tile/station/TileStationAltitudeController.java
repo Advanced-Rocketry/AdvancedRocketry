@@ -5,19 +5,15 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
-import zmaster587.advancedRocketry.api.IMission;
-import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
@@ -37,6 +33,8 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -59,7 +57,7 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 
 	@Override
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		modules.add(moduleGrav);
 		//modules.add(numThrusters);
 		modules.add(maxGravBuildSpeed);
@@ -84,18 +82,19 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 	@Override
 	public SUpdateTileEntityPacket getUpdatePacket() {
 		CompoundNBT nbt = write(new CompoundNBT());
-		
 
-		SUpdateTileEntityPacket packet = new SUpdateTileEntityPacket(pos, 0, nbt);
-		return packet;
+
+		return new SUpdateTileEntityPacket(pos, 0, nbt);
 	}
 
+	@Nonnull
 	@Override
 	public CompoundNBT getUpdateTag() {
 		return write(new CompoundNBT());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void read(BlockState blkstate, CompoundNBT nbt) {
 		super.read(blkstate, nbt);
 
@@ -103,7 +102,9 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 		redstoneControl.setRedstoneState(state);
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public CompoundNBT write(CompoundNBT nbt) {
 		super.write(nbt);
 		nbt.putByte("redstoneState", (byte) state.ordinal());
@@ -151,7 +152,7 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 
 	@Override
 	public void tick() {
-		if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world))) {
+		if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world))) {
 
 			if(!world.isRemote) {
 				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
@@ -253,12 +254,14 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 		PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}

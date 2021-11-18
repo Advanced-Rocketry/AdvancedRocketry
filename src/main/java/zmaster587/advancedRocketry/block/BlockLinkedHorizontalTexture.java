@@ -2,12 +2,9 @@ package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
@@ -16,6 +13,9 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 
 public class BlockLinkedHorizontalTexture extends Block {
@@ -30,6 +30,7 @@ public class BlockLinkedHorizontalTexture extends Block {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	protected void fillStateContainer(Builder<Block, net.minecraft.block.BlockState> builder) {
 		super.fillStateContainer(builder);
 		builder.add(TYPE);
@@ -79,6 +80,8 @@ public class BlockLinkedHorizontalTexture extends Block {
 	 * returns its solidified counterpart.
 	 * Note that this method should ideally consider only the specific face passed in.
 	 */
+	@Nonnull
+	@ParametersAreNonnullByDefault
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
 		
 		int state = stateIn.get(TYPE).ordinal();
@@ -101,7 +104,7 @@ public class BlockLinkedHorizontalTexture extends Block {
 		return this.getDefaultState().with(TYPE, IconNames.values()[state]);
 	}
 
-	static enum IconNames implements IStringSerializable {
+	enum IconNames implements IStringSerializable {
 		ALLEDGE("all"),
 		NOTRIGHTEDGE("nredge"),
 		NOTTOPEDGE("ntedge"),
@@ -123,6 +126,7 @@ public class BlockLinkedHorizontalTexture extends Block {
 		IconNames(String suffix) {
 			this.suffix = suffix;
 		}
+		@Nonnull
 		@Override
 		public String getString() {
 			return suffix;

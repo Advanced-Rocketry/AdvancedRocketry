@@ -3,10 +3,8 @@ package zmaster587.advancedRocketry.block;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -15,7 +13,6 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.tile.multiblock.TileBeacon;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.inventory.GuiHandler;
-import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
 import java.util.Random;
@@ -36,12 +33,11 @@ public class BlockBeacon extends BlockMultiblockMachine {
 	}
 
 	@OnlyIn(value=Dist.CLIENT)
-	public void randomDisplayTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand)
-	{
+	public void randomDisplayTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
 		if(worldIn.getTileEntity(pos) instanceof TileBeacon && ((TileBeacon)worldIn.getTileEntity(pos)).getMachineEnabled()) {
 			Direction enumfacing = stateIn.get(FACING);
 			for(int i = 0; i < 10; i++)
-				AdvancedRocketry.proxy.spawnParticle("reddust", worldIn,  pos.getX() +- enumfacing.getXOffset() + worldIn.rand.nextDouble(), pos.getY() + 5 - worldIn.rand.nextDouble(), pos.getZ() - enumfacing.getZOffset() + worldIn.rand.nextDouble(), 0, 0, 0);
+				AdvancedRocketry.proxy.spawnParticle("reddust", worldIn,  pos.getX() - enumfacing.getXOffset() + worldIn.rand.nextDouble(), pos.getY() + 5 - worldIn.rand.nextDouble(), pos.getZ() - enumfacing.getZOffset() + worldIn.rand.nextDouble(), 0, 0, 0);
 		}
 	}
 }

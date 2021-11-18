@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.satellite;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -37,7 +36,7 @@ import zmaster587.libVulpes.tile.TileInventoriedRFConsumer;
 import zmaster587.libVulpes.util.INetworkMachine;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -56,7 +55,9 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 		data.setMaxData(1000);
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public int[] getSlotsForFace(Direction side) {
 		return new int[0];
 	}
@@ -271,12 +272,14 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 		return true;
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}

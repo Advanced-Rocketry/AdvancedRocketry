@@ -1,12 +1,4 @@
 package zmaster587.advancedRocketry.asm;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.*;
-import zmaster587.advancedRocketry.AdvancedRocketry;
-
-import java.util.AbstractMap.SimpleEntry;
-import java.util.HashMap;
 
 /*public class ClassTransformer implements IClassTransformer {
 

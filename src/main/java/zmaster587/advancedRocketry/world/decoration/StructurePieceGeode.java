@@ -19,7 +19,6 @@ import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.libVulpes.block.BlockMeta;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -89,7 +88,7 @@ public class StructurePieceGeode extends ScatteredStructurePiece {
 						.collect(Collectors.toList())
 		);
 
-		int avgY = (int) 64;
+		int avgY = 64;
 
 		for(int relx = 15; relx >= 0; relx--) {
 			for(int relz = 15; relz >= 0; relz--) {

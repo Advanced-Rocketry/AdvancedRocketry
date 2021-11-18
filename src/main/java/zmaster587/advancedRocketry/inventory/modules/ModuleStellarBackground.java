@@ -26,7 +26,7 @@ public class ModuleStellarBackground extends ModuleBase {
 			Minecraft.getInstance().getTextureManager().bindTexture(this.icon);
 			gui.blit(matrix, 0, 0, 0, 0, gui.width,  gui.height);
 			Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.genericStation);
-			gui.blit(matrix, (int)(256), (int)(64), 0, 0, 256, 256);
+			gui.blit(matrix, 256, 64, 0, 0, 256, 256);
 		}
 	}
 }

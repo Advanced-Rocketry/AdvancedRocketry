@@ -1,21 +1,13 @@
 package zmaster587.advancedRocketry;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.SpellParticle;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
@@ -24,13 +16,9 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.carver.WorldCarver;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.world.ForgeChunkManager;
-import net.minecraftforge.common.world.ForgeChunkManager.LoadingValidationCallback;
-import net.minecraftforge.common.world.ForgeChunkManager.TicketHelper;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -41,12 +29,10 @@ import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppedEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.api.distmarker.Dist;
@@ -56,7 +42,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import zmaster587.advancedRocketry.advancements.ARAdvancements;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
@@ -69,11 +54,8 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.AtmosphereTypes;
 import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.advancedRocketry.enchant.EnchantmentSpaceBreathing;
-import zmaster587.advancedRocketry.entity.fx.FxElectricArc;
-import zmaster587.advancedRocketry.event.CableTickHandler;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.integration.CompatibilityMgr;
-import zmaster587.advancedRocketry.integration.GalacticCraftHandler;
 import zmaster587.advancedRocketry.mission.MissionGasCollection;
 import zmaster587.advancedRocketry.mission.MissionOreMining;
 import zmaster587.advancedRocketry.network.*;
@@ -109,14 +91,9 @@ import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.api.material.MixedMaterial;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockTile;
-import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
-import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
-import zmaster587.libVulpes.inventory.GuiHandler;
-import zmaster587.libVulpes.items.ItemBlockMeta;
 import zmaster587.libVulpes.items.ItemProjector;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketItemModifcation;
-import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.InputSyncHandler;
@@ -126,7 +103,6 @@ import zmaster587.advancedRocketry.command.PlanetCommand;
 
 import javax.annotation.Nonnull;
 import java.io.*;
-import java.nio.file.FileSystem;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -134,36 +110,20 @@ import java.util.Map.Entry;
 @Mod(value=Constants.modId)
 public class AdvancedRocketry {
 
-
-	public static CommonProxy proxy = (CommonProxy) DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+	public static final CommonProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
 	public final static String version = "@MAJOR@.@MINOR@.@REVIS@@BUILD@";
 
-	public static AdvancedRocketry instance;
 	public static final RecipeHandler machineRecipes = new RecipeHandler();
 
-	final String oreGen = "Ore Generation";
-	final String ROCKET = "Rockets";
-	final String MOD_INTERACTION = "Mod Interaction";
-	final String PLANET = "Planet";
-	final String ASTEROID = "Asteroid";
-	final String BLACK_HOLE = "Black_hole_generator";
-	final String GAS_MINING = "GasMining";
-	final String PERFORMANCE = "Performance";
-	final String CLIENT = "Client";
-
 	public static ModContainer MOD_CONTAINER;
-	public static CompatibilityMgr compat = new CompatibilityMgr();
-	public static Logger logger = LogManager.getLogger(Constants.modId);
-	private static final String BIOMECATETORY = "Biomes";
+	public static final Logger logger = LogManager.getLogger(Constants.modId);
 	private boolean resetFromXml;
 
-	public static MaterialRegistry materialRegistry = new MaterialRegistry(); 
-
-	public static HashMap<AllowedProducts, HashSet<String>> modProducts = new HashMap<>();
+	public static final MaterialRegistry materialRegistry = new MaterialRegistry();
 
 
-	public static ItemGroup tabAdvRocketry = new ItemGroup("advancedRocketry") {
+	public static final ItemGroup tabAdvRocketry = new ItemGroup("advancedRocketry") {
 		@Override
 		@Nonnull
 		public ItemStack createIcon() {
@@ -194,8 +154,7 @@ public class AdvancedRocketry {
 	}
 
 	//@SubscribeEvent
-	public void preInit()
-	{
+	public void preInit() {
 		//Init API
 		AdvancedRocketryAPI.atomsphereSealHandler = SealableBlockHandler.INSTANCE;
 		((SealableBlockHandler)AdvancedRocketryAPI.atomsphereSealHandler).loadDefaultData();
@@ -234,7 +193,6 @@ public class AdvancedRocketry {
 
 		//Satellites ---------------------------------------------------------------------------------------------
 		SatelliteRegistry.registerSatellite("optical", SatelliteOptical.class);
-		SatelliteRegistry.registerSatellite("density", SatelliteDensity.class);
 		SatelliteRegistry.registerSatellite("composition", SatelliteComposition.class);
 		SatelliteRegistry.registerSatellite("mass", SatelliteMassScanner.class);
 		SatelliteRegistry.registerSatellite("asteroidMiner", MissionOreMining.class);
@@ -304,8 +262,7 @@ public class AdvancedRocketry {
 	}
 	
 	@SubscribeEvent
-	public void registerRecipeTypes(RegistryEvent.Register<IRecipeSerializer<?>> event)
-	{
+	public void registerRecipeTypes(RegistryEvent.Register<IRecipeSerializer<?>> event) {
 		event.getRegistry().register(RecipeLathe.INSTANCE.setRegistryName("lathe"));
 		event.getRegistry().register(RecipeRollingMachine.INSTANCE.setRegistryName("rollingmachine"));
 		event.getRegistry().register(RecipeCrystallizer.INSTANCE.setRegistryName("crystallizer"));
@@ -318,8 +275,7 @@ public class AdvancedRocketry {
 		event.getRegistry().register(RecipeElectrolyser.INSTANCE.setRegistryName("electrolyser"));
 	}
 	
-    public void registerRecipes()
-    {
+    public void registerRecipes() {
         //GameRegistry.addSmelting(MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("ORE")), MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("DUST")), 0);
 
         //Register the machine recipes
@@ -327,27 +283,23 @@ public class AdvancedRocketry {
     }
 	
 	@SubscribeEvent
-	public void registerEntities(RegistryEvent.Register<EntityType<?>> event)
-	{
+	public void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
 		//Entity Registration ---------------------------------------------------------------------------------------------
 		AdvancedRocketryEntities.registerEntities(event);
 	}
 	
 	@SubscribeEvent
-	public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> evt)
-	{
+	public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> evt) {
 		AdvancedRocketryTileEntityType.registerTileEntities(evt);
 	}
 	
 	@SubscribeEvent
-	public void registerStructures(RegistryEvent.Register<Structure<?>> evt)
-	{
+	public void registerStructures(RegistryEvent.Register<Structure<?>> evt) {
 		AdvancedRocketryBiomes.registerStructures(evt);
 	}
 	
 	@SubscribeEvent
-	public void registerCarvers(RegistryEvent.Register<WorldCarver<?>> evt)
-	{
+	public void registerCarvers(RegistryEvent.Register<WorldCarver<?>> evt) {
 		AdvancedRocketryBiomes.registerCarvers(evt);	
 	}
 	
@@ -364,24 +316,17 @@ public class AdvancedRocketry {
 	}
 	
 	@SubscribeEvent(priority=EventPriority.HIGH)
-	public void registerEnchants(RegistryEvent.Register<Enchantment> evt)
-	{
+	public void registerEnchants(RegistryEvent.Register<Enchantment> evt) {
 		//Enchantments
 		AdvancedRocketryAPI.enchantmentSpaceProtection = new EnchantmentSpaceBreathing().setRegistryName("spacebreathing");
 		evt.getRegistry().register(AdvancedRocketryAPI.enchantmentSpaceProtection);
 	}
 	
 	@SubscribeEvent()
-	public void registerParticles(ParticleFactoryRegisterEvent evt)
-	{
+	public void registerParticles(ParticleFactoryRegisterEvent evt) {
 		AdvancedRocketryParticleTypes.registerParticles(evt);
 	}
-	
-	@SubscribeEvent()
-	public void registerParticles(RegistryEvent.Register<ParticleType<?>> evt)
-	{
-		AdvancedRocketryParticleTypes.registerParticles(evt);
-	}
+
 	
 	@SubscribeEvent(priority=EventPriority.HIGH)
     public void registerItems(RegistryEvent.Register<Item> evt)
@@ -390,8 +335,7 @@ public class AdvancedRocketry {
 	}
 	
 	@SubscribeEvent(priority=EventPriority.HIGH)
-    public void registerBlocks(RegistryEvent.Register<Block> evt)
-	{
+    public void registerBlocks(RegistryEvent.Register<Block> evt) {
 		AdvancedRocketryBlocks.registerBlocks(evt);
 
 		//Register Allowed Products
@@ -433,7 +377,7 @@ public class AdvancedRocketry {
 
 		//Data mapping 'D'
 
-		List<BlockMeta> list = new LinkedList<BlockMeta>();
+		List<BlockMeta> list = new LinkedList<>();
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockDataBus, true));
 		TileMultiBlock.addMapping('D', list);
 		
@@ -449,9 +393,9 @@ public class AdvancedRocketry {
 	{
 		AtmosphereType.registerAtmosphere();
 		OreGen.injectOreGen();
-		List<? extends CharSequence> biomeBlackList = ARConfiguration.getCurrentConfig().biomeBlackList.get();
-		List<? extends CharSequence> biomeHighPressure = ARConfiguration.getCurrentConfig().biomeHighPressure.get();
-		List<? extends CharSequence> biomeSingle = ARConfiguration.getCurrentConfig().biomeSingle.get();
+		List<? extends CharSequence> biomeBlackList = ARConfiguration.biomeBlackList.get();
+		List<? extends CharSequence> biomeHighPressure = ARConfiguration.biomeHighPressure.get();
+		List<? extends CharSequence> biomeSingle = ARConfiguration.biomeSingle.get();
 		
 		//Prevent these biomes from spawning normally
 		AdvancedRocketryBiomes.instance.registerBlackListBiome(AdvancedRocketryBiomes.moonBiome);
@@ -506,10 +450,6 @@ public class AdvancedRocketry {
 				logger.warn("Error registering single biome \"" + string + "\".  It is not a valid number or Biome ResourceLocation");
 			}
 		}
-		
-		// For all intents and purposes, it's the same
-		//FluidUtils.addFluidMapping(AdvancedRocketryFluids.oxygenStill.get(), "liquidoxygen");
-		//FluidUtils.addFluidMapping(AdvancedRocketryFluids.fluidHydrogen, "liquidhydrogen");
 
 		//AtmosphereRegister.getInstance().registerHarvestableFluid(AdvancedRocketryFluids.nitrogenStill.get());
 		//AtmosphereRegister.getInstance().registerHarvestableFluid(AdvancedRocketryFluids.hydrogenStill.get());
@@ -541,7 +481,7 @@ public class AdvancedRocketry {
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileSatelliteBuilder(), (BlockTile)AdvancedRocketryBlocks.blockSatelliteBuilder);
 		//Power generation
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileBlackHoleGenerator(), (BlockTile)AdvancedRocketryBlocks.blockBlackHoleGenerator);
-		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileMicrowaveReciever(), (BlockTile)AdvancedRocketryBlocks.blockMicrowaveReciever);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileMicrowaveReciever(), (BlockTile)AdvancedRocketryBlocks.blockMicrowaveReceiver);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileSolarArray(), (BlockTile)AdvancedRocketryBlocks.blockSolarArray);
 		//Auxillary machines
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileWarpCore(), (BlockTile)AdvancedRocketryBlocks.blockWarpCore);
@@ -574,26 +514,13 @@ public class AdvancedRocketry {
 		MinecraftForge.EVENT_BUS.register(new MapGenLander());
 		AdvancedRocketryAPI.gravityManager = new GravityHandler();
 
-		// Compat stuff
-		if(ModList.get().isLoaded("galacticraftcore") && zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().overrideGCAir.get()) {
-			GalacticCraftHandler eventHandler = new GalacticCraftHandler();
-			MinecraftForge.EVENT_BUS.register(eventHandler);
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {MinecraftForge.EVENT_BUS.register(eventHandler);} );
-				
-		}
 		CompatibilityMgr.isSpongeInstalled = ModList.get().isLoaded("sponge");
 		// End compat stuff
 
 		MinecraftForge.EVENT_BUS.register(SpaceObjectManager.getSpaceManager());
-		
-		//Register mixed material's recipes
-		int mixedMetalCount = 0;
-		for(MixedMaterial material : MaterialRegistry.getMixedMaterialList()) {
-			//RecipesMachine.getInstance().addRecipe(new ResourceLocation("advancedrocketry", "mixed_metal_auto_" + mixedMetalCount), RecipeElectricArcFurnace.INSTANCE,  material.getMachine(), material.getProducts(), 100, 10, material.getInput());
-		}
 
 		//Register space dimension
-		DimensionManager.getInstance().registerSpaceDimension(ARConfiguration.GetSpaceDimId());
+		DimensionManager.getInstance().registerSpaceDimension(ARConfiguration.getSpaceDimId());
 
 		ARConfiguration.loadPostInit();
 		
@@ -607,7 +534,7 @@ public class AdvancedRocketry {
 	public void serverStarted(FMLServerStartedEvent event) {
 		for (ResourceLocation dimId : DimensionManager.getInstance().getLoadedDimensions()) {
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
-			if(!properties.isNativeDimension && properties.getId() == zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().MoonId && !ModList.get().isLoaded("galacticraftcore")) {
+			if(!properties.isNativeDimension && properties.getId() == zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().MoonId) {
 				properties.isNativeDimension = true;
 			}
 		}

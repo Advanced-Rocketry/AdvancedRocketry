@@ -4,15 +4,11 @@ import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * This entire block class is simply a copy of Vanilla fire to make it more volatile and possibly better-behaved
@@ -88,6 +84,7 @@ public class BlockRocketFire extends AbstractFireBlock {
 
 
 	@Deprecated //Forge: Use canCatchFire with more context
+	@ParametersAreNonnullByDefault
 	protected boolean canBurn(BlockState state) {
 		return true;
 	}

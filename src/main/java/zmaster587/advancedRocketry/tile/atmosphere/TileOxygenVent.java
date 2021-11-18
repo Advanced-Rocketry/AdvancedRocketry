@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.atmosphere;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -52,6 +51,7 @@ import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -262,7 +262,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 				}
 
 				int amtToDrain = (int)Math.ceil((atmhandler.getBlobSize(this) * getGasUsageMultiplier()));
-				FluidStack drainedFluid = this.drain((int)amtToDrain, FluidAction.SIMULATE);
+				FluidStack drainedFluid = this.drain(amtToDrain, FluidAction.SIMULATE);
 
 				if( (drainedFluid != null && drainedFluid.getAmount() >= amtToDrain) || amtToDrain == 0) {
 					this.drain(amtToDrain, FluidAction.EXECUTE);
@@ -512,12 +512,14 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		}
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}

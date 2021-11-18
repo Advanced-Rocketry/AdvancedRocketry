@@ -7,10 +7,12 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class FxElectricArc extends SpriteTexturedParticle {
 	int numRecursions;
@@ -30,6 +32,7 @@ public class FxElectricArc extends SpriteTexturedParticle {
 		this.maxAge = 5;
 	}
 
+	@Nonnull
 	public IParticleRenderType getRenderType() {
 		return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 	}
@@ -59,6 +62,7 @@ public class FxElectricArc extends SpriteTexturedParticle {
 			this.spriteSet = p_i50630_1_;
 		}
 
+		@ParametersAreNonnullByDefault
 		public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 			FxElectricArc arc = new FxElectricArc(worldIn, x, y, z, 1f);
 			arc.selectSpriteWithAge(spriteSet);

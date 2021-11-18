@@ -51,8 +51,7 @@ public class StructurePieceVolcano extends ScatteredStructurePiece {
 
 
 	@Override
-	public boolean func_230383_a_(ISeedReader world, StructureManager structureMgr, ChunkGenerator chunkGen, Random rand, MutableBoundingBox bb, ChunkPos chunkPos, BlockPos blockPos)
-	{
+	public boolean func_230383_a_(ISeedReader world, StructureManager structureMgr, ChunkGenerator chunkGen, Random rand, MutableBoundingBox bb, ChunkPos chunkPos, BlockPos blockPos) {
 
 			//Standard coefficient stuff
 			int size = 64;
@@ -79,10 +78,7 @@ public class StructurePieceVolcano extends ScatteredStructurePiece {
 					//Do some roughness
 					int crackle = rand.nextInt(2);
 
-					double func = 1/(Math.pow(1.028, radius-(size-sizeDeviation)*3)) +
-							+ baseHeight
-							- 8/(Math.pow(1.09, radius-((size-sizeDeviation)/2.6)))
-							-Math.pow(1.7, radius - size*.9);
+					double func = 1/(Math.pow(1.028, radius-(size-sizeDeviation)*3)) + baseHeight - 8/(Math.pow(1.09, radius-((size-sizeDeviation)/2.6))) -Math.pow(1.7, radius - size*.9);
 
 					for(int y = 254; y >= 1; y--) {
 						boolean underSurface = func >= y+crackle;
@@ -109,10 +105,11 @@ public class StructurePieceVolcano extends ScatteredStructurePiece {
 			return true;
 	}
 	
-	   protected void setBlockState(ISeedReader worldIn, BlockState blockstateIn, int x, int y, int z, MutableBoundingBox boundingboxIn) {
-		   //super.setBlockState(worldIn, blockstateIn, x, y, z, boundingboxIn);
-		   worldIn.setBlockState(new BlockPos(x,y,z), blockstateIn, 2);
-	   }
+	protected void setBlockState(ISeedReader worldIn, BlockState blockstateIn, int x, int y, int z, MutableBoundingBox boundingboxIn) {
+		//super.setBlockState(worldIn, blockstateIn, x, y, z, boundingboxIn);
+		worldIn.setBlockState(new BlockPos(x,y,z), blockstateIn, 2);
+	}
+
 	//Very fun function for fancy radius
 	//Int[] MUST be the same size as max bumps or larger!
 	private double getRadius(double base, int x, int z, int bumps, int[] random) {

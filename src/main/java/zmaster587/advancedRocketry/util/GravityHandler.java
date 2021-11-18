@@ -11,17 +11,10 @@ import net.minecraft.entity.item.minecart.MinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
-import net.minecraft.util.math.BlockPos;
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.IGravityManager;
-import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.libVulpes.util.ZUtils;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.WeakHashMap;
 
 public class GravityHandler implements IGravityManager {
@@ -31,22 +24,9 @@ public class GravityHandler implements IGravityManager {
 	public static final float THROWABLE_OFFSET = 0.03f;
 	public static final float OTHER_OFFSET = 0.04f;
 	public static final float ARROW_OFFSET = 0.05f;
-
-	static Class gcWorldProvider;
-	static Method gcGetGravity;
 	
 	static {
 		AdvancedRocketryAPI.gravityManager = new GravityHandler();
-		
-		
-		try {
-			gcWorldProvider = Class.forName("micdoodle8.mods.galacticraft.api.world.IGalacticraftWorldProvider");
-			AdvancedRocketry.logger.info("GC IGalacticraftWorldProvider  found");
-			gcGetGravity = gcWorldProvider.getMethod("getGravity");
-		} catch(ClassNotFoundException | NoSuchMethodException e){
-			gcWorldProvider = null;
-			AdvancedRocketry.logger.info("GC IGalacticraftWorldProvider not found");
-		}
 	}
 	
 	private static WeakHashMap<Entity, Double> entityMap = new WeakHashMap<>();
@@ -60,28 +40,24 @@ public class GravityHandler implements IGravityManager {
 			if ((!(entity instanceof PlayerEntity) && !(entity instanceof FlyingEntity)) || (!(entity instanceof FlyingEntity) && !(((PlayerEntity) entity).abilities.isFlying || ((LivingEntity) entity).isElytraFlying()))) {
 				Double d;
 				if(entityMap.containsKey(entity) && (d = entityMap.get(entity)) != null)  {
-
 					double multiplier = (isOtherEntity(entity) || entity instanceof ItemEntity) ? OTHER_OFFSET * d : (entity instanceof ArrowEntity ) ? ARROW_OFFSET * d : (entity instanceof ThrowableEntity) ? THROWABLE_OFFSET * d : LIVING_OFFSET * d;
-
-
 					entity.setMotion(entity.getMotion().add(0, multiplier, 0));
 					
 				} else if (DimensionManager.getInstance().isDimensionCreated(entity.world)) {
-					double gravMult = DimensionManager.getInstance().getDimensionProperties(entity.world, entity.getPosition()).gravitationalMultiplier;
+					double gravity = DimensionManager.getInstance().getDimensionProperties(entity.world, entity.getPosition()).gravitationalMultiplier;
 
 					if (entity instanceof ItemEntity)
-						entity.setMotion(entity.getMotion().add(0, -(gravMult * OTHER_OFFSET - OTHER_OFFSET),0));
+						entity.setMotion(entity.getMotion().add(0, -(gravity * OTHER_OFFSET - OTHER_OFFSET),0));
 					else if (isOtherEntity(entity))
-						entity.setMotion(entity.getMotion().add(0, -(gravMult * OTHER_OFFSET - OTHER_OFFSET),0));
+						entity.setMotion(entity.getMotion().add(0, -(gravity * OTHER_OFFSET - OTHER_OFFSET),0));
 					else if (entity instanceof ThrowableEntity)
-						entity.setMotion(entity.getMotion().add(0, -(gravMult * THROWABLE_OFFSET - THROWABLE_OFFSET),0));
+						entity.setMotion(entity.getMotion().add(0, -(gravity * THROWABLE_OFFSET - THROWABLE_OFFSET),0));
 					else if (entity instanceof ArrowEntity)
-						entity.setMotion(entity.getMotion().add(0, -(gravMult * ARROW_OFFSET - ARROW_OFFSET),0));
+						entity.setMotion(entity.getMotion().add(0, -(gravity * ARROW_OFFSET - ARROW_OFFSET),0));
 					else if (entity instanceof LivingEntity && entity.isInWater() || entity.isInLava())
-						entity.setMotion(entity.getMotion().add(0, -(gravMult * FLUID_LIVING_OFFSET - FLUID_LIVING_OFFSET),0));
+						entity.setMotion(entity.getMotion().add(0, -(gravity * FLUID_LIVING_OFFSET - FLUID_LIVING_OFFSET),0));
 					else if (entity instanceof  LivingEntity)
-						entity.setMotion(entity.getMotion().add(0, -(gravMult * LIVING_OFFSET - LIVING_OFFSET),0));
-					return;
+						entity.setMotion(entity.getMotion().add(0, -(gravity * LIVING_OFFSET - LIVING_OFFSET),0));
 				}
 			}
 	}

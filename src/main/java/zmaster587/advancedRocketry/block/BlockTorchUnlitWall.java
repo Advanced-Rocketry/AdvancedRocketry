@@ -1,7 +1,9 @@
 package zmaster587.advancedRocketry.block;
 
 import java.util.Map;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -10,19 +12,15 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.WallTorchBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -45,10 +43,13 @@ public class BlockTorchUnlitWall extends BlockTorchUnlit {
 	   /**
 	    * Returns the unlocalized name of the block with "tile." appended to the front.
 	    */
+	   @Nonnull
 	   public String getTranslationKey() {
 	      return this.asItem().getTranslationKey();
 	   }
 
+	   @Nonnull
+	   @ParametersAreNonnullByDefault
 	   public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 	      return func_220289_j(state);
 	   }
@@ -57,6 +58,7 @@ public class BlockTorchUnlitWall extends BlockTorchUnlit {
 	      return SHAPES.get(p_220289_0_.get(WallTorchBlock.HORIZONTAL_FACING));
 	   }
 
+	   @ParametersAreNonnullByDefault
 	   public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
 		   return hasEnoughSolidSide(worldIn, pos.down(), Direction.UP);
 	   }
@@ -81,20 +83,19 @@ public class BlockTorchUnlitWall extends BlockTorchUnlit {
 		      return null;
 	   }
 	   
-		@Override
-		public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
-				Hand handIn, BlockRayTraceResult hit) {
-			if(player.getHeldItem(Hand.MAIN_HAND) != null) {
-				Item item = player.getHeldItem(Hand.MAIN_HAND).getItem();
-				if(!world.isRemote && item != null && AtmosphereHandler.getOxygenHandler(world).getAtmosphereType(pos).allowsCombustion() && (item == Item.getItemFromBlock(Blocks.TORCH) || 
-						item == Items.FLINT_AND_STEEL || 
-						item == Items.FIRE_CHARGE)) {
+		@Nonnull
+        @Override
+		public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+			player.getHeldItem(Hand.MAIN_HAND);
+			Item item = player.getHeldItem(Hand.MAIN_HAND).getItem();
+			if(!world.isRemote && item != Items.AIR && AtmosphereHandler.getOxygenHandler(world).getAtmosphereType(pos).allowsCombustion() && (item == Item.getItemFromBlock(Blocks.TORCH) ||
+					item == Items.FLINT_AND_STEEL ||
+					item == Items.FIRE_CHARGE)) {
 
-					world.setBlockState(pos, Blocks.WALL_TORCH.getDefaultState().with(
-							WallTorchBlock.HORIZONTAL_FACING, state.get(WallTorchBlock.HORIZONTAL_FACING)));
+				world.setBlockState(pos, Blocks.WALL_TORCH.getDefaultState().with(
+						WallTorchBlock.HORIZONTAL_FACING, state.get(WallTorchBlock.HORIZONTAL_FACING)));
 
-					return ActionResultType.SUCCESS;
-				}
+				return ActionResultType.SUCCESS;
 			}
 
 			return ActionResultType.SUCCESS;
@@ -107,27 +108,10 @@ public class BlockTorchUnlitWall extends BlockTorchUnlit {
 	    * returns its solidified counterpart.
 	    * Note that this method should ideally consider only the specific face passed in.
 	    */
+	   @Nonnull
+	   @ParametersAreNonnullByDefault
 	   public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
 	      return facing.getOpposite() == stateIn.get(WallTorchBlock.HORIZONTAL_FACING) && !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR.getDefaultState() : stateIn;
-	   }
-
-	   /**
-	    * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
-	    * blockstate.
-	    * @deprecated call via {@link IBlockState#withRotation(Rotation)} whenever possible. Implementing/overriding is
-	    * fine.
-	    */
-	   public BlockState rotate(BlockState state, Rotation rot) {
-	      return state.with(WallTorchBlock.HORIZONTAL_FACING, rot.rotate(state.get(WallTorchBlock.HORIZONTAL_FACING)));
-	   }
-
-	   /**
-	    * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
-	    * blockstate.
-	    * @deprecated call via {@link IBlockState#withMirror(Mirror)} whenever possible. Implementing/overriding is fine.
-	    */
-	   public BlockState mirror(BlockState state, Mirror mirrorIn) {
-	      return state.rotate(mirrorIn.toRotation(state.get(WallTorchBlock.HORIZONTAL_FACING)));
 	   }
 
 	   protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {

@@ -1,7 +1,6 @@
 package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.ARConfiguration;

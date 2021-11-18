@@ -1,8 +1,6 @@
 package zmaster587.advancedRocketry.integration;
 
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoader;
-import zmaster587.advancedRocketry.integration.jei.ARPlugin;
 
 public class CompatibilityMgr {
 

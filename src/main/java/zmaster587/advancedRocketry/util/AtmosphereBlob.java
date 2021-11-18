@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 
-	static ThreadPoolExecutor pool = (ARConfiguration.getCurrentConfig().atmosphereHandleBitMask.get() & 1) == 1 ? new ThreadPoolExecutor(2, 16, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(32)) : null;
+	static ThreadPoolExecutor pool = (ARConfiguration.getCurrentConfig().atmosphereHandleBitMask.get() & 1) == 1 ? new ThreadPoolExecutor(2, 16, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(32)) : null;
 
 	private boolean executing;
 	private HashedBlockPosition blockPos;
@@ -107,7 +107,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 		stack.push(blockPos);
 
 		final int maxSize = (ARConfiguration.getCurrentConfig().atmosphereHandleBitMask.get() & 2) != 0 ? (int)(Math.pow(this.getBlobMaxRadius(), 3)*((4f/3f)*Math.PI)) : this.getBlobMaxRadius();
-		final HashSet<HashedBlockPosition> addableBlocks = new HashSet<HashedBlockPosition>();
+		final HashSet<HashedBlockPosition> addableBlocks = new HashSet<>();
 
 		//Breadth first search; non recursive
 		while(!stack.isEmpty()) {
@@ -172,7 +172,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 
 
 	/**
-	 * @param world
+	 * @param world the world for this to occur in
 	 * @param blocks Collection containing affected locations
 	 */
 	protected void runEffectOnWorldBlocks(@Nonnull World world, @Nonnull Collection<HashedBlockPosition> blocks) {

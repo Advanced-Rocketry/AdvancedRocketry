@@ -13,10 +13,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.ISatelliteIdItem;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
-import zmaster587.advancedRocketry.item.ItemSatellite;
 import zmaster587.libVulpes.util.UniversalBattery;
 import zmaster587.libVulpes.util.ZUtils;
 
@@ -138,18 +136,11 @@ public abstract class SatelliteBase {
 	 */
 	public void setDimensionId(World world) {
 		ResourceLocation newId = ZUtils.getDimensionIdentifier(world);
-		if(dimId.isPresent()) {
-			//TODO: handle dim change
-		}
 		dimId = Optional.of(newId);
 	}
 
 	public void setDimensionId(ResourceLocation world) {
-		ResourceLocation newId = world;
-		if(dimId.isPresent()) {
-			//TODO: handle dim change
-		}
-		dimId = Optional.of(newId);
+		dimId = Optional.of(world);
 	}
 	
 	/**
@@ -207,18 +198,18 @@ public abstract class SatelliteBase {
 			battery = new UniversalBattery(720);
 		}
 	}
-	
+
 	public void writeDataToNetwork(ByteBuf out, byte packetId) {
-		
+
 	}
-	
+
 	public void readDataToNetwork(byte packetId, ByteBuf in) {
-		
+
 	}
-	
+
 	public void useNetworkData(PlayerEntity player, Dist client, byte packetId,
 			CompoundNBT nbt) {
-		
+
 	}
 	
 	//Server Syncing stuff

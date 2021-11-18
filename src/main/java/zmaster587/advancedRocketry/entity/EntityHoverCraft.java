@@ -1,46 +1,25 @@
 package zmaster587.advancedRocketry.entity;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
-import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
-import zmaster587.advancedRocketry.api.IInfrastructure;
-import zmaster587.advancedRocketry.api.RocketEvent;
-import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
-import zmaster587.advancedRocketry.api.stations.ISpaceObject;
-import zmaster587.advancedRocketry.client.SoundRocketEngine;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityRocket.PacketType;
 import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.network.PacketEntity;
@@ -49,21 +28,9 @@ import zmaster587.libVulpes.network.PacketSpawnEntity;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class EntityHoverCraft extends Entity implements IInventory, INetworkEntity, IEntityAdditionalSpawnData {
-
-
-	public enum VehicleType {
-		submarine,
-		blimp
-	}
-
-	protected double speedMultiplier;
-	public boolean cruiseControl;
-	protected float fanLoc;
-	protected int freshBurnTime;
-	protected int currentBurnTime;
 	//Used to calculate rendering stuffs
 	protected EmbeddedInventory inv;
 	private boolean turningLeft, turningRight, turningUp, turningDownforWhat;
@@ -135,7 +102,9 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 	/**
 	 * First layer of player interaction
 	 */
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public ActionResultType processInitialInteract(PlayerEntity player, Hand hand)
 	{
 		if(this.getPassengers().isEmpty()/* || (this.riddenByEntity != null && this.riddenByEntity instanceof PlayerEntity && this.riddenByEntity != player)*/) {
@@ -170,17 +139,6 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 	{
 		return 250;
 	}
-
-	public double getMaxVelocity()
-	{
-		return 0.75;
-	}
-
-	public double getMaxVerticalSpeed()
-	{
-		return 0.1D;
-	}
-
 
 	public double getMaxAcceleration() {
 		return 0.05D;
@@ -324,16 +282,19 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isUsableByPlayer(PlayerEntity player) {
 		return false;
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void openInventory(PlayerEntity player) {
 		inv.openInventory(player);
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void closeInventory(PlayerEntity player) {
 		inv.closeInventory(player);
 	}
@@ -353,16 +314,18 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	protected void readAdditional(CompoundNBT compound) {
 		inv.readFromNBT(compound);
 	}
-	
 
 	@Override
+	@ParametersAreNonnullByDefault
 	protected void writeAdditional(CompoundNBT compound) {
 		inv.write(compound);
 	}
 
+	@Nonnull
 	@Override
 	public IPacket<?> createSpawnPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);

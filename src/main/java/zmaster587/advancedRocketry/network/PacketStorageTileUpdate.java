@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.network;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,8 +16,6 @@ import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.network.BasePacket;
-
-import java.io.IOException;
 
 public class PacketStorageTileUpdate extends BasePacket {
 
@@ -47,7 +44,7 @@ public class PacketStorageTileUpdate extends BasePacket {
 		CompoundNBT nbt = tile.getUpdatePacket().getNbtCompound();
 		
 		//this.writeWorld(out, ((Entity)entity).world);
-		out.writeInt(((Entity)entity).getEntityId());
+		out.writeInt(entity.getEntityId());
 		out.writeInt(x);
 		out.writeInt(y);
 		out.writeInt(z);
@@ -72,11 +69,7 @@ public class PacketStorageTileUpdate extends BasePacket {
 		z = in.readInt();
 		Entity ent = world.getEntityByID(entityId);
 
-		CompoundNBT nbt = null;
-
-		nbt = new PacketBuffer(in).readCompoundTag();
-
-		this.nbt = nbt;
+		this.nbt = new PacketBuffer(in).readCompoundTag();
 
 
 		if(ent instanceof INetworkEntity) {

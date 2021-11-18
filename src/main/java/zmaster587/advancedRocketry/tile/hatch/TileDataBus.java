@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.hatch;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -110,7 +109,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
+		LinkedList<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModuleAutoData(40, 20, 0, 1, this, this, data));
 		return modules;
 	}

@@ -1,11 +1,8 @@
 package zmaster587.advancedRocketry.inventory;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.math.vector.Quaternion;
-
-import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -45,7 +42,7 @@ public class GuiPlanetButton extends GuiImageButton {
 	        //GL11.glTranslatef(xPosition, 100 + this.zLevel, yPosition);
 	        float newWidth = width/2f;
 
-	        RenderPlanetarySky.renderPlanetPubHelper(vertexbuffer, matrix, properties.getPlanetIcon(), (int)(x + newWidth), (int)(y + newWidth), (double)this.height, newWidth, 1f, properties.getSolarTheta(), properties.hasAtmosphere(), properties.skyColor, properties.ringColor, properties.isGasGiant(), properties.hasRings(),properties.hasDecorators(), new float[]{0, 0, 0}, 1f);
+	        RenderPlanetarySky.renderPlanetPubHelper(vertexbuffer, matrix, properties.getPlanetIcon(), (int)(x + newWidth), (int)(y + newWidth), this.height, newWidth, 1f, properties.getSolarTheta(), properties.hasAtmosphere(), properties.skyColor, properties.ringColor, properties.isGasGiant(), properties.hasRings(),properties.hasDecorators(), new float[]{0, 0, 0}, 1f);
             matrix.pop();
 			
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);

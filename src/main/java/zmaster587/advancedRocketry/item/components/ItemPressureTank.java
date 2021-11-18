@@ -1,13 +1,11 @@
 package zmaster587.advancedRocketry.item.components;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -26,6 +24,8 @@ import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.util.FluidUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -41,12 +41,13 @@ public class ItemPressureTank extends Item implements IArmorComponent {
 	}
 	
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag bool) {
-		super.addInformation(stack, player, list, bool);
+	@ParametersAreNonnullByDefault
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag bool) {
+		super.addInformation(stack, world, list, bool);
 		
 		FluidStack fluidStack = FluidUtils.getFluidForItem(stack);
 		
-		if(fluidStack == null) {
+		if(fluidStack.isEmpty()) {
 			list.add(new TranslationTextComponent("msg.empty"));
 		}
 		else {

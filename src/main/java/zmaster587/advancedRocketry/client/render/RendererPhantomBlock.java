@@ -19,22 +19,21 @@ import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.tile.TileSchematic;
 import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class RendererPhantomBlock extends TileEntityRenderer<TileSchematic> {
 
 	public RendererPhantomBlock(TileEntityRendererDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
 	}
 
-	private static BlockRendererDispatcher renderBlocks = Minecraft.getInstance().getBlockRendererDispatcher();
-
 	@Override
-	public void render(TileSchematic tile, float partialTicks, MatrixStack matrix,
-			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+	@ParametersAreNonnullByDefault
+	public void render(TileSchematic tile, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
 
-		renderBlocks = Minecraft.getInstance().getBlockRendererDispatcher();
-		TilePlaceholder tileGhost = (TilePlaceholder)tile;
+		BlockRendererDispatcher renderBlocks = Minecraft.getInstance().getBlockRendererDispatcher();
 
-		BlockState state = tileGhost.getReplacedState();
+		BlockState state = ((TilePlaceholder) tile).getReplacedState();
 
 		//TODO: bring TESRS back
 		/*if(tileGhost.getReplacedTileEntity() != null && !(tileGhost.getReplacedTileEntity() instanceof TileMultiBlock) && TileEntityRendererDispatcher.instance.hasSpecialRenderer(tileGhost.getReplacedTileEntity())) {
@@ -50,8 +49,7 @@ public class RendererPhantomBlock extends TileEntityRenderer<TileSchematic> {
 			//If the player is mousing over this block
 			RayTraceResult movingObjPos = Minecraft.getInstance().objectMouseOver;
 			try {
-				if(movingObjPos.getType() == Type.BLOCK)
-				{
+				if(movingObjPos.getType() == Type.BLOCK) {
 					BlockRayTraceResult result = (BlockRayTraceResult)movingObjPos;
 
 					matrix.push();
@@ -59,7 +57,7 @@ public class RendererPhantomBlock extends TileEntityRenderer<TileSchematic> {
 					if(Minecraft.getInstance().objectMouseOver != null && result.getPos().getX() == tile.getPos().getX() && result.getPos().getY() == tile.getPos().getY() && result.getPos().getZ() == tile.getPos().getZ()) {
 
 						ItemStack stack = tile.getWorld().getBlockState(tile.getPos()).getBlock().getPickBlock(tile.getWorld().getBlockState(tile.getPos()), movingObjPos, Minecraft.getInstance().world, tile.getPos(), Minecraft.getInstance().player);
-						if(stack == null)
+						if(stack.isEmpty())
 							RenderHelper.renderTag(matrix, buffer, Minecraft.getInstance().player.getDistanceSq(result.getHitVec().x, result.getHitVec().y, result.getHitVec().z), "THIS IS AN ERROR, CONTACT THE DEV!!!", 0,1);
 						else
 							RenderHelper.renderTag(matrix, buffer, Minecraft.getInstance().player.getDistanceSq(result.getHitVec().x, result.getHitVec().y, result.getHitVec().z), stack.getDisplayName().getString(), 0xf0, 1);

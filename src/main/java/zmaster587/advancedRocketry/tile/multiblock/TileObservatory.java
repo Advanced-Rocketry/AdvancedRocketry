@@ -45,6 +45,7 @@ import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -171,7 +172,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			timeAlive = 0x1;
 		}
 
-		if((world.isRemote && isOpen) || (!world.isRemote && isRunning() && getMachineEnabled() && ((!world.isRaining() && world.canBlockSeeSky(pos.add(0,1,0)) && !world.isDaytime()) || ZUtils.getDimensionIdentifier(world).equals(ARConfiguration.getCurrentConfig().GetSpaceDimId())))) {
+		if((world.isRemote && isOpen) || (!world.isRemote && isRunning() && getMachineEnabled() && ((!world.isRaining() && world.canBlockSeeSky(pos.add(0,1,0)) && !world.isDaytime()) || ZUtils.getDimensionIdentifier(world).equals(ARConfiguration.getSpaceDimId())))) {
 
 			if(!isOpen) {
 				isOpen= true;
@@ -610,11 +611,13 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void openInventory(PlayerEntity player) {
 
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void closeInventory(PlayerEntity player) {
 	}
 

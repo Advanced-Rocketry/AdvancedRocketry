@@ -12,10 +12,13 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class TileForceFieldProjector extends TileEntity implements ITickableTileEntity {
 
 	private short extensionRange;
-	private final short MAX_RANGE = 32;
+	private static final short  MAX_RANGE = 32;
 
 	public TileForceFieldProjector() {
 		super(AdvancedRocketryTileEntityType.TILE_FORCE_FIELD_PROJECTOR);
@@ -88,6 +91,7 @@ public class TileForceFieldProjector extends TileEntity implements ITickableTile
 		}
 	}
 
+	@Nonnull
 	@Override
 	public CompoundNBT write(CompoundNBT nbt) {
 		nbt.putShort("ext", extensionRange);
@@ -95,6 +99,7 @@ public class TileForceFieldProjector extends TileEntity implements ITickableTile
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void read(BlockState state, CompoundNBT nbt) {
 		extensionRange = nbt.getShort("ext");
 		super.read(state, nbt);

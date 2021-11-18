@@ -2,7 +2,6 @@ package zmaster587.advancedRocketry.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
@@ -341,7 +340,7 @@ public class XMLPlanetLoader {
 				}
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_RETROGRADE)) {
 				String text = planetPropertyNode.getTextContent();
-				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true"))
+				if(text != null && text.equalsIgnoreCase("true"))
 					properties.isRetrograde = true;
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_PERIOD)) {
 				try {
@@ -364,24 +363,22 @@ public class XMLPlanetLoader {
 				properties.hasRivers = Boolean.parseBoolean(planetPropertyNode.getTextContent());
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_BIOMEIDS)) {
 
-				String biomeList[] = planetPropertyNode.getTextContent().split(",");
-				for(int j = 0; j < biomeList.length; j++) {
+				String[] biomeList = planetPropertyNode.getTextContent().split(",");
+				for (String s : biomeList) {
 
-					ResourceLocation location = new ResourceLocation(biomeList[j]);
-					if( AdvancedRocketryBiomes.doesBiomeExist(location)) {
+					ResourceLocation location = new ResourceLocation(s);
+					if (AdvancedRocketryBiomes.doesBiomeExist(location)) {
 						Biome biome = AdvancedRocketryBiomes.getBiomeFromResourceLocation(location);
-						if(biome == null || !properties.addBiome(biome))
-							AdvancedRocketry.logger.warn("Error adding " + biomeList[j]); //TODO: more detailed error msg
-					}
-					else
-					{
+						if (biome == null || !properties.addBiome(biome))
+							AdvancedRocketry.logger.warn("Error adding " + s); //TODO: more detailed error msg
+					} else {
 						try {
-							ResourceLocation biome = new ResourceLocation(biomeList[j]);
+							ResourceLocation biome = new ResourceLocation(s);
 
-							if(!properties.addBiome(biome))
-								AdvancedRocketry.logger.warn(biomeList[j] + " is not a valid biome id"); //TODO: more detailed error msg
+							if (!properties.addBiome(biome))
+								AdvancedRocketry.logger.warn(s + " is not a valid biome id"); //TODO: more detailed error msg
 						} catch (NumberFormatException e) {
-							AdvancedRocketry.logger.warn(biomeList[j] + " is not a valid biome id or name"); //TODO: more detailed error msg
+							AdvancedRocketry.logger.warn(s + " is not a valid biome id or name"); //TODO: more detailed error msg
 						}
 					}
 				}
@@ -585,11 +582,11 @@ public class XMLPlanetLoader {
 				}
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GASGIANT)) {
 				String text = planetPropertyNode.getTextContent();
-				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true"))
+				if(text != null && text.equalsIgnoreCase("true"))
 					properties.setGasGiant(true);
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_ISKNOWN)) {
 				String text = planetPropertyNode.getTextContent();
-				if(text != null && !text.isEmpty() && text.equalsIgnoreCase("true")) {
+				if(text != null && text.equalsIgnoreCase("true")) {
 					ARConfiguration.getCurrentConfig().initiallyKnownPlanets.add(properties.getId());
 				}
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(GENERATECRATERS)) {
@@ -807,14 +804,8 @@ public class XMLPlanetLoader {
 		//galaxy.
 
 		Collection<StellarBody> stars = galaxy.getStars();
-		List<StellarBody> starList = new ArrayList<StellarBody>(stars);
-		starList.sort( new Comparator<StellarBody>() {
-
-			@Override
-			public int compare(StellarBody star1, StellarBody star2) {
-				return star1.getId().compareTo(star2.getId());
-			}
-		});
+		List<StellarBody> starList = new ArrayList<>(stars);
+		starList.sort(Comparator.comparing(StellarBody::getId));
 
 		for(StellarBody star : starList) {
 			Element nodeStar = doc.createElement(ELEMENT_STAR);

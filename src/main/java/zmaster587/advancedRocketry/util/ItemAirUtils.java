@@ -1,14 +1,11 @@
 package zmaster587.advancedRocketry.util;
 
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryAPI;
 import zmaster587.advancedRocketry.api.IAtmosphere;
@@ -16,6 +13,7 @@ import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class ItemAirUtils implements IFillableArmor {
 
@@ -168,9 +166,9 @@ public class ItemAirUtils implements IFillableArmor {
 		}
 
 		@Override
-		public boolean protectsFromSubstance(IAtmosphere atmosphere,
-				ItemStack stack, boolean commitProtection) {
-			if(stack != null && stack.getItem() instanceof ArmorItem) {
+		@ParametersAreNonnullByDefault
+		public boolean protectsFromSubstance(IAtmosphere atmosphere, ItemStack stack, boolean commitProtection) {
+			if(stack.getItem() instanceof ArmorItem) {
 				if(((ArmorItem) stack.getItem()).getEquipmentSlot() == EquipmentSlotType.CHEST )
 					return decrementAir(stack, 1) == 1;
 				

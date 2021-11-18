@@ -46,7 +46,7 @@ public abstract class EntityRocketBase extends Entity {
 	
 	/**
 	 * Unlinks the given infrastructure
-	 * @param tile
+	 * @param tile the tile to unlink
 	 */
 	public void unlinkInfrastructure(IInfrastructure tile) {
 		connectedInfrastructure.remove(tile);
@@ -54,7 +54,7 @@ public abstract class EntityRocketBase extends Entity {
 
 	/**
 	 * Links the supplied IInfrastructure with the rocket
-	 * @param tile
+	 * @param tile the tile to link
 	 */
 	public void linkInfrastructure(IInfrastructure tile) {
 		if(!connectedInfrastructure.contains(tile) && tile.linkRocket(this))
@@ -72,14 +72,14 @@ public abstract class EntityRocketBase extends Entity {
 	public abstract void launch();
 
 	/**
-	 * @param fuelType
+	 * @param fuelType the fuel type to use
 	 * @return the amount of fuel stored in the rocket
 	 */
 	public abstract int getFuelAmount(@Nullable FuelRegistry.FuelType fuelType);
 
 	/**
 	 * Adds fuel and updates the datawatcher
-	 * @param fuelType
+	 * @param fuelType the fuel type to use
 	 * @param amount amount of fuel to add
 	 * @return the amount of fuel added
 	 */
@@ -87,7 +87,7 @@ public abstract class EntityRocketBase extends Entity {
 
 	/**
 	 * Updates the data option
-	 * @param fuelType
+	 * @param fuelType the fuel type to use
 	 * @param amt sets the amount of monopropellant fuel in the rocket
 	 */
 	public abstract void setFuelAmount(@Nonnull FuelRegistry.FuelType fuelType, int amt);
@@ -139,7 +139,7 @@ public abstract class EntityRocketBase extends Entity {
 	public void onOrbitReached() {
 		MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketReachesOrbitEvent(this));
 		
-		if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world)) ) {
+		if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world)) ) {
 			ISpaceObject station = AdvancedRocketryAPI.spaceObjectManager.getSpaceStationFromBlockCoords(new BlockPos(this.getPositionVec()));
 
 			if(station != null) {

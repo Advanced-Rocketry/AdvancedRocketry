@@ -70,7 +70,7 @@ public class ItemAsteroidChip  extends ItemMultiData {
 	}
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List list, ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag bool) {
 
 		if(!stack.hasTag()) {
 			list.add(new TranslationTextComponent("msg.unprogrammed"));

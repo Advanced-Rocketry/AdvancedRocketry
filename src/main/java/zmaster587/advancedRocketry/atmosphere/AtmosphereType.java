@@ -95,7 +95,7 @@ public class AtmosphereType implements IAtmosphere {
 
 	/**
 	 * Sets the atmosphere to be breathable or not breathable
-	 * @param isBreathable
+	 * @param isBreathable boolean for whether the atmosphere should be breatheable
 	 */
 	public void setIsBreathable(boolean isBreathable) {
 		this.isBreathable = isBreathable;
@@ -103,7 +103,7 @@ public class AtmosphereType implements IAtmosphere {
 
 	/**
 	 * Sets the atmosphere to allow combustion or not to allow combustion
-	 * @param allowsCombustion
+	 * @param allowsCombustion boolean for whether the atmosphere should allow combustion
 	 */
 	public void setAllowsCombustion(boolean allowsCombustion) {
 		this.allowsCombustion = allowsCombustion;

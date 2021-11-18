@@ -16,6 +16,8 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.libVulpes.LibVulpes;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class ItemSatelliteIdentificationChip extends Item implements ISatelliteIdItem {
@@ -139,7 +141,8 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	}
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag bool) {
+	@ParametersAreNonnullByDefault
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag bool) {
 		ResourceLocation worldId = getWorldId(stack);
 		long satId = getSatelliteId(stack);
 

@@ -2,7 +2,6 @@ package zmaster587.advancedRocketry.stations;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.NBTTypes;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -10,7 +9,6 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
@@ -79,7 +77,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		transitionEta = -1;
 		destinationDimId = DimensionManager.overworldProperties.getId();
 		created = false;
-		knownPlanetList = new HashSet<ResourceLocation>();
+		knownPlanetList = new HashSet<>();
 		angularVelocity = new double[3];
 		rotation = new double[3];
 	}
@@ -307,7 +305,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 		int stationCount = stations.size();
 		int myIndex = stations.indexOf(this);
 
-		float theta = myIndex*(360/stationCount);
+		float theta = myIndex*(360f/stationCount);
 
 		return new SpacePosition().getFromSpherical(properties.getRenderSizePlanetView()*2f, theta);
 	}
@@ -384,11 +382,8 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	public void setLandingPadAutoLandStatus(int x, int z, boolean status) {
 		HashedBlockPosition pos = new HashedBlockPosition(x, 0, z);
 
-		Iterator<StationLandingLocation> itr = spawnLocations.iterator();
-
-		while(itr.hasNext()) {
-			StationLandingLocation loc = itr.next();
-			if(loc.getPos().equals(pos))
+		for (StationLandingLocation loc : spawnLocations) {
+			if (loc.getPos().equals(pos))
 				loc.setAllowedForAutoLand(status);
 		}
 	}
@@ -422,13 +417,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	public void removeLandingPad(int x, int z) {
 		HashedBlockPosition pos = new HashedBlockPosition(x, 0, z);
 
-		Iterator<StationLandingLocation> itr = spawnLocations.iterator();
-
-		while(itr.hasNext()) {
-			StationLandingLocation loc = itr.next();
-			if(loc.getPos().equals(pos))
-				itr.remove();
-		}
+		spawnLocations.removeIf(loc -> loc.getPos().equals(pos));
 		//spawnLocations.remove(pos);
 	}
 
@@ -590,9 +579,9 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	 */
 	public void onModuleUnpack(IStorageChunk chunk) {
 
-		if(ZUtils.isWorldLoaded(ARConfiguration.GetSpaceDimId()) && ZUtils.getWorld(ARConfiguration.GetSpaceDimId()) == null)
-			ZUtils.initDimension(ARConfiguration.GetSpaceDimId());
-		World worldObj = ZUtils.getWorld(ARConfiguration.GetSpaceDimId());
+		if(ZUtils.isWorldLoaded(ARConfiguration.getSpaceDimId()) && ZUtils.getWorld(ARConfiguration.getSpaceDimId()) == null)
+			ZUtils.initDimension(ARConfiguration.getSpaceDimId());
+		World worldObj = ZUtils.getWorld(ARConfiguration.getSpaceDimId());
 		if(!created) {
 			chunk.pasteInWorld(worldObj, spawnLocation.x - chunk.getSizeX()/2, spawnLocation.y - chunk.getSizeY()/2, spawnLocation.z - chunk.getSizeZ()/2);
 
@@ -886,7 +875,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 			StationLandingLocation loc = new StationLandingLocation(pos, tag.getString("name"));
 			spawnLocations.add(loc);
 			loc.setOccupied(tag.getBoolean("occupied"));
-			loc.setAllowedForAutoLand( tag.contains("occupied") ? tag.getBoolean("occupied") : true);
+			loc.setAllowedForAutoLand(!tag.contains("occupied") || tag.getBoolean("occupied"));
 		}
 
 		list = nbt.getList("warpCorePositions", NBT.TAG_COMPOUND);

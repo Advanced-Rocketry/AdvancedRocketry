@@ -9,6 +9,9 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * InvisLight source
  *
@@ -17,15 +20,18 @@ public class BlockLightSource extends Block {
 
 	public BlockLightSource(Properties properties) {
 		super(properties);
-		properties.setLightLevel(value -> {return 1;} );
+		properties.setLightLevel(value -> 1);
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
 		return true;
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
 			ISelectionContext context) {
 		return VoxelShapes.empty();
@@ -36,7 +42,9 @@ public class BlockLightSource extends Block {
 		return 15;
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return VoxelShapes.empty();
 	}

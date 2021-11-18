@@ -15,6 +15,9 @@ import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class FxLaser extends SpriteTexturedParticle {
 	
 	Entity entityFrom;
@@ -31,6 +34,7 @@ public class FxLaser extends SpriteTexturedParticle {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void renderParticle(IVertexBuilder buffer2, ActiveRenderInfo renderInfo, float partialTicks) {
 		//worldRendererIn.finishDrawing();
 		float x = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks);
@@ -71,6 +75,7 @@ public class FxLaser extends SpriteTexturedParticle {
 		GL11.glLineWidth(1);
 	}
 
+	@Nonnull
 	@Override
 	public IParticleRenderType getRenderType() {
 		return IParticleRenderType.CUSTOM;

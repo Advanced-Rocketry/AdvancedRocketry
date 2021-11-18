@@ -1,51 +1,40 @@
 package zmaster587.advancedRocketry.event;
 
-import net.java.games.input.Mouse;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.IPlanetaryProvider;
 import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
-import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.client.render.ClientDynamicTexture;
 import zmaster587.advancedRocketry.client.render.planet.ISkyRenderer;
 import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
@@ -60,7 +49,6 @@ import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.ZUtils;
 
-import javax.annotation.Nonnull;
 import java.nio.IntBuffer;
 import java.util.List;
 import java.util.Random;
@@ -161,7 +149,7 @@ public class RocketEventHandler extends Screen {
 			outerBounds = new ClientDynamicTexture(outerImgSize, outerImgSize);
 		}
 
-		if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(event.world))) {
+		if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(event.world))) {
 			destroyOrbitalTextures(event.world);
 			mapReady = false;
 			return;
@@ -173,112 +161,109 @@ public class RocketEventHandler extends Screen {
 
 		if(thread == null || !thread.isAlive()) {
 
-			thread = new Thread(new Runnable() {
-				@Override
-				public void run() {
+			thread = new Thread(() -> {
 
-					int numChunksLoaded = 0;
+				int numChunksLoaded = 0;
 
-					//table = earth.getByteBuffer();
-					//outerBoundsTable = outerBounds.getByteBuffer();
+				//table = earth.getByteBuffer();
+				//outerBoundsTable = outerBounds.getByteBuffer();
 
-					//Get the average of each edge RGB
-					long[] total = new long[]{0, 0, 0};
+				//Get the average of each edge RGB
+				long[] total = new long[]{0, 0, 0};
 
-					int numtries = 0;
-					
+				int numtries = 0;
 
-					do {
-						numtries++;
-						for(int i = 0; i < getImgSize*getImgSize; i++) {
-							//TODO: Optimize
-							int xOffset = (i % getImgSize);
-							int yOffset = (i / getImgSize);
 
-							int xPosition = (int)entity.getPosX() - (getImgSize/2) + xOffset;
-							int zPosition = (int)entity.getPosZ() - (getImgSize/2) + yOffset;
-							BlockPos thisPos = new BlockPos(xPosition, 0, zPosition);
-							Chunk chunk = worldObj.getChunkAt(thisPos);
+				do {
+					numtries++;
+					for(int i = 0; i < getImgSize*getImgSize; i++) {
+						//TODO: Optimize
+						int xOffset = (i % getImgSize);
+						int yOffset = (i / getImgSize);
 
-							if(!chunk.isEmpty()) {
-								//Get Xcoord and ZCoords in the chunk
-								numChunksLoaded++;
-								int heightValue = chunk.getTopBlockY(Type.WORLD_SURFACE, xPosition + (chunk.getPos().x >= 0 ? - (Math.abs( chunk.getPos().x )<< 4) : (Math.abs( chunk.getPos().x )<< 4)), zPosition + (chunk.getPos().z >= 0 ? - (Math.abs(chunk.getPos().z )<< 4) : (Math.abs(chunk.getPos().z )<< 4)));
-								MaterialColor color = MaterialColor.AIR;
-								int yPosition;
+						int xPosition = (int)entity.getPosX() - (getImgSize/2) + xOffset;
+						int zPosition = (int)entity.getPosZ() - (getImgSize/2) + yOffset;
+						BlockPos thisPos = new BlockPos(xPosition, 0, zPosition);
+						Chunk chunk = worldObj.getChunkAt(thisPos);
 
-								BlockState block = null;
+						if(!chunk.isEmpty()) {
+							//Get Xcoord and ZCoords in the chunk
+							numChunksLoaded++;
+							int heightValue = chunk.getTopBlockY(Type.WORLD_SURFACE, xPosition + (chunk.getPos().x >= 0 ? - (Math.abs( chunk.getPos().x )<< 4) : (Math.abs( chunk.getPos().x )<< 4)), zPosition + (chunk.getPos().z >= 0 ? - (Math.abs(chunk.getPos().z )<< 4) : (Math.abs(chunk.getPos().z )<< 4)));
+							MaterialColor color = MaterialColor.AIR;
+							int yPosition;
 
-								//Get the first non-air block
-								for(yPosition = heightValue; yPosition > 0; yPosition-- ) {
-									block = worldObj.getBlockState(new BlockPos(xPosition, yPosition, zPosition));
-									if((color = block.getMaterialColor(worldObj, thisPos)) != MaterialColor.AIR) {
-										break;
-									}
+							BlockState block = null;
+
+							//Get the first non-air block
+							for(yPosition = heightValue; yPosition > 0; yPosition-- ) {
+								block = worldObj.getBlockState(new BlockPos(xPosition, yPosition, zPosition));
+								if((color = block.getMaterialColor(worldObj, thisPos)) != MaterialColor.AIR) {
+									break;
 								}
-								if(block == null)
-									continue;
-
-								int intColor;
-
-								if(block.getBlock() == Blocks.GRASS_BLOCK || block.getBlock() == Blocks.TALL_GRASS) {
-									int color2 = worldObj.getBiome(thisPos).getGrassColor(thisPos.getX(), thisPos.getZ());
-									int r = (color2 & 0xFF);
-									int g = ( (color2 >>> 8) & 0xFF);
-									int b = ( (color2 >>> 16) & 0xFF);
-									intColor = b | (g << 8) | (r << 16);
-								}
-								else if(block.getBlock() == Blocks.OAK_LEAVES ) {
-									int color2 = worldObj.getBiome(thisPos).getFoliageColor();
-									int r = (color2 & 0xFF);
-									int g = ( (color2 >>> 8) & 0xFF);
-									int b = ( (color2 >>> 16) & 0xFF);
-									intColor = b | (g << 8) | (r << 16);
-								}
-								else
-									intColor = ( (color.colorValue & 0xFF) << 16) | ( ( color.colorValue >>> 16 ) & 0xFF ) | ( color.colorValue & 0xFF00 );
-
-								//Put into the table and make opaque
-								table.put(i, intColor | 0xFF000000);
-
-								//Background in case chunk doesnt load
-								total[0] += intColor & 0xFF;
-								total[1] += (intColor & 0xFF00) >>> 8;
-									total[2] += (intColor & 0xFF0000) >>> 16;
-
 							}
+							if(block == null)
+								continue;
+
+							int intColor;
+
+							if(block.getBlock() == Blocks.GRASS_BLOCK || block.getBlock() == Blocks.TALL_GRASS) {
+								int color2 = worldObj.getBiome(thisPos).getGrassColor(thisPos.getX(), thisPos.getZ());
+								int r = (color2 & 0xFF);
+								int g = ( (color2 >>> 8) & 0xFF);
+								int b = ( (color2 >>> 16) & 0xFF);
+								intColor = b | (g << 8) | (r << 16);
+							}
+							else if(block.getBlock() == Blocks.OAK_LEAVES ) {
+								int color2 = worldObj.getBiome(thisPos).getFoliageColor();
+								int r = (color2 & 0xFF);
+								int g = ( (color2 >>> 8) & 0xFF);
+								int b = ( (color2 >>> 16) & 0xFF);
+								intColor = b | (g << 8) | (r << 16);
+							}
+							else
+								intColor = ( (color.colorValue & 0xFF) << 16) | ( ( color.colorValue >>> 16 ) & 0xFF ) | ( color.colorValue & 0xFF00 );
+
+							//Put into the table and make opaque
+							table.put(i, intColor | 0xFF000000);
+
+							//Background in case chunk doesnt load
+							total[0] += intColor & 0xFF;
+							total[1] += (intColor & 0xFF00) >>> 8;
+								total[2] += (intColor & 0xFF0000) >>> 16;
+
 						}
-					} while(numChunksLoaded == 0 && numtries < 5000);
-
-					int multiplierGreen = 1;
-					int multiplierBlue = 1;
-
-					//Get the outer layer
-					total[0] =     ZUtils.getAverageColor(total[0], total[1]*multiplierGreen, total[2]* multiplierBlue, numChunksLoaded);
-
-					Random random = new Random(); 
-
-					int randomMax = 0x2A;
-
-					for(int i = 0; i < outerImgSize*outerImgSize; i++) {
-
-						int randR =   randomMax - random.nextInt(randomMax) / 2;
-						int randG = ( randomMax - random.nextInt(randomMax)/2 ) << 8;
-						int randB = ( randomMax - random.nextInt(randomMax) /2 ) << 16;
-
-
-						int color = MathHelper.clamp((int) ( (total[0] & 0xFF) + randR ),0, 0xFF ) |
-								MathHelper.clamp((int)(total[0] & 0xFF00) + randG, 0x0100, 0xFF00)  |
-								MathHelper.clamp( (int)(( total[0] & 0xFF0000) + randB), 0x010000, 0xFF0000);
-
-						outerBoundsTable.put(i, color | 0xff000000);
 					}
+				} while(numChunksLoaded == 0 && numtries < 5000);
 
-					outerBoundsTable.flip();
-					table.flip(); //Yes really
-					mapNeedsBinding = true;
-					mapReady = true;
+				int multiplierGreen = 1;
+				int multiplierBlue = 1;
+
+				//Get the outer layer
+				total[0] =     ZUtils.getAverageColor(total[0], total[1]*multiplierGreen, total[2]* multiplierBlue, numChunksLoaded);
+
+				Random random = new Random();
+
+				int randomMax = 0x2A;
+
+				for(int i = 0; i < outerImgSize*outerImgSize; i++) {
+
+					int randR =   randomMax - random.nextInt(randomMax) / 2;
+					int randG = ( randomMax - random.nextInt(randomMax)/2 ) << 8;
+					int randB = ( randomMax - random.nextInt(randomMax) /2 ) << 16;
+
+
+					int color = MathHelper.clamp((int) ( (total[0] & 0xFF) + randR ),0, 0xFF ) |
+							MathHelper.clamp((int)(total[0] & 0xFF00) + randG, 0x0100, 0xFF00)  |
+							MathHelper.clamp( (int)(( total[0] & 0xFF0000) + randB), 0x010000, 0xFF0000);
+
+					outerBoundsTable.put(i, color | 0xff000000);
 				}
+
+				outerBoundsTable.flip();
+				table.flip(); //Yes really
+				mapNeedsBinding = true;
+				mapReady = true;
 			}, "Planet Texture Creator");
 			thread.start();
 		}
@@ -291,7 +276,7 @@ public class RocketEventHandler extends Screen {
 		if(!mapReady)
 			return;
 		
-		if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(Minecraft.getInstance().getRenderViewEntity().world))) {
+		if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(Minecraft.getInstance().getRenderViewEntity().world))) {
 			destroyOrbitalTextures(Minecraft.getInstance().getRenderViewEntity().world);
 			mapReady = false;
 			return;

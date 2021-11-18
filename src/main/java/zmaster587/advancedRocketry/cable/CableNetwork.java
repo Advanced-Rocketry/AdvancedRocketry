@@ -144,7 +144,7 @@ public class CableNetwork {
 			TileEntity tile = obj.getKey();
 			output += tile.getPos().getX() + "," + tile.getPos().getY() + "," + tile.getPos().getZ() + " ";
 		}
-		return output.toString();
+		return output;
 	}
 
 	/**

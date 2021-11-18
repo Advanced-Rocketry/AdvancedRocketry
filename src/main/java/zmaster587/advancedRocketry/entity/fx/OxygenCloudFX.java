@@ -7,11 +7,13 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class OxygenCloudFX extends SpriteTexturedParticle {
 
@@ -38,6 +40,7 @@ public class OxygenCloudFX extends SpriteTexturedParticle {
         this.particleScale=0.01f;
 	}
 	
+	@Nonnull
 	@Override
 	public IParticleRenderType getRenderType() {
 		return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
@@ -74,6 +77,7 @@ public class OxygenCloudFX extends SpriteTexturedParticle {
 			this.spriteSet = p_i50630_1_;
 		}
 
+		@ParametersAreNonnullByDefault
 		public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 			OxygenCloudFX arc = new OxygenCloudFX(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
 			arc.selectSpriteWithAge(spriteSet);

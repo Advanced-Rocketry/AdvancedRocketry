@@ -1,8 +1,6 @@
 package zmaster587.advancedRocketry.tile.multiblock.energy;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -11,19 +9,13 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -39,7 +31,6 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiPowerProducer;
 import zmaster587.libVulpes.util.MultiBattery;
 import zmaster587.libVulpes.util.ZUtils;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -120,9 +111,6 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 		public String getMachineName() {
 			return "block.advancedrocketry.blackholegenerator";
 		}
-		public int getPowerMadeLastTick() {
-			return powerMadeLastTick;
-		}
 
 		@Override
 		public void onInventoryUpdated() {
@@ -181,7 +169,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 		private boolean isAroundBlackHole()
 		{
 
-			if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world)))
+			if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world)))
 			{
 				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos);
 				if(spaceObject != null)
@@ -208,7 +196,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 
 			if(!world.isRemote) {
 				if(isAroundBlackHole()) {
-					float energyRecieved = 0;
+					float energyRecieved;
 
 
 					//Check to see if we're ready for another injection

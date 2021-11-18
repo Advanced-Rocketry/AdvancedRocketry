@@ -17,8 +17,6 @@ public class ContainerRegistry {
     	evt.getRegistry().registerAll(
     			CONTAINER_SATELLITE.setRegistryName("modular_held_item"));
     	
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-			ScreenManager.registerFactory(CONTAINER_SATELLITE, GuiOreMappingSatellite::new);
-		});
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ScreenManager.registerFactory(CONTAINER_SATELLITE, GuiOreMappingSatellite::new));
 	}
 }

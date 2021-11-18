@@ -12,23 +12,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.entity.EntityItemAbducted;
 
-import javax.annotation.Nullable;
-import java.util.Random;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @OnlyIn(value=Dist.CLIENT)
-public class RendererItem extends EntityRenderer<EntityItemAbducted> implements IRenderFactory<EntityItemAbducted>
-{
-    private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
-    /** The RNG used in RenderItem (for bobbing itemstacks on the ground) */
-    private Random random = new Random();
-    public boolean renderWithColor = true;
-    /** Defines the zLevel of rendering of item on GUI. */
-    public float zLevel;
-    public static boolean renderInFrame;
-    private static final String __OBFID = "CL_00001003";
-    //RenderBlock itemRenderer;
+public class RendererItem extends EntityRenderer<EntityItemAbducted> implements IRenderFactory<EntityItemAbducted> {
 
     public RendererItem(EntityRendererManager renderManagerIn) {
     	super(renderManagerIn);
@@ -41,9 +30,8 @@ public class RendererItem extends EntityRenderer<EntityItemAbducted> implements 
      * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
      */
     @Override
-    public void render(EntityItemAbducted entity, float entityYaw, float partialTicks, MatrixStack matrixStackIn,
-    		IRenderTypeBuffer bufferIn, int packedLightIn)
-    {
+    @ParametersAreNonnullByDefault
+    public void render(EntityItemAbducted entity, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
     	Minecraft.getInstance().getItemRenderer().renderItem(entity.getEntityItem(), TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn);
     }
 
@@ -54,6 +42,7 @@ public class RendererItem extends EntityRenderer<EntityItemAbducted> implements 
 	}
 
 	@Override
+    @ParametersAreNonnullByDefault
 	public ResourceLocation getEntityTexture(EntityItemAbducted entity) {
 		return null;
 	}

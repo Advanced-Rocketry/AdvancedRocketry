@@ -6,17 +6,19 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.entity.EntityUIButton;
 import zmaster587.libVulpes.render.RenderHelper;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class RenderButtonUIEntity extends EntityRenderer<EntityUIButton> implements IRenderFactory<EntityUIButton> {
 
+	@ParametersAreNonnullByDefault
 	public RenderButtonUIEntity(EntityRendererManager renderManager) {
 		super(renderManager);
 	}
@@ -27,13 +29,16 @@ public class RenderButtonUIEntity extends EntityRenderer<EntityUIButton> impleme
 		return new RenderButtonUIEntity(manager);
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public ResourceLocation getEntityTexture(EntityUIButton entity) {
 		return DimensionProperties.PlanetIcons.EARTHLIKE.getResource();
 	}
+
 	@Override
-	public void render(EntityUIButton entity, float entityYaw, float partialTicks, MatrixStack matrix,
-			IRenderTypeBuffer bufferIn, int packedLightIn) {
+	@ParametersAreNonnullByDefault
+	public void render(EntityUIButton entity, float entityYaw, float partialTicks, MatrixStack matrix, IRenderTypeBuffer bufferIn, int packedLightIn) {
 
 		matrix.push();
 		matrix.translate(0, 0.25, 0);

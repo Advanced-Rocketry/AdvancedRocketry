@@ -1,17 +1,13 @@
 package zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -21,13 +17,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.LibVulpes;
@@ -42,6 +36,7 @@ import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -469,7 +464,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	private boolean unableToRun() {
 		return lens.isEmpty() || !canMachineSeeEarth() 
 				|| batteries.getUniversalEnergyStored() == 0 
-				|| ZUtils.getDimensionIdentifier(world).equals(ARConfiguration.GetSpaceDimId()) 
+				|| ZUtils.getDimensionIdentifier(world).equals(ARConfiguration.getSpaceDimId())
 				|| !DimensionManager.getInstance().canTravelTo(DimensionManager.getInstance().getDimensionProperties(world, getPos()).getParentPlanet()) 
 				|| ARConfiguration.getCurrentConfig().laserBlackListDims.get().contains(DimensionManager.getInstance().getDimensionProperties(world, getPos()).getParentPlanet().toString());
 		}
@@ -582,31 +577,35 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public void openInventory(PlayerEntity entity) {
 		// TODO Perhaps make sure laser isn't running
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void closeInventory(PlayerEntity entity) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public int[] getSlotsForFace(Direction side) {
 		return new int[] {};
 	}
 
 	
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn,
-			Direction direction) {
+	@ParametersAreNonnullByDefault
+	public boolean canInsertItem(int index, ItemStack itemStackIn, @Nullable  Direction direction) {
 		return false;
 	}
 	
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack,
-			Direction direction) {
+	@ParametersAreNonnullByDefault
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
 		return false;
 	}
 
@@ -666,7 +665,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 
 	@Override
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		if(world.isRemote) {
 			modules.add(locationX = new ModuleNumericTextbox(this, 113, 31, 50, 10, 16));
 			modules.add(locationZ = new ModuleNumericTextbox(this, 113, 41, 50, 10, 16));

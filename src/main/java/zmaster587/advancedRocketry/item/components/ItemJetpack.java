@@ -41,7 +41,7 @@ import java.util.List;
 
 public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
-	private static enum MODES {
+	private enum MODES {
 		NORMAL,
 		HOVER
 	}
@@ -51,7 +51,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 	}
 
 
-	private ResourceLocation background = TextureResources.rocketHud;
+	private final ResourceLocation background = TextureResources.rocketHud;
 
 	@Override
 	public void onTick(World world, PlayerEntity player,
@@ -85,8 +85,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
 
 		//Apply speed upgrades only if the player isn't using Elytra
-		if(!player.isElytraFlying())
-		{
+		if(!player.isElytraFlying()) {
 			player.setMotion(player.getMotion().x + speedUpgrades*0.02f, player.getMotion().y, player.getMotion().z + speedUpgrades*0.02f);
 		}
 
@@ -198,13 +197,11 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
 		if(hasFuel) {
 
-			player.addVelocity(0, (double)ARConfiguration.getCurrentConfig().jetPackThrust.get()*0.1f, 0);
+			player.addVelocity(0, ARConfiguration.getCurrentConfig().jetPackThrust.get() *0.1f, 0);
 			if(player.world.isRemote) {
-				double xPos = player.getPosX();
-				double zPos = player.getPosZ();
 				float playerRot = (float) ((Math.PI/180f)*(player.rotationYaw - 55));
-				xPos = player.getPosX() + MathHelper.cos(playerRot)*.4f;
-				zPos = player.getPosZ() + MathHelper.sin(playerRot)*.4f;
+				double xPos = player.getPosX() + MathHelper.cos(playerRot)*.4f;
+				double zPos = player.getPosZ() + MathHelper.sin(playerRot)*.4f;
 
 				float ejectSpeed = mode == MODES.HOVER ? 0.1f : 0.3f;
 				//AdvancedRocketry.proxy.spawnParticle("smallRocketFlame", player.worldObj, xPos, player.posY - 0.75, zPos, (player.worldObj.rand.nextFloat() - 0.5f)/18f,-.1 ,(player.worldObj.rand.nextFloat() - 0.5f)/18f);
@@ -331,16 +328,13 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
 	public void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Screen gui) {
-		List<ItemStack> inv = modules;
 
 		int amt = 0, maxAmt = 0;
-		for(int i = 0; i < inv.size(); i++) {
-			ItemStack currentStack = inv.get(i);
-
-			if(FluidUtils.containsFluid(currentStack, AdvancedRocketryFluids.hydrogenStill.get())) {
+		for (ItemStack currentStack : modules) {
+			if (FluidUtils.containsFluid(currentStack, AdvancedRocketryFluids.hydrogenStill.get())) {
 				FluidStack fluidStack = FluidUtils.getFluidForItem(currentStack);
-				if(fluidStack != null)
-					amt+= fluidStack.getAmount();
+				if (fluidStack != null)
+					amt += fluidStack.getAmount();
 				maxAmt += FluidUtils.getFluidItemCapacity(currentStack);
 			}
 

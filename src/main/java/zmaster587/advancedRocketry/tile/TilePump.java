@@ -28,7 +28,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
-import zmaster587.advancedRocketry.network.PacketAirParticle;
 import zmaster587.advancedRocketry.network.PacketFluidParticle;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.cap.FluidCapability;
@@ -40,8 +39,10 @@ import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.tile.TileEntityRFConsumer;
-import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IModularInventory {
 
@@ -59,7 +60,9 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		return 100;
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public <T> LazyOptional<T> getCapability(Capability<T> capability) {
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			return LazyOptional.of(() -> new FluidCapability(this)).cast();
@@ -80,7 +83,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 				{
 					IFluidHandler cap = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite()).orElse(null);
 					FluidStack stack =  tank.getFluid().copy();
-					stack.setAmount((int)Math.min(tank.getFluid().getAmount(), 1000));
+					stack.setAmount(Math.min(tank.getFluid().getAmount(), 1000));
 					//Perform the drain
 					cap.fill(tank.drain(cap.fill(stack, FluidAction.SIMULATE), FluidAction.EXECUTE), FluidAction.EXECUTE);
 					
@@ -135,13 +138,9 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 
 	private boolean canFitFluid(BlockPos pos) {
 		Block worldBlock = world.getBlockState(pos).getBlock();
-		if(worldBlock instanceof FlowingFluidBlock)
-		{
+		if(worldBlock instanceof FlowingFluidBlock) {
 			// Can we put it into the tank?
-			if(tank.getFluid().isEmpty() || tank.getFluid().getFluid() == ((FlowingFluidBlock)worldBlock).getFluid())
-			{
-				return true;
-			}
+			return tank.getFluid().isEmpty() || tank.getFluid().getFluid() == ((FlowingFluidBlock) worldBlock).getFluid();
 		}
 		return false;
 	}
@@ -208,11 +207,13 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		return 0;
 	}
 
+	@Nonnull
 	@Override
 	public FluidStack drain(FluidStack resource, FluidAction doDrain) {
 		return tank.drain(resource, doDrain);
 	}
 
+	@Nonnull
 	@Override
 	public FluidStack drain(int maxDrain, FluidAction doDrain) {
 		return tank.drain(maxDrain, doDrain);
@@ -220,7 +221,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 
 	@Override
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModuleLiquidIndicator(27, 18, this));
 		return modules;
 	}
@@ -235,12 +236,14 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		return false;
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}
@@ -255,6 +258,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 		return this.tank.getTanks();
 	}
 
+	@Nonnull
 	@Override
 	public FluidStack getFluidInTank(int tank) {
 		return this.tank.getFluidInTank(tank);
@@ -266,6 +270,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isFluidValid(int tank, FluidStack stack) {
 		return this.tank.isFluidValid(tank, stack);
 	}

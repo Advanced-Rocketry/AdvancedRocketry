@@ -9,18 +9,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.integration.jei.ARPlugin;
-import zmaster587.advancedRocketry.integration.jei.ItemDraw;
 import zmaster587.advancedRocketry.integration.jei.MachineCategoryTemplate;
 import zmaster587.advancedRocketry.integration.jei.MachineRecipe;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.LibVulpes;
+
+import javax.annotation.Nonnull;
 
 public class ChemicalReactorCategory extends MachineCategoryTemplate<MachineRecipe> {
 
@@ -28,16 +27,19 @@ public class ChemicalReactorCategory extends MachineCategoryTemplate<MachineReci
 		super(helper, TextureResources.crystallizerProgressBar, icon);
 	}
 
+	@Nonnull
 	@Override
 	public ResourceLocation getUid() {
 		return ARPlugin.chemicalReactorUUID;
 	}
 
+	@Nonnull
 	@Override
 	public String getTitle() {
 		return LibVulpes.proxy.getLocalizedString("block.advancedrocketry.chemicalreactor");
 	}
-	
+
+	@Nonnull
 	@Override
 	public Class<? extends MachineRecipe> getRecipeClass() {
 		return MachineRecipe.class;

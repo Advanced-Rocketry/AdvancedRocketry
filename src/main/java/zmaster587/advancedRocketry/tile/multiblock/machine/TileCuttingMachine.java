@@ -3,7 +3,6 @@ package zmaster587.advancedRocketry.tile.multiblock.machine;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundEvent;
@@ -11,7 +10,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
@@ -55,8 +53,8 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 			float xCoord = this.getPos().getX() + (0.5f*back.getXOffset()); 
 			float zCoord = this.getPos().getZ() + (0.5f*back.getZOffset());
 
-			for(Object entity : world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(xCoord, this.getPos().getY() + 1, zCoord, xCoord + 1, this.getPos().getY() + 1.5f, zCoord + 1))) {
-				((LivingEntity)entity).attackEntityFrom(DamageSource.CACTUS, 1f);
+			for(LivingEntity entity : world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(xCoord, this.getPos().getY() + 1, zCoord, xCoord + 1, this.getPos().getY() + 1.5f, zCoord + 1))) {
+				entity.attackEntityFrom(DamageSource.CACTUS, 1f);
 			}
 		}
 	}

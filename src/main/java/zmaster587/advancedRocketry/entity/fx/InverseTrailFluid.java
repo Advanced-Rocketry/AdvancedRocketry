@@ -10,6 +10,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class InverseTrailFluid extends InverseTrailFx {
 	double initX, initZ, distX, distZ;
 	
@@ -30,7 +32,7 @@ public class InverseTrailFluid extends InverseTrailFx {
 		this.particleBlue = ((color& 0xFF)/255f) *intensity;
 
         this.maxAge = time;
-        this.particleScale = (float) (this.rand.nextFloat() * 0.25F) + 0.75f;
+        this.particleScale = (this.rand.nextFloat() * 0.25F) + 0.75f;
 	}
 	
 	@Override
@@ -67,6 +69,7 @@ public class InverseTrailFluid extends InverseTrailFx {
 			spriteSet2 = p_i50630_1_;
 		}
 
+		@ParametersAreNonnullByDefault
 		public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 			InverseTrailFluid arc = new InverseTrailFluid(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, 0xFFFFFF, 0xFFF);
 			arc.selectSpriteWithAge(spriteSet);

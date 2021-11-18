@@ -1,7 +1,6 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ItemTags;
@@ -44,7 +43,7 @@ public class TileWarpCore extends TileMultiBlock {
 	};
 
 	private SpaceStationObject getSpaceObject() {
-		if(station == null && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
+		if(station == null && ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceStationObject)
 				station = (SpaceStationObject) object;
@@ -77,7 +76,7 @@ public class TileWarpCore extends TileMultiBlock {
 				ItemStack stack = inv.getStackInSlot(i).copy();
 				stack.setCount(1);
 				int amt = 0;
-				if(!stack.isEmpty() && ItemTags.getCollection().getOwningTags(stack.getItem()).stream().anyMatch(value -> { return value.getPath().equalsIgnoreCase("gems/dilithium"); }) ) {
+				if(!stack.isEmpty() && ItemTags.getCollection().getOwningTags(stack.getItem()).stream().anyMatch(value -> value.getPath().equalsIgnoreCase("gems/dilithium")) ) {
 					int stackSize = stack.getCount();
 					if(!world.isRemote)
 						amt = getSpaceObject().addFuel(ARConfiguration.getCurrentConfig().fuelPointsPerDilithium.get());

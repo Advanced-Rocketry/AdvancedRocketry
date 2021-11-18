@@ -16,13 +16,11 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.IWorld;
@@ -31,8 +29,6 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent.LoggedOutEvent;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.RenderFogEvent;
 import net.minecraftforge.event.TickEvent;
@@ -47,46 +43,35 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent.ClientCustomPayloadLoginEvent;
-import net.minecraftforge.fml.network.NetworkEvent.ServerCustomPayloadEvent;
-import net.minecraftforge.fml.network.NetworkEvent.ServerCustomPayloadLoginEvent;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.advancements.ARAdvancements;
-import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
-import zmaster587.advancedRocketry.block.BlockTorchUnlitWall;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.entity.EntityRocket;
-import zmaster587.advancedRocketry.network.PacketConfigSync;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.network.PacketStellarInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
-import zmaster587.advancedRocketry.util.GravityHandler;
-import zmaster587.advancedRocketry.util.BiomeHandler;
 import zmaster587.advancedRocketry.util.SpawnListEntryNBT;
 import zmaster587.advancedRocketry.util.TransitionEntity;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
-import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -170,7 +155,7 @@ public class PlanetEventHandler {
 					event.getEntity().getPositionVec().squareDistanceTo(2347,80, 67) < 512 ) {
 				ARAdvancements.triggerAchievement(ARAdvancements.WENT_TO_THE_MOON, (ServerPlayerEntity)event.getEntity());
 			}
-			if(event.getEntity() instanceof PlayerEntity && ZUtils.getDimensionIdentifier(event.getEntity().world).equals(ARConfiguration.getCurrentConfig().spaceDimId) && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.getEntity().getPosition()) == null) {
+			if(event.getEntity() instanceof PlayerEntity && ZUtils.getDimensionIdentifier(event.getEntity().world).toString().equals(ARConfiguration.getCurrentConfig().spaceDimId.toString()) && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.getEntity().getPosition()) == null) {
 				double distance = 0;
 				HashedBlockPosition teleportPosition = null;
 				for (ISpaceObject spaceObject : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
@@ -377,9 +362,9 @@ public class PlanetEventHandler {
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world);
 		if(properties != null) {
 			float[] color =  properties.fogColor;
-			event.setRed((float) Math.min(event.getRed()*color[0]*1.0f,1f));
-			event.setGreen((float) Math.min(event.getGreen()*color[1]*1.0f, 1f));
-			event.setBlue((float) Math.min(event.getBlue()*color[2]*1.0f, 1f));
+			event.setRed(Math.min(event.getRed()*color[0]*1.0f,1f));
+			event.setGreen(Math.min(event.getGreen()*color[1]*1.0f, 1f));
+			event.setBlue(Math.min(event.getBlue()*color[2]*1.0f, 1f));
 
 			//Make sure fog doesn't happen on zero atmospheres
 			if (properties.getAtmosphereDensity() == 0) {
@@ -439,7 +424,7 @@ public class PlanetEventHandler {
 	@OnlyIn(value=Dist.CLIENT)
 	public void fogColor(RenderFogEvent event) {
 
-		if(event.getInfo().getRenderViewEntity().getEntityWorld() == null || event.getInfo().getRenderViewEntity().getEntityWorld() instanceof WorldDummy)
+		if(event.getInfo().getRenderViewEntity().getEntityWorld() instanceof WorldDummy)
 			return;
 
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getInfo().getRenderViewEntity().getEntityWorld());
@@ -509,7 +494,7 @@ public class PlanetEventHandler {
 	public void fallEvent(LivingFallEvent event) {
 		if(DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(event.getEntity().world))) {
 			DimensionProperties planet =  DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(event.getEntity().world));
-			event.setDistance((float) (event.getDistance() * planet.getGravitationalMultiplier(new BlockPos(event.getEntity().getPositionVec()))));
+			event.setDistance(event.getDistance() * planet.getGravitationalMultiplier(new BlockPos(event.getEntity().getPositionVec())));
 		}
 	}
 }

@@ -3,7 +3,6 @@ package zmaster587.advancedRocketry.backwardCompat;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.util.math.vector.Matrix3f;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
@@ -124,10 +123,9 @@ public class Face
 
         if ((textureCoordinates != null) && (textureCoordinates.length > 0))
         {
-            for (int i = 0; i < textureCoordinates.length; ++i)
-            {
-                averageU += textureCoordinates[i].u;
-                averageV += textureCoordinates[i].v;
+            for (TextureCoordinate textureCoordinate : textureCoordinates) {
+                averageU += textureCoordinate.u;
+                averageV += textureCoordinate.v;
             }
 
             averageU = averageU / textureCoordinates.length;

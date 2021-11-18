@@ -21,6 +21,8 @@ import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class RendererWarpCore extends TileEntityRenderer<TileWarpCore> {
 
 	public static WavefrontObject model;
@@ -39,8 +41,8 @@ public class RendererWarpCore extends TileEntityRenderer<TileWarpCore> {
 	}
 
 	@Override
-	public void render(TileWarpCore tile, float partialTicks, MatrixStack matrix,
-			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn)  {
+	@ParametersAreNonnullByDefault
+	public void render(TileWarpCore tile, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn)  {
 
 		if(!tile.canRender())
 			return;
@@ -65,7 +67,7 @@ public class RendererWarpCore extends TileEntityRenderer<TileWarpCore> {
 		matrix.pop();
 		
 		
-		if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(tile.getWorld()))) {
+		if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(tile.getWorld()))) {
 
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(tile.getPos());
 			if(obj instanceof SpaceStationObject && ((SpaceStationObject)obj).getFuelAmount() > 50) {

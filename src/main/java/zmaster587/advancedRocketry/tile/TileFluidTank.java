@@ -1,8 +1,5 @@
 package zmaster587.advancedRocketry.tile;
 
-import javax.annotation.Nonnull;
-
-import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -61,8 +58,7 @@ public class TileFluidTank extends TileFluidHatch {
 		TileFluidTank handler2 = this.getFluidTankInDirection(Direction.UP);
 		
 		//Move up, check if we can fill there, do top down
-		if(handler2 != null && handler2.canFill(resource))
-		{
+		if(handler2 != null && handler2.canFill(resource)) {
 			return handler2.fill(resource, doFill);
 		}
 		return fillInternal2(resource, doFill);
@@ -101,7 +97,7 @@ public class TileFluidTank extends TileFluidHatch {
 	public FluidStack drain(int maxDrain, FluidAction doDrain) {
 		IFluidHandler handler = this.getFluidTankInDirection(Direction.UP);
 
-		FluidStack stack = null;
+		FluidStack stack = FluidStack.EMPTY;
 		if(handler != null && !handler.getFluidInTank(0).isEmpty() &&
 				!fluidTank.getFluid().isEmpty() && fluidTank.getFluid().getFluid() ==
 				handler.getFluidInTank(0).getFluid()) {
@@ -111,7 +107,7 @@ public class TileFluidTank extends TileFluidHatch {
 		if(!stack.isEmpty())
 			return stack;
 
-		FluidStack stack2 = super.drain(maxDrain - (stack != null ? stack.getAmount() : 0), doDrain);
+		FluidStack stack2 = super.drain(maxDrain - (!stack.isEmpty() ? stack.getAmount() : 0), doDrain);
 
 		if(!stack.isEmpty() && stack2.isEmpty())
 			stack2.setAmount(stack2.getAmount() + stack.getAmount());
@@ -186,7 +182,7 @@ public class TileFluidTank extends TileFluidHatch {
 		
 		TileFluidTank tank = getFluidTankInDirection(Direction.UP);
 
-		if(tank != null && tank.getFluidInTank(0) != null) {
+		if(tank != null && !tank.getFluidInTank(0).isEmpty()) {
 			if(fluidTank.getFluid().isEmpty()) {
 				fluidTank.fill(tank.fluidTank.drain(fluidTank.getCapacity(),  FluidAction.EXECUTE),  FluidAction.EXECUTE);
 			}

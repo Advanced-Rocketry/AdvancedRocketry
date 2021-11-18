@@ -4,12 +4,12 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemIdWithName extends Item {
@@ -20,7 +20,7 @@ public class ItemIdWithName extends Item {
 
 	public void setName(ItemStack stack, String name) {
 
-		if(stack.hasTag()) {
+		if(stack.hasTag() && stack.getTag() != null) {
 			CompoundNBT nbt = stack.getTag();
 			nbt.putString("name", name);
 			stack.setTag(nbt);
@@ -28,7 +28,7 @@ public class ItemIdWithName extends Item {
 	}
 
 	public String getName(ItemStack stack) {
-		if(stack.hasTag()) {
+		if(stack.hasTag() && stack.getTag() != null) {
 			CompoundNBT nbt = stack.getTag();
 			return nbt.getString("name");
 		}
@@ -39,8 +39,7 @@ public class ItemIdWithName extends Item {
 	
 	@Override
     @OnlyIn(value=Dist.CLIENT)
-	public void addInformation(ItemStack stack, World player,
-			List list, ITooltipFlag bool) {
+	public void addInformation(ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag bool) {
 		if(stack.getDamage() == -1) {
 			list.add(new StringTextComponent("Unprogrammed"));
 		}

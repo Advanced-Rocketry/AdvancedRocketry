@@ -6,18 +6,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.world.ForgeChunkManager;
-import net.minecraftforge.common.world.ForgeChunkManager.TicketOwner;
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.advancedRocketry.event.BlockBreakEvent;
@@ -54,8 +49,7 @@ class MiningDrill extends AbstractDrill {
 				continue;
 			}
 
-			List<ItemStack> items = NonNullList.create();
-			items = Block.getDrops(state, (ServerWorld) laser.world, laserPos, laser.world.getTileEntity(laserPos));
+			List<ItemStack> items = Block.getDrops(state, (ServerWorld) laser.world, laserPos, laser.world.getTileEntity(laserPos));
 
 			//TODO: may need to fix in later builds
 			if (!state.getMaterial().isOpaque() || state.getBlock() == Blocks.BEDROCK)

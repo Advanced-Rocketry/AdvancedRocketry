@@ -3,11 +3,9 @@ package zmaster587.advancedRocketry.integration.jei;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.drawable.IDrawableBuilder;
 import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
@@ -17,13 +15,14 @@ import net.minecraftforge.fluids.FluidStack;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.recipe.RecipesMachine.ChanceFluidStack;
-import zmaster587.libVulpes.recipe.RecipesMachine.ChanceItemStack;
 
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public abstract class MachineCategoryTemplate<T extends MachineRecipe> implements IRecipeCategory<T> {
 
@@ -39,18 +38,21 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> implement
 		this.icon = helper.createDrawableIngredient(icon);
 	}
 	
+	@Nonnull
 	@Override
 	public IDrawable getBackground() {
 		return background;
 	}
 	
 	
+	@Nonnull
 	@Override
 	public IDrawable getIcon() {
 		return icon;
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public void draw(T recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		IRecipeCategory.super.draw(recipe, matrixStack, mouseX, mouseY);
 		
@@ -68,12 +70,8 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> implement
 		// TODO Auto-generated method stub
 		ingredients.setInputLists(VanillaTypes.ITEM, recipe.getInputs());
 		ingredients.setInputs(VanillaTypes.FLUID, recipe.getFluidIngredients());
-		
-		List<ItemStack> outputStacks = new LinkedList<>();
-		for(ItemStack stack : recipe.getResults())
-		{
-			outputStacks.add(stack);
-		}
+
+		List<ItemStack> outputStacks = new LinkedList<>(recipe.getResults());
 		
 		List<FluidStack> outputFluids = new LinkedList<>();
 		for(ChanceFluidStack stack : recipe._getRawFluidOutput())

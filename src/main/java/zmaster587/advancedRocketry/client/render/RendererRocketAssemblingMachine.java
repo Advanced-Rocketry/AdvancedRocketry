@@ -3,13 +3,9 @@ package zmaster587.advancedRocketry.client.render;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
@@ -22,9 +18,9 @@ public class RendererRocketAssemblingMachine extends TileEntityRenderer<TileRock
 		super(rendererDispatcherIn);
 	}
 
-	private ResourceLocation grid = new ResourceLocation("advancedrocketry:textures/models/grid.png");
-	private ResourceLocation girder = new ResourceLocation("advancedrocketry:textures/models/girder.png");
-	private ResourceLocation round_h = new ResourceLocation("advancedrocketry:textures/models/round_h.png");
+	private final ResourceLocation grid = new ResourceLocation("advancedrocketry:textures/models/grid.png");
+	private final ResourceLocation girder = new ResourceLocation("advancedrocketry:textures/models/girder.png");
+	private final ResourceLocation round_h = new ResourceLocation("advancedrocketry:textures/models/round_h.png");
 	
 	
 	@Override
@@ -68,7 +64,7 @@ public class RendererRocketAssemblingMachine extends TileEntityRenderer<TileRock
 			
 			float r = 0.78f, g= 0.5f, b = 0.34f, a = 1f;
 			
-			RenderHelper.renderCubeWithUV(matrix, entitySolidBuilder, xOffset, 0d, zOffset, xOffset + size, yOffset + yLocation, zOffset + size, (float)uMin, (float)uMax, (float)0d, (float)vMax, r,g,b,a);
+			RenderHelper.renderCubeWithUV(matrix, entitySolidBuilder, xOffset, 0d, zOffset, xOffset + size, yOffset + yLocation, zOffset + size, uMin, uMax, (float)0d, vMax, r,g,b,a);
 			RenderHelper.renderCubeWithUV(matrix, entitySolidBuilder, xOffset + xSize - size, 0d, zOffset, xOffset  + xSize , yOffset + yLocation, zOffset + size, uMin, uMax, vMin, vMax, r,g,b,a);
 			RenderHelper.renderCubeWithUV(matrix, entitySolidBuilder, xOffset + xSize - size, 0d, zOffset + zSize - size, xOffset  + xSize, yOffset + yLocation, zOffset + zSize, uMin, uMax, vMin, vMax, r,g,b,a);
 			RenderHelper.renderCubeWithUV(matrix, entitySolidBuilder, xOffset, 0d, zOffset + zSize  - size, xOffset + size, yOffset + yLocation, zOffset + zSize, uMin, uMax, vMin, vMax, r,g,b,a);
@@ -92,17 +88,15 @@ public class RendererRocketAssemblingMachine extends TileEntityRenderer<TileRock
 			{
 				r = 1;
 				g = 0.333f;
-				b = 0.333f;
-				a = 1f;
 			}
 			else
 			{
 				r = 0.333f;
 				g = 1f;
-				b = 0.333f;
-				a = 1f;
 			}
-			
+			b = 0.333f;
+			a = 1f;
+
 			RenderHelper.renderEastFace(matrix, beam, xMax, yMin, zMin, yMax, zMax,r,g,b,a);
 			
 			//Change mins/maxes then render east block
@@ -123,16 +117,14 @@ public class RendererRocketAssemblingMachine extends TileEntityRenderer<TileRock
 			{
 				r = 1;
 				g = 0.5f;
-				b = 0.5f;
-				a = 0.5f;
 			}
 			else
 			{
 				r = 0.5f;
 				g = 1f;
-				b = 0.5f;
-				a = 0.5f;
 			}
+			b = 0.5f;
+			a = 0.5f;
 			float min = 0;
 			float maxU = (float)(1*xSize);
 			float maxV = (float)(1*zSize);

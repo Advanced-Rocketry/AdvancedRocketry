@@ -2,7 +2,6 @@ package zmaster587.advancedRocketry.api;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.LeavesBlock;
@@ -13,8 +12,6 @@ import net.minecraft.block.TorchBlock;
 import net.minecraft.block.WallTorchBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.ToolType;
@@ -41,7 +38,6 @@ public class AdvancedRocketryBlocks {
 	public static RegistryObject<FlowingFluidBlock> blockOxygenFluid;
 	public static RegistryObject<FlowingFluidBlock> blockHydrogenFluid;
 	public static RegistryObject<FlowingFluidBlock> blockFuelFluid;
-	public static Block test;
 	public static RegistryObject<FlowingFluidBlock> blockNitrogenFluid;
 	public static RegistryObject<FlowingFluidBlock> blockEnrichedLavaFluid;
 
@@ -99,9 +95,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockAltitudeController = new BlockTile(machineLineProperties,  GuiHandler.guiId.MODULAR);
 	public static Block blockOxygenCharger = new BlockHalfTile(machineLineProperties, GuiHandler.guiId.MODULAR);
 	public static Block blockOxygenVent = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockCircleLight = new Block(AbstractBlock.Properties.create(Material.ROCK).setLightLevel((p_235470_0_) -> {
-		return 14;
-	}));
+	public static Block blockCircleLight = new Block(AbstractBlock.Properties.create(Material.ROCK).setLightLevel((p_235470_0_) -> 14));
 	public static Block blockLens = new BlockAlphaTexture(AbstractBlock.Properties.create(Material.GLASS).hardnessAndResistance(0.3f).notSolid());
 	public static Block blockRocketBuilder = new BlockTileWithMultitooltip(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
 	public static Block blockForceField = new BlockForceField(AbstractBlock.Properties.create(Material.GLASS).hardnessAndResistance(-1.0F, 3600000.0F).noDrops().notSolid());
@@ -118,7 +112,7 @@ public class AdvancedRocketryBlocks {
 
 	public static Block blockSatelliteControlCenter = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
 
-	public static Block blockMicrowaveReciever = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockMicrowaveReceiver = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
 
 	public static Block blockCentrifuge = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
 
@@ -144,9 +138,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockAlienSapling = new SaplingBlock(new AlienTree(), AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().zeroHardnessAndResistance().sound(SoundType.PLANT));
 	public static Block blockAlienPlanks = new Block(AbstractBlock.Properties.create(Material.WOOD, MaterialColor.SAND).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD));
 
-	public static Block blockLightSource = new BlockLightSource(AbstractBlock.Properties.create(Material.ROCK).setLightLevel((p_235470_0_) -> {
-		return 14;
-	}));
+	public static Block blockLightSource = new BlockLightSource(AbstractBlock.Properties.create(Material.ROCK).setLightLevel((p_235470_0_) -> 14));
 	public static Block blockBlastBrick = new BlockMultiBlockComponentVisible(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3, 15));
 	public static Block blockQuartzCrucible = new BlockQuartzCrucible(AbstractBlock.Properties.create(Material.ROCK));
 	//public static Block blockAstroBed = new BlockAstroBed(DyeColor.WHITE, ).setHardness(0.2F);
@@ -180,12 +172,8 @@ public class AdvancedRocketryBlocks {
 	public static Block blockSolarGenerator = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
 	public static Block blockDockingPort = new BlockStationModuleDockingPort(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3f));
 	public static Block blockPipeSealer = new BlockSeal(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(0.5f));
-	public static Block blockThermiteTorch = new TorchBlock(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().zeroHardnessAndResistance().setLightLevel((p_235470_0_) -> {
-		return 14;
-	}).sound(SoundType.WOOD), ParticleTypes.FLAME);
-	public static Block blockThermiteTorchWall = new WallTorchBlock(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().zeroHardnessAndResistance().setLightLevel((p_235470_0_) -> {
-		return 14;
-	}).sound(SoundType.WOOD), ParticleTypes.FLAME);
+	public static Block blockThermiteTorch = new TorchBlock(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().zeroHardnessAndResistance().setLightLevel((p_235470_0_) -> 14).sound(SoundType.WOOD), ParticleTypes.FLAME);
+	public static Block blockThermiteTorchWall = new WallTorchBlock(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().zeroHardnessAndResistance().setLightLevel((p_235470_0_) -> 14).sound(SoundType.WOOD), ParticleTypes.FLAME);
 	public static Block blockBasalt = new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(5, 15));
 	public static Block blockLandingFloat = new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(1,1));
 	public static Block blockTransciever = new BlockTransciever(machineLineProperties, GuiHandler.guiId.MODULAR);
@@ -296,7 +284,7 @@ public class AdvancedRocketryBlocks {
 				AdvancedRocketryBlocks.blockOrientationController.setRegistryName("orientationcontroller"),
 				AdvancedRocketryBlocks.blockGravityController.setRegistryName("gravitycontroller"),
 				AdvancedRocketryBlocks.blockDrill.setRegistryName("drill"),
-				AdvancedRocketryBlocks.blockMicrowaveReciever.setRegistryName("microwavereciever"),
+				AdvancedRocketryBlocks.blockMicrowaveReceiver.setRegistryName("microwavereciever"),
 				AdvancedRocketryBlocks.blockLightSource.setRegistryName("lightsource"),
 				AdvancedRocketryBlocks.blockSolarPanel.setRegistryName("solarpanel"),
 				AdvancedRocketryBlocks.blockSuitWorkStation.setRegistryName("suitworkstation"),
@@ -310,7 +298,6 @@ public class AdvancedRocketryBlocks {
 				AdvancedRocketryBlocks.blockDockingPort.setRegistryName("stationmarker"),
 				AdvancedRocketryBlocks.blockAltitudeController.setRegistryName("altitudecontroller"),
 				AdvancedRocketryBlocks.blockRailgun .setRegistryName("railgun"),
-				//AdvancedRocketryBlocks.blockAstroBed .setRegistryName("astrobed"),
 				AdvancedRocketryBlocks.blockPlanetHoloSelector.setRegistryName("planetholoselector"),
 				AdvancedRocketryBlocks.blockLens.setRegistryName("blocklens"),
 				AdvancedRocketryBlocks.blockForceField.setRegistryName("forcefield"),
@@ -343,9 +330,7 @@ public class AdvancedRocketryBlocks {
 	}
 
 	private static RotatedPillarBlock registerLog(MaterialColor p_235430_0_, MaterialColor p_235430_1_) {
-		return new RotatedPillarBlock(AbstractBlock.Properties.create(Material.WOOD, (p_235431_2_) -> {
-			return p_235431_2_.get(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? p_235430_0_ : p_235430_1_;
-		}).hardnessAndResistance(2.0F).sound(SoundType.WOOD));
+		return new RotatedPillarBlock(AbstractBlock.Properties.create(Material.WOOD, (p_235431_2_) -> p_235431_2_.get(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? p_235430_0_ : p_235430_1_).hardnessAndResistance(2.0F).sound(SoundType.WOOD));
 	}
 	private static LeavesBlock registerLeaves() {
 		return new LeavesBlock(AbstractBlock.Properties.create(Material.LEAVES).hardnessAndResistance(0.2F).tickRandomly().sound(SoundType.PLANT).notSolid());

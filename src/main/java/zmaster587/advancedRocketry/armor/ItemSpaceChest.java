@@ -4,7 +4,6 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -14,8 +13,6 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 import zmaster587.advancedRocketry.api.armor.IFillableArmor;
-import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
-import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.FluidUtils;
@@ -45,7 +42,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 		
 		fstack = cap.orElse(null).getFluidInTank(0);
 		
-		return (fstack == null || fstack.isEmpty() || FluidUtils.areFluidsSameType(fstack.getFluid(), AdvancedRocketryFluids.oxygenFlowing.get()));
+		return (fstack.isEmpty() || FluidUtils.areFluidsSameType(fstack.getFluid(), AdvancedRocketryFluids.oxygenFlowing.get()));
 	}
 
 	@Override
@@ -211,7 +208,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 					IFluidHandlerItem fHandler = component.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).orElse(null);
 					FluidStack fluidStack = fHandler.getFluidInTank(0);
 
-					if(fluidStack == null || fluidStack.isEmpty() || FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.oxygenStill.get()))
+					if(fluidStack.isEmpty() || FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.oxygenStill.get()))
 						amtDrained -= fHandler.fill(new FluidStack(AdvancedRocketryFluids.oxygenStill.get(), amtDrained), FluidAction.EXECUTE);
 
 					if(amtDrained == 0)
@@ -279,7 +276,7 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 					IFluidHandlerItem fHandler = cap.orElse(null);
 					FluidStack fluidStack = fHandler.getFluidInTank(0);
 
-					if(fluidStack == null || fluidStack.isEmpty() || FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.oxygenStill.get()))
+					if(fluidStack.isEmpty() || FluidUtils.areFluidsSameType(fluidStack.getFluid(), AdvancedRocketryFluids.oxygenStill.get()))
 						maxAir += fHandler.getTankCapacity(0);
 			}
 

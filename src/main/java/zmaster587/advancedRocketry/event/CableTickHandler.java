@@ -14,8 +14,6 @@ import zmaster587.advancedRocketry.tile.cables.TilePipe;
 
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 public class CableTickHandler {
@@ -44,7 +42,7 @@ public class CableTickHandler {
 				TileEntity obj = event.getChunk().getTileEntity(iter.next());
 
 				if(obj instanceof TilePipe) {
-					((TilePipe)obj).markDirty();
+					obj.markDirty();
 				}
 			}
 		} catch ( ConcurrentModificationException e) {

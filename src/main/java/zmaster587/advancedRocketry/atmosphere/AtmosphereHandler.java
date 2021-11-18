@@ -45,10 +45,10 @@ public class AtmosphereHandler {
 
 	public static long lastSuffocationTime = Integer.MIN_VALUE;
 	private static final int MAX_BLOB_RADIUS = ((ARConfiguration.getCurrentConfig().atmosphereHandleBitMask.get() & 1) == 1) ? 256 : ARConfiguration.getCurrentConfig().oxygenVentSize.get();
-	private static HashMap<ResourceLocation, AtmosphereHandler> dimensionOxygen = new HashMap<>();
-	private static HashMap<PlayerEntity, IAtmosphere> prevAtmosphere = new HashMap<>();
+	private static final HashMap<ResourceLocation, AtmosphereHandler> dimensionOxygen = new HashMap<>();
+	private static final HashMap<PlayerEntity, IAtmosphere> prevAtmosphere = new HashMap<>();
 
-	private HashMap<IBlobHandler,AreaBlob> blobs;
+	private final HashMap<IBlobHandler,AreaBlob> blobs;
 	ResourceLocation dimId;
 
 	//Stores current Atm on the CLIENT
@@ -62,7 +62,7 @@ public class AtmosphereHandler {
 	public static void registerWorld(World world) {
 		ResourceLocation dimId = ZUtils.getDimensionIdentifier(world);
 		//If O2 is allowed and
-		DimensionProperties dimProp = (DimensionProperties) DimensionManager.getInstance().getDimensionProperties(dimId);
+		DimensionProperties dimProp = DimensionManager.getInstance().getDimensionProperties(dimId);
 		if(ARConfiguration.getCurrentConfig().enableOxygen.get() && dimProp.hasSurface() && (ARConfiguration.getCurrentConfig().overrideGCAir.get() || dimId != ARConfiguration.getCurrentConfig().MoonId || dimProp.isNativeDimension)) {
 			dimensionOxygen.put(dimId, new AtmosphereHandler(dimId));
 			MinecraftForge.EVENT_BUS.register(dimensionOxygen.get(dimId));
@@ -98,8 +98,7 @@ public class AtmosphereHandler {
 				prevAtmosphere.put((PlayerEntity)entity, atmosType);
 			}
 
-			if(atmosType.canTick() &&
-					!(event.getEntityLiving().isInLava() || event.getEntityLiving().isInWater()) ) {
+			if(atmosType.canTick() && !(event.getEntityLiving().isInLava() || event.getEntityLiving().isInWater()) ) {
 				AtmosphereEvent event2 = new AtmosphereEvent.AtmosphereTickEvent(entity, atmosType);
 				MinecraftForge.EVENT_BUS.post(event2);
 				if(!event2.isCanceled() && !atmosType.isImmune(event.getEntity().getClass()))
@@ -183,6 +182,7 @@ public class AtmosphereHandler {
 			//Things should be on fire
 			if (handler.getAtmosphereType(bpos) == AtmosphereType.SUPERHEATED) {
 				if(world.getBlockState(bpos).getMaterial().isFlammable()) {
+					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
 				} else if (world.getBlockState(bpos).getMaterial() == Material.WEB) {
 					world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
 				} else if (world.getBlockState(bpos).getMaterial() == Material.GOURD) {
@@ -331,10 +331,10 @@ public class AtmosphereHandler {
 
 	/**
 	 * Adds a block to the blob
-	 * @param handler
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param handler the handler to register the block with
+	 * @param x the x position of the block
+	 * @param y the y position of the block
+	 * @param z the z position of the block
 	 */
 	public void addBlock(@Nonnull IBlobHandler handler, int x, int y, int z){
 		addBlock(handler, new HashedBlockPosition(x, y, z));
@@ -342,7 +342,8 @@ public class AtmosphereHandler {
 
 	/**
 	 * Adds a block to the blob
-	 * @param handler
+	 * @param handler the handler to register the block with
+	 * @param pos the HashedBlockPosition of the block
 	 * @return true if blob addition is successful
 	 */
 	public boolean addBlock(@Nonnull IBlobHandler handler, @Nonnull HashedBlockPosition pos){
@@ -352,7 +353,7 @@ public class AtmosphereHandler {
 	}
 
 	/**
-	 * @param pos2
+	 * @param pos2 the position to get the AtmosphereType at
 	 * @return AtmosphereType at this location
 	 */
     @Nonnull

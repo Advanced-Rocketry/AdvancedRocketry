@@ -4,10 +4,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.tile.TileForceFieldProjector;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class BlockForceFieldProjector extends BlockFullyRotatable {
 
@@ -19,7 +20,8 @@ public class BlockForceFieldProjector extends BlockFullyRotatable {
 	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
-	
+
+	@ParametersAreNonnullByDefault
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		TileEntity tile = worldIn.getTileEntity(pos);

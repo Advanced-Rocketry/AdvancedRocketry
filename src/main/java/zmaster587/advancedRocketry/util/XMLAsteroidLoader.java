@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.util;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,7 +9,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 

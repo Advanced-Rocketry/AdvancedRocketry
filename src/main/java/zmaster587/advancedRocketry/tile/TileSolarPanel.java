@@ -20,6 +20,8 @@ import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.tile.TileInventoriedForgePowerMachine;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class TileSolarPanel extends TileInventoriedForgePowerMachine {
@@ -47,8 +49,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 			}
 			else
 				notEnoughBufferForFunction();
-		}
-		else if(world.isRemote)
+		} else if(world.isRemote)
 			text.setText(LibVulpes.proxy.getLocalizedString("msg.solar.cannotcollectenergy"));
 
 		if(!world.isRemote)
@@ -68,7 +69,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 	@Override
 	public int getPowerPerOperation() {
 		DimensionProperties properties =DimensionManager.getInstance().getDimensionProperties(world);
-		double insolationMultiplier = (ZUtils.getDimensionIdentifier(world).equals(ARConfiguration.getCurrentConfig().spaceDimId.get())) ? SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getInsolationMultiplier() : properties.getPeakInsolationMultiplier();
+		double insolationMultiplier = (ZUtils.getDimensionIdentifier(world) != null && ZUtils.getDimensionIdentifier(world).toString().equals(ARConfiguration.getCurrentConfig().spaceDimId.get())) ? SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getInsolationMultiplier() : properties.getPeakInsolationMultiplier();
 		//Slight adjustment to make Earth 0.9995 into a 1.0
 		//Then multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency
 		//Makes solar panels not return 0 everywhere
@@ -95,12 +96,14 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 		return guiId.MODULAR;
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}

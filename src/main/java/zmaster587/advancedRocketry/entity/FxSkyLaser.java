@@ -3,25 +3,20 @@ package zmaster587.advancedRocketry.entity;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.IParticleRenderType;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
-import zmaster587.advancedRocketry.client.render.RenderLaser;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class FxSkyLaser extends SpriteTexturedParticle {
-	
-	
-	static RenderLaser render = new RenderLaser(0.75, new float[] { 0.2f, 0.2f, 0.8f, 0.0f}, new float[] { 0.2f, 0.2f, 0.8f, 0.2f});
-	
+
 	public FxSkyLaser(World world, double x,
 			double y, double z) {
 		super((ClientWorld)world, x, y, z, 0, 0, 0);
@@ -33,6 +28,7 @@ public class FxSkyLaser extends SpriteTexturedParticle {
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public void renderParticle(IVertexBuilder buffer2, ActiveRenderInfo renderInfo, float partialTicks) {
 		//Will this break rendering?
 		PlayerEntity player  = Minecraft.getInstance().player;
@@ -46,6 +42,7 @@ public class FxSkyLaser extends SpriteTexturedParticle {
 	}
 
 
+	@Nonnull
 	@Override
 	public IParticleRenderType getRenderType() {
 		return IParticleRenderType.CUSTOM;

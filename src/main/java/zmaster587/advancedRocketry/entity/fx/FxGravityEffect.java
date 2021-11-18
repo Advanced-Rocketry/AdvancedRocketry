@@ -7,10 +7,12 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class FxGravityEffect extends SpriteTexturedParticle {
 	public FxGravityEffect(World world, double x,
@@ -35,6 +37,7 @@ public class FxGravityEffect extends SpriteTexturedParticle {
 	}
 
 
+	@Nonnull
 	public IParticleRenderType getRenderType() {
 		return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 	}
@@ -64,6 +67,7 @@ public class FxGravityEffect extends SpriteTexturedParticle {
 			this.spriteSet = p_i50630_1_;
 		}
 
+		@ParametersAreNonnullByDefault
 		public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 			FxGravityEffect grav = new FxGravityEffect(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
 			grav.selectSpriteWithAge(spriteSet);

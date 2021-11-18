@@ -6,15 +6,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill.TileOrbitalLaserDrill;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.inventory.GuiHandler;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 
 public class BlockOrbitalLaserDrill extends BlockMultiblockMachine {
@@ -34,8 +33,8 @@ public class BlockOrbitalLaserDrill extends BlockMultiblockMachine {
 	}
 	
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-			boolean isMoving)  {
+	@ParametersAreNonnullByDefault
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)  {
 		if(blockIn != this)
 			((TileOrbitalLaserDrill)worldIn.getTileEntity(pos)).checkCanRun();
 	}
@@ -55,8 +54,8 @@ public class BlockOrbitalLaserDrill extends BlockMultiblockMachine {
 	}
 	
 	@Override
-	public void onExplosionDestroy(World worldIn, BlockPos pos,
-			Explosion explosionIn) {
+	@ParametersAreNonnullByDefault
+	public void onExplosionDestroy(World worldIn, BlockPos pos, Explosion explosionIn) {
 		// TODO Auto-generated method stub
 		super.onExplosionDestroy(worldIn, pos, explosionIn);
 		if (worldIn.getTileEntity(pos) instanceof TileOrbitalLaserDrill)
@@ -65,6 +64,7 @@ public class BlockOrbitalLaserDrill extends BlockMultiblockMachine {
 
 	//To check if the laser is jammed
 	@Override
+	@ParametersAreNonnullByDefault
 	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
 		super.tick(state, worldIn, pos, rand);
 

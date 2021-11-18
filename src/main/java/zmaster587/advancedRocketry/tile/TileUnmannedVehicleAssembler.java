@@ -8,9 +8,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.block.*;
@@ -19,13 +17,9 @@ import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.block.RotatableBlock;
-import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.ZUtils;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 
@@ -146,7 +140,7 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 		CompoundNBT nbtdata = new CompoundNBT();
 
 		rocket.writeUnlessRemoved(nbtdata);
-		PacketHandler.sendToNearby(new PacketEntity((INetworkEntity)rocket, (byte)0, nbtdata), rocket.world, this.pos, 64);
+		PacketHandler.sendToNearby(new PacketEntity(rocket, (byte)0, nbtdata), rocket.world, this.pos, 64);
 
 		stats.reset();
 		this.status = ErrorCodes.UNSCANNED;
@@ -210,8 +204,6 @@ public class TileUnmannedVehicleAssembler extends TileRocketAssemblingMachine {
 			}
 		}
 
-		boolean hasSatellite = false;
-		boolean hasGuidance = false;
 		int fluidCapacity = 0;
 
 		if(verifyScan(bb, world)) {

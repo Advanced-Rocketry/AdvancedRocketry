@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.hatch;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
@@ -17,8 +16,8 @@ public class TileSatelliteHatch extends TileInventoryHatch {
 
 	public TileSatelliteHatch(int i) {
 		super(AdvancedRocketryTileEntityType.TILE_SATELLITE_HATCH, 1);
-inventory.setCanInsertSlot(0, true);
-inventory.setCanExtractSlot(0, true);
+        inventory.setCanInsertSlot(0, true);
+        inventory.setCanExtractSlot(0, true);
 	}
 
 	@Override

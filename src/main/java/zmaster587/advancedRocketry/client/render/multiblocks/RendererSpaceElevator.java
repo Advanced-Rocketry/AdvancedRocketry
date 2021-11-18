@@ -4,7 +4,6 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Quaternion;
@@ -18,6 +17,8 @@ import zmaster587.advancedRocketry.client.render.RenderLaser;
 import zmaster587.advancedRocketry.tile.multiblock.TileSpaceElevator;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class RendererSpaceElevator extends TileEntityRenderer<TileSpaceElevator> {
 
@@ -36,8 +37,8 @@ public class RendererSpaceElevator extends TileEntityRenderer<TileSpaceElevator>
 	}
 
 	@Override
-	public void render(TileSpaceElevator tile, float partialTicks, MatrixStack matrix,
-			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+	@ParametersAreNonnullByDefault
+	public void render(TileSpaceElevator tile, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
 
 		if(!tile.canRender())
 			return;

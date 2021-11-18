@@ -1,7 +1,6 @@
 package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -44,8 +43,9 @@ public class BlockBipropellantRocketMotor extends BlockFullyRotatable implements
 		return getDefaultState().with(FACING, Direction.DOWN);
 	}
 	
+	@Nonnull
 	@Override
-	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+	public VoxelShape getRenderShape(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
 		return VoxelShapes.empty();
 	}
 }

@@ -1,9 +1,12 @@
 package zmaster587.advancedRocketry.api;
 
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.FloatNBT;
 import net.minecraft.nbt.IntNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.libVulpes.util.HashedBlockPosition;
@@ -21,9 +24,9 @@ public class StatsRocket {
 	private int weight;
 	private float drillingPower;
 
-	private ResourceLocation fuelFluid;
-	private ResourceLocation oxidizerFluid;
-	private ResourceLocation workingFluid;
+	private Fluid fuelFluid;
+	private Fluid oxidizerFluid;
+	private Fluid workingFluid;
 
 	//Used for orbital height calculations
 	public int orbitHeight;
@@ -117,9 +120,9 @@ public class StatsRocket {
 
 	public int getThrust() {return (int) (thrust*ARConfiguration.getCurrentConfig().rocketThrustMultiplier.get());}
 	public int getWeight() {return weight;}
-	public ResourceLocation getFuelFluid() {return fuelFluid;}
-	public ResourceLocation getOxidizerFluid() {return oxidizerFluid;}
-	public ResourceLocation getWorkingFluid() {return workingFluid;}
+	public Fluid getFuelFluid() {return fuelFluid;}
+	public Fluid getOxidizerFluid() {return oxidizerFluid;}
+	public Fluid getWorkingFluid() {return workingFluid;}
 	public float getDrillingPower() {return drillingPower;}
 	public void setDrillingPower(float power) {drillingPower = power;}
 	public float getAcceleration(float gravitationalMultiplier) { return (getThrust() - (weight * ((ARConfiguration.getCurrentConfig().gravityAffectsFuel.get()) ? gravitationalMultiplier : 1)))/10000f; }
@@ -128,9 +131,9 @@ public class StatsRocket {
 
 	public void setThrust(int thrust) { this.thrust = thrust; }
 	public void setWeight(int weight) { this.weight = weight; }
-	public void setFuelFluid(ResourceLocation fuelFluid) { this.fuelFluid = fuelFluid; }
-	public void setOxidizerFluid(ResourceLocation oxidizerFluid) { this.oxidizerFluid = oxidizerFluid; }
-	public void setWorkingFluid(ResourceLocation workingFluid) { this.workingFluid = workingFluid; }
+	public void setFuelFluid(Fluid fuelFluid) { this.fuelFluid = fuelFluid; }
+	public void setOxidizerFluid(Fluid oxidizerFluid) { this.oxidizerFluid = oxidizerFluid; }
+	public void setWorkingFluid(Fluid workingFluid) { this.workingFluid = workingFluid; }
 
 	public void setSeatLocation(int x, int y, int z) {
 		pilotSeatPos.x = x;
@@ -538,12 +541,12 @@ public class StatsRocket {
 		stats.putInt("thrust", this.thrust);
 		stats.putInt("weight", this.weight);
 		stats.putFloat("drillingPower", this.drillingPower);
-		if(this.fuelFluid != null)
-		    stats.putString("fuelFluid", this.fuelFluid.toString());
-		if(this.oxidizerFluid != null)
-		    stats.putString("oxidizerFluid", this.oxidizerFluid.toString());
-		if(this.workingFluid != null)
-		    stats.putString("workingFluid", this.workingFluid.toString());
+		if(!this.fuelFluid.isEquivalentTo(Fluids.EMPTY))
+		    stats.putString("fuelFluid", fuelFluid.getRegistryName().toString());
+		if(!this.oxidizerFluid.isEquivalentTo(Fluids.EMPTY))
+			stats.putString("oxidizerFluid", oxidizerFluid.getRegistryName().toString());
+		if(!this.workingFluid.isEquivalentTo(Fluids.EMPTY))
+			stats.putString("workingFluid", workingFluid.getRegistryName().toString());
 
 		stats.putInt("fuelMonopropellant", this.fuelMonopropellant);
 		stats.putInt("fuelBipropellant", this.fuelBipropellant);
@@ -627,18 +630,17 @@ public class StatsRocket {
 			this.thrust = stats.getInt("thrust");
 			this.weight = stats.getInt("weight");
 			if(nbt.contains("fuelFluid"))
-				this.fuelFluid = ResourceLocation.tryCreate(stats.getString("fuelFluid"));
+				this.fuelFluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(stats.getString("fuelFluid")));
 			else
-				this.fuelFluid = null;
-			
+				this.fuelFluid = Fluids.EMPTY;
 			if(nbt.contains("oxidizerFluid"))
-				this.oxidizerFluid = ResourceLocation.tryCreate(stats.getString("oxidizerFluid"));
+				this.oxidizerFluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(stats.getString("oxidizerFluid")));
 			else
-				this.oxidizerFluid = null;
+				this.oxidizerFluid = Fluids.EMPTY;
 			if(nbt.contains("workingFluid"))
-				this.workingFluid = ResourceLocation.tryCreate(stats.getString("workingFluid"));
+				this.workingFluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(stats.getString("workingFluid")));
 			else
-				this.workingFluid = null;
+				this.workingFluid = Fluids.EMPTY;
 			this.drillingPower = stats.getFloat("drillingPower");
 
 			this.fuelMonopropellant = stats.getInt("fuelMonopropellant");
@@ -678,13 +680,13 @@ public class StatsRocket {
 				CompoundNBT dynStats = stats.getCompound("dynStats");
 
 
-				for(Object key : dynStats.keySet()) {
-					Object obj = dynStats.get((String)key);
+				for(String key : dynStats.keySet()) {
+					Object obj = dynStats.get(key);
 
 					if(obj instanceof FloatNBT)
-						setStatTag((String)key, dynStats.getFloat((String)key));
+						setStatTag(key, dynStats.getFloat(key));
 					else if(obj instanceof IntNBT)
-						setStatTag((String)key, dynStats.getInt((String)key));
+						setStatTag(key, dynStats.getInt(key));
 				}
 			}
 
@@ -693,7 +695,7 @@ public class StatsRocket {
 			pilotSeatPos.z = stats.getInt("playerZPos");
 
 			if(stats.contains("engineLoc")) {
-				int locations[] = stats.getIntArray("engineLoc");
+				int[] locations = stats.getIntArray("engineLoc");
 
 				for(int i=0 ; i < locations.length; i+=3) {
 
@@ -702,7 +704,7 @@ public class StatsRocket {
 			}
 
 			if(stats.contains("passengerSeats")) {
-				int locations[] = stats.getIntArray("passengerSeats");
+				int[] locations = stats.getIntArray("passengerSeats");
 
 				for(int i=0 ; i < locations.length; i+=3) {
 

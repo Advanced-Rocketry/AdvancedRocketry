@@ -1,10 +1,8 @@
 package zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -48,13 +46,13 @@ class VoidDrill extends AbstractDrill {
 				List<Item> items = ItemTags.getCollection().getTagByID(new ResourceLocation(args[0])).getAllElements();
 		
 
-				List<ItemStack> globalOres = new LinkedList<ItemStack>();
+				List<ItemStack> globalOres = new LinkedList<>();
 				for(Item item : items)
 				{
 					globalOres.add(item.getDefaultInstance());
 				}
 
-				if (globalOres != null && !globalOres.isEmpty()) {
+				if (!globalOres.isEmpty()) {
 					int amt = 5;
 					if (args.length > 1) {
 						try {

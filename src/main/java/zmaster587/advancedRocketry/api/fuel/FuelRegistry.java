@@ -23,7 +23,7 @@ public class FuelRegistry {
 		//Stores a fuel entry for each type of fuel
 		final HashSet<FuelEntry> fuels;
 		
-		private FuelType() {
+		FuelType() {
 			fuels = new HashSet<>();
 		}
 		
@@ -54,7 +54,7 @@ public class FuelRegistry {
 		
 		/**
 		 * Called by helper functions and to avoid confusion
-		 * @param obj
+		 * @param obj the item- or fluid- stack to check if it is a fuel
 		 * @return true if the passed Itemstack or fluidstack is a fuel
 		 */
 		private boolean isFuel(@Nullable Object obj) {
@@ -101,12 +101,12 @@ public class FuelRegistry {
 	private static class FuelEntry {
 		
 		//Fuel: itemstack or liquid
-		private Object fuel;
+		private final Object fuel;
 		//Type: as defined above
 		private FuelType type;
 		
 		//Multiplier: basically how good is the fuel relative to the base value set in the config
-		private float multiplier;
+		private final float multiplier;
 		
 		/**
 		 * @param fuel ItemStack or Fluid to register as fuel

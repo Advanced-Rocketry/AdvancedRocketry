@@ -23,7 +23,6 @@ import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.render.RenderHelper;
 
-import javax.annotation.Nonnull;
 import java.nio.IntBuffer;
 
 @OnlyIn(value=Dist.CLIENT)
@@ -83,9 +82,7 @@ public class ModuleOreMapper extends ModuleBase {
 		@Override
 		public void run() {
 			oreMap = satellite.scanChunk(world, xCenter, zCenter, scanSize/2, radius, zoomScale);
-			if(oreMap != null && !Thread.interrupted())
-				merged = true;
-			else merged = false;
+			merged = oreMap != null && !Thread.interrupted();
 		}
 	};
 
@@ -101,23 +98,20 @@ public class ModuleOreMapper extends ModuleBase {
 		@Override
 		public void run() {
 			oreMap = satellite.scanChunk(world, xCenter, zCenter, scanSize/2, radius, myBlock, zoomScale);
-			if(oreMap != null)
-				merged = true;
-			else merged = false;
+			merged = oreMap != null;
 		}
-	};
-	
+	}
+
 	private void runMapperWithSelection() {
 		currentMapping.interrupt();
 		resetTexture();
 		if(prevSlot == -1) {
 			currentMapping = new Thread(mapper);
-			currentMapping.setName("Ore Scan");
 		}
 		else {
 			//currentMapping = new Thread(new ItemMapper(inventorySlots.getSlot(prevSlot).getStack()));//TODO
-			currentMapping.setName("Ore Scan");
 		}
+		currentMapping.setName("Ore Scan");
 		currentMapping.start();
 	}
 	
@@ -138,17 +132,17 @@ public class ModuleOreMapper extends ModuleBase {
 		GlStateManager.disableTexture();
 		buffer.color(0f, 0.8f, 0f, 1f);
 		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
-		buffer.pos(-21, 82 + fancyScanOffset, (double)zLevel).endVertex();
-		buffer.pos(0, 84 + fancyScanOffset, (double)zLevel).endVertex();
-		buffer.pos(0, 81 + fancyScanOffset, (double)zLevel).endVertex();
-		buffer.pos(-21, 81 + fancyScanOffset, (double)zLevel).endVertex();
+		buffer.pos(-21, 82 + fancyScanOffset, zLevel).endVertex();
+		buffer.pos(0, 84 + fancyScanOffset, zLevel).endVertex();
+		buffer.pos(0, 81 + fancyScanOffset, zLevel).endVertex();
+		buffer.pos(-21, 81 + fancyScanOffset, zLevel).endVertex();
 		buffer.finishDrawing();
 		
 		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
-		buffer.pos(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, (double)zLevel).endVertex();
-		buffer.pos(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, (double)zLevel).endVertex();
-		buffer.pos(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)zLevel).endVertex();
-		buffer.pos(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)zLevel).endVertex();
+		buffer.pos(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, zLevel).endVertex();
+		buffer.pos(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, zLevel).endVertex();
+		buffer.pos(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, zLevel).endVertex();
+		buffer.pos(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, zLevel).endVertex();
 		buffer.finishDrawing();
 		
 		
@@ -157,7 +151,7 @@ public class ModuleOreMapper extends ModuleBase {
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
 		buffer.color(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
 		buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
-		RenderHelper.renderNorthFace(matrix, buffer, (double)zLevel, 173, 82, 194, 141,1,1,1,1);
+		RenderHelper.renderNorthFace(matrix, buffer, zLevel, 173, 82, 194, 141,1,1,1,1);
 		buffer.finishDrawing();
 		
 		GlStateManager.enableTexture();

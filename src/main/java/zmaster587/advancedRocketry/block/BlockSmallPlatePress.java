@@ -4,11 +4,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import net.minecraft.block.*;
-import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,13 +24,12 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +42,7 @@ public class BlockSmallPlatePress extends PistonBlock {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (!world.isRemote && world.getTileEntity(pos) == null)
 		{
@@ -53,41 +51,33 @@ public class BlockSmallPlatePress extends PistonBlock {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.getDefaultState().with(FACING, Direction.DOWN).with(EXTENDED, Boolean.valueOf(false));
+		return this.getDefaultState().with(FACING, Direction.DOWN).with(EXTENDED, Boolean.FALSE);
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state,
-			LivingEntity placer, ItemStack stack) {
-		if (!world.isRemote)
-		{
+	@ParametersAreNonnullByDefault
+	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		if (!world.isRemote) {
 			this.checkForMove(world, pos, state);
 		}
 	}
 
-	private boolean shouldBeExtended(World worldIn, BlockPos pos, Direction facing)
-	{
-		for (Direction enumfacing : Direction.values())
-		{
-			if (enumfacing != facing && worldIn.isSidePowered(pos.offset(enumfacing), enumfacing))
-			{
+	private boolean shouldBeExtended(World worldIn, BlockPos pos, Direction facing) {
+		for (Direction enumfacing : Direction.values()) {
+			if (enumfacing != facing && worldIn.isSidePowered(pos.offset(enumfacing), enumfacing)) {
 				return true;
 			}
 		}
 
-		if (worldIn.isSidePowered(pos, Direction.DOWN))
-		{
+		if (worldIn.isSidePowered(pos, Direction.DOWN)) {
 			return true;
-		}
-		else
-		{
+		} else {
 			BlockPos blockpos = pos.up();
 
-			for (Direction enumfacing1 : Direction.values())
-			{
-				if (enumfacing1 != Direction.DOWN && worldIn.isSidePowered(blockpos.offset(enumfacing1), enumfacing1))
-				{
+			for (Direction enumfacing1 : Direction.values()) {
+				if (enumfacing1 != Direction.DOWN && worldIn.isSidePowered(blockpos.offset(enumfacing1), enumfacing1)) {
 					return true;
 				}
 			}
@@ -96,34 +86,28 @@ public class BlockSmallPlatePress extends PistonBlock {
 		}
 	}   
 
-	private void checkForMove(World worldIn, BlockPos pos, BlockState state)
-	{
+	private void checkForMove(World worldIn, BlockPos pos, BlockState state) {
 		Direction enumfacing = Direction.DOWN;
 		boolean flag = this.shouldBeExtended(worldIn, pos, enumfacing);
 
 		ItemStack stack;
-		if (flag && (stack = getRecipe(worldIn, pos, state)) != null && !((Boolean)state.get(EXTENDED)).booleanValue())
-		{
+		if (flag && (stack = getRecipe(worldIn, pos, state)) != null && !state.get(EXTENDED)) {
 			worldIn.setBlockState(pos.down(), Blocks.AIR.getDefaultState());
 
 			if(!worldIn.isRemote)
 				worldIn.addEntity(new ItemEntity(worldIn, pos.getX() + 0.5, pos.getY() - 0.5, pos.getZ() + 0.5, stack));
-			if (new PistonBlockStructureHelper(worldIn, pos, Direction.DOWN, true).canMove())
-			{
+			if (new PistonBlockStructureHelper(worldIn, pos, Direction.DOWN, true).canMove()) {
 				worldIn.addBlockEvent(pos, this, 0, enumfacing.getIndex());
 			}
-		}
-		else if (!flag && ((Boolean)state.get(EXTENDED)).booleanValue())
-		{
+		} else if (!flag && state.get(EXTENDED)) {
 			worldIn.addBlockEvent(pos, this, 1, enumfacing.getIndex());
 		}
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos,
-			boolean isMoving) {
-		if (!((World)world).isRemote)
-		{
+	@ParametersAreNonnullByDefault
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+		if (!world.isRemote) {
 			this.checkForMove(world, pos, state);
 		}
 	}
@@ -175,8 +159,7 @@ public class BlockSmallPlatePress extends PistonBlock {
 			List<BlockPos> list = pistonblockstructurehelper.getBlocksToMove();
 			List<BlockState> list1 = Lists.newArrayList();
 
-			for(int i = 0; i < list.size(); ++i) {
-				BlockPos blockpos1 = list.get(i);
+			for (BlockPos blockpos1 : list) {
 				BlockState blockstate = worldIn.getBlockState(blockpos1);
 				list1.add(blockstate);
 				map.put(blockpos1, blockstate);
@@ -262,7 +245,7 @@ public class BlockSmallPlatePress extends PistonBlock {
 		 if (!worldIn.isRemote) {
 			 boolean flag = this.shouldBeExtended(worldIn, pos, direction);
 			 if (flag && (id == 1 || id == 2)) {
-				 worldIn.setBlockState(pos, state.with(EXTENDED, Boolean.valueOf(true)), 2);
+				 worldIn.setBlockState(pos, state.with(EXTENDED, Boolean.TRUE), 2);
 				 return false;
 			 }
 
@@ -277,8 +260,8 @@ public class BlockSmallPlatePress extends PistonBlock {
 				 return false;
 			 }
 
-			 worldIn.setBlockState(pos, state.with(EXTENDED, Boolean.valueOf(true)), 67);
-			 worldIn.playSound((PlayerEntity)null, pos, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.5F, worldIn.rand.nextFloat() * 0.25F + 0.6F);
+			 worldIn.setBlockState(pos, state.with(EXTENDED, Boolean.TRUE), 67);
+			 worldIn.playSound(null, pos, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.5F, worldIn.rand.nextFloat() * 0.25F + 0.6F);
 		 } else if (id == 1 || id == 2) {
 			 if (net.minecraftforge.event.ForgeEventFactory.onPistonMovePre(worldIn, pos, direction, false)) return false;
 			 TileEntity tileentity1 = worldIn.getTileEntity(pos.offset(direction));
@@ -294,7 +277,7 @@ public class BlockSmallPlatePress extends PistonBlock {
 			 worldIn.removeBlock(pos.offset(direction), false);
 
 
-			 worldIn.playSound((PlayerEntity)null, pos, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.5F, worldIn.rand.nextFloat() * 0.15F + 0.6F);
+			 worldIn.playSound(null, pos, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.5F, worldIn.rand.nextFloat() * 0.15F + 0.6F);
 		 }
 
 		 net.minecraftforge.event.ForgeEventFactory.onPistonMovePost(worldIn, pos, direction, (id == 0));
@@ -303,9 +286,9 @@ public class BlockSmallPlatePress extends PistonBlock {
 
 
 	@Override
+	@ParametersAreNonnullByDefault
 	@OnlyIn(value=Dist.CLIENT)
-	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
-			ITooltipFlag flagIn)  {
+	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)  {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		Style style = Style.EMPTY.setFormatting(TextFormatting.DARK_GRAY).setFormatting(TextFormatting.ITALIC);
 		

@@ -16,6 +16,8 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.IFuelTank;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Locale;
 
 public class BlockFuelTank extends Block implements IFuelTank{
@@ -28,6 +30,7 @@ public class BlockFuelTank extends Block implements IFuelTank{
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder);
 		builder.add(TANKSTATES);
@@ -57,14 +60,17 @@ public class BlockFuelTank extends Block implements IFuelTank{
 		}
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return VoxelShapes.empty();
 	}
 
+	@Nonnull
 	@Override
-	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world,
-										  BlockPos currentPos, BlockPos facingPos) {
+	@ParametersAreNonnullByDefault
+	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
 
 		if(!(facing == Direction.UP || facing == Direction.DOWN))
 			return super.updatePostPlacement(stateIn, facing, facingState, world, currentPos, facingPos);
@@ -140,6 +146,7 @@ public class BlockFuelTank extends Block implements IFuelTank{
 		BOTTOM,
 		MIDDLE;
 
+		@Nonnull
 		@Override
 		public String getString() {
 			return name().toLowerCase(Locale.ENGLISH);

@@ -89,7 +89,7 @@ public class DimensionManager implements IGalaxy {
 	}
 
 	public DimensionManager() {
-		dimensionListResource = new HashMap<ResourceLocation, DimensionProperties>();
+		dimensionListResource = new HashMap<>();
 		starList = new HashMap<>();
 		StellarBody sol = new StellarBody();
 		sol.setTemperature(100);
@@ -152,7 +152,7 @@ public class DimensionManager implements IGalaxy {
 		if(dimid == null)
 			return false;
 
-		return dimid.equals(ARConfiguration.GetSpaceDimId());
+		return dimid.equals(ARConfiguration.getSpaceDimId());
 	}
 
 	public boolean isSpaceDimension(World dimid)
@@ -208,7 +208,7 @@ public class DimensionManager implements IGalaxy {
 			DimensionManager.getInstance().loadDimensions(ServerLifecycleHooks.getCurrentServer().func_240776_a_(new FolderName(DimensionManager.workingPath)).toString());
 		}
 
-		Collection<SatelliteBase> satellites = new LinkedList<SatelliteBase>();
+		Collection<SatelliteBase> satellites = new LinkedList<>();
 
 		for(ResourceLocation i : DimensionManager.getInstance().getLoadedDimensions()) {
 			satellites.addAll(DimensionManager.getInstance().getDimensionProperties(i).getAllSatellites());
@@ -256,7 +256,7 @@ public class DimensionManager implements IGalaxy {
 	 */
 	public ResourceLocation getNextFreeDim() {
 		for(int i = 0; i < 10000; i++) {
-			ResourceLocation planetID = new ResourceLocation( Constants.PLANET_NAMESPACE, "planet-" + String.valueOf(i) );
+			ResourceLocation planetID = new ResourceLocation( Constants.PLANET_NAMESPACE, "planet-" + i);
 			if(!dimensionListResource.containsKey(planetID) && !ZUtils.isWorldRegistered(planetID))
 				return planetID;
 		}
@@ -265,7 +265,7 @@ public class DimensionManager implements IGalaxy {
 
 	public ResourceLocation getNextFreeStarId() {
 		for(int i = 0; i < Integer.MAX_VALUE; i++) {
-			ResourceLocation starId = new ResourceLocation(Constants.STAR_NAMESPACE, "star" + String.valueOf(i));
+			ResourceLocation starId = new ResourceLocation(Constants.STAR_NAMESPACE, "star" + i);
 			if(!starList.containsKey(starId))
 				return starId;
 		}
@@ -664,14 +664,14 @@ public class DimensionManager implements IGalaxy {
 			return warpDimensionProperties;
 
 		if(isStar(resourceLocation)) {
-			DimensionProperties starProps = new DimensionProperties(resourceLocation);;
+			DimensionProperties starProps = new DimensionProperties(resourceLocation);
 			starProps.setStar(resourceLocation);
 			starProps.setName(starProps.getStar().getName());
 			return starProps;
 		}
 
 		DimensionProperties properties = dimensionListResource.get(resourceLocation);
-		if(ARConfiguration.GetSpaceDimId().equals(resourceLocation) || resourceLocation == null) {
+		if(ARConfiguration.getSpaceDimId().equals(resourceLocation) || resourceLocation == null) {
 			return defaultSpaceDimensionProperties;
 		}
 		return properties == null ? overworldProperties : properties;
@@ -680,7 +680,7 @@ public class DimensionManager implements IGalaxy {
 	public DimensionProperties getDimensionProperties(ResourceLocation resourceLocation, BlockPos pos)
 	{
 
-		if(ARConfiguration.GetSpaceDimId().equals(resourceLocation)) {
+		if(ARConfiguration.getSpaceDimId().equals(resourceLocation)) {
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(obj == null)
 				return defaultSpaceDimensionProperties;
@@ -718,7 +718,7 @@ public class DimensionManager implements IGalaxy {
 	}
 
 	public boolean isStar(ResourceLocation id) {
-		return starList.keySet().contains(id);
+		return starList.containsKey(id);
 	}
 
 	public Collection<StellarBody> getStars() {
@@ -839,26 +839,23 @@ public class DimensionManager implements IGalaxy {
 			{
 				firstSave = false;
 				new Thread(
-				new Runnable() {
-					@Override
-					public void run() {
-						// Save dimension to datapacks
-						for(ResourceLocation location : getRegisteredDimensions())
-						{
-							try {
-								DimensionProperties properties = getDimensionProperties(location);
-								if(properties.isNativeDimension)
-									writeDimAsJSON(properties);
-							}
-							catch(IOException e )
+						() -> {
+							// Save dimension to datapacks
+							for(ResourceLocation location : getRegisteredDimensions())
 							{
-								AdvancedRocketry.logger.error("Cannot save advanced rocketry planet files, you may be able to find backups in " + saveDir);
-								e.printStackTrace();
+								try {
+									DimensionProperties properties = getDimensionProperties(location);
+									if(properties.isNativeDimension)
+										writeDimAsJSON(properties);
+								}
+								catch(IOException e )
+								{
+									AdvancedRocketry.logger.error("Cannot save advanced rocketry planet files, you may be able to find backups in " + saveDir);
+									e.printStackTrace();
+								}
 							}
-						}
 
-					}
-				}).start();
+						}).start();
 			}
 
 		} catch (IOException e) {
@@ -872,7 +869,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return true if the dimension exists and is registered
 	 */
 	public boolean isDimensionCreated(ResourceLocation dimId) {
-		return dimensionListResource.containsKey(dimId) || ARConfiguration.GetSpaceDimId().equals(dimId);
+		return dimensionListResource.containsKey(dimId) || ARConfiguration.getSpaceDimId().equals(dimId);
 	}
 
 	public boolean isDimensionCreated( World dimId) {
@@ -1071,11 +1068,11 @@ public class DimensionManager implements IGalaxy {
 				if(DimensionManager.getInstance().isDimensionCreated(properties.getId())) {
 					DimensionProperties loadedProps;
 					loadedProps = DimensionManager.getInstance().getDimensionProperties(properties.getId());
-					List<ItemStack> list = new LinkedList<ItemStack>(properties.getRequiredArtifacts());
+					List<ItemStack> list = new LinkedList<>(properties.getRequiredArtifacts());
 					loadedProps.getRequiredArtifacts().clear();
 					loadedProps.getRequiredArtifacts().addAll(list);
 
-					List<SpawnListEntryNBT> list2 = new LinkedList<SpawnListEntryNBT>(properties.getSpawnListEntries());
+					List<SpawnListEntryNBT> list2 = new LinkedList<>(properties.getSpawnListEntries());
 					loadedProps.getSpawnListEntries().clear();
 					loadedProps.getSpawnListEntries().addAll(list2);
 
@@ -1336,7 +1333,7 @@ public class DimensionManager implements IGalaxy {
 
 	public static DimensionProperties getEffectiveDimId(ResourceLocation dimId, BlockPos pos) {
 
-		if(ARConfiguration.GetSpaceDimId().equals(dimId)) {
+		if(ARConfiguration.getSpaceDimId().equals(dimId)) {
 			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObject != null)
 				return (DimensionProperties) spaceObject.getProperties().getParentProperties();
@@ -1349,7 +1346,7 @@ public class DimensionManager implements IGalaxy {
 	public static DimensionProperties getEffectiveDimId(World world, BlockPos pos) {
 		ResourceLocation dimId = ZUtils.getDimensionIdentifier(world);
 
-		if(ARConfiguration.GetSpaceDimId().equals(dimId)) {
+		if(ARConfiguration.getSpaceDimId().equals(dimId)) {
 			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObject != null)
 				return (DimensionProperties) spaceObject.getProperties().getParentProperties();

@@ -134,12 +134,9 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 		nbt.putString("launchDim", launchDimension.toString());
 
 		ListNBT itemList = new ListNBT();
-		for(int i = 0; i < infrastructureCoords.size(); i++)
-		{
-			HashedBlockPosition inf = infrastructureCoords.get(i);
-
+		for (HashedBlockPosition inf : infrastructureCoords) {
 			CompoundNBT tag = new CompoundNBT();
-			tag.putIntArray("loc", new int[] {inf.x, inf.y, inf.z});
+			tag.putIntArray("loc", new int[]{inf.x, inf.y, inf.z});
 			itemList.add(tag);
 
 		}
@@ -170,7 +167,7 @@ public abstract class MissionResourceCollection extends SatelliteBase implements
 		infrastructureCoords.clear();
 
 		for (int i = 0; i < tagList.size(); i++) {
-			int coords[] = tagList.getCompound(i).getIntArray("loc");
+			int[] coords = tagList.getCompound(i).getIntArray("loc");
 			infrastructureCoords.add(new HashedBlockPosition(coords[0], coords[1], coords[2]));
 		}
 	}
