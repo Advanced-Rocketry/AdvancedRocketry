@@ -619,7 +619,6 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 			shadowColorMultiplier[0] = 1.000001f * shadowColorMultiplier[0];
 
 			for (DimensionProperties moons : children) {
-				//matrix.push();
 
 				float planetPositionTheta = (float)((partialTicks * moons.orbitTheta + ((1 - partialTicks) * moons.prevOrbitalTheta)) * 180F / Math.PI);
 				float flippedPlanetPositionTheta = 360 - planetPositionTheta;

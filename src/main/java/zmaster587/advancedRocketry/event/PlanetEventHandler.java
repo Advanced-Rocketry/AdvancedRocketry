@@ -373,6 +373,13 @@ public class PlanetEventHandler {
 				event.setBlue(0);
 			}
 
+			//Make sure fog doesn't happen on zero atmospheres
+			if (properties.getAtmosphereDensity() == 0) {
+				event.setRed(0);
+				event.setGreen(0);
+				event.setBlue(0);
+			}
+
 			if(endTime > 0) {
 				double amt = (endTime - Minecraft.getInstance().world.getGameTime()) / (double)duration;
 				if(amt < 0) {
