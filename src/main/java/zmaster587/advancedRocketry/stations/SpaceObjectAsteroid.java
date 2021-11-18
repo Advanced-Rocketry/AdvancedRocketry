@@ -5,7 +5,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.api.ARConfiguration;
@@ -59,12 +58,7 @@ public class SpaceObjectAsteroid extends SpaceObjectBase implements IDataHandler
 	}
 	
 	public void registerWithSpaceObjectManager() {
-		
-		SpaceObjectManager.getSpaceManager().registerTemporarySpaceObject(this, Constants.INVALID_PLANET, ZUtils.getWorld(ARConfiguration.GetSpaceDimId()).getGameTime() + 100000);
-	}
-	
-	public static void generateAsteroid(World world, int x, int y, int z) {
-		
+		SpaceObjectManager.getSpaceManager().registerTemporarySpaceObject(this, Constants.INVALID_PLANET, ZUtils.getWorld(ARConfiguration.getSpaceDimId()).getGameTime() + 100000);
 	}
 	
 	@Override

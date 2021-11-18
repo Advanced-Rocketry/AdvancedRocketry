@@ -7,30 +7,26 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-import java.lang.reflect.Method;
-
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class RendererRocket extends EntityRenderer<EntityRocket> implements IRenderFactory<EntityRocket> {
 
 	private static BlockRendererDispatcher renderBlocks = Minecraft.getInstance().getBlockRendererDispatcher();
 
 	Class tileEntityBlockChiseled;
-	Method getState;
 
+	@ParametersAreNonnullByDefault
 	public RendererRocket(EntityRendererManager manager) {
 		super(manager);
 
@@ -46,8 +42,8 @@ public class RendererRocket extends EntityRenderer<EntityRocket> implements IRen
 
 	//TODO: possibly optimize with GL lists
 	@Override
+	@ParametersAreNonnullByDefault
 	public void render(EntityRocket entity, float entityYaw, float partialTicks, MatrixStack matrix, IRenderTypeBuffer bufferIn, int packedLightIn) {
-
 		StorageChunk storage  = entity.storage;
 
 		if(storage == null)
@@ -104,10 +100,10 @@ public class RendererRocket extends EntityRenderer<EntityRocket> implements IRen
 		//Initial setup
 
 		matrix.push();
-		matrix.translate((float)0, (float) halfy, (float)0);
-		matrix.rotate(new Quaternion(((EntityRocket)entity).getRCSRotateProgress()*0.9f,0,0, true));
-		matrix.rotate(new Quaternion(0,0, ((EntityRocket)entity).rotationYaw, true));
-		matrix.translate((float)- halfx, (float)0 - halfy, (float)- halfz);
+		matrix.translate((float)0, halfy, (float)0);
+		matrix.rotate(new Quaternion(entity.getRCSRotateProgress()*0.9f,0,0, true));
+		matrix.rotate(new Quaternion(0,0, entity.rotationYaw, true));
+		matrix.translate(- halfx, (float)0 - halfy, - halfz);
 		//GL11.glNewList(storage.world.displayListIndex, GL11.GL_COMPILE);
 		//net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 
@@ -189,6 +185,7 @@ public class RendererRocket extends EntityRenderer<EntityRocket> implements IRen
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public ResourceLocation getEntityTexture(EntityRocket entity) {
 		return null;
 	}

@@ -4,10 +4,10 @@ import net.minecraft.fluid.Fluid;
 
 public class FluidGasGiantGas {
 
-	private Fluid fluid;
-	private int minGravity;
-	private int maxGravity;
-	private double chance;
+	private final Fluid fluid;
+	private final int minGravity;
+	private final int maxGravity;
+	private final double chance;
 
 	public FluidGasGiantGas(Fluid fluidInput, int minGravityInput, int maxGravityInput, double chanceInput) {
 		fluid = fluidInput;

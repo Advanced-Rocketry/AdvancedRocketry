@@ -1,9 +1,7 @@
 package zmaster587.advancedRocketry.tile;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
@@ -22,7 +20,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -43,7 +40,6 @@ import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
-import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
@@ -60,7 +56,7 @@ import zmaster587.libVulpes.util.IconResource;
 import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -193,8 +189,6 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	public int getFuel(FuelType fuelType) {return (int) (stats.getFuelCapacity(fuelType)*ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());}
 
 	public boolean isBuilding() { return building; }
-
-	public void setBuilding(boolean building) { this.building = building; }
 
 	public void setStatus(int value) {
 		status = ErrorCodes.values()[value];
@@ -478,7 +472,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 		CompoundNBT nbtdata = new CompoundNBT();
 
 		rocket.writeUnlessRemoved(nbtdata);
-		PacketHandler.sendToNearby(new PacketEntity((INetworkEntity)rocket, (byte)0, nbtdata), rocket.world, this.pos, 64);
+		PacketHandler.sendToNearby(new PacketEntity(rocket, (byte)0, nbtdata), rocket.world, this.pos, 64);
 
 		stats.reset();
 		this.status = ErrorCodes.FINISHED;
@@ -668,7 +662,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 
 		blockPos.clear();
 		if(nbt.contains("infrastructureLocations")) {
-			int array[] = nbt.getIntArray("infrastructureLocations");
+			int[] array = nbt.getIntArray("infrastructureLocations");
 
 			for(int counter = 0; counter < array.length; counter += 3) {
 				blockPos.add(new HashedBlockPosition(array[counter], array[counter+1], array[counter+2]));
@@ -689,11 +683,6 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		read(getBlockState(), pkt.getNbtCompound());
-	}
-
-	//Creates the effects for building the rocket and changes state to build
-	public void startBuild(int x, int y, int z) {
-
 	}
 
 	@Override
@@ -785,7 +774,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 
 		modules.add(new ModulePower(160, 90, this));
 
@@ -934,12 +923,14 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
 		return true;
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
 		TileEntity tile = world.getTileEntity(ItemLinker.getMasterCoords(item));
@@ -1046,12 +1037,14 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 		}
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}

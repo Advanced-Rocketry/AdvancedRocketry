@@ -35,8 +35,8 @@ public class MapGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 	public MapGenSwampTree(Codec<ProbabilityConfig> codec, int chancePerChunk) {
 		super(codec, chancePerChunk);
 		chancePerChunk= 10;
-		cachedCanopy = new HashMap<BlockPos, BlockState>();
-		cachedRoots = new HashMap<BlockPos, BlockState>();
+		cachedCanopy = new HashMap<>();
+		cachedRoots = new HashMap<>();
 		this.chancePerChunk = chancePerChunk;
 		buildCanopy();
 		buildRoots();
@@ -226,16 +226,9 @@ public class MapGenSwampTree extends  WorldCarver<ProbabilityConfig>  {
 
 		//roots
 		for(Entry<BlockPos, BlockState> entry : cachedRoots.entrySet())
-			setBlock( entry.getKey().add( + x - radius/2, y, z), entry.getValue(), world);
+			setBlock( entry.getKey().add( x - radius/2, y, z), entry.getValue(), world);
 		
 		return true;
-	}
-
-	protected void func_151538_a(World world2, int rangeX,
-			int rangeZ, int chunkX, int chunkZ,
-			Block[] blocks) {
-
-
 	}
 
 	private void setBlock(BlockPos pos, BlockState block, IChunk world) {

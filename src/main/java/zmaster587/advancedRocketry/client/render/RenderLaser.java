@@ -56,13 +56,13 @@ public class RenderLaser extends EntityRenderer<EntityLaserNode> implements IRen
 				RenderHelper.vertexPos(matrix, laserBuilder, - x , -y + 200,  - z).color(color[0], color[1], color[2], color[3]).endVertex();
 				RenderHelper.vertexPos(matrix, laserBuilder, - x, -y + 200, - z).color(color[0], color[1], color[2], color[3]).endVertex();
 				RenderHelper.vertexPos(matrix, laserBuilder, - (radius* Math.cos(i)) + 0.5F, 0,- (radius* Math.sin(i)) + 0.5F).color(color[0], color[1], color[2], color[3]).endVertex();
-				RenderHelper.vertexPos(matrix, laserBuilder, + (radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).color(color[0], color[1], color[2], color[3]).endVertex();
+				RenderHelper.vertexPos(matrix, laserBuilder, (radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).color(color[0], color[1], color[2], color[3]).endVertex();
 			}
 
 			for(double i = 0; i < 2*Math.PI; i += Math.PI) {
 				RenderHelper.vertexPos(matrix, laserBuilder, - x, -y + 200,- z).color(color[0], color[1], color[2], color[3]).endVertex();
 				RenderHelper.vertexPos(matrix, laserBuilder, - x, -y + 200, - z).color(color[0], color[1], color[2], color[3]).endVertex();
-				RenderHelper.vertexPos(matrix, laserBuilder, + (radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).color(color[0], color[1], color[2], color[3]).endVertex();
+				RenderHelper.vertexPos(matrix, laserBuilder, (radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).color(color[0], color[1], color[2], color[3]).endVertex();
 				RenderHelper.vertexPos(matrix, laserBuilder, - (radius* Math.cos(i)) + 0.5F, 0,(radius* Math.sin(i)) + 0.5F).color(color[0], color[1], color[2], color[3]).endVertex();
 			}
 		}

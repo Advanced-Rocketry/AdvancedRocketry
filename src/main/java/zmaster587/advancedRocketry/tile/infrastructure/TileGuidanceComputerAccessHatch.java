@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.infrastructure;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,11 +15,9 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
@@ -47,7 +44,7 @@ import zmaster587.libVulpes.util.ZUtils;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -155,16 +152,19 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void openInventory(PlayerEntity player) {
 
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void closeInventory(PlayerEntity player) {
 
 	}
@@ -269,7 +269,7 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 
 	@Override
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 
 		modules.add(new ModuleLimitedSlotArray(15, 15, this, 0, 1));
 		modules.add(redstoneControl);
@@ -445,12 +445,14 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 		return getStackInSlot(0).isEmpty();
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}

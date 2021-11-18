@@ -46,6 +46,7 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -100,6 +101,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean onLinkStart(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
 		ItemLinker.setMasterCoords(item, getPos());
@@ -113,6 +115,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
 
@@ -186,7 +189,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 
 	@SubscribeEvent
 	public void onRocketDismantle(RocketDismantleEvent event) {
-		if(!world.isRemote && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
+		if(!world.isRemote && ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
 
 			EntityRocketBase rocket = (EntityRocketBase)event.getEntity();
 			AxisAlignedBB bbCache =  new AxisAlignedBB(this.getPos().add(-1,0,-1), this.getPos().add(1,2,1));
@@ -203,7 +206,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	public void registerTileWithStation(World world, BlockPos pos) {
-		if(!world.isRemote && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
+		if(!world.isRemote && ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 			if(spaceObj instanceof SpaceStationObject) {
@@ -219,7 +222,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	public void setAllowAutoLand(World world, BlockPos pos, boolean allow) {
-		if(!world.isRemote && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
+		if(!world.isRemote && ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 			if(spaceObj instanceof SpaceStationObject) {
@@ -229,7 +232,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	public void unregisterTileWithStation(World world, BlockPos pos) {
-		if(!world.isRemote && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
+		if(!world.isRemote && ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObj instanceof SpaceStationObject)
 				((SpaceStationObject)spaceObj).removeLandingPad(pos);
@@ -341,7 +344,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 			CompoundNBT nbt) {
 		if(id == 0) {
 			name = nbt.getString("id");
-			if(!world.isRemote && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
+			if(!world.isRemote && ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
 				ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(spaceObj instanceof SpaceStationObject) {
@@ -362,7 +365,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 		super.read(state, nbt);
 		blockPos.clear();
 		if(nbt.contains("infrastructureLocations")) {
-			int array[] = nbt.getIntArray("infrastructureLocations");
+			int[] array = nbt.getIntArray("infrastructureLocations");
 
 			for(int counter = 0; counter < array.length; counter += 3) {
 				blockPos.add(new HashedBlockPosition(array[counter], array[counter+1], array[counter+2]));

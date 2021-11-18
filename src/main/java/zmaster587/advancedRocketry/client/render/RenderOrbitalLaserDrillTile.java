@@ -17,10 +17,9 @@ public class RenderOrbitalLaserDrillTile extends TileEntityRenderer<TileOrbitalL
 	}
 	
 	@Override
-	public void render(TileOrbitalLaserDrill tileentity, float partialTicks, MatrixStack matrix,
-			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+	public void render(TileOrbitalLaserDrill tileentity, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
 
-		if(!((TileOrbitalLaserDrill)tileentity).isRunning())
+		if(!tileentity.isRunning())
 			return;
 		
 		matrix.push();
@@ -34,13 +33,13 @@ public class RenderOrbitalLaserDrillTile extends TileEntityRenderer<TileOrbitalL
 				entitySolidBuilder.pos(- x , -y - 100,  - z).color(0.9F, 0.2F, 0.3F, 1F).endVertex();
 				entitySolidBuilder.pos(- x, -y - 100, - z).color(0.9F, 0.2F, 0.3F, 1F).endVertex();
 				entitySolidBuilder.pos(- (radius* Math.cos(i)) + 0.5F, 0,- (radius* Math.sin(i)) + 0.5F).color(0.9F, 0.2F, 0.3F, 1F).endVertex();
-				entitySolidBuilder.pos(+ (radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).color(0.9F, 0.2F, 0.3F, 1F).endVertex();
+				entitySolidBuilder.pos((radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).color(0.9F, 0.2F, 0.3F, 1F).endVertex();
 			}
 
 			for(double i = 0; i < 2*Math.PI; i += Math.PI) {
 				entitySolidBuilder.pos(- x, -y - 100,- z).color(0.9F, 0.2F, 0.3F, 1F).endVertex();
 				entitySolidBuilder.pos(- x, -y - 100, - z).color(0.9F, 0.2F, 0.3F, 1F).endVertex();
-				entitySolidBuilder.pos(+ (radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).color(0.9F, 0.2F, 0.3F, 1F).endVertex();
+				entitySolidBuilder.pos((radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).color(0.9F, 0.2F, 0.3F, 1F).endVertex();
 				entitySolidBuilder.pos(- (radius* Math.cos(i)) + 0.5F, 0,(radius* Math.sin(i)) + 0.5F).color(0.9F, 0.2F, 0.3F, 1F).endVertex();
 			}
 		}

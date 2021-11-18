@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.station;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -31,6 +30,8 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 
 	@Override
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModuleText(20, 50, LibVulpes.proxy.getLocalizedString("msg.dockingport.target"), 0x2a2a2a));
 		if(world.isRemote) {
 			myId = new ModuleTextBox(this, 20, 30, 60, 12, 9);
@@ -89,6 +90,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 		}
 	}
 	
+	@Nonnull
 	@Override
 	public CompoundNBT getUpdateTag() {
 		return write(new CompoundNBT());
@@ -116,7 +118,9 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 		}
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public CompoundNBT write(CompoundNBT nbt) {
 		super.write(nbt);
 		if(!myIdStr.isEmpty())
@@ -128,6 +132,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void read(BlockState state, CompoundNBT nbt) {
 		super.read(state, nbt);
 		myIdStr = nbt.getString("myId");
@@ -159,7 +164,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 
 
 	public void registerTileWithStation(World world, BlockPos pos) {
-		if(!world.isRemote && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
+		if(!world.isRemote && ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 			if(spaceObj instanceof SpaceStationObject) {
@@ -169,7 +174,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 	}
 
 	public void unregisterTileWithStation(World world, BlockPos pos) {
-		if(!world.isRemote && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
+		if(!world.isRemote && ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObj instanceof SpaceStationObject)
 				((SpaceStationObject)spaceObj).removeDockingPosition(pos);
@@ -203,7 +208,7 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 			CompoundNBT nbt) {
 		if(id == 0) {
 			myIdStr = nbt.getString("id");
-			if(!world.isRemote && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
+			if(!world.isRemote && ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
 				ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 
 				if(spaceObj instanceof SpaceStationObject) {
@@ -218,12 +223,14 @@ public class TileDockingPort extends TileEntity implements IModularInventory, IG
 		world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}

@@ -3,7 +3,6 @@ package zmaster587.advancedRocketry.dimension;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
@@ -15,11 +14,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.Category;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.thread.EffectiveSide;
-import net.minecraftforge.common.util.JsonUtils;
 import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
@@ -35,7 +30,6 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.client.render.planet.ISkyRenderer;
-import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
 import zmaster587.advancedRocketry.network.PacketSatellite;
@@ -51,8 +45,6 @@ import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.*;
 import java.util.Map.Entry;
-
-import com.google.gson.JsonElement;
 
 public class DimensionProperties implements Cloneable, IDimensionProperties {
 
@@ -1156,7 +1148,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			while( itr.hasNext()) {
 				Biome biome = itr.next();
 				Temps biomeTemp = AdvancedRocketryBiomes.getBiomeTemp(biome);
-				if(biome != null && (biomeTemp == Temps.HOT || biome.getCategory() == Category.OCEAN)  && !isBiomeblackListed(biome)) {
+				if((biomeTemp == Temps.HOT || biome.getCategory() == Category.OCEAN) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
 				}
 			}
@@ -1166,7 +1158,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			while( itr.hasNext()) {
 				Biome biome = itr.next();
 				Temps biomeTemp = AdvancedRocketryBiomes.getBiomeTemp(biome);
-				if(biome != null && biomeTemp.isInRange(Temps.COLD, Temps.HOT) && !isBiomeblackListed(biome) || biome.getCategory() == Category.OCEAN) {
+				if(biomeTemp.isInRange(Temps.COLD, Temps.HOT) && !isBiomeblackListed(biome) || biome.getCategory() == Category.OCEAN) {
 					viableBiomes.add(biome);
 				}
 			}
@@ -1176,7 +1168,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			while( itr.hasNext()) {
 				Biome biome = itr.next();
 				Temps biomeTemp = AdvancedRocketryBiomes.getBiomeTemp(biome);
-				if(biome != null && biomeTemp.isInRange(Temps.FRIGID, Temps.NORMAL) && !isBiomeblackListed(biome) || biome.getCategory() == Category.OCEAN) {
+				if(biomeTemp.isInRange(Temps.FRIGID, Temps.NORMAL) && !isBiomeblackListed(biome) || biome.getCategory() == Category.OCEAN) {
 					viableBiomes.add(biome);
 				}
 			}
@@ -1186,7 +1178,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			while( itr.hasNext()) {
 				Biome biome = itr.next();
 				Temps biomeTemp = AdvancedRocketryBiomes.getBiomeTemp(biome);
-				if(biome != null && biomeTemp.isInRange(Temps.SNOWBALL, Temps.COLD) && !isBiomeblackListed(biome)) {
+				if(biomeTemp.isInRange(Temps.SNOWBALL, Temps.COLD) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
 				}
 			}
@@ -1196,7 +1188,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			while( itr.hasNext()) {
 				Biome biome = itr.next();
 				Temps biomeTemp = AdvancedRocketryBiomes.getBiomeTemp(biome);
-				if(biome != null && biomeTemp.isInRange(Temps.SNOWBALL, Temps.FRIGID) && !isBiomeblackListed(biome)) {
+				if(biomeTemp.isInRange(Temps.SNOWBALL, Temps.FRIGID) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
 				}
 			}
@@ -1410,8 +1402,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(nbt.contains("satellites")) {
 			CompoundNBT allSatelliteNbt = nbt.getCompound("satellites");
 
-			for(Object keyObject : allSatelliteNbt.keySet()) {
-				String key = (String)keyObject;
+			for(String keyObject : allSatelliteNbt.keySet()) {
+				String key = keyObject;
 				Long longKey = Long.parseLong(key);
 
 				CompoundNBT satelliteNBT = allSatelliteNbt.getCompound(key);
@@ -1507,7 +1499,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 			list = nbt.getList("geodeOres", NBT.TAG_STRING);
 			for(INBT entry : list) {
 				assert entry instanceof StringNBT;
-				geodeOres.add(((StringNBT) entry).getString());
+				geodeOres.add(entry.getString());
 			}
 		}
 
@@ -1702,8 +1694,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		if(!allowedBiomes.isEmpty()) {
 
 			ListNBT biomeList = new ListNBT();
-			for(int i = 0; i < allowedBiomes.size(); i++) {
-				biomeList.add(StringNBT.valueOf(AdvancedRocketryBiomes.getBiomeResource(allowedBiomes.get(i)).toString()));
+			for (Biome allowedBiome : allowedBiomes) {
+				biomeList.add(StringNBT.valueOf(AdvancedRocketryBiomes.getBiomeResource(allowedBiome).toString()));
 			}
 			nbt.put("biomes", biomeList);
 		}
@@ -1827,9 +1819,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public String generateDimJSON()
 	{
 		long seed = 0;
-		List<String> structures = new LinkedList<String>();
-		List<String> biomeConditionalStructures = new LinkedList<String>();
-		List<String> biomeStrings = new LinkedList<String>();
+		List<String> structures = new LinkedList<>();
+		List<String> biomeConditionalStructures = new LinkedList<>();
+		List<String> biomeStrings = new LinkedList<>();
 		Random random = new Random("Yes, I know that temp, altidude and humidity are not the same as the noise generator, but im coming in anywayyy".hashCode());
 
 		
@@ -1840,8 +1832,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 				biomeConditionalStructures.add(
 						"	          \"advancedrocketry:crater\": {\n" + 
-								"	            \"spacing\": " + String.valueOf(40*getCraterMultiplier()) + ",\n" + 
-								"	            \"separation\": " + String.valueOf(20*getCraterMultiplier()) + ",\n" + 
+								"	            \"spacing\": " + 40 * getCraterMultiplier() + ",\n" +
+								"	            \"separation\": " + 20 * getCraterMultiplier() + ",\n" +
 								"	            \"salt\": 0\n" + 
 						"	          }");
 
@@ -1851,8 +1843,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				structures.add("\"advancedrocketry:volcano\"");
 				biomeConditionalStructures.add(
 						"	          \"advancedrocketry:volcano\": {\n" + 
-								"	            \"spacing\": " + String.valueOf(40*getVolcanoMultiplier()) + ",\n" + 
-								"	            \"separation\": " + String.valueOf(20*getVolcanoMultiplier()) + ",\n" + 
+								"	            \"spacing\": " + 40 * getVolcanoMultiplier() + ",\n" +
+								"	            \"separation\": " + 20 * getVolcanoMultiplier() + ",\n" +
 								"	            \"salt\": 0\n" + 
 						"	          }");
 			}
@@ -1861,8 +1853,8 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				structures.add("\"advancedrocketry:geode\"");
 				biomeConditionalStructures.add(
 						"	          \"advancedrocketry:geode\": {\n" + 
-								"	            \"spacing\": " + String.valueOf(40*getGeodeMultiplier()) + ",\n" + 
-								"	            \"separation\": " + String.valueOf(20*getGeodeMultiplier()) + ",\n" + 
+								"	            \"spacing\": " + 40 * getGeodeMultiplier() + ",\n" +
+								"	            \"separation\": " + 20 * getGeodeMultiplier() + ",\n" +
 								"	            \"salt\": 0\n" + 
 						"	          }");
 			}
@@ -1873,10 +1865,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 						"	    {\n" + 
 								"              \"biome\": \"" + biome.getRegistryName().toString() + "\",\n" + 
 								"              \"parameters\": {\n" + 
-								"                \"altitude\": " +  String.valueOf(random.nextFloat()) + ",\n" + 
-								"		\"humidity\": " + String.valueOf(biome.getDownfall()) + ",\n" + 
-								"                \"temperature\": " + String.valueOf(biome.getTemperature()) + ",				\n" +
-								"                \"weirdness\": " + String.valueOf(biome.getScale()) + ",\n" + 
+								"                \"altitude\": " + random.nextFloat() + ",\n" +
+								"		\"humidity\": " + biome.getDownfall() + ",\n" +
+								"                \"temperature\": " + biome.getTemperature() + ",				\n" +
+								"                \"weirdness\": " + biome.getScale() + ",\n" +
 								"                \"offset\": 0\n" + 
 								"              }\n" + 
 						"            }");
@@ -1887,7 +1879,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 					"{\n" + 
 					"      \"generator\": {\n" + 
 					"        \"type\": \"advancedrocketry:planetary_noise\",\n" + 
-					"        \"seed\": " + String.valueOf(seed) + ",\n" + 
+					"        \"seed\": " + seed + ",\n" +
 					(structures.isEmpty() ?  "        \"starts\": [],\n" : "        \"starts\": [" + String.join(", ", structures) +  "],\n") + 
 					"        \"dimension_props\": \"" + getId().toString() +  "\",\n" + 
 					"        \"biome_source\": {\n" + 
@@ -1900,7 +1892,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 					"		\n" + 
 					"		\n" + 
 					"          \"type\": \"advancedrocketry:planetary\",\n" + 
-					"          \"seed\": " + String.valueOf(seed) + ",\n" + 
+					"          \"seed\": " + seed + ",\n" +
 					"          \"biomes\": [\n" + 
 					String.join(",\n", biomeStrings) + "\n" +
 					"          ]\n" + 
@@ -1909,7 +1901,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 					"      \"name\": \"" + getId().toString() + "\",\n" + 
 					"      \"bedrock_roof_position\": -10,\n" + 
 					"      \"bedrock_floor_position\": 0,\n" + 
-					"      \"sea_level\": "  +  String.valueOf(getSeaLevel()) + ",\n" + 
+					"      \"sea_level\": "  + getSeaLevel() + ",\n" +
 					"      \"disable_mob_generation\": " +  (isHabitable() ? "true" : "false") + ",\n" + 
 					"      \"default_block\": {\n" + 
 					"        \"Name\": \"" + getStoneBlock().getBlock().getRegistryName().toString() + "\"\n" + 
@@ -1964,10 +1956,10 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				"	    {\n" + 
 						"              \"biome\": \"" + biome.getRegistryName().toString() + "\",\n" + 
 						"              \"parameters\": {\n" + 
-						"                \"altitude\": " +  String.valueOf(random.nextFloat()) + ",\n" + 
-						"		\"humidity\": " + String.valueOf(biome.getDownfall()) + ",\n" + 
-						"                \"temperature\": " + String.valueOf(biome.getTemperature()) + ",				\n" +
-						"                \"weirdness\": " + String.valueOf(biome.getScale()) + ",\n" + 
+						"                \"altitude\": " + random.nextFloat() + ",\n" +
+						"		\"humidity\": " + biome.getDownfall() + ",\n" +
+						"                \"temperature\": " + biome.getTemperature() + ",				\n" +
+						"                \"weirdness\": " + biome.getScale() + ",\n" +
 						"                \"offset\": 0\n" + 
 						"              }\n" + 
 				"            }");
@@ -1976,7 +1968,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				"{\n" + 
 				"      \"generator\": {\n" + 
 				"        \"type\": \"advancedrocketry:planetary_noise\",\n" + 
-				"        \"seed\": " + String.valueOf(seed) + ",\n" + 
+				"        \"seed\": " + seed + ",\n" +
 				(structures.isEmpty() ?  "        \"starts\": [],\n" : "        \"starts\": [" + String.join(", ", structures) +  "],\n") + 
 				"        \"dimension_props\": \"" + getId().toString() +  "\",\n" + 
 				"        \"biome_source\": {\n" + 
@@ -1989,7 +1981,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				"		\n" + 
 				"		\n" + 
 				"          \"type\": \"advancedrocketry:planetary\",\n" + 
-				"          \"seed\": " + String.valueOf(seed) + ",\n" + 
+				"          \"seed\": " + seed + ",\n" +
 				"          \"biomes\": [\n" + 
 				String.join(",\n", biomeStrings) + "\n" +
 				"          ]\n" + 
@@ -1998,7 +1990,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 				"      \"name\": \"" + getId().toString() + "\",\n" + 
 				"      \"bedrock_roof_position\": -10,\n" + 
 				"      \"bedrock_floor_position\": -10,\n" + 
-				"      \"sea_level\": "  +  String.valueOf(getSeaLevel()) + ",\n" + 
+				"      \"sea_level\": "  + getSeaLevel() + ",\n" +
 				"      \"disable_mob_generation\": " +  (isHabitable() ? "true" : "false") + ",\n" + 
 				"      \"default_block\": {\n" + 
 				"        \"Name\": \"" + getStoneBlock().getBlock().getRegistryName().toString() + "\"\n" + 

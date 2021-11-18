@@ -5,16 +5,15 @@ import net.minecraft.util.math.BlockPos;
 
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.WeakHashMap;
 
 public class RocketInventoryHelper {
 	
 	//TODO: more robust way of inv checking
 	//Has weak refs so if the player gets killed/logsout etc the entry doesnt stay trapped in RAM
-	private static HashSet<WeakReference<PlayerEntity>> inventoryCheckPlayerBypassMap = new HashSet<WeakReference<PlayerEntity>>();
-	private static WeakHashMap<PlayerEntity, Long> inventoryTimingMap = new WeakHashMap<PlayerEntity, Long>();
-	private static WeakHashMap<PlayerEntity, BlockPos> inventoryDismapping = new WeakHashMap<PlayerEntity, BlockPos>();
+	private static HashSet<WeakReference<PlayerEntity>> inventoryCheckPlayerBypassMap = new HashSet<>();
+	private static WeakHashMap<PlayerEntity, Long> inventoryTimingMap = new WeakHashMap<>();
+	private static WeakHashMap<PlayerEntity, BlockPos> inventoryDismapping = new WeakHashMap<>();
 	
 	//TODO: check for rocket
 	public static boolean allowAccess(Object tile) {
@@ -37,23 +36,16 @@ public class RocketInventoryHelper {
 	}
 
 	public static boolean canPlayerBypassInvChecks(PlayerEntity player) {
-		Iterator<WeakReference<PlayerEntity>> iter = inventoryCheckPlayerBypassMap.iterator();
-		while(iter.hasNext()) {
-			WeakReference<PlayerEntity> player2 = iter.next();
-			if(player2.get() == player)
+		for (WeakReference<PlayerEntity> player2 : inventoryCheckPlayerBypassMap) {
+			if (player2.get() == player)
 				return true;
 		}
 		return false;
 	}
 
 	public static void removePlayerFromInventoryBypass(PlayerEntity player) {
-		Iterator<WeakReference<PlayerEntity>> iter = inventoryCheckPlayerBypassMap.iterator();
 
-		while(iter.hasNext()) {
-			WeakReference<PlayerEntity> player2 = iter.next();
-			if(player2.get() == player || player2.get() == null)
-				iter.remove();
-		}
+		inventoryCheckPlayerBypassMap.removeIf(player2 -> player2.get() == player || player2.get() == null);
 	}
 
 	public static void addPlayerToInventoryBypass(PlayerEntity player) {

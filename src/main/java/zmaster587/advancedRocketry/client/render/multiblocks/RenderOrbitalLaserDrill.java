@@ -1,18 +1,12 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Quaternion;
-
-import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -22,7 +16,8 @@ import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill.TileOrbitalLaserDrill;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
-import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class RenderOrbitalLaserDrill extends TileEntityRenderer<TileOrbitalLaserDrill> {
 	
@@ -41,11 +36,10 @@ public class RenderOrbitalLaserDrill extends TileEntityRenderer<TileOrbitalLaser
 	}
 	
 	@Override
-	public void render(TileOrbitalLaserDrill tile, float partialTicks, MatrixStack matrix,
-			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
-		TileMultiBlock multiBlockTile = (TileMultiBlock)tile;
+	@ParametersAreNonnullByDefault
+	public void render(TileOrbitalLaserDrill tile, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
 
-		if(!multiBlockTile.canRender())
+		if(!tile.canRender())
 			return;
 
 		if (tile.getWorld() != null) {
@@ -71,8 +65,7 @@ public class RenderOrbitalLaserDrill extends TileEntityRenderer<TileOrbitalLaser
 		
 		
 		//Laser
-		if(((TileOrbitalLaserDrill)multiBlockTile).isRunning())
-		{
+		if(tile.isRunning()) {
 			matrix.translate(-1.0f, 0, -5f);
 			float x = 0, y = 0, z = 0;
 			for(float radius = 0.1F; radius < .5; radius += .1F) {
@@ -81,13 +74,13 @@ public class RenderOrbitalLaserDrill extends TileEntityRenderer<TileOrbitalLaser
 					lazerType.pos(- x , -y - 100,  - z).endVertex();
 					lazerType.pos(- x, -y - 100, - z).endVertex();
 					lazerType.pos(- (radius* Math.cos(i)) + 0.5F, 0,- (radius* Math.sin(i)) + 0.5F).endVertex();
-					lazerType.pos(+ (radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).endVertex();
+					lazerType.pos((radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).endVertex();
 				}
 	
 				for(double i = 0; i < 2*Math.PI; i += Math.PI) {
 					lazerType.pos(- x, -y - 100,- z).endVertex();
 					lazerType.pos(- x, -y - 100, - z).endVertex();
-					lazerType.pos(+ (radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).endVertex();
+					lazerType.pos((radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).endVertex();
 					lazerType.pos(- (radius* Math.cos(i)) + 0.5F, 0,(radius* Math.sin(i)) + 0.5F).endVertex();
 				}
 			}

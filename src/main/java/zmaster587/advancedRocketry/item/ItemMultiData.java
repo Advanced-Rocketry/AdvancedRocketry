@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -115,8 +116,7 @@ public class ItemMultiData extends Item {
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void addInformation(ItemStack stack, World player,
-			List list, ITooltipFlag bool) {
+	public void addInformation(ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag bool) {
 		super.addInformation(stack, player, list, bool);
 
 		MultiData data = getDataStorage(stack);

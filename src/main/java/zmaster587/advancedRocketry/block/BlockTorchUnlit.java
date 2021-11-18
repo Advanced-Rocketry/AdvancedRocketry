@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootContext.Builder;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -19,12 +18,9 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
-import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.ParametersAreNullableByDefault;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -41,11 +37,12 @@ public class BlockTorchUnlit extends TorchBlock {
 		return ARConfiguration.getCurrentConfig().dropExTorches.get() ? super.getPickBlock(state, target, world, pos, player) : new ItemStack(Blocks.TORCH);
 	}
 	
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public List<ItemStack> getDrops(BlockState state, Builder builder) {
-		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+		ArrayList<ItemStack> ret = new ArrayList<>();
 
-		
 		ret.add(new ItemStack(ARConfiguration.getCurrentConfig().dropExTorches.get() ? AdvancedRocketryBlocks.blockUnlitTorch : Blocks.TORCH));
 
 		return ret;
@@ -53,23 +50,23 @@ public class BlockTorchUnlit extends TorchBlock {
 
 	
 	
+	@Nonnull
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
-			Hand handIn, BlockRayTraceResult hit) {
-		if(player.getHeldItem(Hand.MAIN_HAND) != null) {
-			Item item = player.getHeldItem(Hand.MAIN_HAND).getItem();
-			if(!world.isRemote && item != null && AtmosphereHandler.getOxygenHandler(world).getAtmosphereType(pos).allowsCombustion() && (item == Item.getItemFromBlock(Blocks.TORCH) || item == Items.FLINT_AND_STEEL || item == Items.FIRE_CHARGE)) {
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+		player.getHeldItem(Hand.MAIN_HAND);
+		Item item = player.getHeldItem(Hand.MAIN_HAND).getItem();
+		if(!world.isRemote && item != Items.AIR && AtmosphereHandler.getOxygenHandler(world).getAtmosphereType(pos).allowsCombustion() && (item == Item.getItemFromBlock(Blocks.TORCH) || item == Items.FLINT_AND_STEEL || item == Items.FIRE_CHARGE)) {
 
-				world.setBlockState(pos, Blocks.TORCH.getDefaultState());
+			world.setBlockState(pos, Blocks.TORCH.getDefaultState());
 
-				return ActionResultType.SUCCESS;
-			}
+			return ActionResultType.SUCCESS;
 		}
 
 		return ActionResultType.SUCCESS;
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
 	}
 	

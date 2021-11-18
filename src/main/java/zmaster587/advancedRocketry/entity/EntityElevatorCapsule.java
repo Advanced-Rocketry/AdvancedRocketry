@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.entity;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.PortalInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -12,15 +11,11 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
@@ -49,7 +44,9 @@ import zmaster587.libVulpes.network.PacketSpawnEntity;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEntityAdditionalSpawnData, IEntitySpawnNBT {
@@ -57,7 +54,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 	public static final double MAX_HEIGHT = ARConfiguration.getCurrentConfig().orbit.get();
 	public static final double MAX_STANDTIME = 200;
 	byte motion;
-	int standTime, idleTime;
+	int standTime;
 	DimensionBlockPosition dstTilePos, srcTilePos;
 
 	private static final byte PACKET_WRITE_DST_INFO = 0;
@@ -109,12 +106,6 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 
 	public void setStandTime(int time) {
 		this.dataManager.set(standTimeCounter, standTime);
-	}
-
-	public int decrStandTime() {
-
-		this.dataManager.set(standTimeCounter, (standTime = getStandTime()-1));
-		return standTime;
 	}
 
 	@Override
@@ -180,11 +171,13 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 			PacketHandler.sendToPlayersTrackingEntity(new PacketEntity(this, PACKET_WRITE_SRC_INFO), this);
 	}
 
+	@ParametersAreNonnullByDefault
 	public Entity changeDimension(ServerWorld newDimId) {
 		return changeDimension(newDimId, this.getPosX(), (double)ARConfiguration.getCurrentConfig().orbit.get(), this.getPosZ());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void copyDataFromOld(Entity entityIn)
 	{
 		super.copyDataFromOld(entityIn);
@@ -192,6 +185,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Entity changeDimension(ServerWorld world, ITeleporter teleporter) {
 		return super.changeDimension(world, teleporter);
 	}
@@ -206,12 +200,10 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 			DimensionBlockPosition destination = this.dstTilePos;
 
 			List<Entity> passengers = getPassengers();
-			MinecraftServer minecraftserver = this.getServer();
 			ServerWorld worldserver =  (ServerWorld) this.getEntityWorld();
-			ServerWorld worldserver1 = dimensionIn;
 			PortalInfo info = new PortalInfo(new Vector3d(posX, y, posZ), this.getMotion(), this.rotationYaw, this.rotationPitch);
 
-			ITeleporter teleporter = new TeleporterNoPortal(worldserver1, info);
+			ITeleporter teleporter = new TeleporterNoPortal(dimensionIn, info);
 			Entity entity = changeDimension(dimensionIn, teleporter);
 
 			if(entity == null)
@@ -228,6 +220,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 		return null;
 	}
 
+	@Nonnull
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return super.getRenderBoundingBox(); //getBoundingBox().grow(getPosX(), 2000, getPosZ());
@@ -477,6 +470,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 		return 0.3;
 	}
 
+	@Nonnull
 	@Override
 	public AxisAlignedBB getBoundingBox() {
 		//AxisAlignedBB aabb = new AxisAlignedBB(super.getBoundingBox().minX, super.getBoundingBox().minY, super.getBoundingBox().minZ, super.getBoundingBox().maxX, super.getBoundingBox().maxY-3, super.getBoundingBox().maxZ);
@@ -493,6 +487,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean canCollide(Entity entity) {
       return true;
 	}
@@ -581,6 +576,7 @@ public class EntityElevatorCapsule extends Entity implements INetworkEntity, IEn
 		}
 	}
 
+	@Nonnull
 	@Override
 	public IPacket<?> createSpawnPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);

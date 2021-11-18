@@ -5,8 +5,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import zmaster587.advancedRocketry.util.StorageChunk;
 
-import javax.annotation.Nonnull;
-
 public class ItemPackedStructure extends Item {
 
 	public ItemPackedStructure(Properties props) {

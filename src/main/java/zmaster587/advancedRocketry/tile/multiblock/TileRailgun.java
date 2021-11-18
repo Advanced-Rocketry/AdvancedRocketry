@@ -1,8 +1,6 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
@@ -13,20 +11,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.Unit;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.server.Ticket;
-import net.minecraft.world.server.TicketType;
 import net.minecraftforge.api.distmarker.Dist;
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -47,7 +40,7 @@ import zmaster587.libVulpes.util.ZUtils;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class TileRailgun extends TileMultiPowerConsumer implements IInventory, ILinkableTile, IGuiCallback {
@@ -256,18 +249,6 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public void onLoad() {
-		super.onLoad();
-		
-		// Causes deadlock for now :/
-		/*if(!this.world.isRemote)
-		{
-			ServerWorld serverworld = (ServerWorld)world;
-			serverworld.forceChunk(new ChunkPos(getPos()).x, new ChunkPos(getPos()).z, true);
-		}*/
-	}
-
-	@Override
 	public void remove() {
 		super.remove();
 		if(!this.world.isRemote)
@@ -437,6 +418,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
@@ -447,11 +429,13 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void openInventory(PlayerEntity player) {
 
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void closeInventory(PlayerEntity player) {
 
 	}
@@ -462,8 +446,8 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity,
-			PlayerEntity player, World world) {
+	@ParametersAreNonnullByDefault
+	public boolean onLinkStart(ItemStack item, TileEntity entity, PlayerEntity player, World world) {
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, ZUtils.getDimensionIdentifier(world));
 		if(!world.isRemote)
@@ -472,8 +456,8 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public boolean onLinkComplete(ItemStack item, TileEntity entity,
-			PlayerEntity player, World world) {
+	@ParametersAreNonnullByDefault
+	public boolean onLinkComplete(ItemStack item, TileEntity entity, PlayerEntity player, World world) {
 		return false;
 	}
 

@@ -89,7 +89,7 @@ public class KeyBindings {
 		}
 
 
-		if(event.getKey() == GLFW.GLFW_KEY_SPACE && (event.getAction() != GLFW.GLFW_RELEASE) != prevState) {
+		if(event.getKey() == GLFW.GLFW_KEY_SPACE && (event.getAction() == GLFW.GLFW_RELEASE) == prevState) {
 			prevState = event.getAction() != GLFW.GLFW_RELEASE;
 			InputSyncHandler.updateKeyPress(player, GLFW.GLFW_KEY_SPACE , prevState);
 			PacketHandler.sendToServer(new PacketChangeKeyState(GLFW.GLFW_KEY_SPACE , prevState));

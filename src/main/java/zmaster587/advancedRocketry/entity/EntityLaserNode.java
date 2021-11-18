@@ -8,8 +8,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -23,6 +21,9 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.network.PacketSpawnEntity;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class EntityLaserNode extends Entity implements IEntityAdditionalSpawnData {
 
@@ -123,13 +124,16 @@ public class EntityLaserNode extends Entity implements IEntityAdditionalSpawnDat
 
 	//Dont need to write anything
 	@Override
+	@ParametersAreNonnullByDefault
 	protected void readAdditional(CompoundNBT nbttagcompound) {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	protected void writeAdditional(CompoundNBT nbttagcompound) {
 	}
 	
+	@Nonnull
 	@Override
 	public IPacket<?> createSpawnPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);

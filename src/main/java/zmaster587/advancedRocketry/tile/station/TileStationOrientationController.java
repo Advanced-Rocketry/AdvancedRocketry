@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.station;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -30,6 +29,8 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class TileStationOrientationController extends TileEntity implements ITic
 
 	@Override
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		modules.add(moduleAngularVelocity);
 		//modules.add(numThrusters);
 		//modules.add(maxAngularAcceleration);
@@ -87,14 +88,14 @@ public class TileStationOrientationController extends TileEntity implements ITic
 
 	@Override
 	public void tick() {
-		if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world))) {
+		if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world))) {
 			if(!world.isRemote) {
 				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 				boolean update = false;
 
 				if(spaceObject != null) {
 
-					Direction dirs[] = { Direction.EAST, Direction.UP, Direction.NORTH };
+					Direction[] dirs = { Direction.EAST, Direction.UP, Direction.NORTH };
 					int[] targetRotationsPerHour = ((SpaceStationObject) spaceObject).targetRotationsPerHour;
 					for (int i = 0; i < 3; i++) {
 						setProgress(i, targetRotationsPerHour[i] + (getTotalProgress(i)/2));
@@ -207,12 +208,14 @@ public class TileStationOrientationController extends TileEntity implements ITic
 		PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}

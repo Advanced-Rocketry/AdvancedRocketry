@@ -3,7 +3,6 @@ package zmaster587.advancedRocketry.item;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -39,7 +38,7 @@ public class ItemBlockFluidTank extends BlockItem {
 
 		FluidStack fluidStack = getFluid(stack);
 
-		if(fluidStack == null) {
+		if(fluidStack.isEmpty()) {
 			list.add(new StringTextComponent("Empty"));
 		}
 		else {
@@ -48,6 +47,7 @@ public class ItemBlockFluidTank extends BlockItem {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	protected boolean placeBlock(BlockItemUseContext context, BlockState state) {
 		super.placeBlock(context, state);
 		World world = context.getWorld();
@@ -56,7 +56,7 @@ public class ItemBlockFluidTank extends BlockItem {
 		
 		TileEntity tile = world.getTileEntity(pos);
 		
-		if(tile != null && tile instanceof TileFluidTank) {
+		if(tile instanceof TileFluidTank) {
 			IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.DOWN).orElse(null);
 
 			ItemStack stack2 = stack.copy();

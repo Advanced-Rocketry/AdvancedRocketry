@@ -2,7 +2,6 @@ package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -13,7 +12,6 @@ import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.tile.atmosphere.TileSeal;
 import zmaster587.libVulpes.util.HashedBlockPosition;
-import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

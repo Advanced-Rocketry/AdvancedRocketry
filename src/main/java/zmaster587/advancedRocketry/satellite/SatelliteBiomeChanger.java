@@ -3,7 +3,6 @@ package zmaster587.advancedRocketry.satellite;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.IntArrayNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
@@ -15,13 +14,13 @@ import net.minecraftforge.common.util.Constants.NBT;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
-import zmaster587.advancedRocketry.item.ItemBiomeChanger;
 import zmaster587.advancedRocketry.util.BiomeHandler;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 
 public class SatelliteBiomeChanger extends SatelliteBase  {
@@ -38,8 +37,8 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 	public SatelliteBiomeChanger() {
 		super();
 		radius = 4;
-		toChangeList = new LinkedList<HashedBlockPosition>();
-		discoveredBiomes = new HashSet<ResourceLocation>();
+		toChangeList = new LinkedList<>();
+		discoveredBiomes = new HashSet<>();
 	}
 
 	public void setBiome(int biomeId) {
@@ -72,8 +71,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 
 	@Override
 	@Nonnull
-	public ItemStack getControllerItemStack(@Nonnull ItemStack satIdChip,
-											SatelliteProperties properties) {
+	public ItemStack getControllerItemStack(@Nonnull ItemStack satIdChip, SatelliteProperties properties) {
 
 		//ItemBiomeChanger idChipItem = (ItemBiomeChanger)satIdChip.getItem();
 		//idChipItem.setSatellite(satIdChip, properties);
@@ -81,6 +79,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isAcceptableControllerItemStack(ItemStack stack) {
 		return false; //!stack.isEmpty() && stack.getItem() instanceof ItemBiomeChanger;
 	}

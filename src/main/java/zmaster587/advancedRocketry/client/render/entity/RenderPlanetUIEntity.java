@@ -1,21 +1,16 @@
 package zmaster587.advancedRocketry.client.render.entity;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -27,9 +22,12 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.entity.EntityUIPlanet;
 import zmaster587.libVulpes.render.RenderHelper;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> implements IRenderFactory<EntityUIPlanet> {
 
-	private static WavefrontObject sphere;
+	private static final WavefrontObject sphere;
 	public static ResourceLocation planetUIBG = new ResourceLocation("advancedrocketry","textures/gui/planetuioverlay.png");
 	public static ResourceLocation planetUIFG = new ResourceLocation("advancedrocketry","textures/gui/planetuioverlayfg.png");
 
@@ -41,6 +39,7 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 		}
 	}
 
+	@ParametersAreNonnullByDefault
 	public RenderPlanetUIEntity(EntityRendererManager renderManager) {
 		super(renderManager);
 	}
@@ -51,22 +50,22 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 		return new RenderPlanetUIEntity(manager);
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public ResourceLocation getEntityTexture(EntityUIPlanet entity) {
 		return DimensionProperties.PlanetIcons.EARTHLIKE.getResource();
 	}
 	
 	@Override
-	public void render(EntityUIPlanet entity, float entityYaw, float partialTicks, MatrixStack matrix,
-			IRenderTypeBuffer bufferIn, int packedLightIn) {
+	@ParametersAreNonnullByDefault
+	public void render(EntityUIPlanet entity, float entityYaw, float partialTicks, MatrixStack matrix, IRenderTypeBuffer bufferIn, int packedLightIn) {
 
 		DimensionProperties properties = entity.getProperties();
 		if(properties == null)
 			return;
 
 		float sizeScale = Math.max(properties.gravitationalMultiplier*properties.gravitationalMultiplier*entity.getScale(), .5f);
-        int j = packedLightIn;
-        int k = OverlayTexture.NO_OVERLAY;
 		
 		matrix.push();
 		matrix.translate(0, sizeScale*0.03f, 0);
@@ -79,7 +78,7 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 		
 		matrix.push();
 		matrix.rotate(new Quaternion(0, entity.world.getGameTime() & 0xFF, 0, true));
-		sphere.tessellateAll(matrix, j, k, translucentBuffer);
+		sphere.tessellateAll(matrix, packedLightIn, OverlayTexture.NO_OVERLAY, translucentBuffer);
 		
 		
 		//Render shadow
@@ -153,12 +152,12 @@ public class RenderPlanetUIEntity extends EntityRenderer<EntityUIPlanet> impleme
 			matrix.translate(0, -1.25, 0);
 			matrix.push();
 			matrix.rotate(new Quaternion(0f, (float) (speedRotate*System.currentTimeMillis() % 360), 0f, true));
-			RendererWarpCore.model.renderOnly(matrix, j, k, translucentBuffer, r,g,b,a, "Rotate1");
+			RendererWarpCore.model.renderOnly(matrix, packedLightIn, OverlayTexture.NO_OVERLAY, translucentBuffer, r,g,b,a, "Rotate1");
 			matrix.pop();
 
 			matrix.push();
 			matrix.rotate(new Quaternion(0f, (float) (180 + speedRotate*System.currentTimeMillis() % 360), 0f, true));
-			RendererWarpCore.model.renderOnly(matrix, j, k, translucentBuffer, r,g,b,a, "Rotate1");
+			RendererWarpCore.model.renderOnly(matrix, packedLightIn, OverlayTexture.NO_OVERLAY, translucentBuffer, r,g,b,a, "Rotate1");
 			matrix.pop();
 		}
 

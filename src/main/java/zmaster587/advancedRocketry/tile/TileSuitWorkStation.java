@@ -22,7 +22,7 @@ import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 
 	@Override
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 
 		modules.add(new ModuleSlotArray(15, 15, this, 0, 1));
 		
@@ -141,7 +141,9 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 		}
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public CompoundNBT write(CompoundNBT nbt) {
 		super.write(nbt);
 		
@@ -150,6 +152,7 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public void read(BlockState state, CompoundNBT nbt) {
 		super.read(state, nbt);
 		
@@ -162,7 +165,8 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 
 	@Override
-	public boolean isUsableByPlayer(PlayerEntity p_70300_1_) {
+	@ParametersAreNonnullByDefault
+	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
 
@@ -172,16 +176,19 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public void openInventory(PlayerEntity player) {
 		inventory.openInventory(player);
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void closeInventory(PlayerEntity player) {
 		inventory.closeInventory(player);	
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		return (slot == 0 && stack.getItem() instanceof IModularArmor) || 
 				(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() instanceof IModularArmor && slot != 0 && stack.getItem() instanceof IArmorComponent && 
@@ -202,12 +209,14 @@ public class TileSuitWorkStation extends TileEntity implements IModularInventory
 		
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}

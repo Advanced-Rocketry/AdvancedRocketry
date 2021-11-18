@@ -1,17 +1,12 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -19,6 +14,8 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.tile.multiblock.energy.TileMicrowaveReciever;
 import zmaster587.libVulpes.render.RenderHelper;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveReciever> {
 
@@ -30,8 +27,8 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
 	ResourceLocation panelSide = new ResourceLocation("advancedrocketry","textures/blocks/panelside.png");
 	
 	@Override
-	public void render(TileMicrowaveReciever tile, float partialTicks, MatrixStack matrix,
-			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+	@ParametersAreNonnullByDefault
+	public void render(TileMicrowaveReciever tile, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
 
 		if(!tile.canRender())
 			return;
@@ -113,13 +110,13 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
 					laserBeam.pos(- x , -y + 200,  - z).color(r,g,b,a).endVertex();
 					laserBeam.pos(- x, -y + 200, - z).color(r,g,b,a).endVertex();
 					laserBeam.pos(- (radius* Math.cos(i)) + 0.5F, 0,- (radius* Math.sin(i)) + 0.5F).color(r,g,b,a).endVertex();
-					laserBeam.pos(+ (radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).color(r,g,b,a).endVertex();
+					laserBeam.pos((radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).color(r,g,b,a).endVertex();
 				}
 
 				for(double i = 0; i < 2*Math.PI; i += Math.PI) {
 					laserBeam.pos(- x, -y + 200,- z).color(r,g,b,a).endVertex();
 					laserBeam.pos(- x, -y + 200, - z).color(r,g,b,a).endVertex();
-					laserBeam.pos(+ (radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).color(r,g,b,a).endVertex();
+					laserBeam.pos((radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).color(r,g,b,a).endVertex();
 					laserBeam.pos(- (radius* Math.cos(i)) + 0.5F, 0,(radius* Math.sin(i)) + 0.5F).color(r,g,b,a).endVertex();
 				}
 			}

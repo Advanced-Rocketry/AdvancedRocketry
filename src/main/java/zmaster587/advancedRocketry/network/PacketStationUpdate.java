@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.network;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -15,7 +14,6 @@ import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.network.BasePacket;
 
-import java.io.IOException;
 import java.util.logging.Logger;
 
 public class PacketStationUpdate extends BasePacket {
@@ -97,13 +95,11 @@ public class PacketStationUpdate extends BasePacket {
 
 		switch(type) {
 		case DEST_ORBIT_UPDATE:
-			destOrbitingBody = in.readResourceLocation();
-			break;
 		case ORBIT_UPDATE:
 			destOrbitingBody = in.readResourceLocation();
-			break;
+		break;
 		case FUEL_UPDATE:
-			fuel = in.readInt();
+		    fuel = in.readInt();
 			break;
 		case ROTANGLE_UPDATE:
 			rx = in.readDouble();

@@ -13,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
@@ -27,8 +26,6 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
@@ -48,7 +45,6 @@ import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.naming.directory.NoSuchAttributeException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -71,10 +67,12 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		super(props);
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand) {
 		ItemStack stack = playerIn.getHeldItem(hand);
-		if(!playerIn.world.isRemote && stack != null && playerIn.isSneaking())
+		if(!playerIn.world.isRemote && !stack.isEmpty() && playerIn.isSneaking())
 			NetworkHooks.openGui((ServerPlayerEntity)playerIn, (INamedContainerProvider)stack.getItem(), packetBuffer -> {packetBuffer.writeInt(getModularInvType().ordinal()); packetBuffer.writeBoolean(hand == Hand.MAIN_HAND);});
 
 		return super.onItemRightClick(worldIn, playerIn, hand);
@@ -82,7 +80,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		final int offset_all = 96;
 
 		ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);
@@ -91,7 +89,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			modules.add(new ModuleStellarBackground(0, 0, zmaster587.libVulpes.inventory.TextureResources.starryBG));
 
 
-			List<ModuleBase> list2 = new LinkedList<ModuleBase>();
+			List<ModuleBase> list2 = new LinkedList<>();
 			ModuleButton btnAdd = new ModuleButton(172-offset_all, 18*2+28, LibVulpes.proxy.getLocalizedString("msg.label.add"), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
 			btnAdd.setAdditionalData(BUTTON_ID_ADD);
 			ModuleButton btnClear = new ModuleButton(172-offset_all, 18*4+28, LibVulpes.proxy.getLocalizedString("msg.label.clear"), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
@@ -140,7 +138,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	@OnlyIn(value=Dist.CLIENT)
 	public void onInventoryButtonPressed(ModuleButton buttonId) {
 		ItemStack stack = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
-		if(stack != null && stack.getItem() == this) {
+		if(!stack.isEmpty() && stack.getItem() == this) {
 			Integer num = (Integer)buttonId.getAdditionalData();
 			
 			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getInstance().player, num.byteValue()));
@@ -187,15 +185,11 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 	@Override
 	public void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt, ItemStack stack) {
-		if(!player.world.isRemote)
-		{
+		if(!player.world.isRemote) {
 			ResourceLocation dimId = DimensionManager.getEffectiveDimId(player.world, new BlockPos(player.getPositionVec())).getId();
-			if(id >= BUTTON_ID_OFFSET)
-			{
+			if(id >= BUTTON_ID_OFFSET) {
 				setSelectionId(stack, dimId, id-BUTTON_ID_OFFSET);
-			}
-			else if(id == BUTTON_ID_DELETE)
-			{
+			} else if(id == BUTTON_ID_DELETE) {
 				int selection = getSelectionId(stack, dimId);
 
 				//Can't delete "Last"
@@ -205,18 +199,14 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 					if(selection < locs.size())
 						locs.remove(selection);
 					setLandingLocations(stack, dimId, locs);
-				}				
-			}
-			else if(id == BUTTON_ID_CLEAR)
-			{
+				}
+			} else if(id == BUTTON_ID_CLEAR) {
 				//Can't delete "Last"
 				List<LandingLocation> locs = getLandingLocations(stack, dimId);
 				List<LandingLocation> locs2 = new LinkedList<>();
 				locs2.add(locs.get(0));
 				setLandingLocations(stack, dimId, locs2);
-			}
-			else if(id == BUTTON_ID_ADD)
-			{
+			} else if(id == BUTTON_ID_ADD) {
 				// this will be false if on a space station, do not set on space station
 				if(ZUtils.getDimensionIdentifier(player.getEntityWorld()).equals(dimId)) {
 					List<LandingLocation> locs = getLandingLocations(stack, dimId);
@@ -237,8 +227,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		return player.getHeldItem(player.getActiveHand()).getItem() == this;
 	}
 
-	public int getSelectionId(ItemStack stack, ResourceLocation dimid)
-	{
+	public int getSelectionId(ItemStack stack, ResourceLocation dimid) {
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
 			if(nbt.contains("dimid" + dimid)) {
@@ -251,8 +240,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		return 0;
 	}
 
-	public void setSelectionId(ItemStack stack, ResourceLocation dimid, int slotId)
-	{
+	public void setSelectionId(ItemStack stack, ResourceLocation dimid, int slotId) {
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
 			if(nbt.contains("dimid" + dimid)) {
@@ -262,8 +250,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		}
 	}
 
-	public List<LandingLocation> getLandingLocations(ItemStack stack, ResourceLocation dimid)
-	{
+	public List<LandingLocation> getLandingLocations(ItemStack stack, ResourceLocation dimid) {
 		List<LandingLocation> retList = new LinkedList<>();
 
 		if(stack.hasTag()) {
@@ -291,19 +278,14 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 				for(INBT tag : destList)
 				{
-					try {
-						retList.add(LandingLocation.loadFromNBT((CompoundNBT)tag));
-					} catch (NoSuchAttributeException e) {
-						AdvancedRocketry.logger.warn("Attempting to load a Landing location for planet " + dimid + " but chip appears to have malformed data");
-					}
+					retList.add(LandingLocation.loadFromNBT((CompoundNBT)tag));
 				}
 			}
 		}
 		return retList;
 	}
 
-	public void setLandingLocations(ItemStack stack, ResourceLocation dimid, List<LandingLocation> locations)
-	{
+	public void setLandingLocations(ItemStack stack, ResourceLocation dimid, List<LandingLocation> locations) {
 		if(stack.hasTag()) {
 			CompoundNBT stackNBT = stack.getTag();
 			CompoundNBT nbt;
@@ -404,14 +386,13 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void addInformation(ItemStack stack, World world, List list,
-			ITooltipFlag bool) {
+	public void addInformation(ItemStack stack, World world, List<ITextComponent> list, ITooltipFlag bool) {
 		if(world == null || getUUID(stack) == DimensionManager.overworldProperties.getId())
 			list.add(new StringTextComponent(TextFormatting.GRAY + LibVulpes.proxy.getLocalizedString("msg.unprogrammed")));
 		else {
 			list.add(new StringTextComponent(TextFormatting.GREEN + LibVulpes.proxy.getLocalizedString("msg.stationchip.sation") + getUUID(stack)));
 			super.addInformation(stack, world, list, bool);
-			if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
+			if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
 				Entity p = Minecraft.getInstance().player;
 				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(p.getPositionVec()));
 
@@ -448,25 +429,21 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		}
 	}
 
-	public static class LandingLocation
-	{
+	public static class LandingLocation {
 		public String name;
 		public Vector3F<Float> location;
 
-		public LandingLocation(String name, Vector3F<Float> location)
-		{
+		public LandingLocation(String name, Vector3F<Float> location) {
 			this.name = name;
 			this.location = location;
 		}
 
-		public LandingLocation(String name, float x, float y, float z)
-		{
+		public LandingLocation(String name, float x, float y, float z) {
 			this.name = name;
 			this.location = new Vector3F<>(x, y, z);
 		}
 
-		public LandingLocation()
-		{
+		public LandingLocation() {
 			this.name = "";
 			this.location = new Vector3F<>(0f, 0f, 0f);
 		}
@@ -476,8 +453,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			return String.format("%s: %.0f, %.0f", name, location.x, location.z);
 		}
 
-		static LandingLocation loadFromNBT(CompoundNBT nbt) throws NoSuchAttributeException
-		{
+		static LandingLocation loadFromNBT(CompoundNBT nbt) {
 			String name = nbt.getString("name");
 			Vector3F<Float> vec = new Vector3F<>(nbt.getFloat("x"), nbt.getFloat("y"), nbt.getFloat("z"));
 
@@ -493,12 +469,14 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		}
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_HELD_ITEM, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}

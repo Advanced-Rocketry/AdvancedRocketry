@@ -1,34 +1,20 @@
 package zmaster587.advancedRocketry.world.decoration;
 
-import java.util.BitSet;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import com.mojang.serialization.Codec;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.ISeedReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.Heightmap.Type;
-import net.minecraft.world.gen.carver.WorldCarver;
-import net.minecraft.world.gen.feature.ProbabilityConfig;
-import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.ScatteredStructurePiece;
 import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.template.TemplateManager;

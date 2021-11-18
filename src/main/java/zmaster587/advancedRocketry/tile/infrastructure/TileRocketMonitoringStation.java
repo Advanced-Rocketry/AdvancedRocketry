@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.infrastructure;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,11 +13,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
@@ -46,6 +43,7 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -119,9 +117,8 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 
 
 	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity,
-							   PlayerEntity player, World world) {
-
+	@ParametersAreNonnullByDefault
+	public boolean onLinkStart(ItemStack item, TileEntity entity, PlayerEntity player, World world) {
 		ItemLinker.setMasterCoords(item, getPos());
 
 		if(player.world.isRemote)
@@ -130,6 +127,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean onLinkComplete(ItemStack item, TileEntity entity,
 			PlayerEntity player, World world) {
 		if(player.world.isRemote)
@@ -153,12 +151,14 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		return true;
 	}
 	
+	@Nonnull
 	@Override
 	public CompoundNBT getUpdateTag() {
 		return write(new CompoundNBT());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void read(BlockState blkstate, CompoundNBT nbt) {
 		super.read(blkstate, nbt);
 		
@@ -177,7 +177,9 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		}
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public CompoundNBT write(CompoundNBT nbt) {
 		super.write(nbt);
 		nbt.putByte("redstoneState", (byte) state.ordinal());
@@ -404,25 +406,29 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		return false;
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public GuiHandler.guiId getModularInvType() {
-					return GuiHandler.guiId.MODULARNOINV;
-				}
-				public int getComparatorOverride() {
-					if (linkedRocket instanceof EntityRocket) {
-						return (int)(15 * ((EntityRocket) linkedRocket).getRelativeHeightFraction());
-					}
-					return 0;
-				}
+		return GuiHandler.guiId.MODULARNOINV;
+	}
+
+	public int getComparatorOverride() {
+		if (linkedRocket instanceof EntityRocket) {
+			return (int) (15 * ((EntityRocket) linkedRocket).getRelativeHeightFraction());
+		}
+		return 0;
+	}
 
 }

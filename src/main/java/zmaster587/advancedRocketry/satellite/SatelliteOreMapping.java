@@ -19,7 +19,6 @@ import net.minecraft.world.chunk.AbstractChunkProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
@@ -27,9 +26,9 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.inventory.ContainerOreMappingSatellite;
 import zmaster587.advancedRocketry.inventory.ContainerRegistry;
 import zmaster587.advancedRocketry.item.ItemOreScanner;
-import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -37,7 +36,7 @@ import java.util.List;
 public class SatelliteOreMapping extends SatelliteBase implements INamedContainerProvider {
 
 	int blockCenterX, blockCenterZ;
-	public static ArrayList<Item> oreList = new ArrayList<Item>();
+	public static ArrayList<Item> oreList = new ArrayList<>();
 
 	private int selectedSlot = -1;
 
@@ -72,13 +71,12 @@ public class SatelliteOreMapping extends SatelliteBase implements INamedContaine
 		ItemOreScanner scanner = (ItemOreScanner)AdvancedRocketryItems.itemOreScanner;
 
 		scanner.setSatelliteID(stack, properties.getId());
-		;
 		return stack;
 	}
 
 	@Override
 	public boolean performAction(PlayerEntity player, World world, BlockPos pos) {
-		NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)this, (packet) -> { packet.writeBoolean(false); });
+		NetworkHooks.openGui((ServerPlayerEntity)player, this, (packet) -> packet.writeBoolean(false));
 		return true;
 	}
 
@@ -189,13 +187,12 @@ public class SatelliteOreMapping extends SatelliteBase implements INamedContaine
 								if(world.isAirBlock(pos))
 									continue;
 								boolean exists = false;
-								out:
-									for(Item item : oreList) {
-										if(item == Item.getItemFromBlock(world.getBlockState(pos).getBlock())) {
-											exists = true;
-											break out;
-										}
+								for(Item item : oreList) {
+									if (item == Item.getItemFromBlock(world.getBlockState(pos).getBlock())) {
+										exists = true;
+										break;
 									}
+								}
 
 								if (exists)
 									oreCount++;
@@ -237,10 +234,12 @@ public class SatelliteOreMapping extends SatelliteBase implements INamedContaine
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory playerinv, PlayerEntity player) {
 		return new ContainerOreMappingSatellite(ContainerRegistry.CONTAINER_SATELLITE, id, this, playerinv, player);
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new StringTextComponent(getName());

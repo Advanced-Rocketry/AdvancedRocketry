@@ -36,31 +36,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class CustomPlanetBiomeProvider extends BiomeProvider {
 
 	private static final CustomPlanetBiomeProvider.Noise field_242596_g = new CustomPlanetBiomeProvider.Noise(-7, ImmutableList.of(1.0D, 1.0D));
-	public static final MapCodec<CustomPlanetBiomeProvider> field_235262_e_ = RecordCodecBuilder.mapCodec((p_242602_0_) -> {
-		return p_242602_0_.group(Codec.LONG.fieldOf("seed").forGetter((p_235286_0_) -> {
-			return p_235286_0_.field_235270_m_;
-		}), RecordCodecBuilder.<Pair<Biome.Attributes, Supplier<Biome>>>create((p_235282_0_) -> {
-			return p_235282_0_.group(Biome.Attributes.CODEC.fieldOf("parameters").forGetter(Pair::getFirst), Biome.BIOME_CODEC.fieldOf("biome").forGetter(Pair::getSecond)).apply(p_235282_0_, Pair::of);
-		}).listOf().fieldOf("biomes").forGetter((p_235284_0_) -> {
-			return p_235284_0_.field_235268_k_;
-		}), CustomPlanetBiomeProvider.Noise.field_242609_a.fieldOf("temperature_noise").forGetter((p_242608_0_) -> {
-			return p_242608_0_.field_242597_h;
-		}), CustomPlanetBiomeProvider.Noise.field_242609_a.fieldOf("humidity_noise").forGetter((p_242607_0_) -> {
-			return p_242607_0_.field_242598_i;
-		}), CustomPlanetBiomeProvider.Noise.field_242609_a.fieldOf("altitude_noise").forGetter((p_242606_0_) -> {
-			return p_242606_0_.field_242599_j;
-		}), CustomPlanetBiomeProvider.Noise.field_242609_a.fieldOf("weirdness_noise").forGetter((p_242604_0_) -> {
-			return p_242604_0_.field_242600_k;
-		})).apply(p_242602_0_, CustomPlanetBiomeProvider::new);
-	});
+	public static final MapCodec<CustomPlanetBiomeProvider> field_235262_e_ = RecordCodecBuilder.mapCodec((p_242602_0_) -> p_242602_0_.group(Codec.LONG.fieldOf("seed").forGetter((p_235286_0_) -> p_235286_0_.field_235270_m_), RecordCodecBuilder.<Pair<Biome.Attributes, Supplier<Biome>>>create((p_235282_0_) -> p_235282_0_.group(Biome.Attributes.CODEC.fieldOf("parameters").forGetter(Pair::getFirst), Biome.BIOME_CODEC.fieldOf("biome").forGetter(Pair::getSecond)).apply(p_235282_0_, Pair::of)).listOf().fieldOf("biomes").forGetter((p_235284_0_) -> p_235284_0_.field_235268_k_), Noise.field_242609_a.fieldOf("temperature_noise").forGetter((p_242608_0_) -> p_242608_0_.field_242597_h), Noise.field_242609_a.fieldOf("humidity_noise").forGetter((p_242607_0_) -> p_242607_0_.field_242598_i), Noise.field_242609_a.fieldOf("altitude_noise").forGetter((p_242606_0_) -> p_242606_0_.field_242599_j), Noise.field_242609_a.fieldOf("weirdness_noise").forGetter((p_242604_0_) -> p_242604_0_.field_242600_k)).apply(p_242602_0_, CustomPlanetBiomeProvider::new));
 
-	public static final Codec<CustomPlanetBiomeProvider> customPlanetCodec = Codec.mapEither(CustomPlanetBiomeProvider.DefaultBuilder.field_242624_a, field_235262_e_).xmap((p_235277_0_) -> {
-		return p_235277_0_.map(CustomPlanetBiomeProvider.DefaultBuilder::func_242635_d, Function.identity());
-	}, (p_235275_0_) -> {
-		return p_235275_0_.func_242605_d().map(Either::<CustomPlanetBiomeProvider.DefaultBuilder, CustomPlanetBiomeProvider>left).orElseGet(() -> {
-			return Either.right(p_235275_0_);
-		});
-	}).codec();
+	public static final Codec<CustomPlanetBiomeProvider> customPlanetCodec = Codec.mapEither(CustomPlanetBiomeProvider.DefaultBuilder.field_242624_a, field_235262_e_).xmap((p_235277_0_) -> p_235277_0_.map(DefaultBuilder::func_242635_d, Function.identity()), (p_235275_0_) -> p_235275_0_.func_242605_d().map(Either::<DefaultBuilder, CustomPlanetBiomeProvider>left).orElseGet(() -> Either.right(p_235275_0_))).codec();
 	private final CustomPlanetBiomeProvider.Noise field_242597_h;
 	private final CustomPlanetBiomeProvider.Noise field_242598_i;
 	private final CustomPlanetBiomeProvider.Noise field_242599_j;
@@ -113,17 +91,13 @@ public class CustomPlanetBiomeProvider extends BiomeProvider {
 	}
 
 	private Optional<CustomPlanetBiomeProvider.DefaultBuilder> func_242605_d() {
-		return this.field_235271_n_.map((p_242601_1_) -> {
-			return new CustomPlanetBiomeProvider.DefaultBuilder(p_242601_1_.getSecond(), p_242601_1_.getFirst(), this.field_235270_m_);
-		});
+		return this.field_235271_n_.map((p_242601_1_) -> new DefaultBuilder(p_242601_1_.getSecond(), p_242601_1_.getFirst(), this.field_235270_m_));
 	}
 
 	public Biome getNoiseBiome(int x, int y, int z) {
 		int i = this.field_235269_l_ ? y : 0;
-		Biome.Attributes biome$attributes = new Biome.Attributes((float)this.field_235264_g_.func_237211_a_((double)x, (double)i, (double)z), (float)this.field_235265_h_.func_237211_a_((double)x, (double)i, (double)z), (float)this.field_235266_i_.func_237211_a_((double)x, (double)i, (double)z), (float)this.field_235267_j_.func_237211_a_((double)x, (double)i, (double)z), 0.0F);
-		return this.field_235268_k_.stream().min(Comparator.comparing((p_235272_1_) -> {
-			return p_235272_1_.getFirst().getAttributeDifference(biome$attributes);
-		})).map(Pair::getSecond).map(Supplier::get).orElse(BiomeRegistry.THE_VOID);
+		Biome.Attributes biome$attributes = new Biome.Attributes((float)this.field_235264_g_.func_237211_a_(x, i, z), (float)this.field_235265_h_.func_237211_a_(x, i, z), (float)this.field_235266_i_.func_237211_a_(x, i, z), (float)this.field_235267_j_.func_237211_a_(x, i, z), 0.0F);
+		return this.field_235268_k_.stream().min(Comparator.comparing((p_235272_1_) -> p_235272_1_.getFirst().getAttributeDifference(biome$attributes))).map(Pair::getSecond).map(Supplier::get).orElse(BiomeRegistry.THE_VOID);
 	}
 
 	public boolean func_235280_b_(long p_235280_1_) {
@@ -131,15 +105,7 @@ public class CustomPlanetBiomeProvider extends BiomeProvider {
 	}
 
 	static final class DefaultBuilder {
-		public static final MapCodec<CustomPlanetBiomeProvider.DefaultBuilder> field_242624_a = RecordCodecBuilder.mapCodec((p_242630_0_) -> {
-			return p_242630_0_.group(ResourceLocation.CODEC.flatXmap((p_242631_0_) -> {
-				return Optional.ofNullable(CustomPlanetBiomeProvider.Preset.field_235289_c_.get(p_242631_0_)).map(DataResult::success).orElseGet(() -> {
-					return DataResult.error("Unknown preset: " + p_242631_0_);
-				});
-			}, (p_242629_0_) -> {
-				return DataResult.success(p_242629_0_.field_235290_d_);
-			}).fieldOf("preset").stable().forGetter(CustomPlanetBiomeProvider.DefaultBuilder::func_242628_a), RegistryLookupCodec.getLookUpCodec(Registry.BIOME_KEY).forGetter(CustomPlanetBiomeProvider.DefaultBuilder::func_242632_b), Codec.LONG.fieldOf("seed").stable().forGetter(CustomPlanetBiomeProvider.DefaultBuilder::func_242634_c)).apply(p_242630_0_, p_242630_0_.stable(CustomPlanetBiomeProvider.DefaultBuilder::new));
-		});
+		public static final MapCodec<CustomPlanetBiomeProvider.DefaultBuilder> field_242624_a = RecordCodecBuilder.mapCodec((p_242630_0_) -> p_242630_0_.group(ResourceLocation.CODEC.flatXmap((p_242631_0_) -> Optional.ofNullable(Preset.field_235289_c_.get(p_242631_0_)).map(DataResult::success).orElseGet(() -> DataResult.error("Unknown preset: " + p_242631_0_)), (p_242629_0_) -> DataResult.success(p_242629_0_.field_235290_d_)).fieldOf("preset").stable().forGetter(DefaultBuilder::func_242628_a), RegistryLookupCodec.getLookUpCodec(Registry.BIOME_KEY).forGetter(DefaultBuilder::func_242632_b), Codec.LONG.fieldOf("seed").stable().forGetter(DefaultBuilder::func_242634_c)).apply(p_242630_0_, p_242630_0_.stable(DefaultBuilder::new)));
 		private final CustomPlanetBiomeProvider.Preset field_242625_b;
 		private final Registry<Biome> field_242626_c;
 		private final long field_242627_d;
@@ -170,9 +136,7 @@ public class CustomPlanetBiomeProvider extends BiomeProvider {
 	static class Noise {
 		private final int field_242610_b;
 		private final DoubleList field_242611_c;
-		public static final Codec<CustomPlanetBiomeProvider.Noise> field_242609_a = RecordCodecBuilder.create((p_242613_0_) -> {
-			return p_242613_0_.group(Codec.INT.fieldOf("firstOctave").forGetter(CustomPlanetBiomeProvider.Noise::func_242612_a), Codec.DOUBLE.listOf().fieldOf("amplitudes").forGetter(CustomPlanetBiomeProvider.Noise::func_242614_b)).apply(p_242613_0_, CustomPlanetBiomeProvider.Noise::new);
-		});
+		public static final Codec<CustomPlanetBiomeProvider.Noise> field_242609_a = RecordCodecBuilder.create((p_242613_0_) -> p_242613_0_.group(Codec.INT.fieldOf("firstOctave").forGetter(Noise::func_242612_a), Codec.DOUBLE.listOf().fieldOf("amplitudes").forGetter(Noise::func_242614_b)).apply(p_242613_0_, Noise::new));
 
 		public Noise(int p_i241954_1_, List<Double> p_i241954_2_) {
 			this.field_242610_b = p_i241954_1_;
@@ -194,19 +158,7 @@ public class CustomPlanetBiomeProvider extends BiomeProvider {
 
 	public static class Preset {
 		private static final Map<ResourceLocation, CustomPlanetBiomeProvider.Preset> field_235289_c_ = Maps.newHashMap();
-		public static final CustomPlanetBiomeProvider.Preset field_235288_b_ = new CustomPlanetBiomeProvider.Preset(new ResourceLocation("nether"), (p_242617_0_, p_242617_1_, p_242617_2_) -> {
-			return new CustomPlanetBiomeProvider(p_242617_2_, ImmutableList.of(Pair.of(new Biome.Attributes(0.0F, 0.0F, 0.0F, 0.0F, 0.0F), () -> {
-				return p_242617_1_.getOrThrow(Biomes.NETHER_WASTES);
-			}), Pair.of(new Biome.Attributes(0.0F, -0.5F, 0.0F, 0.0F, 0.0F), () -> {
-				return p_242617_1_.getOrThrow(Biomes.SOUL_SAND_VALLEY);
-			}), Pair.of(new Biome.Attributes(0.4F, 0.0F, 0.0F, 0.0F, 0.0F), () -> {
-				return p_242617_1_.getOrThrow(Biomes.CRIMSON_FOREST);
-			}), Pair.of(new Biome.Attributes(0.0F, 0.5F, 0.0F, 0.0F, 0.375F), () -> {
-				return p_242617_1_.getOrThrow(Biomes.WARPED_FOREST);
-			}), Pair.of(new Biome.Attributes(-0.5F, 0.0F, 0.0F, 0.0F, 0.175F), () -> {
-				return p_242617_1_.getOrThrow(Biomes.BASALT_DELTAS);
-			})), Optional.of(Pair.of(p_242617_1_, p_242617_0_)));
-		});
+		public static final CustomPlanetBiomeProvider.Preset field_235288_b_ = new CustomPlanetBiomeProvider.Preset(new ResourceLocation("nether"), (p_242617_0_, p_242617_1_, p_242617_2_) -> new CustomPlanetBiomeProvider(p_242617_2_, ImmutableList.of(Pair.of(new Biome.Attributes(0.0F, 0.0F, 0.0F, 0.0F, 0.0F), () -> p_242617_1_.getOrThrow(Biomes.NETHER_WASTES)), Pair.of(new Biome.Attributes(0.0F, -0.5F, 0.0F, 0.0F, 0.0F), () -> p_242617_1_.getOrThrow(Biomes.SOUL_SAND_VALLEY)), Pair.of(new Biome.Attributes(0.4F, 0.0F, 0.0F, 0.0F, 0.0F), () -> p_242617_1_.getOrThrow(Biomes.CRIMSON_FOREST)), Pair.of(new Biome.Attributes(0.0F, 0.5F, 0.0F, 0.0F, 0.375F), () -> p_242617_1_.getOrThrow(Biomes.WARPED_FOREST)), Pair.of(new Biome.Attributes(-0.5F, 0.0F, 0.0F, 0.0F, 0.175F), () -> p_242617_1_.getOrThrow(Biomes.BASALT_DELTAS))), Optional.of(Pair.of(p_242617_1_, p_242617_0_))));
 		private final ResourceLocation field_235290_d_;
 		private final Function3<CustomPlanetBiomeProvider.Preset, Registry<Biome>, Long, CustomPlanetBiomeProvider> field_235291_e_;
 

@@ -2,7 +2,6 @@ package zmaster587.advancedRocketry.world.util;
 
 import java.util.List;
 import java.util.OptionalLong;
-import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -11,7 +10,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.profiler.IProfiler;
-import net.minecraft.profiler.Profiler;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITagCollectionSupplier;
@@ -41,12 +39,13 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.advancedRocketry.world.DummyChunkProvider;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class WorldDummy extends World  {
 
 	StorageChunk storage;
-	public int displayListIndex = -1;
 	private CapabilityDispatcher capabilities;
 
 	DummyChunkProvider cnkprovider;
@@ -60,7 +59,7 @@ public class WorldDummy extends World  {
 	}
 
 	public WorldDummy(IProfiler p_i45368_5_, StorageChunk storage) {
-		super(null, RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation("advancedrocketry:dummyworld")), new DummyDimensionType(), () -> AdvancedRocketry.proxy.getProfiler(), false, false, 0);
+		super(null, RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation("advancedrocketry:dummyworld")), new DummyDimensionType(), AdvancedRocketry.proxy::getProfiler, false, false, 0);
 		this.storage = storage;
 		cnkprovider = new DummyChunkProvider(this);
 	}
@@ -70,29 +69,37 @@ public class WorldDummy extends World  {
 		this.chunk = chunk;
 	}
 
+	@Nonnull
 	@Override
-	@Nullable
+	@ParametersAreNonnullByDefault
 	public <T> LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
 		return capabilities == null ? LazyOptional.empty() : capabilities.getCapability(capability, facing);
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public BlockState getBlockState(BlockPos pos) {
 		return storage.getBlockState(pos);
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public TileEntity getTileEntity(BlockPos pos) {
 		return storage.getTileEntity(pos);
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public IChunk getChunk(int chunkX, int chunkZ, ChunkStatus requiredStatus) {
 		return chunk;
 	}
 
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public Biome getBiome(BlockPos pos) {
 		return AdvancedRocketryBiomes.spaceBiome;
 	}
@@ -113,6 +120,7 @@ public class WorldDummy extends World  {
 		return null;
 	}
 
+	@Nonnull
 	@Override
 	public AbstractChunkProvider getChunkProvider() {
 		return cnkprovider;
@@ -138,35 +146,33 @@ public class WorldDummy extends World  {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public float func_230487_a_(Direction p_230487_1_, boolean p_230487_2_) {
 		return 0;
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void notifyBlockUpdate(BlockPos pos, BlockState oldState, BlockState newState, int flags) {
 	}
 
 	@Override
-	public void playSound(PlayerEntity player, double x, double y, double z, SoundEvent soundIn, SoundCategory category,
-			float volume, float pitch) {
-
-	}
+	@ParametersAreNonnullByDefault
+	public void playSound(@Nullable PlayerEntity player, double x, double y, double z, SoundEvent soundIn, SoundCategory category, float volume, float pitch) {}
 
 	@Override
-	public void playMovingSound(PlayerEntity playerIn, Entity entityIn, SoundEvent eventIn, SoundCategory categoryIn,
-			float volume, float pitch) {
-
-	}
+	@ParametersAreNonnullByDefault
+	public void playMovingSound(@Nullable PlayerEntity playerIn, Entity entityIn, SoundEvent eventIn, SoundCategory categoryIn, float volume, float pitch) {}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public MapData getMapData(String mapName) {
 		return null;
 	}
 
 	@Override
-	public void registerMapData(MapData mapDataIn) {
-
-	}
+	@ParametersAreNonnullByDefault
+	public void registerMapData(MapData mapDataIn) {}
 
 	@Override
 	public int getNextMapId() {
@@ -174,10 +180,10 @@ public class WorldDummy extends World  {
 	}
 
 	@Override
-	public void sendBlockBreakProgress(int breakerId, BlockPos pos, int progress) {
+	@ParametersAreNonnullByDefault
+	public void sendBlockBreakProgress(int breakerId, BlockPos pos, int progress) {}
 
-	}
-
+	@Nonnull
 	@Override
 	public Scoreboard getScoreboard() {
 		return new Scoreboard();

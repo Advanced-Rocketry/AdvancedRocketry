@@ -29,7 +29,7 @@ import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.IconResource;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +38,9 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 		super(AdvancedRocketryTileEntityType.TILE_OXYGEN_CHARGER, 0, 2, 16000);
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public int[] getSlotsForFace(Direction side) {
 		return new int[] {};
 	}
@@ -69,8 +71,8 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 	@Override
 	public boolean canPerformFunction() {
 		if(!world.isRemote) {
-			for( Object player : this.world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(pos, pos.add(1,2,1)))) {
-				ItemStack stack = ((PlayerEntity)player).getItemStackFromSlot(EquipmentSlotType.CHEST);
+			for( PlayerEntity player : this.world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(pos, pos.add(1,2,1)))) {
+				ItemStack stack = player.getItemStackFromSlot(EquipmentSlotType.CHEST);
 
 				if(!stack.isEmpty()) {
 					IFillableArmor fillable = null;
@@ -98,11 +100,11 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 
 				//Check for H2 fill (possibly merge with O2 fill
 				//Fix conflict with O2 fill
-				if(this.tank.getFluid() != null && !FluidUtils.areFluidsSameType(this.tank.getFluid().getFluid(), AdvancedRocketryFluids.oxygenStill.get()) && stack != null && stack.getItem() instanceof IModularArmor) {
+				if(!this.tank.getFluid().isEmpty() && !FluidUtils.areFluidsSameType(this.tank.getFluid().getFluid(), AdvancedRocketryFluids.oxygenStill.get()) && !stack.isEmpty() && stack.getItem() instanceof IModularArmor) {
 					IInventory inv = ((IModularArmor)stack.getItem()).loadModuleInventory(stack);
 
 					FluidStack fluidStack = this.drain(100, FluidAction.SIMULATE);
-					if(fluidStack != null) {
+					if(!fluidStack.isEmpty()) {
 						for(int i = 0; i < inv.getSizeInventory(); i++) {
 
 							if(!((IModularArmor)stack.getItem()).canBeExternallyModified(stack, i))
@@ -139,7 +141,7 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		ArrayList<ModuleBase> modules = new ArrayList<ModuleBase>();
+		ArrayList<ModuleBase> modules = new ArrayList<>();
 
 		modules.add(new ModuleSlotArray(50, 21, this, 0, 1));
 		modules.add(new ModuleSlotArray(50, 57, this, 1, 2));
@@ -178,12 +180,14 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 		return inventory.isEmpty();
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}

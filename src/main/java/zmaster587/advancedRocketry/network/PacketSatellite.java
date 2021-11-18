@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.network;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -12,8 +11,6 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.libVulpes.network.BasePacket;
 
-import java.io.IOException;
-
 public class PacketSatellite extends BasePacket {
 
 	SatelliteBase machine;
@@ -24,9 +21,9 @@ public class PacketSatellite extends BasePacket {
 
 	public PacketSatellite() {
 		nbt = new CompoundNBT();
-	};
+	}
 
-	public PacketSatellite(SatelliteBase machine) {
+    public PacketSatellite(SatelliteBase machine) {
 		this();
 		this.machine = machine;
 	}

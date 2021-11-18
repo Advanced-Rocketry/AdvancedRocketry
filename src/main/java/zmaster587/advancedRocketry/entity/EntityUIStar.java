@@ -19,7 +19,6 @@ public class EntityUIStar extends EntityUIPlanet {
 	
 	private StellarBody star;
 	private int subStar;
-	public final static int starIDoffset = 10000;
 
 	protected static final DataParameter<Integer> subStarData =  EntityDataManager.createKey(EntityUIStar.class, DataSerializers.VARINT);
 	
@@ -70,7 +69,7 @@ public class EntityUIStar extends EntityUIPlanet {
 
 		ResourceLocation planetId = new ResourceLocation(this.dataManager.get(planetID));
 
-		if(star != null && star.getId() != planetId) {
+		if(star != null && !star.getId().equals(planetId)) {
 			if(Constants.INVALID_PLANET.equals(planetId) )
 				star = null;
 			else

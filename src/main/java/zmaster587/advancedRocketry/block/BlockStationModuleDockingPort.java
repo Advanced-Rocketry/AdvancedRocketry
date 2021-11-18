@@ -1,7 +1,6 @@
 package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -9,7 +8,6 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -18,14 +16,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.tile.station.TileDockingPort;
 import zmaster587.advancedRocketry.tile.station.TileLandingPad;
-import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
-import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.ParametersAreNullableByDefault;
 
 public class BlockStationModuleDockingPort extends BlockFullyRotatable {
 
@@ -42,9 +37,10 @@ public class BlockStationModuleDockingPort extends BlockFullyRotatable {
 		return new TileDockingPort();
 	}
 	
+	@Nonnull
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
-			Hand handIn, BlockRayTraceResult hit) {
+	@ParametersAreNonnullByDefault
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if(!world.isRemote)
 		{
 			TileEntity te = world.getTileEntity(pos);
@@ -65,6 +61,7 @@ public class BlockStationModuleDockingPort extends BlockFullyRotatable {
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileLandingPad) {

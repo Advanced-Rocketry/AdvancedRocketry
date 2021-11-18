@@ -1,39 +1,22 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
-import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.recipe.RecipeCentrifuge;
 import zmaster587.advancedRocketry.util.AudioRegistry;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
-import zmaster587.libVulpes.recipe.RecipesMachine;
-import zmaster587.libVulpes.recipe.RecipesMachine.ChanceFluidStack;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 public class TileCentrifuge extends TileMultiblockMachine {

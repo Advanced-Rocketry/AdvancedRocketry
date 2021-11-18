@@ -1,14 +1,9 @@
 package zmaster587.advancedRocketry.client.render.armor;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -16,7 +11,6 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
-import zmaster587.libVulpes.render.RenderHelper;
 
 public class RenderJetPack extends BipedModel {
 
@@ -45,9 +39,9 @@ public class RenderJetPack extends BipedModel {
 		public JetpackModelRenderer(Model model) {
 			super(model);
 
-			if(this.model == null)
+			if(JetpackModelRenderer.model == null)
 				try {
-					this.model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/jetpack.obj"));
+					JetpackModelRenderer.model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/jetpack.obj"));
 				} catch (ModelFormatException e) {
 					e.printStackTrace();
 				}

@@ -37,7 +37,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 */
 	public DimensionProperties getDimension(ItemStack stack) {
 		if(stack.hasTag()) {
-			return (DimensionProperties) DimensionManager.getInstance().getDimensionProperties( new ResourceLocation( stack.getTag().getString(dimensionIdIdentifier)));
+			return DimensionManager.getInstance().getDimensionProperties( new ResourceLocation( stack.getTag().getString(dimensionIdIdentifier)));
 		}
 		return null;
 	}
@@ -78,7 +78,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 			return;
 		}
 
-		DimensionProperties properties = (DimensionProperties) DimensionManager.getInstance().getDimensionProperties(dimensionId);
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimensionId);
 		if(properties == null) {
 			erase(stack);
 			return;
@@ -111,7 +111,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 */
 	public DimensionProperties getDimensionProperties(ItemStack stack) {
 		if(stack.hasTag())
-			return (DimensionProperties) DimensionManager.getInstance().getDimensionProperties(new ResourceLocation(stack.getTag().getString(dimensionIdIdentifier)));
+			return DimensionManager.getInstance().getDimensionProperties(new ResourceLocation(stack.getTag().getString(dimensionIdIdentifier)));
 		return null;
 	}
 
@@ -133,7 +133,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	}
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List list, ITooltipFlag bool){
+	public void addInformation(@Nonnull ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag bool){
 
 		if(!stack.hasTag()) {
 			list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.unprogrammed")));
@@ -143,7 +143,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 		}
 		else {
 			if(stack.getDamage()  == 0) {
-				DimensionProperties props = (DimensionProperties) DimensionManager.getInstance().getDimensionProperties(getDimensionId(stack));
+				DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(getDimensionId(stack));
 
 				String unknown = TextFormatting.YELLOW + "???";
 				String dimName = stack.getTag().getString(dimensionNameIdentifier);
@@ -166,7 +166,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 
 			}
 			else { //Space station
-				list.add(LibVulpes.proxy.getLocalizedString("msg.itemplanetidchip.stationid") + TextFormatting.DARK_GREEN + stack.getTag().getString(dimensionNameIdentifier));
+				list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemplanetidchip.stationid") + TextFormatting.DARK_GREEN + stack.getTag().getString(dimensionNameIdentifier)));
 			}
 		}
 	}

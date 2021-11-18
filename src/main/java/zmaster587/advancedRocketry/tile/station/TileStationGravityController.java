@@ -1,12 +1,10 @@
 package zmaster587.advancedRocketry.tile.station;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -34,6 +32,8 @@ import zmaster587.libVulpes.tile.IComparatorOverride;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -64,7 +64,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 
 	@Override
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		modules.add(moduleGrav);
 		//modules.add(numThrusters);
 		modules.add(maxGravBuildSpeed);
@@ -91,16 +91,17 @@ public class TileStationGravityController extends TileEntity implements IModular
 		CompoundNBT nbt = write(new CompoundNBT());
 
 
-		SUpdateTileEntityPacket packet = new SUpdateTileEntityPacket(pos, 0, nbt);
-		return packet;
+		return new SUpdateTileEntityPacket(pos, 0, nbt);
 	}
 
+	@Nonnull
 	@Override
 	public CompoundNBT getUpdateTag() {
 		return write(new CompoundNBT());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void read(BlockState blkstate, CompoundNBT nbt) {
 		super.read(blkstate, nbt);
 
@@ -108,7 +109,9 @@ public class TileStationGravityController extends TileEntity implements IModular
 		redstoneControl.setRedstoneState(state);
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public CompoundNBT write(CompoundNBT nbt) {
 		super.write(nbt);
 		nbt.putByte("redstoneState", (byte) state.ordinal());
@@ -158,7 +161,7 @@ public class TileStationGravityController extends TileEntity implements IModular
 	@Override
 	public void tick() {
 
-		if(ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world))) {
+		if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world))) {
 
 			if(!world.isRemote) {
 				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
@@ -262,12 +265,14 @@ public class TileStationGravityController extends TileEntity implements IModular
 		PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}

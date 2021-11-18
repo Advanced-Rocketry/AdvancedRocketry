@@ -18,8 +18,6 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
-import zmaster587.advancedRocketry.atmosphere.AtmosphereVacuum;
-import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.util.Asteroid;
 import zmaster587.advancedRocketry.util.SealableBlockHandler;
 import java.io.InvalidClassException;
@@ -124,10 +122,10 @@ public class ARConfiguration {
 		laserOreList.add("oreTin");
 		laserOreList.add("oreRedstone");
 		laserOreList.add("oreDiamond");
-		orbitalLaserOres = builder.comment("List of oredictionary names of ores allowed to be mined by the laser drill if surface drilling is disabled.  Ores can be specified by just the oreName:<size> or by <modname>:<blockname>:<meta>:<size> where size is optional").defineList("laserDrillOres", laserOreList, (val)->{return true;} );
+		orbitalLaserOres = builder.comment("List of oredictionary names of ores allowed to be mined by the laser drill if surface drilling is disabled.  Ores can be specified by just the oreName:<size> or by <modname>:<blockname>:<meta>:<size> where size is optional").defineList("laserDrillOres", laserOreList, (val)-> true);
 		arConfig.laserDrillOresBlackList = builder.comment("True if the ores in laserDrillOres should be a blacklist, false for a whitelist").define("laserDrillOres_blacklist", false);
 		arConfig.laserDrillPlanet = builder.comment("If true, the orbital laser will actually mine blocks on the planet below").define("laserDrillPlanet", false);
-		arConfig.laserBlackListDims= builder.comment("Laser drill will not mine these dimension").defineList("spaceLaserDimIdBlackList", new LinkedList<String>(), (val) -> { return true; });
+		arConfig.laserBlackListDims= builder.comment("Laser drill will not mine these dimension").defineList("spaceLaserDimIdBlackList", new LinkedList<>(), (val) -> true);
 		builder.pop();
 		
 		builder.push(ARConfiguration.CATEGORY_TERRAFORMING);
@@ -151,10 +149,10 @@ public class ARConfiguration {
 		arConfig.overrideGCAir = builder.comment("If true, Galacticcraft's air will be disabled entirely requiring use of Advanced Rocketry's Oxygen system on GC planets").define("OverrideGCAir", true);
 		arConfig.oxygenVentConsumptionMult = builder.comment("Multiplier on how much O2 an oxygen vent consumes per tick").define("oxygenVentConsumptionMultiplier", 1d);
 		arConfig.suitTankCapacity = builder.comment("Multiplier for the amount of fluid this tank can hold").define("suitTankMultiplier", 1.0);
-		sealableBlockWhiteList = builder.comment("Blocks that are not automatically detected as sealable but should seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"").defineList("sealableBlockWhiteList", new LinkedList<String>(), (val) -> { return true; });
-		sealableBlockBlackList = builder.comment("Blocks that are automatically detected as sealable but should not seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"").defineList("sealableBlockBlackList", new LinkedList<String>(), (val) -> { return true; });
-		entityList = builder.comment("list entities which should not be affected by atmosphere properties").defineList("entityAtmBypass", new LinkedList<String>(), (val) -> {return true;});
-		breakableTorches = builder.comment("Mod:Blockname  for example \"minecraft:chest\"").define("torchBlocks", new LinkedList<String>(), (val) -> {return true;});
+		sealableBlockWhiteList = builder.comment("Blocks that are not automatically detected as sealable but should seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"").defineList("sealableBlockWhiteList", new LinkedList<>(), (val) -> true);
+		sealableBlockBlackList = builder.comment("Blocks that are automatically detected as sealable but should not seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"").defineList("sealableBlockBlackList", new LinkedList<>(), (val) -> true);
+		entityList = builder.comment("list entities which should not be affected by atmosphere properties").defineList("entityAtmBypass", new LinkedList<>(), (val) -> true);
+		breakableTorches = builder.comment("Mod:Blockname  for example \"minecraft:chest\"").define("torchBlocks", new LinkedList<>(), (val) -> true);
 		builder.pop();
 		
 		builder.push(ARConfiguration.CATEGORY_STATION);
@@ -168,7 +166,7 @@ public class ARConfiguration {
 		builder.push(ARConfiguration.CATEGORY_RESOURCE_MISSION);
 		arConfig.gasCollectionMult = builder.comment("Multiplier for the amount of time gas collection missions take").define("gasMissionMultiplier", 1.0);
 		arConfig.asteroidMiningTimeMult = builder.comment("Multiplier changing how long a mining mission takes").define("miningMissionTmeMultiplier", 1.0);
-		harvestableGasses =  builder.comment("list of fluid names that can be harvested as Gas").defineList("harvestableGasses",  new LinkedList<String>(), (val) -> {return true;} );
+		harvestableGasses =  builder.comment("list of fluid names that can be harvested as Gas").defineList("harvestableGasses", new LinkedList<>(), (val) -> true);
 //Spawnable gasses
 		builder.pop();
 
@@ -182,7 +180,7 @@ public class ARConfiguration {
 		blackHoleGen.add("minecraft:dirt;1");
 		blackHoleGen.add("minecraft:netherrack;1");
 		blackHoleGen.add("minecraft:cobblestone;1");
-		blackHoleGeneratorTiming = builder.comment("minecraft:dirt;1").defineList("blackHoleTimings", blackHoleGen, (val) -> {return true;});
+		blackHoleGeneratorTiming = builder.comment("minecraft:dirt;1").defineList("blackHoleTimings", blackHoleGen, (val) -> true);
 		arConfig.defaultItemTimeBlackHole = builder.comment("List of blocks and the amount of ticks they can power the black hole generator format: 'modname:block:meta;number_of_ticks'").define("defaultBurnTime", 500);
 		builder.pop();
 		
@@ -202,40 +200,39 @@ public class ARConfiguration {
 		arConfig.planetSkyOverride = builder.comment("If true, AR will use a custom skybox on planets").define("PlanetSkyOverride", true);
 		arConfig.advancedVFX = builder.comment("Advanced visual effects").define("advancedVFX", true);
 
-		builder.push(this.CATEGORY_PERFORMANCE);
+		builder.push(CATEGORY_PERFORMANCE);
 		arConfig.atmosphereHandleBitMask = builder.comment("BitMask: 0: no threading, radius based; 1: threading, radius based; 2: no threading volume based; 3: threading volume based").define("atmosphereCalculationMethod", 3);
 		arConfig.oxygenVentSize = builder.comment("Radius of the O2 vent.  if atmosphereCalculationMethod is 2 or 3 then max volume is calculated from this radius.  WARNING: larger numbers can lead to lag").define("oxygenVentSize", 32);
 		builder.pop();
 		
 		builder.push(ARConfiguration.CATEGORY_ROCKET);
 		arConfig.orbit = builder.comment("How high the rocket has to go before it reaches orbit").defineInRange("OrbitHeight", 1000, 255, Integer.MAX_VALUE);
-		List<String> fuels = new LinkedList();
+		List<String> fuels = new LinkedList<>();
 		fuels.add("advancedrocketry:rocket_fuel;2");
-		liquidMonopropellant = builder.comment("List of fluid names for fluids that can be used as rocket monopropellants").defineList("rocketFuels", fuels, (val) -> {return true;} );
-		List<String> bifuels = new LinkedList();
+		liquidMonopropellant = builder.comment("List of fluid names for fluids that can be used as rocket monopropellants").defineList("rocketFuels", fuels, (val) -> true);
+		List<String> bifuels = new LinkedList<>();
 		bifuels.add("advancedrocketry:hydrogen");
-		liquidBipropellantFuel = builder.comment("List of fluid names for fluids that can be used as rocket bipropellant fuels").defineList("rocketBipropellants", bifuels, (val) -> {return true;} );
-		List<String> bioxydizers = new LinkedList();
+		liquidBipropellantFuel = builder.comment("List of fluid names for fluids that can be used as rocket bipropellant fuels").defineList("rocketBipropellants", bifuels, (val) -> true);
+		List<String> bioxydizers = new LinkedList<>();
 		bioxydizers.add("oxygen");
-		liquidBipropellantOxidizer = builder.comment("List of fluid names for fluids that can be used as rocket bipropellant oxidizers").defineList("rocketOxidizers", bioxydizers, (val) -> {return true;} );
-		List<String> working = new LinkedList();
+		liquidBipropellantOxidizer = builder.comment("List of fluid names for fluids that can be used as rocket bipropellant oxidizers").defineList("rocketOxidizers", bioxydizers, (val) -> true);
+		List<String> working = new LinkedList<>();
 		working.add("hydrogen");
-		liquidNuclearWorkingFluid = builder.comment("List of fluid names for fluids that can be used as rocket nuclear working fuels").defineList("rocketWorkingFluids", working, (val) -> {return true;} );
+		liquidNuclearWorkingFluid = builder.comment("List of fluid names for fluids that can be used as rocket nuclear working fuels").defineList("rocketWorkingFluids", working, (val) -> true);
 		arConfig.automaticRetroRockets = builder.comment("Setting to false will disable the retrorockets that fire automatically on reentry on both player and automated rockets").define("autoRetroRockets", true);
 		arConfig.gravityAffectsFuel = builder.comment("If true, planets with higher gravity require more fuel and lower gravity would require less").define("gravityAffectsFuels", true);
-		arConfig.experimentalSpaceFlight = builder.comment("If true, rockets will be able to actually fly around space").define("experimentalSpaceFlight", false);
 		arConfig.rocketRequireFuel = builder.comment("Set to false if rockets should not require fuel to fly").define("rocketsRequireFuel", true);
 		arConfig.canBeFueledByHand = builder.comment("Set to false if rockets should not be able to be fueled by and and will require a fueling station").define("canBeFueledByHand", true);
 		arConfig.rocketThrustMultiplier = builder.comment("Multiplier for per-engine thrust").define("thrustMultiplier", 1d);
 		arConfig.fuelCapacityMultiplier = builder.comment("Multiplier for per-tank capacity").define("fuelCapacityMultiplier", 1d);
-		LinkedList<String> blackListRocketBlocksStrList = new LinkedList<String>();
+		LinkedList<String> blackListRocketBlocksStrList = new LinkedList<>();
 		blackListRocketBlocksStrList.add("minecraft:portal");
 		blackListRocketBlocksStrList.add("minecraft:bedrock");
 		blackListRocketBlocksStrList.add("minecraft:snow_layer");
 		blackListRocketBlocksStrList.add("minecraft:flowing_water");
 		blackListRocketBlocksStrList.add( "minecraft:lava");
 		blackListRocketBlocksStrList.add("minecraft:flowing_lava");
-		blackListRocketBlocksStr = builder.comment("Mod:Blockname  for example \"minecraft:chest\"").defineList("rocketBlockBlackList", blackListRocketBlocksStrList, (val) -> {return true;} );
+		blackListRocketBlocksStr = builder.comment("Mod:Blockname  for example \"minecraft:chest\"").defineList("rocketBlockBlackList", blackListRocketBlocksStrList, (val) -> true);
 		arConfig.launchingDestroysBlocks = builder.comment("Set to false if rockets should not damage blocks").define("rocketsDamageBlocks", false);
 		arConfig.stationClearanceHeight = builder.comment("How high the rocket has to go before it reaches station clearance").defineInRange("stationClearanceHeight", 1000, 255, Integer.MAX_VALUE);
 		arConfig.asteroidTBIBurnMult = builder.comment("TBI multiplier for asteroid flights").define("asteroidTBIBurnMult", 1.0);
@@ -251,16 +248,16 @@ public class ARConfiguration {
 		geodeOresList.add("libvulpes:orecopper");
 		geodeOresList.add("libvulpes:oretin");
 		geodeOresList.add(Blocks.REDSTONE_ORE.getRegistryName().toString());
-		geodeOres = builder.comment("List of block names of blocks (usally ores) allowed to spawn in geodes").defineList("geodeOres", geodeOresList, (val) -> {return true;} );
+		geodeOres = builder.comment("List of block names of blocks (usally ores) allowed to spawn in geodes").defineList("geodeOres", geodeOresList, (val) -> true);
 		arConfig.geodeOresBlackList = builder.comment("True if the ores in geodeOres should be a blacklist").define("geodeOres_blacklist", false);
 		arConfig.generateGeodes = builder.comment("If true, then ore-containing geodes are generated on high pressure planets").define("generateGeodes", true);
 		arConfig.geodeBaseSize = builder.comment("average size of the geodes").define("geodeBaseSize", 36);
 		arConfig.geodeVariation = builder.comment("variation in geode size").define("geodeVariation", 24);
 		arConfig.generateCraters = builder.comment("If true, then low pressure planets will have meteor craters.  Note: setting this option to false overrides 'generageCraters' in the planetDefs.xml").define("generateCraters", true);
-		arConfig.generateVolcanos = builder.comment("If true, then very hot planets planets will volcanos.  Note: setting this option to false overrides 'generateVolcanos' in the planetDefs.xml").define("generateVolcanos", true);
+		arConfig.generateVolcanoes = builder.comment("If true, then very hot planets planets will volcanos.  Note: setting this option to false overrides 'generateVolcanos' in the planetDefs.xml").define("generateVolcanos", true);
 		arConfig.generateVanillaStructures = builder.comment("Enable to allow structures like villages and mineshafts to generate on planets with a breathable atmosphere.  Note, setting this to false will override 'generateStructures' in the planetDefs.xml").define("generateVanillaStructures", false);
 
-		LinkedList<String> blackListedbiomes = new LinkedList<String>();
+		LinkedList<String> blackListedbiomes = new LinkedList<>();
 		blackListedbiomes.add(Biomes.RIVER.getLocation().toString());
 		blackListedbiomes.add(Biomes.THE_END.getLocation().toString());
 		blackListedbiomes.add(Biomes.BADLANDS.getLocation().toString());
@@ -268,16 +265,16 @@ public class ARConfiguration {
 		//blackListedbiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.alienForest).toString());
 
 		ARConfiguration.biomeBlackList = builder.comment("List of Biomes to be blacklisted from spawning as BiomeIds, default is: river, sky, hell, void, alienForest").
-				defineList("BlacklistedBiomes", blackListedbiomes, (item) -> { return true; });
+				defineList("BlacklistedBiomes", blackListedbiomes, (item) -> true);
 
 
-		LinkedList<String> highPressureBiome = new LinkedList<String>();
+		LinkedList<String> highPressureBiome = new LinkedList<>();
 		//highPressureBiome.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.stormLandsBiome).toString());
 		//highPressureBiome.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.swampDeepBiome).toString());
 		ARConfiguration.biomeHighPressure = builder.comment("Biomes that only spawn on worlds with pressures over 125, will override blacklist.").
-				defineList("HighPressureBiomes", highPressureBiome, (item) -> { return true; });
+				defineList("HighPressureBiomes", highPressureBiome, (item) -> true);
 
-		LinkedList<String> singleBiomes = new LinkedList<String>();
+		LinkedList<String> singleBiomes = new LinkedList<>();
 		//singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.volcanicBarren).toString());
 		//singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.swampDeepBiome).toString());
 		//singleBiomes.add(AdvancedRocketryBiomes.getBiomeResource(AdvancedRocketryBiomes.crystalChasms).toString());
@@ -288,7 +285,7 @@ public class ARConfiguration {
 		singleBiomes.add(Biomes.ICE_SPIKES.getLocation().toString());
 
 		ARConfiguration.biomeSingle = builder.comment("Some worlds have a chance of spawning single biomes contained in this list.").
-				defineList("SingleBiomes", singleBiomes, (item) -> { return true; });
+				defineList("SingleBiomes", singleBiomes, (item) -> true);
 
 		final ConfigValue<Boolean> masterToggle = builder.define("EnableOreGen", true);
 
@@ -333,15 +330,13 @@ public class ARConfiguration {
 
 	}
 
-	public ARConfiguration(ARConfiguration config)
-	{
+	public ARConfiguration(ARConfiguration config) {
 		Field[] fields = ARConfiguration.class.getDeclaredFields();
 		List<Field> fieldList = new ArrayList<>(fields.length);
 
 
 		// getDeclaredFields returns an unordered list, so we need to sort them
-		for(Field field : fields)
-		{
+		for(Field field : fields) {
 			if(field.isAnnotationPresent(ConfigProperty.class))
 				fieldList.add(field);
 		}
@@ -350,18 +345,14 @@ public class ARConfiguration {
 
 
 		// do a Shallow copy
-		for(Field field : fieldList)
-		{
+		for(Field field : fieldList) {
 			try {
-				if(field.getClass().isAssignableFrom(List.class))
-				{
+				if(field.getClass().isAssignableFrom(List.class)) {
 					List otherList = (List)field.get(config);
 					List list = otherList.getClass().newInstance();
 					list.addAll(otherList);
 					field.set(this, list);
-				}
-				else if(field.getClass().isAssignableFrom(Map.class))
-				{
+				} else if(field.getClass().isAssignableFrom(Map.class)) {
 					Map otherMap = (Map)field.get(config);
 					Map map = otherMap.getClass().newInstance();
 
@@ -372,8 +363,7 @@ public class ARConfiguration {
 					}
 
 					field.set(this, map);
-				}
-				else
+				} else
 					field.set(this, field.get(config));
 			} catch (IllegalArgumentException | InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
@@ -381,15 +371,13 @@ public class ARConfiguration {
 		}
 	}
 
-	public void writeConfigToNetwork(PacketBuffer out)
-	{
+	public void writeConfigToNetwork(PacketBuffer out) {
 		Field[] fields = ARConfiguration.class.getDeclaredFields();
 		List<Field> fieldList = new ArrayList<>(fields.length);
 
 
 		// getDeclaredFields returns an unordered list, so we need to sort them
-		for(Field field : fields)
-		{
+		for(Field field : fields) {
 			if(field.isAnnotationPresent(ConfigProperty.class) && field.getAnnotation(ConfigProperty.class).needsSync())
 				fieldList.add(field);
 		}
@@ -397,8 +385,7 @@ public class ARConfiguration {
 		fieldList.sort(Comparator.comparing(Field::getName));
 
 		try {
-			for(Field field : fieldList )
-			{
+			for(Field field : fieldList ) {
 				ConfigProperty props = field.getAnnotation(ConfigProperty.class);
 				int hash = field.getName().hashCode();
 				out.writeInt(hash);
@@ -409,31 +396,26 @@ public class ARConfiguration {
 				}
 			}
 		}
-		finally
-		{
+		finally {
 			out.writeByte(MAGIC_CODE);
 			out.writeLong(MAGIC_CODE_PT2);
 		}
 
 	}
 
-	private void writeDatum(PacketBuffer out, Class type, Object value, ConfigProperty property) throws InvalidClassException
-	{
+	private void writeDatum(PacketBuffer out, Class type, Object value, ConfigProperty property) throws InvalidClassException {
 
 		if(Integer.class.isAssignableFrom(type) || type == int.class)
 			out.writeInt((Integer)value);
-		else if(ConfigValue.class.isAssignableFrom(type))
-		{
+		else if(ConfigValue.class.isAssignableFrom(type)) {
 			writeDatum(out, ((ConfigValue)value).get().getClass(), ((ConfigValue)value).get(), property);
-		}
-		else if(Float.class.isAssignableFrom(type) || type == float.class)
+		} else if(Float.class.isAssignableFrom(type) || type == float.class)
 			out.writeFloat((Float)value);
 		else if(Double.class.isAssignableFrom(type) || type == double.class)
 			out.writeDouble((Double)value);
 		else if(Boolean.class.isAssignableFrom(type) || type == boolean.class)
 			out.writeBoolean((Boolean)value);
-		else if(Asteroid.class.isAssignableFrom(type))
-		{
+		else if(Asteroid.class.isAssignableFrom(type)) {
 			Asteroid asteroid = (Asteroid)value;
 			out.writeString(asteroid.ID);
 			out.writeInt(asteroid.distance);
@@ -451,78 +433,56 @@ public class ARConfiguration {
 				out.writeItemStack(asteroid.itemStacks.get(i));
 				out.writeFloat(asteroid.stackProbabilities.get(i));
 			}
-		}
-		else if(ResourceLocation.class.isAssignableFrom(type))
-		{
+		} else if(ResourceLocation.class.isAssignableFrom(type)) {
 			out.writeResourceLocation((ResourceLocation) value);
-		}
-		else if(String.class.isAssignableFrom(type))
-		{
+		} else if(String.class.isAssignableFrom(type)) {
 			out.writeString((String) value);
-		}
-		else if(List.class.isAssignableFrom(type))
-		{
+		} else if(List.class.isAssignableFrom(type)) {
 			List list = (List)value;
 			out.writeShort(list.size());
-			for(Object o : list)
-			{
+			for(Object o : list) {
 				writeDatum(out, property.internalType(), o, property);
 			}
-		}
-		else if(Set.class.isAssignableFrom(type))
-		{
+		} else if(Set.class.isAssignableFrom(type)) {
 			Set list = (Set)value;
 			out.writeShort(list.size());
-			for(Object o : list)
-			{
+			for(Object o : list) {
 				writeDatum(out, property.internalType(), o, property);
 			}
 		}
 		//TODO: maps and lists with arbitrary types
-		else if(Map.class.isAssignableFrom(type))
-		{
+		else if(Map.class.isAssignableFrom(type)) {
 			Map map = (Map)value;
 
 			out.writeInt(map.size());
-			for(Object key : map.keySet())
-			{
+			for(Object key : map.keySet()) {
 				Object mapValue = map.get(key);
 				writeDatum(out, property.keyType(), key, property);
 				writeDatum(out, property.valueType(), mapValue, property);
 			}
-		}
-		else
-		{
+		} else {
 			throw new InvalidClassException("Cannot transmit class type " + type.getName());
 		}
 
 	}
 
-	private Object readDatum(PacketBuffer in, Class type, ConfigProperty property) throws InvalidClassException, InstantiationException, IllegalAccessException
-	{
+	private Object readDatum(PacketBuffer in, Class type, ConfigProperty property) throws InvalidClassException, InstantiationException, IllegalAccessException {
 
 		if(Integer.class.isAssignableFrom(type) || type == int.class)
 			return in.readInt();
-		else if(ConfigValue.class.isAssignableFrom(type))
-		{
+		else if(ConfigValue.class.isAssignableFrom(type)) {
 			return readDatum(in, property.internalType(), property);
-		}
-		else if(Float.class.isAssignableFrom(type) || type == float.class)
+		} else if(Float.class.isAssignableFrom(type) || type == float.class)
 			return in.readFloat();
 		else if(Double.class.isAssignableFrom(type) || type == double.class)
 			return in.readDouble();
 		else if(boolean.class.isAssignableFrom(type) || type == boolean.class)
 			return in.readBoolean();
-		else if(ResourceLocation.class.isAssignableFrom(type))
-		{
+		else if(ResourceLocation.class.isAssignableFrom(type)) {
 			return in.readResourceLocation();
-		}
-		else if(String.class.isAssignableFrom(type))
-		{
+		} else if(String.class.isAssignableFrom(type)) {
 			return in.readString(256);
-		}
-		else if(Asteroid.class.isAssignableFrom(type))
-		{
+		} else if(Asteroid.class.isAssignableFrom(type)) {
 			Asteroid asteroid = new Asteroid();
 
 			asteroid.ID = in.readString(128);
@@ -536,15 +496,12 @@ public class ARConfiguration {
 			asteroid.timeMultiplier = in.readFloat();
 
 			int size = in.readInt();
-			for(int i = 0; i < size; i++)
-			{
+			for(int i = 0; i < size; i++) {
 				asteroid.itemStacks.add(in.readItemStack());
 				asteroid.stackProbabilities.add(in.readFloat());
 			}
 			return asteroid;
-		}
-		else if(List.class.isAssignableFrom(type))
-		{
+		} else if(List.class.isAssignableFrom(type)) {
 			List list = (List)type.newInstance();
 
 			short listsize=in.readShort();
@@ -554,9 +511,7 @@ public class ARConfiguration {
 			}
 
 			return list;
-		}
-		else if(Set.class.isAssignableFrom(type))
-		{
+		} else if(Set.class.isAssignableFrom(type)) {
 			Set set = (Set)type.newInstance();
 
 			short listsize=in.readShort();
@@ -568,42 +523,35 @@ public class ARConfiguration {
 			return set;
 		}
 		//TODO: maps and lists with arbitrary types
-		else if(Map.class.isAssignableFrom(type))
-		{
+		else if(Map.class.isAssignableFrom(type)) {
 			Map map = (Map)type.newInstance();
 			int mapCount = in.readInt();
 
-			for(int i = 0; i < mapCount; i++)
-			{
+			for(int i = 0; i < mapCount; i++) {
 				Object key = readDatum(in, property.keyType(), property);
 				Object value = readDatum(in, property.valueType(), property);
 				map.put(key, value);
 			}
 			return map;
-		}
-		else
-		{
+		} else {
 			throw new InvalidClassException("Cannot transmit class type " + type.getName());
 		}
 	}
 
-	public ARConfiguration readConfigFromNetwork(PacketBuffer in)
-	{
+	public ARConfiguration readConfigFromNetwork(PacketBuffer in) {
 		Field[] fields = ARConfiguration.class.getDeclaredFields();
 		List<Field> fieldList = new ArrayList<>(fields.length);
 
 
 		// getDeclaredFields returns an unordered list, so we need to sort them
-		for(Field field : fields)
-		{
+		for(Field field : fields) {
 			if(field.isAnnotationPresent(ConfigProperty.class) && field.getAnnotation(ConfigProperty.class).needsSync())
 				fieldList.add(field);
 		}
 
 		fieldList.sort(Comparator.comparing(Field::getName));
 
-		for(Field field : fieldList )
-		{
+		for(Field field : fieldList ) {
 			ConfigProperty props = field.getAnnotation(ConfigProperty.class);
 			int hash = field.getName().hashCode();
 			if(hash != in.readInt())
@@ -622,18 +570,15 @@ public class ARConfiguration {
 		return this;
 	}
 
-	public static ARConfiguration getCurrentConfig()
-	{
-		if(currentConfig == null)
-		{
+	public static ARConfiguration getCurrentConfig() {
+		if(currentConfig == null) {
 			logger.error("Had to generate a new config, this shouldn't happen");
 			throw new NullPointerException("Expected config to not be null");
 		}
 		return currentConfig;
 	}
 
-	public static ResourceLocation GetSpaceDimId()
-	{
+	public static ResourceLocation getSpaceDimId() {
 		return new ResourceLocation(getCurrentConfig().spaceDimId.get());
 	}
 
@@ -646,17 +591,14 @@ public class ARConfiguration {
 		usingServerConfig = true;
 	}
 
-	public static void useClientDiskConfig()
-	{
-		if(usingServerConfig)
-		{
+	public static void useClientDiskConfig() {
+		if(usingServerConfig) {
 			currentConfig = diskConfig;
 			usingServerConfig = false;
 		}
 	}
 
-	public void save()
-	{
+	public void save() {
 		if(!usingServerConfig)
 			for(ConfigValue<?> value :  allConfigValues)
 				value.save();
@@ -664,10 +606,9 @@ public class ARConfiguration {
 
 	public void addTorchblock(Block newblock) {
 		torchBlocks.add(newblock);
-		List<String> blocks = new ArrayList<String>(torchBlocks.size());
+		List<String> blocks = new ArrayList<>(torchBlocks.size());
 		int index = 0;
-		for( Block block : torchBlocks)
-		{
+		for( Block block : torchBlocks) {
 			blocks.add(block.getRegistryName().toString());
 		}
 
@@ -680,16 +621,14 @@ public class ARConfiguration {
 		List<Block> blockList = SealableBlockHandler.INSTANCE.getOverriddenSealableBlocks();
 		List<String> blocks = new ArrayList<>(blockList.size());
 		int index = 0;
-		for( Block block : blockList)
-		{
+		for( Block block : blockList) {
 			blocks.add(block.getRegistryName().toString());
 		}
 		sealableBlockWhiteList.set(blocks);
 		sealableBlockWhiteList.save();
 		save(); }
 
-	public static void loadPostInit()
-	{
+	public static void loadPostInit() {
 		ARConfiguration arConfig = getCurrentConfig();
 
 		//Register fuels
@@ -805,16 +744,6 @@ public class ARConfiguration {
 			String[] blockString = splitStr[0].split(":");
 
 			Item block = ForgeRegistries.ITEMS.getValue(new ResourceLocation(blockString[0],blockString[1]));
-			int metaValue = 0;
-
-			if(blockString.length > 2) {
-				try {
-					metaValue = Integer.parseInt(blockString[2]);
-				}
-				catch(NumberFormatException e) {
-					logger.warn("Invalid meta value location for black hole generator: " + splitStr[0] + " using " + blockString[2] );
-				}
-			}
 
 			int time = 0;
 
@@ -886,8 +815,7 @@ public class ARConfiguration {
 
 		//Register laserDrill ores
 		if(!arConfig.laserDrillOresBlackList.get()) {
-			for(String str  : orbitalLaserOres.get())
-				arConfig.standardLaserDrillOres.add(str);
+			arConfig.standardLaserDrillOres.addAll(orbitalLaserOres.get());
 			while(arConfig.standardLaserDrillOres.remove(null));
 		}
 
@@ -1242,7 +1170,7 @@ public class ARConfiguration {
 	public  ConfigValue<Boolean> generateCraters;
 
 	@ConfigProperty
-	public  ConfigValue<Boolean> generateVolcanos; // TODO this was renamed to generateVolcanoes somewhere in the 1.12 2.1.0 branch, and may need changing here
+	public  ConfigValue<Boolean> generateVolcanoes;
 
 	@ConfigProperty(needsSync=true, internalType=Boolean.class)
 	public  ConfigValue<Boolean> experimentalSpaceFlight;

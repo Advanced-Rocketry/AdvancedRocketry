@@ -13,16 +13,16 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import zmaster587.advancedRocketry.backwardCompat.ModelFormatException;
 import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
-import zmaster587.advancedRocketry.client.render.RenderLaser;
 import zmaster587.advancedRocketry.tile.multiblock.TileBeacon;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class RenderBeacon extends TileEntityRenderer<TileBeacon> {
 
 	WavefrontObject model;
 	public ResourceLocation baseTexture =  new ResourceLocation("advancedrocketry","textures/models/beacon.jpg");
-	RenderLaser laser;
 
 	public RenderBeacon(TileEntityRendererDispatcher disp) {
 		super(disp);
@@ -35,8 +35,8 @@ public class RenderBeacon extends TileEntityRenderer<TileBeacon> {
 	}
 	
 	@Override
-	public void render(TileBeacon multiBlockTile, float partialTicks, MatrixStack matrix,
-			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+	@ParametersAreNonnullByDefault
+	public void render(TileBeacon multiBlockTile, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
 
 		if(!multiBlockTile.canRender())
 			return;

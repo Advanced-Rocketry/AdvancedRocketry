@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -38,13 +37,14 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.util.INetworkMachine;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
 public class TilePlanetSelector extends TilePointer implements ISelectionNotify, IModularInventory, IProgressBar, INetworkMachine {
 
 	protected ModulePlanetSelector container;
-	public static final int certaintyDataValue = 5000;
 	DimensionProperties dimCache;
 
 	int[] cachedProgressValues;
@@ -241,12 +241,14 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 		PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}

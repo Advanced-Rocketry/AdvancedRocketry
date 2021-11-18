@@ -24,7 +24,6 @@ import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 import javax.annotation.Nonnull;
-import java.util.Iterator;
 import java.util.List;
 
 public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements IModularInventory {
@@ -68,30 +67,22 @@ public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements I
 		List<List<ItemStack>> ingredients = recipe.getPossibleIngredients();
 
 		label77:
-			for(int ingredientNum = 0; ingredientNum < ingredients.size(); ++ingredientNum) {
-				List<ItemStack> ingredient = (List)ingredients.get(ingredientNum);
-				Iterator var5 = this.getItemInPorts().iterator();
+		for (List<ItemStack> ingredient : ingredients) {
+			for (IInventory hatch : this.getItemInPorts()) {
+				for (int i = 0; i < hatch.getSizeInventory(); ++i) {
+					ItemStack stackInSlot = hatch.getStackInSlot(i);
 
-				while(var5.hasNext()) {
-					IInventory hatch = (IInventory)var5.next();
-
-					for(int i = 0; i < hatch.getSizeInventory(); ++i) {
-						ItemStack stackInSlot = hatch.getStackInSlot(i);
-						Iterator var9 = ingredient.iterator();
-
-						while(var9.hasNext()) {
-							ItemStack stack = (ItemStack)var9.next();
-
-							if ((stackInSlot != null && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.isItemEqual(stack) && stackInSlot.getItem() == stack.getItem())) && !isLensItem(stack)) {
-								hatch.decrStackSize(i, stack.getCount());
-								hatch.markDirty();
-								this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(((TileEntity)hatch).getPos()), this.world.getBlockState(((TileEntity)hatch).getPos()), 6);
-								continue label77;
-							}
+					for (ItemStack stack : ingredient) {
+						if ((!stackInSlot.isEmpty() && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.isItemEqual(stack) && stackInSlot.getItem() == stack.getItem())) && !isLensItem(stack)) {
+							hatch.decrStackSize(i, stack.getCount());
+							hatch.markDirty();
+							this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(((TileEntity) hatch).getPos()), this.world.getBlockState(((TileEntity) hatch).getPos()), 6);
+							continue label77;
 						}
 					}
 				}
 			}
+		}
 	}
 
 	@Override

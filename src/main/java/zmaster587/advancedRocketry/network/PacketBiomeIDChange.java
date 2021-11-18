@@ -1,18 +1,11 @@
 package zmaster587.advancedRocketry.network;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.ParticleStatus;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.libVulpes.network.BasePacket;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
@@ -22,7 +15,7 @@ public class PacketBiomeIDChange extends BasePacket {
 	Chunk chunk;
 	ResourceLocation worldId;
 	int xPos, zPos;
-	int array[];
+	int[] array;
 	HashedBlockPosition pos;
 	
 	public PacketBiomeIDChange() {

@@ -2,7 +2,6 @@ package zmaster587.advancedRocketry.world;
 
 import java.util.List;
 import java.util.function.LongFunction;
-import java.util.function.Supplier;
 
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
@@ -17,7 +16,6 @@ import net.minecraft.world.gen.layer.AddBambooForestLayer;
 import net.minecraft.world.gen.layer.AddIslandLayer;
 import net.minecraft.world.gen.layer.AddMushroomIslandLayer;
 import net.minecraft.world.gen.layer.AddSnowLayer;
-import net.minecraft.world.gen.layer.BiomeLayer;
 import net.minecraft.world.gen.layer.DeepOceanLayer;
 import net.minecraft.world.gen.layer.EdgeBiomeLayer;
 import net.minecraft.world.gen.layer.EdgeLayer;
@@ -35,7 +33,6 @@ import net.minecraft.world.gen.layer.SmoothLayer;
 import net.minecraft.world.gen.layer.StartRiverLayer;
 import net.minecraft.world.gen.layer.ZoomLayer;
 import net.minecraft.world.gen.layer.traits.IAreaTransformer1;
-import zmaster587.advancedRocketry.dimension.DimensionProperties;
 
 public class CustomLayerUtil {
 	private static final Int2IntMap field_242937_a = Util.make(new Int2IntOpenHashMap(), (p_242938_0_) -> {
@@ -156,7 +153,7 @@ public class CustomLayerUtil {
 		lvt_7_1_ = RareBiomeLayer.INSTANCE.apply(p_237216_3_.apply(1001L), lvt_7_1_);
 
 		for(int i = 0; i < p_237216_1_; ++i) {
-			lvt_7_1_ = ZoomLayer.NORMAL.apply(p_237216_3_.apply((long)(1000 + i)), lvt_7_1_);
+			lvt_7_1_ = ZoomLayer.NORMAL.apply(p_237216_3_.apply(1000 + i), lvt_7_1_);
 			if (i == 0) {
 				lvt_7_1_ = AddIslandLayer.INSTANCE.apply(p_237216_3_.apply(3L), lvt_7_1_);
 			}
@@ -175,9 +172,7 @@ public class CustomLayerUtil {
 
 	public static Layer func_237215_a_(long p_237215_0_, boolean p_237215_2_, int p_237215_3_, int p_237215_4_, List<Biome> biomes, boolean hasRivers) {
 		int i = 25;
-		IAreaFactory<LazyArea> iareafactory = func_237216_a_(p_237215_2_, p_237215_3_, p_237215_4_, (p_227473_2_) -> {
-			return new LazyAreaLayerContext(25, p_237215_0_, p_227473_2_);
-		}, biomes, hasRivers);
+		IAreaFactory<LazyArea> iareafactory = func_237216_a_(p_237215_2_, p_237215_3_, p_237215_4_, (p_227473_2_) -> new LazyAreaLayerContext(25, p_237215_0_, p_227473_2_), biomes, hasRivers);
 		return new Layer(iareafactory);
 	}
 
@@ -201,7 +196,7 @@ public class CustomLayerUtil {
 		return biomeIn == 44 || biomeIn == 45 || biomeIn == 0 || biomeIn == 46 || biomeIn == 10;
 	}
 
-	static enum Type {
+	enum Type {
 		NONE,
 		TAIGA,
 		EXTREME_HILLS,
@@ -217,6 +212,6 @@ public class CustomLayerUtil {
 		DESERT,
 		RIVER,
 		SWAMP,
-		MUSHROOM;
+		MUSHROOM
 	}
 }

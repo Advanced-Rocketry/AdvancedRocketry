@@ -12,14 +12,10 @@ import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.IDyeableArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,7 +30,6 @@ import zmaster587.advancedRocketry.api.armor.IProtectiveArmor;
 import zmaster587.advancedRocketry.api.capability.CapabilitySpaceArmor;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.client.render.armor.RenderJetPack;
-import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IArmorComponent;
 import zmaster587.libVulpes.api.IJetPack;
 import zmaster587.libVulpes.api.IModularArmor;
@@ -43,6 +38,7 @@ import zmaster587.libVulpes.util.IconResource;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -67,8 +63,9 @@ public class ItemSpaceArmor extends ArmorItem implements ICapabilityProvider, IP
 	}
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World p_77624_2_, List<ITextComponent> list, ITooltipFlag p_77624_4_) {
-		super.addInformation(stack, p_77624_2_, list, p_77624_4_);
+	@ParametersAreNonnullByDefault
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag p_77624_4_) {
+		super.addInformation(stack, world, list, p_77624_4_);
 
 		list.add(new TranslationTextComponent("msg.modules"));
 
@@ -223,6 +220,7 @@ public class ItemSpaceArmor extends ArmorItem implements ICapabilityProvider, IP
 
 
 
+	@Nonnull
 	public ItemStack removeComponent(World world, ItemStack armor, int index) {
 		CompoundNBT nbt;
 		ListNBT componentList;
@@ -294,8 +292,9 @@ public class ItemSpaceArmor extends ArmorItem implements ICapabilityProvider, IP
 		saveEmbeddedInventory(stack, (EmbeddedInventory)inv);
 	}
 
+	@Nonnull
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
 		if(capability == CapabilitySpaceArmor.PROTECTIVEARMOR)
 			return LazyOptional.of(() -> this).cast();
 		return LazyOptional.empty();

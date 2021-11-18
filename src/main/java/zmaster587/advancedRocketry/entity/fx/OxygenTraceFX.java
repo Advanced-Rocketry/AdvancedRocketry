@@ -7,11 +7,13 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class OxygenTraceFX extends SpriteTexturedParticle {
 
@@ -38,6 +40,7 @@ public class OxygenTraceFX extends SpriteTexturedParticle {
         this.particleScale=0.01f;
 	}
 	
+	@Nonnull
 	@Override
 	public IParticleRenderType getRenderType() {
 		return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
@@ -50,7 +53,7 @@ public class OxygenTraceFX extends SpriteTexturedParticle {
         this.prevPosZ = this.posZ;
         
         //Change color and alpha over lifespan
-        this.particleAlpha = 1f*MathHelper.sin((float)Math.PI*(this.age)/ (float)(this.maxAge));
+        this.particleAlpha = MathHelper.sin((float) Math.PI * (this.age) / (float) (this.maxAge));
         this.particleScale = 0.5f*MathHelper.sin((float)Math.PI*(this.age)/ (float)(this.maxAge));
         
         this.motionX *= 1.01;
@@ -73,6 +76,7 @@ public class OxygenTraceFX extends SpriteTexturedParticle {
 			this.spriteSet = p_i50630_1_;
 		}
 
+		@ParametersAreNonnullByDefault
 		public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 			OxygenTraceFX arc = new OxygenTraceFX(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
 			arc.selectSpriteWithAge(spriteSet);

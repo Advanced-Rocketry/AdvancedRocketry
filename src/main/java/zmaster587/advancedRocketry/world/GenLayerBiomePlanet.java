@@ -6,7 +6,6 @@ import net.minecraft.world.gen.INoiseRandom;
 import net.minecraft.world.gen.layer.traits.IC0Transformer;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GenLayerBiomePlanet implements IC0Transformer {

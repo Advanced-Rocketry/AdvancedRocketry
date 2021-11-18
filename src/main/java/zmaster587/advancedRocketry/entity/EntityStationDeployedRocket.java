@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.entity;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.ParticleStatus;
 import net.minecraft.entity.Entity;
@@ -10,11 +9,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.Unit;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -24,7 +21,6 @@ import net.minecraft.world.server.TicketType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
@@ -33,7 +29,6 @@ import zmaster587.advancedRocketry.api.RocketEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
 import zmaster587.advancedRocketry.api.StatsRocket;
-import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.client.SoundRocketEngine;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -86,16 +81,6 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		gasId = 0;
 	}
 
-	//Use as a way of checking when chunk is unloaded
-	@Override
-	public void remove() {
-		super.remove();
-		
-		// Ticket only lasts for 1 tick, so don't bother cleanup
-		//if(ticket != null)
-			//((ServerWorld)this.world).getChunkProvider().chunkManager.getTicketManager().register(type, pos, distance, value); forceChunk(false);
-	}
-
 	/**
 	 * Called immediately before launch
 	 */
@@ -127,7 +112,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 			return;
 
 		ISpaceObject spaceObj;
-		if( ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world) ) && (spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(getPositionVec()))) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() ) { //Abort if destination is invalid
+		if( ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world) ) && (spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(getPositionVec()))) != null && spaceObj.getProperties().getParentProperties().isGasGiant() ) { //Abort if destination is invalid
 
 
 			setInFlight(true);
@@ -166,8 +151,6 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		}
 
 		if(isInFlight()) {
-
-			boolean burningFuel = isBurningFuel();
 
 			if(launchLocation == null || storage == null)
 				return;
@@ -361,7 +344,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		//Check again to make sure we are around a gas giant
 		ISpaceObject spaceObj;
 		setInOrbit(true);
-		if( ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(world)) && ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(this.getPositionVec()))) != null && ((DimensionProperties)spaceObj.getProperties().getParentProperties()).isGasGiant() )) { //Abort if destination is invalid
+		if( ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world)) && ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(this.getPositionVec()))) != null && spaceObj.getProperties().getParentProperties().isGasGiant() )) { //Abort if destination is invalid
 			this.setPosition(forwardDirection.getXOffset()*64d + this.launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5d), getPosY(), forwardDirection.getZOffset()*64d + this.launchLocation.z + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5d));
 		}
 		else {

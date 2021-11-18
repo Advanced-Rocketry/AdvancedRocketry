@@ -16,7 +16,7 @@ public interface IDimensionProperties {
 	/**
 	 * @return the DIMID of the planet
 	 */
-	public ResourceLocation getId();
+	ResourceLocation getId();
 	
 	/**
 	 * @return the color of the sun as an array of floats represented as  {r,g,b}
@@ -102,7 +102,7 @@ public interface IDimensionProperties {
 	/**
 	 * @return set of all moons orbiting this planet
 	 */
-	public Set<ResourceLocation> getChildPlanets();
+	Set<ResourceLocation> getChildPlanets();
 	
 	/**
 	 * sets the gravity multiplier of the object
@@ -125,7 +125,7 @@ public interface IDimensionProperties {
 	/**
 	 * Returns the satellite with that ID
 	 * @param lng satellite ID
-	 * @return
+	 * @return the SatelliteBase satellite for the long satellite ID
 	 */
 	SatelliteBase getSatellite(long lng);
 
@@ -142,9 +142,9 @@ public interface IDimensionProperties {
 	 */
 	SatelliteBase removeSatellite(long id);
 
-	public void writeToNBT(CompoundNBT nbt);
+	void writeToNBT(CompoundNBT nbt);
 
-	public void readFromNBT(CompoundNBT nbt);
+	void readFromNBT(CompoundNBT nbt);
 
 	void setParentOrbitalDistance(int distance);
 
@@ -162,7 +162,7 @@ public interface IDimensionProperties {
 	/**
 	 * @return the integer id of the star
 	 */
-	public ResourceLocation getStarId();
+	ResourceLocation getStarId();
 
 	/**
 	 * @return density of the atmosphere in the range 0 to 200
@@ -202,7 +202,7 @@ public interface IDimensionProperties {
 	/**
 	 * @return id of the parent planet
 	 */
-	public ResourceLocation getParentPlanet();
+	ResourceLocation getParentPlanet();
 
 	/**
 	 * Set the atmosphere like the terraformer does, can trigger terraform event

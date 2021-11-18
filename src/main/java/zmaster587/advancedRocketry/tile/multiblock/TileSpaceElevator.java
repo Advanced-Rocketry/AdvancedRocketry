@@ -1,13 +1,9 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -19,15 +15,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkHooks;
-import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityElevatorCapsule;
@@ -38,7 +29,6 @@ import zmaster587.advancedRocketry.util.PlanetaryTravelHelper;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
-import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.inventory.ContainerModular;
@@ -55,7 +45,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class TileSpaceElevator extends TileMultiPowerConsumer implements ILinkableTile, IModularInventory, ITickableTileEntity {
@@ -324,8 +314,8 @@ boolean openFullScreen = false;
 	}
 
 	@Override
-	public boolean onLinkStart(ItemStack item, TileEntity entity,
-			PlayerEntity player, World world) {
+	@ParametersAreNonnullByDefault
+	public boolean onLinkStart(ItemStack item, TileEntity entity, PlayerEntity player, World world) {
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, ZUtils.getDimensionIdentifier(world));
 		if(dimBlockPos != null) {
@@ -338,8 +328,8 @@ boolean openFullScreen = false;
 	}
 
 	@Override
-	public boolean onLinkComplete(ItemStack item, TileEntity entity,
-			PlayerEntity player, World myWorld) {
+	@ParametersAreNonnullByDefault
+	public boolean onLinkComplete(ItemStack item, TileEntity entity, PlayerEntity player, World myWorld) {
 
 		if(!myWorld.isRemote) {
 
@@ -465,6 +455,7 @@ boolean openFullScreen = false;
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		GuiHandler.guiId guiType = openFullScreen ? GuiHandler.guiId.MODULARFULLSCREEN : getModularInvType();
 		openFullScreen = false;

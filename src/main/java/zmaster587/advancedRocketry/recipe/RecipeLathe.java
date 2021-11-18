@@ -1,14 +1,13 @@
 package zmaster587.advancedRocketry.recipe;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileLathe;
 import zmaster587.libVulpes.recipe.RecipeMachineFactory;
 
 public class RecipeLathe extends RecipeMachineFactory {
 
-	public static RecipeLathe INSTANCE = new RecipeLathe();;
+	public static RecipeLathe INSTANCE = new RecipeLathe();
 
-	@Override
+    @Override
 	public Class getMachine() {
 		return TileLathe.class;
 	}

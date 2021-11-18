@@ -3,25 +3,21 @@ package zmaster587.advancedRocketry.client.render.entity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
-import zmaster587.advancedRocketry.client.render.multiblocks.RendererWarpCore;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.advancedRocketry.entity.EntityUIStar;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.render.RenderHelper;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class RenderStarUIEntity extends EntityRenderer<EntityUIStar> implements IRenderFactory<EntityUIStar> {
 
@@ -36,13 +32,14 @@ public class RenderStarUIEntity extends EntityRenderer<EntityUIStar> implements 
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public ResourceLocation getEntityTexture(EntityUIStar entity) {
 		return DimensionProperties.PlanetIcons.EARTHLIKE.getResource();
 	}
 
 	@Override
-	public void render(EntityUIStar entity, float entityYaw, float partialTicks, MatrixStack matrix,
-			IRenderTypeBuffer bufferIn, int packedLightIn) {
+	@ParametersAreNonnullByDefault
+	public void render(EntityUIStar entity, float entityYaw, float partialTicks, MatrixStack matrix, IRenderTypeBuffer bufferIn, int packedLightIn) {
 		
 		StellarBody body = entity.getStarProperties();
 		if(body == null)

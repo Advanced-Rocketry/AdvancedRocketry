@@ -11,6 +11,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -20,7 +24,7 @@ public class BlockLightwoodLeaves extends LeavesBlock {
 	public BlockLightwoodLeaves(AbstractBlock.Properties properties) {
 		super(properties);
 		// light value
-		properties.setLightLevel(value -> {return 8;} );
+		properties.setLightLevel(value -> 8);
 		this.setDefaultState(this.stateContainer.getBaseState().with(PERSISTENT, false).with(DISTANCE, 0));
 	}
 	
@@ -36,28 +40,20 @@ public class BlockLightwoodLeaves extends LeavesBlock {
     public int getFlammability(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
     	return 50;
     }
+
     @Override
     public int getFireSpreadSpeed(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
     	return 50;
     }
-    
-    protected void func_150124_c(World world, int x, int y, int z, int p_150124_5_, int p_150124_6_)
-    {
-        if ((p_150124_5_ & 3) == 0 && world.rand.nextInt(p_150124_6_) == 0)
-        {
-            //TODO make drop
-        	//this.dropBlockAsItem(world, x, y, z, new ItemStack(Items.apple, 1, 0));
-        }
-    }
 
-	
-    public Item getItemDropped(BlockState state, Random rand, int fortune)
-    {
+    public Item getItemDropped(BlockState state, Random rand, int fortune) {
         return Item.getItemFromBlock(AdvancedRocketryBlocks.blockAlienSapling);
     }
     
+    @Nonnull
     @Override
-    public List<ItemStack> onSheared(PlayerEntity player, ItemStack item, World world, BlockPos pos, int fortune) {
+    @ParametersAreNonnullByDefault
+    public List<ItemStack> onSheared(@Nullable PlayerEntity player, ItemStack item, World world, BlockPos pos, int fortune) {
     	List<ItemStack> stackList = new LinkedList<>();
     	stackList.add(new ItemStack(this, 1));
     	return stackList;

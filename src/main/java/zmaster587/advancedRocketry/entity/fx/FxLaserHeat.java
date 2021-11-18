@@ -1,14 +1,12 @@
 package zmaster587.advancedRocketry.entity.fx;
 
 import net.minecraft.client.particle.IParticleRenderType;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
@@ -17,6 +15,9 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import zmaster587.libVulpes.render.RenderHelper;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class FxLaserHeat extends SpriteTexturedParticle {
 
@@ -35,6 +36,7 @@ public class FxLaserHeat extends SpriteTexturedParticle {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void renderParticle(IVertexBuilder buffer2, ActiveRenderInfo renderInfo, float partialTicks) {
 		//worldRendererIn.finishDrawing();
 		
@@ -67,6 +69,7 @@ public class FxLaserHeat extends SpriteTexturedParticle {
 		GL11.glLineWidth(1);
 	}
 
+	@Nonnull
 	@Override
 	public IParticleRenderType getRenderType() {
 		return IParticleRenderType.CUSTOM;

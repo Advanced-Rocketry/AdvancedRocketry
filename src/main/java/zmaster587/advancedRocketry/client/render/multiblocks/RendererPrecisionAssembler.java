@@ -1,18 +1,12 @@
 package zmaster587.advancedRocketry.client.render.multiblocks;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Quaternion;
-
-import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -22,22 +16,12 @@ import zmaster587.advancedRocketry.backwardCompat.WavefrontObject;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TilePrecisionAssembler;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
-import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
-import java.util.List;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class RendererPrecisionAssembler extends TileEntityRenderer<TilePrecisionAssembler> {
 	WavefrontObject model;
 	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/precisionassembler.png");
-
-	//private final RenderItem dummyItem = Minecraft.getInstance().getRenderItem();
-	
-	//Model Names:
-	// Tray
-	// Hull
-	// ProcessA
-	// ProcessB
-	// ProcessC
 	
 	public RendererPrecisionAssembler(TileEntityRendererDispatcher tile) {
 		super(tile);
@@ -49,8 +33,8 @@ public class RendererPrecisionAssembler extends TileEntityRenderer<TilePrecision
 	}
 
 	@Override
-	public void render(TilePrecisionAssembler tile, float partialTicks, MatrixStack matrix,
-			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+	@ParametersAreNonnullByDefault
+	public void render(TilePrecisionAssembler tile, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
 
 		if(!tile.canRender())
 			return;

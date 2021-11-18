@@ -1,38 +1,21 @@
 package zmaster587.advancedRocketry.client;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.IDyeableArmorItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.profiler.IProfiler;
-import net.minecraft.profiler.Profiler;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
@@ -51,25 +34,9 @@ import zmaster587.advancedRocketry.entity.fx.*;
 import zmaster587.advancedRocketry.event.PlanetEventHandler;
 import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
-import zmaster587.advancedRocketry.tile.TileFluidTank;
-import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
-import zmaster587.advancedRocketry.tile.cables.TileDataPipe;
-import zmaster587.advancedRocketry.tile.cables.TileEnergyPipe;
-import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
-import zmaster587.advancedRocketry.tile.multiblock.*;
-import zmaster587.advancedRocketry.tile.multiblock.energy.TileSolarArray;
-import zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill.TileOrbitalLaserDrill;
-import zmaster587.advancedRocketry.tile.multiblock.energy.TileBlackHoleGenerator;
-import zmaster587.advancedRocketry.tile.multiblock.energy.TileMicrowaveReciever;
-import zmaster587.advancedRocketry.tile.multiblock.machine.*;
 import zmaster587.libVulpes.api.LibVulpesTileEntityTypes;
 import zmaster587.libVulpes.entity.fx.FxErrorBlock;
 import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
-import zmaster587.libVulpes.tile.TileSchematic;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Objects;
 
 public class ClientProxy extends CommonProxy {
 
@@ -82,70 +49,52 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerRenderers() {
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ROCKET_BUILDER, (dispatcher) -> {return new RendererRocketAssemblingMachine(dispatcher);} );
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_STATION_BUILDER, (dispatcher) -> {return new RendererRocketAssemblingMachine(dispatcher);} );
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileModelRender.class, modelBlock);
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_PREC_ASS, (dispatcher) -> {return new RendererPrecisionAssembler(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CUTTING_MACHINE, (dispatcher) -> {return new RendererCuttingMachine(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CRYSTALLIZER, (dispatcher) -> {return new RendererCrystallizer(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_OBSERVATORY, (dispatcher) -> {return new RendererObservatory(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ASTROBODY_DATA, (dispatcher) -> {return new RenderAstrobodyDataProcessor(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_LATHE, (dispatcher) -> {return new RendererLathe(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ROLLING, (dispatcher) -> {return new RendererRollingMachine(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ELECTROLYSER, (dispatcher) -> {return new RendererElectrolyser(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_WARP_CORE, (dispatcher) -> {return new RendererWarpCore(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CHEMICAL_REACTOR, (dispatcher) -> {return new RendererChemicalReactor(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(LibVulpesTileEntityTypes.TILE_SCHEMATIC, (dispatcher) -> {return new RendererPhantomBlock(dispatcher);});
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileDrill.class, new RendererDrill());
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ROCKET_BUILDER, RendererRocketAssemblingMachine::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_STATION_BUILDER, RendererRocketAssemblingMachine::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_PREC_ASS, RendererPrecisionAssembler::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CUTTING_MACHINE, RendererCuttingMachine::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CRYSTALLIZER, RendererCrystallizer::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_OBSERVATORY, RendererObservatory::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ASTROBODY_DATA, RenderAstrobodyDataProcessor::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_LATHE, RendererLathe::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ROLLING, RendererRollingMachine::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ELECTROLYSER, RendererElectrolyser::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_WARP_CORE, RendererWarpCore::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CHEMICAL_REACTOR, RendererChemicalReactor::new);
+		ClientRegistry.bindTileEntityRenderer(LibVulpesTileEntityTypes.TILE_SCHEMATIC, RendererPhantomBlock::new);
 		//ClientRegistry.bindTileEntityRenderer(TileLiquidPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeLiquid.png")));
 		//ClientRegistry.bindTileEntityRenderer(TileDataPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeData.png")));
 		//ClientRegistry.bindTileEntityRenderer(TileEnergyPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeEnergy.png")));
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_MICROWAVE_RECIEVER, (dispatcher) -> {return new RendererMicrowaveReciever(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_SPACE_LASER, (dispatcher) -> {return new RenderOrbitalLaserDrill(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BIOME_SCANNER, (dispatcher) -> {return new RenderBiomeScanner(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BLACK_HOLE_GENERATOR, (dispatcher) -> {return new RenderBlackHoleGenerator(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_TERRAFORMER, (dispatcher) -> {return new RenderTerraformerAtm(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_FLUID_TANK, (dispatcher) -> {return new RenderTank(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_RAILGUN, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RendererRailgun(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_GRAVITY_CONTROLLER, (dispatcher) -> {return new RenderAreaGravityController(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_SPACE_ELEVATOR, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RendererSpaceElevator(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BEACON, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RenderBeacon(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CENTRIFUGE, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RenderCentrifuge(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_PREC_LASER_ETCHER, (dispatcher) -> {return new zmaster587.advancedRocketry.client.render.multiblocks.RendererPrecisionLaserEtcher(dispatcher);});
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_SOLAR_ARRAY, (dispatcher) -> {return new RendererSolarArray(dispatcher);});
-		
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileModelRenderRotatable.class, modelBlock);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_MICROWAVE_RECIEVER, RendererMicrowaveReciever::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_SPACE_LASER, RenderOrbitalLaserDrill::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BIOME_SCANNER, RenderBiomeScanner::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BLACK_HOLE_GENERATOR, RenderBlackHoleGenerator::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_TERRAFORMER, RenderTerraformerAtm::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_FLUID_TANK, RenderTank::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_RAILGUN, RendererRailgun::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_GRAVITY_CONTROLLER, RenderAreaGravityController::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_SPACE_ELEVATOR, RendererSpaceElevator::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BEACON, RenderBeacon::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CENTRIFUGE, RenderCentrifuge::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_PREC_LASER_ETCHER, RendererPrecisionLaserEtcher::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_SOLAR_ARRAY, RendererSolarArray::new);
 
-		//RendererModelBlock blockRenderer = new RendererModelBlock();
-
-		//RendererBucket bucket =  new RendererBucket();
-		//MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketRocketFuel, bucket);
-		//MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketNitrogen, bucket);
-		//MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketHydrogen, bucket);
-		//MinecraftForgeClient.registerItemRenderer(AdvancedRocketryItems.itemBucketOxygen, bucket);
-
-		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_ROCKET, (IRenderFactory<EntityRocket>)new RendererRocket(null));
-		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_LASER_NODE, (IRenderFactory<EntityLaserNode>)new RenderLaser(2.0, new float[] {1F, 0.25F, 0.25F, 0.2F}, new float[] {0.9F, 0.2F, 0.3F, 0.5F}));
-		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_ITEM_ABDUCTED, (IRenderFactory<EntityItemAbducted>)new RendererItem(Minecraft.getInstance().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_UIPLANET, (IRenderFactory<EntityUIPlanet>)new RenderPlanetUIEntity(null));
-		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_UIBUTTON, (IRenderFactory<EntityUIButton>)new RenderButtonUIEntity(null));
-		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_UISTAR, (IRenderFactory<EntityUIStar>)new RenderStarUIEntity(null));
-		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_ELEVATOR_CAPSULE, (IRenderFactory<EntityElevatorCapsule>)new RenderElevatorCapsule(null));
-		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_HOVER_CRAFT, (IRenderFactory<EntityHoverCraft>)new RenderHoverCraft(null));
-		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_DUMMY, (IRenderFactory<EntityDummy>)new RenderSeat(null));
+		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_ROCKET, new RendererRocket(null));
+		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_LASER_NODE, new RenderLaser(2.0, new float[] {1F, 0.25F, 0.25F, 0.2F}, new float[] {0.9F, 0.2F, 0.3F, 0.5F}));
+		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_ITEM_ABDUCTED, new RendererItem(Minecraft.getInstance().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_UIPLANET, new RenderPlanetUIEntity(null));
+		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_UIBUTTON, new RenderButtonUIEntity(null));
+		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_UISTAR, new RenderStarUIEntity(null));
+		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_ELEVATOR_CAPSULE, new RenderElevatorCapsule(null));
+		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_HOVER_CRAFT, new RenderHoverCraft(null));
+		RenderingRegistry.registerEntityRenderingHandler(AdvancedRocketryEntities.ENTITY_DUMMY, new RenderSeat(null));
 	}
 
 	@Override
 	public void init() {
 
 		//Colorizers
-		Minecraft.getInstance().getItemColors().register(new IItemColor()
-		{
-			@Override
-			public int getColor(@Nonnull ItemStack stack, int tintIndex) {
-				return tintIndex > 0 ? -1 : ((IDyeableArmorItem)stack.getItem()).getColor(stack);
-			}
-		}, AdvancedRocketryItems.itemSpaceSuit_Boots, AdvancedRocketryItems.itemSpaceSuit_Chest, AdvancedRocketryItems.itemSpaceSuit_Helmet, AdvancedRocketryItems.itemSpaceSuit_Leggings);
+		Minecraft.getInstance().getItemColors().register((stack, tintIndex) -> tintIndex > 0 ? -1 : ((IDyeableArmorItem)stack.getItem()).getColor(stack), AdvancedRocketryItems.itemSpaceSuit_Boots, AdvancedRocketryItems.itemSpaceSuit_Chest, AdvancedRocketryItems.itemSpaceSuit_Helmet, AdvancedRocketryItems.itemSpaceSuit_Leggings);
 
 		AdvancedRocketry.materialRegistry.init();
 

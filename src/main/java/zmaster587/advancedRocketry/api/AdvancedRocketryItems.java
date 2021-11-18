@@ -2,15 +2,10 @@ package zmaster587.advancedRocketry.api;
 
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.IItemTier;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
-import net.minecraft.item.Items;
 import net.minecraft.item.TallBlockItem;
 import net.minecraft.item.WallOrFloorItem;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent.Register;
@@ -18,9 +13,7 @@ import net.minecraftforge.fml.RegistryObject;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.armor.ItemSpaceChest;
-import zmaster587.advancedRocketry.item.ItemARBucket;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
-import zmaster587.advancedRocketry.item.ItemAstroBed;
 import zmaster587.advancedRocketry.item.ItemAtmosphereAnalzer;
 import zmaster587.advancedRocketry.item.ItemBeaconFinder;
 import zmaster587.advancedRocketry.item.ItemBiomeChanger;
@@ -39,10 +32,7 @@ import zmaster587.advancedRocketry.item.components.ItemJetpack;
 import zmaster587.advancedRocketry.item.components.ItemPressureTank;
 import zmaster587.advancedRocketry.item.components.ItemUpgrade;
 import zmaster587.advancedRocketry.item.tools.ItemBasicLaserGun;
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.api.material.AllowedProducts;
-import zmaster587.libVulpes.api.material.MaterialRegistry;
+
 /**
  * Stores references to Advanced Rocketry's items
  *
@@ -53,7 +43,6 @@ public class AdvancedRocketryItems {
 	public static final ArmorMaterial spaceSuit = new ArmorMaterial("spaceSuit", net.minecraft.item.ArmorMaterial.DIAMOND.getDurability(EquipmentSlotType.CHEST), new int[] {1,1,1,1}, 0, new SoundEvent(new ResourceLocation("")), 0, 0, null);
 
 	public static Item itemSiliconWafer;
-	public static Item itemAnthracene;
 	public static Item itemBasicCircuitPlate;
 	public static Item itemAdvCircuitPlate;
 	public static Item itemICBasic;
@@ -119,7 +108,6 @@ public class AdvancedRocketryItems {
 	
 	
 	// block items
-	public static Item itemMissionComp;
 	public static Item itemSpaceLaser;
 	public static Item itemPrecisionAssembler;
 	public static Item itemArcFurnace;
@@ -146,16 +134,13 @@ public class AdvancedRocketryItems {
 	public static Item itemMonitoringStation;
 	public static Item itemSatelliteBuilder;
 	public static Item itemSatelliteControlCenter;
-	public static Item itemChipStorage;
 	public static Item itemMoonTurf;
 	public static Item itemHotTurf;
-	public static Item itemMultiMineOre;
 	public static Item itemLightSource;
 	public static Item itemAlienWood;
 	public static Item itemAlienLeaves;
 	public static Item itemAlienSapling;
 	public static Item itemGuidanceComputer;
-	public static Item itemLunarAnalyser;
 	public static Item itemPlanetSelector;
 	public static Item itemSawBladeBlock;
 	public static Item itemConcrete;
@@ -190,6 +175,7 @@ public class AdvancedRocketryItems {
 	public static Item itemDrill;
 	public static Item itemFluidPipe;
 	public static Item itemDataPipe;
+	public static Item itemEnergyPipe;
 	public static Item itemMicrowaveReciever;
 	public static Item itemSolarPanel;
 	public static Item itemSuitWorkStation;
@@ -206,7 +192,6 @@ public class AdvancedRocketryItems {
 	public static Item itemPressureTank;
 	public static Item itemIntake;
 	public static Item itemCircleLight;
-	public static Item itemEnergyPipe;
 	public static Item itemSolarGenerator;
 	public static Item itemDockingPort;
 	public static Item itemAltitudeController;
@@ -374,8 +359,7 @@ public class AdvancedRocketryItems {
 		
 		// register blocks
 		Item.Properties typicalBlockProperties = new Item.Properties().group(AdvancedRocketry.tabAdvRocketry);
-		
-		//AdvancedRocketryItems.itemMissionComp = new BlockItem(AdvancedRocketryBlocks.blockMissionComp, typicalBlockProperties);
+
 		AdvancedRocketryItems.itemSpaceLaser = new BlockItem(AdvancedRocketryBlocks.blockSpaceLaser, typicalBlockProperties);
 		AdvancedRocketryItems.itemPrecisionAssembler = new BlockItem(AdvancedRocketryBlocks.blockPrecisionAssembler, typicalBlockProperties);
 		AdvancedRocketryItems.itemArcFurnace = new BlockItem(AdvancedRocketryBlocks.blockArcFurnace, typicalBlockProperties);
@@ -402,16 +386,13 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemMonitoringStation = new BlockItem(AdvancedRocketryBlocks.blockMonitoringStation, typicalBlockProperties);
 		AdvancedRocketryItems.itemSatelliteBuilder = new BlockItem(AdvancedRocketryBlocks.blockSatelliteBuilder, typicalBlockProperties);
 		AdvancedRocketryItems.itemSatelliteControlCenter = new BlockItem(AdvancedRocketryBlocks.blockSatelliteControlCenter, typicalBlockProperties);
-		//AdvancedRocketryItems.itemChipStorage = new BlockItem(AdvancedRocketryBlocks.blockChipStorage, typicalBlockProperties);
 		AdvancedRocketryItems.itemMoonTurf = new BlockItem(AdvancedRocketryBlocks.blockMoonTurf, typicalBlockProperties);
 		AdvancedRocketryItems.itemHotTurf = new BlockItem(AdvancedRocketryBlocks.blockHotTurf, typicalBlockProperties);
-		//AdvancedRocketryItems.itemMultiMineOre = new BlockItem(AdvancedRocketryBlocks.blockMultiMineOre, typicalBlockProperties);
 		AdvancedRocketryItems.itemLightSource = new BlockItem(AdvancedRocketryBlocks.blockLightSource, typicalBlockProperties);
 		AdvancedRocketryItems.itemAlienWood = new BlockItem(AdvancedRocketryBlocks.blockAlienWood, typicalBlockProperties);
 		AdvancedRocketryItems.itemAlienLeaves = new BlockItem(AdvancedRocketryBlocks.blockAlienLeaves, typicalBlockProperties);
 		AdvancedRocketryItems.itemAlienSapling = new BlockItem(AdvancedRocketryBlocks.blockAlienSapling, typicalBlockProperties);
 		AdvancedRocketryItems.itemGuidanceComputer = new BlockItem(AdvancedRocketryBlocks.blockGuidanceComputer, typicalBlockProperties);
-		//AdvancedRocketryItems.itemLunarAnalyser = new BlockItem(AdvancedRocketryBlocks.blockLunarAnalyser, typicalBlockProperties);
 		AdvancedRocketryItems.itemPlanetSelector = new BlockItem(AdvancedRocketryBlocks.blockPlanetSelector, typicalBlockProperties);
 		AdvancedRocketryItems.itemSawBladeBlock = new BlockItem(AdvancedRocketryBlocks.blockSawBlade, typicalBlockProperties);
 		AdvancedRocketryItems.itemConcrete = new BlockItem(AdvancedRocketryBlocks.blockConcrete, typicalBlockProperties);
@@ -446,7 +427,8 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemDrill = new BlockItem(AdvancedRocketryBlocks.blockDrill, typicalBlockProperties);
 		//AdvancedRocketryItems.itemFluidPipe = new BlockItem(AdvancedRocketryBlocks.blockFluidPipe, typicalBlockProperties);
 		//AdvancedRocketryItems.itemDataPipe = new BlockItem(AdvancedRocketryBlocks.blockDataPipe, typicalBlockProperties);
-		AdvancedRocketryItems.itemMicrowaveReciever = new BlockItem(AdvancedRocketryBlocks.blockMicrowaveReciever, typicalBlockProperties);
+		//AdvancedRocketryItems.itemEnergyPipe = new BlockItem(AdvancedRocketryBlocks.blockEnergyPipe, typicalBlockProperties);
+		AdvancedRocketryItems.itemMicrowaveReciever = new BlockItem(AdvancedRocketryBlocks.blockMicrowaveReceiver, typicalBlockProperties);
 		AdvancedRocketryItems.itemSolarPanel = new BlockItem(AdvancedRocketryBlocks.blockSolarPanel, typicalBlockProperties);
 		AdvancedRocketryItems.itemSuitWorkStation = new BlockItem(AdvancedRocketryBlocks.blockSuitWorkStation, typicalBlockProperties);
 		AdvancedRocketryItems.itemDataBus = new BlockItem(AdvancedRocketryBlocks.blockDataBus, typicalBlockProperties);
@@ -462,7 +444,6 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemPressureTank = new BlockItem(AdvancedRocketryBlocks.blockPressureTank, typicalBlockProperties);
 		AdvancedRocketryItems.itemIntake = new BlockItem(AdvancedRocketryBlocks.blockIntake, typicalBlockProperties);
 		AdvancedRocketryItems.itemCircleLight = new BlockItem(AdvancedRocketryBlocks.blockCircleLight, typicalBlockProperties);
-		//AdvancedRocketryItems.itemEnergyPipe = new BlockItem(AdvancedRocketryBlocks.blockEnergyPipe, typicalBlockProperties);
 		AdvancedRocketryItems.itemSolarGenerator = new BlockItem(AdvancedRocketryBlocks.blockSolarGenerator, typicalBlockProperties);
 		AdvancedRocketryItems.itemDockingPort = new BlockItem(AdvancedRocketryBlocks.blockDockingPort, typicalBlockProperties);
 		AdvancedRocketryItems.itemAltitudeController = new BlockItem(AdvancedRocketryBlocks.blockAltitudeController, typicalBlockProperties);
@@ -576,7 +557,6 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemDockingPort.setRegistryName("stationmarker"),
 				AdvancedRocketryItems.itemAltitudeController.setRegistryName("altitudecontroller"),
 				AdvancedRocketryItems.itemRailgun.setRegistryName("railgun"),
-				//AdvancedRocketryItems.itemAstroBed .setRegistryName("astrobed"),
 				AdvancedRocketryItems.itemPlanetHoloSelector.setRegistryName("planetholoselector"),
 				AdvancedRocketryItems.itemLensBlock.setRegistryName("blocklens"),
 				AdvancedRocketryItems.itemForceField.setRegistryName("forcefield"),

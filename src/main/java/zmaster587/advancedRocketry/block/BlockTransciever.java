@@ -9,9 +9,12 @@ import net.minecraft.world.IBlockReader;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.inventory.GuiHandler;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class BlockTransciever extends BlockTile {
 
-	private static VoxelShape bb[] = {VoxelShapes.create(.25, .25, .75, .75, .75, 1),
+	private static VoxelShape[] bb = {VoxelShapes.create(.25, .25, .75, .75, .75, 1),
 			VoxelShapes.create(.25, .25, 0, .75, .75, 0.25),
 			VoxelShapes.create(.75, .25, .25, 1, .75, .75),
 			VoxelShapes.create(0, .25, .25, 0.25, .75, .75)};
@@ -20,7 +23,9 @@ public class BlockTransciever extends BlockTile {
 		super(properties, guiId);
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return bb[state.get(FACING).ordinal() - 2];
 	}

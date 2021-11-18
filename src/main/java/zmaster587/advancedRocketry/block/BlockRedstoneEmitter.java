@@ -2,7 +2,6 @@ package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -15,16 +14,13 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.tile.atmosphere.TileAtmosphereDetector;
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNullableByDefault;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class BlockRedstoneEmitter extends Block {
 	
@@ -36,6 +32,7 @@ public class BlockRedstoneEmitter extends Block {
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder);
 		
@@ -55,9 +52,10 @@ public class BlockRedstoneEmitter extends Block {
 		return bstate.get(POWERED);
 	}
 	
+	@Nonnull
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
-			Hand handIn, BlockRayTraceResult hit) {
+	@ParametersAreNonnullByDefault
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if(!world.isRemote)
 		{
 			TileEntity te = world.getTileEntity(pos);
@@ -73,16 +71,19 @@ public class BlockRedstoneEmitter extends Block {
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		return blockState.get(POWERED) ? 15 : 0;
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		return blockState.get(POWERED) ? 15 : 0;
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean canProvidePower(BlockState state) {
 		return true;
 	}

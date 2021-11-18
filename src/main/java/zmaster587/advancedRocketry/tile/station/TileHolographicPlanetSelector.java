@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.station;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -37,6 +36,8 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -65,8 +66,8 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 
 	public TileHolographicPlanetSelector() {
 		super(AdvancedRocketryTileEntityType.TILE_HOLOGRAM);
-		entities = new LinkedList<EntityUIPlanet>();
-		starEntities = new LinkedList<EntityUIStar>();
+		entities = new LinkedList<>();
+		starEntities = new LinkedList<>();
 		targetGrav = new ModuleText(6, 45, LibVulpes.proxy.getLocalizedString("msg.planetholo.size"), 0x202020);
 		selectedPlanet = null;
 		stellarMode = false;
@@ -276,7 +277,7 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 		selectedPlanet = null;
 
 		if(backButton == null) {
-			backButton = new EntityUIButton(world, DimensionManager.getInstance().overworldProperties.getId(), this);
+			backButton = new EntityUIButton(world, DimensionManager.overworldProperties.getId(), this);
 			backButton.setPosition(this.pos.getX() + .5, this.pos.getY() + 1.5, this.pos.getZ() + .5);
 			this.getWorld().addEntity(backButton);
 		}
@@ -355,7 +356,7 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 
 	@Override
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 
 		modules.add(targetGrav);
 		modules.add(new ModuleSlider(6, 60, 0, TextureResources.doubleWarningSideBarIndicator, this));
@@ -474,7 +475,9 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 		}
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public CompoundNBT write(CompoundNBT compound) {
 		compound = super.write(compound);
 		state.write(compound);
@@ -483,18 +486,21 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void read(BlockState blkstate, CompoundNBT compound) {
 		super.read(blkstate, compound);
 		state = RedstoneState.createFromNBT(compound);
 		redstoneControl.setRedstoneState(state);
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}

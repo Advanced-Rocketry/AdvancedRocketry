@@ -8,8 +8,6 @@ import zmaster587.advancedRocketry.api.atmosphere.AtmosphereRegister;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.libVulpes.network.BasePacket;
 
-import java.io.IOException;
-
 public class PacketAtmSync extends BasePacket {
 
 	String type;

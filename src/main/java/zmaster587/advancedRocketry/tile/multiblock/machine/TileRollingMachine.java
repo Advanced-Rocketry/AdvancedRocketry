@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,12 +11,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
-import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
-import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;

@@ -28,6 +28,7 @@ import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -171,7 +172,7 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 
 		modules.add(new ModulePower(160, 30, this));
 
@@ -259,6 +260,7 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isUsableByPlayer(PlayerEntity player) {
 		return inventory.isUsableByPlayer(player);
 	}
@@ -269,12 +271,14 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void openInventory(PlayerEntity pos) {
 
 	}
 
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void closeInventory(PlayerEntity pos) {
 
 	}

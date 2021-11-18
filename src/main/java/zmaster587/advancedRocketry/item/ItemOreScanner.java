@@ -2,32 +2,27 @@ package zmaster587.advancedRocketry.item;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
-import zmaster587.advancedRocketry.inventory.GuiHandler;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,7 +35,8 @@ public class ItemOreScanner extends Item {
 	}
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag arg5) {
+	@ParametersAreNonnullByDefault
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag arg5) {
 		
 		SatelliteBase sat = DimensionManager.getInstance().getSatellite(this.getSatelliteID(stack));
 		
@@ -52,7 +48,7 @@ public class ItemOreScanner extends Item {
 			list.add( new TranslationTextComponent("msg.unprogrammed"));
 		else if(mapping == null)
 			list.add( new TranslationTextComponent("msg.itemorescanner.nosat"));
-		else if(mapping.getDimensionId().get() == ZUtils.getDimensionIdentifier(player)) {
+		else if(mapping.getDimensionId().get() == ZUtils.getDimensionIdentifier(world)) {
 			list.add( new TranslationTextComponent("msg.connected"));
 			list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.maxzoom") + mapping.getZoomRadius()));
 			list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.filter") + mapping.canFilterOre()));
@@ -60,7 +56,7 @@ public class ItemOreScanner extends Item {
 		else
 			list.add( new TranslationTextComponent("msg.notconnected"));
 
-		super.addInformation(stack, player, list, arg5);
+		super.addInformation(stack, world, list, arg5);
 	}
 	
 	public void setSatelliteID(@Nonnull ItemStack stack, long id) {

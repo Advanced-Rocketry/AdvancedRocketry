@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.network;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -8,8 +7,6 @@ import net.minecraft.network.PacketBuffer;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.util.Asteroid;
 import zmaster587.libVulpes.network.BasePacket;
-
-import java.io.IOException;
 
 public class PacketAsteroidInfo extends BasePacket {
 

@@ -1,23 +1,16 @@
 package zmaster587.advancedRocketry.world.gen;
 
-import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.World;
 import net.minecraft.world.gen.IWorldGenerationReader;
 import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
 import net.minecraft.world.gen.foliageplacer.FoliagePlacer;
 import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
-import net.minecraft.world.gen.trunkplacer.TrunkPlacerType;
-import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
-import zmaster587.advancedRocketry.api.AdvancedRocktryTrees;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-
-import com.google.common.collect.ImmutableList;
 
 public class WorldGenCharredTree extends StraightTrunkPlacer {
 	
@@ -37,7 +30,7 @@ public class WorldGenCharredTree extends StraightTrunkPlacer {
            func_236911_a_(p_230382_1_, p_230382_2_, p_230382_4_.up(i), p_230382_5_, p_230382_6_, p_230382_7_);
         }
 
-        return new LinkedList<FoliagePlacer.Foliage>();
+        return new LinkedList<>();
      }
     
     /*protected TrunkPlacerType<?> func_230381_a_() {

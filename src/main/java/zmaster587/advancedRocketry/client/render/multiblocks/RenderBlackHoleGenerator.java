@@ -16,6 +16,8 @@ import zmaster587.advancedRocketry.tile.multiblock.energy.TileBlackHoleGenerator
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.render.RenderHelper;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class RenderBlackHoleGenerator extends TileEntityRenderer<TileBlackHoleGenerator> {
 
 	WavefrontObject model;
@@ -32,11 +34,10 @@ public class RenderBlackHoleGenerator extends TileEntityRenderer<TileBlackHoleGe
 	}
 	
 	@Override
-	public void render(TileBlackHoleGenerator tile, float partialTicks, MatrixStack matrix,
-			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
-		TileBlackHoleGenerator multiBlockTile = (TileBlackHoleGenerator)tile;
+	@ParametersAreNonnullByDefault
+	public void render(TileBlackHoleGenerator tile, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
 
-		if(!multiBlockTile.canRender())
+		if(!tile.canRender())
 			return;
 
 		matrix.push();
@@ -53,7 +54,7 @@ public class RenderBlackHoleGenerator extends TileEntityRenderer<TileBlackHoleGe
 		
 		model.tessellateAll(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder);
 		
-		if(multiBlockTile.isProducingPower())
+		if(tile.isProducingPower())
 		{
 			IVertexBuilder entityTransparentBuilder = buffer.getBuffer(RenderHelper.getTranslucentManualRenderType());
 			

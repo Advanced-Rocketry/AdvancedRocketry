@@ -6,7 +6,6 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -170,11 +169,6 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 
 			runMapperWithSelection();
 		}
-		else if(keyCode == GLFW.GLFW_KEY_A) {
-			xCenter += radius;
-
-			runMapperWithSelection();
-		}
 		else if(keyCode == GLFW.GLFW_KEY_DOWN){
 			scanSize = Math.min(scanSize*2, maxZoom);
 
@@ -256,18 +250,18 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 		RenderSystem.disableTexture();
 		RenderSystem.color4f(0f, 0.8f, 0f,1f);
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		buffer.pos(-21, 82 + fancyScanOffset, (double)this.getBlitOffset()).endVertex();
-		buffer.pos(0, 84 + fancyScanOffset, (double)this.getBlitOffset()).endVertex();
-		buffer.pos(0, 81 + fancyScanOffset, (double)this.getBlitOffset()).endVertex();
-		buffer.pos(-21, 81 + fancyScanOffset, (double)this.getBlitOffset()).endVertex();
+		buffer.pos(-21, 82 + fancyScanOffset, this.getBlitOffset()).endVertex();
+		buffer.pos(0, 84 + fancyScanOffset, this.getBlitOffset()).endVertex();
+		buffer.pos(0, 81 + fancyScanOffset, this.getBlitOffset()).endVertex();
+		buffer.pos(-21, 81 + fancyScanOffset, this.getBlitOffset()).endVertex();
 		Tessellator.getInstance().draw();
 
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		buffer.pos(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.getBlitOffset()).endVertex();
-		buffer.pos(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.getBlitOffset()).endVertex();
-		buffer.pos(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.getBlitOffset()).endVertex();
-		buffer.pos(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, (double)this.getBlitOffset()).endVertex();
+		buffer.pos(-21, 82 - fancyScanOffset + FANCYSCANMAXSIZE, this.getBlitOffset()).endVertex();
+		buffer.pos(0, 84 - fancyScanOffset + FANCYSCANMAXSIZE, this.getBlitOffset()).endVertex();
+		buffer.pos(0, 81 - fancyScanOffset + FANCYSCANMAXSIZE, this.getBlitOffset()).endVertex();
+		buffer.pos(-21, 81 - fancyScanOffset + FANCYSCANMAXSIZE, this.getBlitOffset()).endVertex();
 		Tessellator.getInstance().draw();
 
 
@@ -365,7 +359,7 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 			Tessellator.getInstance().draw();
 			RenderSystem.color4f(1, 1, 1,1f);
 			RenderSystem.enableTexture();
-			this.drawCenteredString(matrix, this.font, "You", (int)(offsetX + 47 + x + SCREEN_SIZE/2 - radius), (int)(offsetY + 20 + y + SCREEN_SIZE/2 - radius) -10, 0xF0F0F0);
+			drawCenteredString(matrix, this.font, "You", (int)(offsetX + 47 + x + SCREEN_SIZE/2 - radius), (int)(offsetY + 20 + y + SCREEN_SIZE/2 - radius) -10, 0xF0F0F0);
 		}
 
 		//Render sliders and controls
@@ -373,11 +367,11 @@ public class GuiOreMappingSatellite extends ContainerScreen<ContainerOreMappingS
 
 		this.blit(matrix, 197 + x, 31 + y, 0, 192, 32, 14);
 		//this.drawVerticalLine((int)(32*VulpineMath.log2(scanSize-1)/8F) + 199 + x, 34 + y, 45 + y, 0xFFC00F0F);
-		this.drawString(matrix, this.font, "Zoom", 198 + x, 22 + y, 0xF0F0F0);
-		this.drawString(matrix, this.font, "X: " + xSelected, 6 + x, 33 + y, 0xF0F0F0);
-		this.drawString(matrix, this.font, "Z: " + zSelected, 6 + x, 49 + y, 0xF0F0F0);
-		this.drawString(matrix, this.font,  LibVulpes.proxy.getLocalizedString("msg.itemorescanner.value"), 6 + x, 65 + y, 0xF0F0F0);
-		this.drawString(matrix, this.font, String.valueOf(mouseValue), 6 + x, 79 + y, 0xF0F0F0);
+		drawString(matrix, this.font, "Zoom", 198 + x, 22 + y, 0xF0F0F0);
+		drawString(matrix, this.font, "X: " + xSelected, 6 + x, 33 + y, 0xF0F0F0);
+		drawString(matrix, this.font, "Z: " + zSelected, 6 + x, 49 + y, 0xF0F0F0);
+		drawString(matrix, this.font,  LibVulpes.proxy.getLocalizedString("msg.itemorescanner.value"), 6 + x, 65 + y, 0xF0F0F0);
+		drawString(matrix, this.font, String.valueOf(mouseValue), 6 + x, 79 + y, 0xF0F0F0);
 	}
 
 	public static void drawString(MatrixStack matrix, FontRenderer font, String str, int x, int z, int color)

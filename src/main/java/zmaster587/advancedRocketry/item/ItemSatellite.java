@@ -114,7 +114,7 @@ public class ItemSatellite extends ItemIdWithName {
 
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List list, ITooltipFlag bool) {
+	public void addInformation(@Nonnull ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag bool) {
 
 		SatelliteProperties properties = getSatellite(stack);
 

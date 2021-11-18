@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.network;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -14,7 +13,6 @@ import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.network.BasePacket;
 
-import java.io.IOException;
 import java.util.logging.Logger;
 
 public class PacketSpaceStationInfo extends BasePacket {

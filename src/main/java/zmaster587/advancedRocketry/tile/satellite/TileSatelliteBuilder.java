@@ -25,7 +25,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -196,7 +196,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(new ModuleTexturedLimitedSlotArray(152, 10, this, 0, 1, TextureResources.functionComponent)); //Functional Piece
@@ -294,11 +294,13 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void openInventory(PlayerEntity player) {
 		inventory.openInventory(player);
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void closeInventory(PlayerEntity player) {
 		inventory.closeInventory(player);
 	}
@@ -332,6 +334,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 		inventory.readFromNBT(nbt);
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
 		if(index < outputSlot) {

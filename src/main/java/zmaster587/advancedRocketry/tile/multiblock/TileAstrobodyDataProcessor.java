@@ -1,6 +1,5 @@
 package zmaster587.advancedRocketry.tile.multiblock;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,6 +34,7 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -361,7 +361,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 
-		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
+		LinkedList<ModuleBase> modules = new LinkedList<>();
 		modules.add( new ModulePower(18, 20, getBatteries()));
 
 		//TODO: write NBT
@@ -528,11 +528,13 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void openInventory(PlayerEntity player) {
 
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void closeInventory(PlayerEntity player) {
 
 	}

@@ -12,7 +12,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -20,10 +19,12 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryEntities;
 import zmaster587.libVulpes.network.PacketSpawnEntity;
 
+import javax.annotation.Nonnull;
+
 public class EntityItemAbducted extends Entity implements IEntityAdditionalSpawnData {
 
-	private static final DataParameter<ItemStack> ITEM = EntityDataManager.<ItemStack>createKey(ItemEntity.class, DataSerializers.ITEMSTACK);
-	public int lifespan = 6000;
+	private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(ItemEntity.class, DataSerializers.ITEMSTACK);
+	public int lifespan;
 	public int age = 0;
 	ItemEntity itemEntity;
 	
@@ -44,10 +45,6 @@ public class EntityItemAbducted extends Entity implements IEntityAdditionalSpawn
 		this.lifespan = 200;
 		this.setMotion(new Vector3d(0,2,0));
 	}
-
-    public int getLifespan() {
-        return lifespan;
-    }
 
     public int getAge() {
         return age;
@@ -162,7 +159,8 @@ public class EntityItemAbducted extends Entity implements IEntityAdditionalSpawn
     	return itemEntity;
     }
 
-	@Override
+	@Nonnull
+    @Override
 	public IPacket<?> createSpawnPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}

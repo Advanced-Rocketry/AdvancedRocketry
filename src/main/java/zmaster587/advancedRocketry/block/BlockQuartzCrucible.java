@@ -9,6 +9,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class BlockQuartzCrucible extends CauldronBlock {
 	
 	public BlockQuartzCrucible(Properties properties) {
@@ -16,13 +19,15 @@ public class BlockQuartzCrucible extends CauldronBlock {
 	}
 
 	
+	@Nonnull
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player,
-			Hand handIn, BlockRayTraceResult hit) {
+	@ParametersAreNonnullByDefault
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		return ActionResultType.FAIL;
 	}
     
 	@Override
+	@ParametersAreNonnullByDefault
 	public void fillWithRain(World worldIn, BlockPos pos) {
 	}
 }

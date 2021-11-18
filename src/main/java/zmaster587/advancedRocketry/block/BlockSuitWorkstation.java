@@ -4,7 +4,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -46,16 +45,16 @@ public class BlockSuitWorkstation extends BlockTile {
 					itemstack.setCount(itemstack.getCount() - j1 );
 					ItemStack newStack = itemstack.copy();
 					newStack.setCount(j1);
-					entityitem = new ItemEntity(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), newStack);
+					entityitem = new ItemEntity(world, (float)pos.getX() + f, (float)pos.getY() + f1, (float)pos.getZ() + f2, newStack);
 					float f3 = 0.05F;
 					
-					entityitem.setMotion((double)((float)world.rand.nextGaussian() * f3),
-						(double)((float)world.rand.nextGaussian() * f3 + 0.2F),
-						(double)((float)world.rand.nextGaussian() * f3));
+					entityitem.setMotion((float)world.rand.nextGaussian() * f3,
+							(float)world.rand.nextGaussian() * f3 + 0.2F,
+							(float)world.rand.nextGaussian() * f3);
 
 					if (itemstack.hasTag())
 					{
-						entityitem.getItem().setTag((CompoundNBT)itemstack.getTag().copy());
+						entityitem.getItem().setTag(itemstack.getTag().copy());
 					}
 				}
 			}

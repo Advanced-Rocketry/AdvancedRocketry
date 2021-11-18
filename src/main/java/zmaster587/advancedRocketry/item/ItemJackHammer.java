@@ -4,13 +4,11 @@ import com.google.common.collect.Sets;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolItem;
 import net.minecraft.tags.ItemTags;
-import zmaster587.advancedRocketry.api.MaterialGeode;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -22,7 +20,6 @@ public class ItemJackHammer extends ToolItem {
 	
 	public ItemJackHammer(IItemTier toolMaterial, Item.Properties properties) {
 		super(1, 1, toolMaterial, items, properties);
-		
 	}
 	
 	@Override
@@ -31,6 +28,7 @@ public class ItemJackHammer extends ToolItem {
 	}
     
 	@Override
+	@ParametersAreNonnullByDefault
     public boolean canHarvestBlock(BlockState blockIn)
     {
             return true;

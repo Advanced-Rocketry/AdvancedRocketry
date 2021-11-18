@@ -58,6 +58,7 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -94,7 +95,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 
 
 	private SpaceStationObject getSpaceObject() {
-		if(station == null && ARConfiguration.GetSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world))) {
+		if(station == null && ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world))) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceStationObject)
 				station = (SpaceStationObject) object;
@@ -189,7 +190,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 
 		if(ID == guiId.MODULARNOINV.ordinal()) {
 
@@ -406,7 +407,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 			{
 				ResourceLocation dstBody =  station.getDestOrbitingBody();
 				if(DimensionManager.getInstance().isStar(dstBody)) {
-					DimensionProperties starProps = new DimensionProperties(dstBody);;
+					DimensionProperties starProps = new DimensionProperties(dstBody);
 					starProps.setStar(dstBody);
 					starProps.setName(starProps.getStar().getName());
 					dstProps = starProps;
@@ -527,14 +528,10 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 			if(station != null && !station.isAnchored() && station.hasUsableWarpCore() && station.useFuel(getTravelCost()) != 0 && meetsArtifactReq(DimensionManager.getInstance().getDimensionProperties(station.getDestOrbitingBody()))) {
 				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), Math.max(Math.min(getTravelCost()*5, 5000),0));
 
-				for (PlayerEntity player2 : ((ServerWorld)world).getPlayers(new Predicate<PlayerEntity>() {
-					public boolean apply(PlayerEntity input) {
-						return SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos( input.getPositionVec())) == station;
-					};
-				})) {
-					ARAdvancements.triggerAchievement(ARAdvancements.ALL_SHE_GOT, (ServerPlayerEntity) player2);
+				for (ServerPlayerEntity player2 : ((ServerWorld)world).getPlayers((Predicate<PlayerEntity>) input -> SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos( input.getPositionVec())) == station)) {
+					ARAdvancements.triggerAchievement(ARAdvancements.ALL_SHE_GOT, player2);
 					if(!DimensionManager.hasReachedWarp)
-						ARAdvancements.triggerAchievement(ARAdvancements.FLIGHT_OF_PHEONIX, (ServerPlayerEntity)player2);
+						ARAdvancements.triggerAchievement(ARAdvancements.PHOENIX_FLIGHT, player2);
 				}
 
 				DimensionManager.hasReachedWarp = true;
@@ -576,7 +573,9 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 		}
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public CompoundNBT write(CompoundNBT compound) {
 		inv.write(compound);
 		data.writeToNBT(compound);
@@ -584,12 +583,14 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 		return super.write(compound);
 	}
 
+	@Nonnull
 	@Override
 	public CompoundNBT getUpdateTag() {
 		return write(new CompoundNBT());
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public void read(BlockState state, CompoundNBT compound) {
 		super.read(state, compound);
 		inv.readFromNBT(compound);
@@ -761,6 +762,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
@@ -770,17 +772,16 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 		return inv.isEmpty();
 	}
 
+	@ParametersAreNonnullByDefault
 	@Override
 	public void openInventory(PlayerEntity player) {
 		inv.openInventory(player);
-
 	}
 
-
 	@Override
+	@ParametersAreNonnullByDefault
 	public void closeInventory(PlayerEntity player) {
 		inv.closeInventory(player);
-
 	}
 
 
@@ -906,7 +907,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 					ItemStack stack = getStackInSlot(PLANETSLOT);
 					if(!stack.isEmpty() && stack.getItem() instanceof ItemPlanetIdentificationChip) {
 						ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)stack.getItem();
-						List<ResourceLocation> unknownPlanets = new LinkedList<ResourceLocation>();
+						List<ResourceLocation> unknownPlanets = new LinkedList<>();
 						
 						//Check to see if any planets with artifacts can be discovered
 						for(ResourceLocation id : DimensionManager.getInstance().getLoadedDimensions()) {
@@ -966,14 +967,15 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 	}
 
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
-		// TODO Auto-generated method stub
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		GuiHandler.guiId guiType = openFullScreen ? GuiHandler.guiId.MODULARFULLSCREEN : getModularInvType();
 		openFullScreen = false;

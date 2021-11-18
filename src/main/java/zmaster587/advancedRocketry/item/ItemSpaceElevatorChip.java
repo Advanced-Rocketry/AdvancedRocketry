@@ -4,14 +4,16 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.util.DimensionBlockPosition;
 import zmaster587.advancedRocketry.util.NBTStorableListList;
-import zmaster587.libVulpes.LibVulpes;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class ItemSpaceElevatorChip extends Item {
@@ -46,8 +48,7 @@ public class ItemSpaceElevatorChip extends Item {
 			else {
 				list.writeToNBT(stack.getTag());
 			}
-		}
-		else if(!listToStore.isEmpty()) {
+		} else if(!listToStore.isEmpty()) {
 			CompoundNBT nbt = new CompoundNBT();
 			list.writeToNBT(nbt);
 			
@@ -56,7 +57,8 @@ public class ItemSpaceElevatorChip extends Item {
 	}
 	
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List list, ITooltipFlag bool) {
+	@ParametersAreNonnullByDefault
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag bool) {
 		
 		int numPos = getBlockPositions(stack).size();
 		

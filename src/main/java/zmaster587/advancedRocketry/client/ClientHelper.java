@@ -16,7 +16,6 @@ import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.client.render.planet.RenderSpaceSky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.libVulpes.util.ZUtils;
 
 public class ClientHelper {
 
@@ -75,7 +74,7 @@ public class ClientHelper {
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties((World)reader);
 
 
-		if(properties.isStation() || properties.getId().equals(ARConfiguration.GetSpaceDimId()))
+		if(properties.isStation() || properties.getId().equals(ARConfiguration.getSpaceDimId()))
 			return AdvancedRocketry.proxy.calculateCelestialAngleSpaceStation();
 		
 		double d0 = MathHelper.frac((double)reader.func_241851_ab() / ((double)properties.rotationalPeriod) - 0.25D);

@@ -4,9 +4,7 @@ import java.util.function.Supplier;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.block.material.Material;
 import net.minecraft.fluid.FlowingFluid;
-import net.minecraft.fluid.Fluid;
 
 public class BlockEnrichedLava extends FlowingFluidBlock {
 

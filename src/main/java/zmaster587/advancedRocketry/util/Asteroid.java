@@ -42,7 +42,7 @@ public class Asteroid {
 	/**
 	 * @param seed to use in RNG
 	 * @param uncertainty how uncertain the outcome should be, 1 is default settings, 0 is 100% known
-	 * @return
+	 * @return the list of stacks in StackEntry form for the harvest
 	 */
 	public List<StackEntry> getHarvest(long seed, float uncertainty) {
 		

@@ -3,7 +3,6 @@ package zmaster587.advancedRocketry.api;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -16,15 +15,11 @@ import net.minecraft.world.biome.BiomeGenerationSettings.Builder;
 import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.biome.Biome.RainType;
 import net.minecraft.world.biome.BiomeAmbience.GrassColorModifier;
-import net.minecraft.world.biome.provider.BiomeProvider;
-import net.minecraft.world.biome.provider.CheckerboardBiomeProvider;
 import net.minecraft.world.biome.BiomeAmbience;
 import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.NoiseChunkGenerator;
 import net.minecraft.world.gen.GenerationStage.Carving;
 import net.minecraft.world.gen.GenerationStage.Decoration;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
-import net.minecraft.world.gen.carver.CaveWorldCarver;
 import net.minecraft.world.gen.carver.ConfiguredCarver;
 import net.minecraft.world.gen.carver.ConfiguredCarvers;
 import net.minecraft.world.gen.carver.ICarverConfig;
@@ -35,28 +30,19 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.FeatureSpread;
 import net.minecraft.world.gen.feature.Features;
 import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraft.world.gen.feature.IceSpikeFeature;
-import net.minecraft.world.gen.feature.MultipleRandomFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.ProbabilityConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.TwoLayerFeature;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
-import net.minecraft.world.gen.feature.structure.JunglePyramidStructure;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureFeatures;
 import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
-import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
-import net.minecraft.world.gen.placement.Placement;
 import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilders;
 import net.minecraft.world.gen.surfacebuilders.ISurfaceBuilderConfig;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
-import net.minecraft.world.gen.trunkplacer.AbstractTrunkPlacer;
-import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
-import net.minecraft.world.gen.trunkplacer.TrunkPlacerType;
-import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.biome.MoodSoundAmbience;
@@ -65,17 +51,12 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import java.lang.reflect.Field;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import com.google.common.collect.ImmutableList;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.Lifecycle;
 
 import zmaster587.advancedRocketry.dimension.DimensionProperties.Temps;
 import zmaster587.advancedRocketry.world.decoration.StructurePieceCrater;
@@ -110,9 +91,9 @@ public class AdvancedRocketryBiomes {
 	public static IStructurePieceType STRUCTURE_PIECE_GEODE;
 	// Biome Providers
 	static {
-		Registry.register(Registry.BIOME_PROVIDER_CODEC, "advancedrocketry:planetary", CustomPlanetBiomeProvider.customPlanetCodec);
-		Registry.register(Registry.CHUNK_GENERATOR_CODEC, "advancedrocketry:planetary_noise", ChunkProviderPlanet.planetCodec);
-		Registry.register(Registry.CHUNK_GENERATOR_CODEC, "advancedrocketry:space", ChunkProviderSpace.planetCodec);
+		Registry.register(Registry.BIOME_PROVIDER_CODEC, "planetary", CustomPlanetBiomeProvider.customPlanetCodec);
+		Registry.register(Registry.CHUNK_GENERATOR_CODEC, "planetary_noise", ChunkProviderPlanet.planetCodec);
+		Registry.register(Registry.CHUNK_GENERATOR_CODEC, "space", ChunkProviderSpace.planetCodec);
 		
 		
 		STRUCTURE_PIECE_CRATER = Registry.register(Registry.STRUCTURE_PIECE, "craterpiece".toLowerCase(Locale.ROOT), StructurePieceCrater::new);
@@ -135,7 +116,7 @@ public class AdvancedRocketryBiomes {
 
 	public static void configureSurfaceBuilders()
 	{
-		MOON_LUNAR_LIGHT_CONFIG = registerSurfaceBuilder("advancedrocketry:lunargenerationlight", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(AdvancedRocketryBlocks.blockMoonTurf.getDefaultState(), AdvancedRocketryBlocks.blockMoonTurf.getDefaultState(), Blocks.GRAVEL.getDefaultState())));
+		MOON_LUNAR_LIGHT_CONFIG = registerSurfaceBuilder("lunargenerationlight", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(AdvancedRocketryBlocks.blockMoonTurf.getDefaultState(), AdvancedRocketryBlocks.blockMoonTurf.getDefaultState(), Blocks.GRAVEL.getDefaultState())));
 		MOON_LUNAR_DARK_CONFIG = registerSurfaceBuilder("lunargenerationdark", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(AdvancedRocketryBlocks.blockMoonTurfDark.getDefaultState(), AdvancedRocketryBlocks.blockMoonTurfDark.getDefaultState(), Blocks.GRAVEL.getDefaultState())));
 		HOTDRY_CONFIG = registerSurfaceBuilder("hotdrygeneration", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(AdvancedRocketryBlocks.blockHotTurf.getDefaultState(), AdvancedRocketryBlocks.blockHotTurf.getDefaultState(), Blocks.GRAVEL.getDefaultState())));
 		SPACE_CONFIG = registerSurfaceBuilder("spacegeneration", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState())));
@@ -146,9 +127,9 @@ public class AdvancedRocketryBiomes {
 	// End surface Builder config
 
 	// Structure features
-	public static Structure<ProbabilityConfig> CRATER = (Structure<ProbabilityConfig>) new StructureCrater(ProbabilityConfig.CODEC);
-	public static Structure<ProbabilityConfig> VOLCANO = (Structure<ProbabilityConfig>) new StructureVolcano(ProbabilityConfig.CODEC);
-	public static Structure<ProbabilityConfig> GEODE = (Structure<ProbabilityConfig>) new StructureGeode(ProbabilityConfig.CODEC);
+	public static Structure<ProbabilityConfig> CRATER = new StructureCrater(ProbabilityConfig.CODEC);
+	public static Structure<ProbabilityConfig> VOLCANO = new StructureVolcano(ProbabilityConfig.CODEC);
+	public static Structure<ProbabilityConfig> GEODE = new StructureGeode(ProbabilityConfig.CODEC);
 	public static StructureFeature<ProbabilityConfig, ? extends Structure<ProbabilityConfig>> CONFIGURED_CRATER = CRATER.withConfiguration(new ProbabilityConfig(0.0000001F));
 	public static StructureFeature<ProbabilityConfig, ? extends Structure<ProbabilityConfig>> CONFIGURED_VOLCANO = VOLCANO.withConfiguration(new ProbabilityConfig(0.0000001F));
 	public static StructureFeature<ProbabilityConfig, ? extends Structure<ProbabilityConfig>> CONFIGURED_GEODE = GEODE.withConfiguration(new ProbabilityConfig(0.0000001F));
@@ -160,9 +141,9 @@ public class AdvancedRocketryBiomes {
 		evt.getRegistry().register(CRATER.setRegistryName("crater"));
 		evt.getRegistry().register(GEODE.setRegistryName("geode"));
 		
-		Structure.NAME_STRUCTURE_BIMAP.put("advancedrocketry:volcano", VOLCANO);
-	    Structure.NAME_STRUCTURE_BIMAP.put("advancedrocketry:crater", CRATER);
-	    Structure.NAME_STRUCTURE_BIMAP.put("advancedrocketry:geode", GEODE);
+		Structure.NAME_STRUCTURE_BIMAP.put("volcano", VOLCANO);
+	    Structure.NAME_STRUCTURE_BIMAP.put("crater", CRATER);
+	    Structure.NAME_STRUCTURE_BIMAP.put("geode", GEODE);
 	    
 	    Field decorationStageField = ObfuscationReflectionHelper.findField(Structure.class, "field_236385_u_");
 	    decorationStageField.setAccessible(true);
@@ -174,17 +155,14 @@ public class AdvancedRocketryBiomes {
 		    decoractionStage.put(VOLCANO, GenerationStage.Decoration.LOCAL_MODIFICATIONS);
 		    decoractionStage.put(CRATER, GenerationStage.Decoration.LOCAL_MODIFICATIONS);
 		    decoractionStage.put(GEODE, GenerationStage.Decoration.LOCAL_MODIFICATIONS);
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		} catch (IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
-	    
 
 
-	    WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE, "advancedrocketry:volcano", CONFIGURED_VOLCANO);
-		WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE, "advancedrocketry:crater", CONFIGURED_CRATER);
-		WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE, "advancedrocketry:geode", CONFIGURED_GEODE);
+		WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE, "volcano", CONFIGURED_VOLCANO);
+		WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE, "crater", CONFIGURED_CRATER);
+		WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE, "geode", CONFIGURED_GEODE);
 	}
 	
 	   
@@ -197,8 +175,7 @@ public class AdvancedRocketryBiomes {
 	public static ConfiguredCarver<ProbabilityConfig> CONFIGURED_BIG_TREE = configureCarver("big_tree", BIG_TREE.func_242761_a(new ProbabilityConfig(0.02F)));
 	public static ConfiguredCarver<ProbabilityConfig> CONFIGURED_INVERTED_PILLAR = configureCarver("inverted_pillar", INVERTED_PILLAR.func_242761_a(new ProbabilityConfig(0.02F)));
 
-	public static void registerCarvers(RegistryEvent.Register<WorldCarver<?>> evt)
-	{
+	public static void registerCarvers(RegistryEvent.Register<WorldCarver<?>> evt) {
 		evt.getRegistry().register(BIG_TREE.setRegistryName("swamp_tree"));
 		evt.getRegistry().register(INVERTED_PILLAR.setRegistryName("inverted_pillar"));
 		
@@ -216,8 +193,7 @@ public class AdvancedRocketryBiomes {
 	public static ConfiguredFeature<BaseTreeFeatureConfig, ?> CHARRED_TREE;
 	public static ConfiguredFeature<NoFeatureConfig, ?> CRYSTAL_SPIRE;
 	   
-	public static void initFeature()
-	{
+	public static void initFeature() {
 		CRYSTAL_FEATURE = new WorldGenLargeCrystal(NoFeatureConfig.CODEC);
 
 		ALIEN_TREE = registerTree("alientree", Feature.TREE.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(AdvancedRocketryBlocks.blockAlienWood.getDefaultState()), new SimpleBlockStateProvider(AdvancedRocketryBlocks.blockAlienLeaves.getDefaultState()), new BlobFoliagePlacer(FeatureSpread.create(2), FeatureSpread.create(0), 3), new WorldGenAlienTree(4, 2, 0), new TwoLayerFeature(1, 0, 1))).setIgnoreVines().build()));
@@ -225,8 +201,7 @@ public class AdvancedRocketryBiomes {
 		CRYSTAL_SPIRE = registerTree("crystal", CRYSTAL_FEATURE.withConfiguration(NoFeatureConfig.NO_FEATURE_CONFIG));		
 	}
 	
-	public static void registerFeature(RegistryEvent.Register<Feature<?>> evt)
-	{
+	public static void registerFeature(RegistryEvent.Register<Feature<?>> evt) {
 		if(CRYSTAL_FEATURE == null)
 			initFeature();
 		evt.getRegistry().register(CRYSTAL_FEATURE.setRegistryName("largecrystal"));
@@ -253,8 +228,7 @@ public class AdvancedRocketryBiomes {
 	private static BiomeGenerationSettings genVolcanicBasalt;
 	private static BiomeGenerationSettings genVolcanicBasaltBarren;
 	
-	public static void registerBiomeGenerationSettings()
-	{
+	public static void registerBiomeGenerationSettings() {
 		configureSurfaceBuilders();
 		barren = createBuilder(MOON_LUNAR_LIGHT_CONFIG, true).withCarver(Carving.AIR, ConfiguredCarvers.CAVE).build();
 		barrenDark = createBuilder(MOON_LUNAR_DARK_CONFIG, true).withCarver(Carving.AIR, ConfiguredCarvers.CAVE).build();
@@ -274,8 +248,7 @@ public class AdvancedRocketryBiomes {
 		
 	}
 
-	private static BiomeGenerationSettings.Builder createBuilder(ConfiguredSurfaceBuilder<?> surface, boolean space)
-	{
+	private static BiomeGenerationSettings.Builder createBuilder(ConfiguredSurfaceBuilder<?> surface, boolean space) {
 		BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder();
 		builder = builder.withSurfaceBuilder(surface);
 		if(!space)
@@ -365,8 +338,7 @@ public class AdvancedRocketryBiomes {
 		      return MathHelper.hsvToRGB(0.62222224F - lvt_1_1_ * 0.05F, 0.5F + lvt_1_1_ * 0.1F, 1.0F);
 		   }
 	
-	public static void registerBiomes(RegistryEvent.Register<Biome> evt)
-	{
+	public static void registerBiomes(RegistryEvent.Register<Biome> evt) {
 		if(CRYSTAL_FEATURE == null)
 			initFeature();
 		
@@ -402,18 +374,18 @@ public class AdvancedRocketryBiomes {
 		volcanicBarren = new Biome.Builder().category(Category.NONE).precipitation(RainType.NONE).downfall(0.0f).depth(0f).scale(0.09f).temperature(1.0f).withGenerationSettings(genVolcanicBasaltBarren).setEffects(noAmbience).withMobSpawnSettings(noMobs).build();
 
 		evt.getRegistry().registerAll(
-				moonBiome.setRegistryName("advancedrocketry:moon"),
-				hotDryBiome.setRegistryName("advancedrocketry:hotdry"),
-				/*alienForest.setRegistryName("advancedrocketry:alien_forest"),*/
-				spaceBiome.setRegistryName("advancedrocketry:space"),
-				stormLandsBiome.setRegistryName("advancedrocketry:stormland"),
-				crystalChasms.setRegistryName("advancedrocketry:crystal_chasm"),
-				swampDeepBiome.setRegistryName("advancedrocketry:deepswamp"),
-				marsh.setRegistryName("advancedrocketry:marsh"),
-				oceanSpires.setRegistryName("advancedrocketry:oceanspires"),
-				moonBiomeDark.setRegistryName("advancedrocketry:moon_dark"),
-				volcanic.setRegistryName("advancedrocketry:volcanic"),
-				volcanicBarren.setRegistryName("advancedrocketry:volcanic_barren")
+				moonBiome.setRegistryName("moon"),
+				hotDryBiome.setRegistryName("hotdry"),
+				/*alienForest.setRegistryName("alien_forest"),*/
+				spaceBiome.setRegistryName("space"),
+				stormLandsBiome.setRegistryName("stormland"),
+				crystalChasms.setRegistryName("crystal_chasm"),
+				swampDeepBiome.setRegistryName("deepswamp"),
+				marsh.setRegistryName("marsh"),
+				oceanSpires.setRegistryName("oceanspires"),
+				moonBiomeDark.setRegistryName("moon_dark"),
+				volcanic.setRegistryName("volcanic"),
+				volcanicBarren.setRegistryName("volcanic_barren")
 				);
 	}
 
@@ -423,8 +395,6 @@ public class AdvancedRocketryBiomes {
 	 * Registers biomes you don't want to spawn on any planet unless registered with highpressure or similar feature
 	 */
 	public void registerBlackListBiome(Biome biome) {
-
-
 		blackListedBiomeIds.add(getBiomeResource(biome));
 	}
 
@@ -437,7 +407,7 @@ public class AdvancedRocketryBiomes {
 
 	/**
 	 * Registers a biome as high pressure for use with the planet generators (It will only spawn on planets with high pressure)
-	 * @param biome
+	 * @param biome biome to register
 	 */
 	public void registerHighPressureBiome(Biome biome) {
 		registeredHighPressureBiomes.add(biome);
@@ -450,7 +420,7 @@ public class AdvancedRocketryBiomes {
 
 	/**
 	 * Registers a biome to have a chance to spawn as the only biome on a planet, will not register the biome if it is in the blacklist already
-	 * @param biome
+	 * @param biome biome to register
 	 */
 	public void registerSingleBiome(Biome biome) {
 		if(!blackListedBiomeIds.contains(getBiomeResource(biome)))
@@ -490,8 +460,7 @@ public class AdvancedRocketryBiomes {
 		return registeredSingleBiome;	
 	}
 
-	public static Biome getBiome(String string)
-	{
+	public static Biome getBiome(String string) {
 		Biome biome;
 		int id = 0;
 		biome = getBiomeFromResourceLocation(new ResourceLocation(string));
@@ -500,8 +469,7 @@ public class AdvancedRocketryBiomes {
 	}
 
 
-	public static Temps getBiomeTemp(Biome biome)
-	{
+	public static Temps getBiomeTemp(Biome biome) {
 		return Temps.getTempFromValue((int) (biome.getTemperature(new BlockPos(0,100,0))*Temps.HOT.getTemp()));
 	}
 
@@ -530,8 +498,7 @@ public class AdvancedRocketryBiomes {
 		return getBiomeRegistry().getId(key);
 	}
 
-	public static int getBiomeId(ResourceLocation key)
-	{
+	public static int getBiomeId(ResourceLocation key) {
 		return getBiomeRegistry().getId(getBiomeFromResourceLocation(key));
 	}
 
@@ -540,8 +507,7 @@ public class AdvancedRocketryBiomes {
 		return ForgeRegistries.BIOMES;
 	}
 	
-	public static Registry<Biome> getBiomeRegistry()
-	{
+	public static Registry<Biome> getBiomeRegistry() {
 		
 		return DynamicRegistries.func_239770_b_().func_230521_a_(Registry.BIOME_KEY).get();
 	}

@@ -1,10 +1,8 @@
 package zmaster587.advancedRocketry.util;
 
 import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
-import net.minecraftforge.fluids.ForgeFlowingFluid.Properties;
 
 public class FluidColored extends ForgeFlowingFluid {
 

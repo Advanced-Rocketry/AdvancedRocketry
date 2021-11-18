@@ -2,7 +2,6 @@ package zmaster587.advancedRocketry.tile.multiblock;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -69,7 +68,7 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		List<ModuleBase> list = new LinkedList<ModuleBase>();//super.getModules(ID, player);
+		List<ModuleBase> list = new LinkedList<>();//super.getModules(ID, player);
 
 		boolean suitable = true;
 		for(int y = this.getPos().getY() - 4; y > 0; y--) {
@@ -105,10 +104,8 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 						}
 					}
 					else {
-						Iterator<Biome> itr = properties.getBiomes().iterator();
-						while (itr.hasNext()) {
-							Biome biome = itr.next();
-							list2.add(new ModuleText(32, 16 + 12*(i++), AdvancedRocketry.proxy.getNameFromBiome(biome), 0x202020));
+						for (Biome biome : properties.getBiomes()) {
+							list2.add(new ModuleText(32, 16 + 12 * (i++), AdvancedRocketry.proxy.getNameFromBiome(biome), 0x202020));
 						}
 					}
 				}

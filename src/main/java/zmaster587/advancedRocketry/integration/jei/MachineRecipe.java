@@ -9,7 +9,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import zmaster587.libVulpes.interfaces.IRecipe;
-import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.recipe.RecipesMachine.ChanceItemStack;
 import zmaster587.libVulpes.recipe.RecipesMachine.Recipe;
 
@@ -19,13 +18,16 @@ import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class MachineRecipe extends Recipe implements IRecipeCategoryExtension {
-	private List<List<ItemStack>> ingredients;
-	private ArrayList<ItemStack> result;
+	private final List<List<ItemStack>> ingredients;
+	private final ArrayList<ItemStack> result;
 	private ArrayList<ChanceItemStack> resultChance;
-	private List<FluidStack> fluidIngredients;
-	private List<FluidStack> fluidOutputs;
-	private int energy, time;
+	private final List<FluidStack> fluidIngredients;
+	private final List<FluidStack> fluidOutputs;
+	private final int energy;
+	private final int time;
 	private ResourceLocation name;
 
 
@@ -77,19 +79,19 @@ public class MachineRecipe extends Recipe implements IRecipeCategoryExtension {
 	public int getTime() {return time;}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public void drawInfo(int recipeWidth, int recipeHeight, MatrixStack matrixStack, double mouseX, double mouseY) {
 		
 		String powerString = String.format("Power: %d RF/t", energy);
 		FontRenderer fontRendererObj = Minecraft.getInstance().fontRenderer;
-		int stringWidth = fontRendererObj.getStringWidth(powerString);
 		fontRendererObj.drawTextWithShadow(matrixStack, new StringTextComponent(powerString), 0, 55, Color.black.getRGB());
 		
 		String timeString = String.format("Time: %d s", time/20);
-		stringWidth = fontRendererObj.getStringWidth(powerString);
 		fontRendererObj.drawTextWithShadow(matrixStack, new StringTextComponent(timeString), recipeWidth - 55, 55, Color.black.getRGB());
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public void setIngredients(IIngredients ingredients) {
 		// TODO Auto-generated method stub
 	}

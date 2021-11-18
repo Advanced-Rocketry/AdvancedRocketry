@@ -30,7 +30,8 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -70,8 +71,8 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 	
 	@Override
 	public List<ModuleBase> getModules(int id, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-		List<ModuleBase> btns = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
+		List<ModuleBase> btns = new LinkedList<>();
 
 		Iterator<IAtmosphere> atmIter = AtmosphereRegister.getInstance().getAtmosphereList().iterator();
 
@@ -131,7 +132,9 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 		}
 	}
 
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public CompoundNBT write(CompoundNBT nbt) {
 		super.write(nbt);
 
@@ -140,6 +143,7 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void read(BlockState state, CompoundNBT nbt) {
 		super.read(state, nbt);
 
@@ -147,6 +151,7 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 	}
 
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
@@ -154,6 +159,7 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
 	}

@@ -13,6 +13,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.api.DataStorage;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class ItemData extends Item {
@@ -91,8 +93,9 @@ public class ItemData extends Item {
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void addInformation(@Nonnull ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag bool) {
-		super.addInformation(stack, player, list, bool);
+	@ParametersAreNonnullByDefault
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag bool) {
+		super.addInformation(stack, world, list, bool);
 
 		DataStorage data = getDataStorage(stack);
 

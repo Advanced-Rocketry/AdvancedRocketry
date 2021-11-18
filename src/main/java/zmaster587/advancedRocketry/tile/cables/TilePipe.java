@@ -9,14 +9,11 @@ import net.minecraft.util.math.BlockPos;
 import zmaster587.advancedRocketry.cable.HandlerCableNetwork;
 import zmaster587.advancedRocketry.cable.NetworkRegistry;
 
-import javax.annotation.Nonnull;
-
 public class TilePipe extends TileEntity {
 
 	private int networkID;
 	private boolean initialized, destroyed;
 
-	private static boolean debug = false;
 	boolean[] connectedSides;
 
 	public TilePipe(TileEntityType<?> type) {
@@ -206,37 +203,24 @@ public class TilePipe extends TileEntity {
 					if(this.destroyed)
 						return;
 
-					debug = false;
 					if(pipe.isInitialized()) {
 						if(!isInitialized()) {
 							initialize(pipe.getNetworkID());
 							linkSystems();
 							markDirty();
-							
-							if(debug && !world.isRemote)
-								System.out.println(" pos1 " + getPos());
 
 						} else if(pipe.getNetworkID() != networkID)
 							mergeNetworks(pipe.getNetworkID(), networkID);
 					}
 					else if(pipe.destroyed) {
 						getNetworkHandler().removeNetworkByID(pipe.networkID);
-
-						if( debug && !world.isRemote)
-							System.out.println(" pos2 " + getPos());
-						
 						onPlaced();
 						markDirty();
 					}
 					else if(isInitialized()) {
-						if(debug && !world.isRemote)
-							System.out.println(" pos3 " + getPos());
-						
 						pipe.initialize(networkID);
 					}
-					else {		
-						if(debug && !world.isRemote)
-							System.out.println(" pos4 " + getPos());
+					else {
 						onPlaced();
 						markDirty();
 					}

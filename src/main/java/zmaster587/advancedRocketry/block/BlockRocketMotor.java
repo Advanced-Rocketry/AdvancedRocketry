@@ -1,7 +1,6 @@
 package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -15,6 +14,7 @@ import zmaster587.advancedRocketry.api.IRocketEngine;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class BlockRocketMotor extends BlockFullyRotatable implements IRocketEngine {
 
@@ -44,7 +44,9 @@ public class BlockRocketMotor extends BlockFullyRotatable implements IRocketEngi
 		return getDefaultState().with(FACING, Direction.DOWN);
 	}
 	
+	@Nonnull
 	@Override
+	@ParametersAreNonnullByDefault
 	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return VoxelShapes.empty();
 	}

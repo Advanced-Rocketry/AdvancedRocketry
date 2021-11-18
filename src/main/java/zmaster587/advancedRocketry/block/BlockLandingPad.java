@@ -2,24 +2,22 @@ package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.tile.station.TileLandingPad;
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class BlockLandingPad extends Block {
 
@@ -38,6 +36,7 @@ public class BlockLandingPad extends Block {
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		// TODO Auto-generated method stub
 		super.onBlockAdded(state, worldIn, pos, state, isMoving);
@@ -47,9 +46,10 @@ public class BlockLandingPad extends Block {
 		}
 	}
 	
+	@Nonnull
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
-			Hand handIn, BlockRayTraceResult hit) {
+	@ParametersAreNonnullByDefault
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if(!world.isRemote)
 		{
 			TileEntity te = world.getTileEntity(pos);
@@ -60,10 +60,11 @@ public class BlockLandingPad extends Block {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileLandingPad) {
-			((TileLandingPad) tile).unregisterTileWithStation((World)world, pos);
+			((TileLandingPad) tile).unregisterTileWithStation(world, pos);
 		}
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}

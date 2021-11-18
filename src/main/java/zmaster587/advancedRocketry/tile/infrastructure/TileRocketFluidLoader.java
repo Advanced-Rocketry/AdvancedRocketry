@@ -35,8 +35,6 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
-import javax.annotation.Nonnull;
-import java.util.Calendar;
 import java.util.List;
 
 public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastructure,  ITickableTileEntity,  IButtonInventory, INetworkMachine, IGuiCallback {
@@ -57,7 +55,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 		inputRedstoneControl = new ModuleRedstoneOutputButton(174, 32, "", this, LibVulpes.proxy.getLocalizedString("msg.fluidloader.allowloading"));
 		inputstate = RedstoneState.OFF;
 		inputRedstoneControl.setRedstoneState(inputstate);
-		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, new String[] {LibVulpes.proxy.getLocalizedString("msg.fluidloader.none"), LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowredstoneoutput"), LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowredstoneinput")});
+		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, LibVulpes.proxy.getLocalizedString("msg.fluidloader.none"), LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowredstoneoutput"), LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowredstoneinput"));
 	}
 
 	public TileRocketFluidLoader(TileEntityType<?> type, int size) {
@@ -67,7 +65,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 		inputRedstoneControl = new ModuleRedstoneOutputButton(174, 32, "", this, LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowloading"));
 		inputstate = RedstoneState.OFF;
 		inputRedstoneControl.setRedstoneState(inputstate);
-		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, new String[] {LibVulpes.proxy.getLocalizedString("msg.fluidloader.none"), LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowredstoneoutput"), LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowredstoneinput")});
+		sideSelectorModule = new ModuleBlockSideSelector(90, 15, this, LibVulpes.proxy.getLocalizedString("msg.fluidloader.none"), LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowredstoneoutput"), LibVulpes.proxy.getLocalizedString("msg.fluidLoader.allowredstoneinput"));
 	}
 	
 	public TileRocketFluidLoader()

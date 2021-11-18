@@ -1,16 +1,5 @@
 package zmaster587.advancedRocketry.client.render;
 
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-import zmaster587.advancedRocketry.tile.cables.TilePipe;
-import zmaster587.libVulpes.render.RenderHelper;
-
 public class RendererPipe { //extends TileEntityRenderer {
 
 /*
