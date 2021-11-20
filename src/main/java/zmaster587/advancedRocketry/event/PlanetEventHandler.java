@@ -155,7 +155,7 @@ public class PlanetEventHandler {
 					event.getEntity().getPositionVec().squareDistanceTo(2347,80, 67) < 512 ) {
 				ARAdvancements.triggerAchievement(ARAdvancements.WENT_TO_THE_MOON, (ServerPlayerEntity)event.getEntity());
 			}
-			if(event.getEntity() instanceof PlayerEntity && ZUtils.getDimensionIdentifier(event.getEntity().world).toString().equals(ARConfiguration.getCurrentConfig().spaceDimId.toString()) && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.getEntity().getPosition()) == null) {
+			if(event.getEntity() instanceof PlayerEntity && ZUtils.getDimensionIdentifier(event.getEntity().world).equals(DimensionManager.spaceId) && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.getEntity().getPosition()) == null) {
 				double distance = 0;
 				HashedBlockPosition teleportPosition = null;
 				for (ISpaceObject spaceObject : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {

@@ -38,7 +38,7 @@ import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.IMultiblock;
-import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
+import zmaster587.libVulpes.tile.TileInventoriedFEConsumerTank;
 import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
@@ -50,7 +50,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileFuelingStation extends TileInventoriedRFConsumerTank implements IModularInventory, IMultiblock, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory {
+public class TileFuelingStation extends TileInventoriedFEConsumerTank implements IModularInventory, IMultiblock, IInfrastructure, ILinkableTile, INetworkMachine, IButtonInventory {
 	EntityRocketBase linkedRocket;
 	HashedBlockPosition masterBlock;
 	ModuleRedstoneOutputButton redstoneControl;

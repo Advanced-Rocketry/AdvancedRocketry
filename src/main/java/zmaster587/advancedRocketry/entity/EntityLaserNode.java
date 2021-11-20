@@ -59,26 +59,7 @@ public class EntityLaserNode extends Entity implements IEntityAdditionalSpawnDat
 	
 	@Override
 	public void remove() {
-		this.cleanUp();
 		super.remove();
-	}
-
-	/**
-	 * Removes all the light blocks created by the laser
-	 */
-	public void cleanUp() {
-		if(!this.world.isRemote)
-		{
-			for(int h = 0; h < world.getHeight(); h++) {
-				for(int i = 0; i < 9; i++) {
-					int x = (int)this.getPosX() + (i % 3) - 1;
-					int z = (int)getPosZ() + (i / 3) - 1;
-					BlockPos pos = new BlockPos(x, h, z);
-					if(world.getBlockState(pos).getBlock() == AdvancedRocketryBlocks.blockLightSource)
-						world.setBlockState(pos, Blocks.AIR.getDefaultState());
-				}
-			}
-		}
 	}
 
 	@Override

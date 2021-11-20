@@ -141,11 +141,11 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 		}
 
 		//Checks whenever a station changes dimensions or when the multiblock is intialized - ie any time the multipler could concieveably change
-		if(insolationPowerMultiplier == 0 || ((ZUtils.getDimensionIdentifier(world).getPath().equals(ARConfiguration.getCurrentConfig().spaceDimId.get())) && (powerSourceDimensionID != SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getOrbitingPlanetId()))) {
+		if(insolationPowerMultiplier == 0 || ((ZUtils.getDimensionIdentifier(world).equals(DimensionManager.spaceId)) && (powerSourceDimensionID != SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getOrbitingPlanetId()))) {
 			DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world);
-			insolationPowerMultiplier = (ZUtils.getDimensionIdentifier(world).getPath().equals(ARConfiguration.getCurrentConfig().spaceDimId.get())) ? SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getInsolationMultiplier() : properties.getPeakInsolationMultiplierWithoutAtmosphere();
+			insolationPowerMultiplier = (ZUtils.getDimensionIdentifier(world).equals(DimensionManager.spaceId)) ? SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getInsolationMultiplier() : properties.getPeakInsolationMultiplierWithoutAtmosphere();
 			//Sets the ID of the place it's sourcing power from so it does not have to recheck
-			if (ZUtils.getDimensionIdentifier(world).getPath().equals(ARConfiguration.getCurrentConfig().spaceDimId.get()))
+			if (ZUtils.getDimensionIdentifier(world).equals(DimensionManager.spaceId))
 			    powerSourceDimensionID = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getOrbitingPlanetId();
 		}
 		if(!isComplete())

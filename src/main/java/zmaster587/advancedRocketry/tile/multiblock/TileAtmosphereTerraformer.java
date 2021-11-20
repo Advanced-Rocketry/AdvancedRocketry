@@ -379,9 +379,6 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 			}
 		}
 
-		if(!ARConfiguration.getCurrentConfig().terraformRequiresFluid.get())
-			return;
-
 		if(!world.isRemote) {
 			int requiredN2 = ARConfiguration.getCurrentConfig().terraformliquidRate.get(), requiredO2 =  ARConfiguration.getCurrentConfig().terraformliquidRate.get();
 
@@ -437,7 +434,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 
 	@Override
 	public boolean isRunning() {
-		boolean bool = getMachineEnabled() && super.isRunning() && zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableTerraforming.get();
+		boolean bool = getMachineEnabled() && super.isRunning() && ARConfiguration.getCurrentConfig().allowTerraforming.get();
 
 
 		if(!bool)

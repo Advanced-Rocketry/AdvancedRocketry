@@ -30,6 +30,8 @@ import zmaster587.advancedRocketry.api.dimension.solar.IGalaxy;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
@@ -469,78 +471,14 @@ public class XMLPlanetLoader {
 			}
 			//TODO
 			else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_LASER_DRILL_ORES) && !properties.isGasGiant()) {
-
 				properties.laserDrillOresRaw = planetPropertyNode.getTextContent();
-
-				String[] entries = properties.laserDrillOresRaw.split(",");
-				for (String entry : entries) {
-
-					String[] parts = entry.split(";");
-					ResourceLocation tagname = ResourceLocation.tryCreate(parts[0].trim());
-					
-					if (ItemTags.getAllTags().contains(tagname)) {
-						List<Item> items = ItemTags.getCollection().getTagByID(tagname).getAllElements();
-						ItemStack item = items.get(0).getDefaultInstance();
-						if(parts.length > 1) {
-							try {
-								item.setCount(Integer.parseInt(parts[1]));
-							} catch (NumberFormatException ignored) {}
-						}
-						properties.laserDrillOres.add(item);
-					}
-					else if (ForgeRegistries.ITEMS.containsKey(tagname)) {
-						int quantity = 1;
-						int damage = 0;
-						if(parts.length > 1) {
-							try {
-								quantity = Integer.parseInt(parts[1]);
-							} catch (NumberFormatException ignored) {}
-						}
-						properties.laserDrillOres.add(new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(tagname)),quantity));
-					}
-					else {
-						AdvancedRocketry.logger.warn(parts[0] + " is not a valid OreDictionary name or item ID");
-					}
-				}
+				properties.laserDrillOres = ZUtils.readListFromString(properties.laserDrillOresRaw);
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GEODE_ORES)) {
-				String[] entries = planetPropertyNode.getTextContent().split(",");
-				properties.geodeOres.addAll(Arrays.stream(entries)
-						.filter(e -> BlockTags.getAllTags().contains(ResourceLocation.tryCreate(e.trim())))
-						.collect(Collectors.toSet())
-				);
+				properties.geodeOresRaw = planetPropertyNode.getTextContent();
+				properties.geodeOres = ZUtils.readListFromString(properties.geodeOresRaw);
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_CRATER_ORES)) {
 				properties.craterOresRaw = planetPropertyNode.getTextContent();
-
-				String[] entries = properties.craterOresRaw.split(",");
-				for (String entry : entries) {
-
-					String[] parts = entry.split(";");
-					ResourceLocation tagname = ResourceLocation.tryCreate(parts[0].trim());
-
-					if (ItemTags.getAllTags().contains(tagname)) {
-						List<Item> items = ItemTags.getCollection().getTagByID(tagname).getAllElements();
-						ItemStack item = items.get(0).getDefaultInstance();
-						if(parts.length > 1) {
-							try {
-								item.setCount(Integer.parseInt(parts[1]));
-							} catch (NumberFormatException ignored) {}
-						}
-						properties.craterOres.add(item);
-					}
-					else if (ForgeRegistries.ITEMS.containsKey(tagname)) {
-						int quantity = 1;
-						int damage = 0;
-						if(parts.length > 1) {
-							try {
-								quantity = Integer.parseInt(parts[1]);
-							} catch (NumberFormatException ignored) {}
-						}
-						properties.craterOres.add(new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(tagname)),quantity));
-					}
-					else {
-						AdvancedRocketry.logger.warn(parts[0] + " is not a valid OreDictionary name or item ID");
-					}
-				}
+				properties.craterOres = ZUtils.readListFromString(properties.craterOresRaw);
 			} else if(planetPropertyNode.getNodeName().equalsIgnoreCase(ELEMENT_GENTYPE)) {
 				try {
 					properties.setGenType(Integer.parseInt(planetPropertyNode.getTextContent()));
@@ -973,12 +911,8 @@ public class XMLPlanetLoader {
 		if(properties.craterOresRaw != null) {
 			nodePlanet.appendChild(createTextNode(doc, ELEMENT_CRATER_ORES, properties.craterOresRaw));
 		}
-		if(!properties.geodeOres.isEmpty()) {
-			StringJoiner joiner = new StringJoiner(",");
-			for(String ore: properties.geodeOres) {
-				joiner.add(ore);
-			}
-			nodePlanet.appendChild(createTextNode(doc, ELEMENT_GEODE_ORES, joiner.toString()));
+		if(properties.geodeOresRaw != null) {
+			nodePlanet.appendChild(createTextNode(doc, ELEMENT_GEODE_ORES, properties.geodeOresRaw));
 		}
 
 		if(properties.isDecorationOverridden())

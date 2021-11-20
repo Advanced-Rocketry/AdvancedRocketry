@@ -138,7 +138,6 @@ public class AdvancedRocketryBlocks {
 	public static Block blockAlienSapling = new SaplingBlock(new AlienTree(), AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().zeroHardnessAndResistance().sound(SoundType.PLANT));
 	public static Block blockAlienPlanks = new Block(AbstractBlock.Properties.create(Material.WOOD, MaterialColor.SAND).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD));
 
-	public static Block blockLightSource = new BlockLightSource(AbstractBlock.Properties.create(Material.ROCK).setLightLevel((p_235470_0_) -> 14));
 	public static Block blockBlastBrick = new BlockMultiBlockComponentVisible(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3, 15));
 	public static Block blockQuartzCrucible = new BlockQuartzCrucible(AbstractBlock.Properties.create(Material.ROCK));
 	//public static Block blockAstroBed = new BlockAstroBed(DyeColor.WHITE, ).setHardness(0.2F);
@@ -285,7 +284,6 @@ public class AdvancedRocketryBlocks {
 				AdvancedRocketryBlocks.blockGravityController.setRegistryName("gravitycontroller"),
 				AdvancedRocketryBlocks.blockDrill.setRegistryName("drill"),
 				AdvancedRocketryBlocks.blockMicrowaveReceiver.setRegistryName("microwavereciever"),
-				AdvancedRocketryBlocks.blockLightSource.setRegistryName("lightsource"),
 				AdvancedRocketryBlocks.blockSolarPanel.setRegistryName("solarpanel"),
 				AdvancedRocketryBlocks.blockSuitWorkStation.setRegistryName("suitworkstation"),
 				AdvancedRocketryBlocks.blockBiomeScanner.setRegistryName("biomescanner"),
@@ -319,14 +317,9 @@ public class AdvancedRocketryBlocks {
 				AdvancedRocketryBlocks.blockRocketFire.setRegistryName("rocketfire"),
 				AdvancedRocketryBlocks.blockNuclearCore.setRegistryName("nuclearcore"),
 				AdvancedRocketryBlocks.blockNuclearEngine.setRegistryName("nuclearengine"),
+				AdvancedRocketryBlocks.blockGravityMachine.setRegistryName("gravitymachine"),
+				AdvancedRocketryBlocks.blockSpaceLaser.setRegistryName("spacelaser"),
 				AdvancedRocketryBlocks.blockNuclearFuelTank.setRegistryName("nucleartank"));
-
-		//if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableGravityController.get())
-		evt.getRegistry().register(AdvancedRocketryBlocks.blockGravityMachine.setRegistryName("gravitymachine"));
-
-		//TODO, use different mechanism to enable/disable drill
-		//if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableLaserDrill.get())
-		evt.getRegistry().register(AdvancedRocketryBlocks.blockSpaceLaser.setRegistryName("spacelaser"));
 	}
 
 	private static RotatedPillarBlock registerLog(MaterialColor p_235430_0_, MaterialColor p_235430_1_) {

@@ -143,13 +143,13 @@ public class PlanetCommand {
 	{
 		PlayerEntity player;
 		ResourceLocation stationId = new ResourceLocation(SpaceObjectManager.STATION_NAMESPACE, String.valueOf(stationIdStr));
-		ServerWorld world = ZUtils.getWorld(ARConfiguration.getSpaceDimId());
+		ServerWorld world = ZUtils.getWorld(DimensionManager.spaceId);
 		if(sender.getEntity() != null && (player = (PlayerEntity) sender.getEntity()) != null) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(stationId);
 
 			if(object != null) {
 				HashedBlockPosition vec = object.getSpawnLocation();
-				if(!ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(player.world)))
+				if(!DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(player.world)))
 					((ServerPlayerEntity) player).teleport(world, vec.x, vec.y, vec.z, 0, 0);
 				
 				player.setPositionAndUpdate(vec.x, vec.y, vec.z);

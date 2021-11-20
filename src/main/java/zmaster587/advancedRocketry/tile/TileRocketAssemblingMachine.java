@@ -49,7 +49,7 @@ import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.IMultiblock;
-import zmaster587.libVulpes.tile.TileEntityRFConsumer;
+import zmaster587.libVulpes.tile.TileEntityFEConsumer;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
@@ -66,7 +66,7 @@ import java.util.List;
  * changed to complete the rocket structure
  * Also will be used to "build" the rocket components from the placed frames, control fuel flow etc
  **/
-public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements IButtonInventory, INetworkMachine, IDataSync, IModularInventory, IProgressBar, ILinkableTile {
+public class TileRocketAssemblingMachine extends TileEntityFEConsumer implements IButtonInventory, INetworkMachine, IDataSync, IModularInventory, IProgressBar, ILinkableTile {
 
 	private final static int MAXSCANDELAY = 10;
 	private final static int ENERGYFOROP = 100;

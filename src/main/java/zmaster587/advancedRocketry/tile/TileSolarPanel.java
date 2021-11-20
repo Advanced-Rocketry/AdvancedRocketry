@@ -69,7 +69,7 @@ public class TileSolarPanel extends TileInventoriedForgePowerMachine {
 	@Override
 	public int getPowerPerOperation() {
 		DimensionProperties properties =DimensionManager.getInstance().getDimensionProperties(world);
-		double insolationMultiplier = (ZUtils.getDimensionIdentifier(world) != null && ZUtils.getDimensionIdentifier(world).toString().equals(ARConfiguration.getCurrentConfig().spaceDimId.get())) ? SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getInsolationMultiplier() : properties.getPeakInsolationMultiplier();
+		double insolationMultiplier = (ZUtils.getDimensionIdentifier(world) != null && ZUtils.getDimensionIdentifier(world).equals(DimensionManager.spaceId)) ? SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getInsolationMultiplier() : properties.getPeakInsolationMultiplier();
 		//Slight adjustment to make Earth 0.9995 into a 1.0
 		//Then multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency
 		//Makes solar panels not return 0 everywhere

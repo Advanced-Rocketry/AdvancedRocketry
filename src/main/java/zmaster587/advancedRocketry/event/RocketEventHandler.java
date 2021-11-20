@@ -149,7 +149,7 @@ public class RocketEventHandler extends Screen {
 			outerBounds = new ClientDynamicTexture(outerImgSize, outerImgSize);
 		}
 
-		if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(event.world))) {
+		if(DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(event.world))) {
 			destroyOrbitalTextures(event.world);
 			mapReady = false;
 			return;
@@ -276,7 +276,7 @@ public class RocketEventHandler extends Screen {
 		if(!mapReady)
 			return;
 		
-		if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(Minecraft.getInstance().getRenderViewEntity().world))) {
+		if(DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(Minecraft.getInstance().getRenderViewEntity().world))) {
 			destroyOrbitalTextures(Minecraft.getInstance().getRenderViewEntity().world);
 			mapReady = false;
 			return;

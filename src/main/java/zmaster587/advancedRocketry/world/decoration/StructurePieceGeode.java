@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.world.decoration;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -24,22 +25,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class StructurePieceGeode extends ScatteredStructurePiece {
-	int chancePerChunk;
 	int radius;
 	int xCenter, zCenter;
 
-	private static List<BlockState> ores; // = {new BlockMeta(Blocks.IRON_ORE), new BlockMeta(Blocks.GOLD_ORE), new BlockMeta(Blocks.REDSTONE_ORE), new BlockMeta(Blocks.LAPIS_ORE)};
+	private static List<BlockState> ores;
 
-	public static void init()
-	{
+	public static void init() {
 		if(ores == null) {
 			ores = new LinkedList<>();
-			for(int i = 0; i < ARConfiguration.getCurrentConfig().standardGeodeOres.size(); i++) {
-				ResourceLocation oreDictName = ARConfiguration.getCurrentConfig().standardGeodeOres.get(i);
-				ores.add(ForgeRegistries.BLOCKS.getValue(oreDictName).getDefaultState());
-			}
+			IntStream.range(0, ARConfiguration.getCurrentConfig().standardGeodeOres.size()).forEach(i -> ores.add(ARConfiguration.getCurrentConfig().standardGeodeOres.get(i).getDefaultState()));
 		}
 	}
 	
@@ -69,10 +66,7 @@ public class StructurePieceGeode extends ScatteredStructurePiece {
        tagCompound.putInt("zCenter", zCenter);
     }
 
-	public boolean func_230383_a_(ISeedReader world, StructureManager structureMgr, ChunkGenerator chunkGen, Random rand, MutableBoundingBox bb, ChunkPos chunkPos, BlockPos blockPos)
-	{
-		//TODO: make hemisphere from surface and line the side with ore of some kind
-
+	public boolean func_230383_a_(ISeedReader world, StructureManager structureMgr, ChunkGenerator chunkGen, Random rand, MutableBoundingBox bb, ChunkPos chunkPos, BlockPos blockPos) {
 		int depth = radius*radius;
 
 		int chunkX = chunkPos.x;
@@ -83,7 +77,7 @@ public class StructurePieceGeode extends ScatteredStructurePiece {
 
 		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(world.getWorld());
 		ores.addAll(
-				props.craterOres.stream()
+				props.geodeOres.stream()
 						.map(s-> Block.getBlockFromItem(s.getItem()).getDefaultState())
 						.collect(Collectors.toList())
 		);

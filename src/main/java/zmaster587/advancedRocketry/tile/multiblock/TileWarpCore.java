@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -43,7 +44,7 @@ public class TileWarpCore extends TileMultiBlock {
 	};
 
 	private SpaceStationObject getSpaceObject() {
-		if(station == null && ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
+		if(station == null && DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(world))) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceStationObject)
 				station = (SpaceStationObject) object;

@@ -464,7 +464,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	private boolean unableToRun() {
 		return lens.isEmpty() || !canMachineSeeEarth() 
 				|| batteries.getUniversalEnergyStored() == 0 
-				|| ZUtils.getDimensionIdentifier(world).equals(ARConfiguration.getSpaceDimId())
+				|| ZUtils.getDimensionIdentifier(world).equals(DimensionManager.spaceId)
 				|| !DimensionManager.getInstance().canTravelTo(DimensionManager.getInstance().getDimensionProperties(world, getPos()).getParentPlanet()) 
 				|| ARConfiguration.getCurrentConfig().laserBlackListDims.get().contains(DimensionManager.getInstance().getDimensionProperties(world, getPos()).getParentPlanet().toString());
 		}

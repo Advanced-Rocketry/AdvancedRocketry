@@ -590,7 +590,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 					if(planetDefiner != null && !planetDefiner.isPlanetKnown(properties))
 						continue;
 
-					if(!properties.isMoon() && !ARConfiguration.getSpaceDimId().equals(properties.getId())) {
+					if(!properties.isMoon() && !DimensionManager.spaceId.equals(properties.getId())) {
 						ModuleButton button = new ModuleButton(0, i*18, properties.getName(), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
 						button.setAdditionalData(properties.getId());
 						list2.add(button);

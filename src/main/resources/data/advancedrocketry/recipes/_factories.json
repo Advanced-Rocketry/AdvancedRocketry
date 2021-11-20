@@ -5,6 +5,7 @@
         "electricarcfurnace": "zmaster587.advancedRocketry.recipe.RecipeElectricarcfurnace",
         "cuttingmachine": "zmaster587.advancedRocketry.recipe.RecipeCuttingMachine",
         "chemicalreactor": "zmaster587.advancedRocketry.recipe.RecipeChemicalReactor",
+        "centrifuge": "zmaster587.advancedRocketry.recipe.RecipeCentrifuge",
         "electrolyser": "zmaster587.advancedRocketry.recipe.RecipeElectrolyser",
         "crystallizer": "zmaster587.advancedRocketry.recipe.RecipeCrystallizer",
         "precisionlaseretcher": "zmaster587.advancedRocketry.recipe.RecipePrecisionLaserEtcher"

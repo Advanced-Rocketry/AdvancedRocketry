@@ -7,7 +7,6 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biomes;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -31,16 +30,18 @@ import java.util.*;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import zmaster587.libVulpes.util.ZUtils;
 
 /**
  * Stores config variables
  */
 
 public class ARConfiguration {
-	public static final String configFolder = "advRocketry";
+	public static final String configFolder = "advancedrocketry";
 	private final static byte MAGIC_CODE = (byte)197;
 	private final static long MAGIC_CODE_PT2 = 2932031007403L; // Prime
 
+	private final static String CATEGORY_GENERAL = "General";
 	private final static String CATEGORY_WORLD_GENERATION = "World Generation";
 	private final static String CATEGORY_ROCKET = "Rockets";
 	private final static String CATEGORY_TERRAFORMING = "Terraforming";
@@ -55,7 +56,7 @@ public class ARConfiguration {
 	public static Logger logger = LogManager.getLogger(Constants.modId);
 
 	private static ConfigValue<List<? extends String>> sealableBlockWhiteList;
-	private static ConfigValue<List<? extends String>> sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, entityList, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidMonopropellant, liquidBipropellantFuel, liquidBipropellantOxidizer;
+	private static ConfigValue<List<? extends String>> sealableBlockBlackList, breakableTorches,  blackListRocketBlocksStr, harvestableGasses, entityList, geodeOres, blackHoleGeneratorTiming, orbitalLaserOres, liquidMonopropellant, liquidBipropellant, liquidOxidizer;
 	public static ConfigValue<List<? extends String>> biomeBlackList;
 	public static ConfigValue<List<? extends String>> biomeHighPressure;
 	public static ConfigValue<List<? extends String>> biomeSingle;
@@ -75,11 +76,10 @@ public class ARConfiguration {
 	static {
 		Pair<ARConfiguration, ForgeConfigSpec> commonConfiguration = new ForgeConfigSpec.Builder().configure(ARConfiguration::new);
 		commonSpec = commonConfiguration.getRight();
-		ARConfiguration config = commonConfiguration.getLeft();
 	}
 
 	public static void register() {
-		registerConfig(ModConfig.Type.COMMON, commonSpec, "advancedRocketry.toml");
+		registerConfig(ModConfig.Type.COMMON, commonSpec, "advancedrocketry.toml");
 	}
 
 	private static void registerConfig(ModConfig.Type type, ForgeConfigSpec spec, String fileName) {
@@ -87,101 +87,83 @@ public class ARConfiguration {
 	}
 
 
-	private ARConfiguration()
-	{
-	}
+	private ARConfiguration() { }
 
-	public ARConfiguration(ForgeConfigSpec.Builder builder)
-	{
+	public ARConfiguration(ForgeConfigSpec.Builder builder) {
 		currentConfig = new ARConfiguration();
-		//allConfigValues;
-		final String CATEGORY_GENERAL = "General";
 
 		ARConfiguration arConfig = getCurrentConfig();
-		//net.minecraftforge.common.config.Configuration config = arConfig.config;
 
 		builder.push(CATEGORY_GENERAL);
-		arConfig.allowMakingItemsForOtherMods = builder.comment("If true, the machines from AdvancedRocketry will produce things like plates/rods for other mods even if Advanced Rocketry itself does not use the material (This can increase load time)").define("makeMaterialsForOtherMods", true);
-		arConfig.allowSawmillVanillaWood = builder.comment("Should the cutting machine be able to cut vanilla wood into planks").define("sawMillCutVanillaWood", true);
-		arConfig.lowGravityBoots = builder.comment("If true, the boots only protect the player on planets with low gravity").define("lowGravityBoots", false);
-		arConfig.jetPackThrust = builder.comment("Amount of force the jetpack provides with respect to gravity").define("jetPackForce", 1.3);
-		arConfig.buildSpeedMultiplier = builder.comment("Multiplier for the build speed of the Rocket Builder (0.5 is twice as fast 2 is half as fast").define("buildSpeedMultiplier", 1d);
-		arConfig.blockTankCapacity = builder.comment("Multiplier for the amount of fluid this tank can hold").define("blockTankCapacity", 1.0);
-		//Enriched Lava in the centrifuge
-		arConfig.crystalliserMaximumGravity = builder.comment("Maximum gravity the crystallizer can work at. 0 to disable!").define("crystalliserMaximumGravity", 0);
-		arConfig.enableGravityController = builder.comment("If false, the gravity controller cannot be built or used").define("enableGravityMachine", true);
+		arConfig.lowGravityBoots = builder.comment("Should the padded boots only function in <1G: [Default:false]").define("lowGravityBoots", false);
+		arConfig.jetPackThrust = builder.comment("Acceleration in G that the jetpack should provide: [Default:1.3]").define("jetpackAcceleration", 1.3);
+		arConfig.buildSpeedMultiplier = builder.comment("Rocket assembling speed multiplier: [Default:1.0]").define("assemblySpeedMultipluer", 1d);
+		arConfig.crystalliserMaximumGravity = builder.comment("The maximum gravity the Crystallizer should function at. 0 Disables this: [Default:0]").define("crystalliserMaximumGravity", 0);
 		builder.pop();
 		
 		builder.push(ARConfiguration.CATEGORY_LASERDRILL);
-		arConfig.enableLaserDrill = builder.comment("Enables the laser drill machine").define("EnableLaserDrill", true);
-		arConfig.spaceLaserPowerMult = builder.comment("Power multiplier for the laser drill machine").define("LaserDrillPowerMultiplier", 1d);
+		arConfig.spaceLaserPowerMult = builder.comment("Multiplier for the power the laser drill should consume to operate. [Default:1.0]").define("LaserDrillPowerMultiplier", 1d);
 		List<String> laserOreList = new LinkedList<>();
-		laserOreList.add("oreIron");
-		laserOreList.add("oreGold");
-		laserOreList.add("oreCopper");
-		laserOreList.add("oreTin");
-		laserOreList.add("oreRedstone");
-		laserOreList.add("oreDiamond");
-		orbitalLaserOres = builder.comment("List of oredictionary names of ores allowed to be mined by the laser drill if surface drilling is disabled.  Ores can be specified by just the oreName:<size> or by <modname>:<blockname>:<meta>:<size> where size is optional").defineList("laserDrillOres", laserOreList, (val)-> true);
-		arConfig.laserDrillOresBlackList = builder.comment("True if the ores in laserDrillOres should be a blacklist, false for a whitelist").define("laserDrillOres_blacklist", false);
-		arConfig.laserDrillPlanet = builder.comment("If true, the orbital laser will actually mine blocks on the planet below").define("laserDrillPlanet", false);
-		arConfig.laserBlackListDims= builder.comment("Laser drill will not mine these dimension").defineList("spaceLaserDimIdBlackList", new LinkedList<>(), (val) -> true);
+		laserOreList.add("forge:ores/iron");
+		laserOreList.add("forge:ores/gold");
+		laserOreList.add("forge:ores/copper");
+		laserOreList.add("forge:ores/tin");
+		laserOreList.add("forge:ores/redstone");
+		laserOreList.add("forge:ores/diamond");
+		laserOreList.add("forge:ores/coal");
+		laserOreList.add("forge:ores/aluminum");
+		orbitalLaserOres = builder.comment("List of tags/block names of ores allowed to be mined by the laser drill if surface drilling is disabled.  Format is either tag;size or modname:item;size: ").defineList("laserDrillOres", laserOreList, (val)-> true);
+		arConfig.laserDrillPlanet = builder.comment("Should the laser drill mine the planet below: [Default:false]").define("laserDrillPlanet", false);
+		arConfig.laserBlackListDims= builder.comment("Dimensions the laser drill should not mine: [Default: ]").defineList("laserDrillBlacklist", new LinkedList<>(), (val) -> true);
 		builder.pop();
 		
 		builder.push(ARConfiguration.CATEGORY_TERRAFORMING);
-		arConfig.enableTerraforming = builder.comment("Enables terraforming items and blocks").define("EnableTerraforming", true);
-		arConfig.allowTerraforming = builder.comment("EXPERIMENTAL: If set to true allows contruction and usage of the terraformer.  This is known to cause strange world generation after successful terraform").define("allowTerraforming", false);
-		arConfig.terraformingBlockSpeed = builder.comment("How many blocks have the biome changed per tick.  Large numbers can slow the server down").define("biomeUpdateSpeed", 1);
-		arConfig.terraformSpeed = builder.comment("Multplier for atmosphere change speed").define("terraformMult", 1d);
-		arConfig.terraformPlanetSpeed = builder.comment("Max number of blocks allowed to be changed per tick").define("terraformBlockPerTick", 1);
-		arConfig.terraformRequiresFluid = builder.define("TerraformerRequiresFluids", true);
-		arConfig.terraformliquidRate = builder.comment("how many millibuckets/t are required to keep the terraformer running").define("TerraformerFluidConsumeRate", 40);
-		arConfig.allowTerraformNonAR = builder.comment("If true, dimensions not added by AR can be terraformed").define("allowTerraformingNonARWorlds", false);
+		arConfig.allowTerraforming = builder.comment("Should the terraformer be able to function: WARNING: This has been known to cause strange generation! [Default:false]").define("allowTerraforming", false);
+		arConfig.terraformSpeed = builder.comment("Multiplier for the speed at which the terraformer modifies the atmosphere: [Default:1]").define("terraformMult", 1d);
+		arConfig.terraformliquidRate = builder.comment("Terraformer oxygen/nitrogen consumption in mB/t: [Default:40]").define("terraformerFluidRate", 40);
+		arConfig.allowTerraformNonAR = builder.comment("Should dimensions not provided by AR be able to be terraformed: [Default:false]").define("allowTerraformingNonARWorlds", false);
 		builder.pop();
 		
         builder.push(ARConfiguration.CATEGORY_OXYGEN);
-		arConfig.enableOxygen = builder.comment("If true, allows players being hurt due to lack of oxygen and allows effects from non-standard atmosphere types").define("EnableAtmosphericEffects", true);
-		arConfig.scrubberRequiresCartrige = builder.comment("If true, the Oxygen scrubbers require a consumable carbon collection cartridge").define("scrubberRequiresCartrige", true);
-		arConfig.vacuumDamageValue = builder.comment("Amount of damage inflicted with each tick on an entity in a vacuum").defineInRange("vacuumDamage", 1, 0, 100);
-		arConfig.oxygenVentPowerMultiplier = builder.comment("Power consumption multiplier for the oxygen vent").define("OxygenVentPowerMultiplier", 1.0d);
+		arConfig.enableOxygen = builder.comment("Should the atmosphere system be enabled: [Default:true]").define("EnableAtmosphericEffects", true);
+		arConfig.scrubberRequiresCartrige = builder.comment("Should CO2 scrubbers require a carbon collection cartridge: [Default:true]").define("scrubberRequiresCartridge", true);
+		arConfig.oxygenVentPowerMultiplier = builder.comment("Multiplier for the power consumption of the oxygen vent: [Default:1.0]").define("oxygenVentPowerMultiplier", 1.0d);
 		arConfig.spaceSuitOxygenTime = builder.comment("Maximum time in minutes that the spacesuit's internal buffer can store O2 for").define("spaceSuitO2Buffer", 30);
-		arConfig.dropExTorches = builder.comment("If true, breaking an extinguished torch will drop an extinguished torch instead of a vanilla torch").define("dropExtinguishedTorches", false);
-		arConfig.overrideGCAir = builder.comment("If true, Galacticcraft's air will be disabled entirely requiring use of Advanced Rocketry's Oxygen system on GC planets").define("OverrideGCAir", true);
+		arConfig.dropExTorches = builder.comment("Should breaking a torch drop an extinguished torch: [Default:false]").define("dropExtinguishedTorches", false);
 		arConfig.oxygenVentConsumptionMult = builder.comment("Multiplier on how much O2 an oxygen vent consumes per tick").define("oxygenVentConsumptionMultiplier", 1d);
 		arConfig.suitTankCapacity = builder.comment("Multiplier for the amount of fluid this tank can hold").define("suitTankMultiplier", 1.0);
-		sealableBlockWhiteList = builder.comment("Blocks that are not automatically detected as sealable but should seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"").defineList("sealableBlockWhiteList", new LinkedList<>(), (val) -> true);
-		sealableBlockBlackList = builder.comment("Blocks that are automatically detected as sealable but should not seal.  Format \"Mod:Blockname\"  for example \"minecraft:chest\"").defineList("sealableBlockBlackList", new LinkedList<>(), (val) -> true);
-		entityList = builder.comment("list entities which should not be affected by atmosphere properties").defineList("entityAtmBypass", new LinkedList<>(), (val) -> true);
+		sealableBlockWhiteList = builder.comment("Blocks that are not automatically detected as sealable but should seal. Format \"Mod:Blockname\"  for example \"minecraft:chest\"").defineList("sealableBlockWhiteList", new LinkedList<>(), (val) -> true);
+		sealableBlockBlackList = builder.comment("Blocks that are automatically detected as sealable but should not seal. Format \"Mod:Blockname\"  for example \"minecraft:chest\"").defineList("sealableBlockBlackList", new LinkedList<>(), (val) -> true);
+		entityList = builder.comment("List of entities that completely ignore atmosphere properties and effects").defineList("entityAtmBypass", new LinkedList<>(), (val) -> true);
 		breakableTorches = builder.comment("Mod:Blockname  for example \"minecraft:chest\"").define("torchBlocks", new LinkedList<>(), (val) -> true);
 		builder.pop();
 		
 		builder.push(ARConfiguration.CATEGORY_STATION);
-		arConfig.spaceDimId = builder.comment("Dimension ID to use for space stations, changing this could really break things!").define("spaceStationId", Constants.modId + ":space");
-		arConfig.travelTimeMultiplier = builder.comment("Multiplier for warp travel time").define("warpTravelTime", 1d);
-		arConfig.stationSize = builder.comment("The largest size a space station can be.  Should also be a power of 2 (512)").define("SpaceStationBuildRadius", 1024);
-		arConfig.allowZeroGSpacestations = builder.comment("If true, players will be able to completely disable gravity on spacestation.  It's possible to get stuck and require a teleport").define("allowZeroGSpacestations", false);
-		arConfig.fuelPointsPerDilithium = builder.comment("How many units of fuel should each Dilithium Crystal give to warp ships").define("pointsPerDilithium", 500);
+		arConfig.travelTimeMultiplier = builder.comment("Multiplier for warp travel time: [Default:1.0]").define("warpTravelTime", 1d);
+		arConfig.stationSize = builder.comment("The size each station area is created as: [Default:1024]").define("stationSize", 1024);
+		arConfig.allowZeroGSpacestations = builder.comment("Should players be able to completely disable gravity on space stations: WARNING: You can get stuck and require a teleport! [Default:false]").define("stationGravity", false);
+		arConfig.fuelPointsPerDilithium = builder.comment("Dilithium fuel points per crystal: [Default:500]").define("pointsPerDilithium", 500);
 		builder.pop();
 		
 		builder.push(ARConfiguration.CATEGORY_RESOURCE_MISSION);
-		arConfig.gasCollectionMult = builder.comment("Multiplier for the amount of time gas collection missions take").define("gasMissionMultiplier", 1.0);
-		arConfig.asteroidMiningTimeMult = builder.comment("Multiplier changing how long a mining mission takes").define("miningMissionTmeMultiplier", 1.0);
-		harvestableGasses =  builder.comment("list of fluid names that can be harvested as Gas").defineList("harvestableGasses", new LinkedList<>(), (val) -> true);
+		arConfig.gasCollectionMult = builder.comment("Multiplier for the amount of time gas collection missions take: [Default:1.0]").define("gasMissionMultiplier", 1.0);
+		arConfig.asteroidMiningTimeMult = builder.comment("Multiplier for the amount of time asteroid collection missions take: [Default:1.0]").define("asteroidMissingMultiplier", 1.0);
+		harvestableGasses =  builder.comment("List of fluid names that all gas giants will have available to mine: [Default: ]").defineList("harvestableGasses", new LinkedList<>(), (val) -> true);
 //Spawnable gasses
 		builder.pop();
 
 
 		builder.push(ARConfiguration.CATEGORY_ENERGY);
-		arConfig.solarGeneratorMult = builder.comment("Amount of power per tick the solar generator should produce").define("solarGeneratorMultiplier", 1);
-		arConfig.microwaveRecieverMulitplier = builder.comment("Multiplier for the amount of energy produced by the microwave reciever").define("MicrowaveRecieverMultiplier", 1d);
-		arConfig.blackHolePowerMultiplier = builder.comment("Multiplier for the amount of power per tick the black hole generator should produce").define("blackHoleGeneratorMultiplier", 1f);
+		arConfig.solarGeneratorMult = builder.comment("Multiplier for tha mount of power the solar generator should produce:  [Default:1.0]").define("solarGeneratorMultiplier", 1d);
+		arConfig.microwaveRecieverMulitplier = builder.comment("Multiplier for tha mount of power the microwave receiver should produce:  [Default:1.0]").define("microwaveRecieverMultiplier", 1d);
+		arConfig.blackHolePowerMultiplier = builder.comment("Multiplier for tha mount of power the black hole generator should produce:  [Default:1.0]").define("blackHoleGeneratorMultiplier", 1f);
 		List<String> blackHoleGen = new LinkedList<>();
 		blackHoleGen.add("minecraft:stone;1");
 		blackHoleGen.add("minecraft:dirt;1");
 		blackHoleGen.add("minecraft:netherrack;1");
 		blackHoleGen.add("minecraft:cobblestone;1");
-		blackHoleGeneratorTiming = builder.comment("minecraft:dirt;1").defineList("blackHoleTimings", blackHoleGen, (val) -> true);
-		arConfig.defaultItemTimeBlackHole = builder.comment("List of blocks and the amount of ticks they can power the black hole generator format: 'modname:block:meta;number_of_ticks'").define("defaultBurnTime", 500);
+		blackHoleGeneratorTiming = builder.comment("List of stacks that can be used as fuel in the black hole generator. Format is modid:item;multiplier: ").defineList("blackHoleTimings", blackHoleGen, (val) -> true);
+		arConfig.defaultItemTimeBlackHole = builder.comment("Ticks per item in the black hole generator: [Default:500]").define("defaultBurnTime", 500);
 		builder.pop();
 		
 		builder.push(ARConfiguration.CATEGORY_PLANET);
@@ -195,36 +177,35 @@ public class ARConfiguration {
 		builder.pop();
 		
 		builder.push(ARConfiguration.CATEGORY_CLIENT);
-		arConfig.enableNausea = builder.comment("If true, allows players to experience nausea on non-standard atmosphere types").define("EnableAtmosphericNausea", true);
-		arConfig.stationSkyOverride = builder.comment("If true, AR will use a custom skybox on space stations").define("StationSkyOverride", true);
-		arConfig.planetSkyOverride = builder.comment("If true, AR will use a custom skybox on planets").define("PlanetSkyOverride", true);
-		arConfig.advancedVFX = builder.comment("Advanced visual effects").define("advancedVFX", true);
+		arConfig.enableNausea = builder.comment("Should players experience nausea in low-oxygen environments: [Default:true]").define("enableNausea", true);
+		arConfig.stationSkyOverride = builder.comment("Should players see a custom skybox on stations: [Default:true]").define("stationSkyOverride", true);
+		arConfig.planetSkyOverride = builder.comment("Should players see a custom skybox on planets, including the Overworld: [Default:true]").define("planetSkyOverride", true);
 
 		builder.push(CATEGORY_PERFORMANCE);
-		arConfig.atmosphereHandleBitMask = builder.comment("BitMask: 0: no threading, radius based; 1: threading, radius based; 2: no threading volume based; 3: threading volume based").define("atmosphereCalculationMethod", 3);
-		arConfig.oxygenVentSize = builder.comment("Radius of the O2 vent.  if atmosphereCalculationMethod is 2 or 3 then max volume is calculated from this radius.  WARNING: larger numbers can lead to lag").define("oxygenVentSize", 32);
+		arConfig.atmosphereHandleBitMask = builder.comment("BitMask: 0: no threading, radius based; 1: threading, radius based; 2: no threading volume based; 3: threading volume based: [Default:3]").define("atmosphereCalculationMethod", 3);
+		arConfig.oxygenVentSize = builder.comment("Radius of the O2 vent, volume is calculated if volume-based. WARNING: larger numbers can lead to lag: [Default:32]").define("oxygenVentSize", 32);
 		builder.pop();
 		
 		builder.push(ARConfiguration.CATEGORY_ROCKET);
-		arConfig.orbit = builder.comment("How high the rocket has to go before it reaches orbit").defineInRange("OrbitHeight", 1000, 255, Integer.MAX_VALUE);
+		arConfig.orbit = builder.comment("Height in blocks, from bedrock, that rockets should consider low orbit: [Default:1000]").defineInRange("orbitAltitude", 1000, 255, Integer.MAX_VALUE);
 		List<String> fuels = new LinkedList<>();
 		fuels.add("advancedrocketry:rocket_fuel;2");
-		liquidMonopropellant = builder.comment("List of fluid names for fluids that can be used as rocket monopropellants").defineList("rocketFuels", fuels, (val) -> true);
+		liquidMonopropellant = builder.comment("List of fluid IDs that can be used as rocket monopropellants: [Default: ]").defineList("rocketMonopropellants", fuels, (val) -> true);
 		List<String> bifuels = new LinkedList<>();
 		bifuels.add("advancedrocketry:hydrogen");
-		liquidBipropellantFuel = builder.comment("List of fluid names for fluids that can be used as rocket bipropellant fuels").defineList("rocketBipropellants", bifuels, (val) -> true);
+		liquidBipropellant = builder.comment("List of fluid IDs that can be used as rocket bipropellants: [Default: ]").defineList("rocketBipropellants", bifuels, (val) -> true);
 		List<String> bioxydizers = new LinkedList<>();
-		bioxydizers.add("oxygen");
-		liquidBipropellantOxidizer = builder.comment("List of fluid names for fluids that can be used as rocket bipropellant oxidizers").defineList("rocketOxidizers", bioxydizers, (val) -> true);
+		bioxydizers.add("advancedrocketry:oxygen");
+		liquidOxidizer = builder.comment("List of fluid IDs that can be used as rocket oxidizers: [Default: ]").defineList("rocketOxidizers", bioxydizers, (val) -> true);
 		List<String> working = new LinkedList<>();
-		working.add("hydrogen");
-		liquidNuclearWorkingFluid = builder.comment("List of fluid names for fluids that can be used as rocket nuclear working fuels").defineList("rocketWorkingFluids", working, (val) -> true);
-		arConfig.automaticRetroRockets = builder.comment("Setting to false will disable the retrorockets that fire automatically on reentry on both player and automated rockets").define("autoRetroRockets", true);
-		arConfig.gravityAffectsFuel = builder.comment("If true, planets with higher gravity require more fuel and lower gravity would require less").define("gravityAffectsFuels", true);
-		arConfig.rocketRequireFuel = builder.comment("Set to false if rockets should not require fuel to fly").define("rocketsRequireFuel", true);
-		arConfig.canBeFueledByHand = builder.comment("Set to false if rockets should not be able to be fueled by and and will require a fueling station").define("canBeFueledByHand", true);
-		arConfig.rocketThrustMultiplier = builder.comment("Multiplier for per-engine thrust").define("thrustMultiplier", 1d);
-		arConfig.fuelCapacityMultiplier = builder.comment("Multiplier for per-tank capacity").define("fuelCapacityMultiplier", 1d);
+		working.add("advancedrocketry:hydrogen");
+		liquidNuclearWorkingFluid = builder.comment("List of fluid IDs that can be used as rocket working fluids: [Default: ]").defineList("rocketWorkingFluids", working, (val) -> true);
+		arConfig.automaticRetroRockets = builder.comment("Should automatic retrothrust be enabled: [Default:true]").define("autoRetroRockets", true);
+		arConfig.gravityAffectsFuel = builder.comment("Should gravity affect rocket total thrust: [Default:true]").define("gravityAffectsRockets", true);
+		arConfig.rocketRequireFuel = builder.comment("Shoud rockets require fuel to fly: [Default:true]").define("rocketsRequireFuel", true);
+		arConfig.canBeFueledByHand = builder.comment("Should rockets be able to be fueled with fluid containers by hand: [Default:true]").define("canBeFueledByHand", true);
+		arConfig.rocketThrustMultiplier = builder.comment("Multiplier for per-engine thrust [Default:1.0]").define("thrustMultiplier", 1d);
+		arConfig.fuelCapacityMultiplier = builder.comment("Multiplier for per-tank capacity [Default:1.0]").define("fuelCapacityMultiplier", 1d);
 		LinkedList<String> blackListRocketBlocksStrList = new LinkedList<>();
 		blackListRocketBlocksStrList.add("minecraft:portal");
 		blackListRocketBlocksStrList.add("minecraft:bedrock");
@@ -232,30 +213,29 @@ public class ARConfiguration {
 		blackListRocketBlocksStrList.add("minecraft:flowing_water");
 		blackListRocketBlocksStrList.add( "minecraft:lava");
 		blackListRocketBlocksStrList.add("minecraft:flowing_lava");
-		blackListRocketBlocksStr = builder.comment("Mod:Blockname  for example \"minecraft:chest\"").defineList("rocketBlockBlackList", blackListRocketBlocksStrList, (val) -> true);
-		arConfig.launchingDestroysBlocks = builder.comment("Set to false if rockets should not damage blocks").define("rocketsDamageBlocks", false);
-		arConfig.stationClearanceHeight = builder.comment("How high the rocket has to go before it reaches station clearance").defineInRange("stationClearanceHeight", 1000, 255, Integer.MAX_VALUE);
-		arConfig.asteroidTBIBurnMult = builder.comment("TBI multiplier for asteroid flights").define("asteroidTBIBurnMult", 1.0);
-		arConfig.transBodyInjection = builder.comment("How long transbody injection is before the rocket can exit").define("transBodyInjection", 0);
-		arConfig.warpTBIBurnMult = builder.comment("TBI multiplier for warp flights").define("warpTBIBurnMult", 10.0);
+		blackListRocketBlocksStr = builder.comment("List of tags/block names of blocks blacklisted from rockets. Format is either tag or modname:item [Default: ]").defineList("rocketBlockBlackList", blackListRocketBlocksStrList, (val) -> true);
+		arConfig.launchingDestroysBlocks = builder.comment("Should rockets damage blocks below them upon launch: [Default:false]").define("rocketsDamageBlocks", false);
+		arConfig.stationClearanceHeight = builder.comment("Height in blocks, from the bottom of the world, that rockets should consider far enough from a station to clear: [Default:1000]").defineInRange("stationClearanceHeight", 1000, 255, Integer.MAX_VALUE);
+		arConfig.asteroidTBIBurnMult = builder.comment("Multiplier for the height in blocks rockets should burn after reaching low orbit used for asteroids: WARNING: This is multiplied by transBodyInjection to get the total added height! [Default:1.0]").define("asteroidTBIBurnMult", 1.0);
+		arConfig.transBodyInjection = builder.comment("Base height in blocks rockets should burn for after reaching low orbit to fly to other destinations: WARNING This is always zero for ground to station! [Default:0]").define("transBodyInjection", 0);
+		arConfig.warpTBIBurnMult = builder.comment("Mutlipliter for the height in blocks rockets should burn after reaching low orbit used for interplanetary flight: WARNING: This is multiplied by transBodyInjection to get the total added height! [Default: 7.0]").define("interplanetaryTBIBurnMult", 12.0);
 		builder.pop();
 		
 		builder.push(ARConfiguration.CATEGORY_WORLD_GENERATION);
-		arConfig.electricPlantsSpawnLightning = builder.comment("Should Electric Mushrooms be able to spawn lightning").define("electricPlantsSpawnLightning", true);
+		arConfig.electricPlantsSpawnLightning = builder.comment("Should Electric Mushrooms be able to spawn lightning: [Default:true]").define("electricPlantsSpawnLightning", true);
 		List<String> geodeOresList = new LinkedList<>();
 		geodeOresList.add(Blocks.IRON_ORE.getRegistryName().toString());
 		geodeOresList.add(Blocks.GOLD_ORE.getRegistryName().toString());
 		geodeOresList.add("libvulpes:orecopper");
 		geodeOresList.add("libvulpes:oretin");
 		geodeOresList.add(Blocks.REDSTONE_ORE.getRegistryName().toString());
-		geodeOres = builder.comment("List of block names of blocks (usally ores) allowed to spawn in geodes").defineList("geodeOres", geodeOresList, (val) -> true);
-		arConfig.geodeOresBlackList = builder.comment("True if the ores in geodeOres should be a blacklist").define("geodeOres_blacklist", false);
-		arConfig.generateGeodes = builder.comment("If true, then ore-containing geodes are generated on high pressure planets").define("generateGeodes", true);
-		arConfig.geodeBaseSize = builder.comment("average size of the geodes").define("geodeBaseSize", 36);
-		arConfig.geodeVariation = builder.comment("variation in geode size").define("geodeVariation", 24);
-		arConfig.generateCraters = builder.comment("If true, then low pressure planets will have meteor craters.  Note: setting this option to false overrides 'generageCraters' in the planetDefs.xml").define("generateCraters", true);
-		arConfig.generateVolcanoes = builder.comment("If true, then very hot planets planets will volcanos.  Note: setting this option to false overrides 'generateVolcanos' in the planetDefs.xml").define("generateVolcanos", true);
-		arConfig.generateVanillaStructures = builder.comment("Enable to allow structures like villages and mineshafts to generate on planets with a breathable atmosphere.  Note, setting this to false will override 'generateStructures' in the planetDefs.xml").define("generateVanillaStructures", false);
+		geodeOres = builder.comment("List of tags/block names of ores allowed to be spawned within geodes. Format is either tag or modname:item [Default: ]").defineList("geodeOres", geodeOresList, (val) -> true);
+		arConfig.generateGeodes = builder.comment("Should geodes generate on high pressure planets? [Default:true]").define("generateGeodes", true);
+		arConfig.geodeBaseSize = builder.comment("Average geode size in blocks: [Default:36]").define("geodeBaseSize", 36);
+		arConfig.geodeVariation = builder.comment("Maximum geode size variation: [Default:24]").define("geodeVariation", 24);
+		arConfig.generateCraters = builder.comment("Should planets be able to have generate craters: [Default:true]").define("generateCraters", true);
+		arConfig.generateVolcanoes = builder.comment("Should planets be able to generate any volcanoes: [Default:true]").define("generateVolcanos", true);
+		arConfig.generateVanillaStructures = builder.comment("Should planets be able to generate any Vanilla structures: [Default:true]").define("generateVanillaStructures", false);
 
 		LinkedList<String> blackListedbiomes = new LinkedList<>();
 		blackListedbiomes.add(Biomes.RIVER.getLocation().toString());
@@ -287,46 +267,7 @@ public class ARConfiguration {
 		ARConfiguration.biomeSingle = builder.comment("Some worlds have a chance of spawning single biomes contained in this list.").
 				defineList("SingleBiomes", singleBiomes, (item) -> true);
 
-		final ConfigValue<Boolean> masterToggle = builder.define("EnableOreGen", true);
-
-		//Copper Config
-		arConfig.generateCopper = builder.define("GenerateCopper", true);
-		arConfig.copperClumpSize = builder.define("CopperPerClump", 6);
-		arConfig.copperPerChunk = builder.define("CopperPerChunk", 10);
-
-		//Tin Config
-		arConfig.generateTin = builder.define("GenerateTin", true);
-		arConfig.tinClumpSize = builder.define("TinPerClump", 6);
-		arConfig.tinPerChunk = builder.define("TinPerChunk", 10);
-
-		arConfig.generateDilithium = builder.define("generateDilithium", true);
-		arConfig.dilithiumClumpSize = builder.define("DilithiumPerClump", 16);
-		arConfig.dilithiumPerChunk = builder.define("DilithiumPerChunk", 1);
-		arConfig.dilithiumPerChunkMoon = builder.define("DilithiumPerChunkLuna", 10);
-
-		arConfig.generateAluminum = builder.define("generateAluminum", true);
-		arConfig.aluminumClumpSize = builder.define("AluminumPerClump", 16);
-		arConfig.aluminumPerChunk = builder.define("AluminumPerChunk", 1);
-
-		arConfig.generateIridium = builder.define("generateIridium", false);
-		arConfig.IridiumClumpSize = builder.define("IridiumPerClump", 16);
-		arConfig.IridiumPerChunk = builder.define("IridiumPerChunk", 1);
-
-		arConfig.generateRutile = builder.define("GenerateRutile", true);
-		arConfig.rutileClumpSize = builder.define("RutilePerClump", 6);
-		arConfig.rutilePerChunk = builder.define("RutilePerChunk", 6);
 		builder.pop();
-
-
-
-
-		//Enriched Lava in the centrifuge
-		//arConfig.lavaCentrifugeOutputs = config.getStringList("lavaCentrifugeOutputs", CATEGORY_GENERAL,
-		//new String[] {"nuggetCopper:100", "nuggetIron:100", "nuggetTin:100", "nuggetLead:100", "nuggetSilver:100",
-		//"nuggetGold:75" ,"nuggetDiamond:10", "nuggetUranium:10", "nuggetIridium:1"}, "Outputs and chances of objects from Enriched Lava in the Centrifuge.  Format: <oredictionaryEntry>:<weight>.  Larger weights are more frequent");
-
-
-
 
 	}
 
@@ -578,10 +519,6 @@ public class ARConfiguration {
 		return currentConfig;
 	}
 
-	public static ResourceLocation getSpaceDimId() {
-		return new ResourceLocation(getCurrentConfig().spaceDimId.get());
-	}
-
 	public static void loadConfigFromServer(ARConfiguration config)	{
 		if(usingServerConfig)
 			throw new IllegalStateException("Cannot load server config when already using server config!");
@@ -604,136 +541,52 @@ public class ARConfiguration {
 				value.save();
 	}
 
-	public void addTorchblock(Block newblock) {
-		torchBlocks.add(newblock);
-		List<String> blocks = new ArrayList<>(torchBlocks.size());
-		int index = 0;
-		for( Block block : torchBlocks) {
-			blocks.add(block.getRegistryName().toString());
-		}
+	public static void registerFuelEntries(FuelType type, List<? extends String> fuels) {
+		for(String str : fuels) {
+			String[] splitStr = str.split(";");
+			Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(splitStr[0]));
+			float multiplier = 1.0f;
+			if (splitStr.length > 1) {
+				multiplier = Float.parseFloat(splitStr[1]);
+			}
 
-		breakableTorches.set(blocks);
-		breakableTorches.save();
+			if(fluid != null) {
+				logger.info("Registering fluid "+ str + " as rocket " + type.name());
+				FuelRegistry.instance.registerFuel(type, fluid, multiplier);
+			}
+			else
+				logger.warn("Fluid name" + str  + " is not a registered fluid!");
+		}
 	}
-
-	public void addSealedBlock(Block newblock) {
-		SealableBlockHandler.INSTANCE.addSealableBlock(newblock);
-		List<Block> blockList = SealableBlockHandler.INSTANCE.getOverriddenSealableBlocks();
-		List<String> blocks = new ArrayList<>(blockList.size());
-		int index = 0;
-		for( Block block : blockList) {
-			blocks.add(block.getRegistryName().toString());
-		}
-		sealableBlockWhiteList.set(blocks);
-		sealableBlockWhiteList.save();
-		save(); }
 
 	public static void loadPostInit() {
 		ARConfiguration arConfig = getCurrentConfig();
 
 		//Register fuels
 		logger.info("Start registering liquid rocket fuels");
-		for(String str : liquidMonopropellant.get()) {
-			String[] splitStr = str.split(";");
-			Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(splitStr[0]));
-			float multiplier = 1.0f;
-			if (splitStr.length > 1) {
-				multiplier = Float.parseFloat(splitStr[1]);
-			}
-
-			if(fluid != null) {
-				logger.info("Registering fluid "+ str + " as rocket monopropellant");
-				FuelRegistry.instance.registerFuel(FuelType.LIQUID_MONOPROPELLANT, fluid, multiplier);
-			}
-			else
-				logger.warn("Fluid name" + str  + " is not a registered fluid!");
-		}
-
-
-		liquidMonopropellant = null; //clean up
-		for(String str : liquidBipropellantFuel.get()) {
-			String[] splitStr = str.split(";");
-			Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(splitStr[0]));
-			float multiplier = 1.0f;
-			if (splitStr.length > 1) {
-				multiplier = Float.parseFloat(splitStr[1]);
-			}
-
-			if(fluid != null) {
-				logger.info("Registering fluid "+ str + " as rocket bipropellant");
-				FuelRegistry.instance.registerFuel(FuelType.LIQUID_BIPROPELLANT, fluid, multiplier);
-			}
-			else
-				logger.warn("Fluid name" + str  + " is not a registered fluid!");
-		}
-
-		liquidBipropellantFuel = null; //clean up
-		for(String str : liquidBipropellantOxidizer.get()) {
-			String[] splitStr = str.split(";");
-			Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(splitStr[0]));
-			float multiplier = 1.0f;
-			if (splitStr.length > 1) {
-				multiplier = Float.parseFloat(splitStr[1]);
-			}
-
-			if(fluid != null) {
-				logger.info("Registering fluid "+ str + " as rocket oxidizer");
-				FuelRegistry.instance.registerFuel(FuelType.LIQUID_OXIDIZER, fluid, multiplier);
-			}
-			else
-				logger.warn("Fluid name" + str  + " is not a registered fluid!");
-		}
-		liquidBipropellantOxidizer = null; //clean up
-		for(String str : liquidNuclearWorkingFluid.get()) {
-			String[] splitStr = str.split(";");
-			Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(splitStr[0]));
-			float multiplier = 1.0f;
-			if (splitStr.length > 1) {
-				multiplier = Float.parseFloat(splitStr[1]);
-			}
-
-			if(fluid != null) {
-				logger.info("Registering fluid "+ str + " as rocket nuclear working fluid");
-				FuelRegistry.instance.registerFuel(FuelType.NUCLEAR_WORKING_FLUID, fluid, multiplier);
-			}
-			else
-				logger.warn("Fluid name" + str  + " is not a registered fluid!");
-		}
-		liquidNuclearWorkingFluid = null; //clean up
+		registerFuelEntries(FuelType.LIQUID_MONOPROPELLANT, liquidMonopropellant.get());
+		liquidMonopropellant = null;
+		registerFuelEntries(FuelType.LIQUID_BIPROPELLANT, liquidBipropellant.get());
+		liquidBipropellant = null;
+		registerFuelEntries(FuelType.LIQUID_OXIDIZER, liquidOxidizer.get());
+		liquidOxidizer = null;
+		registerFuelEntries(FuelType.NUCLEAR_WORKING_FLUID, liquidNuclearWorkingFluid.get());
+		liquidNuclearWorkingFluid = null;
 		logger.info("Finished registering liquid rocket fuels");
 
 		//Register Whitelisted Sealable Blocks
-
 		logger.info("Start registering sealable blocks (sealableBlockWhiteList)");
-		for(String str : sealableBlockWhiteList.get()) {
-			Block block = ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryCreate(str));
-			if(block == null)
-				logger.warn("'" + str + "' is not a valid Block");
-			else
-				SealableBlockHandler.INSTANCE.addSealableBlock(block);
-		}
+		SealableBlockHandler.INSTANCE.addSealableBlocks(ZUtils.readBlockListFromStringList(sealableBlockWhiteList.get()));
 		logger.info("End registering sealable blocks");
 		sealableBlockWhiteList = null;
 
 		logger.info("Start registering unsealable blocks (sealableBlockBlackList)");
-		for(String str : sealableBlockBlackList.get()) {
-			Block block = ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryCreate(str));
-			if(block == null)
-				logger.warn("'" + str + "' is not a valid Block");
-			else
-				SealableBlockHandler.INSTANCE.addUnsealableBlock(block);
-		}
+		SealableBlockHandler.INSTANCE.addUnsealableBlocks(ZUtils.readBlockListFromStringList(sealableBlockBlackList.get()));
 		logger.info("End registering unsealable blocks");
 		sealableBlockBlackList = null;
 
 		logger.info("Start registering torch blocks");
-		for(String str : breakableTorches.get()) {
-			Block block = ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryCreate(str));
-			if(block == null)
-				logger.warn("'" + str + "' is not a valid Block");
-			else
-				arConfig.torchBlocks.add(block);
-		}
+		arConfig.torchBlocks = ZUtils.readBlockListFromStringList(breakableTorches.get());
 		logger.info("End registering torch blocks");
 		breakableTorches = null;
 
@@ -759,17 +612,11 @@ public class ARConfiguration {
 				arConfig.blackHoleGeneratorBlocks.put(new ItemStack(block, 1), time);
 		}
 		logger.info("End registering blackhole generator blocks");
-		breakableTorches = null;
+		blackHoleGeneratorTiming = null;
 
 
 		logger.info("Start registering rocket blacklist blocks");
-		for(String str : blackListRocketBlocksStr.get()) {
-			Block block = ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryCreate(str));
-			if(block == null)
-				logger.warn("'" + str + "' is not a valid Block");
-			else
-				arConfig.blackListRocketBlocks.add(block);
-		}
+		arConfig.blackListRocketBlocks = ZUtils.readBlockListFromStringList(blackListRocketBlocksStr.get());
 		logger.info("End registering rocket blacklist blocks");
 		blackListRocketBlocksStr = null;
 
@@ -787,8 +634,6 @@ public class ARConfiguration {
 
 		//Add armor stand by default
 		arConfig.bypassEntity.add(EntityType.ARMOR_STAND);
-
-
 		for(String str : entityList.get()) {
 			EntityType.byKey(str).ifPresent(value -> arConfig.bypassEntity.add(value) );
 			Optional<EntityType<?>> entityType = EntityType.byKey(str);
@@ -801,52 +646,20 @@ public class ARConfiguration {
 			else
 				logger.warn("Cannot find " + str + " while registering entity for atmosphere bypass");
 		}
-
 		//Free memory
 		entityList = null;
 		logger.info("End registering entity atmosphere bypass");
 
-		//Register geodeOres
-		if(!arConfig.geodeOresBlackList.get()) {
-			for(String str : geodeOres.get())
-				arConfig.standardGeodeOres.add(ResourceLocation.tryCreate(str));
-			while(arConfig.standardGeodeOres.remove(null));
-		}
+		//Geode & Laser ores
+		logger.info("Start registering geode ores");
+		arConfig.standardGeodeOres = ZUtils.readBlockListFromStringList(geodeOres.get());
+		logger.info("End registering geode ores");
+		geodeOres = null;
 
-		//Register laserDrill ores
-		if(!arConfig.laserDrillOresBlackList.get()) {
-			arConfig.standardLaserDrillOres.addAll(orbitalLaserOres.get());
-			while(arConfig.standardLaserDrillOres.remove(null));
-		}
-
-
-		//Do blacklist stuff for ore registration
-		for(ResourceLocation oreName : BlockTags.getCollection().getRegisteredTags()) {
-
-			if(arConfig.geodeOresBlackList.get() && oreName.getPath().startsWith("ore")) {
-				boolean found = false;
-				for(String str : geodeOres.get()) {
-					if(oreName.equals(str)) {
-						found = true;
-						break;
-					}
-				}
-				if(!found)
-					arConfig.standardGeodeOres.add(oreName);
-			}
-
-			if(arConfig.laserDrillOresBlackList.get() && oreName.getPath().startsWith("ore")) {
-				boolean found = false;
-				for(String str : orbitalLaserOres.get()) {
-					if(oreName.equals(str)) {
-						found = true;
-						break;
-					}
-				}
-				if(!found)
-					arConfig.standardLaserDrillOres.add(oreName.toString());
-			}
-		}
+		logger.info("Start registering laser drill ores");
+		for (String str : orbitalLaserOres.get()) arConfig.standardLaserDrillOres.addAll(ZUtils.readListFromString(str));
+		logger.info("End registering laser drill ores");
+		orbitalLaserOres = null;
 	}
 
 	@ConfigProperty
@@ -854,15 +667,8 @@ public class ARConfiguration {
 
 	@ConfigProperty
 	public ConfigValue<Double> suitTankCapacity;
-
-	@ConfigProperty
-	public ConfigValue<Double> blockTankCapacity;
-
 	@ConfigProperty
 	public ConfigValue<Integer> crystalliserMaximumGravity;
-
-	@ConfigProperty
-	public  ConfigValue<Integer> vacuumDamageValue;
 
 	@ConfigProperty(needsSync=true, internalType=Integer.class)
 	public  ConfigValue<Integer> orbit;
@@ -884,9 +690,6 @@ public class ARConfiguration {
 
 	@ConfigProperty
 	public ResourceLocation MoonId = Constants.INVALID_PLANET;
-
-	@ConfigProperty(needsSync=true, internalType=String.class)
-	public  ConfigValue<String> spaceDimId;
 
 	@ConfigProperty(needsSync=true, internalType=Integer.class)
 	public  ConfigValue<Integer> stationSize;
@@ -918,75 +721,7 @@ public class ARConfiguration {
 	public ConfigValue<Double> buildSpeedMultiplier;
 
 	@ConfigProperty
-	public  ConfigValue<Boolean> generateCopper;
-
-	@ConfigProperty
-	public  ConfigValue<Integer> copperPerChunk;
-
-	@ConfigProperty
-	public  ConfigValue<Integer> copperClumpSize;
-
-	@ConfigProperty
-	public  ConfigValue<Boolean> generateTin;
-
-	@ConfigProperty
-	public  ConfigValue<Integer> tinPerChunk;
-
-	@ConfigProperty
-	public  ConfigValue<Integer> tinClumpSize;
-
-	@ConfigProperty
-	public  ConfigValue<Boolean> generateDilithium;
-
-	@ConfigProperty
-	public  ConfigValue<Integer> dilithiumClumpSize;
-
-	@ConfigProperty
-	public  ConfigValue<Integer> dilithiumPerChunk;
-
-	@ConfigProperty
-	public  ConfigValue<Integer> dilithiumPerChunkMoon;
-
-	public  ConfigValue<Integer> aluminumPerChunk;
-
-	@ConfigProperty
-	public  ConfigValue<Integer> aluminumClumpSize;
-
-	@ConfigProperty
-	public  ConfigValue<Boolean> generateAluminum;
-
-	@ConfigProperty
-	public  ConfigValue<Boolean> generateIridium;
-
-	@ConfigProperty
-	public  ConfigValue<Integer> IridiumClumpSize;
-
-	@ConfigProperty
-	public  ConfigValue<Integer> IridiumPerChunk;
-
-	@ConfigProperty
-	public  ConfigValue<Boolean> generateRutile;
-
-	@ConfigProperty
-	public  ConfigValue<Integer> rutilePerChunk;
-
-	@ConfigProperty
-	public  ConfigValue<Integer> rutileClumpSize;
-
-	@ConfigProperty
-	public  ConfigValue<Boolean> allowMakingItemsForOtherMods;
-
-	@ConfigProperty
 	public  ConfigValue<Boolean> scrubberRequiresCartrige;
-
-	@ConfigProperty
-	public float EUMult;
-
-	@ConfigProperty
-	public float RFMult;
-
-	@ConfigProperty
-	public  ConfigValue<Boolean> overrideGCAir;
 
 	@ConfigProperty
 	public  ConfigValue<Integer> fuelPointsPerDilithium;
@@ -995,20 +730,10 @@ public class ARConfiguration {
 	public  ConfigValue<Boolean> electricPlantsSpawnLightning;
 
 	@ConfigProperty
-	public  ConfigValue<Boolean> allowSawmillVanillaWood;
-
-	@ConfigProperty
 	public  ConfigValue<Integer> atmosphereHandleBitMask;
 
 	@ConfigProperty
 	public  ConfigValue<Boolean> automaticRetroRockets;
-
-	@ConfigProperty
-	public  ConfigValue<Boolean> advancedVFX;
-
-	@ConfigProperty
-	public  ConfigValue<Boolean> enableLaserDrill;
-
 	@ConfigProperty
 	public  ConfigValue<Integer> spaceSuitOxygenTime;
 
@@ -1019,22 +744,13 @@ public class ARConfiguration {
 	public  ConfigValue<Integer>  maxBiomesPerPlanet;
 
 	@ConfigProperty
-	public  ConfigValue<Boolean> enableTerraforming;
-
-	@ConfigProperty
 	public  ConfigValue<Double> gasCollectionMult;
 
 	@ConfigProperty
 	public  ConfigValue<Boolean> allowTerraforming;
 
 	@ConfigProperty
-	public  ConfigValue<Integer> terraformingBlockSpeed;
-
-	@ConfigProperty
 	public  ConfigValue<Double> terraformSpeed;
-
-	@ConfigProperty
-	public  ConfigValue<Boolean> terraformRequiresFluid;
 
 	@ConfigProperty
 	public  ConfigValue<Double> microwaveRecieverMulitplier;
@@ -1058,7 +774,7 @@ public class ARConfiguration {
 	public ConfigValue<List<? extends String>> laserBlackListDims;
 
 	@ConfigProperty
-	public LinkedList<String> standardLaserDrillOres = new LinkedList<>();
+	public LinkedList<ItemStack> standardLaserDrillOres = new LinkedList<>();
 
 	@ConfigProperty
 	public  ConfigValue<Boolean> laserDrillPlanet;
@@ -1074,28 +790,19 @@ public class ARConfiguration {
 	public LinkedList<Block> blackListRocketBlocks = new LinkedList<>();
 
 	@ConfigProperty
-	public LinkedList<ResourceLocation> standardGeodeOres = new LinkedList<>();
+	public LinkedList<Block> standardGeodeOres = new LinkedList<>();
 
 	@ConfigProperty(needsSync=true, internalType=ResourceLocation.class)
 	public HashSet<ResourceLocation> initiallyKnownPlanets = new HashSet<>();
-
-	@ConfigProperty
-	public  ConfigValue<Boolean> geodeOresBlackList;
-
-	@ConfigProperty
-	public  ConfigValue<Boolean> laserDrillOresBlackList;
 
 	@ConfigProperty(needsSync=true, keyType=String.class, valueType=Asteroid.class)
 	public HashMap<String, Asteroid> asteroidTypes = new HashMap<>();
 
 	@ConfigProperty
-	public HashMap<String, Asteroid> prevAsteroidTypes = new HashMap<>();
-
-	@ConfigProperty
 	public  ConfigValue<Integer> oxygenVentSize;
 
 	@ConfigProperty
-	public  ConfigValue<Integer> solarGeneratorMult;
+	public  ConfigValue<Double> solarGeneratorMult;
 
 	@ConfigProperty
 	public  ConfigValue<Boolean> gravityAffectsFuel;
@@ -1105,9 +812,6 @@ public class ARConfiguration {
 
 	@ConfigProperty
 	public  ConfigValue<Double> jetPackThrust;
-
-	@ConfigProperty
-	public  ConfigValue<Boolean> enableGravityController;
 
 	@ConfigProperty(needsSync=true, internalType=Boolean.class)
 	public  ConfigValue<Boolean> planetsMustBeDiscovered;
@@ -1129,9 +833,6 @@ public class ARConfiguration {
 
 	@ConfigProperty
 	public  ConfigValue<Double> oxygenVentConsumptionMult;
-
-	@ConfigProperty
-	public  ConfigValue<Integer> terraformPlanetSpeed;
 
 	@ConfigProperty
 	public  ConfigValue<Integer> planetDiscoveryChance;
@@ -1161,9 +862,6 @@ public class ARConfiguration {
 	public Map<ItemStack, Integer> blackHoleGeneratorBlocks = new HashMap<>();
 
 	@ConfigProperty
-	public String[] lavaCentrifugeOutputs;
-
-	@ConfigProperty
 	public  ConfigValue<Boolean> generateVanillaStructures;
 
 	@ConfigProperty
@@ -1178,8 +876,7 @@ public class ARConfiguration {
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
-	public @interface ConfigProperty
-	{
+	public @interface ConfigProperty {
 		boolean needsSync() default false;
 		Class internalType() default Object.class;
 		Class keyType() default Object.class;

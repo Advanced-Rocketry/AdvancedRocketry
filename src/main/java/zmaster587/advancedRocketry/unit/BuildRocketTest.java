@@ -14,6 +14,7 @@ import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
@@ -80,7 +81,7 @@ public class BuildRocketTest extends BaseTest {
 	
 	public void Phase3(World world, PlayerEntity player) {
 		// Make sure we're in space and riding a rocket
-		if(!(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))))
+		if(!(DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(world))))
 			throw new AssertionError("Expected to be on space station!");
 		if(!(player.getRidingEntity() instanceof EntityRocket))
 			throw new AssertionError("Expected player to be riding a rocket!");

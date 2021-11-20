@@ -73,10 +73,11 @@ public class DimensionManager implements IGalaxy {
 	private HashMap<ResourceLocation, DimensionProperties> dimensionListResource;
 	private HashMap<ResourceLocation, StellarBody> starList;
 
-	public static final int GASGIANT_DIMID_OFFSET = 0x100; //Offset by 256
 	private static long nextSatelliteId;
 	public Set<ResourceLocation> knownPlanets;
 
+	//Space station DIMID
+	public static final ResourceLocation spaceId = new ResourceLocation(Constants.modId , "space");
 	//The default properties belonging to the overworld
 	public static DimensionProperties overworldProperties;
 	//the default property for any dimension created in space, normally, space over earth
@@ -152,7 +153,7 @@ public class DimensionManager implements IGalaxy {
 		if(dimid == null)
 			return false;
 
-		return dimid.equals(ARConfiguration.getSpaceDimId());
+		return dimid.equals(DimensionManager.spaceId);
 	}
 
 	public boolean isSpaceDimension(World dimid)
@@ -671,7 +672,7 @@ public class DimensionManager implements IGalaxy {
 		}
 
 		DimensionProperties properties = dimensionListResource.get(resourceLocation);
-		if(ARConfiguration.getSpaceDimId().equals(resourceLocation) || resourceLocation == null) {
+		if(DimensionManager.spaceId.equals(resourceLocation) || resourceLocation == null) {
 			return defaultSpaceDimensionProperties;
 		}
 		return properties == null ? overworldProperties : properties;
@@ -680,7 +681,7 @@ public class DimensionManager implements IGalaxy {
 	public DimensionProperties getDimensionProperties(ResourceLocation resourceLocation, BlockPos pos)
 	{
 
-		if(ARConfiguration.getSpaceDimId().equals(resourceLocation)) {
+		if(DimensionManager.spaceId.equals(resourceLocation)) {
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(obj == null)
 				return defaultSpaceDimensionProperties;
@@ -869,7 +870,7 @@ public class DimensionManager implements IGalaxy {
 	 * @return true if the dimension exists and is registered
 	 */
 	public boolean isDimensionCreated(ResourceLocation dimId) {
-		return dimensionListResource.containsKey(dimId) || ARConfiguration.getSpaceDimId().equals(dimId);
+		return dimensionListResource.containsKey(dimId) || DimensionManager.spaceId.equals(dimId);
 	}
 
 	public boolean isDimensionCreated( World dimId) {
@@ -1333,7 +1334,7 @@ public class DimensionManager implements IGalaxy {
 
 	public static DimensionProperties getEffectiveDimId(ResourceLocation dimId, BlockPos pos) {
 
-		if(ARConfiguration.getSpaceDimId().equals(dimId)) {
+		if(DimensionManager.spaceId.equals(dimId)) {
 			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObject != null)
 				return (DimensionProperties) spaceObject.getProperties().getParentProperties();
@@ -1346,7 +1347,7 @@ public class DimensionManager implements IGalaxy {
 	public static DimensionProperties getEffectiveDimId(World world, BlockPos pos) {
 		ResourceLocation dimId = ZUtils.getDimensionIdentifier(world);
 
-		if(ARConfiguration.getSpaceDimId().equals(dimId)) {
+		if(DimensionManager.spaceId.equals(dimId)) {
 			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObject != null)
 				return (DimensionProperties) spaceObject.getProperties().getParentProperties();

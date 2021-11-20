@@ -392,7 +392,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		else {
 			list.add(new StringTextComponent(TextFormatting.GREEN + LibVulpes.proxy.getLocalizedString("msg.stationchip.sation") + getUUID(stack)));
 			super.addInformation(stack, world, list, bool);
-			if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world))) {
+			if(DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(world))) {
 				Entity p = Minecraft.getInstance().player;
 				ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(p.getPositionVec()));
 

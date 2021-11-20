@@ -24,7 +24,7 @@ import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.*;
-import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
+import zmaster587.libVulpes.tile.TileInventoriedFEConsumerTank;
 import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.IconResource;
 
@@ -33,7 +33,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileGasChargePad extends TileInventoriedRFConsumerTank implements IModularInventory {
+public class TileGasChargePad extends TileInventoriedFEConsumerTank implements IModularInventory {
 	public TileGasChargePad() {
 		super(AdvancedRocketryTileEntityType.TILE_OXYGEN_CHARGER, 0, 2, 16000);
 	}

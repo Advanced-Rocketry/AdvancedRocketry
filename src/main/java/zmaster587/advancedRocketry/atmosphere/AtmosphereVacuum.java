@@ -24,7 +24,7 @@ public class AtmosphereVacuum extends AtmosphereNeedsSuit {
 	@Override
 	public void onTick(LivingEntity player) {
 		if(player.world.getGameTime() % 10  == 0 && !isImmune(player)) {
-			player.attackEntityFrom(AtmosphereHandler.vacuumDamage, ARConfiguration.getCurrentConfig().vacuumDamageValue.get());
+			player.attackEntityFrom(AtmosphereHandler.vacuumDamage, 1);
 			player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 40, 4));
 			player.addPotionEffect(new EffectInstance(Effects.MINING_FATIGUE, 40, 4));
 			if(enableNausea) {

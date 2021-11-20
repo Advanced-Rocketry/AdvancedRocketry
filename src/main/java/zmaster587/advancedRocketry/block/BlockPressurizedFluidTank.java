@@ -72,7 +72,7 @@ public class BlockPressurizedFluidTank extends Block {
 	
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new TileFluidTank((int) (64000*ARConfiguration.getCurrentConfig().blockTankCapacity.get()));
+		return new TileFluidTank(64000);
 	}
 	
 	@Nonnull

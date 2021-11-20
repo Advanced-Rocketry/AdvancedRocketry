@@ -32,7 +32,7 @@ import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
-import zmaster587.libVulpes.tile.TileInventoriedRFConsumer;
+import zmaster587.libVulpes.tile.TileInventoriedFEConsumer;
 import zmaster587.libVulpes.util.INetworkMachine;
 
 import javax.annotation.Nonnull;
@@ -40,7 +40,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements INetworkMachine, IModularInventory, IButtonInventory, IDataInventory {
+public class TileSatelliteTerminal extends TileInventoriedFEConsumer implements INetworkMachine, IModularInventory, IButtonInventory, IDataInventory {
 
 
 	//private ModuleText satelliteText;

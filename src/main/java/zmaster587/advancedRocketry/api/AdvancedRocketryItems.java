@@ -136,7 +136,6 @@ public class AdvancedRocketryItems {
 	public static Item itemSatelliteControlCenter;
 	public static Item itemMoonTurf;
 	public static Item itemHotTurf;
-	public static Item itemLightSource;
 	public static Item itemAlienWood;
 	public static Item itemAlienLeaves;
 	public static Item itemAlienSapling;
@@ -291,9 +290,6 @@ public class AdvancedRocketryItems {
 		//Tools
 		AdvancedRocketryItems.itemJackhammer = new ItemJackHammer(ItemTier.DIAMOND, new Item.Properties().group(AdvancedRocketry.tabAdvRocketry).maxStackSize(1).maxDamage(1500)).setRegistryName("jackhammer");
 
-		//Note: not registered
-		//AdvancedRocketryItems.itemAstroBed = new ItemAstroBed(AdvancedRocketryBlocks.blockAstroBed, singleStackSize).setRegistryName("astrobed");
-
 		//Item Registration
 		evt.getRegistry().registerAll(
 				AdvancedRocketryItems.itemQuartzCrucible,
@@ -388,7 +384,6 @@ public class AdvancedRocketryItems {
 		AdvancedRocketryItems.itemSatelliteControlCenter = new BlockItem(AdvancedRocketryBlocks.blockSatelliteControlCenter, typicalBlockProperties);
 		AdvancedRocketryItems.itemMoonTurf = new BlockItem(AdvancedRocketryBlocks.blockMoonTurf, typicalBlockProperties);
 		AdvancedRocketryItems.itemHotTurf = new BlockItem(AdvancedRocketryBlocks.blockHotTurf, typicalBlockProperties);
-		AdvancedRocketryItems.itemLightSource = new BlockItem(AdvancedRocketryBlocks.blockLightSource, typicalBlockProperties);
 		AdvancedRocketryItems.itemAlienWood = new BlockItem(AdvancedRocketryBlocks.blockAlienWood, typicalBlockProperties);
 		AdvancedRocketryItems.itemAlienLeaves = new BlockItem(AdvancedRocketryBlocks.blockAlienLeaves, typicalBlockProperties);
 		AdvancedRocketryItems.itemAlienSapling = new BlockItem(AdvancedRocketryBlocks.blockAlienSapling, typicalBlockProperties);
@@ -537,7 +532,6 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemGravityController.setRegistryName("gravitycontroller"),
 				AdvancedRocketryItems.itemDrill.setRegistryName("drill"),
 				AdvancedRocketryItems.itemMicrowaveReciever.setRegistryName("microwavereciever"),
-				AdvancedRocketryItems.itemLightSource.setRegistryName("lightsource"),
 				AdvancedRocketryItems.itemSolarPanel.setRegistryName("solarpanel"),
 				AdvancedRocketryItems.itemSuitWorkStation.setRegistryName("suitworkstation"),
 				AdvancedRocketryItems.itemDataBus.setRegistryName("databus"),

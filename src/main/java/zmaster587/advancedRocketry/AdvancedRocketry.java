@@ -82,7 +82,6 @@ import zmaster587.advancedRocketry.tile.satellite.TileSatelliteBuilder;
 import zmaster587.advancedRocketry.util.*;
 import zmaster587.advancedRocketry.world.decoration.MapGenLander;
 import zmaster587.advancedRocketry.world.decoration.StructurePieceGeode;
-import zmaster587.advancedRocketry.world.gen.ore.OreGen;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.LibVulpesItems;
@@ -123,7 +122,7 @@ public class AdvancedRocketry {
 	public static final MaterialRegistry materialRegistry = new MaterialRegistry();
 
 
-	public static final ItemGroup tabAdvRocketry = new ItemGroup("advancedRocketry") {
+	public static final ItemGroup tabAdvRocketry = new ItemGroup("advancedrocketry") {
 		@Override
 		@Nonnull
 		public ItemStack createIcon() {
@@ -220,21 +219,6 @@ public class AdvancedRocketry {
 		File dir = new File( "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder);
 		if(!dir.exists())
 			dir.mkdir();
-		
-		LibVulpes.registerRecipeHandler(TileCuttingMachine.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/CuttingMachine.xml");
-		LibVulpes.registerRecipeHandler(TilePrecisionAssembler.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/PrecisionAssembler.xml");
-		LibVulpes.registerRecipeHandler(TileChemicalReactor.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/ChemicalReactor.xml");
-		LibVulpes.registerRecipeHandler(TileCrystallizer.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/Crystallizer.xml");
-		LibVulpes.registerRecipeHandler(TileElectrolyser.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/Electrolyser.xml");
-		LibVulpes.registerRecipeHandler(TileElectricArcFurnace.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/ElectricArcFurnace.xml");
-		LibVulpes.registerRecipeHandler(TileLathe.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/Lathe.xml");
-		LibVulpes.registerRecipeHandler(TileRollingMachine.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/RollingMachine.xml");
-		LibVulpes.registerRecipeHandler(BlockSmallPlatePress.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/SmallPlatePress.xml");
-		LibVulpes.registerRecipeHandler(TileCentrifuge.class, "./config/" + zmaster587.advancedRocketry.api.ARConfiguration.configFolder + "/Centrifuge.xml");
-
-
-		
-		//AUDIO
 
 		//MOD-SPECIFIC ENTRIES --------------------------------------------------------------------------------------------------------------------------
 
@@ -276,8 +260,6 @@ public class AdvancedRocketry {
 	}
 	
     public void registerRecipes() {
-        //GameRegistry.addSmelting(MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("ORE")), MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("DUST")), 0);
-
         //Register the machine recipes
         machineRecipes.registerAllMachineRecipes();
     }
@@ -381,18 +363,14 @@ public class AdvancedRocketry {
 		list.add(new BlockMeta(AdvancedRocketryBlocks.blockDataBus, true));
 		TileMultiBlock.addMapping('D', list);
 		
-		//machineRecipes.createAutoGennedRecipes(modProducts);
-		
         //Register the machine recipes
         machineRecipes.registerAllMachineRecipes();
 	}
 
 
 	@SubscribeEvent
-	public void postInit(FMLLoadCompleteEvent event)
-	{
+	public void postInit(FMLLoadCompleteEvent event) {
 		AtmosphereType.registerAtmosphere();
-		OreGen.injectOreGen();
 		List<? extends CharSequence> biomeBlackList = ARConfiguration.biomeBlackList.get();
 		List<? extends CharSequence> biomeHighPressure = ARConfiguration.biomeHighPressure.get();
 		List<? extends CharSequence> biomeSingle = ARConfiguration.biomeSingle.get();
@@ -451,16 +429,6 @@ public class AdvancedRocketry {
 			}
 		}
 
-		//AtmosphereRegister.getInstance().registerHarvestableFluid(AdvancedRocketryFluids.nitrogenStill.get());
-		//AtmosphereRegister.getInstance().registerHarvestableFluid(AdvancedRocketryFluids.hydrogenStill.get());
-		//AtmosphereRegister.getInstance().registerHarvestableFluid(AdvancedRocketryFluids.oxygenStill.get());
-		
-		//register gasses
-		//AdvancedRocketryFluids.registerGasGiantGas(AdvancedRocketryFluids.hydrogenStill.get());
-		//AdvancedRocketryFluids.registerGasGiantGas(AdvancedRocketryFluids.nitrogenStill.get());
-		//AdvancedRocketryFluids.registerGasGiantGas(AdvancedRocketryFluids.oxygenStill.get());
-		
-
 		CapabilitySpaceArmor.register();
 
 		//Register multiblock items with the projector
@@ -490,13 +458,10 @@ public class AdvancedRocketry {
 
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileRailgun(), (BlockTile)AdvancedRocketryBlocks.blockRailgun);
 		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileSpaceElevator(), (BlockTile)AdvancedRocketryBlocks.blockSpaceElevatorController);
-		//Config-controlled machines
-		if(ARConfiguration.getCurrentConfig().enableTerraforming.get())
-		    ((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileAtmosphereTerraformer(), (BlockTile)AdvancedRocketryBlocks.blockAtmosphereTerraformer);
-		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableGravityController.get())
-			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileAreaGravityController(), (BlockTile)AdvancedRocketryBlocks.blockGravityMachine);
-		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableLaserDrill.get())
-			((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileOrbitalLaserDrill(), (BlockTile)AdvancedRocketryBlocks.blockSpaceLaser);
+		//Extremely high teir machines
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileAtmosphereTerraformer(), (BlockTile)AdvancedRocketryBlocks.blockAtmosphereTerraformer);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileAreaGravityController(), (BlockTile)AdvancedRocketryBlocks.blockGravityMachine);
+		((ItemProjector)LibVulpesItems.itemHoloProjector).registerMachine(new TileOrbitalLaserDrill(), (BlockTile)AdvancedRocketryBlocks.blockSpaceLaser);
 
 		proxy.registerEventHandlers();
 		proxy.registerKeyBindings();
@@ -520,7 +485,7 @@ public class AdvancedRocketry {
 		MinecraftForge.EVENT_BUS.register(SpaceObjectManager.getSpaceManager());
 
 		//Register space dimension
-		DimensionManager.getInstance().registerSpaceDimension(ARConfiguration.getSpaceDimId());
+		DimensionManager.getInstance().registerSpaceDimension(DimensionManager.spaceId);
 
 		ARConfiguration.loadPostInit();
 		

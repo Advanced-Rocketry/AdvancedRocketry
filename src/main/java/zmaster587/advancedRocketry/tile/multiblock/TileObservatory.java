@@ -21,6 +21,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.inventory.modules.ModuleData;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
@@ -172,7 +173,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 			timeAlive = 0x1;
 		}
 
-		if((world.isRemote && isOpen) || (!world.isRemote && isRunning() && getMachineEnabled() && ((!world.isRaining() && world.canBlockSeeSky(pos.add(0,1,0)) && !world.isDaytime()) || ZUtils.getDimensionIdentifier(world).equals(ARConfiguration.getSpaceDimId())))) {
+		if((world.isRemote && isOpen) || (!world.isRemote && isRunning() && getMachineEnabled() && ((!world.isRaining() && world.canBlockSeeSky(pos.add(0,1,0)) && !world.isDaytime()) || ZUtils.getDimensionIdentifier(world).equals(DimensionManager.spaceId)))) {
 
 			if(!isOpen) {
 				isOpen= true;

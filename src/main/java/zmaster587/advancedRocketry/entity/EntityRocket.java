@@ -317,7 +317,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		if(storage != null) {
 			ResourceLocation dimid = storage.getDestinationDimId(ZUtils.getDimensionIdentifier(this.world), (int)getPosX(), (int)getPosZ());
 
-			if(dimid.equals(ARConfiguration.getSpaceDimId())) {
+			if(dimid.equals(DimensionManager.spaceId)) {
 				Vector3F<Float> vec = storage.getDestinationCoordinates(dimid, false);
 				if(vec != null) {
 
@@ -1076,7 +1076,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 									distanceSq = this.spacePosition.distanceToSpacePosition2(((SpaceStationObject)station).getSpacePosition());
 									if(distanceSq < 100*100)
 									{
-										this.destinationDimId = ARConfiguration.getSpaceDimId();
+										this.destinationDimId = DimensionManager.spaceId;
 										this.storage.getGuidanceComputer().overrideLandingStation(station);
 										this.setRCS(false);
 										this.rotationYaw = 0;
@@ -1099,7 +1099,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 							distanceSq = this.spacePosition.distanceToSpacePosition2(((SpaceStationObject)station).getSpacePosition());
 							if(distanceSq < 100*100)
 							{
-								this.destinationDimId = ARConfiguration.getSpaceDimId();
+								this.destinationDimId = DimensionManager.spaceId;
 								this.storage.getGuidanceComputer().overrideLandingStation(station);
 								this.setRCS(false);
 								rcs_mode = false;
@@ -1215,7 +1215,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				if(this.getPosY() < 0) {
 					ResourceLocation dimId = ZUtils.getDimensionIdentifier(world);
 
-					if(ARConfiguration.getSpaceDimId().equals(dimId)) {
+					if(DimensionManager.spaceId.equals(dimId)) {
 
 						ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(getPositionVec()));
 
@@ -1337,7 +1337,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 	}
 
 	private int getEntryHeight(ResourceLocation entryLocationDimID){
-		if (entryLocationDimID.getPath().equals(ARConfiguration.getCurrentConfig().spaceDimId.get())) {
+		if (entryLocationDimID.equals(DimensionManager.spaceId)) {
 			return ARConfiguration.getCurrentConfig().stationClearanceHeight.get();
 		} else {
 			return ARConfiguration.getCurrentConfig().orbit.get();
@@ -1483,7 +1483,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			setInOrbit(true);
 			this.setMotion(0,0,0);
 
-			destinationDimId = ARConfiguration.getSpaceDimId();
+			destinationDimId = DimensionManager.spaceId;
 			destPos.x = 0f;
 			destPos.y = (float) getEntryHeight(destinationDimId);
 			destPos.z = 0f;
@@ -1504,7 +1504,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			setInOrbit(true);
 			//If going to a station or something make sure to set coords accordingly
 			//If in space land on the planet, if on the planet go to space
-			if((ARConfiguration.getSpaceDimId().equals(destinationDimId) || (ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world)) && !getInSpaceFlight())) && ZUtils.getDimensionIdentifier(this.world) != destinationDimId) {
+			if((DimensionManager.spaceId.equals(destinationDimId) || (DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(this.world)) && !getInSpaceFlight())) && ZUtils.getDimensionIdentifier(this.world) != destinationDimId) {
 				Vector3F<Float> pos = storage.getDestinationCoordinates(destinationDimId, true);
 				storage.setDestinationCoordinates(new Vector3F<>((float) this.getPosX(), (float) this.getPosY(), (float) this.getPosZ()), ZUtils.getDimensionIdentifier(this.world));
 				if(pos != null) {
@@ -1596,7 +1596,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				ResourceLocation destinationId = storage.getDestinationDimId(ZUtils.getDimensionIdentifier(this.world), (int)getPosX(), (int)getPosZ());
 				DimensionProperties properties = DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(this.world), new BlockPos(getPositionVec()));
 				ResourceLocation world2;
-				if(ARConfiguration.getSpaceDimId().equals(destinationId) || Constants.INVALID_PLANET.equals(destinationId))
+				if(DimensionManager.spaceId.equals(destinationId) || Constants.INVALID_PLANET.equals(destinationId))
 					world2 = properties.getId();
 				else
 					world2 = destinationId;
@@ -1664,7 +1664,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			}
 
 			ResourceLocation finalDest = destinationDimId;
-			if(ARConfiguration.getSpaceDimId().equals(destinationDimId)) {
+			if(DimensionManager.spaceId.equals(destinationDimId)) {
 				ISpaceObject obj = null;
 				Vector3F<Float> vec = storage.getDestinationCoordinates(destinationDimId,false);
 
@@ -1682,7 +1682,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 
 			//If we're on a space station get the id of the planet, not the station
 			ResourceLocation thisDimId = ZUtils.getDimensionIdentifier(this.world);
-			if(ARConfiguration.getSpaceDimId().equals(thisDimId)) {
+			if(DimensionManager.spaceId.equals(thisDimId)) {
 				ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(this.getPositionVec()));
 				if(object != null)
 					thisDimId = object.getProperties().getParentProperties().getId();
@@ -1702,7 +1702,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 
 
 		//TODO: Clean this logic a bit?
-		if(allowLaunch || !stats.hasSeat() || ((DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || ARConfiguration.getSpaceDimId().equals(destinationDimId) || Constants.INVALID_PLANET.equals(destinationDimId)) ) { //Abort if destination is invalid
+		if(allowLaunch || !stats.hasSeat() || ((DimensionManager.getInstance().isDimensionCreated(destinationDimId)) || DimensionManager.spaceId.equals(destinationDimId) || Constants.INVALID_PLANET.equals(destinationDimId)) ) { //Abort if destination is invalid
 
 
 			setInFlight(true);

@@ -95,7 +95,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 
 
 	private SpaceStationObject getSpaceObject() {
-		if(station == null && ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world))) {
+		if(station == null && DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(this.world))) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceStationObject)
 				station = (SpaceStationObject) object;
