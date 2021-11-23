@@ -1,7 +1,0 @@
-{
-    "variants": {
-        "axis=y":    { "model": "advancedrocketry:block/alien_log" },
-        "axis=z":     { "model": "advancedrocketry:block/alien_log", "x": 90 },
-        "axis=x":     { "model": "advancedrocketry:block/alien_log", "x": 90, "y": 90 }
-    }
-}

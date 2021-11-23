@@ -147,9 +147,9 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 					enchanted.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
 	
 					if(((ArmorItem)item).getEquipmentSlot() == EquipmentSlotType.CHEST)
-						RecipesMachine.getInstance().addRecipe(key, RecipeChemicalReactor.INSTANCE, TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack(new ResourceLocation("forge","sheets/titaniumaluminide"), 8), new ItemStack(AdvancedRocketryItems.itemPressureTankSuperHigh, 1));
+						RecipesMachine.getInstance().addRecipe(key, RecipeChemicalReactor.INSTANCE, TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(AdvancedRocketryBlocks.blockSeal, 1), new NumberedOreDictStack(new ResourceLocation("forge","sheets/titaniumaluminide"), 8), new ItemStack(AdvancedRocketryItems.itemTitaniumPressureTank, 1));
 					else
-						RecipesMachine.getInstance().addRecipe(key, RecipeChemicalReactor.INSTANCE, TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack(new ResourceLocation("forge","sheets/titaniumaluminide"), 4));
+						RecipesMachine.getInstance().addRecipe(key, RecipeChemicalReactor.INSTANCE, TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(AdvancedRocketryBlocks.blockSeal, 1), new NumberedOreDictStack(new ResourceLocation("forge","sheets/titaniumaluminide"), 4));
 	
 				}
 			}

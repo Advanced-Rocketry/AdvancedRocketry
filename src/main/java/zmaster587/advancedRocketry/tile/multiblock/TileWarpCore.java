@@ -33,9 +33,9 @@ public class TileWarpCore extends TileMultiBlock {
 			{new ResourceLocation("advancedrocketry", "warpcorerim"), 'I', new ResourceLocation("advancedrocketry", "warpcorerim")},
 			{new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcorerim")}},
 
-			{{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null},
-				{new BlockMeta(LibVulpesBlocks.blockStructureBlock), new ResourceLocation("advancedrocketry", "warpcore"), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
-				{null, new BlockMeta(LibVulpesBlocks.blockStructureBlock), null}},
+			{{null, new BlockMeta(LibVulpesBlocks.blockMachineStructure), null},
+				{new BlockMeta(LibVulpesBlocks.blockMachineStructure), new ResourceLocation("advancedrocketry", "warpcore"), new BlockMeta(LibVulpesBlocks.blockMachineStructure)},
+				{null, new BlockMeta(LibVulpesBlocks.blockMachineStructure), null}},
 			
 				{{new ResourceLocation("advancedrocketry", "warpcorerim"), 'c', new ResourceLocation("advancedrocketry", "warpcorerim")},
 					{new ResourceLocation("advancedrocketry", "warpcorerim"), new ResourceLocation("advancedrocketry", "warpcore"), new ResourceLocation("advancedrocketry", "warpcorerim")},

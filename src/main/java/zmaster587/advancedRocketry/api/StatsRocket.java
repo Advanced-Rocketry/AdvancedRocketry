@@ -541,11 +541,11 @@ public class StatsRocket {
 		stats.putInt("thrust", this.thrust);
 		stats.putInt("weight", this.weight);
 		stats.putFloat("drillingPower", this.drillingPower);
-		if(!this.fuelFluid.isEquivalentTo(Fluids.EMPTY))
+		if(this.fuelFluid != null && !this.fuelFluid.isEquivalentTo(Fluids.EMPTY) && this.fuelFluid.getRegistryName() != null)
 		    stats.putString("fuelFluid", fuelFluid.getRegistryName().toString());
-		if(!this.oxidizerFluid.isEquivalentTo(Fluids.EMPTY))
+		if(this.oxidizerFluid != null && !this.oxidizerFluid.isEquivalentTo(Fluids.EMPTY) && this.oxidizerFluid.getRegistryName() != null)
 			stats.putString("oxidizerFluid", oxidizerFluid.getRegistryName().toString());
-		if(!this.workingFluid.isEquivalentTo(Fluids.EMPTY))
+		if(this.workingFluid != null && !this.workingFluid.isEquivalentTo(Fluids.EMPTY) && this.workingFluid.getRegistryName() != null)
 			stats.putString("workingFluid", workingFluid.getRegistryName().toString());
 
 		stats.putInt("fuelMonopropellant", this.fuelMonopropellant);

@@ -1,22 +1,19 @@
 {
     "type": "advancedrocketry:precisionassembler",
-    "itemingredients":
-    [
+    "itemingredients": [
         {
-
             "tag": "forge:dusts/redstone"
         },
         {
             "tag": "forge:plates/copper"
         },
-	{
+		{
             "tag": "forge:plates/steel"
         }
     ],
     "time": 200,
     "energy": 10,
-    "itemresults":
-    {
-	"item": "advancedrocketry:circuit_ic_control"
+    "itemresults": {
+		"item": "advancedrocketry:controlcircuit"
     }
 }

@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "ggg",
+	    "tbc",
+	    "aoa"
+    ],
+    "key": {
+        "g": {
+            "tag": "forge:plates/gold"
+        },
+        "t": {
+            "item": "advancedrocketry:trackingcircuit"
+        },
+        "c": {
+            "item": "advancedrocketry:controlcircuit"
+        },
+	    "b": {
+            "item": "libvulpes:machinestructure"
+        },
+        "a": {
+            "item": "advancedrocketry:advancedcircuit"
+        },
+        "o": {
+            "item": "advancedrocketry:opticalsensor"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:microwavereceiver",
+        "count": 1
+    }
+}

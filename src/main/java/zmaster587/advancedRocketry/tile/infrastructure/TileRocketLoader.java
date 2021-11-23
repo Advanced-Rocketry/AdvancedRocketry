@@ -26,7 +26,7 @@ import zmaster587.advancedRocketry.api.IMission;
 import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
-import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
+import zmaster587.advancedRocketry.tile.TileRocketAssembler;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
@@ -89,13 +89,13 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 	@Override
 	public void remove() {
 		super.remove();
-		if(getMasterBlock() instanceof TileRocketAssemblingMachine)
-			((TileRocketAssemblingMachine)getMasterBlock()).removeConnectedInfrastructure(this);
+		if(getMasterBlock() instanceof TileRocketAssembler)
+			((TileRocketAssembler)getMasterBlock()).removeConnectedInfrastructure(this);
 	}
 
 	@Override
 	public String getModularInventoryName() {
-		return "block.advancedrocketry.rloader";
+		return "block.advancedrocketry.rocketloader";
 	}
 
 	@Override

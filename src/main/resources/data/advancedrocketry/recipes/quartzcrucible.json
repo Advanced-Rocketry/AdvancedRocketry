@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    " a ",
+	    "aba",
+	    " a "
+    ],
+    "key": {
+        "a": {
+            "item": "minecraft:quartz"
+        },
+	    "b": {
+            "item": "minecraft:cauldron"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:quartzcrucible",
+        "count": 1
+    }
+}

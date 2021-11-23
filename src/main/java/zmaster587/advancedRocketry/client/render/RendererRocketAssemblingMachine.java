@@ -8,10 +8,10 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
+import zmaster587.advancedRocketry.tile.TileRocketAssembler;
 import zmaster587.libVulpes.render.RenderHelper;
 
-public class RendererRocketAssemblingMachine extends TileEntityRenderer<TileRocketAssemblingMachine> {
+public class RendererRocketAssemblingMachine extends TileEntityRenderer<TileRocketAssembler> {
 
 	
 	public RendererRocketAssemblingMachine(TileEntityRendererDispatcher rendererDispatcherIn) {
@@ -24,8 +24,8 @@ public class RendererRocketAssemblingMachine extends TileEntityRenderer<TileRock
 	
 	
 	@Override
-	public void render(TileRocketAssemblingMachine tile, float partialTicks, MatrixStack matrix,
-			IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+	public void render(TileRocketAssembler tile, float partialTicks, MatrixStack matrix,
+                       IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
 		AxisAlignedBB bb;
 		
 		//If the rocketbuilder is scanning and a valid bounding box for the rocket exists

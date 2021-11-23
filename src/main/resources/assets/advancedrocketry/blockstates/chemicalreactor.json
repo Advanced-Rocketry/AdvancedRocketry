@@ -4,9 +4,9 @@
         "facing=south,state=false": { "model": "advancedrocketry:block/chemicalreactor", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/chemicalreactor", "y": 270 },
         "facing=east,state=false":  { "model": "advancedrocketry:block/chemicalreactor", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:block/chemicalreactor_on" },
-        "facing=south,state=true": { "model": "advancedrocketry:block/chemicalreactor_on", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:block/chemicalreactor_on", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:block/chemicalreactor_on", "y": 90 }
+        "facing=north,state=true": { "model": "advancedrocketry:block/chemicalreactor" },
+        "facing=south,state=true": { "model": "advancedrocketry:block/chemicalreactor", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:block/chemicalreactor", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:block/chemicalreactor", "y": 90 }
     }
 }

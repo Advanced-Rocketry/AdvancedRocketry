@@ -33,13 +33,13 @@ public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements I
 				{Blocks.AIR, new ResourceLocation("minecraft","slabs"), Blocks.AIR},
 				{new ResourceLocation("minecraft","slabs"), new ResourceLocation("minecraft","slabs"), new ResourceLocation("minecraft","slabs")}},
 
-			{{AdvancedRocketryBlocks.blockStructureTower, Blocks.AIR, LibVulpesBlocks.blockStructureBlock},
-					{Blocks.AIR, AdvancedRocketryBlocks.blockVacuumLaser, LibVulpesBlocks.blockStructureBlock},
-					{AdvancedRocketryBlocks.blockStructureTower, Blocks.AIR, LibVulpesBlocks.blockStructureBlock}},
+			{{AdvancedRocketryBlocks.blockStructureTower, Blocks.AIR, LibVulpesBlocks.blockMachineStructure},
+					{Blocks.AIR, AdvancedRocketryBlocks.blockLaser, LibVulpesBlocks.blockMachineStructure},
+					{AdvancedRocketryBlocks.blockStructureTower, Blocks.AIR, LibVulpesBlocks.blockMachineStructure}},
 
-			{{LibVulpesBlocks.blockStructureBlock, 'c', 'I'},
+			{{LibVulpesBlocks.blockMachineStructure, 'c', 'I'},
 						{'P', LibVulpesBlocks.motors, 'O'},
-						{'P', LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock}},
+						{'P', LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure}},
 	};
 
 	public TilePrecisionLaserEtcher()

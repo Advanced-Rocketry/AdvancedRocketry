@@ -1,12 +1,12 @@
 {
     "parent": "block/cube",
     "textures": {
-        "up": "advancedrocketry:blocks/forcefieldprojectorfront",
-        "north": "advancedrocketry:blocks/forcefieldprojector",
-        "south": "advancedrocketry:blocks/forcefieldprojector",
-        "west": "advancedrocketry:blocks/forcefieldprojector",
-        "east": "advancedrocketry:blocks/forcefieldprojector",
-        "down": "advancedrocketry:blocks/machinegeneric",
-        "particle": "advancedrocketry:blocks/machinegeneric"
+        "up": "advancedrocketry:blocks/machines/forcefieldprojector",
+        "north": "advancedrocketry:blocks/machines/forcefieldprojectorpanel",
+        "south": "advancedrocketry:blocks/machines/forcefieldprojectorpanel",
+        "west": "advancedrocketry:blocks/machines/forcefieldprojectorpanel",
+        "east": "advancedrocketry:blocks/machines/forcefieldprojectorpanel",
+        "down": "libvulpes:blocks/machinegeneric",
+        "particle": "libvulpes:blocks/machinegeneric"
     }
 }

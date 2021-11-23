@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.tile.atmosphere;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -52,11 +53,9 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 			BlockState state = world.getBlockState(pos);
 			boolean detectedAtm = false;
 
-			//TODO: Galacticcraft support
 			if(AtmosphereHandler.getOxygenHandler(ZUtils.getDimensionIdentifier(world)) == null) {
 				detectedAtm = atmosphereToDetect == AtmosphereType.AIR;
-			}
-			else {
+			} else {
 				for(Direction  direction : Direction.values()) {
 					detectedAtm = ((world.getBlockState(pos.offset(direction)).getShape(world, pos.offset(direction)) != VoxelShapes.fullCube()) && atmosphereToDetect == AtmosphereHandler.getOxygenHandler(world).getAtmosphereType(pos.offset(direction)));
 					if(detectedAtm) break;
@@ -83,14 +82,14 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 			i++;
 		}
 
-		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<>(), zmaster587.libVulpes.inventory.TextureResources.starryBG, 165, 120, 0, 500);
+		ModuleContainerPanYOnly panningContainer = new ModuleContainerPanYOnly(5, 20, btns, new LinkedList<>(), zmaster587.libVulpes.inventory.TextureResources.starryBG, 160, 100, 0, 500);
 		modules.add(panningContainer);
 		return modules;
 	}
 
 	@Override
 	public String getModularInventoryName() {
-		return "atmosphereDetector";
+		return "block.advancedrocketry.atmospheredetector";
 	}
 
 	@Override
@@ -150,23 +149,21 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 		atmosphereToDetect = AtmosphereRegister.getInstance().getAtmosphere(nbt.getString("atmName"));
 	}
 
-
 	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
-
-	@Override
 	@ParametersAreNonnullByDefault
-	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, getModules(getModularInvType().ordinal(), player), this, getModularInvType());
+	@Override
+	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player) {
+		GuiHandler.guiId ID = getModularInvType();
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, id, player, this.getModules(getModularInvType().ordinal(), player), this, ID);
 	}
-
 
 	@Override
 	public GuiHandler.guiId getModularInvType() {
-		return guiId.MODULAR;
+		return guiId.MODULARNOINV;
 	}
 }

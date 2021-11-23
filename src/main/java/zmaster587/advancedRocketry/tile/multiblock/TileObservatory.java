@@ -59,27 +59,27 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	private static final Object[][][] structure = new Object[][][]{
 
 		{	{null, null, null, null, null},
-			{null, LibVulpesBlocks.blockStructureBlock, lens, LibVulpesBlocks.blockStructureBlock, null},
-			{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null},
-			{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null},
+			{null, LibVulpesBlocks.blockMachineStructure, lens, LibVulpesBlocks.blockMachineStructure, null},
+			{null, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, null},
+			{null, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, null},
 			{null, null, null, null, null}},
 
 			{	{null,null,null,null,null}, 
-				{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null},
-				{null, LibVulpesBlocks.blockStructureBlock, lens, LibVulpesBlocks.blockStructureBlock, null},
-				{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null},
+				{null, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, null},
+				{null, LibVulpesBlocks.blockMachineStructure, lens, LibVulpesBlocks.blockMachineStructure, null},
+				{null, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, null},
 				{null,null,null,null,null}},
 
-				{	{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null},
-					{LibVulpesBlocks.blockStructureBlock, Blocks.AIR, Blocks.AIR, Blocks.AIR, LibVulpesBlocks.blockStructureBlock},
-					{LibVulpesBlocks.blockStructureBlock, Blocks.AIR, Blocks.AIR, Blocks.AIR, LibVulpesBlocks.blockStructureBlock},
-					{LibVulpesBlocks.blockStructureBlock, Blocks.AIR, lens, Blocks.AIR, LibVulpesBlocks.blockStructureBlock},
-					{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null}},
+				{	{null, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, null},
+					{LibVulpesBlocks.blockMachineStructure, Blocks.AIR, Blocks.AIR, Blocks.AIR, LibVulpesBlocks.blockMachineStructure},
+					{LibVulpesBlocks.blockMachineStructure, Blocks.AIR, Blocks.AIR, Blocks.AIR, LibVulpesBlocks.blockMachineStructure},
+					{LibVulpesBlocks.blockMachineStructure, Blocks.AIR, lens, Blocks.AIR, LibVulpesBlocks.blockMachineStructure},
+					{null, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, null}},
 
 					{	{ null,'*', 'c', '*',null}, 
-						{'*',LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock,'*'},
-						{'*',LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, '*'},
-						{'*',LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock,'*'},
+						{'*',LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure,'*'},
+						{'*',LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, '*'},
+						{'*',LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure,'*'},
 						{null,'*', '*', '*', null}},
 
 						{	{null,'*', '*', '*', null}, 
@@ -301,7 +301,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 	@Override
 	public String getMachineName() {
-		return "container.observatory";
+		return "block.advancedrocketry.observatory";
 	}
 
 	@Override

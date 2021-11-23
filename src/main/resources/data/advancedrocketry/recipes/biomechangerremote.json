@@ -1,27 +1,25 @@
 {
     "type": "advancedrocketry:precisionassembler",
-    "itemingredients":
-    [
+    "itemingredients": [
         {
-	    "item": "libvulpes:smallbattery"
+	        "item": "libvulpes:battery"
         },
         {
-	    "item": "advancedrocketry:circuit_ic_adv"
+	        "item": "advancedrocketry:advancedcircuit"
         },
-	{
-	    "item": "advancedrocketry:item_ui"
+	    {
+	        "item": "advancedrocketry:userinterface"
         },
-	{
-	    "item": "advancedrocketry:circuit_ic_tracking"
+    	{
+    	    "item": "advancedrocketry:trackingcircuit"
         },
-	{
-            "tag": "forge:plates/tin"
+    	{
+            "tag": "forge:plates/aluminum"
         }
     ],
     "time": 1000,
     "energy": 1,
-    "itemresults":
-    {
-	"item": "advancedrocketry:biome_changer"
+    "itemresults": {
+	    "item": "advancedrocketry:biomechangerremote"
     }
 }

@@ -24,7 +24,7 @@ public class ItemJackHammer extends ToolItem {
 	
 	@Override
 	public boolean getIsRepairable(@Nonnull ItemStack stackMe, @Nonnull ItemStack stackItem) {
-		return ItemTags.getCollection().getOwningTags(stackItem.getItem()).stream().anyMatch(value -> value.getPath().equals("stickTitanium"));
+		return ItemTags.getCollection().getOwningTags(stackItem.getItem()).stream().anyMatch(value -> value.getPath().equals("rodTitanium"));
 	}
     
 	@Override

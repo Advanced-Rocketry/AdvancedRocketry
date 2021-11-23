@@ -1,44 +1,34 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"ada",
-	"ecf",
-	"bgb"
+    "pattern": [
+		"ada",
+		"ecf",
+		"bgb"
     ],
-    "key":
-    {
-        "a":
-        {
+    "key": {
+        "a": {
             "item": "minecraft:quartz"
         },
-        "d":
-        {
-            "item": "advancedrocketry:item_ui"
+        "d": {
+            "item": "advancedrocketry:userinterface"
         },
-	"e":
-        {
-            "item": "advancedrocketry:circuit_ic_item_io"
+		"e": {
+            "item": "advancedrocketry:itemiocircuit"
         },
-	"c":
-        {
-            "item": "libvulpes:structure_machine"
+		"c": {
+            "item": "libvulpes:machinestructure"
         },
-	"f":
-        {
-            "item": "advancedrocketry:circuit_ic_control"
+		"f": {
+            "item": "advancedrocketry:controlcircuit"
         },
-	"b":
-        {
+		"b": {
             "item": "minecraft:repeater"
         },
-	"g":
-        {
+		"g": {
             "tag": "forge:plates/steel"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:crystallizer",
         "count": 1
     }

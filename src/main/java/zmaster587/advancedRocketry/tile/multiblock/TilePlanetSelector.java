@@ -100,7 +100,7 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 
 	@Override
 	public String getModularInventoryName() {
-		return "";
+		return "block.advancedrocketry.planetselector";
 	}
 
 	@Override

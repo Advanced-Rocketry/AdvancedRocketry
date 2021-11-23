@@ -1,27 +1,24 @@
 {
     "type": "advancedrocketry:precisionassembler",
-    "itemingredients":
-    [
+    "itemingredients": [
         {
-            "tag": "forge:sticks/copper",
+            "tag": "forge:rods/copper",
             "count": 2
         },
         {
-            "tag": "forge:sticks/titanium"
+            "tag": "forge:rods/titanium"
         },
-	{
-	    "item": "advancedrocketry:circuit_ic_adv"
+	    {
+	        "item": "advancedrocketry:advancedcircuit"
         },
-	{
-	    "item": "advancedrocketry:wafer",
-	    "count": 2
+	    {
+	        "item": "advancedrocketry:siliconwafer",
+	        "count": 2
         }
     ],
     "time": 1000,
     "energy": 1,
-    "itemresults":
-    {
-	"item": "advancedrocketry:sensor_biomechanger",
-	"data": 5
+    "itemresults": {
+	    "item": "advancedrocketry:biomechanger"
     }
 }

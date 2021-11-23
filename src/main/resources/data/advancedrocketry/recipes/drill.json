@@ -1,16 +1,14 @@
 {
     "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
+    "ingredients": [
         {
-	    "item": "libvulpes:structure_machine"
+	  	  "item": "libvulpes:machinestructure"
         },
         {
-	    "item": "minecraft:iron_pickaxe"
+	 	   "item": "minecraft:iron_pickaxe"
         }
     ],
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:drill",
         "count": 1
     }

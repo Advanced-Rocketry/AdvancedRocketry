@@ -39,7 +39,7 @@ public class TileStationOrientationController extends TileEntity implements ITic
 
 	private int[] progress;
 
-	private ModuleText moduleAngularVelocity, numThrusters, maxAngularAcceleration, targetRotations;
+	private ModuleText moduleAngularVelocity, targetRotations;
 
 	public TileStationOrientationController() {
 		super(AdvancedRocketryTileEntityType.TILE_ORIENTATION_CONTROLLER);

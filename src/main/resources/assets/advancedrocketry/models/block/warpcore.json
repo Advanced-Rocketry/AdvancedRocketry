@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "advancedrocketry:blocks/warpcore"
+        "all": "advancedrocketry:blocks/multiblocks/warpcore"
     }
 }

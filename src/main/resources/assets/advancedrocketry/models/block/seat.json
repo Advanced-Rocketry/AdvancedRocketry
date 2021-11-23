@@ -4,7 +4,7 @@
         "generic": "libvulpes:blocks/machinegeneric",
         "wool": "block/light_gray_wool",
         "support": "advancedrocketry:blocks/smallconnector",
-        "panel": "advancedrocketry:blocks/panelside",
+        "panel": "libvulpes:blocks/machinegeneric",
         "particle": "advancedrocketry:blocks/solar"
     },
     "elements": [

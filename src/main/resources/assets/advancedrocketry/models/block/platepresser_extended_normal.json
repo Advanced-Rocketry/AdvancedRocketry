@@ -1,8 +1,0 @@
-{
-    "parent": "block/piston_extended",
-    "textures": {
-        "bottom": "advancedrocketry:blocks/platepresser_top",
-        "side": "advancedrocketry:blocks/platepresser_side",
-        "inside": "advancedrocketry:blocks/platepresser_internal"
-    }
-}

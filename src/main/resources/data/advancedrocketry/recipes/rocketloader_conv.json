@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+	    {
+	        "item": "advancedrocketry:rocketunloader"
+        }
+    ],
+    "result": {
+        "item": "advancedrocketry:rocketloader",
+        "count": 1
+    }
+}

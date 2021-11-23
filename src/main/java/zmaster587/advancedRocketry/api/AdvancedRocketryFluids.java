@@ -62,25 +62,25 @@ public class AdvancedRocketryFluids {
 	private static final ResourceLocation lavaFlowing = new ResourceLocation("advancedrocketry:blocks/fluid/lava_flow");
 
 	public static ForgeFlowingFluid.Properties makeOxygenProps() {
-		return new ForgeFlowingFluid.Properties(oxygenStill, oxygenFlowing, FluidAttributes.builder(notFlowing, flowing).color(0xFF8f94b9).density(800).viscosity(1500)).bucket(AdvancedRocketryItems.itemBucketOxygen).block(AdvancedRocketryBlocks.blockOxygenFluid);
+		return new ForgeFlowingFluid.Properties(oxygenStill, oxygenFlowing, FluidAttributes.builder(notFlowing, flowing).color(0xFF6CE2FF).density(800).viscosity(1500)).bucket(AdvancedRocketryItems.itemBucketOxygen).block(AdvancedRocketryBlocks.blockOxygenFluid);
 	}
 	public static RegistryObject<FlowingFluid> oxygenFlowing;
 	public static RegistryObject<FlowingFluid> oxygenStill;
 
 	public static ForgeFlowingFluid.Properties makeHydrogenProps() {
-		return new ForgeFlowingFluid.Properties(hydrogenStill, hydrogenFlowing, FluidAttributes.builder(notFlowing, flowing).color(0xFFdbc1c1).density(800).viscosity(1500)).bucket(AdvancedRocketryItems.itemBucketHydrogen).block(AdvancedRocketryBlocks.blockHydrogenFluid);
+		return new ForgeFlowingFluid.Properties(hydrogenStill, hydrogenFlowing, FluidAttributes.builder(notFlowing, flowing).color(0xFFDBC1C1).density(800).viscosity(1500)).bucket(AdvancedRocketryItems.itemBucketHydrogen).block(AdvancedRocketryBlocks.blockHydrogenFluid);
 	}
 	public static RegistryObject<FlowingFluid> hydrogenFlowing;
 	public static RegistryObject<FlowingFluid> hydrogenStill;
 
 	public static ForgeFlowingFluid.Properties makeRocketFuelProps() {
-		return new ForgeFlowingFluid.Properties(rocketFuelStill, rocketFuelFlowing, FluidAttributes.builder(notFlowing, flowing).color(0xFFe5d884).density(800).viscosity(1500)).bucket(AdvancedRocketryItems.itemBucketRocketFuel);
+		return new ForgeFlowingFluid.Properties(rocketFuelStill, rocketFuelFlowing, FluidAttributes.builder(notFlowing, flowing).color(0xFFDBF1FF).density(800).viscosity(1500)).bucket(AdvancedRocketryItems.itemBucketRocketFuel);
 	}
 	public static RegistryObject<FlowingFluid> rocketFuelFlowing;
 	public static RegistryObject<FlowingFluid> rocketFuelStill;
 
 	public static ForgeFlowingFluid.Properties makeNitrogenProps() {
-		return new ForgeFlowingFluid.Properties(nitrogenStill, nitrogenFlowing, FluidAttributes.builder(notFlowing, flowing).color(0xFF97a7e7).density(800).viscosity(1500)).bucket(AdvancedRocketryItems.itemBucketNitrogen).block(AdvancedRocketryBlocks.blockNitrogenFluid);
+		return new ForgeFlowingFluid.Properties(nitrogenStill, nitrogenFlowing, FluidAttributes.builder(notFlowing, flowing).color(0xFFDFE5FE).density(800).viscosity(1500)).bucket(AdvancedRocketryItems.itemBucketNitrogen).block(AdvancedRocketryBlocks.blockNitrogenFluid);
 	}
 	public static RegistryObject<FlowingFluid> nitrogenFlowing;
 	public static RegistryObject<FlowingFluid> nitrogenStill;

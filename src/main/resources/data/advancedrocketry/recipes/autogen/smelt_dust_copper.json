@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "libvulpes:dustcopper"
-  },
-  "result": "libvulpes:ingotcopper",
-  "experience": 0.0,
-  "cookingtime": 200
-}

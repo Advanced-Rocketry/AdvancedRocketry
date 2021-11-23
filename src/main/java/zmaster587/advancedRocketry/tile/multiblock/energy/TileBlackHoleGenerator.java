@@ -39,27 +39,27 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 	static final Object[][][] structure = new Object[][][] {
 		{
 			{null, null, null},
-			{null, LibVulpesBlocks.blockAdvStructureBlock, null},
+			{null, LibVulpesBlocks.blockAdvancedMachineStructure, null},
 			{null, null, null}
 		},
 		{
 			{null, 'c', null},
-			{'*', LibVulpesBlocks.blockAdvStructureBlock, '*'},
+			{'*', LibVulpesBlocks.blockAdvancedMachineStructure, '*'},
 			{null, '*', null},
 		},
 		{
-			{null, LibVulpesBlocks.blockAdvStructureBlock, null},
-			{null, LibVulpesBlocks.blockAdvStructureBlock, null},
+			{null, LibVulpesBlocks.blockAdvancedMachineStructure, null},
+			{null, LibVulpesBlocks.blockAdvancedMachineStructure, null},
 			{null, null, null}
 		},
 		{
 			{null, null, null},
-			{null, LibVulpesBlocks.blockAdvStructureBlock, null},
+			{null, LibVulpesBlocks.blockAdvancedMachineStructure, null},
 			{null, null, null}
 		},
 		{
 			{null, null, null},
-			{null, LibVulpesBlocks.blockAdvStructureBlock, null},
+			{null, LibVulpesBlocks.blockAdvancedMachineStructure, null},
 			{null, null, null}
 		}};
 
@@ -102,7 +102,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 		public List<BlockMeta> getAllowableWildCardBlocks() {
 			List<BlockMeta> blocks = super.getAllowableWildCardBlocks();
 			blocks.addAll(TileMultiBlock.getMapping('I'));
-			blocks.add(new BlockMeta( LibVulpesBlocks.blockAdvStructureBlock));
+			blocks.add(new BlockMeta( LibVulpesBlocks.blockAdvancedMachineStructure));
 			blocks.addAll(TileMultiBlock.getMapping('p'));
 
 			return blocks;

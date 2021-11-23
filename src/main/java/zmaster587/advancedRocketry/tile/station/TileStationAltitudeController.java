@@ -41,9 +41,9 @@ import java.util.List;
 public class TileStationAltitudeController extends TileEntity implements IModularInventory, ITickableTileEntity, INetworkMachine, ISliderBar, IButtonInventory, IComparatorOverride {
 
 	int progress;
-	private RedstoneState state;
+	private RedstoneState state = ZUtils.RedstoneState.OFF;
 
-	private ModuleText moduleGrav, numGravPylons, maxGravBuildSpeed, targetGrav;
+	private ModuleText moduleGrav, maxGravBuildSpeed, targetGrav;
 	private ModuleRedstoneOutputButton redstoneControl;
 
 	public TileStationAltitudeController() {

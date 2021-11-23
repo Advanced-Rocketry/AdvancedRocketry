@@ -1,9 +1,9 @@
 {
     "variants": {
-        "level=0": { "model": "advancedrocketry:quartzcrucible" },
-        "level=1": { "model": "advancedrocketry:quartzcrucible" },
-        "level=2": { "model": "advancedrocketry:quartzcrucible" },
-        "level=3": { "model": "advancedrocketry:quartzcrucible" },
-        "inventory" : { "model": "advancedrocketry:quartzcrucible" }
+        "level=0": { "model": "advancedrocketry:block/quartzcrucible" },
+        "level=1": { "model": "advancedrocketry:block/quartzcrucible" },
+        "level=2": { "model": "advancedrocketry:block/quartzcrucible" },
+        "level=3": { "model": "advancedrocketry:block/quartzcrucible" },
+        "inventory" : { "model": "advancedrocketry:block/quartzcrucible" }
     }
 }

@@ -1,0 +1,35 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+		"psp",
+		"abc",
+		"ded"
+    ],
+    "key": {
+        "d": {
+            "item": "advancedrocketry:basiccircuit"
+        },
+        "s": {
+            "item": "advancedrocketry:userinterface"
+        },
+		"a": {
+            "item": "advancedrocketry:fluidiocircuit"
+        },
+		"b": {
+            "item": "libvulpes:machinestructure"
+        },
+		"c": {
+            "item": "advancedrocketry:controlcircuit"
+        },
+		"p": {
+            "tag": "forge:plates/steel"
+        },
+		"e": {
+	    "item": "minecraft:redstone_torch"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:electrolyzer",
+        "count": 1
+    }
+}

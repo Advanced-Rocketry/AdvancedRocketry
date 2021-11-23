@@ -1,35 +1,22 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"rrr",
-	"gbg",
-	"ppp"
+    "pattern": [
+        "xxx",
+        "yyy",
+        "zzz"
     ],
-    "key":
-    {
-        "r":
-        {
-
+    "key": {
+        "x": {
             "tag": "forge:dusts/redstone"
         },
-        "g":
-        {
-
+        "y": {
             "tag": "forge:dusts/glowstone"
         },
-        "p":
-        {
-
+		"z": {
             "tag": "forge:plates/gold"
-        },
-	"b":
-        {
-            "item": "libvulpes:structure_machine"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:solarpanel",
         "count": 1
     }

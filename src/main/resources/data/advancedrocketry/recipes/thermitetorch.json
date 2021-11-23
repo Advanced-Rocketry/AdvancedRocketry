@@ -1,17 +1,21 @@
 {
     "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
+    "ingredients": [
         {
-	    "item": "minecraft:stick"
+            "tag": "forge:dusts/aluminum"
         },
         {
-	    "item": "advancedrocketry:thermite"
+            "tag": "forge:dusts/aluminum"
+        },
+        {
+            "tag": "forge:dusts/iron"
+        },
+        {
+            "item": "minecraft:nether_brick"
         }
     ],
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:thermitetorch",
-        "count": 4
+        "count": 8
     }
 }

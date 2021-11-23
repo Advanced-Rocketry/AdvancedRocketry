@@ -1,27 +1,20 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	" s ",
-	"sps",
-	" s "
+    "pattern": [
+		" s ",
+		"sps",
+		" s "
     ],
-    "key":
-    {
-        "s":
-        {
-
-            "tag": "forge:sticks/iron"
+    "key": {
+        "s": {
+            "tag": "forge:rods/iron"
         },
-	"p":
-        {
-
+		"p": {
             "tag": "forge:plates/iron"
         }
     },
-    "result":
-    {
-        "item": "advancedrocketry:sawbladeiron",
+    "result": {
+        "item": "advancedrocketry:sawblade",
         "count": 1
     }
 }

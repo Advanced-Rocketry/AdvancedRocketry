@@ -16,8 +16,8 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
-import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
-import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
+import zmaster587.advancedRocketry.item.ItemPlanetChip;
+import zmaster587.advancedRocketry.item.ItemSatelliteChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.item.ItemStationChip.LandingLocation;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -66,10 +66,10 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		Item item = itemStack.getItem();
 
 		return slot == 0 &&
-				(item instanceof ItemPlanetIdentificationChip ||
+				(item instanceof ItemPlanetChip ||
 				item instanceof ItemStationChip ||
 				item instanceof ItemAsteroidChip ||
-				item instanceof ItemSatelliteIdentificationChip ||
+				item instanceof ItemSatelliteChip ||
 				item == LibVulpesItems.itemLinker);
 	}
 
@@ -99,8 +99,8 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 
 	public long getTargetSatellite() {
 		ItemStack stack = getStackInSlot(0);
-		if(!stack.isEmpty() && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
-			return ItemSatelliteIdentificationChip.getSatelliteId(stack);
+		if(!stack.isEmpty() && stack.getItem() instanceof ItemSatelliteChip) {
+			return ItemSatelliteChip.getSatelliteId(stack);
 		}
 		return -1;
 	}
@@ -114,8 +114,8 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 
 		if(!stack.isEmpty()) {
 			Item itemType = stack.getItem();
-			if (itemType instanceof ItemPlanetIdentificationChip) {
-				ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)itemType;
+			if (itemType instanceof ItemPlanetChip) {
+				ItemPlanetChip item = (ItemPlanetChip)itemType;
 
 				return item.getDimensionId(stack);
 			}
@@ -138,7 +138,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				landingPos = new Vector3F<>((float) pos.getX(), (float) pos.getY(), (float) pos.getZ());
 				return currentDimension;
 			}
-			else if(itemType instanceof ItemSatelliteIdentificationChip) {
+			else if(itemType instanceof ItemSatelliteChip) {
 				long satelliteId = getTargetSatellite();
 				if(satelliteId != Constants.INVALID_SAT) {
 					SatelliteBase sat = DimensionManager.getInstance().getSatellite(satelliteId);
@@ -170,7 +170,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 		//Make the if tree match the destination if tree:
 		if(!stack.isEmpty()){
 			Item itemType = stack.getItem();
-			if (itemType instanceof ItemPlanetIdentificationChip) {
+			if (itemType instanceof ItemPlanetChip) {
 				//This could be the location of the rocket.
 				return null;
 			}
@@ -194,7 +194,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 				//Caution Side-Effect dependency: landingPos from getDim.				
 				return landingPos;
 			}
-			else if(itemType instanceof ItemSatelliteIdentificationChip) {
+			else if(itemType instanceof ItemSatelliteChip) {
 				//You can't actually go to the satellites.
 				return null;
 			} 

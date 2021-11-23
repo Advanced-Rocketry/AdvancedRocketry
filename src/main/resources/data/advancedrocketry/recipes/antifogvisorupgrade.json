@@ -1,0 +1,22 @@
+{
+    "type": "advancedrocketry:precisionassembler",
+    "itemingredients": [
+        {
+	        "item": "libvulpes:battery"
+        },
+        {
+	        "item": "advancedrocketry:advancedcircuit"
+        },
+	    {
+    	    "item": "advancedrocketry:controlcircuit"
+        },
+    	{
+	        "item": "advancedrocketry:lens"
+        }
+    ],
+    "time": 200,
+    "energy": 1,
+    "itemresults": {
+	    "item": "advancedrocketry:antifogvisorupgrade"
+    }
+}

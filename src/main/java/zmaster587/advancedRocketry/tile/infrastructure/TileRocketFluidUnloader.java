@@ -18,14 +18,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.IMission;
 import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
 import zmaster587.advancedRocketry.entity.EntityRocket;
-import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
+import zmaster587.advancedRocketry.tile.TileRocketAssembler;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
 import zmaster587.libVulpes.inventory.modules.IGuiCallback;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -62,7 +61,7 @@ public class TileRocketFluidUnloader extends TileFluidOutputHatch implements IIn
 
 	@Override
 	public String getModularInventoryName() {
-		return "block.advancedrocketry.funloader";
+		return "block.advancedrocketry.rocketfluidunloader";
 	}
 
 	protected boolean getStrongPowerForSides(World world, BlockPos pos) {
@@ -238,8 +237,8 @@ public class TileRocketFluidUnloader extends TileFluidOutputHatch implements IIn
 	@Override
 	public void remove() {
 		super.remove();
-		if(getMasterBlock() instanceof TileRocketAssemblingMachine)
-			((TileRocketAssemblingMachine)getMasterBlock()).removeConnectedInfrastructure(this);
+		if(getMasterBlock() instanceof TileRocketAssembler)
+			((TileRocketAssembler)getMasterBlock()).removeConnectedInfrastructure(this);
 	}
 	
 	@Override

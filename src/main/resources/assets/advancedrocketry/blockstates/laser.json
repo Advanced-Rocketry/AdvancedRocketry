@@ -1,0 +1,11 @@
+{
+    "variants": {
+        "facing=north": { "model": "advancedrocketry:block/laser", "x": 90 },
+        "facing=south": { "model": "advancedrocketry:block/laser", "y": 180, "x": 90 },
+        "facing=west":  { "model": "advancedrocketry:block/laser", "y": 270, "x": 90 },
+        "facing=east":  { "model": "advancedrocketry:block/laser", "y": 90, "x": 90 },
+        "facing=up": { "model": "advancedrocketry:block/laser" },
+        "facing=down": { "model": "advancedrocketry:block/laser", "y": 180 },
+        "inventory": { "model": "advancedrocketry:block/laser" }
+    }
+}

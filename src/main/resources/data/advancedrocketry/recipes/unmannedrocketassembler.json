@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+		"gdg",
+		"dad",
+		"rdr"
+    ],
+    "key": {
+		"a": {
+		    "item": "advancedrocketry:rocketassembler"
+        },
+		"d": {
+            "tag": "forge:dusts/dilithium"
+        },
+		"g": {
+            "tag": "forge:gears/titaniumaluminide"
+        },
+		"r": {
+            "tag": "forge:rods/titaniumaluminide"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:unmannedrocketassembler",
+        "count": 1
+    }
+}

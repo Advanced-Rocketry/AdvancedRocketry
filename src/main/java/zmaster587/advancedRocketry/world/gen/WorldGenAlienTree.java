@@ -95,28 +95,28 @@ public class WorldGenAlienTree extends StraightTrunkPlacer {
 				for (j2 = 0; j2 < treeHeight; ++j2) {
 					trunkY = y + j2;
 
-					func_236913_a_(world, new BlockPos(x, trunkY, z), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
-					func_236913_a_(world, new BlockPos(x + 1, trunkY, z), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
-					func_236913_a_(world, new BlockPos(x, trunkY, z + 1), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
-					func_236913_a_(world, new BlockPos(x + 1, trunkY, z + 1), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
+					func_236913_a_(world, new BlockPos(x, trunkY, z), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState(), boundingBox);
+					func_236913_a_(world, new BlockPos(x + 1, trunkY, z), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState(), boundingBox);
+					func_236913_a_(world, new BlockPos(x, trunkY, z + 1), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState(), boundingBox);
+					func_236913_a_(world, new BlockPos(x + 1, trunkY, z + 1), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState(), boundingBox);
 					i2 = trunkY;
 				}
 				
 				//Genthe root
-				func_236913_a_(world, new BlockPos(x - 1, y, z), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
-				func_236913_a_(world, new BlockPos(x + 2, y, z), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
-				func_236913_a_(world, new BlockPos(x + 2, y, z + 1), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
-				func_236913_a_(world, new BlockPos(x - 1, y, z + 1), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
+				func_236913_a_(world, new BlockPos(x - 1, y, z), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState(), boundingBox);
+				func_236913_a_(world, new BlockPos(x + 2, y, z), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState(), boundingBox);
+				func_236913_a_(world, new BlockPos(x + 2, y, z + 1), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState(), boundingBox);
+				func_236913_a_(world, new BlockPos(x - 1, y, z + 1), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState(), boundingBox);
 
-				func_236913_a_(world, new BlockPos(x, y, z - 1), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
-				func_236913_a_(world, new BlockPos(x + 1, y, z - 1), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
-				func_236913_a_(world, new BlockPos(x + 1, y, z + 2), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
-				func_236913_a_(world, new BlockPos(x, y, z + 2), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
+				func_236913_a_(world, new BlockPos(x, y, z - 1), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState(), boundingBox);
+				func_236913_a_(world, new BlockPos(x + 1, y, z - 1), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState(), boundingBox);
+				func_236913_a_(world, new BlockPos(x + 1, y, z + 2), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState(), boundingBox);
+				func_236913_a_(world, new BlockPos(x, y, z + 2), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState(), boundingBox);
 
-				func_236913_a_(world, new BlockPos(x, y, z), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
-				func_236913_a_(world, new BlockPos(x + 1, y, z), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
-				func_236913_a_(world, new BlockPos(x, y, z +1 ), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
-				func_236913_a_(world, new BlockPos(x + 1, y, z + 1), AdvancedRocketryBlocks.blockAlienWood.getDefaultState(), boundingBox);
+				func_236913_a_(world, new BlockPos(x, y, z), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState(), boundingBox);
+				func_236913_a_(world, new BlockPos(x + 1, y, z), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState(), boundingBox);
+				func_236913_a_(world, new BlockPos(x, y, z +1 ), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState(), boundingBox);
+				func_236913_a_(world, new BlockPos(x + 1, y, z + 1), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState(), boundingBox);
 
 
 				generatePod(world, random, 6, x + 1, random.nextInt(10) + y + treeHeight / 6, z, 1, 1, boundingBox);
@@ -216,7 +216,7 @@ public class WorldGenAlienTree extends StraightTrunkPlacer {
 
 	private boolean replaceBlockWithWood(IWorldGenerationReader world, int x, int y, int z, Direction direction, MutableBoundingBox boundingBox) {
 
-		func_236913_a_(world, new BlockPos(x,y,z), AdvancedRocketryBlocks.blockAlienWood.getDefaultState().with(RotatedPillarBlock.AXIS, direction.getAxis()), boundingBox);
+		func_236913_a_(world, new BlockPos(x,y,z), AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState().with(RotatedPillarBlock.AXIS, direction.getAxis()), boundingBox);
 		return true;
 
 		/*BlockPos pos = new BlockPos(x,y,z);
@@ -237,7 +237,7 @@ public class WorldGenAlienTree extends StraightTrunkPlacer {
 
 		//if (world.isAirBlock(pos))
 		{
-			func_236913_a_(world, pos, AdvancedRocketryBlocks.blockAlienLeaves.getDefaultState(), boundingBox);
+			func_236913_a_(world, pos, AdvancedRocketryBlocks.blockLightwoodLeaves.getDefaultState(), boundingBox);
 		}
 	}
 

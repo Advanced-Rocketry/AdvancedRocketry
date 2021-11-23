@@ -1,0 +1,25 @@
+{
+    "type": "advancedrocketry:precisionassembler",
+    "itemingredients": [
+        {
+	    	"item": "libvulpes:battery"
+        },
+        {
+	    	"item": "advancedrocketry:advancedcircuit"
+        },
+		{
+	   	    "item": "advancedrocketry:userinterface"
+        },
+		{
+	    	"item": "advancedrocketry:lens"
+        },
+		{
+            "tag": "forge:plates/aluminum"
+        }
+    ],
+    "time": 1000,
+    "energy": 1,
+    "itemresults": {
+		"item": "advancedrocketry:atmosphereanalyzer"
+    }
+}

@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -9,12 +10,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryParticleTypes;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.tile.multiblock.TileBeacon;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 
 public class BlockBeacon extends BlockMultiblockMachine {
@@ -33,11 +36,13 @@ public class BlockBeacon extends BlockMultiblockMachine {
 	}
 
 	@OnlyIn(value=Dist.CLIENT)
-	public void randomDisplayTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+	@Override
+	@ParametersAreNonnullByDefault
+	public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
 		if(worldIn.getTileEntity(pos) instanceof TileBeacon && ((TileBeacon)worldIn.getTileEntity(pos)).getMachineEnabled()) {
 			Direction enumfacing = stateIn.get(FACING);
 			for(int i = 0; i < 10; i++)
-				AdvancedRocketry.proxy.spawnParticle("reddust", worldIn,  pos.getX() - enumfacing.getXOffset() + worldIn.rand.nextDouble(), pos.getY() + 5 - worldIn.rand.nextDouble(), pos.getZ() - enumfacing.getZOffset() + worldIn.rand.nextDouble(), 0, 0, 0);
+				AdvancedRocketry.proxy.spawnParticle(ParticleTypes.INSTANT_EFFECT, worldIn,  pos.getX() - enumfacing.getXOffset() + worldIn.rand.nextDouble(), pos.getY() + 5 - worldIn.rand.nextDouble(), pos.getZ() - enumfacing.getZOffset() + worldIn.rand.nextDouble(), 0, 0, 0);
 		}
 	}
 }

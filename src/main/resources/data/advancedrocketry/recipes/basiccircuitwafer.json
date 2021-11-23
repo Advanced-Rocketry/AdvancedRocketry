@@ -1,0 +1,19 @@
+{
+    "type": "advancedrocketry:precisionassembler",
+    "itemingredients": [
+        {
+            "tag": "forge:ingots/gold"
+        },
+        {
+            "tag": "forge:dusts/redstone"
+        },
+	    {
+	        "item": "advancedrocketry:siliconwafer"
+        }
+    ],
+    "time": 900,
+    "energy": 100,
+    "itemresults": {
+	    "item": "advancedrocketry:basiccircuitwafer"
+    }
+}

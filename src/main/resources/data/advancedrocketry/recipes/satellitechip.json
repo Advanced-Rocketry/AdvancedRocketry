@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "advancedrocketry:basiccircuit"
+        }
+    ],
+    "result": {
+        "item": "advancedrocketry:satellitechip",
+        "count": 1
+    }
+}

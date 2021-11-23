@@ -1,38 +1,28 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"bgb",
-	"lbf",
-	"ppp"
+    "pattern": [
+		"bgb",
+		"lbf",
+		"ppp"
     ],
-    "key":
-    {
-        "g":
-        {
-            "item": "advancedrocketry:item_ui"
+    "key": {
+        "g": {
+            "item": "advancedrocketry:userinterface"
         },
-        "l":
-        {
-            "item": "advancedrocketry:circuit_ic_fluid_io"
+        "l": {
+            "item": "advancedrocketry:fluidiocircuit"
         },
-	"b":
-        {
-            "item": "libvulpes:structure_machine"
+		"b": {
+            "item": "libvulpes:machinestructure"
         },
-	"f":
-        {
-
+		"f": {
             "tag": "forge:fans/steel"
         },
-	"p":
-        {
-
-            "tag": "forge:plates/tin"
+		"p": {
+            "tag": "forge:plates/aluminum"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:fuelingstation",
         "count": 1
     }

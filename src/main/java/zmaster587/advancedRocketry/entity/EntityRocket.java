@@ -75,7 +75,7 @@ import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
 import zmaster587.advancedRocketry.inventory.modules.ModuleStellarBackground;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
 import zmaster587.advancedRocketry.item.ItemPackedStructure;
-import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
+import zmaster587.advancedRocketry.item.ItemPlanetChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.mission.MissionOreMining;
 import zmaster587.advancedRocketry.network.PacketSatellite;
@@ -791,10 +791,10 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 
 				AtmosphereHandler handler;
 				if(Minecraft.getInstance().gameSettings.particles  == ParticleStatus.ALL && world.getGameTime() % 10 == 0 && (engineNum < 8 || ((world.getGameTime()/10) % Math.max((stats.getEngineLocations().size()/8),1)) == (engineNum/8)) && ( (handler = AtmosphereHandler.getOxygenHandler(world)) == null || (handler.getAtmosphereType(this) != null && handler.getAtmosphereType(this).allowsCombustion())) )
-					AdvancedRocketry.proxy.spawnParticle("rocketSmoke", world, this.getPosX() + vec.x, this.getPosY() + vec.y - 0.75, this.getPosZ() +vec.z,0,0,0);
+					AdvancedRocketry.proxy.spawnParticle(AdvancedRocketryParticleTypes.trailFx, world, this.getPosX() + vec.x, this.getPosY() + vec.y - 0.75, this.getPosZ() +vec.z,0,0,0);
 
 				for(int i = 0; i < 4; i++) {
-					AdvancedRocketry.proxy.spawnParticle("rocketFlame", world, this.getPosX() + vec.x, this.getPosY() + vec.y - 0.75, this.getPosZ() +vec.z,(this.rand.nextFloat() - 0.5f)/8f,-.75 ,(this.rand.nextFloat() - 0.5f)/8f);
+					AdvancedRocketry.proxy.spawnParticle(AdvancedRocketryParticleTypes.rocketFx, world, this.getPosX() + vec.x, this.getPosY() + vec.y - 0.75, this.getPosZ() +vec.z,(this.rand.nextFloat() - 0.5f)/8f,-.75 ,(this.rand.nextFloat() - 0.5f)/8f);
 
 				}
 			}
@@ -1573,7 +1573,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			SatelliteBase satellite = tile.getSatellite();
 			if(satellite == null) {
 				ItemStack stack = tile.getStackInSlot(0);
-				if(!stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemSpaceStation) {
+				if(!stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemSpaceStationContainer) {
 					StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(stack));
 
@@ -2052,8 +2052,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			else {
 				if(storage.getGuidanceComputer() != null) {
 					ItemStack stack = storage.getGuidanceComputer().getStackInSlot(0);
-					if(!stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemPlanetIdChip) {
-						out.writeString(((ItemPlanetIdentificationChip)AdvancedRocketryItems.itemPlanetIdChip).getDimensionId(stack).toString());
+					if(!stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemPlanetChip) {
+						out.writeString(((ItemPlanetChip)AdvancedRocketryItems.itemPlanetChip).getDimensionId(stack).toString());
 					}
 				}
 			}
@@ -2132,8 +2132,8 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		}
 		else if(id == PacketType.SENDPLANETDATA.ordinal()) {
 			ItemStack stack = storage.getGuidanceComputer().getStackInSlot(0);
-			if(!stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemPlanetIdChip) {
-				((ItemPlanetIdentificationChip)AdvancedRocketryItems.itemPlanetIdChip).setDimensionId(stack, new ResourceLocation(nbt.getString("selection")));
+			if(!stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemPlanetChip) {
+				((ItemPlanetChip)AdvancedRocketryItems.itemPlanetChip).setDimensionId(stack, new ResourceLocation(nbt.getString("selection")));
 
 				//Send data back to sync destination dims
 				if(!world.isRemote) {

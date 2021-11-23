@@ -1,34 +1,25 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"bfb",
-	"bmb",
-	"btb"
+    "pattern": [
+	    "bfb",
+	    "bmb",
+	    "btb"
     ],
-    "key":
-    {
-        "f":
-        {
-
+    "key": {
+        "f": {
             "tag": "forge:fans/steel"
         },
-	"b":
-        {
+	    "b": {
             "item": "minecraft:iron_bars"
         },
-	"m":
-        {
-
+	    "m": {
             "tag": "forge:motors"
         },
-	"t":
-        {
-            "item": "advancedrocketry:fueltank"
+    	"t": {
+            "item": "advancedrocketry:monopropellantfueltank"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:oxygenvent",
         "count": 1
     }

@@ -97,7 +97,7 @@ public abstract class SatelliteBase {
 	 * @return true if the item stack is a valid controller for the satellite
 	 */
 	public boolean isAcceptableControllerItemStack(@Nonnull ItemStack stack) {
-		return !stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemSatelliteIdChip;
+		return !stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemSatelliteChip;
 	}
 	
 	/**

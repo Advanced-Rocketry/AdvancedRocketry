@@ -47,11 +47,11 @@ public class ItemOreScanner extends Item {
 		if(!stack.hasTag())
 			list.add( new TranslationTextComponent("msg.unprogrammed"));
 		else if(mapping == null)
-			list.add( new TranslationTextComponent("msg.itemorescanner.nosat"));
+			list.add( new TranslationTextComponent("msg.ore_scanner.nosat"));
 		else if(mapping.getDimensionId().get() == ZUtils.getDimensionIdentifier(world)) {
 			list.add( new TranslationTextComponent("msg.connected"));
-			list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.maxzoom") + mapping.getZoomRadius()));
-			list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.filter") + mapping.canFilterOre()));
+			list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.ore_scanner.maxzoom") + mapping.getZoomRadius()));
+			list.add(new StringTextComponent(LibVulpes.proxy.getLocalizedString("msg.ore_scanner.filter") + mapping.canFilterOre()));
 		}
 		else
 			list.add( new TranslationTextComponent("msg.notconnected"));

@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+		"pip",
+		"gbf",
+		"pcp"
+    ],
+    "key": {
+		"c": {
+            "item": "advancedrocketry:basiccircuit"
+        },
+		"i": {
+            "item": "advancedrocketry:userinterface"
+        },
+		"b": {
+	    	"item": "libvulpes:machinestructure"
+        },
+		"p": {
+            "tag": "forge:plates/steel"
+        },
+		"f": {
+            "tag": "forge:fans/steel"
+        },
+		"g": {
+	   	 "item": "minecraft:iron_bars"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:atmospheredetector",
+        "count": 1
+    }
+}

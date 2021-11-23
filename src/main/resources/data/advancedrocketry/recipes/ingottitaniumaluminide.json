@@ -1,24 +1,19 @@
 {
     "type": "advancedrocketry:electricarcfurnace",
-    "itemingredients":
-    [
+    "itemingredients": [
         {
-
             "tag": "forge:ingots/aluminum",
             "count": 7
         },
         {
-
             "tag": "forge:ingots/titanium",
             "count": 3
         }
     ],
     "time": 9000,
     "energy": 20,
-    "itemresults":
-    {
-
+    "itemresults": {
             "tag": "forge:ingots/titaniumaluminide",
-            "count": 3
+            "count": 10
     }
 }

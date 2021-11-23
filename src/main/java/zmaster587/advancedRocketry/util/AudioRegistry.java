@@ -5,6 +5,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import zmaster587.advancedRocketry.api.Constants;
 
 public class AudioRegistry {
 	public static final SoundEvent electricShockSmall = createSoundEvent("electricshocksmall");
@@ -24,7 +25,7 @@ public class AudioRegistry {
 	public static final SoundEvent gravityOhhh = createSoundEvent("gravityohhh");
 	
 	private static SoundEvent createSoundEvent(String name) {
-		final ResourceLocation soundID = new ResourceLocation("advancedrocketry", name);
+		final ResourceLocation soundID = new ResourceLocation(Constants.modId, name);
 		return new SoundEvent(soundID).setRegistryName(soundID);
 	}
 	

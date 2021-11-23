@@ -229,7 +229,7 @@ public class PlanetEventHandler {
 			}
 		}
 
-		if(!event.getWorld().isRemote && !event.getItemStack().isEmpty() && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
+		if(!event.getWorld().isRemote && !event.getItemStack().isEmpty() && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
 			ARAdvancements.triggerAchievement(ARAdvancements.BEER, (ServerPlayerEntity)event.getEntity());
 		}
 	}
@@ -426,7 +426,7 @@ public class PlanetEventHandler {
 	}*/
 
 
-	private static final ItemStack component = new ItemStack(AdvancedRocketryItems.itemUpgradeFogGoggles, 1);
+	private static final ItemStack component = new ItemStack(AdvancedRocketryItems.itemAntiFogVisorUpgrade, 1);
 	@SubscribeEvent
 	@OnlyIn(value=Dist.CLIENT)
 	public void fogColor(RenderFogEvent event) {

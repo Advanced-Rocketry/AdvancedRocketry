@@ -422,7 +422,7 @@ public class TileOxygenVent extends TileInventoriedFEConsumerTank implements IBl
 
 	@Override
 	public String getModularInventoryName() {
-		return "OxygenVent";
+		return "block.advancedrocketry.oxygenvent";
 	}
 
 	@Override

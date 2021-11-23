@@ -52,7 +52,7 @@ tile.liquidHatch.name=Flüssigkeitenluke
 tile.rocketFuelBlock.name=Raketentreibstoff
 tile.hydrogenFluidBlock.name=Wasserstoff
 tile.oxygenFluidBlock.name=Sauerstoff
-tile.nitrogenFluidBlock.name=Stickstoff
+tile.nitrogenFluidBlock.name=rodstoff
 tile.oxygenCharger.name=Gasaufladeplatte
 tile.dockingPad.name=Landerampe
 tile.stationmonitor.name=Warpsteuerung
@@ -180,7 +180,7 @@ data.mass.name=Masse
 
 fluid.oxygen=Sauerstoff
 fluid.hydrogen=Wasserstoff
-fluid.nitrogen=Stickstoff
+fluid.nitrogen=rodstoff
 fluid.rocketFuel=Raketentreibstoff
 
 mission.asteroidmining.name=Asteroidenaubau

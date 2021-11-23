@@ -53,8 +53,7 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> implement
 	
 	@Override
 	@ParametersAreNonnullByDefault
-	public void draw(T recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		IRecipeCategory.super.draw(recipe, matrixStack, mouseX, mouseY);
+	public void draw(T recipe, MatrixStack matrixStack, double mouseX, double mouseY) {IRecipeCategory.super.draw(recipe, matrixStack, mouseX, mouseY);
 		
 		ProgressBarImage progressBar = bar;
 		Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.progressBars);
@@ -67,15 +66,13 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> implement
 	
 	@Override
 	public void setIngredients(T recipe, IIngredients ingredients) {
-		// TODO Auto-generated method stub
 		ingredients.setInputLists(VanillaTypes.ITEM, recipe.getInputs());
 		ingredients.setInputs(VanillaTypes.FLUID, recipe.getFluidIngredients());
 
 		List<ItemStack> outputStacks = new LinkedList<>(recipe.getResults());
 		
 		List<FluidStack> outputFluids = new LinkedList<>();
-		for(ChanceFluidStack stack : recipe._getRawFluidOutput())
-		{
+		for(ChanceFluidStack stack : recipe._getRawFluidOutput()) {
 			outputFluids.add(stack.stack);
 		}
 		
@@ -84,13 +81,12 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> implement
 	}
 	
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout,
-			T recipeWrapper, IIngredients ingredients) {
+	public void setRecipe(IRecipeLayout recipeLayout, @Nonnull T recipeWrapper, IIngredients ingredients) {
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 		IGuiFluidStackGroup guiFluidStacks = recipeLayout.getFluidStacks();
 		int numOutputs = ingredients.getOutputs(VanillaTypes.ITEM).size() + ingredients.getOutputs(VanillaTypes.FLUID).size();
 		
-		for(int i = 0; i < 10; i++ ) {
+		for(int i = 0; i < 9; i++ ) {
 			guiItemStacks.init(i, true,   18*(i%3),  18*(i/3));
 			
 			//Set capacity to 1mb to make sure it fills the screen

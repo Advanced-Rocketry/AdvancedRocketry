@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+    	"oso",
+    	"cbc",
+    	"rpr"
+    ],
+    "key": {
+        "s": {
+            "item": "advancedrocketry:userinterface"
+        },
+        "o": {
+            "item": "advancedrocketry:opticalsensor"
+        },
+    	"b": {
+            "item": "libvulpes:machinestructure"
+        },
+    	"c": {
+            "tag": "forge:rods/copper"
+        },
+    	"p": {
+            "item": "libvulpes:battery"
+        },
+    	"r": {
+	        "item": "minecraft:repeater"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:satellitecontrolcenter",
+        "count": 1
+    }
+}

@@ -300,8 +300,8 @@ public class ItemSpaceChest extends ItemSpaceArmor implements IFillableArmor {
 			return true;
 		
 		// If the atmosphere allows for combustion, it probably has O2, TODO: atmosphere with non O2 oxidizers
-		boolean commitAndDecrement = commitProtection && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).decrementAir(stack, 1) > 0;
-		boolean noncommitAndHasAir = !commitProtection && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuit_Chest).getAirRemaining(stack) > 0;
+		boolean commitAndDecrement = commitProtection && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuitChestpiece).decrementAir(stack, 1) > 0;
+		boolean noncommitAndHasAir = !commitProtection && ((IFillableArmor)AdvancedRocketryItems.itemSpaceSuitChestpiece).getAirRemaining(stack) > 0;
 		return noncommitAndHasAir || commitAndDecrement;
 	}
 }

@@ -1,35 +1,25 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"gcg",
-	"pbp",
-	"gcg"
+    "pattern": [
+		"gcg",
+		"pbp",
+		"gcg"
     ],
-    "key":
-    {
-	"c":
-        {
-            "item": "advancedrocketry:circuit_ic_adv"
+    "key": {
+		"c": {
+            "item": "advancedrocketry:advancedcircuit"
         },
-	"b":
-        {
-
+		"b": {
             "tag": "forge:coils/copper"
         },
-	"p":
-        {
-
+		"p": {
             "tag": "forge:plates/steel"
         },
-	"g":
-        {
-
+		"g": {
             "tag": "forge:plates/titanium"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:warpcore",
         "count": 1
     }

@@ -1,18 +1,16 @@
 {
     "type": "advancedrocketry:precisionassembler",
-    "itemingredients":
-    [
+    "itemingredients": [
         {
-	    "item": "advancedrocketry:circuit_ic_tracking"
+	    "item": "advancedrocketry:trackingcircuit"
         },
         {
-	    "item": "advancedrocketry:beacon_finder"
+	    "item": "advancedrocketry:antifogvisorupgrade"
         }
     ],
     "time": 100,
     "energy": 1,
-    "itemresults":
-    {
-	"item": "advancedrocketry:beacon_finder"
+    "itemresults": {
+	    "item": "advancedrocketry:beaconfinderupgrade"
     }
 }

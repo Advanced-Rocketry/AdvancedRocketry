@@ -1,6 +1,0 @@
-{
-    "variants": {
-        "": { "model": "advancedrocketry:block/blockpipesealer" },
-        "inventory" : { "model": "advancedrocketry:block/blockpipesealer" }
-    }
-}

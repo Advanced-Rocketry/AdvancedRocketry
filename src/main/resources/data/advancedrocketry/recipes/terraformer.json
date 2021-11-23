@@ -1,43 +1,31 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"gdg",
-	"lac",
-	"gbg"
+    "pattern": [
+    	"gdg",
+    	"lac",
+    	"gbg"
     ],
-    "key":
-    {
-        "c":
-        {
-            "item": "advancedrocketry:circuit_ic_control"
+    "key": {
+        "c": {
+            "item": "advancedrocketry:controlcircuit"
         },
-        "l":
-        {
-            "item": "advancedrocketry:circuit_ic_fluid_io"
+        "l": {
+            "item": "advancedrocketry:fluidiocircuit"
         },
-        "d":
-	{
-
+        "d": {
             "tag": "forge:gems/dilithium"
         },
-        "g":
-        {
-
+        "g": {
             "tag": "forge:gears/titaniumaluminide"
         },
-        "b":
-        {
-
-            "item": "libvulpes:smallbattery"
+        "b": {
+            "item": "libvulpes:battery"
         },
-        "a":
-        {
-            "item": "libvulpes:adv_structure_machine"
+        "a": {
+            "item": "libvulpes:advancedmachinestructure"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:terraformer",
         "count": 1
     }

@@ -1,38 +1,28 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"ial",
-	"bgb",
-	"   "
+    "pattern": [
+	    "ial",
+	    "bgb"
     ],
-    "key":
-    {
-        "i":
-        {
-            "item": "advancedrocketry:circuit_ic_adv"
+    "key": {
+        "i": {
+            "item": "advancedrocketry:advancedcircuit"
         },
-        "g":
-        {
-            "item": "advancedrocketry:item_ui"
+        "g": {
+            "item": "advancedrocketry:userinterface"
         },
-        "b":
-        {
-
-            "item": "libvulpes:smallbattery"
+        "b": {
+            "item": "libvulpes:battery"
         },
-        "l":
-        {
+        "l": {
             "item": "minecraft:lever"
         },
-        "a":
-        {
-            "item": "advancedrocketry:circuit_ic_adv"
+        "a": {
+            "item": "advancedrocketry:advancedcircuit"
         }
     },
-    "result":
-    {
-        "item": "advancedrocketry:ore_scanner",
+    "result": {
+        "item": "advancedrocketry:orescanner",
         "count": 1
     }
 }

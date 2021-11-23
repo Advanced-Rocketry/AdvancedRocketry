@@ -23,12 +23,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.IInfrastructure;
-import zmaster587.advancedRocketry.api.RocketEvent;
+import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
-import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.client.SoundRocketEngine;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -177,7 +174,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 							xVel = (1-xMult)*((this.rand.nextFloat() - 0.5f)/8f) + xMult*-.15f;
 							zVel = (1-zMult)*((this.rand.nextFloat() - 0.5f)/8f) + zMult*-.15f;
 
-							AdvancedRocketry.proxy.spawnParticle("rocketFlame", world, this.getPosX() + vec.x + getMotion().x, this.getPosY() + vec.y, this.getPosZ() +vec.z, xVel,(this.rand.nextFloat() - 0.5f)/8f, zVel + getMotion().z);
+							AdvancedRocketry.proxy.spawnParticle(AdvancedRocketryParticleTypes.rocketFx, world, this.getPosX() + vec.x + getMotion().x, this.getPosY() + vec.y, this.getPosZ() +vec.z, xVel,(this.rand.nextFloat() - 0.5f)/8f, zVel + getMotion().z);
 
 						}
 					}

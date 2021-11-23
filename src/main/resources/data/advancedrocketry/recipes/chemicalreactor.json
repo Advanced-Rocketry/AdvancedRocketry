@@ -1,44 +1,34 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"psp",
-	"abc",
-	"rdr"
+    "pattern": [
+		"psp",
+		"abc",
+		"rdr"
     ],
-    "key":
-    {
-        "r":
-        {
-            "item": "advancedrocketry:circuit_ic_basic"
+    "key": {
+        "r": {
+            "item": "advancedrocketry:basiccircuit"
         },
-        "s":
-        {
-            "item": "advancedrocketry:item_ui"
+        "s": {
+            "item": "advancedrocketry:userinterface"
         },
-	"a":
-        {
-            "item": "advancedrocketry:circuit_ic_item_io"
+		"a": {
+            "item": "advancedrocketry:itemiocircuit"
         },
-	"b":
-        {
-            "item": "libvulpes:structure_machine"
+		"b": {
+            "item": "libvulpes:machinestructure"
         },
-	"c":
-        {
-            "item": "advancedrocketry:circuit_ic_control"
+		"c": {
+            "item": "advancedrocketry:controlcircuit"
         },
-	"p":
-        {
+		"p": {
             "tag": "forge:plates/gold"
         },
-	"d":
-        {
-            "item": "advancedrocketry:circuit_ic_fluid_io"
+		"d": {
+            "item": "advancedrocketry:fluidiocircuit"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:chemicalreactor",
         "count": 1
     }

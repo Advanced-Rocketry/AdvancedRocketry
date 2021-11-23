@@ -1,0 +1,9 @@
+{
+    "parent": "block/slab",
+    "textures": {
+        "top": "advancedrocketry:blocks/machines/hololamp",
+        "front": "libvulpes:blocks/machinegeneric",
+        "side": "libvulpes:blocks/machinegeneric",
+        "bottom": "libvulpes:blocks/machinegeneric"
+    }
+}

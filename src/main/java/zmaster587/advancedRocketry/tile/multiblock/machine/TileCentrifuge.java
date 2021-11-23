@@ -22,21 +22,21 @@ import java.util.List;
 public class TileCentrifuge extends TileMultiblockMachine {
 	public static final Object[][][] structure = {
 
-			{{Blocks.AIR, new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'},
-					{new ResourceLocation("advancedrocketry","casingcentrifuge"), new ResourceLocation("advancedrocketry","casingcentrifuge"), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
-					{new ResourceLocation("advancedrocketry","casingcentrifuge"), new ResourceLocation("advancedrocketry","casingcentrifuge"), null}},
+			{{Blocks.AIR, new BlockMeta(LibVulpesBlocks.blockMachineStructure), 'l'},
+					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, new BlockMeta(LibVulpesBlocks.blockMachineStructure)},
+					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, null}},
 
-			{{Blocks.AIR, new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'},
-					{new ResourceLocation("advancedrocketry","casingcentrifuge"), new ResourceLocation("advancedrocketry","casingcentrifuge"), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
-					{new ResourceLocation("advancedrocketry","casingcentrifuge"), new ResourceLocation("advancedrocketry","casingcentrifuge"), 'l'}},
+			{{Blocks.AIR, new BlockMeta(LibVulpesBlocks.blockMachineStructure), 'l'},
+					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, new BlockMeta(LibVulpesBlocks.blockMachineStructure)},
+					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, 'l'}},
 
-			{{'c', new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'},
-					{new ResourceLocation("advancedrocketry","casingcentrifuge"), new ResourceLocation("advancedrocketry","casingcentrifuge"), new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
-					{new ResourceLocation("advancedrocketry","casingcentrifuge"), new ResourceLocation("advancedrocketry","casingcentrifuge"), 'l'}},
+			{{'c', new BlockMeta(LibVulpesBlocks.blockMachineStructure), 'l'},
+					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, new BlockMeta(LibVulpesBlocks.blockMachineStructure)},
+					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, 'l'}},
 
 			{   {'P','L', 'l'},
-				{LibVulpesBlocks.motors,'O', new BlockMeta(LibVulpesBlocks.blockStructureBlock)},
-			  {new BlockMeta(LibVulpesBlocks.blockStructureBlock), new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'l'}},
+				{LibVulpesBlocks.motors,'O', new BlockMeta(LibVulpesBlocks.blockMachineStructure)},
+			  {new BlockMeta(LibVulpesBlocks.blockMachineStructure), new BlockMeta(LibVulpesBlocks.blockMachineStructure), 'l'}},
 
 	};
 
@@ -62,7 +62,6 @@ public class TileCentrifuge extends TileMultiblockMachine {
 
 	@Override
 	public SoundEvent getSound() {
-		// TODO Auto-generated method stub
 		return AudioRegistry.electrolyser;
 	}
 

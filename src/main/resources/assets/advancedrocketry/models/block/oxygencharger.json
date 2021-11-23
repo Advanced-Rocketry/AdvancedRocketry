@@ -1,8 +1,0 @@
-{
-    "parent": "block/slab",
-    "textures": {
-        "top": "advancedrocketry:blocks/gaschargertop",
-        "side": "advancedrocketry:blocks/panelside",
-        "bottom": "libvulpes:blocks/machinegeneric"
-    }
-}

@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "cpc",
+	    "lbl",
+	    "coc"
+    ],
+    "key": {
+	    "c": {
+            "item": "advancedrocketry:trackingcircuit"
+        },
+	    "o": {
+            "item": "advancedrocketry:compositionsensor"
+        },
+	    "l": {
+            "item": "minecraft:lever"
+        },
+	    "b": {
+            "item": "advancedrocketry:guidancecomputer"
+        },
+	    "p": {
+            "item": "minecraft:stone_button"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:holographicplanetselector",
+        "count": 1
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+		"ggg",
+		" d ",
+		"ggg"
+    ],
+    "key": {
+		"d": {
+	  	  "item": "advancedrocketry:dataunit"
+        },
+		"g": {
+            "tag": "forge:glass_panes"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:wirelesstransceiver",
+        "count": 4
+    }
+}

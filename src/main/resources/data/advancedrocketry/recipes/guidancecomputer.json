@@ -1,34 +1,25 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"ctc",
-	"rbr",
-	"crc"
+    "pattern": [
+	    "ctc",
+	    "rbr",
+    	"crc"
     ],
-    "key":
-    {
-        "c":
-        {
-            "item": "advancedrocketry:circuit_ic_tracking"
+    "key": {
+        "c": {
+            "item": "advancedrocketry:trackingcircuit"
         },
-	"b":
-        {
-            "item": "libvulpes:structure_machine"
+    	"b": {
+            "item": "libvulpes:machinestructure"
         },
-	"r":
-        {
-
+    	"r": {
             "tag": "forge:dusts/redstone"
         },
-	"t":
-        {
-
+    	"t": {
             "tag": "forge:plates/titanium"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:guidancecomputer",
         "count": 1
     }

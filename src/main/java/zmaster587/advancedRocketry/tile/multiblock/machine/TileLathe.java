@@ -22,7 +22,7 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 
 	public static final Object[][][] structure = { 
 		{{'c', LibVulpesBlocks.motors, Blocks.AIR, 'I'}},
-		{{'P', LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, 'O'}},
+		{{'P', LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, 'O'}},
 	};
 	
 	public TileLathe() {
@@ -41,7 +41,6 @@ public class TileLathe extends TileMultiblockMachine implements IModularInventor
 	
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		
 		return new AxisAlignedBB(pos.add(-3,-2,-3),pos.add(3,2,3));
 	}
 	

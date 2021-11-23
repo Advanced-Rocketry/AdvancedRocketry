@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "libvulpes:orealuminum"
-  },
-  "result": "libvulpes:ingotaluminum",
-  "experience": 0.0,
-  "cookingtime": 200
-}

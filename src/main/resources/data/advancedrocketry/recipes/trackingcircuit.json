@@ -1,22 +1,19 @@
 {
     "type": "advancedrocketry:precisionassembler",
-    "itemingredients":
-    [
+    "itemingredients": [
         {
-
             "tag": "forge:dusts/redstone"
         },
         {
 	    "item": "minecraft:ender_eye"
         },
-	{
-	    "item": "advancedrocketry:basiccircuitplate"
+    	{
+	        "item": "advancedrocketry:basiccircuitwafer"
         }
     ],
     "time": 900,
     "energy": 50,
-    "itemresults":
-    {
-	"item": "advancedrocketry:circuit_ic_tracking"
+    "itemresults": {
+	    "item": "advancedrocketry:trackingcircuit"
     }
 }

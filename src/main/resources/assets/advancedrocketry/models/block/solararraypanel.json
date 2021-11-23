@@ -2,14 +2,12 @@
     "ambientocclusion": false,
     "textures": {
         "generic": "libvulpes:blocks/machinegeneric",
-        "solar": "advancedrocketry:blocks/solar",
+        "solar": "advancedrocketry:blocks/machines/solar",
         "support": "advancedrocketry:blocks/smallconnector",
-        "panel": "advancedrocketry:blocks/panelside",
-        "particle": "advancedrocketry:blocks/solar"
+        "panel": "libvulpes:blocks/machinegeneric",
+        "particle": "advancedrocketry:blocks/machines/solar"
     },
     "elements": [
-
-
         {
             "name": "BottomL1",
             "from": [ 0, 6, 0 ],

@@ -26,7 +26,7 @@ import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.block.BlockTileRedstoneEmitter;
-import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
+import zmaster587.advancedRocketry.tile.TileRocketAssembler;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.gui.CommonResources;
@@ -165,7 +165,7 @@ public class TileFuelingStation extends TileInventoriedFEConsumerTank implements
 
 	@Override
 	public String getModularInventoryName() {
-		return "Fueling Station";
+		return "block.advancedrocketry.fuelingstation";
 	}
 
 
@@ -244,8 +244,8 @@ public class TileFuelingStation extends TileInventoriedFEConsumerTank implements
 	@Override
 	public void remove() {
 		super.remove();
-		if(getMasterBlock() instanceof TileRocketAssemblingMachine)
-			((TileRocketAssemblingMachine)getMasterBlock()).removeConnectedInfrastructure(this);
+		if(getMasterBlock() instanceof TileRocketAssembler)
+			((TileRocketAssembler)getMasterBlock()).removeConnectedInfrastructure(this);
 
 		//Mostly for client rendering stuff
 		if(linkedRocket != null)

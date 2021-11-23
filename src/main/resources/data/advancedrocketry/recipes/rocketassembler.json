@@ -1,0 +1,34 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "sgs",
+	    "cbc",
+	    "tdt"
+    ],
+    "key": {
+        "c": {
+            "item": "advancedrocketry:controlcircuit"
+        },
+	    "g": {
+            "item": "advancedrocketry:userinterface"
+        },
+	    "b": {
+            "item": "libvulpes:machinestructure"
+        },
+	    "d": {
+	        "item": "advancedrocketry:concrete"
+        },
+	    "t": {
+
+            "tag": "forge:gears/titanium"
+        },
+	    "s": {
+
+            "tag": "forge:rods/titanium"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:rocketassembler",
+        "count": 1
+    }
+}

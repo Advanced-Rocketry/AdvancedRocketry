@@ -1,6 +1,7 @@
 package zmaster587.advancedRocketry.common;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.particles.BasicParticleType;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Dimension;
@@ -19,44 +20,29 @@ public class CommonProxy {
 
 	private static zmaster587.advancedRocketry.dimension.DimensionManager dimensionManagerServer = new zmaster587.advancedRocketry.dimension.DimensionManager();
 	
-	public void registerRenderers() {
+	public void registerRenderers() { }
 
-	}
+	public void registerEventHandlers() { }
 
-	public void registerEventHandlers() {
+	public void spawnParticle(BasicParticleType particle, World world, double x, double y, double z, double motionX, double motionY, double motionZ) { }
 
-	}
-
-
-	public void spawnParticle(String particle, World world, double x, double y,
-			double z, double motionX, double motionY, double motionZ) {
-
-	}
-
-	public void registerKeyBindings() {
-
-	}
+	public void registerKeyBindings() { }
 
 	public IProfiler getProfiler() {
 		return  ServerLifecycleHooks.getCurrentServer().getProfiler();
 	}
 
-	public void changeClientPlayerWorld(World world) {
-
-	}
+	public void changeClientPlayerWorld(World world) { }
 
 	public void fireFogBurst(ISpaceObject station) {
 		PacketHandler.sendToNearby(new PacketStationUpdate(station, PacketStationUpdate.Type.SIGNAL_WHITE_BURST), DimensionManager.spaceId, station.getSpawnLocation().x, 128, station.getSpawnLocation().z, ARConfiguration.getCurrentConfig().stationSize.get());
 	}
-
-
 
 	public float calculateCelestialAngleSpaceStation() {
 		return 0;
 	}
 
 	public long getWorldTimeUniversal() {
-		
 		try {
 			
 			return ZUtils.getWorld(Dimension.OVERWORLD.getRegistryName()).getGameTime();
@@ -65,39 +51,15 @@ public class CommonProxy {
 		}
 	}
 
-	public void preinit() {
-		// TODO Auto-generated method stub
+	public void preinit() { }
 
-	}
-
-	public void init() {
-		// TODO Auto-generated method stub
-
-	}
+	public void init() { }
 
 	public void spawnLaser(Entity entity, Vector3d toPos) {
 		PacketHandler.sendToPlayersTrackingEntity(new PacketLaserGun(entity, toPos), entity);
 	}
-
-	public void loadUILayout(
-			ARConfiguration config) {
-		// TODO Auto-generated method stub
-		
-	}
 	
-	public void displayMessage(String msg, int time) {
-		
-	}
-
-	public void preInitBlocks() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void preInitItems() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void displayMessage(String msg, int time) { }
 
 	public String getNameFromBiome(Biome biome) {
 		return "";
@@ -107,7 +69,5 @@ public class CommonProxy {
 		return dimensionManagerServer;
 	}
 
-	public void initDeferredRegistries() {
-		
-	}
+	public void initDeferredRegistries() { }
 }

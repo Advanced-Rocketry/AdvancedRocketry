@@ -1,34 +1,25 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"tgt",
-	" f ",
-	" c "
+    "pattern": [
+		"tgt",
+		" f ",
+		" c "
     ],
-    "key":
-    {
-        "t":
-        {
+    "key": {
+        "t": {
             "item": "minecraft:redstone_torch"
         },
-        "c":
-        {
+        "c": {
             "item": "minecraft:comparator"
         },
-	"g":
-        {
-
+		"g": {
             "tag": "forge:glass_panes"
         },
-        "f":
-        {
-
+        "f": {
             "tag": "forge:fans/steel"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:sealdetector",
         "count": 1
     }

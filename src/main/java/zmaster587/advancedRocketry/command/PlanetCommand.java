@@ -27,6 +27,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
@@ -244,9 +245,8 @@ public class PlanetCommand {
 		return 0;
 	}
 	
-	private static int commandGiveStation(CommandSource sender, @Nullable PlayerEntity player, String stationIdStr)
-	{
-		ResourceLocation stationId = new ResourceLocation(stationIdStr);
+	private static int commandGiveStation(CommandSource sender, @Nullable PlayerEntity player, String stationIdStr) {
+		ResourceLocation stationId = new ResourceLocation(Constants.modId, stationIdStr);
 		if(player == null && sender.getEntity() != null)
 			try {
 				player = sender.asPlayer();
@@ -264,8 +264,7 @@ public class PlanetCommand {
 		return 0;
 	}
 
-	private static int commandPlanetDelete(CommandSource sender, ServerWorld world)
-	{
+	private static int commandPlanetDelete(CommandSource sender, ServerWorld world) {
 
 		ResourceLocation deletedDimId = ZUtils.getDimensionIdentifier(world);
 

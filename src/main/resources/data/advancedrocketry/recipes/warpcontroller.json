@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+		"pip",
+		"obo",
+		"pcp"
+    ],
+    "key": {
+		"c": {
+            "item": "advancedrocketry:advancedcircuit"
+        },
+		"i": {
+            "item": "advancedrocketry:userinterface"
+        },
+		"b": {
+	  	  "item": "libvulpes:machinestructure"
+        },
+        "p": {
+            "tag": "forge:plates/steel"
+        },
+		"o": {
+	 	   "item": "advancedrocketry:controlcircuit"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:warpcontroller",
+        "count": 1
+    }
+}

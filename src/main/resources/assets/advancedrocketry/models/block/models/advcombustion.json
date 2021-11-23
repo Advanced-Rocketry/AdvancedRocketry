@@ -1,5 +1,0 @@
-{
-  "loader": "forge:obj",
-  "model": "advancedrocketry:models/block/models/advcombustion.obj",
-  "flip-v": false
-}

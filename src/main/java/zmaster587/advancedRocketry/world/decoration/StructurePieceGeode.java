@@ -3,9 +3,7 @@ package zmaster587.advancedRocketry.world.decoration;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
@@ -14,7 +12,6 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.structure.ScatteredStructurePiece;
 import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.template.TemplateManager;
-import net.minecraftforge.registries.ForgeRegistries;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
@@ -126,8 +123,8 @@ public class StructurePieceGeode extends ScatteredStructurePiece {
 
 					}
 
-					setBlockState(world, AdvancedRocketryBlocks.blocksGeode.getDefaultState(), x, avgY - count, z, bb);
-					setBlockState(world, AdvancedRocketryBlocks.blocksGeode.getDefaultState(), x, avgY + count, z, bb);
+					setBlockState(world, AdvancedRocketryBlocks.blockGeode.getDefaultState(), x, avgY - count, z, bb);
+					setBlockState(world, AdvancedRocketryBlocks.blockGeode.getDefaultState(), x, avgY + count, z, bb);
 				}
 			}
 		}

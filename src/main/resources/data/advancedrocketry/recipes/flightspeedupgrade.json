@@ -1,0 +1,22 @@
+{
+    "type": "advancedrocketry:precisionassembler",
+    "itemingredients": [
+        {
+            "tag": "forge:gems/diamond"
+        },
+        {
+	    	"item": "advancedrocketry:advancedcircuit"
+        },
+		{
+	    	"item": "advancedrocketry:controlcircuit"
+        },
+		{
+	  	  "item": "minecraft:fire_charge"
+        }
+    ],
+    "time": 200,
+    "energy": 1,
+    "itemresults": {
+		"item": "advancedrocketry:flightspeedupgrade"
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "type": "advancedrocketry:precisionassembler",
+    "itemingredients": [
+        {
+            "item": "libvulpes:advancedmachinestructure"
+        },
+        {
+            "item": "advancedrocketry:advancedcircuit",
+            "count": 4
+        },
+        {
+           "tag": "forge:plates/steel",
+           "count": 8
+        },
+        {
+           "tag": "forge:gems/dilithium",
+          "count": 32
+        }
+    ],
+    "time": 2000,
+    "energy": 250,
+    "itemresults": {
+        "item": "advancedrocketry:nuclearcore"
+    }
+}

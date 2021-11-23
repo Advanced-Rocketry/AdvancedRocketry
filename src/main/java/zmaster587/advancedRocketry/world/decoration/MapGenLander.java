@@ -30,7 +30,7 @@ public class MapGenLander {
 			
 			position = position.up();
 
-			worldIn.setBlockState(position, AdvancedRocketryBlocks.blockEngine.getDefaultState());
+			worldIn.setBlockState(position, AdvancedRocketryBlocks.blockMonopropellantEngine.getDefaultState());
 			worldIn.setBlockState(position.add(0, 0, 3), Blocks.IRON_BARS.getDefaultState());
 			worldIn.setBlockState(position.add(0, 0, -3), Blocks.IRON_BARS.getDefaultState());
 			worldIn.setBlockState(position.add(3, 0, 0), Blocks.IRON_BARS.getDefaultState());

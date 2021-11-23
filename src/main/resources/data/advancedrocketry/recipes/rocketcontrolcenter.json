@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "coc",
+	    "cbc",
+	    "cpc"
+    ],
+    "key": {
+        "o": {
+            "item": "advancedrocketry:opticalsensor"
+        },
+	    "b": {
+            "item": "libvulpes:machinestructure"
+        },
+	    "c": {
+            "tag": "forge:rods/copper"
+        },
+	    "p": {
+            "item": "libvulpes:battery"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:rocketcontrolcenter",
+        "count": 1
+    }
+}

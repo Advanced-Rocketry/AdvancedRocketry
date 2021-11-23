@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+		" d ",
+		"aba",
+		"ccc"
+    ],
+    "key": {
+		"d": {
+		    "item": "advancedrocketry:controlcircuit"
+        },
+		"a": {
+		    "item": "advancedrocketry:advancedcircuit"
+        },
+		"b": {
+	 	   "item": "libvulpes:machinestructure"
+        },
+		"c": {
+            "tag": "forge:coils/aluminum"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:spaceelevator",
+        "count": 1
+    }
+}

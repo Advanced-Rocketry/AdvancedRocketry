@@ -1,0 +1,9 @@
+{
+    "parent": "advancedrocketry:block/orientablebottom",
+    "textures": {
+        "top": "libvulpes:blocks/machinegeneric",
+        "front": "advancedrocketry:blocks/multiblocks/orbitallaserdrill",
+        "side": "libvulpes:blocks/machinegeneric",
+        "bottom": "libvulpes:blocks/machinegeneric"
+    }
+}

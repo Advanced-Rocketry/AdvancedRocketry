@@ -1,21 +1,18 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	" g ",
-	"g g"
-    ],
-    "key":
-    {
-        "g":
+    "type": "advancedrocketry:precisionassembler",
+    "itemingredients": [
         {
-
-            "tag": "forge:glass_panes"
+            "tag": "forge:rods/iron",
+            "count": 3
+        },
+        {
+	        "item": "minecraft:glass",
+	        "count": 3
         }
-    },
-    "result":
-    {
-        "item": "advancedrocketry:basiclens",
-        "count": 1
+    ],
+    "time": 100,
+    "energy": 1,
+    "itemresults": {
+	    "item": "advancedrocketry:lens"
     }
 }

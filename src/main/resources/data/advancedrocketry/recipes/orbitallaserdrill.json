@@ -1,0 +1,35 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "ata",
+	    "bec",
+	    "gpg"
+    ],
+    "key": {
+        "c": {
+            "item": "advancedrocketry:controlcircuit"
+        },
+        "t": {
+            "item": "advancedrocketry:trackingcircuit"
+        },
+        "a": {
+            "item": "advancedrocketry:advancedcircuit"
+        },
+        "e": {
+            "tag": "forge:gems/emerald"
+        },
+        "g": {
+            "tag": "forge:gears/titanium"
+        },
+        "b": {
+            "item": "libvulpes:battery"
+        },
+        "p": {
+            "item": "libvulpes:machinestructure"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:orbitallaserdrill",
+        "count": 1
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "parent": "advancedrocketry:block/orientablebottom",
+    "textures": {
+        "bottom": "advancedrocketry:blocks/machines/impeller",
+        "front": "advancedrocketry:blocks/machines/pump",
+        "side": "libvulpes:blocks/machinegeneric",
+        "top": "libvulpes:blocks/machinegeneric"
+        
+    }
+}

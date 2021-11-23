@@ -89,7 +89,7 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 				return false;
 			}
 			//TODO replace with seal logic handler
-			else if (block == AdvancedRocketryBlocks.blockAirLock)
+			else if (block == AdvancedRocketryBlocks.blockSmallAirlockDoor)
 			{
 				HashedBlockPosition myPos = new HashedBlockPosition(pos);
 				if(doorPositions.contains(myPos))

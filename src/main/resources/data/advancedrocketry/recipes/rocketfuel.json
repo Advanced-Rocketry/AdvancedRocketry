@@ -1,23 +1,21 @@
 {
     "type": "advancedrocketry:chemicalreactor",
-    "fluidingredients":
-    [
-	{
-	    "fluid": "advancedrocketry:oxygen",
-	    "amount": 10
-	},
-	{
-	    "fluid": "advancedrocketry:hydrogen",
-	    "amount": 10
-	}
+    "fluidingredients": [
+	    {
+	        "fluid": "advancedrocketry:oxygen",
+	        "amount": 10
+	    },
+	    {
+	        "fluid": "advancedrocketry:hydrogen",
+	        "amount": 10
+	    }
     ],
     "time": 100,
     "energy": 10,
-    "fluidresults":
-    [
-	{
-	    "fluid": "advancedrocketry:rocket_fuel",
-	    "amount": 20
-	}
+    "fluidresults": [
+	    {
+	        "fluid": "advancedrocketry:rocket_fuel",
+	        "amount": 20
+	    }
     ]
 }

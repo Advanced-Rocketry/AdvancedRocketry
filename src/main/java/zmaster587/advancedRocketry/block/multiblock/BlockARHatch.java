@@ -4,10 +4,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
+import zmaster587.advancedRocketry.tile.infrastructure.TileRocketFluidLoader;
+import zmaster587.advancedRocketry.tile.infrastructure.TileRocketLoader;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.tile.TilePointer;
 
@@ -30,10 +34,13 @@ public class BlockARHatch extends BlockHatch {
 	@Override
 	@ParametersAreNonnullByDefault
 	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-		if(blockAccess.getTileEntity(pos) instanceof TilePointer && !((TilePointer)blockAccess.getTileEntity(pos)).allowRedstoneOutputOnSide(side))
-			return 0;
+		if (blockAccess.getTileEntity(pos) instanceof TileRocketLoader || blockAccess.getTileEntity(pos) instanceof TileRocketFluidLoader) {
+			if (blockAccess.getTileEntity(pos) instanceof TilePointer && !((TilePointer) blockAccess.getTileEntity(pos)).allowRedstoneOutputOnSide(side))
+				return 0;
 
-		return 15;
+			return 15;
+		}
+		return 0;
 	}
 
 	public void setRedstoneState(World world, BlockState bstate , BlockPos pos, boolean state) {
@@ -51,6 +58,15 @@ public class BlockARHatch extends BlockHatch {
 
 	@Override
 	public boolean canProvidePower(BlockState state) {
-		return !state.get(POWERED);
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+		TileEntity tile = worldIn.getTileEntity(pos);
+		if (tile instanceof TileDataBus) {
+			return 15 * ((TileDataBus)tile).getData() / ((TileDataBus)tile).getDataObject().getMaxData();
+		} else
+			return super.getComparatorInputOverride(blockState, worldIn, pos);
 	}
 }

@@ -1,0 +1,19 @@
+{
+    "type": "advancedrocketry:precisionassembler",
+    "itemingredients": [
+        {
+            "tag": "forge:dusts/redstone"
+        },
+        {
+            "tag": "forge:gems/lapis"
+        },
+	    {
+            "tag": "forge:plates/steel"
+        }
+    ],
+    "time": 200,
+    "energy": 10,
+    "itemresults": {
+	    "item": "advancedrocketry:fluidiocircuit"
+    }
+}

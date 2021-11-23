@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"sds",
+	"sws"
+    ],
+    "key": {
+        "d": {
+            "item": "advancedrocketry:masssensor"
+        },
+	    "w": {
+            "item": "advancedrocketry:warpcore"
+        },
+	    "s": {
+            "tag": "forge:sheets/titanium"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:areagravitycontroller",
+        "count": 1
+    }
+}

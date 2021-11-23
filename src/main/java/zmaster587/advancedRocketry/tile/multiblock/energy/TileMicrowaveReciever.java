@@ -17,13 +17,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
-import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.api.dimension.IDimensionProperties;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
+import zmaster587.advancedRocketry.item.ItemSatelliteChip;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.libVulpes.LibVulpes;
@@ -43,7 +42,7 @@ import java.util.List;
 
 public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITickableTileEntity {
 
-	static final BlockMeta iron_block = new BlockMeta(AdvancedRocketryBlocks.blockSolarPanel);
+	static final BlockMeta iron_block = new BlockMeta(AdvancedRocketryBlocks.blockSolarGenerator);
 	static final Object[][][] structure = new Object[][][] {
 		{
 			{iron_block, '*', '*', '*', iron_block},
@@ -104,7 +103,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 
 	@Override
 	public String getMachineName() {
-		return "block.advancedrocketry.microwavereciever";
+		return "block.advancedrocketry.microwavereceiver";
 	}
 
 	public int getPowerMadeLastTick() {
@@ -120,8 +119,8 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 		for(IInventory inv : itemInPorts) {
 			for(int i = 0; i < inv.getSizeInventory(); i++) {
 				ItemStack stack = inv.getStackInSlot(i);
-				if(!stack.isEmpty() && stack.getItem() instanceof ItemSatelliteIdentificationChip) {
-					list.add(ItemSatelliteIdentificationChip.getSatelliteId(stack));
+				if(!stack.isEmpty() && stack.getItem() instanceof ItemSatelliteChip) {
+					list.add(ItemSatelliteChip.getSatelliteId(stack));
 				}
 			}
 		}

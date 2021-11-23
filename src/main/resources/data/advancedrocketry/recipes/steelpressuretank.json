@@ -1,0 +1,20 @@
+{
+    "type": "advancedrocketry:rollingmachine",
+    "itemingredients": [
+        {
+            "tag": "forge:sheets/steel",
+            "count": 2
+        }
+    ],
+    "fluidingredients": [
+        {
+	        "fluid": "water",
+            "amount": 100
+        }
+    ],
+    "time": 100,
+    "energy": 2,
+    "itemresults": {
+	    "item": "advancedrocketry:steelpressuretank"
+    }
+}

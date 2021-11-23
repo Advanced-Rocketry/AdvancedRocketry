@@ -76,9 +76,7 @@ public class AtmosphereHandler {
 	public static void unregisterWorld(World world) {
 		AtmosphereHandler handler = dimensionOxygen.remove(ZUtils.getDimensionIdentifier(world));
 		if(ARConfiguration.getCurrentConfig().enableOxygen.get() && handler != null) {
-
 			MinecraftForge.EVENT_BUS.unregister(handler);
-			FMLJavaModLoadingContext.get().getModEventBus().unregister(handler);
 		}
 	}
 

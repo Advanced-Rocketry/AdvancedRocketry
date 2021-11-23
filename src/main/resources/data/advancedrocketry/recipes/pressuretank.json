@@ -1,24 +1,20 @@
 {
-    "type": "advancedrocketry:rollingmachine",
-    "itemingredients":
-    [
-        {
-
-            "tag": "forge:sheets/steel",
-            "count": 2
-        }
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "tgt",
+	    "tgt",
+	    "tgt"
     ],
-    "fluidingredients":
-    [
-        {
-	    "fluid": "water",
-            "amount": 100
+    "key": {
+	    "t": {
+	        "item": "advancedrocketry:steelpressuretank"
+        },
+	    "g": {
+            "tag": "forge:glass_panes"
         }
-    ],
-    "time": 100,
-    "energy": 2,
-    "itemresults":
-    {
-	"item": "advancedrocketry:pressure_tank_med"
+    },
+    "result": {
+        "item": "advancedrocketry:pressuretank",
+        "count": 1
     }
 }

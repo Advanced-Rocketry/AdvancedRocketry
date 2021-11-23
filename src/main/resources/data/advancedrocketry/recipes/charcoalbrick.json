@@ -1,29 +1,27 @@
 {
     "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
+    "ingredients": [
         {
-	    "item": "minecraft:charcoal"
+	 	   "item": "minecraft:charcoal"
         },
         {
-	    "item": "minecraft:charcoal"
+	  	  "item": "minecraft:charcoal"
         },
         {
-	    "item": "minecraft:charcoal"
+	  	  "item": "minecraft:charcoal"
         },
         {
-	    "item": "minecraft:charcoal"
+		    "item": "minecraft:charcoal"
         },
         {
-	    "item": "minecraft:charcoal"
+	 	   "item": "minecraft:charcoal"
         },
         {
-	    "item": "minecraft:charcoal"
+	  	  "item": "minecraft:charcoal"
         }
     ],
-    "result":
-    {
-        "item": "advancedrocketry:carbon_brick",
+    "result": {
+        "item": "advancedrocketry:carbonbrick",
         "count": 1
     }
 }

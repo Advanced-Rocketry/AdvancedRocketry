@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "visible=false": { "model": "advancedrocketry:block/satellitebay" },
+        "visible=true": { "model": "advancedrocketry:block/satellitebay" }
+    }
+}

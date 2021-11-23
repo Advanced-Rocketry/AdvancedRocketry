@@ -1,22 +1,17 @@
 {
     "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
+    "ingredients": [
         {
             "item": "advancedrocketry:concrete"
         },
-	{
-
+	    {
             "tag": "forge:dyes/black"
-            
-	},
-	{
-
+	    },
+	    {
             "tag": "forge:dyes/yellow"
         }
     ],
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:launchpad",
         "count": 1
     }

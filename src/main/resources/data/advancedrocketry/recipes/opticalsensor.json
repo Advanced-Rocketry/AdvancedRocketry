@@ -1,32 +1,23 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"ppp",
-	" g ",
-	" l "
+    "pattern": [
+	    "ppp",
+	    " g ",
+	    " l "
     ],
-    "key":
-    {
-        "g":
-        {
-
+    "key": {
+        "g": {
             "tag": "forge:dusts/glowstone"
         },
-	"l":
-        {
-
+	    "l": {
             "tag": "forge:plates/gold"
         },
-	"p":
-        {
-
+	    "p": {
             "tag": "forge:glass_panes"
         }
     },
-    "result":
-    {
-        "item": "advancedrocketry:sensor_optical",
+    "result": {
+        "item": "advancedrocketry:opticalsensor",
         "count": 1
     }
 }

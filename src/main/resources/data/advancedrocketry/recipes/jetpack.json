@@ -1,37 +1,27 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"cpc",
-	"lsl",
-	"f f"
+    "pattern": [
+	    "cpc",
+	    "lsl",
+	    "f f"
     ],
-    "key":
-    {
-	"c":
-        {
-	    "item": "advancedrocketry:pressure_tank_high"
+    "key": {
+	    "c": {"item": "advancedrocketry:titaniumpressuretank"
         },
-	"l":
-        {
-	    "item": "minecraft:lever"
+	    "l": {
+	        "item": "minecraft:lever"
         },
-	"s":
-        {
-	    "item": "minecraft:string"
+	    "s": {
+	        "item": "minecraft:string"
         },
-	"p":
-        {
-
+	    "p": {
             "tag": "forge:plates/steel"
         },
-	"f":
-        {
-	    "item": "minecraft:fire_charge"
+	    "f": {
+	        "item": "minecraft:fire_charge"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:jetpack",
         "count": 1
     }

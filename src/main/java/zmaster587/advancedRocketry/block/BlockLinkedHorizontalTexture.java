@@ -55,9 +55,7 @@ public class BlockLinkedHorizontalTexture extends Block {
 	}
 
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		IBlockReader iblockreader = context.getWorld();
 		BlockPos blockpos = context.getPos();
-		FluidState fluidstate = context.getWorld().getFluidState(context.getPos());
 		World world = context.getWorld();
 		
 		int offset = 0;

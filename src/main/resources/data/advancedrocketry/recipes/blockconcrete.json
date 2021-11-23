@@ -1,20 +1,18 @@
 {
     "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
+    "ingredients": [
         {
             "item": "minecraft:sand"
         },
-	{
+		{
             "item": "minecraft:gravel"
-	},
-	{
+		},
+		{
             "item": "minecraft:water_bucket"
         }
     ],
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:concrete",
-        "count": 16
+        "count": 8
     }
 }

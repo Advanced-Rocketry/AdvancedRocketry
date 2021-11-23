@@ -1,22 +1,17 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"pp",
-	"pp",
-	"pp"
+    "pattern": [
+		"pp",
+		"pp",
+		"pp"
     ],
-    "key":
-    {
-	"p":
-        {
-
+    "key": {
+		"p": {
             "tag": "forge:plates/steel"
         }
     },
-    "result":
-    {
-        "item": "advancedrocketry:smallairlock",
+    "result": {
+        "item": "advancedrocketry:smallairlockdoor",
         "count": 1
     }
 }

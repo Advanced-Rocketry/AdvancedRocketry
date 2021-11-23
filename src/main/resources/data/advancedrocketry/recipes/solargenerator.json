@@ -1,21 +1,17 @@
 {
     "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
-        
+    "ingredients": [
         {
-
-            "item": "libvulpes:smallbattery"
+            "item": "libvulpes:battery"
         },
-	{
+		{
             "item": "advancedrocketry:solarpanel"
         },
-	{
+		{
             "item": "libvulpes:forge_power_output"
         }
     ],
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:solargenerator",
         "count": 1
     }

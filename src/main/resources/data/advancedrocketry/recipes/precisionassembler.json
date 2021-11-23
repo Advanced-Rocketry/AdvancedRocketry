@@ -1,0 +1,42 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "abc",
+	    "def",
+	    "ghi"
+    ],
+    "key": {
+        "a": {
+            "item": "minecraft:repeater"
+        },
+        "b": {
+            "item": "advancedrocketry:userinterface"
+        },
+	    "c": {
+            "item": "minecraft:diamond"
+        },
+	    "d": {
+            "item": "advancedrocketry:itemiocircuit"
+        },
+	    "e": {
+            "item": "libvulpes:machinestructure"
+        },
+	    "f": {
+            "item": "advancedrocketry:controlcircuit"
+        },
+	    "g": {
+            "item": "minecraft:furnace"
+        },
+	    "h": {
+            "tag": "forge:gears/steel"
+        },
+	    "i": {
+            "item": "minecraft:dropper"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:precisionassembler",
+        "count": 1
+    }
+}

@@ -1,15 +1,14 @@
 {
     "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
+    "ingredients": [
         {
-	    "item": "libvulpes:structure_machine"
+	        "item": "libvulpes:machinestructure"
         },
         {
-	    "item": "minecraft:compass"
+	        "item": "minecraft:compass"
         },
-	{
-	    "item": "advancedrocketry:item_ui"
+	    {
+	        "item": "advancedrocketry:userinterface"
         }
     ],
     "result":

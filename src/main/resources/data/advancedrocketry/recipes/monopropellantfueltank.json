@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "s s",
+	    "p p",
+	    "sSs"
+    ],
+    "key": {
+        "s": {
+            "tag": "forge:rods/steel"
+        },
+        "S": {
+            "tag": "forge:sheets/steel"
+        },
+	    "p": {
+            "tag": "forge:plates/steel"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:monopropellantfueltank",
+        "count": 1
+    }
+}

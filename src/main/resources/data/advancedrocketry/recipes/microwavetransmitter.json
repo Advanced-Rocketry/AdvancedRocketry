@@ -1,32 +1,26 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"owo",
+    "pattern": [
+	    "owo",
         "rpr"
     ],
-    "key":
-    {
-        "o":
-        {
-	    "item": "advancedrocketry:basiclens"
+    "key": {
+        "o": {
+	        "item": "advancedrocketry:lens"
         },
-        "w":
-        {
-	    "item": "advancedrocketry:circuit_ic_tracking"
+        "w": {
+	        "item": "advancedrocketry:trackingcircuit"
         },
-        "p":
-        {
-	    "item": "advancedrocketry:circuit_ic_basic"
+        "p": {
+	        "item": "advancedrocketry:basiccircuit"
         },
-        "r":
-        {
-	    "item": "advancedrocketry:wafer"
+        "r": {
+	        "item": "advancedrocketry:siliconwafer"
         }
     },
     "result":
     {
-	"item": "advancedrocketry:sensor_microwave",
+	"item": "advancedrocketry:microwavetransmitter",
         "count": 1
     }
 }

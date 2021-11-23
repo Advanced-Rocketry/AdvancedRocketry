@@ -1,0 +1,38 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "dht",
+	    "cbc",
+	    "mas"
+    ],
+    "key": {
+        "c": {
+            "item": "advancedrocketry:basiccircuit"
+        },
+        "b": {
+            "item": "libvulpes:machinestructure"
+        },
+        "m": {
+            "tag": "forge:motors"
+        },
+        "t": {
+            "tag": "forge:plates/titanium"
+        },
+        "d": {
+	        "item": "advancedrocketry:dataunit"
+        },
+        "a": {
+	        "item": "minecraft:anvil"
+        },
+        "s": {
+            "item": "advancedrocketry:sawbladeassembly"
+        },
+        "h": {
+	        "item": "minecraft:hopper"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:satelliteassembler",
+        "count": 1
+    }
+}

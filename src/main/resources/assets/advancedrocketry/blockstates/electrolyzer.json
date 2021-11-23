@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "facing=north,state=false": { "model": "advancedrocketry:block/electrolyzer" },
+        "facing=south,state=false": { "model": "advancedrocketry:block/electrolyzer", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:block/electrolyzer", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:block/electrolyzer", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:block/electrolyzer" },
+        "facing=south,state=true": { "model": "advancedrocketry:block/electrolyzer", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:block/electrolyzer", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:block/electrolyzer", "y": 90 }
+    }
+}

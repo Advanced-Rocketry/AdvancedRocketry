@@ -1,22 +1,20 @@
 {
     "type": "advancedrocketry:chemicalreactor",
-    "itemingredients":
-    [
+    "itemingredients": [
         {
-            "item": "advancedrocketry:carbon_scrubber_cartridge",
+            "item": "advancedrocketry:carbonscrubbercartridge",
             "data": 32766
         }
     ],
     "time": 40,
     "energy": 20,
-    "itemresults":
-    [
-	{
-            "item": "advancedrocketry:carbon_scrubber_cartridge",
+    "itemresults": [
+		{
+            "item": "advancedrocketry:carbonscrubbercartridge",
             "data": 0
-	},
-	{
+		},
+		{
             "item": "minecraft:charcoal"
-	}
+		}
     ]
 }

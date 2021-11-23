@@ -17,7 +17,7 @@ public class TileSeal extends TileEntity implements ITickableTileEntity {
 
 	@Override
 	public void onChunkUnloaded() {
-		((BlockSeal) AdvancedRocketryBlocks.blockPipeSealer).removeSeal(getWorld(), getPos());
+		((BlockSeal) AdvancedRocketryBlocks.blockSeal).removeSeal(getWorld(), getPos());
 		ticked = false;
 	}
 	
@@ -25,7 +25,7 @@ public class TileSeal extends TileEntity implements ITickableTileEntity {
 	public void tick() {
 		if(!world.isRemote && !ticked && !isRemoved()) {
 			for(Direction dir : Direction.values()) {
-				((BlockSeal) AdvancedRocketryBlocks.blockPipeSealer).fireCheckAllDirections(getWorld(), pos.offset(dir), dir);
+				((BlockSeal) AdvancedRocketryBlocks.blockSeal).fireCheckAllDirections(getWorld(), pos.offset(dir), dir);
 			}
 			ticked = true;
 		}

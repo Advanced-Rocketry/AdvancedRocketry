@@ -1,21 +1,16 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"xxx",
-	" x ",
-	"xxx"
+    "pattern": [
+	    "xxx",
+	    " x ",
+	    "xxx"
     ],
-    "key":
-    {
-        "x":
-        {
-
-            "tag": "forge:sticks/steel"
+    "key": {
+        "x": {
+            "tag": "forge:rods/steel"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:structuretower",
         "count": 8
     }

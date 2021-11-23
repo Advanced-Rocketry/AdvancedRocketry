@@ -1,0 +1,22 @@
+{
+    "type": "advancedrocketry:precisionassembler",
+    "itemingredients": [
+        {
+	        "item": "minecraft:feather"
+        },
+        {
+	        "item": "advancedrocketry:advancedcircuit"
+        },
+	    {
+	        "item": "advancedrocketry:controlcircuit"
+        },
+        {
+	        "item": "minecraft:leather_boots"
+        }
+    ],
+    "time": 200,
+    "energy": 1,
+    "itemresults": {
+	    "item": "advancedrocketry:paddedbootsupgrade"
+    }
+}

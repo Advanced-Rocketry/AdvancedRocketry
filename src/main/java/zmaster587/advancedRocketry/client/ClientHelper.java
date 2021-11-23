@@ -20,8 +20,7 @@ import zmaster587.advancedRocketry.dimension.DimensionProperties;
 public class ClientHelper {
 
 	@OnlyIn(Dist.CLIENT)
-	public static boolean callCustomSkyRenderer(MatrixStack matrix, float partialTicks)
-	{
+	public static boolean callCustomSkyRenderer(MatrixStack matrix, float partialTicks) {
 		World world = Minecraft.getInstance().world;
 		if(!DimensionManager.getInstance().isDimensionCreated(world))
 			return true;
@@ -32,22 +31,15 @@ public class ClientHelper {
 		ISkyRenderer renderer =  properties.getSkyRenderer();
 
 		
-		if(renderer == null)
-		{
-			if(properties.isStation())
-			{
-				
-				if(!ARConfiguration.getCurrentConfig().stationSkyOverride.get())
-				{
+		if(renderer == null) {
+			if(properties.isStation()) {
+				if(!ARConfiguration.getCurrentConfig().stationSkyOverride.get()) {
 					properties.setSkyRenderer(null);
 					return true;
 				}
 				properties.setSkyRenderer(new RenderSpaceSky());
-			}
-			else
-			{	
-				if(!ARConfiguration.getCurrentConfig().planetSkyOverride.get())
-				{
+			} else {
+				if(!ARConfiguration.getCurrentConfig().planetSkyOverride.get()) {
 					properties.setSkyRenderer(null);
 					return true;
 				}
@@ -55,16 +47,11 @@ public class ClientHelper {
 			}
 			renderer = properties.getSkyRenderer();
 		}
-
-
 		renderer.render(matrix, partialTicks);
 		return false;
 	}
 
-
-	public static float callTimeOfDay(float ogTime, IDayTimeReader reader)
-	{
-
+	public static float callTimeOfDay(float ogTime, IDayTimeReader reader) {
 		if(!(reader instanceof World))
 			return ogTime;
 
@@ -72,7 +59,6 @@ public class ClientHelper {
 			return ogTime;
 
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties((World)reader);
-
 
 		if(properties.isStation() || properties.getId().equals(DimensionManager.spaceId))
 			return AdvancedRocketry.proxy.calculateCelestialAngleSpaceStation();

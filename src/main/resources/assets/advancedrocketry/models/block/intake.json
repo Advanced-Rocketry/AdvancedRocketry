@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "advancedrocketry:blocks/intake"
+        "all": "advancedrocketry:blocks/machines/intake"
     }
 }

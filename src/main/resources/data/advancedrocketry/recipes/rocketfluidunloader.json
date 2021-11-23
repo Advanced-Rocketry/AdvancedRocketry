@@ -1,31 +1,15 @@
 {
     "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
+    "ingredients": [
         {
-	    "item": "libvulpes:fluidohatch"
+	        "item": "libvulpes:fluidohatch"
         },
-	{
-	    "item": "advancedrocketry:circuit_ic_tracking"
+	    {
+	        "item": "advancedrocketry:trackingcircuit"
         }
     ],
-    "result":
-    {
-        "item": "advancedrocketry:funloader",
-        "count": 1
-    }
-}
-{
-    "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
-	{
-	    "item": "advancedrocketry:floader"
-        }
-    ],
-    "result":
-    {
-        "item": "advancedrocketry:funloader",
+    "result": {
+        "item": "advancedrocketry:rocketfluidunloader",
         "count": 1
     }
 }

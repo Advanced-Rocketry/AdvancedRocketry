@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "advancedrocketry:blocks/machines/laser",
+        "north": "advancedrocketry:blocks/machines/laserpanel",
+        "south": "advancedrocketry:blocks/machines/laserpanel",
+        "west": "advancedrocketry:blocks/machines/laserpanel",
+        "east": "advancedrocketry:blocks/machines/laserpanel",
+        "down": "libvulpes:blocks/machinegeneric",
+        "particle": "advancedrocketry:blocks/machinegeneric"
+    }
+}

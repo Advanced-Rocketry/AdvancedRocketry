@@ -8,6 +8,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryParticleTypes;
 import zmaster587.libVulpes.network.BasePacket;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
@@ -44,13 +45,13 @@ public class PacketAirParticle extends BasePacket {
 	public void executeClient(PlayerEntity thePlayer) {
 
 		if(Minecraft.getInstance().gameSettings.particles == ParticleStatus.ALL) {
-			AdvancedRocketry.proxy.spawnParticle("oxygencloudFx", thePlayer.world,  toPos.x + 0.5, toPos.y + 0.5, toPos.z + 0.5, 0, 0, 0);
+			AdvancedRocketry.proxy.spawnParticle(AdvancedRocketryParticleTypes.oxygenCloudFx, thePlayer.world,  toPos.x + 0.5, toPos.y + 0.5, toPos.z + 0.5, 0, 0, 0);
 		}
 
 		int numIterations = Minecraft.getInstance().gameSettings.particles == ParticleStatus.ALL ? 5 : (Minecraft.getInstance().gameSettings.particles == ParticleStatus.DECREASED ? 3 : 1);
 		
 		for(int i = 0; i < numIterations;i++) {
-			AdvancedRocketry.proxy.spawnParticle("oxygentraceFx", thePlayer.world,  toPos.x + 0.5, toPos.y + 0.5, toPos.z + 0.5, 0.01*(0.5 - Math.random()), 0.01*(0.5 - Math.random()), 0.01*(0.5 - Math.random()));
+			AdvancedRocketry.proxy.spawnParticle(AdvancedRocketryParticleTypes.oxygenTraceFx, thePlayer.world,  toPos.x + 0.5, toPos.y + 0.5, toPos.z + 0.5, 0.01*(0.5 - Math.random()), 0.01*(0.5 - Math.random()), 0.01*(0.5 - Math.random()));
 		}
 	}
 

@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "ggg",
+	    "tbc",
+	    "aca"
+    ],
+    "key": {
+        "g": {
+            "item": "advancedrocketry:siliconwafer"
+        },
+        "t": {
+            "item": "advancedrocketry:trackingcircuit"
+        },
+        "c": {
+            "item": "advancedrocketry:controlcircuit"
+        },
+	    "b": {
+            "item": "libvulpes:machinestructure"
+        },
+        "a": {
+            "item": "advancedrocketry:basiccircuit"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:solararray",
+        "count": 1
+    }
+}

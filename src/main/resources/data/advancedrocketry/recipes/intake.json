@@ -1,29 +1,22 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"rhr",
-	"hbh",
-	"rhr"
+    "pattern": [
+	    "rhr",
+	    "hbh",
+	    "rhr"
     ],
-    "key":
-    {
-	"h":
-        {
-	    "item": "minecraft:hopper"
+    "key": {
+	    "h": {
+	        "item": "minecraft:hopper"
         },
-	"b":
-        {
-	    "item": "libvulpes:structure_machine"
+	    "b": {
+	        "item": "libvulpes:machinestructure"
         },
-	"r":
-        {
-
-            "tag": "forge:sticks/titanium"
+	    "r": {
+            "tag": "forge:rods/titanium"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:intake",
         "count": 1
     }

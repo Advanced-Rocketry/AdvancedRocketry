@@ -1,24 +1,18 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"m",
-	"c",
-	" "
+    "pattern": [
+		"m",
+		"c"
     ],
-    "key":
-    {
-        "c":
-        {
+    "key": {
+        "c": {
             "item": "advancedrocketry:dataunit"
         },
-	"m":
-        {
-            "item": "libvulpes:structure_machine"
+		"m": {
+            "item": "libvulpes:machinestructure"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:databus",
         "count": 1
     }
