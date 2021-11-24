@@ -21,7 +21,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class RendererSolarArray extends TileEntityRenderer<TileSolarArray> {
 
 	WavefrontObject model;
-
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/solararray.png");
 
 	public RendererSolarArray(TileEntityRendererDispatcher tile){

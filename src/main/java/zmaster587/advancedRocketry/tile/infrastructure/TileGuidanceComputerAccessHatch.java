@@ -59,7 +59,7 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 	RedstoneState state;
 
 	public TileGuidanceComputerAccessHatch() {
-		super(AdvancedRocketryTileEntityType.TILE_GUIDANCE_COMPUTER_HATCH);
+		super(AdvancedRocketryTileEntityType.TILE_GUIDANCE_COMPUTER__ACCESS_HATCH);
 		buttonState = new boolean[4];
 		chipEjected = false;
 

@@ -24,7 +24,6 @@ import java.util.List;
 public class RendererCuttingMachine extends TileEntityRenderer<TileCuttingMachine> {
 
 	private WavefrontObject model;
-
 	public final static ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/cuttingmachine.png");
 
 	public RendererCuttingMachine(TileEntityRendererDispatcher tile) {

@@ -14,7 +14,7 @@ public class ARAdvancements {
 	public static final ResourceLocation ALL_SHE_GOT = new ResourceLocation("advancedrocketry", "givingitallshesgot");
 	public static final ResourceLocation PHOENIX_FLIGHT = new ResourceLocation("advancedrocketry", "flightofpheonix");
 	
-	public static void triggerAchievement(ResourceLocation name, ServerPlayerEntity player) {
+	public static void triggerAdvancement(ResourceLocation name, ServerPlayerEntity player) {
 		Advancement advancement = ServerLifecycleHooks.getCurrentServer().getAdvancementManager().getAdvancement(name);
 		
 		if(advancement != null)

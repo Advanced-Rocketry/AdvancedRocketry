@@ -1826,7 +1826,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		writeTechnicalNBT(nbt);
 	}
-
 	public String generateDimJSON()
 	{
 		long seed = 0;
@@ -1837,8 +1836,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		
 		if(!isAsteroid()) {
-			if(canGenerateCraters())
-			{
+			if(canGenerateCraters()) {
 				structures.add("\"advancedrocketry:crater\"");
 
 				biomeConditionalStructures.add(
@@ -1849,8 +1847,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 						"	          }");
 
 			}
-			if(canGenerateVolcanoes)
-			{
+			if(canGenerateVolcanoes) {
 				structures.add("\"advancedrocketry:volcano\"");
 				biomeConditionalStructures.add(
 						"	          \"advancedrocketry:volcano\": {\n" + 
@@ -1859,8 +1856,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 								"	            \"salt\": 0\n" + 
 						"	          }");
 			}
-			if(canGenerateGeodes())
-			{
+			if(canGenerateGeodes()) {
 				structures.add("\"advancedrocketry:geode\"");
 				biomeConditionalStructures.add(
 						"	          \"advancedrocketry:geode\": {\n" + 
@@ -1870,8 +1866,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 						"	          }");
 			}
 			
-			for(Biome biome : getBiomes())
-			{
+			for(Biome biome : getBiomes()) {
 				biomeStrings.add(
 						"	    {\n" + 
 								"              \"biome\": \"" + biome.getRegistryName().toString() + "\",\n" + 
@@ -2126,8 +2121,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	}
 
-	public double[] getPlanetPosition()
-	{
+	public double[] getPlanetPosition() {
 		double orbitalDistance = this.orbitalDist;
 		double theta = this.orbitTheta;
 		double phi = this.orbitalPhi;
@@ -2234,13 +2228,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		return this.canGenerateCaves;
 	}
 
-	public float getRenderSizePlanetView()
-	{
+	public float getRenderSizePlanetView() {
 		return (isMoon() ? 8f : 10f)*Math.max(this.getGravitationalMultiplier()*this.getGravitationalMultiplier(), .5f)*100;
 	}
 
-	public float getRenderSizeSolarView()
-	{
+	public float getRenderSizeSolarView() {
 		return (isMoon() ? 0.2f : 1f)*Math.max(this.getGravitationalMultiplier()*this.getGravitationalMultiplier(), .5f)*100;
 	}
 

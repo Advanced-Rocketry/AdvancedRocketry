@@ -102,7 +102,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 			modules.add(btnAdd);
 
 			// Get effective dimension
-			ResourceLocation dimId = DimensionManager.getEffectiveDimId(player.world, new BlockPos(player.getPositionVec())).getId();
+			ResourceLocation dimId = DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(player.world), new BlockPos(player.getPositionVec())).getId();
 			List<LandingLocation> list = getLandingLocations(stack, dimId);
 
 			int selectedId = getSelectionId(stack, dimId);
@@ -178,7 +178,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	@Override
 	public void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt, ItemStack stack) {
 		if(!player.world.isRemote) {
-			ResourceLocation dimId = DimensionManager.getEffectiveDimId(player.world, new BlockPos(player.getPositionVec())).getId();
+			ResourceLocation dimId = DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(player.world), new BlockPos(player.getPositionVec())).getId();
 			if(id >= BUTTON_ID_OFFSET) {
 				setSelectionId(stack, dimId, id-BUTTON_ID_OFFSET);
 			} else if(id == BUTTON_ID_DELETE) {

@@ -17,6 +17,7 @@ import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -72,7 +73,7 @@ public class StructurePieceGeode extends ScatteredStructurePiece {
 		int xCoord = (chunkX << 4) - xCenter - radius;
 		int zCoord =  (chunkZ << 4) - zCenter - radius;
 
-		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(world.getWorld());
+		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(world.getWorld()));
 		ores.addAll(
 				props.geodeOres.stream()
 						.map(s-> Block.getBlockFromItem(s.getItem()).getDefaultState())

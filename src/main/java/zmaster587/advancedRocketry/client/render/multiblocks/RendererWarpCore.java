@@ -27,7 +27,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class RendererWarpCore extends TileEntityRenderer<TileWarpCore> {
 
 	public static WavefrontObject model;
-
 	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/warpcore.png");
 
 	//private final RenderItem dummyItem = Minecraft.getInstance().getRenderItem();

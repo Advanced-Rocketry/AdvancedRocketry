@@ -19,7 +19,7 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.inventory.modules.ModuleData;
 import zmaster587.advancedRocketry.inventory.modules.ModuleSatellite;
-import zmaster587.advancedRocketry.item.ItemData;
+import zmaster587.advancedRocketry.item.ItemDataChip;
 import zmaster587.advancedRocketry.item.ItemSatelliteChip;
 import zmaster587.advancedRocketry.satellite.SatelliteData;
 import zmaster587.advancedRocketry.util.IDataInventory;
@@ -34,6 +34,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.TileInventoriedFEConsumer;
 import zmaster587.libVulpes.util.INetworkMachine;
+import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -49,7 +50,7 @@ public class TileSatelliteControlCenter extends TileInventoriedFEConsumer implem
 	private DataStorage data;
 
 	public TileSatelliteControlCenter() {
-	super(AdvancedRocketryTileEntityType.TILE_SAT_CONTROL, 10000, 2);
+	super(AdvancedRocketryTileEntityType.TILE_SATELLITE_CONTROL_CENTER, 10000, 2);
 		data = new DataStorage();
 		data.setMaxData(1000);
 	}
@@ -105,7 +106,7 @@ public class TileSatelliteControlCenter extends TileInventoriedFEConsumer implem
 		}
 		else if( id == 100 ) {
 
-			if(satellite != null && PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(satellite.getDimensionId().get(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
+			if(satellite != null && PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(satellite.getDimensionId().get(), DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(world), pos).getId())) {
 				satellite.performAction(player, world, pos);
 			}
 		}
@@ -128,7 +129,7 @@ public class TileSatelliteControlCenter extends TileInventoriedFEConsumer implem
 				if(getUniversalEnergyStored() < getPowerPerOperation()) 
 					moduleText.setText(LibVulpes.proxy.getLocalizedString("msg.notenoughpower"));
 
-				else if(!PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(satellite.getDimensionId().get(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
+				else if(!PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(satellite.getDimensionId().get(), DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(world), pos).getId())) {
 					moduleText.setText(satellite.getName() + "\n\n" + LibVulpes.proxy.getLocalizedString("msg.satctrlcenter.toofar") );
 				}
 
@@ -234,8 +235,8 @@ public class TileSatelliteControlCenter extends TileInventoriedFEConsumer implem
 	public void storeData(int id) {
 		if(!world.isRemote) {
 			ItemStack stack = getStackInSlot(1);
-			if(!stack.isEmpty() && stack.getItem() instanceof ItemData && stack.getCount() == 1) {
-				ItemData dataItem = (ItemData)stack.getItem();
+			if(!stack.isEmpty() && stack.getItem() instanceof ItemDataChip && stack.getCount() == 1) {
+				ItemDataChip dataItem = (ItemDataChip)stack.getItem();
 				data.removeData(dataItem.addData(stack, data.getData(), data.getDataType()), true);
 			}
 		}
@@ -249,7 +250,7 @@ public class TileSatelliteControlCenter extends TileInventoriedFEConsumer implem
 		//TODO
 		
 		SatelliteBase satellite = getSatelliteFromSlot(0);
-		if(satellite instanceof SatelliteData && PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(satellite.getDimensionId().get(), DimensionManager.getEffectiveDimId(world, pos).getId())) {
+		if(satellite instanceof SatelliteData && PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(satellite.getDimensionId().get(), DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(world), pos).getId())) {
 				satellite.performAction(null, world, pos);
 		}
 		

@@ -21,7 +21,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class RenderBlackHoleGenerator extends TileEntityRenderer<TileBlackHoleGenerator> {
 
 	WavefrontObject model;
-
 	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/blackholegenerator.jpg");
 
 	public RenderBlackHoleGenerator(TileEntityRendererDispatcher tile){
@@ -54,8 +53,7 @@ public class RenderBlackHoleGenerator extends TileEntityRenderer<TileBlackHoleGe
 		
 		model.tessellateAll(matrix, combinedLightIn, combinedOverlayIn, entitySolidBuilder);
 		
-		if(tile.isProducingPower())
-		{
+		if(tile.isProducingPower()) {
 			IVertexBuilder entityTransparentBuilder = buffer.getBuffer(RenderHelper.getTranslucentManualRenderType());
 			
 			matrix.push();

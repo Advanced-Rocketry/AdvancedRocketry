@@ -9,11 +9,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
-import zmaster587.advancedRocketry.tile.infrastructure.TileRocketFluidLoader;
-import zmaster587.advancedRocketry.tile.infrastructure.TileRocketLoader;
+import zmaster587.advancedRocketry.tile.multiblock.TileDataBus;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
-import zmaster587.libVulpes.tile.TilePointer;
+import zmaster587.libVulpes.tile.ISidedRedstoneTile;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -34,10 +32,10 @@ public class BlockARHatch extends BlockHatch {
 	@Override
 	@ParametersAreNonnullByDefault
 	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-		if (blockAccess.getTileEntity(pos) instanceof TileRocketLoader || blockAccess.getTileEntity(pos) instanceof TileRocketFluidLoader) {
-			if (blockAccess.getTileEntity(pos) instanceof TilePointer && !((TilePointer) blockAccess.getTileEntity(pos)).allowRedstoneOutputOnSide(side))
+		TileEntity tile = blockAccess.getTileEntity(pos);
+		if (tile instanceof ISidedRedstoneTile) {
+			if (((ISidedRedstoneTile)tile).allowRedstoneOutputOnSide(side))
 				return 0;
-
 			return 15;
 		}
 		return 0;

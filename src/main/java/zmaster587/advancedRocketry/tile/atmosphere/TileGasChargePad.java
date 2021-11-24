@@ -35,7 +35,7 @@ import java.util.List;
 
 public class TileGasChargePad extends TileInventoriedFEConsumerTank implements IModularInventory {
 	public TileGasChargePad() {
-		super(AdvancedRocketryTileEntityType.TILE_OXYGEN_CHARGER, 0, 2, 16000);
+		super(AdvancedRocketryTileEntityType.TILE_GAS_CHARGE_PAD, 0, 2, 16000);
 	}
 
 	@Nonnull

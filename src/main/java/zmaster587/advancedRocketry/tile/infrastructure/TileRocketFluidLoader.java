@@ -31,13 +31,14 @@ import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.ISidedRedstoneTile;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import java.util.List;
 
-public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastructure,  ITickableTileEntity,  IButtonInventory, INetworkMachine, IGuiCallback {
+public class TileRocketFluidLoader extends TileFluidHatch implements IInfrastructure, ITickableTileEntity, IButtonInventory, INetworkMachine, IGuiCallback, ISidedRedstoneTile {
 
 	EntityRocket rocket;
 	ModuleRedstoneOutputButton redstoneControl;
@@ -46,7 +47,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	RedstoneState inputstate;
 	ModuleBlockSideSelector sideSelectorModule;
 
-	private final static int ALLOW_REDSTONEOUT = 2;
+	private static int ALLOW_REDSTONEOUT = 2;
 
 	public TileRocketFluidLoader(TileEntityType<?> type) {
 		super(type);

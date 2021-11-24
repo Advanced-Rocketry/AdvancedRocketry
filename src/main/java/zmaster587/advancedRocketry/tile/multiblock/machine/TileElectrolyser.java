@@ -33,7 +33,7 @@ public class TileElectrolyser extends TileMultiblockMachine {
 	};
 	
 	public TileElectrolyser() {
-		super(AdvancedRocketryTileEntityType.TILE_ELECTROLYSER);
+		super(AdvancedRocketryTileEntityType.TILE_ELECTROLYZER);
 	}
 	
 	@Override

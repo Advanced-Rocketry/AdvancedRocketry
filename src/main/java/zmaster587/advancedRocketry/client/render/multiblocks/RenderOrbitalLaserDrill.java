@@ -22,7 +22,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class RenderOrbitalLaserDrill extends TileEntityRenderer<TileOrbitalLaserDrill> {
 	
 	WavefrontObject model;
-
 	ResourceLocation texture =  new ResourceLocation("advancedrocketry","textures/models/orbitallaserdrill.png");
 	
 	

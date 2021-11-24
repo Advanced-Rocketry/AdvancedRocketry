@@ -35,7 +35,7 @@ import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.inventory.modules.ModuleData;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetImage;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
-import zmaster587.advancedRocketry.item.ItemData;
+import zmaster587.advancedRocketry.item.ItemDataChip;
 import zmaster587.advancedRocketry.item.ItemPlanetChip;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -84,7 +84,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 	private boolean openFullScreen = false;
 
 	public TileWarpController() {
-		super(AdvancedRocketryTileEntityType.TILE_WARP_SHIP_CONTROLLER);
+		super(AdvancedRocketryTileEntityType.TILE_WARP_CONTROLLER);
 		tabModule = new ModuleTab(4,0,0,this, 3, new String[]{LibVulpes.proxy.getLocalizedString("msg.warpcontroller.tab.warp"), LibVulpes.proxy.getLocalizedString("msg.warpcontroller.tab.data"), LibVulpes.proxy.getLocalizedString("msg.warpcontroller.tab.tracking")}, new ResourceLocation[][] { TextureResources.tabWarp, TextureResources.tabData, TextureResources.tabPlanetTracking} );
 		data = new MultiData();
 		data.setMaxData(10000);
@@ -529,9 +529,9 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), Math.max(Math.min(getTravelCost()*5, 5000),0));
 
 				for (ServerPlayerEntity player2 : ((ServerWorld)world).getPlayers((Predicate<PlayerEntity>) input -> SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos( input.getPositionVec())) == station)) {
-					ARAdvancements.triggerAchievement(ARAdvancements.ALL_SHE_GOT, player2);
+					ARAdvancements.triggerAdvancement(ARAdvancements.ALL_SHE_GOT, player2);
 					if(!DimensionManager.hasReachedWarp)
-						ARAdvancements.triggerAchievement(ARAdvancements.PHOENIX_FLIGHT, player2);
+						ARAdvancements.triggerAdvancement(ARAdvancements.PHOENIX_FLIGHT, player2);
 				}
 
 				DimensionManager.hasReachedWarp = true;
@@ -821,8 +821,8 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 
 		
 		
-		if(!stack.isEmpty() && stack.getItem() instanceof ItemData) {
-			ItemData item = (ItemData) stack.getItem();
+		if(!stack.isEmpty() && stack.getItem() instanceof ItemDataChip) {
+			ItemDataChip item = (ItemDataChip) stack.getItem();
 			if(item.getDataType(stack) == type)
 				item.removeData(stack, this.addData(item.getData(stack), item.getDataType(stack), Direction.UP, true), type);
 		}
@@ -850,8 +850,8 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 			type = DataType.COMPOSITION;
 		}
 
-		if(!stack.isEmpty() && stack.getItem() instanceof ItemData) {
-			ItemData item = (ItemData) stack.getItem();
+		if(!stack.isEmpty() && stack.getItem() instanceof ItemDataChip) {
+			ItemDataChip item = (ItemDataChip) stack.getItem();
 			data.extractData(item.addData(stack, data.getDataAmount(type), type), type, Direction.UP, true);
 		}
 

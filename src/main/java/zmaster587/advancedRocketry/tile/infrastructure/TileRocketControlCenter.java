@@ -60,7 +60,7 @@ public class TileRocketControlCenter extends TileEntity  implements IModularInve
 	int fuelLevel, maxFuelLevel;
 
 	public TileRocketControlCenter() {
-		super(AdvancedRocketryTileEntityType.TILE_MONITORIING_STATION);
+		super(AdvancedRocketryTileEntityType.TILE_ROCKET_CONTROL_CENTER);
 		mission = null;
 		missionText = new ModuleText(20, 90, LibVulpes.proxy.getLocalizedString("msg.monitoringstation.missionprogressna"), 0x2b2b2b);
 		redstoneControl = new ModuleRedstoneOutputButton(174, 4, "", this);

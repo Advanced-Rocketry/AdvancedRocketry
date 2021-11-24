@@ -74,7 +74,7 @@ import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
 import zmaster587.advancedRocketry.inventory.modules.ModuleStellarBackground;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
-import zmaster587.advancedRocketry.item.ItemPackedStructure;
+import zmaster587.advancedRocketry.item.ItemSpaceStationContainer;
 import zmaster587.advancedRocketry.item.ItemPlanetChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.mission.MissionOreMining;
@@ -82,7 +82,7 @@ import zmaster587.advancedRocketry.network.PacketSatellite;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
-import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
+import zmaster587.advancedRocketry.tile.satellite.TileSatelliteBay;
 import zmaster587.advancedRocketry.util.*;
 import zmaster587.advancedRocketry.world.util.TeleporterNoPortal;
 import zmaster587.libVulpes.LibVulpes;
@@ -225,7 +225,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 
 
 	public void toggleRCS() {
-		if(DimensionManager.getInstance().getDimensionProperties(this.world).isAsteroid()) {
+		if(DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(this.world)).isAsteroid()) {
 			rcs_mode = !rcs_mode;
 			setRCS(rcs_mode);
 			setPosition(this.getPosX(), this.getPosY(), this.getPosZ());
@@ -363,7 +363,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 					LibVulpes.proxy.getLocalizedString("msg.entity.rocket.launch2");
 		}
 
-		if(DimensionManager.getInstance().getDimensionProperties(this.world).isAsteroid()) {
+		if(DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(this.world)).isAsteroid()) {
 			if(getRCS())
 				return LibVulpes.proxy.getLocalizedString("msg.entity.rocket.rcs") + ": " + getRCS();
 			else
@@ -774,7 +774,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		}
 
 		if(this.areEnginesRunning())
-			return mult*Math.max(DimensionManager.getInstance().getDimensionProperties(this.world).getAtmosphereDensityAtHeight(this.getPosY()), 0.05f);
+			return mult*Math.max(DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(this.world)).getAtmosphereDensityAtHeight(this.getPosY()), 0.05f);
 		else
 			return 0;
 	}
@@ -1182,7 +1182,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				if(isInOrbit() || !burningFuel) {
 					motionY = Math.min(motionY - 0.001, 1);
 				} else
-					motionY += stats.getAcceleration(DimensionManager.getInstance().getDimensionProperties(this.world).getGravitationalMultiplier()) * deltaTime;
+					motionY += stats.getAcceleration(DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(this.world)).getGravitationalMultiplier()) * deltaTime;
 
 
 				double lastPosY = this.getPosY();
@@ -1191,7 +1191,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				this.move(MoverType.SELF , new Vector3d(0, prevMotion*deltaTime, 0));
 
 
-				boolean landedInSpace = DimensionManager.getInstance().getDimensionProperties(this.world).isAsteroid() && this.getPosY() < 64;
+				boolean landedInSpace = DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(this.world)).isAsteroid() && this.getPosY() < 64;
 				boolean landedOnGround = lastPosY + prevMotion != this.getPosY() && this.getPosY() < 256;
 				//Check to see if it's landed
 				if((isInOrbit() || !burningFuel) && isInFlight() && (landedOnGround || landedInSpace)) {
@@ -1250,7 +1250,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				this.move(MoverType.SELF , new Vector3d(0, this.getMotion().y, 0));
 			}
 		}
-		else if(DimensionManager.getInstance().getDimensionProperties(this.world).isAsteroid() && getRCS()) {
+		else if(DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(this.world)).isAsteroid() && getRCS()) {
 			double motionX = getMotion().x, motionY  = getMotion().y, motionZ  = getMotion().z;
 			this.rotationYaw += (turningRight ? 5 : 0) - (turningLeft ? 5 : 0);
 			double acc = this.getPassengerMovingForward()*.02;
@@ -1301,7 +1301,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 	 */
 	public List<SatelliteBase> getSatellites() {	
 		List<SatelliteBase> satellites = new ArrayList<>();
-		for(TileSatelliteHatch tile : storage.getSatelliteHatches()) {
+		for(TileSatelliteBay tile : storage.getSatelliteHatches()) {
 			SatelliteBase satellite = tile.getSatellite();
 			if(satellite != null)
 				satellites.add(satellite);
@@ -1319,7 +1319,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		if(storage.getGuidanceComputer() != null && (targetSatellite = storage.getGuidanceComputer().getTargetSatellite()) != -1) {
 			SatelliteBase sat = DimensionManager.getInstance().getSatellite(targetSatellite);
 			for(TileEntity tile : storage.getTileEntityList()) {
-				if(tile instanceof TileSatelliteHatch && ((IInventory)tile).getStackInSlot(0).isEmpty()) {
+				if(tile instanceof TileSatelliteBay && ((IInventory)tile).getStackInSlot(0).isEmpty()) {
 					((IInventory)tile).setInventorySlotContents(0, sat.getItemStackFromSatellite());
 					DimensionManager.getInstance().getDimensionProperties(sat.getDimensionId().get()).removeSatellite(targetSatellite);
 					break;
@@ -1362,7 +1362,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 			}
 
 			MissionOreMining miningMission = new MissionOreMining((long)(asteroidDrillingMult*ARConfiguration.getCurrentConfig().asteroidMiningTimeMult.get()*(drillingPower == 0f ? 36000 : 360/stats.getDrillingPower())), this, connectedInfrastructure);
-			DimensionProperties properties = DimensionManager.getEffectiveDimId(world, new BlockPos(getPositionVec()));
+			DimensionProperties properties = DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(world), new BlockPos(getPositionVec()));
 
 			miningMission.setDimensionId(world);
 			properties.addSatellite(miningMission, world);
@@ -1463,7 +1463,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 		// Update space position
 		if(ARConfiguration.getCurrentConfig().experimentalSpaceFlight.get() && storage.getGuidanceComputer().isEmpty() && hasHumanPassenger() && !getInSpaceFlight())
 		{
-			DimensionProperties currentDim = DimensionManager.getEffectiveDimId(world, new BlockPos(getPositionVec()));
+			DimensionProperties currentDim = DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(world), new BlockPos(getPositionVec()));
 
 			// Get top level planet
 			while(currentDim.isMoon()) currentDim = currentDim.getParentProperties();
@@ -1534,9 +1534,9 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				if(DimensionManager.getInstance().getDimensionProperties(destinationDimId).getName().equals("Luna")) {
 					for(Entity player : this.getPassengers()) {
 						if(player instanceof PlayerEntity) {
-							ARAdvancements.triggerAchievement(ARAdvancements.MOON_LANDING, (ServerPlayerEntity) player);
+							ARAdvancements.triggerAdvancement(ARAdvancements.MOON_LANDING, (ServerPlayerEntity) player);
 							if(!DimensionManager.hasReachedMoon)
-								ARAdvancements.triggerAchievement(ARAdvancements.ONE_SMALL_STEP, (ServerPlayerEntity) player);
+								ARAdvancements.triggerAdvancement(ARAdvancements.ONE_SMALL_STEP, (ServerPlayerEntity) player);
 						}
 					}
 					DimensionManager.hasReachedMoon = true;
@@ -1567,14 +1567,14 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 	}
 
 	private void unpackSatellites() {
-		List<TileSatelliteHatch> satelliteHatches = storage.getSatelliteHatches();
+		List<TileSatelliteBay> satelliteHatches = storage.getSatelliteHatches();
 
-		for(TileSatelliteHatch tile : satelliteHatches) {
+		for(TileSatelliteBay tile : satelliteHatches) {
 			SatelliteBase satellite = tile.getSatellite();
 			if(satellite == null) {
 				ItemStack stack = tile.getStackInSlot(0);
 				if(!stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemSpaceStationContainer) {
-					StorageChunk storage = ((ItemPackedStructure)stack.getItem()).getStructure(stack);
+					StorageChunk storage = ((ItemSpaceStationContainer)stack.getItem()).getStructure(stack);
 					ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(ItemStationChip.getUUID(stack));
 
 					//in case of no NBT data or the like
@@ -2336,7 +2336,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IE
 				modules.add(landingPadDisplayText);
 			}
 			else {
-				DimensionProperties properties = DimensionManager.getEffectiveDimId(world, new BlockPos(this.getPositionVec()));
+				DimensionProperties properties = DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(world), new BlockPos(this.getPositionVec()));
 				while(properties.getParentProperties() != null) properties = properties.getParentProperties();
 
 				if(stats.isNuclear())

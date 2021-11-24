@@ -101,7 +101,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	private MODE mode;
 	
 	public TileOrbitalLaserDrill() { 
-		super(AdvancedRocketryTileEntityType.TILE_SPACE_LASER);
+		super(AdvancedRocketryTileEntityType.TILE_ORBITAL_LASER_DRILL);
 		lens = ItemStack.EMPTY;
 		radius = 0;
 		xCenter = 0;
@@ -263,15 +263,6 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	
 	@Override
 	public void tick() {
-		
-		//Freaky janky crap to make sure the multiblock loads on chunkload etc
-		if(timeAlive == 0 && !world.isRemote) {
-			if(isComplete())
-				canRender = completeStructure = completeStructure(world.getBlockState(pos));
-			timeAlive = 0x1;
-			checkCanRun();
-		}
-		
 		if(!this.world.isRemote) {
 			tickSinceLastOperation++;
 

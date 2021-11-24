@@ -33,7 +33,7 @@ import zmaster587.advancedRocketry.block.*;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.network.PacketInvalidLocationNotify;
-import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
+import zmaster587.advancedRocketry.tile.satellite.TileSatelliteBay;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
@@ -122,7 +122,7 @@ public class TileRocketAssembler extends TileEntityFEConsumer implements IButton
 	}
 
 	public TileRocketAssembler() {
-		this(AdvancedRocketryTileEntityType.TILE_ROCKET_BUILDER);
+		this(AdvancedRocketryTileEntityType.TILE_ROCKET_ASSEMBLER);
 	}
 	
 	public TileRocketAssembler(TileEntityType<?> type) {
@@ -184,7 +184,7 @@ public class TileRocketAssembler extends TileEntityFEConsumer implements IButton
 
 	public float getNeededFuel(FuelType fuelType) { return getAcceleration( getGravityMultiplier() ) > 0 ? 2*stats.getBaseFuelRate(fuelType)*MathHelper.sqrt((2*(ARConfiguration.getCurrentConfig().orbit.get()-this.getPos().getY()))/getAcceleration(getGravityMultiplier())) : 0; }
 
-	public float getGravityMultiplier () { return DimensionManager.getInstance().getDimensionProperties(world).getGravitationalMultiplier(); }
+	public float getGravityMultiplier () { return DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(world)).getGravitationalMultiplier(); }
 
 	public int getFuel(FuelType fuelType) {return (int) (stats.getFuelCapacity(fuelType)*ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());}
 
@@ -244,18 +244,13 @@ public class TileRocketAssembler extends TileEntityFEConsumer implements IButton
 
 	public void scanRocket(World world, BlockPos pos2, AxisAlignedBB bb) {
 
-		int thrustMonopropellant = 0;
-		int thrustBipropellant = 0;
-		int thrustNuclearNozzleLimit = 0;
-		int thrustNuclearReactorLimit = 0;
+		int thrust = 0;
+		int thrustNuclearCoreLimit = 0;
 		int thrustNuclearTotalLimit = 0;
-		int monopropellantfuelUse = 0;
-		int bipropellantfuelUse = 0;
-		int nuclearWorkingFluidUseMax = 0;
-		int fuelCapacityMonopropellant = 0;
-		int fuelCapacityBipropellant = 0;
-		int fuelCapacityOxidizer = 0;
-		int fuelCapacityNuclearWorkingFluid = 0;
+		int fuelUse = 0;
+		int fuelCapacity = 0;
+		FuelType rocketType = null;
+		FuelType currentType = null;
 		int numBlocks = 0;
 		float drillPower = 0f;
 		stats.reset();
@@ -273,9 +268,6 @@ public class TileRocketAssembler extends TileEntityFEConsumer implements IButton
 				for(int yCurr = (int)bb.minY; yCurr<= bb.maxY; yCurr++) {
 
 					BlockPos currBlockPos = new BlockPos(xCurr, yCurr, zCurr);
-					BlockState state = world.getBlockState(currBlockPos);
-					Block block = state.getBlock();
-
 					if(!world.isAirBlock(currBlockPos)) {
 						if(xCurr < actualMinX)
 							actualMinX = xCurr;
@@ -311,51 +303,38 @@ public class TileRocketAssembler extends TileEntityFEConsumer implements IButton
 							BlockState state = world.getBlockState(currBlockPos);
 							Block block = state.getBlock();
 
-							if(ARConfiguration.getCurrentConfig().blackListRocketBlocks.contains(block))
-							{
-								if(!block.isReplaceable( state, Fluids.WATER))
-								{
+							//Check blacklist
+							if(ARConfiguration.getCurrentConfig().blackListRocketBlocks.contains(block)) {
+								if(!block.isReplaceable( state, Fluids.WATER)) {
 									invalidBlock = true;
 									if(!world.isRemote)
 										PacketHandler.sendToNearby(new PacketInvalidLocationNotify(new HashedBlockPosition(xCurr, yCurr, zCurr)), ZUtils.getDimensionIdentifier(world), getPos(), 64);
 								}
 								continue;
 							}
-							
 							numBlocks++;
-							
-							//If rocketEngine increaseThrust
+
 							final float x = xCurr - actualMinX - ((actualMaxX - actualMinX) / 2f);
 							final float z = zCurr - actualMinZ - ((actualMaxZ - actualMinZ) / 2f);
+
+							//Check fuel-type determining blocks
 							if(block instanceof IRocketEngine && (world.getBlockState(belowPos).getBlock().isAir(world.getBlockState(belowPos), world, belowPos) || world.getBlockState(belowPos).getBlock() instanceof BlockLandingPad || world.getBlockState(belowPos).getBlock() == AdvancedRocketryBlocks.blockLaunchpad)) {
-								if (block instanceof BlockNuclearRocketMotor) {
-									nuclearWorkingFluidUseMax += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
-									thrustNuclearNozzleLimit += ((IRocketEngine)block).getThrust(world, currBlockPos);
-								} else if (block instanceof BlockBipropellantRocketMotor) {
-									bipropellantfuelUse += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
-									thrustBipropellant += ((IRocketEngine)block).getThrust(world, currBlockPos);
-								} else if (block instanceof BlockRocketMotor) {
-									monopropellantfuelUse += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
-									thrustMonopropellant += ((IRocketEngine)block).getThrust(world, currBlockPos);
-								}
+								fuelUse += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
+								thrust += ((IRocketEngine)block).getThrust(world, currBlockPos);
+								currentType = ((IRocketEngine) block).getFuelType(world, currBlockPos);
 								stats.addEngineLocation(x, yCurr - actualMinY, z);
+							} else if(block instanceof IFuelTank) {
+								fuelCapacity += (((IFuelTank) block).getMaxFill(world, currBlockPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
+								currentType = ((IFuelTank) block).getFuelType(world, currBlockPos);
+							} else if (block instanceof IRocketNuclearCore && ((world.getBlockState(belowPos).getBlock() instanceof  IRocketNuclearCore) || (world.getBlockState(belowPos).getBlock() instanceof  IRocketEngine))) {
+								thrustNuclearCoreLimit += ((IRocketNuclearCore) block).getMaxThrust(world, currBlockPos);
 							}
 
-							if(block instanceof IFuelTank) {
-								if (block instanceof BlockFuelTank) {
-									fuelCapacityMonopropellant += (((IFuelTank) block).getMaxFill(world, currBlockPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
-								} else if (block instanceof BlockBipropellantFuelTank) {
-									fuelCapacityBipropellant += (((IFuelTank) block).getMaxFill(world, currBlockPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
-								} else if(block instanceof BlockOxidizerFuelTank) {
-									fuelCapacityOxidizer += (((IFuelTank) block).getMaxFill(world, currBlockPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
-								} else if(block instanceof BlockNuclearFuelTank) {
-									fuelCapacityNuclearWorkingFluid += (((IFuelTank) block).getMaxFill(world, currBlockPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
-								}
-							}
-
-							if (block instanceof IRocketNuclearCore && ((world.getBlockState(belowPos).getBlock() instanceof  IRocketNuclearCore) || (world.getBlockState(belowPos).getBlock() instanceof  IRocketEngine))) {
-								thrustNuclearReactorLimit += ((IRocketNuclearCore) block).getMaxThrust(world, currBlockPos);
-							}
+							if (rocketType != null && currentType != null && currentType != rocketType) {
+								status = ErrorCodes.COMBINEDTHRUST;
+								return;
+							} else
+								rocketType = currentType;
 
 							if(block instanceof BlockSeat && !world.getBlockState(abovePos).isSuffocating(world, abovePos)) {
 								stats.addPassengerSeat((int) (x), yCurr - actualMinY, (int) (z));
@@ -366,57 +345,42 @@ public class TileRocketAssembler extends TileEntityFEConsumer implements IButton
 							}
 
 							TileEntity tile= world.getTileEntity(currBlockPos);
-							if(tile instanceof TileSatelliteHatch)
-								hasSatellite = true;
-							if(tile instanceof TileGuidanceComputer)
-								hasGuidance = true;
-								
+							if(tile instanceof TileSatelliteBay) hasSatellite = true;
+							if(tile instanceof TileGuidanceComputer) hasGuidance = true;
 						}
 					}
 				}
 			}
 
 			int nuclearWorkingFluidUse = 0;
-			if (thrustNuclearNozzleLimit > 0) {
+			if (thrustNuclearCoreLimit > 0) {
 				//Only run the number of engines our cores can support - we can't throttle these effectively because they're small, so they shut off if they don't get full power
-				thrustNuclearTotalLimit = Math.min(thrustNuclearNozzleLimit, thrustNuclearReactorLimit);
-				nuclearWorkingFluidUse = (int) (nuclearWorkingFluidUseMax * (thrustNuclearTotalLimit / (float) thrustNuclearNozzleLimit));
-				thrustNuclearTotalLimit = (nuclearWorkingFluidUse * thrustNuclearNozzleLimit) / nuclearWorkingFluidUseMax;
+				thrustNuclearTotalLimit = Math.min(thrust, thrustNuclearCoreLimit);
+				nuclearWorkingFluidUse = (int) (fuelUse * (thrustNuclearTotalLimit / (float) thrust));
+				thrustNuclearTotalLimit = (nuclearWorkingFluidUse * thrust) / fuelUse;
+
+				fuelUse = nuclearWorkingFluidUse;
+				thrust = thrustNuclearTotalLimit;
 			}
 
 			//Set fuel stats
-			//Thrust depending on rocket type
-			stats.setBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT, monopropellantfuelUse);
-			stats.setBaseFuelRate(FuelType.LIQUID_BIPROPELLANT, bipropellantfuelUse);
-			stats.setBaseFuelRate(FuelType.LIQUID_OXIDIZER, bipropellantfuelUse);
-			stats.setBaseFuelRate(FuelType.NUCLEAR_WORKING_FLUID, nuclearWorkingFluidUse);
-			//Fuel storage depending on rocket type
-			stats.setFuelCapacity(FuelType.LIQUID_MONOPROPELLANT, fuelCapacityMonopropellant);
-			stats.setFuelCapacity(FuelType.LIQUID_BIPROPELLANT, fuelCapacityBipropellant);
-			stats.setFuelCapacity(FuelType.LIQUID_OXIDIZER, fuelCapacityOxidizer);
-			stats.setFuelCapacity(FuelType.NUCLEAR_WORKING_FLUID, fuelCapacityNuclearWorkingFluid);
-
+			if (rocketType != null) {
+				stats.setBaseFuelRate(rocketType, fuelUse);
+				stats.setFuelCapacity(rocketType, fuelCapacity);
+			}
 			//Non-fuel stats
 			stats.setWeight(numBlocks);
-			stats.setThrust(Math.max(Math.max(thrustMonopropellant, thrustBipropellant), thrustNuclearTotalLimit));
+			stats.setThrust(thrust);
 			stats.setDrillingPower(drillPower);
-
-			//Total stats, used to check if the user has tried to apply two or more types of thrust/fuel
-			int totalFuel = fuelCapacityBipropellant + fuelCapacityNuclearWorkingFluid + fuelCapacityMonopropellant;
-			int totalFuelUse = bipropellantfuelUse + nuclearWorkingFluidUse + monopropellantfuelUse;
 
 			//Set status
 			if(invalidBlock)
 				status = ErrorCodes.INVALIDBLOCK;
-			else if (((fuelCapacityBipropellant > 0 && totalFuel > fuelCapacityBipropellant) || (fuelCapacityMonopropellant > 0 && totalFuel > fuelCapacityMonopropellant) || (fuelCapacityNuclearWorkingFluid > 0 && totalFuel > fuelCapacityNuclearWorkingFluid))
-					||
-					((thrustBipropellant > 0 && totalFuelUse > bipropellantfuelUse) || (thrustMonopropellant > 0 && totalFuelUse > monopropellantfuelUse) || (thrustNuclearTotalLimit > 0 && totalFuelUse > nuclearWorkingFluidUse)))
-			    status = ErrorCodes.COMBINEDTHRUST;
-			else if(!hasGuidance && !hasSatellite)
+		    else if(!hasGuidance && !hasSatellite)
 				status = ErrorCodes.NOGUIDANCE;
 			else if(getThrust() <= getNeededThrust())
 				status = ErrorCodes.NOENGINES;
-			else if(((thrustBipropellant > 0) && getFuel(FuelType.LIQUID_BIPROPELLANT) < getNeededFuel(FuelType.LIQUID_BIPROPELLANT)) || ((thrustMonopropellant > 0) && getFuel(FuelType.LIQUID_MONOPROPELLANT) < getNeededFuel(FuelType.LIQUID_MONOPROPELLANT)) || ((thrustNuclearTotalLimit > 0) && getFuel(FuelType.NUCLEAR_WORKING_FLUID) < getNeededFuel(FuelType.NUCLEAR_WORKING_FLUID)))
+			else if(rocketType != null && getFuel(rocketType) < getNeededFuel(rocketType))
 				status = ErrorCodes.NOFUEL;
 			else
 				status = ErrorCodes.SUCCESS;
@@ -424,8 +388,7 @@ public class TileRocketAssembler extends TileEntityFEConsumer implements IButton
 	}
 
 
-	private void removeReplaceableBlocks(AxisAlignedBB bb)
-	{
+	private void removeReplaceableBlocks(AxisAlignedBB bb) {
 		for(int yCurr = (int) bb.minY; yCurr <= bb.maxY; yCurr++) {
 			for(int xCurr = (int) bb.minX; xCurr <= bb.maxX; xCurr++) {
 				for(int zCurr = (int) bb.minZ; zCurr <= bb.maxZ; zCurr++) {
@@ -447,14 +410,11 @@ public class TileRocketAssembler extends TileEntityFEConsumer implements IButton
 	}
 
 	public void assembleRocket() {
-
-		if(bbCache == null || world.isRemote)
-			return;
+		if(bbCache == null || world.isRemote) return;
 		//Need to scan again b/c something may have changed
 		scanRocket(world, pos, bbCache);
 
-		if(status != ErrorCodes.SUCCESS)
-			return;
+		if(status != ErrorCodes.SUCCESS) return;
 
 		// Remove replacable blocks that don't belong on the rocket
 		removeReplaceableBlocks(bbCache);
@@ -522,8 +482,7 @@ public class TileRocketAssembler extends TileEntityFEConsumer implements IButton
 			if(direction.getXOffset() < 0) {
 				xMin = xCurrent - xSize+1;
 			}
-		}
-		else {
+		} else {
 			zSize = ZUtils.getContinuousBlockLength(world, direction, currPos, MAX_SIZE, viableBlocks);
 			xMin = ZUtils.getContinuousBlockLength(world, Direction.WEST, currPos, MAX_SIZE, viableBlocks);
 			xMax = ZUtils.getContinuousBlockLength(world, Direction.EAST, currPos.add(1,0,0), MAX_SIZE - xMin, viableBlocks);
@@ -548,7 +507,6 @@ public class TileRocketAssembler extends TileEntityFEConsumer implements IButton
 			if(world.getBlockState(new BlockPos(i, yCurrent, zMin-1)).getBlock() == AdvancedRocketryBlocks.blockStructureTower) {
 				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, Direction.UP, new BlockPos(i, yCurrent, zMin-1), MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower));
 			}
-
 			if(world.getBlockState(new BlockPos(i, yCurrent, zMax+1)).getBlock() == AdvancedRocketryBlocks.blockStructureTower) {
 				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, Direction.UP, new BlockPos(i, yCurrent, zMax+1), MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower));
 			}
@@ -558,7 +516,6 @@ public class TileRocketAssembler extends TileEntityFEConsumer implements IButton
 			if(world.getBlockState(new BlockPos(xMin-1, yCurrent, i)).getBlock() == AdvancedRocketryBlocks.blockStructureTower) {
 				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, Direction.UP, new BlockPos(xMin-1, yCurrent, i), MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower));
 			}
-
 			if(world.getBlockState(new BlockPos(xMax+1, yCurrent, i)).getBlock() == AdvancedRocketryBlocks.blockStructureTower) {
 				maxTowerSize = Math.max(maxTowerSize, ZUtils.getContinuousBlockLength(world, Direction.UP, new BlockPos(xMax+1, yCurrent, i), MAX_SIZE_Y, AdvancedRocketryBlocks.blockStructureTower));
 			}
@@ -728,8 +685,7 @@ public class TileRocketAssembler extends TileEntityFEConsumer implements IButton
 			totalProgress = (int) (ARConfiguration.getCurrentConfig().buildSpeedMultiplier.get()*this.getVolume(world, bbCache)/10);
 			this.markDirty();
 			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
-		}
-		else if(id == 1) {
+		} else if(id == 1) {
 
 			if(isScanning())
 				return;
@@ -744,12 +700,10 @@ public class TileRocketAssembler extends TileEntityFEConsumer implements IButton
 			this.markDirty();
 			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 
-		}
-		else if(id == 2) {
+		} else if(id == 2) {
 			energy.setEnergyStored(nbt.getInt("pwr"));
 			this.progress = nbt.getInt("tik");
-		}
-		else if(id == 3) {
+		} else if(id == 3) {
 			EntityRocket rocket = (EntityRocket) world.getEntityByID(nbt.getInt("id"));
 			for(IInfrastructure infrastructure : getConnectedInfrastructure()) {
 				rocket.linkInfrastructure(infrastructure);
@@ -817,7 +771,6 @@ public class TileRocketAssembler extends TileEntityFEConsumer implements IButton
 
 	@Override
 	public float getNormallizedProgress(int id) {
-
 		if(isScanning() && id != 2)
 			return 0f;
 

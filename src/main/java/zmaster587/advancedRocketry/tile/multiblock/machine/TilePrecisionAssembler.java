@@ -42,7 +42,7 @@ public class TilePrecisionAssembler extends TileMultiblockMachine implements IMo
 
 				
 				public TilePrecisionAssembler() {
-					super(AdvancedRocketryTileEntityType.TILE_PREC_ASS);
+					super(AdvancedRocketryTileEntityType.TILE_PRECISION_ASSEMBLER);
 				}
 				
 	@Override

@@ -16,6 +16,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.item.*;
+import zmaster587.advancedRocketry.item.tools.ItemOreScanner;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import zmaster587.libVulpes.inventory.modules.*;
@@ -54,7 +55,7 @@ public class TileSatelliteAssembler extends TileMultiPowerConsumer implements IM
 	private static final byte chassisSlot = 11;
 
 	public TileSatelliteAssembler() {
-		super(AdvancedRocketryTileEntityType.TILE_SAT_BUILDER);
+		super(AdvancedRocketryTileEntityType.TILE_SATELLITE_ASSEMBLER);
 		inventory = new EmbeddedInventory(5);
 		powerPerTick = 10;
 	}

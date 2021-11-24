@@ -13,8 +13,12 @@
 
     "commentbcjsonbad": "Entities",
     "entity.advancedrocketry.rocket": "Rocket",
-    "entity.rocket": "Rocket",
-    "entity.hovercraft": "Hovercraft",
+    "entity.advancedrocketry.hovercraft": "Hovercraft",
+    "entity.advancedrocketry.spaceelevator": "Space Elevator Capsule",
+    "entity.advancedrocketry.uiplanet": "Holographic Planet",
+    "entity.advancedrocketry.uistar": "Holographic Star",
+    "entity.advancedrocketry.uibutton": "Holographic Button",
+
 
     "commentbcjsonbad": "Lights",
    "block.advancedrocketry.unlittorch": "Unlit Torch",
@@ -172,7 +176,7 @@
     "item.advancedrocketry.satellite": "Satellite",
     "commentbcjsonbad": "Suit Component Registration",
     "item.advancedrocketry.jetpack": "Jetpack",
-    "item.advancedrocketry.aluminumpressuretank": "Aluminum Oxygen Tank",
+    "item.advancedrocketry.aluminumpressuretank": "Aluminium Oxygen Tank",
     "item.advancedrocketry.steelpressuretank": "Steel Oxygen Tank",
     "item.advancedrocketry.titaniumpressuretank": "Titanium Oxygen Tank",
     "item.advancedrocketry.hoverupgrade": "Hover Upgrade",

@@ -22,6 +22,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
+import zmaster587.libVulpes.util.ZUtils;
 
 import java.util.List;
 
@@ -80,7 +81,7 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 
 	public boolean isGravityWithinBounds() {
 		if (!(ARConfiguration.getCurrentConfig().crystalliserMaximumGravity.get() == 0)) {
-			return ARConfiguration.getCurrentConfig().crystalliserMaximumGravity.get() > DimensionManager.getInstance().getDimensionProperties(world).gravitationalMultiplier;
+			return ARConfiguration.getCurrentConfig().crystalliserMaximumGravity.get() > DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(world)).gravitationalMultiplier;
 		}
 		return true;
 	}
@@ -106,6 +107,6 @@ public class TileCrystallizer extends TileMultiblockMachine implements IModularI
 
 	@Override
 	public String getMachineName() {
-		return "container.crystallizer";
+		return "block.advancedrocketry.crystallizer";
 	}
 }

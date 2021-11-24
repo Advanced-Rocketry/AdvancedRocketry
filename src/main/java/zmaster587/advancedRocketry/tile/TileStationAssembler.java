@@ -16,7 +16,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.item.ItemPackedStructure;
+import zmaster587.advancedRocketry.item.ItemSpaceStationContainer;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
@@ -138,7 +138,7 @@ public class TileStationAssembler extends TileRocketAssembler implements IInvent
 				ItemStationChip.setUUID(outputStack, storedId);
 			}
 
-			((ItemPackedStructure)outputStack.getItem()).setStructure(outputStack, storageChunk);
+			((ItemSpaceStationContainer)outputStack.getItem()).setStructure(outputStack, storageChunk);
 
 			inventory.setInventorySlotContents(2, outputStack);
 

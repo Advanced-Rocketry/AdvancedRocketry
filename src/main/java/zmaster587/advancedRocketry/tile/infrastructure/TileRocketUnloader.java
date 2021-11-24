@@ -15,8 +15,6 @@ import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 import java.util.List;
 
 public class TileRocketUnloader extends TileRocketLoader implements IInfrastructure, ITickableTileEntity, IButtonInventory, INetworkMachine   {
-	ModuleRedstoneOutputButton redstoneControl;
-	RedstoneState state;
 
 	public TileRocketUnloader() {
 		super(AdvancedRocketryTileEntityType.TILE_ROCKET_UNLOADER);
@@ -42,7 +40,6 @@ public class TileRocketUnloader extends TileRocketLoader implements IInfrastruct
 
 	@Override
 	public void tick() {
-
 		//Move a stack of items
 		if(!world.isRemote && rocket != null ) {
 			boolean isAllowedToOperate = (inputstate == RedstoneState.OFF || isStateActive(inputstate, getStrongPowerForSides(world, getPos())));

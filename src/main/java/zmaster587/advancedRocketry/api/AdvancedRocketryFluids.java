@@ -116,7 +116,7 @@ public class AdvancedRocketryFluids {
 		AdvancedRocketryBlocks.blockEnrichedLavaFluid = AdvancedRocketry.BLOCKS.register("enrichedlavablock", () -> new BlockEnrichedLava(AdvancedRocketryFluids.enrichedLavaStill, AbstractBlock.Properties.create(Material.LAVA).tickRandomly().doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops().setLightLevel((p_235470_0_) -> 14)));
 
 
-		Item.Properties bucketItem = new Item.Properties().group(LibVulpes.tabLibVulpesOres).containerItem(Items.BUCKET);
+		Item.Properties bucketItem = new Item.Properties().group(LibVulpes.tabLibVulpesOres).containerItem(Items.BUCKET).maxStackSize(1);
 		AdvancedRocketryItems.itemBucketRocketFuel = AdvancedRocketry.ITEMS.register("bucketrocketfuel", () -> new BucketItem(AdvancedRocketryFluids.rocketFuelStill, bucketItem));
 		AdvancedRocketryItems.itemBucketNitrogen = AdvancedRocketry.ITEMS.register("bucketnitrogen", () -> new BucketItem(AdvancedRocketryFluids.nitrogenStill, bucketItem));
 		AdvancedRocketryItems.itemBucketHydrogen = AdvancedRocketry.ITEMS.register("buckethydrogen", () -> new BucketItem(AdvancedRocketryFluids.hydrogenStill, bucketItem));

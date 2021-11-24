@@ -25,8 +25,7 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.inventory.modules.ModuleData;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
-import zmaster587.advancedRocketry.item.ItemData;
-import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
+import zmaster587.advancedRocketry.item.ItemDataChip;
 import zmaster587.advancedRocketry.util.Asteroid;
 import zmaster587.advancedRocketry.util.Asteroid.StackEntry;
 import zmaster587.advancedRocketry.util.IDataInventory;
@@ -166,13 +165,6 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	
 	@Override
 	public void tick() {
-
-		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
-		if(timeAlive == 0 ) {
-			attemptCompleteStructure(world.getBlockState(pos));
-			timeAlive = 0x1;
-		}
-
 		if((world.isRemote && isOpen) || (!world.isRemote && isRunning() && getMachineEnabled() && ((!world.isRaining() && world.canBlockSeeSky(pos.add(0,1,0)) && !world.isDaytime()) || ZUtils.getDimensionIdentifier(world).equals(DimensionManager.spaceId)))) {
 
 			if(!isOpen) {
@@ -652,9 +644,9 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	public void storeData(int id) {
 		ItemStack dataChip = inv.getStackInSlot(0);
 
-		if(dataChip != ItemStack.EMPTY && dataChip.getItem() instanceof ItemData && dataChip.getCount() == 1) {
+		if(dataChip != ItemStack.EMPTY && dataChip.getItem() instanceof ItemDataChip && dataChip.getCount() == 1) {
 
-			ItemData dataItem = (ItemData)dataChip.getItem();
+			ItemDataChip dataItem = (ItemDataChip)dataChip.getItem();
 			DataStorage data = dataItem.getDataStorage(dataChip);
 
 			for(TileDataBus tile : dataCables) {

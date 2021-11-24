@@ -56,7 +56,7 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 	};
 
 	public TileAreaGravityController() {
-		super(AdvancedRocketryTileEntityType.TILE_GRAVITY_CONTROLLER);
+		super(AdvancedRocketryTileEntityType.TILE_AREA_GRAVITY_CONTROLLER);
 		//numGravPylons = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
 		textRadius = new ModuleText(6, 82, LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.radius") + "5", 0x202020);
 		targetGrav = new ModuleText(6, 110, LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.targetgrav"), 0x202020);
@@ -142,20 +142,6 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 
 	@Override
 	public void tick() {
-		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
-		if(timeAlive == 0) {
-			if(!world.isRemote) {
-				if(isComplete())
-					canRender = completeStructure = completeStructure(world.getBlockState(pos));
-			} else {
-				SoundEvent str;
-				if((str = getSound()) != null) {
-					playMachineSound(str);
-				}
-			}
-			timeAlive = 0x1;
-		}
-
 		if(isRunning()) {
 			if(!world.isRemote) {
 

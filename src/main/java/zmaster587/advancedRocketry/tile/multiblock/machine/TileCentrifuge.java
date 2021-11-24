@@ -22,17 +22,17 @@ import java.util.List;
 public class TileCentrifuge extends TileMultiblockMachine {
 	public static final Object[][][] structure = {
 
-			{{Blocks.AIR, new BlockMeta(LibVulpesBlocks.blockMachineStructure), 'l'},
-					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, new BlockMeta(LibVulpesBlocks.blockMachineStructure)},
-					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, null}},
+			{{Blocks.AIR, Blocks.AIR, Blocks.AIR},
+					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, Blocks.AIR},
+					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, Blocks.AIR}},
 
-			{{Blocks.AIR, new BlockMeta(LibVulpesBlocks.blockMachineStructure), 'l'},
-					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, new BlockMeta(LibVulpesBlocks.blockMachineStructure)},
-					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, 'l'}},
+			{{Blocks.AIR, Blocks.AIR, Blocks.AIR},
+					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, Blocks.AIR},
+					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, Blocks.AIR}},
 
-			{{'c', new BlockMeta(LibVulpesBlocks.blockMachineStructure), 'l'},
-					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, new BlockMeta(LibVulpesBlocks.blockMachineStructure)},
-					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, 'l'}},
+			{{'c', Blocks.AIR, Blocks.AIR},
+					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, Blocks.AIR},
+					{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, Blocks.AIR}},
 
 			{   {'P','L', 'l'},
 				{LibVulpesBlocks.motors,'O', new BlockMeta(LibVulpesBlocks.blockMachineStructure)},

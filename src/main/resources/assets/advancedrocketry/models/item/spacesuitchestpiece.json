@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "advancedrocketry:items/spacechestplate",
-        "layer1": "advancedrocketry:items/spacechestplate_overlay"
+        "layer0": "advancedrocketry:items/spacesuitchestpiece",
+        "layer1": "advancedrocketry:items/spacesuitchestpiece_overlay"
     }
 }

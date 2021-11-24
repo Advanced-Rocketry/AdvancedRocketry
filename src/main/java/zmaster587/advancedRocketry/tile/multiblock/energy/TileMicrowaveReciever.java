@@ -40,7 +40,7 @@ import zmaster587.libVulpes.util.ZUtils;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITickableTileEntity {
+public class TileMicrowaveReciever extends TileMultiPowerProducer {
 
 	static final BlockMeta iron_block = new BlockMeta(AdvancedRocketryBlocks.blockSolarGenerator);
 	static final Object[][][] structure = new Object[][][] {
@@ -59,9 +59,8 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 	int powerMadeLastTick, prevPowerMadeLastTick;
 	ModuleText textModule;
 	public TileMicrowaveReciever() {
-		super(AdvancedRocketryTileEntityType.TILE_MICROWAVE_RECIEVER);
+		super(AdvancedRocketryTileEntityType.TILE_MICROWAVE_RECEIVER);
 		connectedSatellites = new LinkedList<>();
-		initialCheck = false;
 		insolationPowerMultiplier = 0;
 		textModule = new ModuleText(40, 20, LibVulpes.proxy.getLocalizedString("msg.microwaverec.notgenerating"), 0x2b2b2b);
 	}
@@ -132,12 +131,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer implements ITi
 
 	@Override
 	public void tick() {
-
-		if(!initialCheck && !world.isRemote) {
-			completeStructure = attemptCompleteStructure(world.getBlockState(pos));
-			onInventoryUpdated();
-			initialCheck = true;
-		}
+		super.tick();
 
 		//Checks whenever a station changes dimensions or when the multiblock is intialized - ie any time the multipler could concieveably change
 		if(insolationPowerMultiplier == 0 || ((ZUtils.getDimensionIdentifier(world).equals(DimensionManager.spaceId)) && (powerSourceDimensionID != SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getOrbitingPlanetId()))) {

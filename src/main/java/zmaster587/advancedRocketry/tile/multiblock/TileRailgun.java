@@ -338,8 +338,8 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 
 					if(world != null && (tile = world.getTileEntity(pos)) instanceof TileRailgun && ((TileRailgun)tile).canReceiveCargo(tfrStack) &&
 							(PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(ZUtils.getDimensionIdentifier(this.world),
-									DimensionManager.getEffectiveDimId(world, pos).getId()) ||
-									DimensionManager.getEffectiveDimId(world, pos).getId() == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(this.world, this.pos).getId()) ) {
+									DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(world), pos).getId()) ||
+									DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(world), pos).getId() == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(this.world), this.pos).getId()) ) {
 
 						((TileRailgun)tile).onReceiveCargo(tfrStack);
 						inv2.setInventorySlotContents(index, ItemStack.EMPTY);

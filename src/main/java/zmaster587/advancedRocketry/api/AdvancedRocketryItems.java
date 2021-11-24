@@ -14,18 +14,17 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.armor.ItemSpaceArmor;
 import zmaster587.advancedRocketry.armor.ItemSpaceChest;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
-import zmaster587.advancedRocketry.item.ItemAtmosphereAnalyzer;
-import zmaster587.advancedRocketry.item.ItemBeaconFinder;
-import zmaster587.advancedRocketry.item.ItemBiomeChanger;
-import zmaster587.advancedRocketry.item.ItemData;
+import zmaster587.advancedRocketry.item.tools.ItemAtmosphereAnalyzer;
+import zmaster587.advancedRocketry.item.components.ItemBeaconFinder;
+import zmaster587.advancedRocketry.item.ItemDataChip;
 import zmaster587.advancedRocketry.item.ItemHovercraft;
-import zmaster587.advancedRocketry.item.ItemJackHammer;
-import zmaster587.advancedRocketry.item.ItemOreScanner;
-import zmaster587.advancedRocketry.item.ItemPackedStructure;
+import zmaster587.advancedRocketry.item.tools.ItemJackhammer;
+import zmaster587.advancedRocketry.item.tools.ItemOreScanner;
+import zmaster587.advancedRocketry.item.ItemSpaceStationContainer;
 import zmaster587.advancedRocketry.item.ItemPlanetChip;
 import zmaster587.advancedRocketry.item.ItemSatellite;
 import zmaster587.advancedRocketry.item.ItemSatelliteChip;
-import zmaster587.advancedRocketry.item.ItemSealDetector;
+import zmaster587.advancedRocketry.item.tools.ItemSealDetector;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.item.components.ItemJetpack;
 import zmaster587.advancedRocketry.item.components.ItemPressureTank;
@@ -38,7 +37,7 @@ import zmaster587.advancedRocketry.item.components.ItemUpgrade;
 public class AdvancedRocketryItems {
 
 	//TODO: fix
-	public static final ArmorMaterial spaceSuit = new ArmorMaterial("spacesuit", net.minecraft.item.ArmorMaterial.DIAMOND.getDurability(EquipmentSlotType.CHEST), new int[] {1,1,1,1}, 0, new SoundEvent(new ResourceLocation("")), 0, 0, null);
+	public static final SpaceSuitArmorMaterial spacesuit = new SpaceSuitArmorMaterial("spacesuit", 480, new int[] {1,1,1,1}, 0, new SoundEvent(new ResourceLocation("")), 0, 0, null);
 
 	public static RegistryObject<Item> itemBucketRocketFuel;
 	public static RegistryObject<Item> itemBucketNitrogen;
@@ -69,7 +68,7 @@ public class AdvancedRocketryItems {
 	public static Item itemAsteroidChip = new ItemAsteroidChip(singleStackSize).setRegistryName("asteroidchip");
 	public static Item itemSatelliteChip = new ItemSatelliteChip(typicalProperties).setRegistryName("satellitechip");
 	public static Item itemPlanetChip = new ItemPlanetChip(typicalProperties).setRegistryName("planetchip");
-	public static Item itemSpaceStationContainer = new ItemPackedStructure(singleStackSize).setRegistryName("spacestationcontainer");
+	public static Item itemSpaceStationContainer = new ItemSpaceStationContainer(singleStackSize).setRegistryName("spacestationcontainer");
 	//Satellite stuff
 	public static Item itemSolarPanel = new Item(typicalProperties).setRegistryName("solarpanel");
 	public static Item itemLargeSolarPanel = new Item(typicalProperties).setRegistryName("largesolarpanel");
@@ -78,8 +77,7 @@ public class AdvancedRocketryItems {
 	public static Item itemMassSensor = new Item(typicalProperties).setRegistryName("masssensor");
 	public static Item itemMicrowaveTransmitter = new Item(typicalProperties).setRegistryName("microwavetransmitter");
 	public static Item itemOreSensor = new Item(typicalProperties).setRegistryName("oresensor");
-	public static Item itemBiomeChanger = new Item(typicalProperties).setRegistryName("biomechanger");
-	public static Item itemDataUnit = new ItemData(singleStackSize).setRegistryName("dataunit");
+	public static Item itemDataUnit = new ItemDataChip(singleStackSize).setRegistryName("dataunit");
 	public static Item itemSatellite = new ItemSatellite(singleStackSize).setRegistryName("satellite");
 	//Suit Component Registration
 	public static Item itemJetpack = new ItemJetpack(singleStackSize).setRegistryName("jetpack");
@@ -101,8 +99,7 @@ public class AdvancedRocketryItems {
 	public static Item itemSealDetector = new ItemSealDetector(singleStackSize).setRegistryName("sealdetector");
 	public static Item itemAtmosphereAnalyzer = new ItemAtmosphereAnalyzer(singleStackSize).setRegistryName("atmosphereanalyzer");
 	public static Item itemOreScanner = new ItemOreScanner(singleStackSize).setRegistryName("orescanner");
-	public static Item itemBiomeChangerRemote = new ItemBiomeChanger(typicalProperties).setRegistryName("biomechangerremote");
-	public static Item itemJackhammer = new ItemJackHammer(ItemTier.DIAMOND, new Item.Properties().group(AdvancedRocketry.tabAdvRocketry).maxStackSize(1).maxDamage(1500)).setRegistryName("jackhammer");
+	public static Item itemJackhammer = new ItemJackhammer(ItemTier.DIAMOND, new Item.Properties().group(AdvancedRocketry.tabAdvRocketry).maxStackSize(1).maxDamage(1500)).setRegistryName("jackhammer");
 	public static Item itemHovercraft = new ItemHovercraft(singleStackSize).setRegistryName("hovercraft");
 	//public static Item itemBasicLaserGun = new ItemBasicLaserGun(typicalProperties).setRegistryName("basic_laser_gun");
     //Weird block-items
@@ -206,7 +203,7 @@ public class AdvancedRocketryItems {
 	public static Item itemBeacon = new BlockItem(AdvancedRocketryBlocks.blockBeacon, typicalBlockProperties);
 	public static Item itemLightwoodPlanks = new BlockItem(AdvancedRocketryBlocks.blockLightwoodPlanks, typicalBlockProperties);
 	public static Item itemThermiteTorch = new WallOrFloorItem(AdvancedRocketryBlocks.blockThermiteTorch, AdvancedRocketryBlocks.blockThermiteTorchWall, typicalBlockProperties);
-	public static Item itemWirelessTransceiver = new BlockItem(AdvancedRocketryBlocks.blockTransceiver, typicalBlockProperties);
+	public static Item itemWirelessTransceiver = new BlockItem(AdvancedRocketryBlocks.blockWirelessTransceiver, typicalBlockProperties);
 	public static Item itemLaser = new BlockItem(AdvancedRocketryBlocks.blockLaser, typicalBlockProperties);
 	public static Item itemMoonTurfDark = new BlockItem(AdvancedRocketryBlocks.blockMoonTurfDark, typicalBlockProperties);
 	public static Item itemBlackHoleGenerator = new BlockItem(AdvancedRocketryBlocks.blockBlackHoleGenerator, typicalBlockProperties);
@@ -251,7 +248,6 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemMassSensor,
 				AdvancedRocketryItems.itemMicrowaveTransmitter,
 				AdvancedRocketryItems.itemOreSensor,
-				AdvancedRocketryItems.itemBiomeChanger,
 				AdvancedRocketryItems.itemDataUnit,
 				AdvancedRocketryItems.itemSatellite,
 		        //Suit Component Registration
@@ -274,7 +270,6 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemSealDetector,
 				AdvancedRocketryItems.itemAtmosphereAnalyzer,
 		        AdvancedRocketryItems.itemOreScanner,
-				AdvancedRocketryItems.itemBiomeChangerRemote,
 		        AdvancedRocketryItems.itemJackhammer,
 				AdvancedRocketryItems.itemHovercraft,
 		        //AdvancedRocketryItems.itemBasicLaserGun,

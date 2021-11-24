@@ -25,7 +25,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
-import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
@@ -33,7 +32,7 @@ import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.item.ItemData;
+import zmaster587.advancedRocketry.item.ItemDataChip;
 import zmaster587.advancedRocketry.item.ItemMultiData;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
@@ -172,8 +171,8 @@ public class PlanetCommand {
 		if(sender.getEntity() != null ) {
 			stack = sender.asPlayer().getHeldItem(Hand.MAIN_HAND);
 
-			if(!stack.isEmpty() && stack.getItem() instanceof ItemData) {
-				ItemData item = (ItemData) stack.getItem();
+			if(!stack.isEmpty() && stack.getItem() instanceof ItemDataChip) {
+				ItemDataChip item = (ItemDataChip) stack.getItem();
 				int dataAmount = item.getMaxData(stack);
 				DataType dataType = null;
 

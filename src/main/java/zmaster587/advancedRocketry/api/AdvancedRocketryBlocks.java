@@ -10,8 +10,10 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.block.*;
-import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
+import zmaster587.advancedRocketry.block.multiblock.*;
+import zmaster587.advancedRocketry.block.plant.BlockElectricMushroom;
 import zmaster587.advancedRocketry.world.tree.AlienTree;
 import zmaster587.libVulpes.block.*;
 import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
@@ -70,15 +72,15 @@ public class AdvancedRocketryBlocks {
 			blockCrystalBlue,
 			blockCrystalPurple};
 	//Rocket blocks
-	public static Block blockMonopropellantEngine = new BlockRocketMotor(machineLineProperties);
-	public static Block blockAdvancedMonopropellantEngine = new BlockAdvancedRocketMotor(machineLineProperties);
-	public static Block blockBipropellantEngine = new BlockBipropellantRocketMotor(machineLineProperties);
-	public static Block blockAdvancedBipropellantEngine = new BlockAdvancedBipropellantRocketMotor(machineLineProperties);
-	public static Block blockNuclearEngine = new BlockNuclearRocketMotor(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f));
-	public static Block blockMonopropellantFuelTank = new BlockFuelTank(machineLineProperties);
-	public static Block blockBipropellantFuelTank = new BlockBipropellantFuelTank(machineLineProperties);
-	public static Block blockOxidizerFuelTank = new BlockOxidizerFuelTank(machineLineProperties);
-	public static Block blockNuclearWorkingFluidTank = new BlockNuclearFuelTank(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f));
+	public static Block blockMonopropellantEngine = new BlockGenericRocketMotor(10, 1, FuelType.LIQUID_MONOPROPELLANT, machineLineProperties.notSolid());
+	public static Block blockAdvancedMonopropellantEngine = new BlockGenericRocketMotor(50, 3, FuelType.LIQUID_MONOPROPELLANT, machineLineProperties.notSolid());
+	public static Block blockBipropellantEngine = new BlockGenericRocketMotor(10, 1, FuelType.LIQUID_BIPROPELLANT, machineLineProperties.notSolid());
+	public static Block blockAdvancedBipropellantEngine = new BlockGenericRocketMotor(50, 3, FuelType.LIQUID_BIPROPELLANT, machineLineProperties.notSolid());
+	public static Block blockNuclearEngine = new BlockGenericRocketMotor(35, 1, FuelType.NUCLEAR_WORKING_FLUID, machineLineProperties.notSolid());
+	public static Block blockMonopropellantFuelTank = new BlockGenericFuelTank(1000, FuelType.LIQUID_MONOPROPELLANT, machineLineProperties);
+	public static Block blockBipropellantFuelTank = new BlockGenericFuelTank(1000, FuelType.LIQUID_BIPROPELLANT, machineLineProperties);
+	public static Block blockOxidizerFuelTank = new BlockGenericFuelTank(1000, FuelType.LIQUID_OXIDIZER, machineLineProperties);
+	public static Block blockNuclearWorkingFluidTank = new BlockGenericFuelTank(1000, FuelType.NUCLEAR_WORKING_FLUID, machineLineProperties);
 	public static Block blockNuclearCore = new BlockNuclearCore(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f));
 	//Rocket auxiliary
 	public static Block blockSeat = new BlockSeat(AbstractBlock.Properties.create(Material.WOOL).hardnessAndResistance(0.5f));
@@ -148,7 +150,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockCentrifuge = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
 	//Data collection
 	public static Block blockSatelliteAssembler = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockTransceiver = new BlockTransciever(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockWirelessTransceiver = new BlockTransciever(machineLineProperties, GuiHandler.guiId.MODULAR);
 	public static Block blockDataBus = new BlockARHatch(machineLineProperties);
 	public static Block blockObservatory = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
 	public static Block blockAstrobodyDataProcessor = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
@@ -280,7 +282,7 @@ public class AdvancedRocketryBlocks {
 				AdvancedRocketryBlocks.blockCentrifuge.setRegistryName("centrifuge"),
 				//Data collection
 				AdvancedRocketryBlocks.blockSatelliteAssembler.setRegistryName("satelliteassembler"),
-				AdvancedRocketryBlocks.blockTransceiver.setRegistryName("wirelesstranscriver"),
+				AdvancedRocketryBlocks.blockWirelessTransceiver.setRegistryName("wirelesstranscriver"),
 				AdvancedRocketryBlocks.blockDataBus.setRegistryName("databus"),
 				AdvancedRocketryBlocks.blockObservatory.setRegistryName("observatory"),
 				AdvancedRocketryBlocks.blockAstrobodyDataProcessor.setRegistryName("astrobodydataprocessor"),

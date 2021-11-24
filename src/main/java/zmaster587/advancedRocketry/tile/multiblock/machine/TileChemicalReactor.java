@@ -79,7 +79,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 		}
 
 		//If airbreathing enchantment
-		if(flag && getOutputs() == null) {
+		if(flag && getOutputs().isEmpty()) {
 			if(enabled && (recipe = getRecipe(getMachineRecipeList())) != null && canProcessRecipe(recipe)) {
 				consumeItemsSpecial(recipe);
 				setOutputFluids(new LinkedList<>());
@@ -90,12 +90,6 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 
 				markDirty();
 				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
-
-				setMachineRunning(true); //turn on machine
-
-			}
-			else {
-				setMachineRunning(false);
 			}
 		}
 		else {
@@ -134,9 +128,8 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 			}
 		}
 	}
-	
-	@Override
-	public void registerRecipes() {
+
+	public static void registerRecipes() {
 		//Chemical Reactor
 		if(ARConfiguration.getCurrentConfig().enableOxygen.get()) {
 			for(ResourceLocation key : ForgeRegistries.ITEMS.getKeys()) {

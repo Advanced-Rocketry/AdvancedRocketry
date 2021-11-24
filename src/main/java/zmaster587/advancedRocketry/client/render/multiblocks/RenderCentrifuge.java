@@ -21,7 +21,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class RenderCentrifuge extends TileEntityRenderer<TileCentrifuge> {
 
 	WavefrontObject model;
-
 	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/centrifuge.png");
 
 	public RenderCentrifuge(TileEntityRendererDispatcher tile){
@@ -56,8 +55,7 @@ public class RenderCentrifuge extends TileEntityRenderer<TileCentrifuge> {
 		model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, builder, "Hull");
 
 
-		if(tile.isRunning())
-		{
+		if(tile.isRunning()) {
 			matrix.push();
 			matrix.rotate(new Quaternion(0, System.currentTimeMillis() * -100f, 0, true));
 			model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, builder, "Cylinder");

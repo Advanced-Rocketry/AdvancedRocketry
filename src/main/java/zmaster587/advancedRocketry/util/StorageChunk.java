@@ -66,7 +66,7 @@ import zmaster587.advancedRocketry.api.EntityRocketBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.stations.IStorageChunk;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
-import zmaster587.advancedRocketry.tile.hatch.TileSatelliteHatch;
+import zmaster587.advancedRocketry.tile.satellite.TileSatelliteBay;
 import zmaster587.advancedRocketry.world.util.WorldDummy;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
@@ -702,11 +702,11 @@ public class StorageChunk implements IWorld, IStorageChunk {
 
 
 
-	public List<TileSatelliteHatch> getSatelliteHatches() {
-		LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<>();
+	public List<TileSatelliteBay> getSatelliteHatches() {
+		LinkedList<TileSatelliteBay> satelliteHatches = new LinkedList<>();
 		for (TileEntity tile : getTileEntityList()) {
-			if (tile instanceof TileSatelliteHatch) {
-				satelliteHatches.add((TileSatelliteHatch) tile);
+			if (tile instanceof TileSatelliteBay) {
+				satelliteHatches.add((TileSatelliteBay) tile);
 			}
 		}
 
@@ -716,15 +716,15 @@ public class StorageChunk implements IWorld, IStorageChunk {
 	@Deprecated
 	public List<SatelliteBase> getSatellites() {
 		LinkedList<SatelliteBase> satellites = new LinkedList<>();
-		LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<>();
+		LinkedList<TileSatelliteBay> satelliteHatches = new LinkedList<>();
 		for (TileEntity tile : getTileEntityList()) {
-			if (tile instanceof TileSatelliteHatch) {
-				satelliteHatches.add((TileSatelliteHatch) tile);
+			if (tile instanceof TileSatelliteBay) {
+				satelliteHatches.add((TileSatelliteBay) tile);
 			}
 		}
 
 
-		for(TileSatelliteHatch tile : satelliteHatches) {
+		for(TileSatelliteBay tile : satelliteHatches) {
 			SatelliteBase satellite = tile.getSatellite();
 			if(satellite != null)
 				satellites.add(satellite);

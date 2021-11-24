@@ -413,11 +413,6 @@ boolean openFullScreen = false;
 	public String getModularInventoryName() { return "block.advancedrocketry.spaceelevator"; }
 
 	@Override
-	public boolean isUsableByPlayer(PlayerEntity player) {
-		return true;
-	}
-
-	@Override
 	public void writeNetworkData(CompoundNBT nbt) {
 
 

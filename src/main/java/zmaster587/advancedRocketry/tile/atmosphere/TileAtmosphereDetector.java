@@ -3,7 +3,6 @@ package zmaster587.advancedRocketry.tile.atmosphere;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -42,7 +41,7 @@ public class TileAtmosphereDetector extends TileEntity implements ITickableTileE
 	private IAtmosphere atmosphereToDetect;
 
 	public TileAtmosphereDetector() {
-		super(AdvancedRocketryTileEntityType.TILE_ATM_DETECTOR);
+		super(AdvancedRocketryTileEntityType.TILE_ATMOSPHERE_DETECTOR);
 		atmosphereToDetect = AtmosphereType.AIR;
 	}
 

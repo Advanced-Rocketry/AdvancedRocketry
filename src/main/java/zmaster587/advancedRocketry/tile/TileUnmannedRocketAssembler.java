@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.tile;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -14,11 +15,13 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.block.*;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.entity.EntityStationDeployedRocket;
+import zmaster587.advancedRocketry.network.PacketInvalidLocationNotify;
 import zmaster587.advancedRocketry.util.StorageChunk;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
 
 public class TileUnmannedRocketAssembler extends TileRocketAssembler {
@@ -129,7 +132,7 @@ public class TileUnmannedRocketAssembler extends TileRocketAssembler {
 				for(int z = 0; z < storageChunk.getSizeZ(); z++) {
 
 					BlockPos pos3 = new BlockPos(x,y,z);
-					if(storageChunk.getBlockState(pos3).getBlock() instanceof BlockRocketMotor ) {
+					if(storageChunk.getBlockState(pos3).getBlock() instanceof BlockGenericRocketMotor ) {
 						storageChunk.setBlockState(pos3, storageChunk.getBlockState(pos3).with(BlockFullyRotatable.FACING, rocket.forwardDirection)  );
 					}
 				}		
@@ -156,20 +159,14 @@ public class TileUnmannedRocketAssembler extends TileRocketAssembler {
 	@Override
 	public void scanRocket(World world, BlockPos pos2, AxisAlignedBB bb) {
 
-		int thrustMonopropellant = 0;
-		int thrustBipropellant = 0;
-		int thrustNuclearNozzleLimit = 0;
-		int thrustNuclearReactorLimit = 0;
+		int thrust = 0;
+		int thrustNuclearCoreLimit = 0;
 		int thrustNuclearTotalLimit = 0;
-		int monopropellantfuelUse = 0;
-		int bipropellantfuelUse = 0;
-		int nuclearWorkingFluidUseMax = 0;
-		int fuelCapacityMonopropellant = 0;
-		int fuelCapacityBipropellant = 0;
-		int fuelCapacityOxidizer = 0;
-		int fuelCapacityNuclearWorkingFluid = 0;
+		int fuelUse = 0;
+		int fuelCapacity = 0;
+		FuelType rocketType = null;
+		FuelType currentType = null;
 		int numBlocks = 0;
-		float drillPower = 0f;
 		stats.reset();
 
 		int actualMinX = (int)bb.maxX,
@@ -204,101 +201,90 @@ public class TileUnmannedRocketAssembler extends TileRocketAssembler {
 			}
 		}
 
-		int fluidCapacity = 0;
+		boolean hasGuidance = false;
+		boolean invalidBlock = false;
 
 		if(verifyScan(bb, world)) {
 			for(int yCurr = (int) bb.minY; yCurr <= bb.maxY; yCurr++) {
 				for(int xCurr = (int) bb.minX; xCurr <= bb.maxX; xCurr++) {
 					for(int zCurr = (int) bb.minZ; zCurr <= bb.maxZ; zCurr++) {
 
-						BlockPos currPos = new BlockPos(xCurr, yCurr, zCurr);
-						if(!world.isAirBlock(currPos)) {
-							BlockState state = world.getBlockState(currPos);
+						BlockPos currBlockPos = new BlockPos(xCurr, yCurr, zCurr);
+						BlockPos behindPos = currBlockPos.offset(world.getBlockState(this.getPos()).get(BlockFullyRotatable.FACING).getOpposite());
+
+						if(!world.isAirBlock(currBlockPos)) {
+							BlockState state = world.getBlockState(currBlockPos);
 							Block block = state.getBlock();
+
+							//Check blacklist
+							if(ARConfiguration.getCurrentConfig().blackListRocketBlocks.contains(block)) {
+								if(!block.isReplaceable( state, Fluids.WATER)) {
+									invalidBlock = true;
+									if(!world.isRemote)
+										PacketHandler.sendToNearby(new PacketInvalidLocationNotify(new HashedBlockPosition(xCurr, yCurr, zCurr)), ZUtils.getDimensionIdentifier(world), getPos(), 64);
+								}
+								continue;
+							}
 							numBlocks++;
 
-							//If rocketEngine increaseThrust
-							if(block instanceof IRocketEngine) {
-								if (block instanceof BlockNuclearRocketMotor) {
-									nuclearWorkingFluidUseMax += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
-									thrustNuclearNozzleLimit += ((IRocketEngine)block).getThrust(world, currPos);
-								} else if (block instanceof BlockBipropellantRocketMotor) {
-									bipropellantfuelUse += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
-									thrustBipropellant += ((IRocketEngine)block).getThrust(world, currPos);
-								} else if (block instanceof BlockRocketMotor) {
-									monopropellantfuelUse += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
-									thrustMonopropellant += ((IRocketEngine)block).getThrust(world, currPos);
-								}
+							//Check fuel-type determining blocks
+							if(block instanceof IRocketEngine && (world.getBlockState(behindPos).getBlock().isAir(world.getBlockState(behindPos), world, behindPos) || world.getBlockState(behindPos).getBlock() instanceof BlockLandingPad || world.getBlockState(behindPos).getBlock() == AdvancedRocketryBlocks.blockLaunchpad)) {
+								fuelUse += ((IRocketEngine) block).getFuelConsumptionRate(world, xCurr, yCurr, zCurr);
+								thrust += ((IRocketEngine)block).getThrust(world, currBlockPos);
+								currentType = ((IRocketEngine) block).getFuelType(world, currBlockPos);
 								stats.addEngineLocation(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f), yCurr - actualMinY, zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f));
+							} else if(block instanceof IFuelTank) {
+								fuelCapacity += (((IFuelTank) block).getMaxFill(world, currBlockPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
+								currentType = ((IFuelTank) block).getFuelType(world, currBlockPos);
+							} else if (block instanceof IRocketNuclearCore && ((world.getBlockState(behindPos).getBlock() instanceof  IRocketNuclearCore) || (world.getBlockState(behindPos).getBlock() instanceof  IRocketEngine))) {
+								thrustNuclearCoreLimit += ((IRocketNuclearCore) block).getMaxThrust(world, currBlockPos);
 							}
 
-							if(block instanceof IFuelTank) {
-								if (block instanceof BlockFuelTank) {
-									fuelCapacityMonopropellant += (((IFuelTank) block).getMaxFill(world, currPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
-								} else if (block instanceof BlockBipropellantFuelTank) {
-									fuelCapacityBipropellant += (((IFuelTank) block).getMaxFill(world, currPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
-								} else if(block instanceof BlockOxidizerFuelTank) {
-									fuelCapacityOxidizer += (((IFuelTank) block).getMaxFill(world, currPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
-								} else if(block instanceof BlockNuclearFuelTank) {
-									fuelCapacityNuclearWorkingFluid += (((IFuelTank) block).getMaxFill(world, currPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
-								}
-							}
-
-							if (block instanceof  IRocketNuclearCore) {
-								thrustNuclearReactorLimit += ((IRocketNuclearCore) block).getMaxThrust(world, currPos);
-							}
+							if (rocketType != null && currentType != null && currentType != rocketType) {
+								status = ErrorCodes.COMBINEDTHRUST;
+								return;
+							} else
+								rocketType = currentType;
 
 							if(block instanceof IIntake) {
 								stats.setStatTag("intakePower", (int)stats.getStatTag("intakePower") + ((IIntake)block).getIntakeAmt(state));
 							}
 
-							TileEntity tile= world.getTileEntity(currPos);
-
-							if(tile != null && tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).isPresent()) {
-									fluidCapacity += tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).resolve().get().getTankCapacity(0);
-							}
+							TileEntity tile= world.getTileEntity(currBlockPos);
+							if(tile instanceof TileGuidanceComputer) hasGuidance = true;
 						}
 					}
 				}
 			}
 
 			int nuclearWorkingFluidUse = 0;
-			if (thrustNuclearNozzleLimit > 0) {
+			if (thrust > 0) {
 				//Only run the number of engines our cores can support - we can't throttle these effectively because they're small, so they shut off if they don't get full power
-				thrustNuclearTotalLimit = Math.min(thrustNuclearNozzleLimit, thrustNuclearReactorLimit);
-				nuclearWorkingFluidUse = (int) (nuclearWorkingFluidUseMax * (thrustNuclearTotalLimit / (float) thrustNuclearNozzleLimit));
-				thrustNuclearTotalLimit = (nuclearWorkingFluidUse * thrustNuclearNozzleLimit) / nuclearWorkingFluidUseMax;
+				thrustNuclearTotalLimit = Math.min(thrust, thrustNuclearCoreLimit);
+				nuclearWorkingFluidUse = (int) (fuelUse * (thrustNuclearTotalLimit / (float) thrust));
+				thrustNuclearTotalLimit = (nuclearWorkingFluidUse * thrust) / fuelUse;
+
+				fuelUse = nuclearWorkingFluidUse;
+				thrust = thrustNuclearTotalLimit;
 			}
 
 			//Set fuel stats
-			//Thrust depending on rocket type
-			stats.setBaseFuelRate(FuelType.LIQUID_MONOPROPELLANT, monopropellantfuelUse);
-			stats.setBaseFuelRate(FuelType.LIQUID_BIPROPELLANT, bipropellantfuelUse);
-			stats.setBaseFuelRate(FuelType.LIQUID_OXIDIZER, bipropellantfuelUse);
-			stats.setBaseFuelRate(FuelType.NUCLEAR_WORKING_FLUID, nuclearWorkingFluidUse);
-			//Fuel storage depending on rocket type
-			stats.setFuelCapacity(FuelType.LIQUID_MONOPROPELLANT, fuelCapacityMonopropellant);
-			stats.setFuelCapacity(FuelType.LIQUID_BIPROPELLANT, fuelCapacityBipropellant);
-			stats.setFuelCapacity(FuelType.LIQUID_OXIDIZER, fuelCapacityOxidizer);
-			stats.setFuelCapacity(FuelType.NUCLEAR_WORKING_FLUID, thrustNuclearTotalLimit);
-
+			if (rocketType != null) {
+				stats.setBaseFuelRate(rocketType, fuelUse);
+				stats.setFuelCapacity(rocketType, fuelCapacity);
+			}
 			//Non-fuel stats
-			stats.setThrust(Math.max(thrustMonopropellant, thrustBipropellant));
 			stats.setWeight(numBlocks);
-			stats.setStatTag("liquidCapacity", fluidCapacity);
-
-			//Total stats, used to check if the user has tried to apply two or more types of thrust/fuel
-			int totalFuel = fuelCapacityBipropellant + fuelCapacityNuclearWorkingFluid + fuelCapacityMonopropellant;
-			int totalFuelUse = bipropellantfuelUse + nuclearWorkingFluidUse + monopropellantfuelUse;
+			stats.setThrust(thrust);
 
 			//Set status
-			if (((fuelCapacityBipropellant > 0 && totalFuel > fuelCapacityBipropellant) || (fuelCapacityMonopropellant > 0 && totalFuel > fuelCapacityMonopropellant) || (fuelCapacityNuclearWorkingFluid > 0 && totalFuel > fuelCapacityNuclearWorkingFluid))
-				||
-				((thrustBipropellant > 0 && totalFuelUse > bipropellantfuelUse) || (thrustMonopropellant > 0 && totalFuelUse > monopropellantfuelUse) || (thrustNuclearTotalLimit > 0 && totalFuelUse > nuclearWorkingFluidUse)))
-				status = ErrorCodes.COMBINEDTHRUST;
-			else if(getThrust() < getNeededThrust())
+			if(invalidBlock)
+				status = ErrorCodes.INVALIDBLOCK;
+		    else if(!hasGuidance)
+				status = ErrorCodes.NOGUIDANCE;
+			else if(getThrust() <= getNeededThrust())
 				status = ErrorCodes.NOENGINES;
-			else if(((thrustBipropellant > 0) && getFuel(FuelType.LIQUID_BIPROPELLANT) < getNeededFuel(FuelType.LIQUID_BIPROPELLANT)) || ((thrustMonopropellant > 0) && getFuel(FuelType.LIQUID_MONOPROPELLANT) < getNeededFuel(FuelType.LIQUID_MONOPROPELLANT)) || ((thrustNuclearTotalLimit > 0) && getFuel(FuelType.NUCLEAR_WORKING_FLUID) < getNeededFuel(FuelType.NUCLEAR_WORKING_FLUID)))
+			else if(rocketType != null && getFuel(rocketType) < getNeededFuel(rocketType))
 				status = ErrorCodes.NOFUEL;
 			else
 				status = ErrorCodes.SUCCESS;

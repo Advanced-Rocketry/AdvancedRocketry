@@ -37,10 +37,10 @@ public class TextureResources {
 	public static final  ResourceLocation jetpackIconEnabled = new ResourceLocation("advancedrocketry:textures/gui/jetpack.png");
 	public static final  ResourceLocation jetpackIconDisabled = new ResourceLocation("advancedrocketry:textures/gui/jetpackdisabled.png");
 	public static final  ResourceLocation jetpackIconHover = new ResourceLocation("advancedrocketry:textures/gui/jetpackhover.png");
-	public static final  ResourceLocation modularHelm = new ResourceLocation("advancedrocketry:textures/gui/space_helmet.png");
-	public static final  ResourceLocation modularChest = new ResourceLocation("advancedrocketry:textures/gui/space_chestplate.png");
-	public static final  ResourceLocation modularLegs = new ResourceLocation("advancedrocketry:textures/gui/space_leggings.png");
-	public static final  ResourceLocation modularBoots = new ResourceLocation("advancedrocketry:textures/gui/space_boots.png");
+	public static final  ResourceLocation modularHelm = new ResourceLocation("advancedrocketry:textures/gui/spacesuithelmet.png");
+	public static final  ResourceLocation modularChest = new ResourceLocation("advancedrocketry:textures/gui/spacesuitchestpiece.png");
+	public static final  ResourceLocation modularLegs = new ResourceLocation("advancedrocketry:textures/gui/spacesuitleggings.png");
+	public static final  ResourceLocation modularBoots = new ResourceLocation("advancedrocketry:textures/gui/spacesuitboots.png");
 	public static final  ResourceLocation frameHUDBG = new ResourceLocation("advancedrocketry:textures/gui/framebg.png");
 	public static final  ResourceLocation[] armorSlots = new ResourceLocation[]{modularHelm, modularChest, modularLegs, modularBoots};
 	public static final  ResourceLocation earthCandy = new ResourceLocation("advancedrocketry:textures/gui/eyecandy/earth.png");

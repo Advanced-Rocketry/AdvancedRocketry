@@ -48,30 +48,30 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerRenderers() {
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ROCKET_BUILDER, RendererRocketAssemblingMachine::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ROCKET_ASSEMBLER, RendererRocketAssemblingMachine::new);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_STATION_BUILDER, RendererRocketAssemblingMachine::new);
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_PREC_ASS, RendererPrecisionAssembler::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_PRECISION_ASSEMBLER, RendererPrecisionAssembler::new);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CUTTING_MACHINE, RendererCuttingMachine::new);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CRYSTALLIZER, RendererCrystallizer::new);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_OBSERVATORY, RendererObservatory::new);
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ASTROBODY_DATA, RenderAstrobodyDataProcessor::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ASTROBODY_DATA_PROCESSOR, RenderAstrobodyDataProcessor::new);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_LATHE, RendererLathe::new);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ROLLING, RendererRollingMachine::new);
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ELECTROLYSER, RendererElectrolyser::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ELECTROLYZER, RendererElectrolyser::new);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_WARP_CORE, RendererWarpCore::new);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CHEMICAL_REACTOR, RendererChemicalReactor::new);
 		ClientRegistry.bindTileEntityRenderer(LibVulpesTileEntityTypes.TILE_SCHEMATIC, RendererPhantomBlock::new);
 		//ClientRegistry.bindTileEntityRenderer(TileLiquidPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeLiquid.png")));
 		//ClientRegistry.bindTileEntityRenderer(TileDataPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeData.png")));
 		//ClientRegistry.bindTileEntityRenderer(TileEnergyPipe.class, new RendererPipe(new ResourceLocation("AdvancedRocketry:textures/blocks/pipeEnergy.png")));
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_MICROWAVE_RECIEVER, RendererMicrowaveReciever::new);
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_SPACE_LASER, RenderOrbitalLaserDrill::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_MICROWAVE_RECEIVER, RendererMicrowaveReciever::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_ORBITAL_LASER_DRILL, RenderOrbitalLaserDrill::new);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BIOME_SCANNER, RenderBiomeScanner::new);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BLACK_HOLE_GENERATOR, RenderBlackHoleGenerator::new);
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_TERRAFORMER, RenderTerraformerAtm::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_TERRAFORMER, RenderTerraformer::new);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_FLUID_TANK, RenderTank::new);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_RAILGUN, RendererRailgun::new);
-		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_GRAVITY_CONTROLLER, RenderAreaGravityController::new);
+		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_AREA_GRAVITY_CONTROLLER, RenderAreaGravityController::new);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_SPACE_ELEVATOR, RendererSpaceElevator::new);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_BEACON, RenderBeacon::new);
 		ClientRegistry.bindTileEntityRenderer(AdvancedRocketryTileEntityType.TILE_CENTRIFUGE, RenderCentrifuge::new);

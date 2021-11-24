@@ -16,6 +16,7 @@ import zmaster587.advancedRocketry.client.render.planet.RenderPlanetarySky;
 import zmaster587.advancedRocketry.client.render.planet.RenderSpaceSky;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.libVulpes.util.ZUtils;
 
 public class ClientHelper {
 
@@ -26,7 +27,7 @@ public class ClientHelper {
 			return true;
 
 
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world,  new BlockPos(Minecraft.getInstance().player.getPositionVec()));
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(world),  new BlockPos(Minecraft.getInstance().player.getPositionVec()));
 
 		ISkyRenderer renderer =  properties.getSkyRenderer();
 
@@ -52,13 +53,10 @@ public class ClientHelper {
 	}
 
 	public static float callTimeOfDay(float ogTime, IDayTimeReader reader) {
-		if(!(reader instanceof World))
+		if(!(reader instanceof World) || !DimensionManager.getInstance().isDimensionCreated((World)reader))
 			return ogTime;
 
-		if(!DimensionManager.getInstance().isDimensionCreated((World)reader))
-			return ogTime;
-
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties((World)reader);
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier((World)reader));
 
 		if(properties.isStation() || properties.getId().equals(DimensionManager.spaceId))
 			return AdvancedRocketry.proxy.calculateCelestialAngleSpaceStation();

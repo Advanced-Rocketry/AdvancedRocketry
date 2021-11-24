@@ -29,7 +29,7 @@ import zmaster587.libVulpes.util.Vector3F;
 
 import java.util.List;
 
-public class TileSolarArray extends TileMultiPowerProducer implements ITickableTileEntity {
+public class TileSolarArray extends TileMultiPowerProducer {
 
 	static final Object[][][] structure = new Object[][][] {
 		{
@@ -125,11 +125,7 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickableT
 
 	@Override
 	public void tick() {
-
-		if(!initialCheck && !world.isRemote) {
-			completeStructure = attemptCompleteStructure(world.getBlockState(pos));
-			initialCheck = true;
-		}
+		super.tick();
 
 		if(!isComplete())
 			return;

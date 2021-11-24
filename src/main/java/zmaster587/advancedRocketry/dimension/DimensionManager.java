@@ -116,7 +116,6 @@ public class DimensionManager implements IGalaxy {
 		defaultSpaceDimensionProperties.skyColor = new float[] {0f,0f,0f};
 		defaultSpaceDimensionProperties.setName("Space");
 		defaultSpaceDimensionProperties.fogColor = new float[] {0f,0f,0f};
-		//defaultSpaceDimensionProperties.setParentPlanet(overworldProperties,false);
 		defaultSpaceDimensionProperties.orbitalDist = 1;
 
 		warpDimensionProperties = new DimensionProperties(SpaceObjectManager.WARPDIMID, false);
@@ -148,20 +147,12 @@ public class DimensionManager implements IGalaxy {
 		return getRegisteredDimensions();
 	}
 
-	public boolean isSpaceDimension(ResourceLocation dimid)
-	{
-		if(dimid == null)
-			return false;
-
-		return dimid.equals(DimensionManager.spaceId);
+	public boolean isSpaceDimension(ResourceLocation dimid) {
+		return dimid != null && dimid.equals(DimensionManager.spaceId);
 	}
 
-	public boolean isSpaceDimension(World dimid)
-	{
-		if(dimid == null)
-			return false;
-
-		return isSpaceDimension(ZUtils.getDimensionIdentifier(dimid));
+	public boolean isSpaceDimension(World dimid) {
+		return dimid != null && isSpaceDimension(ZUtils.getDimensionIdentifier(dimid));
 	}
 
 	/**
@@ -177,7 +168,6 @@ public class DimensionManager implements IGalaxy {
 	 * @return a reference to the satellite object with the supplied ID
 	 */
 	public SatelliteBase getSatellite(long satId) {
-
 		//Hack to allow monitoring stations to properly reload after a server restart
 		//Because there should never be a tile in the world where no planets have been generated load file first
 		//Worst thing that can happen is there is no file and it gets genned later and the monitor does not reconnect
@@ -201,7 +191,6 @@ public class DimensionManager implements IGalaxy {
 	 * @return a reference to the satellite object with the supplied ID
 	 */
 	public Collection<SatelliteBase> getSatellites() {
-
 		//Hack to allow monitoring stations to properly reload after a server restart
 		//Because there should never be a tile in the world where no planets have been generated load file first
 		//Worst thing that can happen is there is no file and it gets genned later and the monitor does not reconnect
@@ -456,8 +445,7 @@ public class DimensionManager implements IGalaxy {
 		return bool;
 	}
 
-	public void writeDimAsJSON(DimensionProperties properties) throws IOException
-	{
+	public void writeDimAsJSON(DimensionProperties properties) throws IOException {
 		//Getting real sick of my planet file getting toasted during debug...
 		final File saveDir = ServerLifecycleHooks.getCurrentServer().func_240776_a_(FolderName.DOT).toFile();
 
@@ -470,8 +458,7 @@ public class DimensionManager implements IGalaxy {
 
 		if(!dir.exists())
 			dir.mkdirs();
-		if(!mcMeta.exists())
-		{
+		if(!mcMeta.exists()) {
 			mcMeta.createNewFile();
 			FileOutputStream fileString = new FileOutputStream(mcMeta);
 			PrintWriter tmpFileOut = new PrintWriter(fileString);
@@ -491,7 +478,6 @@ public class DimensionManager implements IGalaxy {
 		FileOutputStream fileString = new FileOutputStream(tmpFile);
 		PrintWriter tmpFileOut = new PrintWriter(fileString);
 		try {
-
 			tmpFileOut.print(fileContents);
 
 			//Open in append mode to make sure the file syncs, hacky AF
@@ -557,8 +543,7 @@ public class DimensionManager implements IGalaxy {
 		return true;
 	}
 
-	public void registerSpaceDimension(ResourceLocation dimId)
-	{
+	public void registerSpaceDimension(ResourceLocation dimId) {
 		defaultSpaceDimensionProperties.setId(dimId);
 		/*DimensionType dimType = new ModdedDimensionType(OptionalLong.empty(), true, false, false, true, 1.0D, false, false, true, false, true, 256, ColumnFuzzedBiomeMagnifier.INSTANCE, BlockTags.INFINIBURN_OVERWORLD.getName(), dimId, 0.0F);
 
@@ -640,14 +625,11 @@ public class DimensionManager implements IGalaxy {
 		}
 	}
 
-	public boolean isInitialized()
-	{
-
+	public boolean isInitialized() {
 		return hasBeenInitialized;
 	}
 
-	public void onServerStopped()
-	{
+	public void onServerStopped() {
 		unregisterAllDimensions();
 		knownPlanets.clear();
 		overworldProperties.resetProperties();
@@ -659,8 +641,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param resourceLocation id of the dimention of which to get the properties
 	 * @return DimensionProperties representing the dimId given
 	 */
-	public DimensionProperties getDimensionProperties(ResourceLocation resourceLocation)
-	{
+	public DimensionProperties getDimensionProperties(ResourceLocation resourceLocation) {
 		if(SpaceObjectManager.WARPDIMID.equals(resourceLocation))
 			return warpDimensionProperties;
 
@@ -678,8 +659,7 @@ public class DimensionManager implements IGalaxy {
 		return properties == null ? overworldProperties : properties;
 	}
 
-	public DimensionProperties getDimensionProperties(ResourceLocation resourceLocation, BlockPos pos)
-	{
+	public DimensionProperties getDimensionProperties(ResourceLocation resourceLocation, BlockPos pos) {
 
 		if(DimensionManager.spaceId.equals(resourceLocation)) {
 			ISpaceObject obj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
@@ -693,13 +673,11 @@ public class DimensionManager implements IGalaxy {
 
 	}
 
-	public DimensionProperties getDimensionProperties(World world)
-	{
+	public DimensionProperties getDimensionProperties(World world) {
 		return getDimensionProperties(ZUtils.getDimensionIdentifier(world));
 	}
 
-	public DimensionProperties getDimensionProperties(World world, BlockPos pos)
-	{
+	public DimensionProperties getDimensionProperties(World world, BlockPos pos) {
 		return getDimensionProperties(ZUtils.getDimensionIdentifier(world), pos);
 	}
 
@@ -836,8 +814,7 @@ public class DimensionManager implements IGalaxy {
 
 			// Save dimension datapacks
 			//TODO: replace with actually loading the dimensions up from the advanced rocketry config
-			if(firstSave)
-			{
+			if(firstSave) {
 				firstSave = false;
 				new Thread(
 						() -> {
@@ -949,8 +926,7 @@ public class DimensionManager implements IGalaxy {
 		return dimPropList;
 	}
 
-	public void createAndLoadDimensions(boolean resetFromXml)
-	{
+	public void createAndLoadDimensions(boolean resetFromXml) {
 		//Load planet files
 		//Note: loading this modifies dimOffset
 		int dimOffset =0;
@@ -1025,8 +1001,7 @@ public class DimensionManager implements IGalaxy {
 		//End load planet files
 
 
-		if(dimCouplingList != null)
-		{
+		if(dimCouplingList != null) {
 			//Register new stars
 			for(StellarBody star : dimCouplingList.stars) {
 				if(DimensionManager.getInstance().getStar(star.getId()) == null)
@@ -1213,10 +1188,6 @@ public class DimensionManager implements IGalaxy {
 
 			}
 		}
-		//Maybe add this back one day when we have a version of AR that needs it
-		/*else {
-			VersionCompat.upgradeDimensionManagerPostLoad(DimensionManager.prevBuild);
-		}*/
 
 		//Attempt to load ore config from adv planet XML
 		if(dimCouplingList != null) {
@@ -1240,11 +1211,9 @@ public class DimensionManager implements IGalaxy {
 
 		// Run all sanity checks now
 		//Try to fix invalid objects
-		for(ISpaceObject spaceObject : SpaceObjectManager.getSpaceManager().getSpaceObjects())
-		{
+		for(ISpaceObject spaceObject : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
 			ResourceLocation orbitingId = spaceObject.getOrbitingPlanetId();
-			if(!isDimensionCreated(orbitingId) && !SpaceObjectManager.WARPDIMID.equals(orbitingId) && orbitingId.getNamespace().equals(Constants.PLANET_NAMESPACE))
-			{
+			if(!isDimensionCreated(orbitingId) && !SpaceObjectManager.WARPDIMID.equals(orbitingId) && orbitingId.getNamespace().equals(Constants.PLANET_NAMESPACE)) {
 				AdvancedRocketry.logger.warn("Dimension ID " + spaceObject.getOrbitingPlanetId() + " is not registered and a space station is orbiting it, moving to dimid 0");
                 spaceObject.setOrbitingBody(defaultSpaceDimensionProperties.getId());
 			}
@@ -1297,8 +1266,7 @@ public class DimensionManager implements IGalaxy {
 		}
 
 		ListNBT satNbtList = nbt.getList("satellites", NBT.TAG_COMPOUND);
-		for(int i = 0; i < satNbtList.size(); i++)
-		{
+		for(int i = 0; i < satNbtList.size(); i++) {
 			CompoundNBT satTag = satNbtList.getCompound(i);
 			SatelliteBase sat = SatelliteRegistry.createFromNBT(satTag);
 
@@ -1317,36 +1285,11 @@ public class DimensionManager implements IGalaxy {
 	 * @param dimension
 	 * @return true if the two dimensions are in the same planet/moon system
 	 */
-	public boolean areDimensionsInSamePlanetMoonSystem(ResourceLocation destinationDimId,
-			ResourceLocation dimension) {
+	public boolean areDimensionsInSamePlanetMoonSystem(ResourceLocation destinationDimId, ResourceLocation dimension) {
 		return PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(destinationDimId,dimension);
 	}
 
-	private boolean areDimensionsInSamePlanetMoonSystem(DimensionProperties properties, ResourceLocation id) {
-		if(properties.getId().equals(id))
-			return true;
-
-		for(ResourceLocation child : properties.getChildPlanets()) {
-			if(areDimensionsInSamePlanetMoonSystem(getDimensionProperties(child), id)) return true;
-		}
-		return false;
-	}
-
 	public static DimensionProperties getEffectiveDimId(ResourceLocation dimId, BlockPos pos) {
-
-		if(DimensionManager.spaceId.equals(dimId)) {
-			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(spaceObject != null)
-				return (DimensionProperties) spaceObject.getProperties().getParentProperties();
-			else 
-				return defaultSpaceDimensionProperties;
-		}
-		else return getInstance().getDimensionProperties(dimId);
-	}
-
-	public static DimensionProperties getEffectiveDimId(World world, BlockPos pos) {
-		ResourceLocation dimId = ZUtils.getDimensionIdentifier(world);
-
 		if(DimensionManager.spaceId.equals(dimId)) {
 			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(spaceObject != null)
