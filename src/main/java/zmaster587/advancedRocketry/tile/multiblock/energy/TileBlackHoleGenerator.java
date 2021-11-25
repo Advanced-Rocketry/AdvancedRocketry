@@ -204,7 +204,6 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer {
 		@Override
 		public SUpdateTileEntityPacket getUpdatePacket() {
 			CompoundNBT nbt = new CompoundNBT();
-			nbt.putBoolean("canRender", canRender);
 			nbt.putInt("amtPwr", powerMadeLastTick);
 			writeNetworkData(nbt);
 			return new SUpdateTileEntityPacket(pos, 0, nbt);
@@ -214,7 +213,6 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer {
 		public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 			CompoundNBT nbt = pkt.getNbtCompound();
 
-			canRender = nbt.getBoolean("canRender");
 			powerMadeLastTick = nbt.getInt("amtPwr");
 			readNetworkData(nbt);
 		}
@@ -222,7 +220,6 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer {
 		@Override
 		public CompoundNBT getUpdateTag() {
 			CompoundNBT nbt = new CompoundNBT();
-			nbt.putBoolean("canRender", canRender);
 			nbt.putInt("amtPwr", powerMadeLastTick);
 			write(nbt);
 			return nbt;
@@ -230,7 +227,6 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer {
 
 		@Override
 		public void handleUpdateTag(BlockState state, CompoundNBT nbt) {
-			powerMadeLastTick = nbt.getInt("amtPwr");
 			canRender = nbt.getBoolean("canRender");
 			readNetworkData(nbt);
 		}
@@ -247,8 +243,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer {
 		}
 
 		@Override
-		public void readDataFromNetwork(PacketBuffer in, byte packetId,
-				CompoundNBT nbt) {
+		public void readDataFromNetwork(PacketBuffer in, byte packetId, CompoundNBT nbt) {
 			super.readDataFromNetwork(in, packetId, nbt);	
 
 			if(packetId == 1) {
@@ -257,8 +252,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer {
 		}
 
 		@Override
-		public void useNetworkData(PlayerEntity player, Dist side, byte id,
-				CompoundNBT nbt) {
+		public void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt) {
 			super.useNetworkData(player, side, id, nbt);
 
 			if(id == 1) {

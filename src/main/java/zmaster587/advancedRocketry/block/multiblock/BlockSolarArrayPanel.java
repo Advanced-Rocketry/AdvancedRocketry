@@ -15,12 +15,13 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.entity.EntityDummy;
 import zmaster587.libVulpes.block.BlockAlphaTexture;
+import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisibleAlphaTexture;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
-public class BlockSolarArrayPanel extends BlockAlphaTexture {
+public class BlockSolarArrayPanel extends BlockMultiBlockComponentVisibleAlphaTexture {
 
 	private static VoxelShape bb = VoxelShapes.create(0, 0.375, 0, 1, 0.625, 1);
 

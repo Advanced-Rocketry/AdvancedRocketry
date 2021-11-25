@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.tile.multiblock.energy;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,7 +10,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -42,18 +42,17 @@ import java.util.List;
 
 public class TileMicrowaveReciever extends TileMultiPowerProducer {
 
-	static final BlockMeta iron_block = new BlockMeta(AdvancedRocketryBlocks.blockSolarGenerator);
+	static final Block solarGenerator = AdvancedRocketryBlocks.blockSolarArrayPanel;
 	static final Object[][][] structure = new Object[][][] {
 		{
-			{iron_block, '*', '*', '*', iron_block},
-			{'*', iron_block, iron_block, iron_block, '*'},
-			{'*', iron_block, 'c', iron_block,'*'},
-			{'*', iron_block, iron_block, iron_block, '*'},
-			{iron_block, '*', '*', '*', iron_block},
+			{solarGenerator, '*', '*', '*', solarGenerator},
+			{'*', solarGenerator, solarGenerator, solarGenerator, '*'},
+			{'*', solarGenerator, 'c', solarGenerator,'*'},
+			{'*', solarGenerator, solarGenerator, solarGenerator, '*'},
+			{solarGenerator, '*', '*', '*', solarGenerator},
 		}};
 
 	List<Long> connectedSatellites;
-	boolean initialCheck;
 	double insolationPowerMultiplier;
 	ResourceLocation powerSourceDimensionID;
 	int powerMadeLastTick, prevPowerMadeLastTick;
@@ -94,7 +93,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 		List<BlockMeta> blocks = super.getAllowableWildCardBlocks();
 
 		blocks.addAll(TileMultiBlock.getMapping('I'));
-		blocks.add(iron_block);
+		blocks.add(new BlockMeta(solarGenerator));
 		blocks.addAll(TileMultiBlock.getMapping('p'));
 
 		return blocks;
@@ -112,7 +111,6 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 	@Override
 	public void onInventoryUpdated() {
 		super.onInventoryUpdated();
-
 		List<Long> list = new LinkedList<>();
 
 		for(IInventory inv : itemInPorts) {
@@ -123,8 +121,6 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 				}
 			}
 		}
-
-
 		connectedSatellites = list;
 
 	}
@@ -148,19 +144,12 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 		if(!world.isRemote && getPowerMadeLastTick() > 0 && world.getGameTime() % 100 == 0) {
 			Vector3F<Integer> offset = getControllerOffset(getStructure());
 
-
 			List<Entity> entityList = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(this.getPos().getX() - offset.x, this.getPos().getY(), this.getPos().getZ() - offset.z, this.getPos().getX() - offset.x + getStructure()[0][0].length, 256, this.getPos().getZ() - offset.z + getStructure()[0].length));
-
-			for(Entity e : entityList) {
-				e.setFire(powerMadeLastTick/10);
-			}
+			for(Entity e : entityList) e.setFire(powerMadeLastTick/10);
 
 			for(int x=0 ; x < getStructure()[0][0].length; x++) {
 				for(int z=0 ; z < getStructure()[0].length; z++) {
-
-					BlockPos pos2;
-					BlockState state = world.getBlockState(pos2 = (world.getHeight(Type.WORLD_SURFACE , pos.add(x - offset.x, 128, z - offset.z)).add(0, -1, 0)));
-
+					BlockPos pos2 = (world.getHeight(Type.WORLD_SURFACE , pos.add(x - offset.x, 128, z - offset.z)).add(0, -1, 0));
 					if(pos2.getY() > this.getPos().getY()) {
 						if(!world.isAirBlock(pos2.add(0,1,0))) {
 							world.removeBlock(pos2, false);
@@ -181,7 +170,6 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 			if(enabled) {
 				for(long lng : connectedSatellites) {
 					SatelliteBase satellite =  properties.getSatellite(lng);
-
 					if(satellite instanceof IUniversalEnergyTransmitter) {
 						energyReceived += ((IUniversalEnergyTransmitter)satellite).transmitEnergy(Direction.UP, false);
 					}
@@ -206,7 +194,6 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 	@Override
 	public SUpdateTileEntityPacket getUpdatePacket() {
 		CompoundNBT nbt = new CompoundNBT();
-		nbt.putBoolean("canRender", canRender);
 		nbt.putInt("amtPwr", powerMadeLastTick);
 		writeNetworkData(nbt);
 		return new SUpdateTileEntityPacket(pos, 0, nbt);
@@ -215,8 +202,6 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		CompoundNBT nbt = pkt.getNbtCompound();
-
-		canRender = nbt.getBoolean("canRender");
 		powerMadeLastTick = nbt.getInt("amtPwr");
 		readNetworkData(nbt);
 	}
@@ -224,7 +209,6 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 	@Override
 	public CompoundNBT getUpdateTag() {
 		CompoundNBT nbt = new CompoundNBT();
-		nbt.putBoolean("canRender", canRender);
 		nbt.putInt("amtPwr", powerMadeLastTick);
 		write(nbt);
 		return nbt;
@@ -233,7 +217,6 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 	@Override
 	public void handleUpdateTag(BlockState state, CompoundNBT nbt) {
 		powerMadeLastTick = nbt.getInt("amtPwr");
-		canRender = nbt.getBoolean("canRender");
 		readNetworkData(nbt);
 	}
 	
@@ -249,8 +232,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 	}
 
 	@Override
-	public void readDataFromNetwork(PacketBuffer in, byte packetId,
-			CompoundNBT nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId, CompoundNBT nbt) {
 		super.readDataFromNetwork(in, packetId, nbt);	
 
 		if(packetId == 1) {
@@ -259,8 +241,7 @@ public class TileMicrowaveReciever extends TileMultiPowerProducer {
 	}
 
 	@Override
-	public void useNetworkData(PlayerEntity player, Dist side, byte id,
-			CompoundNBT nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt) {
 		super.useNetworkData(player, side, id, nbt);
 
 		if(id == 1) {

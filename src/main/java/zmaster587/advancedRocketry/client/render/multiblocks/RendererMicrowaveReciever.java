@@ -23,8 +23,8 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
 		super(rendererDispatcherIn);
 	}
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/blocks/solar.png");
-	ResourceLocation panelSide = new ResourceLocation("advancedrocketry","textures/blocks/panelside.png");
+	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/blocks/machines/solar.png");
+	ResourceLocation panelSide = new ResourceLocation("libvulpes","textures/blocks/machinegeneric.png");
 	
 	@Override
 	@ParametersAreNonnullByDefault
@@ -87,15 +87,13 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
 		RenderHelper.renderEastFaceWithUV(matrix, entitySolidSideManual, 2.99, 0, -2, 1, 3, 0, 5, 0 ,1,1,1,1,1);
 		RenderHelper.renderWestFaceWithUV(matrix, entitySolidSideManual, -1.99, 0, -2, 1, 3, 0, 5, 0 ,1,1,1,1,1);
 
+		RenderHelper.renderBottomFaceWithUV(matrix, entitySolidSideManual, 0.001, -2, -2, 3, 3,1,1,1,1, 1, 1, 1, 1);
 		
-		entitySolidSideManualColor = buffer.getBuffer(RenderHelper.getSolidManualRenderType());
-		RenderHelper.renderBottomFace(matrix, entitySolidSideManualColor, 0.001, -2, -2, 3, 3,1,1,1,1);
-		
-		RenderHelper.renderCube(matrix, entitySolidSideManualColor, -2, 0.99, -2, -1.9, 1.1, 3, 1,1,1,1);
-		RenderHelper.renderCube(matrix, entitySolidSideManualColor, -2, 0.99, -2, 3, 1.1, -1.9,1,1,1,1);
+		RenderHelper.renderCubeWithUV(matrix, entitySolidSideManual, -2, 0.99, -2, -1.9, 1.1, 3, 1,1,1,1, 1, 1, 1, 1);
+		RenderHelper.renderCubeWithUV(matrix, entitySolidSideManual, -2, 0.99, -2, 3, 1.1, -1.9,1,1,1,1, 1, 1, 1, 1);
 
-		RenderHelper.renderCube(matrix, entitySolidSideManualColor, -1.9, 0.99, 2.9, 3, 1.1, 3, 1,1,1,1);
-		RenderHelper.renderCube(matrix, entitySolidSideManualColor, 2.9, 0.99, -1.9, 3, 1.1, 3, 1,1,1,1);
+		RenderHelper.renderCubeWithUV(matrix, entitySolidSideManual, -1.9, 0.99, 2.9, 3, 1.1, 3, 1,1,1,1, 1, 1, 1, 1);
+		RenderHelper.renderCubeWithUV(matrix, entitySolidSideManual, 2.9, 0.99, -1.9, 3, 1.1, 3, 1,1,1,1, 1, 1, 1, 1);
 
 		float r = 1,g = 1,b = 1,a = 0.5f;
 		if(tile.getPowerMadeLastTick() > 0 ) {

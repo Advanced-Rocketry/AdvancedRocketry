@@ -293,7 +293,7 @@ public class TileRocketControlCenter extends TileEntity  implements IModularInve
 
 	@Override
 	public String getModularInventoryName() {
-		return "container.rocketcontrolcenter";
+		return "block.advancedrocketry.rocketcontrolcenter";
 	}
 
 	@Override

@@ -157,7 +157,7 @@ public class AdvancedRocketryBlocks {
 	//Energy production
 	public static Block blockSolarGenerator = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
 	public static Block blockSolarArrayPanel = new BlockSolarArrayPanel(machineLineProperties);
-	public static Block blockSolarArray = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockSolarArray = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
 	public static Block blockMicrowaveReceiver = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
 	public static Block blockBlackHoleGenerator = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
     //Station multiblocks

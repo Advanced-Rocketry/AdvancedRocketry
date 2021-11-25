@@ -264,7 +264,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		Iterator<ModuleBase> itr = modules.iterator();
 		while(itr.hasNext()) {
 			ModuleBase module = itr.next();
-			if(module instanceof ModuleButton && ((ModuleButton)module).buttonId == 1) {
+			if(module instanceof ModuleButton && ((ModuleButton)module).getAdditionalData().equals("unmannedremove")) {
 				itr.remove();
 				break;
 			}
