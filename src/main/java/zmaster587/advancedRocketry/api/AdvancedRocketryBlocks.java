@@ -282,7 +282,7 @@ public class AdvancedRocketryBlocks {
 				AdvancedRocketryBlocks.blockCentrifuge.setRegistryName("centrifuge"),
 				//Data collection
 				AdvancedRocketryBlocks.blockSatelliteAssembler.setRegistryName("satelliteassembler"),
-				AdvancedRocketryBlocks.blockWirelessTransceiver.setRegistryName("wirelesstranscriver"),
+				AdvancedRocketryBlocks.blockWirelessTransceiver.setRegistryName("wirelesstransceiver"),
 				AdvancedRocketryBlocks.blockDataBus.setRegistryName("databus"),
 				AdvancedRocketryBlocks.blockObservatory.setRegistryName("observatory"),
 				AdvancedRocketryBlocks.blockAstrobodyDataProcessor.setRegistryName("astrobodydataprocessor"),

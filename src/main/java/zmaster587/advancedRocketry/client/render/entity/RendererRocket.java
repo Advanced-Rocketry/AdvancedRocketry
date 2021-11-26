@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.client.render;
+package zmaster587.advancedRocketry.client.render.entity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;

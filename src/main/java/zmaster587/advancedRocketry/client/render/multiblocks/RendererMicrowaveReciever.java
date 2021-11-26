@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.client.render.multiblocks;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.ResourceLocation;
@@ -33,11 +34,16 @@ public class RendererMicrowaveReciever extends TileEntityRenderer<TileMicrowaveR
 		if(!tile.canRender())
 			return;
 
+		if (tile.getWorld() != null) {
+			combinedLightIn = WorldRenderer.getCombinedLight(tile.getWorld(), tile.getPos().add(0, 1, 0));
+		} else {
+			combinedLightIn = 15728880;
+		}
+
 		matrix.push();
 		//Initial setup
 		IVertexBuilder entitySolidManual;
 		IVertexBuilder entitySolidSideManual;
-		IVertexBuilder entitySolidSideManualColor;
 		IVertexBuilder laserBeam;
 		
 		//Initial setup

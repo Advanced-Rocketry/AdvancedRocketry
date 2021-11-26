@@ -46,6 +46,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereType;
 import zmaster587.advancedRocketry.block.*;
 import zmaster587.advancedRocketry.block.multiblock.BlockSmallPlatePress;
+import zmaster587.advancedRocketry.cable.NetworkRegistry;
 import zmaster587.advancedRocketry.capability.CapabilityProtectiveArmor;
 import zmaster587.advancedRocketry.common.CommonProxy;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -443,7 +444,8 @@ public class AdvancedRocketry {
 		PlanetEventHandler handle = new PlanetEventHandler();
 		MinecraftForge.EVENT_BUS.register(handle);
 
-		// One day cables may be a thing again
+		//Wireless transceievers
+		NetworkRegistry.registerData();
 
 		InputSyncHandler inputSync = new InputSyncHandler();
 		MinecraftForge.EVENT_BUS.register(inputSync);

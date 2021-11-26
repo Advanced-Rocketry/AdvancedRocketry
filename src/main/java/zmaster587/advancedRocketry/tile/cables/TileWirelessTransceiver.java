@@ -123,18 +123,14 @@ public class TileWirelessTransceiver extends TileEntity implements INetworkMachi
 	}
 
 	private void addToNetwork() {
-
 		if(networkID == -1 || world.isRemote)
 			return;
 		else if(!NetworkRegistry.dataNetwork.doesNetworkExist(networkID))
 			NetworkRegistry.dataNetwork.getNewNetworkID(networkID);
 
-		if(extractMode)
-		{
+		if(extractMode) {
 			NetworkRegistry.dataNetwork.getNetwork(networkID).addSource(this, Direction.UP);
-		}
-		else
-		{
+		} else {
 			NetworkRegistry.dataNetwork.getNetwork(networkID).addSink(this, Direction.UP);
 		}
 	}
@@ -168,7 +164,7 @@ public class TileWirelessTransceiver extends TileEntity implements INetworkMachi
 
 	@Override
 	public String getModularInventoryName() {
-		return "block.advancedrocketry.wirelesstransciever";
+		return "block.advancedrocketry.wirelesstransceiver";
 	}
 
 	@Override
@@ -185,23 +181,17 @@ public class TileWirelessTransceiver extends TileEntity implements INetworkMachi
 	}
 
 	@Override
-	public void readDataFromNetwork(PacketBuffer in, byte packetId,
-			CompoundNBT nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId, CompoundNBT nbt) {
 		nbt.putBoolean("state", in.readBoolean());
 
 	}
 
 	@Override
-	public void useNetworkData(PlayerEntity player, Dist side, byte id,
-			CompoundNBT nbt) {
-
-		if(side.isDedicatedServer()) 
-		{
-			if(id == 0)
-			{
+	public void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt) {
+		if(side.isDedicatedServer()) {
+			if(id == 0) {
 				extractMode = nbt.getBoolean("state");
-				if(NetworkRegistry.dataNetwork.doesNetworkExist(networkID))
-				{
+				if(NetworkRegistry.dataNetwork.doesNetworkExist(networkID)) {
 					NetworkRegistry.dataNetwork.getNetwork(networkID).removeFromAll(this);
 
 					if(extractMode) 
@@ -209,9 +199,7 @@ public class TileWirelessTransceiver extends TileEntity implements INetworkMachi
 					else
 						NetworkRegistry.dataNetwork.getNetwork(networkID).addSink(this, Direction.UP);
 				}
-			}
-			else if(id == 1)
-			{
+			} else if(id == 1) {
 				enabled = nbt.getBoolean("state");
 			}
 		}
@@ -243,23 +231,19 @@ public class TileWirelessTransceiver extends TileEntity implements INetworkMachi
 	}
 
 	@Override
-	public int extractData(int maxAmount, DataType type, Direction dir,
-			boolean commit) {
+	public int extractData(int maxAmount, DataType type, Direction dir, boolean commit) {
 		return enabled ? data.extractData(maxAmount, type, dir, commit) : 0;
 	}
 
 	@Override
-	public int addData(int maxAmount, DataType type, Direction dir,
-			boolean commit) {
+	public int addData(int maxAmount, DataType type, Direction dir, boolean commit) {
 		return enabled ? data.addData(maxAmount, type, dir, commit) : 0;
 	}
 
 	@Override
 	public void onLoad() {
 		super.onLoad();
-		if(!world.isRemote)
-		{
-
+		if(!world.isRemote) {
 			if(!NetworkRegistry.dataNetwork.doesNetworkExist(networkID))
 				NetworkRegistry.dataNetwork.getNewNetworkID(networkID);
 			
@@ -275,7 +259,6 @@ public class TileWirelessTransceiver extends TileEntity implements INetworkMachi
 
 	@Override
 	public void tick() {
-
 		if(!world.isRemote) {
 			BlockState state = world.getBlockState(getPos());
 			if (state.getBlock() instanceof RotatableBlock) {
@@ -283,10 +266,8 @@ public class TileWirelessTransceiver extends TileEntity implements INetworkMachi
 
 				TileEntity tile = world.getTileEntity(getPos().add(facing.getXOffset(),facing.getYOffset(),facing.getZOffset()));
 
-				if( tile instanceof IDataHandler && !(tile instanceof TileWirelessTransceiver))
-				{
-					for(DataType data : DataType.values())
-					{
+				if( tile instanceof IDataHandler && !(tile instanceof TileWirelessTransceiver)) {
+					for(DataType data : DataType.values()) {
 
 						if(data == DataStorage.DataType.UNDEFINED)
 							continue;
@@ -297,9 +278,7 @@ public class TileWirelessTransceiver extends TileEntity implements INetworkMachi
 								int amt = ((IDataHandler)tile).addData(amountCurrent, data, facing.getOpposite(), true);
 								this.data.extractData(amt, data, facing.getOpposite(), true);
 							}
-						}
-						else
-						{
+						} else {
 							int amt = ((IDataHandler)tile).extractData(this.data.getMaxData() - this.data.getDataAmount(data), data, facing.getOpposite(), true);
 							this.data.addData(amt, data, facing.getOpposite(), true);
 						}
