@@ -11,14 +11,10 @@ public class FxSystemElectricArc {
 		//left child = 2*current index
 		//right child = 2*current index + 1
 		// parent = index/2
-		System.out.println(world == null);
 		makeNextPosition(world, new Vector3F<>(x, y, z), sizeMult, numrecursion);
 	}
 
 	private static void makeNextPosition(World world, Vector3F<Double> parent, double scale, int numrecursion) {
-
-		System.out.println((world == null) + " 2");
-
 		double radius = scale*2;
 		double angle = world.getRandom().nextDouble()*Math.PI*2;
 		

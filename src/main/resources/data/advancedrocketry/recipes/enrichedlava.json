@@ -6,7 +6,7 @@
 		    "amount": 1000
 		}
     ],
-    "time": 100,
+    "time": 600,
     "energy": 250,
     "itemresults": [
         {
@@ -14,20 +14,22 @@
         	"count": 4
         },
         {
-        	"tag": "forge:nuggets/gold",
-        	"count": 4
-        },
-        {
         	"tag": "forge:nuggets/copper",
-            "count": 4
+        	"count": 3
         },
         {
-        	"tag": "forge:nuggets/aluminum",
-        	"count": 2
+        	"tag": "forge:nuggets/gold",
+            "count": 2
         },
         {
         	"tag": "forge:nuggets/titanium",
         	"count": 1
       }
+    ],
+    "fluidresults": [
+         {
+            "fluid": "minecraft:lava",
+            "amount": 1000
+         }
     ]
 }

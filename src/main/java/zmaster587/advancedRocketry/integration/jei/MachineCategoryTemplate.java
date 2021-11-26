@@ -67,14 +67,11 @@ public abstract class MachineCategoryTemplate<T extends MachineRecipe> implement
 	@Override
 	public void setIngredients(T recipe, IIngredients ingredients) {
 		ingredients.setInputLists(VanillaTypes.ITEM, recipe.getInputs());
-		ingredients.setInputs(VanillaTypes.FLUID, recipe.getFluidIngredients());
+		ingredients.setInputs(VanillaTypes.FLUID, recipe.getFluidInputs());
 
 		List<ItemStack> outputStacks = new LinkedList<>(recipe.getResults());
 		
-		List<FluidStack> outputFluids = new LinkedList<>();
-		for(ChanceFluidStack stack : recipe._getRawFluidOutput()) {
-			outputFluids.add(stack.stack);
-		}
+		List<FluidStack> outputFluids = new LinkedList<>(recipe.getFluidResults());
 		
 		ingredients.setOutputs(VanillaTypes.ITEM, outputStacks);
 		ingredients.setOutputs(VanillaTypes.FLUID, outputFluids);

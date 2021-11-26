@@ -1,5 +1,6 @@
 package zmaster587.advancedRocketry.item.components;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -73,7 +74,7 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 		if(DimensionManager.getInstance().isDimensionCreated(dimid)) {
 			for(HashedBlockPosition pos : DimensionManager.getInstance().getDimensionProperties(dimid).getBeacons()) {
 				
-				GL11.glPushMatrix();
+				matrix.push();
 				
 				double deltaX = Minecraft.getInstance().player.getPosX() - pos.x;
 				double deltaZ = Minecraft.getInstance().player.getPosZ() - pos.z;
@@ -81,12 +82,12 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 				double angle = MathHelper.wrapDegrees(MathHelper.atan2(deltaZ, deltaX)*180/Math.PI + 90 - Minecraft.getInstance().player.rotationYawHead);
 				
 				//GL11.glTranslatef(pos.x, pos.y, pos.z);
-				GL11.glTranslated((Minecraft.getInstance().getMainWindow().getScaledWidth()*angle/180f) + Minecraft.getInstance().getMainWindow().getScaledWidth()/2f,0,5);
+				matrix.translate((Minecraft.getInstance().getMainWindow().getScaledWidth()*angle/180f) + Minecraft.getInstance().getMainWindow().getScaledWidth()/2f,0,5);
 				//GL11.glDepthMask(false);
 				//GL11.glDisable(GL11.GL_TEXTURE_2D);
 				Minecraft.getInstance().getTextureManager().bindTexture(TextureResources.buttonDown[0]);
 				
-				GlStateManager.color4f(0.5f, 0.5f, 1, 1);
+				RenderSystem.color4f(0.5f, 0.5f, 1, 1);
 				
 		        Tessellator tessellator = Tessellator.getInstance();
 		        BufferBuilder vertexbuffer = tessellator.getBuffer();
@@ -97,9 +98,8 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 				
 				//GL11.glDepthMask(true);
 				//GL11.glEnable(GL11.GL_TEXTURE_2D);
-				GlStateManager.color4f(1, 1, 1, 1);
-				GL11.glPopMatrix();
-				
+				RenderSystem.color4f(1, 1, 1, 1);
+				matrix.pop();
 			}
 		}
 	}

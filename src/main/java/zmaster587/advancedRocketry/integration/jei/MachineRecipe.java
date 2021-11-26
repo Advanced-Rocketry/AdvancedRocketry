@@ -32,21 +32,16 @@ public class MachineRecipe extends LibVulpesRecipe implements IRecipeCategoryExt
 
 
 	protected MachineRecipe(IRecipe rec) {
-		if(rec instanceof LibVulpesRecipe)
-		{
+		if(rec instanceof LibVulpesRecipe) {
 			resultChance = new ArrayList<>(((LibVulpesRecipe) rec).getChanceOutputs());
 			result = new ArrayList<>();
-			
-			int i = -1;
+
 			float totalChance = 0;
 			for( ChanceItemStack stack : resultChance)
 				totalChance += stack.chance;
 			
-			for( ChanceItemStack stack : resultChance)
-			{
-				i++;
-				if(stack.chance == 0)
-				{
+			for( ChanceItemStack stack : resultChance) {
+				if(stack.chance == 0) {
 					result.add(stack.stack.copy());
 					continue;
 				}
@@ -55,9 +50,7 @@ public class MachineRecipe extends LibVulpesRecipe implements IRecipeCategoryExt
 				stack2.setDisplayName(new StringTextComponent(String.format("%s   Chance: %.1f%%",  stack2.getDisplayName(), 100*stack.chance/totalChance)));
 				result.add(stack2);
 			}
-		}
-		else
-		{
+		} else {
 			result  = new ArrayList<>(rec.getOutput());
 		}
 		ingredients = rec.getPossibleIngredients();
@@ -65,14 +58,23 @@ public class MachineRecipe extends LibVulpesRecipe implements IRecipeCategoryExt
 		time = rec.getTime();
 		fluidIngredients = rec.getFluidIngredients();
 		fluidOutputs = rec.getFluidOutputs();
+		name = rec.getId();
 	}
 	
 	public List<ItemStack> getResults() {
 		return result;
 	}
+
+	public List<FluidStack> getFluidResults() {
+		return fluidOutputs;
+	}
 	
 	public List<List<ItemStack>> getInputs() {
 		return ingredients;
+	}
+
+	public List<FluidStack> getFluidInputs() {
+		return fluidIngredients;
 	}
 	
 	public int getEnergy() {return energy;}
@@ -95,4 +97,8 @@ public class MachineRecipe extends LibVulpesRecipe implements IRecipeCategoryExt
 	public void setIngredients(IIngredients ingredients) {
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public ResourceLocation getId() {return name;}
+
 }
