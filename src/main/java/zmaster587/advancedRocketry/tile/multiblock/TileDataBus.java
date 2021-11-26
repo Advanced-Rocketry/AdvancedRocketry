@@ -28,7 +28,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	DataStorage data;
 
 	public TileDataBus() {
-		super(AdvancedRocketryTileEntityType.TILE_DATA_BUS,1);
+		super(AdvancedRocketryTileEntityType.TILE_DATA_BUS,2);
 		data = new DataStorage(DataStorage.DataType.UNDEFINED);
 		data.setMaxData(2000);
 	}
@@ -46,7 +46,6 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 
 	@Override
 	public void loadData(int id) {
-
 		ItemStack itemStack = inventory.getStackInSlot(0);
 
 		if(itemStack != ItemStack.EMPTY && itemStack.getItem() instanceof ItemDataChip) {
@@ -55,6 +54,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 
 			inventory.setInventorySlotContents(1, decrStackSize(0, 1));
 		}
+		inventory.markDirty();
 	}
 
 	@Override
@@ -72,6 +72,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 
 			inventory.setInventorySlotContents(1, decrStackSize(0, 1));
 		}
+		inventory.markDirty();
 	}
 
 
@@ -141,8 +142,8 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 			}
 		}
 
-		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
-			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
+		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock) ((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
+		inventory.markDirty();
 	}
 
 	@Override

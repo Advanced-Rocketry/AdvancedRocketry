@@ -46,7 +46,7 @@ public class PlanetCommand {
 	public static void register(CommandDispatcher<CommandSource> dispatcher) {
 		
 
-		dispatcher.register(Commands.literal("advRocketry").then(Commands.literal("planet")
+		dispatcher.register(Commands.literal("advancedrocketry").then(Commands.literal("planet")
 				.executes((value) -> commandPlanetHelp(value.getSource()))
 				.then(Commands.literal("reset").executes((value) -> commandPlanetReset(value.getSource(), null))
 				.then(Commands.argument("dim", DimensionArgument.getDimension())).executes((value) -> commandPlanetReset(value.getSource(), DimensionArgument.getDimensionArgument(value, "dim"))) )
