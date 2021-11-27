@@ -4,10 +4,10 @@
             "item": "libvulpes:holo_projector"
         },
         "title": {
-            "translate": "advancement.holographic"
+            "translate": "advancement.advancedrocketry.holographic"
         },
         "description": {
-            "translate": "advancement.holographic.desc"
+            "translate": "advancement.advancedrocketry.holographic.desc"
         }
     },
     "parent": "advancedrocketry:normal/blockpresser",

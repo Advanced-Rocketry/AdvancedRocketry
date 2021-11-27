@@ -205,7 +205,7 @@ public class PlanetEventHandler {
 			}
 		}
 
-		if(!event.getWorld().isRemote && !event.getItemStack().isEmpty() && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
+		if(!event.getWorld().isRemote && !event.getItemStack().isEmpty() && event.getItemStack().getItem() == AdvancedRocketryItems.itemSeat && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
 			ARAdvancements.triggerAdvancement(ARAdvancements.BEER, (ServerPlayerEntity)event.getEntity());
 		}
 	}

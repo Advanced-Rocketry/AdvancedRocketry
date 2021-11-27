@@ -4,10 +4,10 @@
             "item": "piston"
         },
         "title": {
-            "translate": "advancement.flattening"
+            "translate": "advancement.advancedrocketry.flattening"
         },
         "description": {
-            "translate": "advancement.flattening.desc"
+            "translate": "advancement.advancedrocketry.flattening.desc"
         }
     },
     "parent": "advancedrocketry:normal/root",
@@ -17,7 +17,7 @@
             "conditions": {
                 "items": [
                     {
-                        "item": "advancedrocketry:platepress"
+                        "item": "advancedrocketry:smallplatepress"
                     }
                 ]
             }

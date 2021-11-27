@@ -4,10 +4,10 @@
             "item": "advancedrocketry:rollingmachine"
         },
         "title": {
-            "translate": "advancement.rollin"
+            "translate": "advancement.advancedrocketry.rollin"
         },
         "description": {
-            "translate": "advancement.rollin.desc"
+            "translate": "advancement.advancedrocketry.rollin.desc"
         }
     },
     "parent": "advancedrocketry:normal/holographic",

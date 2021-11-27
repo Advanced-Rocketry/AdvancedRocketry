@@ -4,16 +4,16 @@
             "item": "advancedrocketry:warpcore"
         },
         "title": {
-            "translate": "advancement.givingItAllShesGot"
+            "translate": "advancement.advancedrocketry.givingitallshesgot"
         },
         "description": {
-            "translate": "advancement.givingItAllShesGot.desc"
+            "translate": "advancement.advancedrocketry.givingitallshesgot.desc"
         }
     },
     "parent": "advancedrocketry:normal/warp",
     "criteria": {
         "givingitallshesgot": {
-            "trigger": "advancedrocketry:givingitallshesgot"
+            "trigger": "minecraft:impossible"
         }
     }
 }
