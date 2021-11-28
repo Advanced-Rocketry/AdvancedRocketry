@@ -2,11 +2,11 @@
     "forge_marker": 1,
     "defaults": {
         "textures": {},
-        "model": "advancedrocketry:block/models/middletank"
+        "model": "advancedrocketry:block/models/tank"
     },
     "variants": {
-        "tankstates=top": { "model": "advancedrocketry:block/models/toptank" },
-        "tankstates=middle": { "model": "advancedrocketry:block/models/middletank" },
-        "tankstates=bottom": { "model": "advancedrocketry:block/models/bottomtank" }
+        "tankstates=top": { "model": "advancedrocketry:block/models/uppertank" },
+        "tankstates=middle": { "model": "advancedrocketry:block/models/tank" },
+        "tankstates=bottom": { "model": "advancedrocketry:block/models/lowertank" }
     }
 }

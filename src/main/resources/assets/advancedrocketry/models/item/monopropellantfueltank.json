@@ -1,5 +1,5 @@
 {
-    "parent": "advancedrocketry:block/models/middletank",
+    "parent": "advancedrocketry:block/models/tank",
     "display": {
         "gui": {
             "rotation": [ 30, 225, 0 ],

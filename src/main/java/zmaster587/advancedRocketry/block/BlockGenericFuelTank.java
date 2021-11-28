@@ -14,6 +14,8 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.api.IFuelTank;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 
@@ -24,6 +26,7 @@ import java.util.Locale;
 public class BlockGenericFuelTank extends Block implements IFuelTank{
 
 	public final static EnumProperty<TankStates> TANKSTATES = EnumProperty.create("tankstates", TankStates.class);
+	static final VoxelShape HOLLOW_CUBE = VoxelShapes.create(0.0,0.0,0.0,1.0,1.0,1.0);
 	private int fuelCapacity;
 	private FuelType type;
 
@@ -70,57 +73,33 @@ public class BlockGenericFuelTank extends Block implements IFuelTank{
 	@Override
 	@ParametersAreNonnullByDefault
 	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		return VoxelShapes.empty();
+		return HOLLOW_CUBE;
 	}
 
 	@Nonnull
 	@Override
 	@ParametersAreNonnullByDefault
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
-
-		if(!(facing == Direction.UP || facing == Direction.DOWN))
-			return super.updatePostPlacement(stateIn, facing, facingState, world, currentPos, facingPos);
-
-		if(facingState.getBlock() == this) {
-			if(stateIn.get(TANKSTATES) == TankStates.TOP && facing == Direction.UP)
-				return this.getDefaultState().with(TANKSTATES, TankStates.MIDDLE);
-			if(stateIn.get(TANKSTATES) == TankStates.BOTTOM && facing == Direction.DOWN)
-				return this.getDefaultState().with(TANKSTATES, TankStates.MIDDLE);
-			return super.updatePostPlacement(stateIn, facing, facingState, world, currentPos, facingPos);
-
-		} else {
-			if(stateIn.get(TANKSTATES) == TankStates.MIDDLE && facing == Direction.UP)
-				return this.getDefaultState().with(TANKSTATES, TankStates.TOP);
-			if(stateIn.get(TANKSTATES) == TankStates.MIDDLE && facing == Direction.DOWN)
-				return this.getDefaultState().with(TANKSTATES, TankStates.BOTTOM);
-
-			if(stateIn.get(TANKSTATES) == TankStates.BOTTOM && facing == Direction.UP || stateIn.get(TANKSTATES) == TankStates.TOP && facing == Direction.DOWN)
-				return this.getDefaultState().with(TANKSTATES, TankStates.MIDDLE);
-			return stateIn;
-		}
-	}
-
-	public void updateMyState(World world, BlockPos pos) {
-		int i = world.getBlockState(pos.add(0,1,0)).getBlock() == this ? 1 : 0;
-		i += world.getBlockState(pos.add(0,-1,0)).getBlock() == this ? 2 : 0;
+		int i = world.getBlockState(currentPos.add(0,1,0)).getBlock() == this.getBlock() ? 1 : 0;
+		i += world.getBlockState(currentPos.add(0,-1,0)).getBlock() == this ? 2 : 0;
 
 		//If there is no tank below this one
 		if( i == 1 ) {
-			world.setBlockState(pos, this.getDefaultState().with(TANKSTATES, TankStates.BOTTOM),2);
+			return stateIn.with(TANKSTATES, TankStates.BOTTOM);
 		}
 		//If there is no tank above this one
 		else if( i == 2 ) {
-			world.setBlockState(pos, this.getDefaultState().with(TANKSTATES, TankStates.TOP),2);
+			return stateIn.with(TANKSTATES, TankStates.TOP);
 		}
 		//If there is a tank above and below this one
 		else {
-			world.setBlockState(pos, this.getDefaultState().with(TANKSTATES, TankStates.MIDDLE),2);
+			return stateIn.with(TANKSTATES, TankStates.MIDDLE);
 		}
 	}
 
 	@Override
 	public BlockState getStateAtViewpoint(BlockState state, IBlockReader world, BlockPos pos, Vector3d viewpoint) {
-		int i = world.getBlockState(pos.add(0,1,0)).getBlock() == this ? 1 : 0;
+		int i = world.getBlockState(pos.add(0,1,0)).getBlock() == this.getBlock() ? 1 : 0;
 		i += world.getBlockState(pos.add(0,-1,0)).getBlock() == this ? 2 : 0;
 
 		//If there is no tank below this one
@@ -145,6 +124,19 @@ public class BlockGenericFuelTank extends Block implements IFuelTank{
 	@Override
 	public FuelType getFuelType(World world, BlockPos pos) {
 		return type;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@ParametersAreNonnullByDefault
+	public float getAmbientOcclusionLightValue(BlockState state, IBlockReader worldIn, BlockPos pos) {
+		return 1.0F;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	@ParametersAreNonnullByDefault
+	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
+		return false;
 	}
 
 	public enum TankStates implements IStringSerializable {

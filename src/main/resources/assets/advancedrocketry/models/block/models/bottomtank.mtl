@@ -1,8 +1,0 @@
-# Blender MTL File: 'bottomTank.blend'
-# Material Count: 1
-
-newmtl None
-ka 0.000000 0.000000 0.000000
-kd 0.8 0.8 0.8
-d 1
-map_Kd advancedrocketry:models/tank

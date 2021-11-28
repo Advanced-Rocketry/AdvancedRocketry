@@ -1,5 +1,5 @@
 {
-    "parent": "advancedrocketry:block/models/middletank",
+    "parent": "advancedrocketry:block/models/tank",
     "gui_light": "side",
     "display": {
         "gui": {

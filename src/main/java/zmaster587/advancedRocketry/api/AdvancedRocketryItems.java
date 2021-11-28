@@ -312,8 +312,8 @@ public class AdvancedRocketryItems {
 				AdvancedRocketryItems.itemMonopropellantFuelTank.setRegistryName("monopropellantfueltank"),
 				AdvancedRocketryItems.itemBipropellantFuelTank.setRegistryName("bipropellantfueltank"),
 				AdvancedRocketryItems.itemOxidizerFuelTank.setRegistryName("oxidizerfueltank"),
-				AdvancedRocketryItems.itemNuclearCore.setRegistryName("nuclearcore"),
 				AdvancedRocketryItems.itemNuclearWorkingFluidTank.setRegistryName("nuclearworkingfluidtank"),
+				AdvancedRocketryItems.itemNuclearCore.setRegistryName("nuclearcore"),
 				//Rocket auxiliary
 				AdvancedRocketryItems.itemSeat.setRegistryName("seat"),
 				AdvancedRocketryItems.itemSatelliteBay.setRegistryName("satellitebay"),

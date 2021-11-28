@@ -10,6 +10,8 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.advancedRocketry.api.IRocketEngine;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
@@ -19,6 +21,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 public class BlockGenericRocketMotor extends BlockFullyRotatable implements IRocketEngine {
 
+	static final VoxelShape HOLLOW_CUBE = VoxelShapes.create(0.0,0.0,0.0,1.0,1.0,1.0);
 	private int thrust;
 	private int fuelConsumption;
 	private FuelType type;
@@ -61,6 +64,12 @@ public class BlockGenericRocketMotor extends BlockFullyRotatable implements IRoc
 	@Override
 	@ParametersAreNonnullByDefault
 	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		return VoxelShapes.empty();
+		return HOLLOW_CUBE;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@ParametersAreNonnullByDefault
+	public float getAmbientOcclusionLightValue(BlockState state, IBlockReader worldIn, BlockPos pos) {
+		return 1.0F;
 	}
 }

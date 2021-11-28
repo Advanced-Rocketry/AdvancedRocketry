@@ -1,7 +1,7 @@
 {
   "loader": "forge:obj",
-  "model": "advancedrocketry:models/block/models/nuclearrocketengine.obj",
-  "flip-v": false,
+  "model": "advancedrocketry:models/block/models/tank.obj",
+  "flip-v": true,
   "textures": {
     "particle": "libvulpes:blocks/machinegeneric"
   }

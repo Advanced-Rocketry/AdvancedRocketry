@@ -77,10 +77,10 @@ public class AdvancedRocketryBlocks {
 	public static Block blockBipropellantEngine = new BlockGenericRocketMotor(10, 1, FuelType.LIQUID_BIPROPELLANT, machineLineProperties.notSolid());
 	public static Block blockAdvancedBipropellantEngine = new BlockGenericRocketMotor(50, 3, FuelType.LIQUID_BIPROPELLANT, machineLineProperties.notSolid());
 	public static Block blockNuclearEngine = new BlockGenericRocketMotor(35, 1, FuelType.NUCLEAR_WORKING_FLUID, machineLineProperties.notSolid());
-	public static Block blockMonopropellantFuelTank = new BlockGenericFuelTank(1000, FuelType.LIQUID_MONOPROPELLANT, machineLineProperties);
-	public static Block blockBipropellantFuelTank = new BlockGenericFuelTank(1000, FuelType.LIQUID_BIPROPELLANT, machineLineProperties);
-	public static Block blockOxidizerFuelTank = new BlockGenericFuelTank(1000, FuelType.LIQUID_OXIDIZER, machineLineProperties);
-	public static Block blockNuclearWorkingFluidTank = new BlockGenericFuelTank(1000, FuelType.NUCLEAR_WORKING_FLUID, machineLineProperties);
+	public static Block blockMonopropellantFuelTank = new BlockGenericFuelTank(1000, FuelType.LIQUID_MONOPROPELLANT, machineLineProperties.notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false));
+	public static Block blockBipropellantFuelTank = new BlockGenericFuelTank(1000, FuelType.LIQUID_BIPROPELLANT, machineLineProperties.notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false));
+	public static Block blockOxidizerFuelTank = new BlockGenericFuelTank(1000, FuelType.LIQUID_OXIDIZER, machineLineProperties.notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false));
+	public static Block blockNuclearWorkingFluidTank = new BlockGenericFuelTank(1000, FuelType.NUCLEAR_WORKING_FLUID, machineLineProperties.notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false));
 	public static Block blockNuclearCore = new BlockNuclearCore(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f));
 	//Rocket auxiliary
 	public static Block blockSeat = new BlockSeat(AbstractBlock.Properties.create(Material.WOOL).hardnessAndResistance(0.5f));
@@ -101,7 +101,7 @@ public class AdvancedRocketryBlocks {
 	//Rocket pad blocks
 	public static Block blockLaunchpad = new BlockLinkedHorizontalTexture(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2f, 10f));
 	public static Block blockLandingPad = new BlockLandingPad(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f,3f));
-	public static Block blockStructureTower = new BlockAlphaTexture(machineLineProperties.notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false).setBlocksVision((p_test_1_, p_test_2_, p_test_3_) -> false));
+	public static Block blockStructureTower = new BlockAlphaTexture(machineLineProperties.notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false));
 	public static Block blockRocketAssembler = new BlockTileWithMultitooltip(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
 	public static Block blockSpaceStationAssembler = new BlockTileWithMultitooltip(machineLineProperties, GuiHandler.guiId.MODULAR);
 	public static Block blockUnmannedRocketAssembler = new BlockTileWithMultitooltip(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
@@ -121,9 +121,9 @@ public class AdvancedRocketryBlocks {
 	public static Block blockSmallAirlockDoor = new DoorBlock(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f, 8f));
 
 	public static Block blockRocketFire = new BlockRocketFire(AbstractBlock.Properties.create(Material.FIRE, MaterialColor.TNT).doesNotBlockMovement().zeroHardnessAndResistance().setLightLevel((state) -> 15));
-	public static Block blockSawBlade = new BlockMotor(machineLineProperties,1f);
+	public static Block blockSawBlade = new BlockMotor(machineLineProperties.notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false),1f);
 	public static Block blockQuartzCrucible = new BlockQuartzCrucible(AbstractBlock.Properties.create(Material.ROCK));
-	public static Block blockLens = new BlockAlphaTexture(AbstractBlock.Properties.create(Material.GLASS).hardnessAndResistance(0.3f).notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false).setBlocksVision((p_test_1_, p_test_2_, p_test_3_) -> false));
+	public static Block blockLens = new BlockAlphaTexture(AbstractBlock.Properties.create(Material.GLASS).hardnessAndResistance(0.3f).notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false));
 	public static Block blockConcrete = new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2f, 16f));
 	public static Block blockBlastBrick = new BlockMultiBlockComponentVisible(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3, 15));
 	public static Block blockSeal = new BlockSeal(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(0.5f));
@@ -132,7 +132,7 @@ public class AdvancedRocketryBlocks {
 	public static Block blockForceFieldProjector = new BlockForceFieldProjector(machineLineProperties);
 	//Misc non-multiblock machines
 	public static Block blockSuitWorkStation = new BlockSuitWorkstation(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockPressureTank = new BlockPressurizedFluidTank(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3f).notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false).setBlocksVision((p_test_1_, p_test_2_, p_test_3_) -> false));
+	public static Block blockPressureTank = new BlockPressurizedFluidTank(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3f).notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false));
 	public static Block blockPump = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
 	public static Block blockSmallPlatePress = new BlockSmallPlatePress(machineLineProperties);
 	//MULTIBLOCK MACHINES
@@ -212,8 +212,8 @@ public class AdvancedRocketryBlocks {
 				AdvancedRocketryBlocks.blockMonopropellantFuelTank.setRegistryName("monopropellantfueltank"),
 				AdvancedRocketryBlocks.blockBipropellantFuelTank.setRegistryName("bipropellantfueltank"),
 				AdvancedRocketryBlocks.blockOxidizerFuelTank.setRegistryName("oxidizerfueltank"),
-				AdvancedRocketryBlocks.blockNuclearCore.setRegistryName("nuclearcore"),
 				AdvancedRocketryBlocks.blockNuclearWorkingFluidTank.setRegistryName("nuclearworkingfluidtank"),
+				AdvancedRocketryBlocks.blockNuclearCore.setRegistryName("nuclearcore"),
 				//Rocket auxiliary
 				AdvancedRocketryBlocks.blockSeat.setRegistryName("seat"),
 				AdvancedRocketryBlocks.blockSatelliteBay.setRegistryName("satellitebay"),

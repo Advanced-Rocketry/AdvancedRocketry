@@ -1,5 +1,0 @@
-{
-  "loader": "forge:obj",
-  "model": "advancedrocketry:models/block/models/toptank.obj",
-  "flip-v": false
-}

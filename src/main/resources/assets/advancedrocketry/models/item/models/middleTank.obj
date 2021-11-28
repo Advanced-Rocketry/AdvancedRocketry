@@ -1,6 +1,6 @@
-# Blender v2.77 (sub 0) OBJ File: 'middleTank.blend'
+# Blender v2.77 (sub 0) OBJ File: 'tank.blend'
 # www.blender.org
-mtllib middleTank.mtl
+mtllib tank.mtl
 o Cylinder4
 v 0.937500 0.000000 0.875000
 v 0.937500 1.000000 0.875000

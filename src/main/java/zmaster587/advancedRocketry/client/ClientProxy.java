@@ -109,6 +109,10 @@ public class ClientProxy extends CommonProxy {
 		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockPressureTank, RenderType.getTranslucent());
 		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockLightwoodSapling, RenderType.getCutoutMipped());
 		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockElectricMushroom, RenderType.getCutoutMipped());
+		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockMonopropellantFuelTank, RenderType.getTranslucent());
+		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockBipropellantFuelTank, RenderType.getTranslucent());
+		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockOxidizerFuelTank, RenderType.getTranslucent());
+		RenderTypeLookup.setRenderLayer(AdvancedRocketryBlocks.blockNuclearWorkingFluidTank, RenderType.getTranslucent());
 		for(Block block : AdvancedRocketryBlocks.crystalBlocks)
 			RenderTypeLookup.setRenderLayer(block, RenderType.getTranslucent());
 	}
