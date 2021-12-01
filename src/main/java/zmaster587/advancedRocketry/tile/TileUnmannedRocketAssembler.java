@@ -164,6 +164,7 @@ public class TileUnmannedRocketAssembler extends TileRocketAssembler {
 		int thrustNuclearTotalLimit = 0;
 		int fuelUse = 0;
 		int fuelCapacity = 0;
+		int oxidizerCapacity = 0;
 		FuelType rocketType = null;
 		FuelType currentType = null;
 		int numBlocks = 0;
@@ -234,6 +235,10 @@ public class TileUnmannedRocketAssembler extends TileRocketAssembler {
 								currentType = ((IRocketEngine) block).getFuelType(world, currBlockPos);
 								stats.addEngineLocation(xCurr - actualMinX - ((actualMaxX - actualMinX)/2f), yCurr - actualMinY, zCurr - actualMinZ - ((actualMaxZ - actualMinZ)/2f));
 							} else if(block instanceof IFuelTank) {
+								if (((IFuelTank) block).getFuelType(world, currBlockPos) == FuelType.LIQUID_OXIDIZER) {
+									oxidizerCapacity += (((IFuelTank) block).getMaxFill(world, currBlockPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
+									continue;
+								}
 								fuelCapacity += (((IFuelTank) block).getMaxFill(world, currBlockPos, state) * ARConfiguration.getCurrentConfig().fuelCapacityMultiplier.get());
 								currentType = ((IFuelTank) block).getFuelType(world, currBlockPos);
 							} else if (block instanceof IRocketNuclearCore && ((world.getBlockState(behindPos).getBlock() instanceof  IRocketNuclearCore) || (world.getBlockState(behindPos).getBlock() instanceof  IRocketEngine))) {
@@ -270,8 +275,10 @@ public class TileUnmannedRocketAssembler extends TileRocketAssembler {
 
 			//Set fuel stats
 			if (rocketType != null) {
-				stats.setBaseFuelRate(rocketType, fuelUse);
-				stats.setFuelCapacity(rocketType, fuelCapacity);
+				stats.setFluidTank(rocketType, fuelCapacity, fuelUse);
+				if (rocketType == FuelType.LIQUID_BIPROPELLANT) {
+					stats.setFluidTank(FuelType.LIQUID_OXIDIZER, oxidizerCapacity, fuelUse);
+				}
 			}
 			//Non-fuel stats
 			stats.setWeight(numBlocks);
@@ -284,16 +291,9 @@ public class TileUnmannedRocketAssembler extends TileRocketAssembler {
 				status = ErrorCodes.NOGUIDANCE;
 			else if(getThrust() <= getNeededThrust())
 				status = ErrorCodes.NOENGINES;
-			else if(rocketType != null && getFuel(rocketType) < getNeededFuel(rocketType))
-				status = ErrorCodes.NOFUEL;
 			else
 				status = ErrorCodes.SUCCESS;
 		}
-	}
-
-	@Override
-	public float getNeededFuel(FuelType fuelType) {
-		return getAcceleration(DimensionManager.getInstance().getDimensionProperties(world).getGravitationalMultiplier()) > 0 ? stats.getFuelRate(fuelType) : 0;
 	}
 
 	//No additional scanning is needed

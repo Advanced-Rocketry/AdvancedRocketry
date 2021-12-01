@@ -491,8 +491,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public void readDataFromNetwork(PacketBuffer in, byte packetId,
-			CompoundNBT nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId, CompoundNBT nbt) {
 		if(packetId == 4)
 			nbt.putInt("minTransferSize", in.readInt());
 		else if(packetId == 5) 
@@ -502,8 +501,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public void useNetworkData(PlayerEntity player, Dist side, byte id,
-			CompoundNBT nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt) {
 		if(side.isClient()) {
 			if(id == 3) {
 				Direction dir = RotatableBlock.getFront(world.getBlockState(pos));

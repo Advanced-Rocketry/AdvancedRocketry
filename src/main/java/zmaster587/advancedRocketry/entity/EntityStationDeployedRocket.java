@@ -96,17 +96,14 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	
 	@Override
 	public void launch() {
-
 		if(isInFlight())
 			return;
-
 
 		if(isInOrbit()) {
 			setInFlight(true);
 			return;
 		}
-		if(getFuelAmount(getRocketFuelType()) < getFuelCapacity(getRocketFuelType()))
-			return;
+		if(stats.getFluidTank(getRocketFuelType()).getFluidAmount() < stats.getFluidTank(getRocketFuelType()).getCapacity()) return;
 
 		ISpaceObject spaceObj;
 		if( DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(world) ) && (spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(getPositionVec()))) != null && spaceObj.getProperties().getParentProperties().isGasGiant() ) { //Abort if destination is invalid

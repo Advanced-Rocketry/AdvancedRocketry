@@ -12,8 +12,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 public class BlockTileRedstoneEmitter extends BlockTile {
 
-	public BlockTileRedstoneEmitter(Properties properties,
-			GuiHandler.guiId guiId) {
+	public BlockTileRedstoneEmitter(Properties properties, GuiHandler.guiId guiId) {
 		super(properties, guiId);
 	}
 	

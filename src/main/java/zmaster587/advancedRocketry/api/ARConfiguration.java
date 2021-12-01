@@ -206,6 +206,7 @@ public class ARConfiguration {
 		arConfig.canBeFueledByHand = builder.comment("Should rockets be able to be fueled with fluid containers by hand: [Default:true]").define("canBeFueledByHand", true);
 		arConfig.rocketThrustMultiplier = builder.comment("Multiplier for per-engine thrust [Default:1.0]").define("thrustMultiplier", 1d);
 		arConfig.fuelCapacityMultiplier = builder.comment("Multiplier for per-tank capacity [Default:1.0]").define("fuelCapacityMultiplier", 1d);
+		arConfig.nuclearCoreThrustRatio = builder.comment("Multiplier for the maximum thrust provided by one nuclear core [Default:1.0]").define("nuclearCoreMultiplier", 1d);
 		LinkedList<String> blackListRocketBlocksStrList = new LinkedList<>();
 		blackListRocketBlocksStrList.add("minecraft:portal");
 		blackListRocketBlocksStrList.add("minecraft:bedrock");
@@ -869,10 +870,11 @@ public class ARConfiguration {
 
 	@ConfigProperty
 	public  ConfigValue<Boolean> generateVolcanoes;
-
+/*
 	@ConfigProperty(needsSync=true, internalType=Boolean.class)
 	public  ConfigValue<Boolean> experimentalSpaceFlight;
-
+*/
+	public boolean experimentalSpaceFlight = false;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)

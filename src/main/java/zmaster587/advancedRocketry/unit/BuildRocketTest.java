@@ -10,7 +10,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
+import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -195,7 +198,7 @@ public class BuildRocketTest extends BaseTest {
 	
 	
 	public void FuelRocket(EntityRocket rocket) {
-		rocket.setFuelAmount(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT, rocket.getFuelCapacity(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT));
+		rocket.stats.getFluidTank(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT).fill(new FluidStack(AdvancedRocketryFluids.rocketFuelStill.get().getFluid(), rocket.stats.getFluidTank(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT).getCapacity()), IFluidHandler.FluidAction.EXECUTE);
 	}
 	
 	public EntityRocket findRocketOnPad(World world)

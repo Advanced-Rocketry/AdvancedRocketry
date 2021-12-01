@@ -445,7 +445,7 @@ public class RocketEventHandler extends Screen {
 			}
 
 			//Draw module icons
-			if(!isCreativeOrSpec && Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD) != null && Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() instanceof IModularArmor) {
+			if(!isCreativeOrSpec && Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() instanceof IModularArmor) {
 				for(EquipmentSlotType slot : EquipmentSlotType.values()) {
 					renderModuleSlots(Minecraft.getInstance().player.getItemStackFromSlot(slot), 4-slot.getIndex(), event);
 				}

@@ -57,7 +57,6 @@ public class TileRocketControlCenter extends TileEntity  implements IModularInve
 
 	int rocketHeight;
 	int velocity;
-	int fuelLevel, maxFuelLevel;
 
 	public TileRocketControlCenter() {
 		super(AdvancedRocketryTileEntityType.TILE_ROCKET_CONTROL_CENTER);
@@ -168,7 +167,6 @@ public class TileRocketControlCenter extends TileEntity  implements IModularInve
 
 		if(nbt.contains("missionID")) {
 			long id = nbt.getLong("missionID");
-			ResourceLocation dimid = new ResourceLocation(nbt.getString("missionDimId"));
 
 			SatelliteBase sat = DimensionManager.getInstance().getSatellite(id);
 
@@ -210,8 +208,7 @@ public class TileRocketControlCenter extends TileEntity  implements IModularInve
 	}
 
 	@Override
-	public void useNetworkData(PlayerEntity player, Dist side, byte id,
-			CompoundNBT nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt) {
 		if(id == 1) {
 			long idNum = nbt.getLong("id");
 			if(idNum == -1) {
@@ -243,9 +240,11 @@ public class TileRocketControlCenter extends TileEntity  implements IModularInve
 		LinkedList<ModuleBase> modules = new LinkedList<>();
 
 		modules.add(new ModuleButton(20, 40, "Launch!", this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
-		modules.add(new ModuleProgress(98, 4, 0, new IndicatorBarImage(2, 7, 12, 81, 17, 0, 6, 6, 1, 0, Direction.UP, TextureResources.rocketHud), this));
-		modules.add(new ModuleProgress(120, 14, 1, new IndicatorBarImage(2, 95, 12, 71, 17, 0, 6, 6, 1, 0, Direction.UP, TextureResources.rocketHud), this));
-		modules.add(new ModuleProgress(142, 14, 2, new ProgressBarImage(2, 173, 12, 71, 17, 6, 3, 69, 1, 1, Direction.UP, TextureResources.rocketHud), this));
+		modules.add(new ModuleProgress(98, 14, 6, new ProgressBarImage(2, 173, 12, 71, 17, 6, 3, 69, 1, 1, Direction.UP, TextureResources.rocketHud), this));
+		modules.add(new ModuleProgress(114, 14, 7, new ProgressBarImage(19, 173, 12, 71, 17, 6, 3, 69, 1, 1, Direction.UP, TextureResources.rocketHud), this));
+		modules.add(new ModuleProgress(128, 14, 8, new ProgressBarImage(36, 173, 12, 71, 17, 6, 3, 69, 1, 1, Direction.UP, TextureResources.rocketHud), this));
+		modules.add(new ModuleProgress(144, 14, 1, new IndicatorBarImage(2, 95, 12, 71, 17, 0, 6, 6, 1, 0, Direction.UP, TextureResources.rocketHud), this));
+		modules.add(new ModuleProgress(160, 4, 0, new IndicatorBarImage(2, 7, 12, 81, 17, 0, 6, 6, 1, 0, Direction.UP, TextureResources.rocketHud), this));
 
 		modules.add(redstoneControl);
 		setMissionText();
@@ -277,7 +276,6 @@ public class TileRocketControlCenter extends TileEntity  implements IModularInve
 	
 	@Override
 	public void onInventoryButtonPressed(ModuleButton buttonId) {
-		
 		if(buttonId == redstoneControl) {
 			state = redstoneControl.getState();
 			PacketHandler.sendToServer(new PacketMachine(this, (byte)2));
@@ -315,6 +313,13 @@ public class TileRocketControlCenter extends TileEntity  implements IModularInve
 			if(mission == null)
 				return 0f;
 			return (float) Math.min(Math.max( 3f*(mission.getProgress(this.world) - 0.666f), 0f), 1f);
+		} else if(linkedRocket != null) {
+			if (id == 6)
+				return linkedRocket.stats.getFuelFillPercentage(FuelRegistry.FuelType.LIQUID_MONOPROPELLANT);
+			else if (id == 7)
+				return linkedRocket.stats.getFuelFillPercentage(FuelRegistry.FuelType.LIQUID_OXIDIZER);
+			else if (id == 8)
+				return linkedRocket.stats.getFuelFillPercentage(FuelRegistry.FuelType.NUCLEAR_WORKING_FLUID);
 		}
 		
 		//keep text updated
@@ -330,22 +335,19 @@ public class TileRocketControlCenter extends TileEntity  implements IModularInve
 			rocketHeight = progress;
 		else if(id == 1)
 			velocity = progress;
-		else if(id == 2)
-			fuelLevel = progress;
 	}
 
 	@Override
 	public int getProgress(int id) {
 		//Try to keep client synced with server, this also allows us to put the monitor on a different world altogether
-		if(world.isRemote)
-			if(mission != null && id == 0)
+		if(world.isRemote) {
+			if (mission != null && id == 0)
 				return getTotalProgress(id);
-			else if(id == 0)
+			else if (id == 0)
 				return rocketHeight;
-			else if(id == 1)
+			else if (id == 1)
 				return velocity;
-			else if(id == 2)
-				return fuelLevel;
+		}
 
 		if(linkedRocket == null)
 			return 0;
@@ -353,8 +355,6 @@ public class TileRocketControlCenter extends TileEntity  implements IModularInve
 			return (int)linkedRocket.getPosY();
 		else if(id == 1)
 			return (int)(linkedRocket.getMotion().y*100);
-		else if (id == 2)
-			return (linkedRocket.getRocketFuelType() == FuelRegistry.FuelType.LIQUID_BIPROPELLANT) ? linkedRocket.getFuelAmount(linkedRocket.getRocketFuelType()) + linkedRocket.getFuelAmount(FuelRegistry.FuelType.LIQUID_OXIDIZER) : linkedRocket.getFuelAmount(linkedRocket.getRocketFuelType());
 
 		return 0;
 	}
@@ -365,22 +365,11 @@ public class TileRocketControlCenter extends TileEntity  implements IModularInve
 			return ARConfiguration.getCurrentConfig().orbit.get();
 		else if(id == 1)
 			return 200;
-		else if(id == 2)
-			if(world.isRemote)
-				return maxFuelLevel;
-			else if(linkedRocket == null)
-				return 0;
-		    else
-		    	return (linkedRocket.getRocketFuelType() == FuelRegistry.FuelType.LIQUID_BIPROPELLANT) ? linkedRocket.getFuelCapacity(linkedRocket.getRocketFuelType()) + linkedRocket.getFuelCapacity(FuelRegistry.FuelType.LIQUID_OXIDIZER): linkedRocket.getFuelCapacity(linkedRocket.getRocketFuelType());
 		return 1;
 	}
 
 	@Override
-	public void setTotalProgress(int id, int progress) {
-		//Should only become an issue if configs are desynced or fuel
-		if(id == 2)
-			maxFuelLevel = progress;
-	}
+	public void setTotalProgress(int id, int progress) { }
 
 	@Override
 	public boolean canInteractWithContainer(PlayerEntity entity) {

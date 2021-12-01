@@ -792,8 +792,6 @@ public class StorageChunk implements IWorld, IStorageChunk {
 	}
 
 	public void writeToNetwork(PacketBuffer out) {
-
-
 		CompoundNBT nbt = new CompoundNBT();
 		this.writeToNBT(nbt);
 		out.writeCompoundTag(nbt);
