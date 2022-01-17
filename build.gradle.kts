@@ -115,6 +115,9 @@ repositories {
     ivy {
         name = "LibVulpes"
         artifactPattern("http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/1.12/$libVulpesBuildNum/artifact/output/[module]-[revision].[ext]")
+        metadataSources {
+            artifact()
+        }
     }
     maven {
         name = "mezz.jei"
@@ -132,13 +135,6 @@ repositories {
     maven {
         name = "Galacticraft"
         url = uri("https://maven.galacticraft.dev")
-    }
-    maven {
-        name = "CurseMaven"
-        url = uri("https://www.cursemaven.com")
-        content {
-            includeGroup("curse.maven")
-        }
     }
     flatDir {
         dirs("libs")
