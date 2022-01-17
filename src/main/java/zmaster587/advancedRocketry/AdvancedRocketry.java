@@ -140,7 +140,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 
-@Mod(modid="advancedrocketry", dependencies="required-after:libvulpes@[0.4.2.-84,)")
+@Mod(modid="advancedrocketry")
 public class AdvancedRocketry {
 
 	@SidedProxy(clientSide="zmaster587.advancedRocketry.client.ClientProxy", serverSide="zmaster587.advancedRocketry.common.CommonProxy")

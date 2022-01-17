@@ -22,4 +22,10 @@ pluginManagement {
 
 rootProject.name = "AdvancedRocketry"
 
-//includeBuild("libVulpes")
+if(file("libVulpes").exists()) {
+    includeBuild("libVulpes") {
+        dependencySubstitution {
+            substitute(module("zmaster587.libVulpes:LibVulpes")).using(project(":"))
+        }
+    }
+}

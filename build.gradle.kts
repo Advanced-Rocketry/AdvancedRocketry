@@ -163,18 +163,36 @@ dependencies {
 tasks.processResources {
     //includeEmptyDirs = false
     inputs.properties(
-        "version" to project.version,
-        "mcversion" to mcVersion
+        "advRocketryVersion" to project.version,
+        "mcVersion" to mcVersion,
+        "libVulpesVersion" to libVulpesVersion
     )
 
     filesMatching("mcmod.info") {
         expand(
-            "version" to project.version,
-            "mcversion" to mcVersion
+            "advRocketryVersion" to project.version,
+            "mcVersion" to mcVersion,
+            "libVulpesVersion" to libVulpesVersion
         )
     }
 
     exclude("**/*.sh")
+}
+
+tasks.register("cloneLibVulpes") {
+    group = "build setup"
+    doLast {
+        val libVulpesRepo: String by project
+        val libVulpesBranch: String? by project
+
+        val repo = Grgit.clone {
+            dir = "$projectDir/libVulpes"
+            uri = libVulpesRepo
+            if(libVulpesBranch != null)
+                refToCheckout = libVulpesBranch
+        }
+        println("Cloned libVulpes repository from $libVulpesRepo (current branch: ${repo.branch.current().name})")
+    }
 }
 
 val currentJvm: String = Jvm.current().toString()
