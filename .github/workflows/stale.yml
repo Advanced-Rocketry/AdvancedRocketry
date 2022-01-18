@@ -1,22 +1,21 @@
-/*
-name: "Close stale issues"
-on:
-  schedule:
-  - cron: "0 0 * * *"
+# name: "Close stale issues"
+# on:
+#   schedule:
+#   - cron: "0 0 * * *"
 
-jobs:
-  stale:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/stale@v3.0.6
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        stale-pr-message: 'Is this pr still needed?'
-        stale-issue-message: 'This issue is stale because it has been open 60 days with no activity. Is this still an issue? If yes please comment that it still is.'
-        stale-issue-label: 'no-issue-activity'
-        exempt-issue-labels: 'enhancement,question,Needs-Info'
-        stale-pr-label: 'no-pr-activity'
-        exempt-pr-labels: 'awaiting-approval,work-in-progress,PrExempt'
-        days-before-stale: 60
-        days-before-close: 90
-*/
+# jobs:
+#   stale:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/stale@v3.0.6
+#       with:
+#         repo-token: ${{ secrets.GITHUB_TOKEN }}
+#         stale-pr-message: 'Is this pr still needed?'
+#         stale-issue-message: 'This issue is stale because it has been open 60 days with no activity. Is this still an issue? If yes please comment that it still is.'
+#         stale-issue-label: 'no-issue-activity'
+#         exempt-issue-labels: 'enhancement,question,Needs-Info'
+#         stale-pr-label: 'no-pr-activity'
+#         exempt-pr-labels: 'awaiting-approval,work-in-progress,PrExempt'
+#         days-before-stale: 60
+#         days-before-close: 90
+
