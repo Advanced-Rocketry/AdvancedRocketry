@@ -1,0 +1,14 @@
+{
+    "type": "advancedrocketry:cuttingmachine",
+    "itemingredients": [
+        {
+            "item": "advancedrocketry:lightwoodlog"
+        }
+    ],
+    "time": 80,
+    "energy": 10,
+    "itemresults": {
+            "item": "advancedrocketry:lightwoodplanks",
+            "count": 6
+    }
+}

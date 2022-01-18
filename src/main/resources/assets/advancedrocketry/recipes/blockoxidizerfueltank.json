@@ -11,7 +11,7 @@
         "s":
         {
             "type": "forge:ore_dict",
-            "ore": "stickSteel"
+            "ore": "rodSteel"
         },
         "S":
         {

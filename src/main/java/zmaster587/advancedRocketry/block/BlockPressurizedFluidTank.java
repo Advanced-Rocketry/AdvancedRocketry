@@ -26,10 +26,9 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.network.NetworkHooks;
-import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.item.ItemBlockFluidTank;
-import zmaster587.advancedRocketry.tile.TileFluidTank;
+import zmaster587.advancedRocketry.tile.TilePressureTank;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.util.FluidUtils;
 
@@ -72,7 +71,7 @@ public class BlockPressurizedFluidTank extends Block {
 	
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new TileFluidTank((int) (64000*ARConfiguration.getCurrentConfig().blockTankCapacity.get()));
+		return new TilePressureTank(64000);
 	}
 	
 	@Nonnull
@@ -86,7 +85,7 @@ public class BlockPressurizedFluidTank extends Block {
 	@ParametersAreNonnullByDefault
 	public void harvestBlock(World world, PlayerEntity player, BlockPos pos, BlockState state, TileEntity te, ItemStack stack) {
 
-		if(te instanceof TileFluidTank) {
+		if(te instanceof TilePressureTank) {
 			LazyOptional<IFluidHandler> cap = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.DOWN);
 			
 			IFluidHandler fluid = cap.orElse(null);
@@ -121,7 +120,6 @@ public class BlockPressurizedFluidTank extends Block {
 	@Override
 	@ParametersAreNonnullByDefault
 	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
-		
 		if(side.getYOffset() != 0) {
 			if(adjacentBlockState.getBlock() == this)
 				return false;
@@ -141,7 +139,7 @@ public class BlockPressurizedFluidTank extends Block {
 	@Override
 	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TileFluidTank)
-			((TileFluidTank)tile).onAdjacentBlockUpdated(Direction.getFacingFromVector(neighbor.getX() - pos.getX(), neighbor.getY() - pos.getY(), neighbor.getZ() - pos.getZ()));
+		if(tile instanceof TilePressureTank)
+			((TilePressureTank)tile).onAdjacentBlockUpdated(Direction.getFacingFromVector(neighbor.getX() - pos.getX(), neighbor.getY() - pos.getY(), neighbor.getZ() - pos.getZ()));
 	}
 }

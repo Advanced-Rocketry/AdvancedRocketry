@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -34,66 +35,7 @@ class VoidDrill extends AbstractDrill {
 	}
 
 	private void loadGlobalOres() {
-		//isEmpty check because <init> is called in post init to register for holo projector
-		if (ores == null && !ARConfiguration.getCurrentConfig().standardLaserDrillOres.isEmpty()) {
-			ores = new ArrayList<>();
-
-			for (int i = 0; i < ARConfiguration.getCurrentConfig().standardLaserDrillOres.size(); i++) {
-				String oreDictName = ARConfiguration.getCurrentConfig().standardLaserDrillOres.get(i);
-
-				String[] args = oreDictName.split(";");
-				
-				List<Item> items = ItemTags.getCollection().getTagByID(new ResourceLocation(args[0])).getAllElements();
-		
-
-				List<ItemStack> globalOres = new LinkedList<>();
-				for(Item item : items)
-				{
-					globalOres.add(item.getDefaultInstance());
-				}
-
-				if (!globalOres.isEmpty()) {
-					int amt = 5;
-					if (args.length > 1) {
-						try {
-							amt = Integer.parseInt(args[1]);
-						} catch (NumberFormatException ignored) {}
-					}
-					ores.add(new ItemStack(globalOres.get(0).getItem(), amt));
-				} else {
-					String[] splitStr = oreDictName.split(";");
-					ResourceLocation name;
-					
-					name = ResourceLocation.tryCreate(splitStr[0]);
-					if(name == null)
-					{
-						AdvancedRocketry.logger.error("Cannot load item or itemtag '" + name + "' for void Drill");
-						continue;
-					}
-					
-					int size = 1;
-					//format: "name size"
-					if (splitStr.length > 2) {
-						try {
-							size = Integer.parseInt(splitStr[2]);
-						} catch (NumberFormatException ignored) {}
-					}
-
-					ItemStack stack = ItemStack.EMPTY;
-					
-					if(ForgeRegistries.ITEMS.containsKey(name))
-						stack = new ItemStack(ForgeRegistries.ITEMS.getValue(name), size);
-					else
-					{
-						AdvancedRocketry.logger.error("Cannot load item or itemtag '" + name + "' for void Drill");
-						continue;
-					}
-
-					if (!stack.isEmpty())
-						ores.add(stack);
-				}
-			}
-		}
+		ores = ARConfiguration.getCurrentConfig().standardLaserDrillOres;
 	}
 
 	/**

@@ -1,17 +1,15 @@
 {
     "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
+    "ingredients": [
         {
-	    "item": "advancedrocketry:dataunit"
+	        "item": "advancedrocketry:dataunit"
         },
         {
-	    "item": "advancedrocketry:circuit_ic_tracking"
+	        "item": "advancedrocketry:trackingcircuit"
         }
     ],
-    "result":
-    {
-        "item": "advancedrocketry:chip_asteroid",
+    "result": {
+        "item": "advancedrocketry:asteroidchip",
         "count": 1
     }
 }

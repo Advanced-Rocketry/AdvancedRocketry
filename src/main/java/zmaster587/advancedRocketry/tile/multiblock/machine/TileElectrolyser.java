@@ -28,22 +28,17 @@ public class TileElectrolyser extends TileMultiblockMachine {
 		{'P', new ResourceLocation("forge","coils"),'P'}},
 		
 		{{'l', 'c', 'l'}, 
-			{new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'L', new BlockMeta(LibVulpesBlocks.blockStructureBlock)}},
+			{new BlockMeta(LibVulpesBlocks.blockMachineStructure), 'L', new BlockMeta(LibVulpesBlocks.blockMachineStructure)}},
 
 	};
 	
 	public TileElectrolyser() {
-		super(AdvancedRocketryTileEntityType.TILE_ELECTROLYSER);
+		super(AdvancedRocketryTileEntityType.TILE_ELECTROLYZER);
 	}
 	
 	@Override
 	public Object[][][] getStructure() {
 		return structure;
-	}
-	
-	@Override
-	public void registerRecipes() {
-		//RecipesMachine.getInstance().addRecipe(TileElectrolyser.class, new Object[] {new FluidStack(AdvancedRocketryFluids.fluidOxygen, 100), new FluidStack(AdvancedRocketryFluids.fluidHydrogen, 100)}, 100, 20, new FluidStack(FluidRegistry.WATER, 10));
 	}
 	
 	@Override
@@ -89,6 +84,6 @@ public class TileElectrolyser extends TileMultiblockMachine {
 
 	@Override
 	public String getMachineName() {
-		return "block.advancedrocketry.electrolyser";
+		return "block.advancedrocketry.electrolyzer";
 	}
 }

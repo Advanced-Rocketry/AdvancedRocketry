@@ -20,6 +20,7 @@ import zmaster587.libVulpes.render.RenderHelper;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 public class RendererPrecisionAssembler extends TileEntityRenderer<TilePrecisionAssembler> {
+
 	WavefrontObject model;
 	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/precisionassembler.png");
 	

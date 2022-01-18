@@ -1,8 +1,0 @@
-{
-    "parent": "block/orientable",
-    "textures": {
-        "top": "libvulpes:blocks/machinegeneric",
-        "front": "advancedrocketry:blocks/starshipcontrolpanel",
-        "side": "libvulpes:blocks/machinegeneric"
-    }
-}

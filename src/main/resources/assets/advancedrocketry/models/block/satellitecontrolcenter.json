@@ -2,7 +2,7 @@
     "parent": "block/orientable",
     "textures": {
         "top": "libvulpes:blocks/machinegeneric",
-        "front": "advancedrocketry:blocks/monitorsatellite",
+        "front": "advancedrocketry:blocks/machines/satellitecontrolcenter",
         "side": "libvulpes:blocks/machinegeneric"
     }
 }

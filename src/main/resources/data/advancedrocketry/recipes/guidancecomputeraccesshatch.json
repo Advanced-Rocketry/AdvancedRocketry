@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    " z ",
+	    "xmx",
+	    " z "
+    ],
+    "key": {
+        "x": {
+            "tag": "forge:rods/copper"
+        },
+        "z": {
+            "item": "advancedrocketry:controlcircuit"
+        },
+        "m": {
+            "item": "libvulpes:machinestructure"
+        }
+    },
+    "result":
+    {
+        "item": "advancedrocketry:guidancecomputeraccesshatch",
+        "count": 1
+    }
+}

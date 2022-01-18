@@ -23,7 +23,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class RenderAreaGravityController extends TileEntityRenderer<TileAreaGravityController> {
 	
 	WavefrontObject model;
-
 	ResourceLocation texture =  new ResourceLocation("advancedrocketry:textures/models/areagravitycontroller.png");
 	
 	public RenderAreaGravityController(TileEntityRendererDispatcher tile) {

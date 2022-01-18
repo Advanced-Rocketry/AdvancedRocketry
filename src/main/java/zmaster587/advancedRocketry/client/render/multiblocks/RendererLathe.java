@@ -22,7 +22,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 public class RendererLathe extends TileEntityRenderer<TileLathe> {
 	WavefrontObject model;
-
 	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/lathe.png");
 
 	public RendererLathe(TileEntityRendererDispatcher tile) {

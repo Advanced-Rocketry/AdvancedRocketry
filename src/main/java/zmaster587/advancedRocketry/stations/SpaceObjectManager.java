@@ -250,7 +250,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 */
 	@SubscribeEvent
 	public void onPlayerTick(@Nonnull PlayerTickEvent event) {
-		if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(event.player.world))) {
+		if(DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(event.player.world))) {
 
 			if(event.player.getPosY() < 0 && !event.player.world.isRemote) {
 				ISpaceObject spaceObject = getSpaceStationFromBlockCoords(new BlockPos(event.player.getPositionVec()));
@@ -300,10 +300,10 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) {
-		if(ZUtils.getWorld(ARConfiguration.getSpaceDimId()) == null)
+		if(ZUtils.getWorld(DimensionManager.spaceId) == null)
 			return;
 		
-		long worldTime = ZUtils.getWorld(ARConfiguration.getSpaceDimId()).getGameTime();
+		long worldTime = ZUtils.getWorld(DimensionManager.spaceId).getGameTime();
 		//Assuming server
 		//If no dim undergoing transition then nextTransitionTick = -1
 		if((nextStationTransitionTick != -1 && worldTime >= nextStationTransitionTick && spaceStationOrbitMap.get(WARPDIMID) != null) || (nextStationTransitionTick == -1 && spaceStationOrbitMap.get(WARPDIMID) != null && !spaceStationOrbitMap.get(WARPDIMID).isEmpty())) {
@@ -454,7 +454,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 				if(tag.contains("expireTime")) {
 					long expireTime = tag.getLong("expireTime");
 					int numPlayers = tag.getInt("numPlayers");
-					if (ZUtils.getWorld(ARConfiguration.getSpaceDimId()).getGameTime() >= expireTime && numPlayers == 0)
+					if (ZUtils.getWorld(DimensionManager.spaceId).getGameTime() >= expireTime && numPlayers == 0)
 						continue;
 					temporaryDimensions.put(spaceObject.getId(), expireTime);
 					temporaryDimensionPlayerNumber.put(spaceObject.getId(), numPlayers);

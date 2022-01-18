@@ -1,40 +1,29 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"rvr",
-	"dwd",
-	"dpd"
+    "pattern": [
+		"rvr",
+		"dwd",
+		"dpd"
     ],
-    "key":
-    {
-        "d":
-        {
+    "key": {
+        "d": {
             "tag": "forge:dusts/copper"
         },
-        "r":
-        {
-
+        "r": {
             "tag": "forge:dusts/redstone"
         },
-        "p":
-	{
-
+        "p": {
             "tag": "forge:plates/iron"
         },
-        "w":
-        {
-            "item": "minecraft:oak_slab"
+        "w": {
+            "tag": "minecraft:wooden_slabs"
         },
-        "v":
-        {
-
+        "v": {
             "tag": "forge:gems/diamond"
         }
     },
-    "result":
-    {
-        "item": "advancedrocketry:circuit_ic_control",
+    "result": {
+        "item": "advancedrocketry:controlcircuit",
         "count": 1
     }
 }

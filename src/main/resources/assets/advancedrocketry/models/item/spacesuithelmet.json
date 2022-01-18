@@ -1,0 +1,7 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "advancedrocketry:items/spacesuithelmet",
+        "layer1": "advancedrocketry:items/spacesuithelmet_overlay"
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "sss",
+	    "tdt",
+	    "t t"
+    ],
+    "key": {
+        "s": {
+            "tag": "forge:ingots/titaniumaluminide"
+        },
+	    "t": {
+            "tag": "forge:plates/titaniumiridium"
+        },
+        "d": {
+          "tag": "forge:gems/dilithium"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:nuclearrocketengine"
+    }
+}

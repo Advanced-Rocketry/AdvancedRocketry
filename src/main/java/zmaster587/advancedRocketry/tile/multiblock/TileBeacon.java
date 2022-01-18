@@ -24,23 +24,23 @@ public class TileBeacon extends TileMultiPowerConsumer {
 		},
 		{
 			{Blocks.AIR,Blocks.AIR, Blocks.AIR},
-			{Blocks.AIR, LibVulpesBlocks.blockStructureBlock, Blocks.AIR},
+			{Blocks.AIR, LibVulpesBlocks.blockMachineStructure, Blocks.AIR},
 			{Blocks.AIR,Blocks.AIR, Blocks.AIR}
 		},
 		{
 			{Blocks.AIR,Blocks.AIR, Blocks.AIR},
-			{Blocks.AIR, LibVulpesBlocks.blockStructureBlock, Blocks.AIR},
+			{Blocks.AIR, LibVulpesBlocks.blockMachineStructure, Blocks.AIR},
 			{Blocks.AIR,Blocks.AIR, Blocks.AIR}
 		},
 		{
 			{Blocks.AIR,Blocks.AIR, Blocks.AIR},
-			{Blocks.AIR, LibVulpesBlocks.blockStructureBlock, Blocks.AIR},
+			{Blocks.AIR, LibVulpesBlocks.blockMachineStructure, Blocks.AIR},
 			{Blocks.AIR,Blocks.AIR, Blocks.AIR}
 		},
 		{
 			{null,'c', null},
-			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock},
-			{null, LibVulpesBlocks.blockStructureBlock, null}
+			{LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure},
+			{null, LibVulpesBlocks.blockMachineStructure, null}
 		}
 			};
 

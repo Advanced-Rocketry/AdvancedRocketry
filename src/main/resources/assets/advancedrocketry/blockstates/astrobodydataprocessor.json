@@ -1,0 +1,13 @@
+{
+    "variants": {
+        "facing=north,state=false": { "model": "advancedrocketry:block/astrobodydataprocessor" },
+        "facing=south,state=false": { "model": "advancedrocketry:block/astrobodydataprocessor", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:block/astrobodydataprocessor", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:block/astrobodydataprocessor", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:block/astrobodydataprocessor" },
+        "facing=south,state=true": { "model": "advancedrocketry:block/astrobodydataprocessor", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:block/astrobodydataprocessor", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:block/astrobodydataprocessor", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:block/astrobodydataprocessor" }
+    }
+}

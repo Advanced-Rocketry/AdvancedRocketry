@@ -1,41 +1,30 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"aba",
-	"cde",
-	"opo"
+    "pattern": [
+		"aba",
+		"cde",
+		"opo"
     ],
-    "key":
-    {
-        "a":
-        {
-
+    "key": {
+        "a": {
             "tag": "forge:gears/steel"
         },
-        "b":
-        {
-            "item": "advancedrocketry:item_ui"
+        "b": {
+            "item": "advancedrocketry:userinterface"
         },
-	"c":
-        {
-            "item": "advancedrocketry:circuit_ic_item_io"
+		"c": {
+            "item": "advancedrocketry:itemiocircuit"
         },
-	"d":
-        {
-            "item": "libvulpes:structure_machine"
+		"d": {
+            "item": "libvulpes:machinestructure"
         },
-	"e":
-        {
-            "item": "advancedrocketry:circuit_ic_control"
+		"e": {
+            "item": "advancedrocketry:controlcircuit"
         },
-	"o":
-        {
+		"o": {
             "item": "minecraft:obsidian"
         },
-	"p":
-        {
-
+		"p": {
             "tag": "forge:plates/steel"
         }
     },

@@ -106,37 +106,13 @@ public class PlanetEventHandler {
 	public void SpawnEntity(WorldEvent.PotentialSpawns event) {
 		World world = (World) event.getWorld();
 
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world);
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(world));
 		if(properties != null) {
 			List<SpawnListEntryNBT> entries = properties.getSpawnListEntries();
 			if(!entries.isEmpty() && event.getType() != EntityClassification.MONSTER)
 				event.getList().addAll(entries);
 		}
 	}
-
-	/*@SubscribeEvent
-	public void onWorldGen(OreGenEvent.GenerateMinable event) {
-
-		if(event.getWorld().provider instanceof WorldProviderPlanet && 
-				DimensionManager.getInstance().getDimensionProperties(event.getWorld().provider.getDimension()).getOreGenProperties(event.getWorld()) != null) {
-
-			switch(event.getType()) {
-			case COAL:
-			case DIAMOND:
-			case EMERALD:
-			case GOLD:
-			case IRON:
-			case LAPIS:
-			case QUARTZ:
-			case REDSTONE:
-			case CUSTOM:
-				event.setResult(Result.DENY);
-				break;
-			default:
-				event.setResult(Result.DEFAULT);
-			}
-		}
-	}*/
 
 	//Handle gravity
 	@SubscribeEvent
@@ -151,11 +127,11 @@ public class PlanetEventHandler {
 		}
 
 		if(!event.getEntity().world.isRemote && event.getEntity().world.getGameTime() % 20 ==0 && event.getEntity() instanceof PlayerEntity) {
-			if(DimensionManager.getInstance().getDimensionProperties(event.getEntity().world).getName().equals("Luna") && 
+			if(DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(event.getEntity().world)).getName().equals("Luna") &&
 					event.getEntity().getPositionVec().squareDistanceTo(2347,80, 67) < 512 ) {
-				ARAdvancements.triggerAchievement(ARAdvancements.WENT_TO_THE_MOON, (ServerPlayerEntity)event.getEntity());
+				ARAdvancements.triggerAdvancement(ARAdvancements.WENT_TO_THE_MOON, (ServerPlayerEntity)event.getEntity());
 			}
-			if(event.getEntity() instanceof PlayerEntity && ZUtils.getDimensionIdentifier(event.getEntity().world).toString().equals(ARConfiguration.getCurrentConfig().spaceDimId.toString()) && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.getEntity().getPosition()) == null) {
+			if(event.getEntity() instanceof PlayerEntity && ZUtils.getDimensionIdentifier(event.getEntity().world).equals(DimensionManager.spaceId) && SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(event.getEntity().getPosition()) == null) {
 				double distance = 0;
 				HashedBlockPosition teleportPosition = null;
 				for (ISpaceObject spaceObject : SpaceObjectManager.getSpaceManager().getSpaceObjects()) {
@@ -179,7 +155,7 @@ public class PlanetEventHandler {
 
 	@SubscribeEvent
 	public void sleepEvent(@Nonnull PlayerSleepInBedEvent event) {
-		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(event.getEntity().getEntityWorld());
+		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(event.getEntity().getEntityWorld()));
 		if(props != DimensionManager.defaultSpaceDimensionProperties) {
 			if (!ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace.get() && AtmosphereHandler.hasAtmosphereHandler(event.getEntity().world) && 
 					!AtmosphereHandler.getOxygenHandler(event.getEntity().world).getAtmosphereType(event.getPos()).isBreathable()) {
@@ -229,8 +205,8 @@ public class PlanetEventHandler {
 			}
 		}
 
-		if(!event.getWorld().isRemote && !event.getItemStack().isEmpty() && event.getItemStack().getItem() == Item.getItemFromBlock(AdvancedRocketryBlocks.blockGenericSeat) && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
-			ARAdvancements.triggerAchievement(ARAdvancements.BEER, (ServerPlayerEntity)event.getEntity());
+		if(!event.getWorld().isRemote && !event.getItemStack().isEmpty() && event.getItemStack().getItem() == AdvancedRocketryItems.itemSeat && event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.TNT) {
+			ARAdvancements.triggerAdvancement(ARAdvancements.BEER, (ServerPlayerEntity)event.getEntity());
 		}
 	}
 
@@ -359,7 +335,7 @@ public class PlanetEventHandler {
 		if(state.getMaterial() == Material.WATER)
 			return;
 
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world);
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(world));
 		if(properties != null) {
 			float[] color =  properties.fogColor;
 			event.setRed(Math.min(event.getRed()*color[0]*1.0f,1f));
@@ -395,38 +371,7 @@ public class PlanetEventHandler {
 		}
 	}
 
-	//TODO: terraforming
-	/*@SubscribeEvent
-	public void serverTickEvent(TickEvent.WorldTickEvent event) {
-		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().allowTerraforming.get() && DimensionManager.getInstance().isDimensionCreated(event.world)) {
-
-			if(DimensionManager.getInstance().getDimensionProperties(event.world).isTerraformed()) {
-				Collection<Chunk> list = ((ServerWorld)event.world).getChunkProvider().getLoadedChunks();
-				if(list.size() > 0) {
-					try {
-						int listSize = list.size();
-
-						for(Chunk chunk : list) {
-
-							if(ARConfiguration.getCurrentConfig().terraformingBlockSpeed.get() > listSize || event.world.rand.nextFloat() < ARConfiguration.getCurrentConfig().terraformingBlockSpeed/(float)listSize)
-							{
-								int coord = event.world.rand.nextInt(256);
-								int x = (coord & 0xF) + chunk.getPos().x*16;
-								int z = (coord >> 4) + chunk.getPos().z*16;
-
-								BiomeHandler.changeBiome(event.world, Biome.getIdForBiome(((ChunkManagerPlanet)((WorldProviderPlanet)event.world.provider).chunkMgrTerraformed).getBiomeGenAt(x,z)), x, z);
-							}
-						}
-					} catch (NullPointerException e) {
-						//Ghost
-					}
-				}
-			}
-		}
-	}*/
-
-
-	private static final ItemStack component = new ItemStack(AdvancedRocketryItems.itemUpgradeFogGoggles, 1);
+	private static final ItemStack component = new ItemStack(AdvancedRocketryItems.itemAntiFogVisorUpgrade, 1);
 	@SubscribeEvent
 	@OnlyIn(value=Dist.CLIENT)
 	public void fogColor(RenderFogEvent event) {
@@ -434,7 +379,7 @@ public class PlanetEventHandler {
 		if(event.getInfo().getRenderViewEntity().getEntityWorld() instanceof WorldDummy)
 			return;
 
-		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(event.getInfo().getRenderViewEntity().getEntityWorld());
+		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(event.getInfo().getRenderViewEntity().getEntityWorld()));
 		if(properties != null && event.getInfo().getBlockAtCamera().getBlock() != Blocks.WATER && event.getInfo().getBlockAtCamera().getBlock() != Blocks.LAVA) {//& properties.atmosphereDensity > 125) {
 			//GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
 			GlStateManager.fogMode(GlStateManager.FogMode.LINEAR.param);

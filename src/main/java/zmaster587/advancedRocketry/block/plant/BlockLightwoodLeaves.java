@@ -47,7 +47,7 @@ public class BlockLightwoodLeaves extends LeavesBlock {
     }
 
     public Item getItemDropped(BlockState state, Random rand, int fortune) {
-        return Item.getItemFromBlock(AdvancedRocketryBlocks.blockAlienSapling);
+        return Item.getItemFromBlock(AdvancedRocketryBlocks.blockLightwoodSapling);
     }
     
     @Nonnull

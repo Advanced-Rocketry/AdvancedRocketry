@@ -1,0 +1,14 @@
+{
+    "type": "advancedrocketry:cuttingmachine",
+    "itemingredients": [
+        {
+            "item": "advancedrocketry:advancedcircuitwafer"
+        }
+    ],
+    "time": 300,
+    "energy": 100,
+    "itemresults": {
+        "item": "advancedrocketry:advancedcircuit",
+        "count": 4
+    }
+}

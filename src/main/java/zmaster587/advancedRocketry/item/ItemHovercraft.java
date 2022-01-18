@@ -34,11 +34,6 @@ public class ItemHovercraft extends Item {
 		super(props);
 	}
 
-	protected boolean canTriggerWalking()
-	{
-		return false;
-	}
-
 	/**
 	 * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
 	 */

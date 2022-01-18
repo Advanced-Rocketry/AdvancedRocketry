@@ -4,10 +4,10 @@
         "facing=south,state=false": { "model": "advancedrocketry:block/railgun", "y": 180 },
         "facing=west,state=false":  { "model": "advancedrocketry:block/railgun", "y": 270 },
         "facing=east,state=false":  { "model": "advancedrocketry:block/railgun", "y": 90 },
-        "facing=north,state=true": { "model": "advancedrocketry:block/railgun_on" },
-        "facing=south,state=true": { "model": "advancedrocketry:block/railgun_on", "y": 180 },
-        "facing=west,state=true":  { "model": "advancedrocketry:block/railgun_on", "y": 270 },
-        "facing=east,state=true":  { "model": "advancedrocketry:block/railgun_on", "y": 90 },
+        "facing=north,state=true": { "model": "advancedrocketry:block/railgun" },
+        "facing=south,state=true": { "model": "advancedrocketry:block/railgun", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:block/railgun", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:block/railgun", "y": 90 },
         "inventory" : { "model": "advancedrocketry:block/railgun" }
     }
 }

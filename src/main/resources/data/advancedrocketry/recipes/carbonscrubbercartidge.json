@@ -1,25 +1,20 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"xix",
-	"xix",
-	"xix"
+    "pattern": [
+		"xix",
+		"xix",
+		"xix"
     ],
-    "key":
-    {
-        "x":
-        {
+    "key": {
+        "x": {
             "tag": "forge:sheets/iron"
         },
-	"i":
-        {
+		"i": {
             "item": "minecraft:iron_bars"
         }
     },
-    "result":
-    {
-        "item": "advancedrocketry:carbon_scrubber_cartridge",
+    "result": {
+        "item": "advancedrocketry:carbonscrubbercartridge",
         "count": 1
     }
 }

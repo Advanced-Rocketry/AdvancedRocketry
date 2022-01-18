@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.inventory.modules;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.container.Container;
@@ -49,8 +50,8 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 	}
 
 	@Override
-	public List<Button> addButtons(int x, int y) {
-		List<Button> list = buttonLoad.addButtons(x, y);
+	public List<AbstractButton> addButtons(int x, int y) {
+		List<AbstractButton> list = buttonLoad.addButtons(x, y);
 		list.addAll(buttonStore.addButtons(x, y));
 		return list;
 	}
@@ -66,7 +67,7 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 	}
 
 	@Override
-	public void actionPerform(Button button) {
+	public void actionPerform(AbstractButton button) {
 		buttonStore.actionPerform(button);
 		buttonLoad.actionPerform(button);
 	}
@@ -117,9 +118,7 @@ public class ModuleData extends ModuleBase implements IButtonInventory {
 
 	@OnlyIn(value=Dist.CLIENT)
 	@Override
-	public void renderForeground(MatrixStack matrix, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY,
-			float zLevel, ContainerScreen<? extends Container> gui, FontRenderer font) {
-
+	public void renderForeground(MatrixStack matrix, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, ContainerScreen<? extends Container> gui, FontRenderer font) {
 		buttonLoad.renderForeground(matrix, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
 		buttonStore.renderForeground(matrix, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
 

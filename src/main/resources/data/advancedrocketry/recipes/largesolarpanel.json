@@ -1,29 +1,27 @@
 {
     "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
+    "ingredients": [
         {
-	    "item": "advancedrocketry:satellite_power_source_basic"
+	        "item": "advancedrocketry:solarpanel"
         },
         {
-	    "item": "advancedrocketry:satellite_power_source_basic"
+	        "item": "advancedrocketry:solarpanel"
+            },
+        {
+	        "item": "advancedrocketry:solarpanel"
+        },
+	    {
+	        "item": "advancedrocketry:solarpanel"
+        },
+        {
+	        "item": "advancedrocketry:solarpanel"
         },        
         {
-	    "item": "advancedrocketry:satellite_power_source_basic"
-        },
-	{
-	    "item": "advancedrocketry:satellite_power_source_basic"
-        },
-        {
-	    "item": "advancedrocketry:satellite_power_source_basic"
-        },        
-        {
-	    "item": "advancedrocketry:satellite_power_source_basic"
+	        "item": "advancedrocketry:solarpanel"
         }
     ],
-    "result":
-    {
-        "item": "advancedrocketry:satellite_power_source_adv",
+    "result": {
+        "item": "advancedrocketry:largesolarpanel",
         "count": 1
     }
 }

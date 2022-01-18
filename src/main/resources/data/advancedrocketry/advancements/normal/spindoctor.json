@@ -4,10 +4,10 @@
             "item": "advancedrocketry:lathe"
         },
         "title": {
-            "translate": "advancement.spinDoctor"
+            "translate": "advancement.advancedrocketry.spindoctor"
         },
         "description": {
-            "translate": "advancement.spinDoctor.desc"
+            "translate": "advancement.advancedrocketry.spindoctor.desc"
         }
     },
     "parent": "advancedrocketry:normal/holographic",

@@ -7,18 +7,20 @@ import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 public class ARAdvancements {
 
-	public static final ResourceLocation MOON_LANDING = new ResourceLocation("advancedrocketry", "moonlanding");
-	public static final ResourceLocation ONE_SMALL_STEP = new ResourceLocation("advancedrocketry", "onesmallstep");
-	public static final ResourceLocation BEER = new ResourceLocation("advancedrocketry", "beer");
-	public static final ResourceLocation WENT_TO_THE_MOON = new ResourceLocation("advancedrocketry", "wenttothemoon");
-	public static final ResourceLocation ALL_SHE_GOT = new ResourceLocation("advancedrocketry", "givingitallshesgot");
-	public static final ResourceLocation PHOENIX_FLIGHT = new ResourceLocation("advancedrocketry", "flightofpheonix");
+	public static final ResourceLocation MOON_LANDING = new ResourceLocation("advancedrocketry", "normal/moonlanding");
+	public static final ResourceLocation ONE_SMALL_STEP = new ResourceLocation("advancedrocketry", "normal/onesmallstep");
+	public static final ResourceLocation BEER = new ResourceLocation("advancedrocketry", "normal/beer");
+	public static final ResourceLocation WENT_TO_THE_MOON = new ResourceLocation("advancedrocketry", "normal/wenttothemoon");
+	public static final ResourceLocation ALL_SHE_GOT = new ResourceLocation("advancedrocketry", "normal/givingitallshesgot");
+	public static final ResourceLocation PHOENIX_FLIGHT = new ResourceLocation("advancedrocketry", "normal/flightofpheonix");
 	
-	public static void triggerAchievement(ResourceLocation name, ServerPlayerEntity player) {
+	public static void triggerAdvancement(ResourceLocation name, ServerPlayerEntity player) {
 		Advancement advancement = ServerLifecycleHooks.getCurrentServer().getAdvancementManager().getAdvancement(name);
-		
-		if(advancement != null)
-			for(String str : advancement.getCriteria().keySet())
+		System.out.println(true);
+		if(advancement != null) {
+
+			for (String str : advancement.getCriteria().keySet())
 				player.getAdvancements().grantCriterion(advancement, str);
+		}
 	}
 }

@@ -6,7 +6,7 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 
-public class AtmosphereEvent  extends EntityEvent {
+public class AtmosphereEvent extends EntityEvent {
 	
 	public final World world;
 	public final IAtmosphere atmosphere;

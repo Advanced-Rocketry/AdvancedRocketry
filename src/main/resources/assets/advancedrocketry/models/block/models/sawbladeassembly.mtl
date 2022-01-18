@@ -1,0 +1,8 @@
+# Blender MTL File: 'lowertank.blend'
+# Material Count: 1
+
+newmtl sawblade
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+d 1.000000
+map_Kd advancedrocketry:models/sawbladeassembly

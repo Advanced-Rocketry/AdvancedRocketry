@@ -26,19 +26,20 @@ import zmaster587.advancedRocketry.api.IMission;
 import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
-import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
+import zmaster587.advancedRocketry.tile.TileRocketAssembler;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.ISidedRedstoneTile;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import java.util.List;
 
-public class TileRocketLoader extends TileInventoryHatch implements IInfrastructure, ITickableTileEntity,  IButtonInventory, INetworkMachine, IGuiCallback  {
+public class TileRocketLoader extends TileInventoryHatch implements IInfrastructure, ITickableTileEntity,  IButtonInventory, INetworkMachine, IGuiCallback, ISidedRedstoneTile {
 
 	EntityRocket rocket;
 	ModuleRedstoneOutputButton redstoneControl;
@@ -89,13 +90,13 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 	@Override
 	public void remove() {
 		super.remove();
-		if(getMasterBlock() instanceof TileRocketAssemblingMachine)
-			((TileRocketAssemblingMachine)getMasterBlock()).removeConnectedInfrastructure(this);
+		if(getMasterBlock() instanceof TileRocketAssembler)
+			((TileRocketAssembler)getMasterBlock()).removeConnectedInfrastructure(this);
 	}
 
 	@Override
 	public String getModularInventoryName() {
-		return "block.advancedrocketry.rloader";
+		return "block.advancedrocketry.rocketloader";
 	}
 
 	@Override

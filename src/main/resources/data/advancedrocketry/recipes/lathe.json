@@ -1,47 +1,34 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"rsr",
-	"abc",
-	"pgp"
+    "pattern": [
+	    "rsr",
+	    "abc",
+	    "pgp"
     ],
-    "key":
-    {
-        "r":
-        {
-
-            "tag": "forge:sticks/iron"
+    "key": {
+        "r": {
+            "tag": "forge:rods/iron"
         },
-        "s":
-        {
-            "item": "advancedrocketry:item_ui"
+        "s": {
+            "item": "advancedrocketry:userinterface"
         },
-	"a":
-        {
-            "item": "advancedrocketry:circuit_ic_item_io"
+	    "a": {
+            "item": "advancedrocketry:itemiocircuit"
         },
-	"b":
-        {
-            "item": "libvulpes:structure_machine"
+	    "b": {
+            "item": "libvulpes:machinestructure"
         },
-	"c":
-        {
-            "item": "advancedrocketry:circuit_ic_control"
+	    "c": {
+            "item": "advancedrocketry:controlcircuit"
         },
-	"g":
-        {
-
+	    "g": {
             "tag": "forge:gears/steel"
         },
-	"p":
-        {
-
+	    "p": {
             "tag": "forge:plates/steel"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:lathe",
         "count": 1
     }

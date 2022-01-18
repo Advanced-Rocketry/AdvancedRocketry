@@ -1,16 +1,13 @@
 {
     "type": "advancedrocketry:electricarcfurnace",
-    "itemingredients":
-    [
+    "itemingredients": [
         {
-	    "item": "minecraft:sand"
+	   	 "item": "minecraft:sand"
         }
     ],
     "time": 12000,
     "energy": 1,
-    "itemresults":
-    {
-
+    "itemresults": {
             "tag": "forge:ingots/silicon"
     }
 }

@@ -240,8 +240,9 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 	public OreGenProperties oreProperties = null;
 	public List<ItemStack> laserDrillOres;
 	public List<ItemStack> craterOres;
-	public List<String> geodeOres;
+	public List<ItemStack> geodeOres;
 	public String craterOresRaw;
+	public String geodeOresRaw;
 	// The parsing of laserOreDrills is destructive of the actual oredict entries, so we keep a copy of the raw data around for XML writing
 	public String laserDrillOresRaw;
 	public String customIcon;
@@ -1496,11 +1497,15 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		if(nbt.contains("geodeOres")) {
 			geodeOres.clear();
-			list = nbt.getList("geodeOres", NBT.TAG_STRING);
+			list = nbt.getList("geodeOres", NBT.TAG_COMPOUND);
 			for(INBT entry : list) {
-				assert entry instanceof StringNBT;
-				geodeOres.add(entry.getString());
+				assert entry instanceof CompoundNBT;
+				geodeOres.add(ItemStack.read((CompoundNBT) entry));
 			}
+		}
+
+		if(nbt.contains("geodeOresRaw")) {
+			geodeOresRaw = nbt.getString("geodeOresRaw");
 		}
 
 		if(nbt.contains("craterOres")) {
@@ -1717,10 +1722,16 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		if(!geodeOres.isEmpty()) {
 			list = new ListNBT();
-			for(String ore : geodeOres) {
-				list.add(StringNBT.valueOf(ore));
+			for(ItemStack ore : geodeOres) {
+				CompoundNBT entry = new CompoundNBT();
+				ore.write(entry);
+				list.add(entry);
 			}
 			nbt.put("geodeOres",list);
+		}
+
+		if(geodeOresRaw != null) {
+			nbt.put("geodeOresRaw", StringNBT.valueOf(geodeOresRaw));
 		}
 
 		if(!craterOres.isEmpty()) {
@@ -1815,7 +1826,6 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		writeTechnicalNBT(nbt);
 	}
-
 	public String generateDimJSON()
 	{
 		long seed = 0;
@@ -1826,8 +1836,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 		
 		if(!isAsteroid()) {
-			if(canGenerateCraters())
-			{
+			if(canGenerateCraters()) {
 				structures.add("\"advancedrocketry:crater\"");
 
 				biomeConditionalStructures.add(
@@ -1838,8 +1847,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 						"	          }");
 
 			}
-			if(canGenerateVolcanoes)
-			{
+			if(canGenerateVolcanoes) {
 				structures.add("\"advancedrocketry:volcano\"");
 				biomeConditionalStructures.add(
 						"	          \"advancedrocketry:volcano\": {\n" + 
@@ -1848,8 +1856,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 								"	            \"salt\": 0\n" + 
 						"	          }");
 			}
-			if(canGenerateGeodes())
-			{
+			if(canGenerateGeodes()) {
 				structures.add("\"advancedrocketry:geode\"");
 				biomeConditionalStructures.add(
 						"	          \"advancedrocketry:geode\": {\n" + 
@@ -1859,8 +1866,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 						"	          }");
 			}
 			
-			for(Biome biome : getBiomes())
-			{
+			for(Biome biome : getBiomes()) {
 				biomeStrings.add(
 						"	    {\n" + 
 								"              \"biome\": \"" + biome.getRegistryName().toString() + "\",\n" + 
@@ -2115,8 +2121,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 
 	}
 
-	public double[] getPlanetPosition()
-	{
+	public double[] getPlanetPosition() {
 		double orbitalDistance = this.orbitalDist;
 		double theta = this.orbitTheta;
 		double phi = this.orbitalPhi;
@@ -2223,13 +2228,11 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		return this.canGenerateCaves;
 	}
 
-	public float getRenderSizePlanetView()
-	{
+	public float getRenderSizePlanetView() {
 		return (isMoon() ? 8f : 10f)*Math.max(this.getGravitationalMultiplier()*this.getGravitationalMultiplier(), .5f)*100;
 	}
 
-	public float getRenderSizeSolarView()
-	{
+	public float getRenderSizeSolarView() {
 		return (isMoon() ? 0.2f : 1f)*Math.max(this.getGravitationalMultiplier()*this.getGravitationalMultiplier(), .5f)*100;
 	}
 

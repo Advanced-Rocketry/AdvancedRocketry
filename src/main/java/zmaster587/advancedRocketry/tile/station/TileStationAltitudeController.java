@@ -41,9 +41,9 @@ import java.util.List;
 public class TileStationAltitudeController extends TileEntity implements IModularInventory, ITickableTileEntity, INetworkMachine, ISliderBar, IButtonInventory, IComparatorOverride {
 
 	int progress;
-	private RedstoneState state;
+	private RedstoneState state = ZUtils.RedstoneState.OFF;
 
-	private ModuleText moduleGrav, numGravPylons, maxGravBuildSpeed, targetGrav;
+	private ModuleText moduleGrav, maxGravBuildSpeed, targetGrav;
 	private ModuleRedstoneOutputButton redstoneControl;
 
 	public TileStationAltitudeController() {
@@ -152,7 +152,7 @@ public class TileStationAltitudeController extends TileEntity implements IModula
 
 	@Override
 	public void tick() {
-		if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world))) {
+		if(DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(this.world))) {
 
 			if(!world.isRemote) {
 				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);

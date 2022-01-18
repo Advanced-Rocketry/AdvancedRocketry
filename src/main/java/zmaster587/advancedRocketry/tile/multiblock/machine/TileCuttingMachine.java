@@ -71,7 +71,7 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 
 	@Override
 	public String getMachineName() {
-		return "container.cuttingmachine";
+		return "block.advancedrocketry.cuttingmachine";
 	}
 
 	@Override

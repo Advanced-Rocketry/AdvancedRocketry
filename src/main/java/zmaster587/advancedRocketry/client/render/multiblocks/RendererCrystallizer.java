@@ -25,7 +25,6 @@ import java.util.List;
 public class RendererCrystallizer extends TileEntityRenderer<TileCrystallizer> {
 
 	WavefrontObject model;
-
 	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/crystallizer.png");
 
 
@@ -122,8 +121,7 @@ public class RendererCrystallizer extends TileEntityRenderer<TileCrystallizer> {
 				model.renderOnly(matrix, combinedLightIn, combinedOverlayIn, entityTransparentBuilder, "Liquid");
 				matrix.pop();
 			}
-		}
-		else {
+		} else {
 			model.tessellatePart(matrix, combinedLightIn, combinedOverlayIn,  entityTransparentBuilder, "Hull");
 		}
 		matrix.pop();

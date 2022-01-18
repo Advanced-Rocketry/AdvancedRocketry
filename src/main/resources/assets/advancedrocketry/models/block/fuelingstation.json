@@ -2,7 +2,7 @@
     "parent": "block/orientable",
     "textures": {
         "top": "libvulpes:blocks/machinegeneric",
-        "front": "advancedrocketry:blocks/fuelingmachine",
-        "side": "advancedrocketry:blocks/fuelingmachine"
+        "front": "advancedrocketry:blocks/machines/fuelingstation",
+        "side": "libvulpes:blocks/machinegeneric"
     }
 }

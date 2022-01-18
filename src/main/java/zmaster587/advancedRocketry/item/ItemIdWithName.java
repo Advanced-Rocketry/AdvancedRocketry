@@ -10,6 +10,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class ItemIdWithName extends Item {
@@ -36,10 +39,9 @@ public class ItemIdWithName extends Item {
 		return "";
 	}
 	
-	
 	@Override
     @OnlyIn(value=Dist.CLIENT)
-	public void addInformation(ItemStack stack, World player, List<ITextComponent> list, ITooltipFlag bool) {
+	public void addInformation(ItemStack stack, @Nullable World world, @Nonnull List<ITextComponent> list, @Nonnull ITooltipFlag bool) {
 		if(stack.getDamage() == -1) {
 			list.add(new StringTextComponent("Unprogrammed"));
 		}

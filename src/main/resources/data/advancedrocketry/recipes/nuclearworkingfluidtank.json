@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "s s",
+	    "pSp",
+	    "s s"
+    ],
+    "key": {
+        "s": {
+            "tag": "forge:rods/steel"
+        },
+        "S": {
+            "tag": "forge:sheets/titanium"
+        },
+	    "p": {
+            "tag": "forge:plates/steel"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:nuclearworkingfluidtank",
+        "count": 1
+    }
+}

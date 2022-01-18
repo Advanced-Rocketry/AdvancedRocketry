@@ -4,10 +4,10 @@
             "item": "libvulpes:gemdilithium"
         },
         "title": {
-            "translate": "advancement.dilithium"
+            "translate": "advancement.advancedrocketry.dilithium"
         },
         "description": {
-            "translate": "advancement.dilithium.desc"
+            "translate": "advancement.advancedrocketry.dilithium.desc"
         }
     },
     "parent": "advancedrocketry:normal/root",
@@ -17,8 +17,7 @@
             "conditions": {
                 "items": [
                     {
-                        "item": "libvulpes:gemdilithium",
-                        "data": 0
+                        "item": "libvulpes:gemdilithium"
                     }
                 ]
             }

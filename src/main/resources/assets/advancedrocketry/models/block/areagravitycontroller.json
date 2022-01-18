@@ -1,0 +1,8 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+        "top": "advancedrocketry:blocks/multiblocks/warpcore",
+        "front": "advancedrocketry:blocks/machines/gravitycontrollerpanel",
+        "side": "advancedrocketry:blocks/machines/gravitycontrollerpanel"
+    }
+}

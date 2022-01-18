@@ -1,25 +1,22 @@
 {
     "type": "advancedrocketry:precisionassembler",
-    "itemingredients":
-    [
+    "itemingredients": [
         {
-
             "tag": "forge:dusts/redstone"
         },
         {
-	    "item": "advancedrocketry:circuit_ic_basic"
+	        "item": "advancedrocketry:basiccircuit"
         },
-	{
-	    "item": "advancedrocketry:circuit_ic_control"
+	    {
+	        "item": "advancedrocketry:controlcircuit"
         },
-	{
+	    {
 	    "item": "minecraft:redstone_torch"
         }
     ],
     "time": 200,
     "energy": 1,
-    "itemresults":
-    {
-	"item": "advancedrocketry:upgrade_hover"
+    "itemresults": {
+	    "item": "advancedrocketry:hoverupgrade"
     }
 }

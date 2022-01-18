@@ -1,0 +1,31 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+		"udg",
+		"dsd",
+		"ada"
+    ],
+    "key": {
+        "a": {
+            "item": "advancedrocketry:advancedcircuit"
+        },
+        "u": {
+            "item": "advancedrocketry:userinterface"
+        },
+        "s": {
+            "item": "advancedrocketry:rocketassembler"
+        },
+        "d": {
+
+            "tag": "forge:dusts/dilithium"
+        },
+        "g": {
+
+            "tag": "forge:gears/titanium"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:spacestationassembler",
+        "count": 1
+    }
+}

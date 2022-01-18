@@ -384,7 +384,7 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 
 	@Override
 	public String getModularInventoryName() {
-		return "block.advancedrocketry.planetholoselector";
+		return "block.advancedrocketry.holographicplanetselector";
 	}
 
 	@Override

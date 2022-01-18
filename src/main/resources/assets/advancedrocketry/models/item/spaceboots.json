@@ -1,7 +1,0 @@
-{
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "advancedrocketry:items/spaceboots",
-        "layer1": "advancedrocketry:items/spaceboots_overlay"
-    }
-}

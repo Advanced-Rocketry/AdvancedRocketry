@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "": { "model": "advancedrocketry:block/seal" },
+        "inventory" : { "model": "advancedrocketry:block/seal" }
+    }
+}

@@ -18,7 +18,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
-import zmaster587.advancedRocketry.tile.TileFluidTank;
+import zmaster587.advancedRocketry.tile.TilePressureTank;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,7 +56,7 @@ public class ItemBlockFluidTank extends BlockItem {
 		
 		TileEntity tile = world.getTileEntity(pos);
 		
-		if(tile instanceof TileFluidTank) {
+		if(tile instanceof TilePressureTank) {
 			IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.DOWN).orElse(null);
 
 			ItemStack stack2 = stack.copy();

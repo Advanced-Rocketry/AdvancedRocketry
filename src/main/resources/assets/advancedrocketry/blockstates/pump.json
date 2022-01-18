@@ -1,0 +1,9 @@
+{
+    "variants": {
+        "facing=north": { "model": "advancedrocketry:block/pump" },
+        "facing=south": { "model": "advancedrocketry:block/pump", "y": 180 },
+        "facing=west":  { "model": "advancedrocketry:block/pump", "y": 270 },
+        "facing=east":  { "model": "advancedrocketry:block/pump", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:block/pump" }
+    }
+}

@@ -26,11 +26,10 @@ import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.compat.InventoryCompat;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
-import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
+import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 import zmaster587.libVulpes.util.MultiInventory;
 import zmaster587.libVulpes.util.ZUtils;
 
@@ -41,7 +40,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISidedInventory, IGuiCallback, IButtonInventory {
+public class TileOrbitalLaserDrill extends TileMultiblockMachine implements ISidedInventory, IGuiCallback, IButtonInventory {
 
 	private ItemStack lens;
 	private final AbstractDrill drill;
@@ -49,8 +48,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	private int radius, xCenter, yCenter, numSteps;
 	private Direction prevDir;
 	public int laserX, laserZ, tickSinceLastOperation;
-	private static final Direction[] VALID_INVENTORY_DIRECTIONS = { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
-	private static final int POWER_PER_OPERATION =(int)( 10000* ARConfiguration.getCurrentConfig().spaceLaserPowerMult.get());
+	private static final int POWER_PER_OPERATION =(int)( 20000* ARConfiguration.getCurrentConfig().spaceLaserPowerMult.get());
 	private ModuleTextBox locationX, locationZ;
 	private ModuleText updateText;
 	private MultiInventory inv;
@@ -60,34 +58,34 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 				{null, null, null, null, null, null, null, null, null, null, null},
 				{null, null, null, null, null, null, null, null, null, null, null},
 				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, LibVulpesBlocks.blockAdvStructureBlock, null, null, null, null, null, null, null, null, null},
-				{LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockAdvStructureBlock, null, null, null, null, null, null, null, null},
-				{null, LibVulpesBlocks.blockAdvStructureBlock, null, null, null, null, null, null, null, null, null},
+				{null, LibVulpesBlocks.blockAdvancedMachineStructure, null, null, null, null, null, null, null, null, null},
+				{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, null, null, null, null, null, null, null, null},
+				{null, LibVulpesBlocks.blockAdvancedMachineStructure, null, null, null, null, null, null, null, null, null},
 				{null, null, null, null, null, null, null, null, null, null, null},
 				{null, null, null, null, null, null, null, null, null, null, null},
 				{null, null, null, null, null, null, null, null, null, null, null}
 			},
 			{
-				{null, null, null, null, null, null,  LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, null},
-				{null, null, null, null,  LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, 'P'},
-				{null, null, null, null,  LibVulpesBlocks.blockAdvStructureBlock,  LibVulpesBlocks.blockAdvStructureBlock,  LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, 'P'},
-				{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockStructureBlock, null, AdvancedRocketryBlocks.blockLens, null,  LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, null},
-				{LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockLens,  LibVulpesBlocks.blockAdvStructureBlock, null, null, null, null, null, null},
-				{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockStructureBlock, null, AdvancedRocketryBlocks.blockLens, null,  LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, null},
-				{null, null, null, null,  LibVulpesBlocks.blockAdvStructureBlock,  LibVulpesBlocks.blockAdvStructureBlock,  LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, 'P'},
-				{null, null, null, null,  LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, 'P'},
-				{null, null, null, null, null, null,  LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, null}
+				{null, null, null, null, null, null,  LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, null},
+				{null, null, null, null,  LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, 'P'},
+				{null, null, null, null,  LibVulpesBlocks.blockAdvancedMachineStructure,  LibVulpesBlocks.blockAdvancedMachineStructure,  LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, 'P'},
+				{LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockMachineStructure, null, AdvancedRocketryBlocks.blockLens, null,  LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, null},
+				{LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLens,  LibVulpesBlocks.blockAdvancedMachineStructure, null, null, null, null, null, null},
+				{LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockAdvancedMachineStructure, LibVulpesBlocks.blockMachineStructure, null, AdvancedRocketryBlocks.blockLens, null,  LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, null},
+				{null, null, null, null,  LibVulpesBlocks.blockAdvancedMachineStructure,  LibVulpesBlocks.blockAdvancedMachineStructure,  LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, 'P'},
+				{null, null, null, null,  LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, 'P'},
+				{null, null, null, null, null, null,  LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, null}
 			},
 			{
-			    {null, null, null, null, null, null,  LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, null},
-		    	{null, null, null, null,  LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, 'P'},
-		    	{'O', 'c', 'O', null,  LibVulpesBlocks.blockAdvStructureBlock,  LibVulpesBlocks.blockAdvStructureBlock,  LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, 'P'},
-		    	{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null, AdvancedRocketryBlocks.blockLens, null,  LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, null},
-		    	{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockLens,  LibVulpesBlocks.blockAdvStructureBlock, null, null, null, null, null, null},
-		    	{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null, AdvancedRocketryBlocks.blockLens, null,  LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, null},
-	    		{null, null, null, null,  LibVulpesBlocks.blockAdvStructureBlock,  LibVulpesBlocks.blockAdvStructureBlock,  LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, 'P'},
-		    	{null, null, null, null,  LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, 'P'},
-		    	{null, null, null, null, null, null,  LibVulpesBlocks.blockAdvStructureBlock, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, AdvancedRocketryBlocks.blockVacuumLaser, null}
+			    {null, null, null, null, null, null,  LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, null},
+		    	{null, null, null, null,  LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, 'P'},
+		    	{'O', 'c', 'O', null,  LibVulpesBlocks.blockAdvancedMachineStructure,  LibVulpesBlocks.blockAdvancedMachineStructure,  LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, 'P'},
+		    	{LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, null, AdvancedRocketryBlocks.blockLens, null,  LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, null},
+		    	{LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, AdvancedRocketryBlocks.blockLens,  LibVulpesBlocks.blockAdvancedMachineStructure, null, null, null, null, null, null},
+		    	{LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, null, AdvancedRocketryBlocks.blockLens, null,  LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, null},
+	    		{null, null, null, null,  LibVulpesBlocks.blockAdvancedMachineStructure,  LibVulpesBlocks.blockAdvancedMachineStructure,  LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, 'P'},
+		    	{null, null, null, null,  LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockLens, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, 'P'},
+		    	{null, null, null, null, null, null,  LibVulpesBlocks.blockAdvancedMachineStructure, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, AdvancedRocketryBlocks.blockLaser, null}
 	        },
 	};
 	
@@ -101,7 +99,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	private MODE mode;
 	
 	public TileOrbitalLaserDrill() { 
-		super(AdvancedRocketryTileEntityType.TILE_SPACE_LASER);
+		super(AdvancedRocketryTileEntityType.TILE_ORBITAL_LASER_DRILL);
 		lens = ItemStack.EMPTY;
 		radius = 0;
 		xCenter = 0;
@@ -263,15 +261,6 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	
 	@Override
 	public void tick() {
-		
-		//Freaky janky crap to make sure the multiblock loads on chunkload etc
-		if(timeAlive == 0 && !world.isRemote) {
-			if(isComplete())
-				canRender = completeStructure = completeStructure(world.getBlockState(pos));
-			timeAlive = 0x1;
-			checkCanRun();
-		}
-		
 		if(!this.world.isRemote) {
 			tickSinceLastOperation++;
 
@@ -291,7 +280,6 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 				ZUtils.mergeInventory(stacks,this.inv);
 
 				if(!ZUtils.isInvEmpty(stacks)) {
-					//TODO: drop extra items
 					this.drill.deactivate();
 					this.isJammed = true;
 				}
@@ -338,7 +326,6 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 						this.laserZ += 3*prevDir.getZOffset();
 					}
 				}
-				//TODO: unneeded?
 				checkCanRun();
 			}
 		}
@@ -464,7 +451,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	private boolean unableToRun() {
 		return lens.isEmpty() || !canMachineSeeEarth() 
 				|| batteries.getUniversalEnergyStored() == 0 
-				|| ZUtils.getDimensionIdentifier(world).equals(ARConfiguration.getSpaceDimId())
+				|| ZUtils.getDimensionIdentifier(world).equals(DimensionManager.spaceId)
 				|| !DimensionManager.getInstance().canTravelTo(DimensionManager.getInstance().getDimensionProperties(world, getPos()).getParentPlanet()) 
 				|| ARConfiguration.getCurrentConfig().laserBlackListDims.get().contains(DimensionManager.getInstance().getDimensionProperties(world, getPos()).getParentPlanet().toString());
 		}
@@ -473,7 +460,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	 * Checks to see if the situation for firing the laser exists... and changes the state accordingly
 	 */
 	public void checkCanRun() {
-		//Laser requires lense, redstone power, not be jammed, and be in orbit and energy to function
+		//Laser requires lens, redstone power, not be jammed, and be in orbit and energy to function
 
 		if(world.getRedstonePowerFromNeighbors(getPos()) == 0 || unableToRun()) {
 			drill.deactivate();
@@ -508,14 +495,6 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 			PacketHandler.sendToNearby(new PacketMachine(this, (byte)12), ZUtils.getDimensionIdentifier(world), pos, 128);
 	}
 
-	public int getEnergyPercentScaled(int max) {
-		return (int)(max * (batteries.getUniversalEnergyStored() / (float)batteries.getMaxEnergyStored()) );
-	}
-
-	public boolean hasEnergy() {
-		return batteries.getUniversalEnergyStored() != 0;
-	}
-
 	//InventoryHandling start
 	@Override
 	public int getSizeInventory() {
@@ -548,22 +527,11 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 
 	@Override
 	public void setInventorySlotContents(int i, @Nonnull ItemStack itemstack) {
-
-		//TODO: add gregcipies
 		if(i == 0)
 			lens = itemstack;
 		else {
-
-			if(InventoryCompat.canInjectItems(inv, itemstack))
-				InventoryCompat.injectItem(inv, itemstack);
-
 			this.checkCanRun();
 		}
-	}
-
-	@Override
-	public int getInventoryStackLimit() {
-		return 64;
 	}
 
 	@Override
@@ -612,13 +580,10 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	@Override
 	public boolean isItemValidForSlot(int i, @Nonnull ItemStack itemstack) {
 		if(i == 0)
-			return AdvancedRocketryItems.itemLens == itemstack.getItem();
+			return AdvancedRocketryItems.itemLensBlock == itemstack.getItem();
 
 		return inv.isItemValidForSlot(i, itemstack);
 	}
-	//InventoryHandling end
-
-	//Redstone Flux start
 
 	/**
 	 * @return returns whether enough power is stored for the next operation
@@ -634,8 +599,6 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	public void setEnergy(int amt) {
 		batteries.setEnergyStored(amt);
 	}
-	
-	//Redstone Flux end
 
 	public boolean isJammed() {
 		return this.isJammed;
@@ -648,7 +611,6 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 
 	@Override
 	public void onModuleUpdated(ModuleBase module) {
-
 		if(module == locationX) {
 			if(!((ModuleTextBox)module).getText().isEmpty() && !((ModuleTextBox)module).getText().contentEquals("-"))
 				laserX = Integer.parseInt(((ModuleTextBox)module).getText());
@@ -682,19 +644,16 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 		
 		modules.add(new ModuleButton(103, 20, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonLeft, 5, 8).setAdditionalData(0));
 		modules.add(new ModuleButton(157, 20, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonRight, 5, 8).setAdditionalData(1));
-		modules.add(new ModuleButton(103, 62, LibVulpes.proxy.getLocalizedString("msg.spacelaser.reset"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, 64, 20).setAdditionalData(2));
+		modules.add(new ModuleButton(103, 62, LibVulpes.proxy.getLocalizedString("msg.orbitallaserdrill.reset"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, 64, 20).setAdditionalData(2));
 		modules.add(new ModulePower(11, 25, batteries));
 		modules.add(new ModuleSlotArray(56, 54, this, 0, 1));
-		
-		
-
 
 		return modules;
 	}
 
 	@Override
 	public String getModularInventoryName() {
-		return "block.advancedrocketry.spacelaser";
+		return "block.advancedrocketry.orbitallaserdrill";
 	}
 
 	@Override
@@ -704,7 +663,6 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 
 	@Override
 	public void onInventoryButtonPressed(ModuleButton button) {
-
 		int buttonId = button.getAdditionalData() == null ? -1 : (int)button.getAdditionalData();
 		
 		if(buttonId == 0){
@@ -733,7 +691,5 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	}
 
 	@Override
-	public void clear() {
-		
-	}
+	public void clear() { }
 }

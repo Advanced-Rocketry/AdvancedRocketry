@@ -30,6 +30,8 @@ import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.util.AstronomicalBodyHelper;
 import zmaster587.libVulpes.util.Vector3F;
+import zmaster587.libVulpes.util.ZUtils;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -263,7 +265,7 @@ public class RenderPlanetarySky implements ISkyRenderer { // implements IRenderH
 
 		if(dimensionMgr.isDimensionCreated(mc.world)) {
 
-			properties = DimensionManager.getInstance().getDimensionProperties(mc.world, new BlockPos(mc.player.getPositionVec()));
+			properties = DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(mc.world), new BlockPos(mc.player.getPositionVec()));
 
 
 			atmosphere = properties.getAtmosphereDensityAtHeight(mc.getRenderViewEntity().getPosY());//planetaryProvider.getAtmosphereDensityFromHeight(mc.getRenderViewEntity().posY, mc.player.getPosition());

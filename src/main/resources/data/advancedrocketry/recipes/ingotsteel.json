@@ -1,19 +1,16 @@
 {
     "type": "advancedrocketry:electricarcfurnace",
-    "itemingredients":
-    [
+    "itemingredients": [
         {
-	    "item": "minecraft:charcoal"
+	        "item": "minecraft:charcoal"
         },
         {
-
             "tag": "forge:ingots/iron"
         }
     ],
     "time": 6000,
     "energy": 1,
-    "itemresults":
-    {
-	"tag": "forge:ingots/steel"
+    "itemresults": {
+	    "tag": "forge:ingots/steel"
     }
 }

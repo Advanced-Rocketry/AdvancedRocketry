@@ -1,23 +1,18 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"c",
-	"b"
+    "pattern": [
+	    "c",
+	    "b"
     ],
-    "key":
-    {
-        "c":
-        {
+    "key": {
+        "c": {
             "item": "minecraft:crafting_table"
         },
-        "b":
-        {
-            "item": "libvulpes:structure_machine"
+        "b": {
+            "item": "libvulpes:machinestructure"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:suitworkstation",
         "count": 1
     }

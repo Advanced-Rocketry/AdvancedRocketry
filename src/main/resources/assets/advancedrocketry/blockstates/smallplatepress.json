@@ -1,0 +1,17 @@
+{
+    "variants": {
+        "extended=false,facing=down": { "model": "advancedrocketry:block/smallplatepress", "x": 90 },
+        "extended=false,facing=up": { "model": "advancedrocketry:block/smallplatepress", "x": 270 },
+        "extended=false,facing=north": { "model": "advancedrocketry:block/smallplatepress" },
+        "extended=false,facing=south": { "model": "advancedrocketry:block/smallplatepress", "y": 180 },
+        "extended=false,facing=west": { "model": "advancedrocketry:block/smallplatepress", "y": 270 },
+        "extended=false,facing=east": { "model": "advancedrocketry:block/smallplatepress", "y": 90 },
+        "extended=true,facing=down": { "model": "advancedrocketry:block/smallplatepress", "x": 90 },
+        "extended=true,facing=up": { "model": "advancedrocketry:block/smallplatepress", "x": 270 },
+        "extended=true,facing=north": { "model": "advancedrocketry:block/smallplatepress" },
+        "extended=true,facing=south": { "model": "advancedrocketry:block/smallplatepress", "y": 180 },
+        "extended=true,facing=west": { "model": "advancedrocketry:block/smallplatepress", "y": 270 },
+        "extended=true,facing=east": { "model": "advancedrocketry:block/smallplatepress", "y": 90 },
+        "inventory": { "model": "advancedrocketry:block/smallplatepress", "x": 180 }
+    }
+}

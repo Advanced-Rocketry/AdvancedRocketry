@@ -1,0 +1,21 @@
+{
+"parent": "block/thin_block",
+    "elements": [
+        {   "from": [ 4, 4, 12 ],
+            "to": [ 12, 12, 16 ],
+            "faces": {
+                "down":  { "texture": "#side" },
+                "up":    { "texture": "#side" },
+                "north": { "texture": "#front" },
+                "south": { "texture": "#side" },
+                "west":  { "texture": "#side" },
+                "east":  { "texture": "#side" }
+            }
+        }
+    ],
+    "textures": {
+	"particle": "libvulpes:blocks/machinegeneric",
+        "front": "advancedrocketry:blocks/multiblocks/databus",
+        "side": "libvulpes:blocks/machinegeneric"
+    }
+}

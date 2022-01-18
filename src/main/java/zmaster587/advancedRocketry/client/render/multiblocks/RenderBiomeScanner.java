@@ -50,7 +50,6 @@ public class RenderBiomeScanner extends TileEntityRenderer<TileBiomeScanner> {
 		//Initial setup
 
 		//Rotate and move the model into position
-		Direction front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
 		matrix.translate(0, 0, 1);
 		IVertexBuilder entityTransparentBuilder = buffer.getBuffer(RenderHelper.getSolidEntityModelRenderType(texture));
 		

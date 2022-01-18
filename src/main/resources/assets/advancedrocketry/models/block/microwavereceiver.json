@@ -1,0 +1,8 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+        "top": "advancedrocketry:blocks/machines/microwavereceiver",
+        "front": "libvulpes:blocks/machinegeneric",
+        "side": "libvulpes:blocks/machinegeneric"
+    }
+}

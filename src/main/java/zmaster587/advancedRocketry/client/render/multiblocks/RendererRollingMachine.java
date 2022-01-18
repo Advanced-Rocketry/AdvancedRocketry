@@ -20,10 +20,9 @@ import zmaster587.libVulpes.render.RenderHelper;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 public class RendererRollingMachine extends TileEntityRenderer<TileRollingMachine> {
-	WavefrontObject model;
 
+	WavefrontObject model;
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/rollingmachine.png");
-	private static int bodyList;
 
 	public RendererRollingMachine(TileEntityRendererDispatcher tile) {
 		super(tile);

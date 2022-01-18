@@ -35,8 +35,8 @@ import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.inventory.modules.ModuleData;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetImage;
 import zmaster587.advancedRocketry.inventory.modules.ModulePlanetSelector;
-import zmaster587.advancedRocketry.item.ItemData;
-import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
+import zmaster587.advancedRocketry.item.ItemDataChip;
+import zmaster587.advancedRocketry.item.ItemPlanetChip;
 import zmaster587.advancedRocketry.network.PacketSpaceStationInfo;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
@@ -84,8 +84,8 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 	private boolean openFullScreen = false;
 
 	public TileWarpController() {
-		super(AdvancedRocketryTileEntityType.TILE_WARP_SHIP_CONTROLLER);
-		tabModule = new ModuleTab(4,0,0,this, 3, new String[]{LibVulpes.proxy.getLocalizedString("msg.warpmon.tab.warp"), LibVulpes.proxy.getLocalizedString("msg.warpmon.tab.data"), LibVulpes.proxy.getLocalizedString("msg.warpmon.tab.tracking")}, new ResourceLocation[][] { TextureResources.tabWarp, TextureResources.tabData, TextureResources.tabPlanetTracking} );
+		super(AdvancedRocketryTileEntityType.TILE_WARP_CONTROLLER);
+		tabModule = new ModuleTab(4,0,0,this, 3, new String[]{LibVulpes.proxy.getLocalizedString("msg.warpcontroller.tab.warp"), LibVulpes.proxy.getLocalizedString("msg.warpcontroller.tab.data"), LibVulpes.proxy.getLocalizedString("msg.warpcontroller.tab.tracking")}, new ResourceLocation[][] { TextureResources.tabWarp, TextureResources.tabData, TextureResources.tabPlanetTracking} );
 		data = new MultiData();
 		data.setMaxData(10000);
 		inv = new EmbeddedInventory(9);
@@ -95,7 +95,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 
 
 	private SpaceStationObject getSpaceObject() {
-		if(station == null && ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world))) {
+		if(station == null && DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(this.world))) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 			if(object instanceof SpaceStationObject)
 				station = (SpaceStationObject) object;
@@ -232,21 +232,21 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 					modules.add(new ModuleScaledImage(baseX,baseY,70,3, TextureResources.horizontalBar));
 					modules.add(new ModuleScaledImage(baseX,baseY + sizeY - 3,70,-3, TextureResources.horizontalBar));
 				}
-				modules.add(new ModuleButton(baseX - 3, baseY + sizeY, LibVulpes.proxy.getLocalizedString("msg.warpmon.selectplanet"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, sizeX + 6, 16).setAdditionalData(0));
+				modules.add(new ModuleButton(baseX - 3, baseY + sizeY, LibVulpes.proxy.getLocalizedString("msg.warpcontroller.selectplanet"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, sizeX + 6, 16).setAdditionalData(0));
 
 
 				//Status text
-				modules.add(new ModuleText(baseX, baseY + sizeY + 20, LibVulpes.proxy.getLocalizedString("msg.warpmon.corestatus"), 0x1b1b1b));
+				modules.add(new ModuleText(baseX, baseY + sizeY + 20, LibVulpes.proxy.getLocalizedString("msg.warpcontroller.corestatus"), 0x1b1b1b));
 				boolean flag = isOnStation && getSpaceObject().getFuelAmount() >= getTravelCost() && getSpaceObject().hasUsableWarpCore();
 				flag = flag && !(isOnStation && (Constants.INVALID_PLANET.equals(getSpaceObject().getDestOrbitingBody()) || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()));
 				boolean artifactFlag = (dimCache != null && meetsArtifactReq(dimCache));
 
 				canWarp = new ModuleText(baseX, baseY + sizeY + 30,
-						(getSpaceObject().isAnchored()) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.anchored") :
-						((isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId().equals(getSpaceObject().getDestOrbitingBody()))) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") :
-						(!artifactFlag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.missingart") :
-						(flag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.ready") :
-						LibVulpes.proxy.getLocalizedString("msg.warpmon.notready")))), flag && artifactFlag && !getSpaceObject().isAnchored() ? 0x1baa1b : 0xFF1b1b);
+						(getSpaceObject() != null && getSpaceObject().isAnchored()) ? LibVulpes.proxy.getLocalizedString("msg.warpcontroller.anchored") :
+						((isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId().equals(getSpaceObject().getDestOrbitingBody()))) ? LibVulpes.proxy.getLocalizedString("msg.warpcontroller.nowhere") :
+						(!artifactFlag ? LibVulpes.proxy.getLocalizedString("msg.warpcontroller.missingart") :
+						(flag ? LibVulpes.proxy.getLocalizedString("msg.warpcontroller.ready") :
+						LibVulpes.proxy.getLocalizedString("msg.warpcontroller.notready")))), flag && artifactFlag && !getSpaceObject().isAnchored() ? 0x1baa1b : 0xFF1b1b);
 				modules.add(canWarp);
 				modules.add(new ModuleProgress(baseX, baseY + sizeY + 40, 10, new IndicatorBarImage(70, 58, 53, 8, 122, 58, 5, 8, Direction.EAST, TextureResources.progressBars), this));
 				//modules.add(new ModuleText(baseX + 82, baseY + sizeY + 20, "Fuel Cost:", 0x1b1b1b));
@@ -260,7 +260,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 				baseY = 20;
 				sizeX = 70;
 				sizeY = 70;
-				ModuleButton warp = new ModuleButton(baseX - 3, baseY + sizeY, LibVulpes.proxy.getLocalizedString("msg.warpmon.warp"), this ,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, sizeX + 6, 16).setAdditionalData(1);
+				ModuleButton warp = new ModuleButton(baseX - 3, baseY + sizeY, LibVulpes.proxy.getLocalizedString("msg.warpcontroller.warp"), this ,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, sizeX + 6, 16).setAdditionalData(1);
 
 				modules.add(warp);
 
@@ -273,8 +273,8 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 
 
 				if(world.isRemote) {
-					warpFuel.setText(LibVulpes.proxy.getLocalizedString("msg.warpmon.fuelcost") + (flag ? String.valueOf(warpCost) : LibVulpes.proxy.getLocalizedString("msg.warpmon.na")));
-					warpCapacity.setText(LibVulpes.proxy.getLocalizedString("msg.warpmon.fuel") + (isOnStation ? getSpaceObject().getFuelAmount() : LibVulpes.proxy.getLocalizedString("msg.warpmon.na")));
+					warpFuel.setText(LibVulpes.proxy.getLocalizedString("msg.warpcontroller.fuelcost") + (flag ? String.valueOf(warpCost) : LibVulpes.proxy.getLocalizedString("msg.warpcontroller.na")));
+					warpCapacity.setText(LibVulpes.proxy.getLocalizedString("msg.warpcontroller.fuel") + (isOnStation ? getSpaceObject().getFuelAmount() : LibVulpes.proxy.getLocalizedString("msg.warpcontroller.na")));
 					modules.add(warpFuel);
 					modules.add(warpCapacity);
 
@@ -284,7 +284,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 						modules.add(dstPlanetImg);
 					}
 					
-					ModuleText text = new ModuleText(baseX + 4, baseY + 4, LibVulpes.proxy.getLocalizedString("msg.warpmon.dest"), 0xFFFFFF);
+					ModuleText text = new ModuleText(baseX + 4, baseY + 4, LibVulpes.proxy.getLocalizedString("msg.warpcontroller.dest"), 0xFFFFFF);
 					///text.setAlwaysOnTop(true);
 					modules.add(text);
 					modules.add(dstPlanetText);
@@ -304,15 +304,15 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 			}
 			else {
 				modules.add(tabModule);
-				modules.add(new ModuleText(65, 20, LibVulpes.proxy.getLocalizedString("msg.warpmon.artifact"), 0x202020));
+				modules.add(new ModuleText(65, 20, LibVulpes.proxy.getLocalizedString("msg.warpcontroller.artifact"), 0x202020));
 				modules.add(new ModuleSlotArray(30, 35, this, 4, 5));
 				modules.add(new ModuleSlotArray(55, 60, this, 5, 6));
 				modules.add(new ModuleSlotArray(80, 35, this, 6, 7));
 				modules.add(new ModuleSlotArray(105, 60, this, 7, 8));
 				modules.add(new ModuleSlotArray(130, 35, this, 8, 9));
 
-				modules.add(new ModuleButton(50, 117, LibVulpes.proxy.getLocalizedString("msg.warpmon.search"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, LibVulpes.proxy.getLocalizedString("msg.warpmon.datareq"), 100, 10).setAdditionalData(3));
-				modules.add(new ModuleButton(50, 127, LibVulpes.proxy.getLocalizedString("msg.warpmon.chip"), this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild,100, 10).setAdditionalData(4));
+				modules.add(new ModuleButton(50, 117, LibVulpes.proxy.getLocalizedString("msg.warpcontroller.search"), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild, LibVulpes.proxy.getLocalizedString("msg.warpcontroller.datareq"), 100, 10).setAdditionalData(3));
+				modules.add(new ModuleButton(50, 127, LibVulpes.proxy.getLocalizedString("msg.warpcontroller.chip"), this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild,100, 10).setAdditionalData(4));
 				modules.add(new ModuleTexturedSlotArray(30, 120, this, 3, 4, TextureResources.idChip));
 				modules.add(programmingProgress);
 			}
@@ -359,10 +359,10 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 			boolean artifactFlag = (dimCache != null && meetsArtifactReq(dimCache));
 			
 			canWarp.setText(
-				(isOnStation && getSpaceObject().isAnchored()) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.anchored") :
-				(isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()) ? LibVulpes.proxy.getLocalizedString("msg.warpmon.nowhere") :
-				(!artifactFlag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.missingart") : 
-				(flag ? LibVulpes.proxy.getLocalizedString("msg.warpmon.ready") : LibVulpes.proxy.getLocalizedString("msg.warpmon.notready")))));
+				(isOnStation && getSpaceObject().isAnchored()) ? LibVulpes.proxy.getLocalizedString("msg.warpcontroller.anchored") :
+				(isOnStation && (getSpaceObject().getDestOrbitingBody() == Constants.INVALID_PLANET || getSpaceObject().getOrbitingPlanetId() == getSpaceObject().getDestOrbitingBody()) ? LibVulpes.proxy.getLocalizedString("msg.warpcontroller.nowhere") :
+				(!artifactFlag ? LibVulpes.proxy.getLocalizedString("msg.warpcontroller.missingart") : 
+				(flag ? LibVulpes.proxy.getLocalizedString("msg.warpcontroller.ready") : LibVulpes.proxy.getLocalizedString("msg.warpcontroller.notready")))));
 			canWarp.setColor(flag && artifactFlag && !getSpaceObject().isAnchored() ? 0x1baa1b : 0xFF1b1b);
 		}
 
@@ -397,8 +397,8 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 			srcPlanetText.setText(planetName);
 
 
-			warpFuel.setText(LibVulpes.proxy.getLocalizedString("msg.warpmon.fuelcost") + (warpCost < Integer.MAX_VALUE ? String.valueOf(warpCost) : LibVulpes.proxy.getLocalizedString("msg.warpmon.na")));
-			warpCapacity.setText(LibVulpes.proxy.getLocalizedString("msg.warpmon.fuel") + (isOnStation ? station.getFuelAmount() : LibVulpes.proxy.getLocalizedString("msg.warpmon.na")));
+			warpFuel.setText(LibVulpes.proxy.getLocalizedString("msg.warpcontroller.fuelcost") + (warpCost < Integer.MAX_VALUE ? String.valueOf(warpCost) : LibVulpes.proxy.getLocalizedString("msg.warpcontroller.na")));
+			warpCapacity.setText(LibVulpes.proxy.getLocalizedString("msg.warpcontroller.fuel") + (isOnStation ? station.getFuelAmount() : LibVulpes.proxy.getLocalizedString("msg.warpcontroller.na")));
 
 
 
@@ -436,7 +436,7 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 
 	@Override
 	public String getModularInventoryName() {
-		return "block.advancedrocketry.stationmonitor";
+		return "block.advancedrocketry.warpcontroller";
 	}
 
 	@Override
@@ -529,9 +529,9 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 				SpaceObjectManager.getSpaceManager().moveStationToBody(station, station.getDestOrbitingBody(), Math.max(Math.min(getTravelCost()*5, 5000),0));
 
 				for (ServerPlayerEntity player2 : ((ServerWorld)world).getPlayers((Predicate<PlayerEntity>) input -> SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos( input.getPositionVec())) == station)) {
-					ARAdvancements.triggerAchievement(ARAdvancements.ALL_SHE_GOT, player2);
+					ARAdvancements.triggerAdvancement(ARAdvancements.ALL_SHE_GOT, player2);
 					if(!DimensionManager.hasReachedWarp)
-						ARAdvancements.triggerAchievement(ARAdvancements.PHOENIX_FLIGHT, player2);
+						ARAdvancements.triggerAdvancement(ARAdvancements.PHOENIX_FLIGHT, player2);
 				}
 
 				DimensionManager.hasReachedWarp = true;
@@ -565,9 +565,9 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 			SpaceStationObject spaceStationObject = getSpaceObject();
 			if(spaceStationObject != null) {
 				ItemStack stack = getStackInSlot(PLANETSLOT);
-				if(!stack.isEmpty() && stack.getItem() instanceof ItemPlanetIdentificationChip) {
-					if(DimensionManager.getInstance().isDimensionCreated(((ItemPlanetIdentificationChip)stack.getItem()).getDimensionId(stack)))
-						spaceStationObject.discoverPlanet(((ItemPlanetIdentificationChip)stack.getItem()).getDimensionId(stack));
+				if(!stack.isEmpty() && stack.getItem() instanceof ItemPlanetChip) {
+					if(DimensionManager.getInstance().isDimensionCreated(((ItemPlanetChip)stack.getItem()).getDimensionId(stack)))
+						spaceStationObject.discoverPlanet(((ItemPlanetChip)stack.getItem()).getDimensionId(stack));
 				}
 			}
 		}
@@ -821,8 +821,8 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 
 		
 		
-		if(!stack.isEmpty() && stack.getItem() instanceof ItemData) {
-			ItemData item = (ItemData) stack.getItem();
+		if(!stack.isEmpty() && stack.getItem() instanceof ItemDataChip) {
+			ItemDataChip item = (ItemDataChip) stack.getItem();
 			if(item.getDataType(stack) == type)
 				item.removeData(stack, this.addData(item.getData(stack), item.getDataType(stack), Direction.UP, true), type);
 		}
@@ -850,8 +850,8 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 			type = DataType.COMPOSITION;
 		}
 
-		if(!stack.isEmpty() && stack.getItem() instanceof ItemData) {
-			ItemData item = (ItemData) stack.getItem();
+		if(!stack.isEmpty() && stack.getItem() instanceof ItemDataChip) {
+			ItemDataChip item = (ItemDataChip) stack.getItem();
 			data.extractData(item.addData(stack, data.getDataAmount(type), type), type, Direction.UP, true);
 		}
 
@@ -905,8 +905,8 @@ public class TileWarpController extends TileEntity implements ITickableTileEntit
 				SpaceStationObject obj = getSpaceObject();
 				if(Math.abs(world.rand.nextInt()) % ARConfiguration.getCurrentConfig().planetDiscoveryChance.get() == 0 && obj != null) {
 					ItemStack stack = getStackInSlot(PLANETSLOT);
-					if(!stack.isEmpty() && stack.getItem() instanceof ItemPlanetIdentificationChip) {
-						ItemPlanetIdentificationChip item = (ItemPlanetIdentificationChip)stack.getItem();
+					if(!stack.isEmpty() && stack.getItem() instanceof ItemPlanetChip) {
+						ItemPlanetChip item = (ItemPlanetChip)stack.getItem();
 						List<ResourceLocation> unknownPlanets = new LinkedList<>();
 						
 						//Check to see if any planets with artifacts can be discovered

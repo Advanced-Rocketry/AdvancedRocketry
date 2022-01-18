@@ -1,8 +1,0 @@
-{
-    "parent": "block/orientable",
-    "textures": {
-        "top": "advancedrocketry:blocks/solar",
-        "front": "libvulpes:blocks/machinegeneric",
-        "side": "libvulpes:blocks/machinegeneric"
-    }
-}

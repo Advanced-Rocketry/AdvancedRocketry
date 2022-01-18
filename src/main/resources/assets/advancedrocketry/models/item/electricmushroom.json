@@ -1,3 +1,6 @@
 {
-    "parent": "advancedrocketry:block/electricmushroom"
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "advancedrocketry:blocks/mushroom_electric"
+    }
 }

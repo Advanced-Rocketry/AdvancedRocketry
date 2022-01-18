@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "facing=north": { "model": "advancedrocketry:block/stationdockingport" },
+        "facing=south": {  "model": "advancedrocketry:block/stationdockingport",  "y": 180 },
+        "facing=west":  { "model": "advancedrocketry:block/stationdockingport", "y": 270 },
+        "facing=east":  { "model": "advancedrocketry:block/stationdockingport", "y": 90 },
+        "facing=up":  { "model": "advancedrocketry:block/stationdockingport", "x": -90 },
+        "facing=down":  { "model": "advancedrocketry:block/stationdockingport", "x": 90 }
+    }
+}

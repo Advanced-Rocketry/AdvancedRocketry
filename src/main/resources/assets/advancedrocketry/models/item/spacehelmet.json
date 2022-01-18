@@ -1,7 +1,0 @@
-{
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "advancedrocketry:items/spacehelmet",
-        "layer1": "advancedrocketry:items/spacehelmet_overlay"
-    }
-}

@@ -26,12 +26,12 @@ public class TileRollingMachine extends TileMultiblockMachine {
 
 	public static final Object[][][] structure = new Object[][][] {
 		{   {Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},
-			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock},
-			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, new ResourceLocation("forge","storage_blocks/steel"), LibVulpesBlocks.blockStructureBlock}},
+			{LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure},
+			{LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, new ResourceLocation("forge","storage_blocks/steel"), LibVulpesBlocks.blockMachineStructure}},
 
 		{{'P', 'c', 'I', Blocks.AIR, Blocks.AIR},
-				{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.motors, LibVulpesBlocks.motors, new ResourceLocation("forge","storage_blocks/steel"), LibVulpesBlocks.blockStructureBlock},
-				{LibVulpesBlocks.blockStructureBlock, 'L', 'O', new ResourceLocation("forge","storage_blocks/steel"), LibVulpesBlocks.blockStructureBlock}}};
+				{LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.motors, LibVulpesBlocks.motors, new ResourceLocation("forge","storage_blocks/steel"), LibVulpesBlocks.blockMachineStructure},
+				{LibVulpesBlocks.blockMachineStructure, 'L', 'O', new ResourceLocation("forge","storage_blocks/steel"), LibVulpesBlocks.blockMachineStructure}}};
 	
 	public TileRollingMachine() {
 		super(AdvancedRocketryTileEntityType.TILE_ROLLING);

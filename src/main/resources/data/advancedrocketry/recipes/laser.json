@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+		" c ",
+		"pdp",
+		"psp"
+    ],
+    "key": {
+        "c": {
+            "tag": "forge:coils/copper"
+        },
+		"s": {
+            "item": "libvulpes:machinestructure"
+        },
+		"p": {
+            "tag": "forge:plates/aluminum"
+        },
+		"d": {
+          "item": "advancedrocketry:crystal_red"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:laser",
+        "count": 1
+    }
+}

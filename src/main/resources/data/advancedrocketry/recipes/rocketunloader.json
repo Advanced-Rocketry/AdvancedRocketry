@@ -1,31 +1,15 @@
 {
     "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
+    "ingredients": [
         {
-	    "item": "libvulpes:itemohatch"
+	   	    "item": "libvulpes:itemohatch"
         },
-	{
-	    "item": "advancedrocketry:circuit_ic_tracking"
+    	{
+	    	"item": "advancedrocketry:trackingcircuit"
         }
     ],
-    "result":
-    {
-        "item": "advancedrocketry:runloader",
-        "count": 1
-    }
-}
-{
-    "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
-	{
-	    "item": "advancedrocketry:rloader"
-        }
-    ],
-    "result":
-    {
-        "item": "advancedrocketry:runloader",
+    "result": {
+        "item": "advancedrocketry:rocketunloader",
         "count": 1
     }
 }

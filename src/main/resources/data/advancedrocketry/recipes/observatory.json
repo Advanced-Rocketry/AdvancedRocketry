@@ -1,34 +1,26 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"gug",
-	" b ",
-	"rrr"
+    "pattern": [
+	    "gug",
+	    " b ",
+	    "rrr"
     ],
-    "key":
-    {
-        "g":
-        {
+    "key": {
+        "g": {
 
             "tag": "forge:glass_panes"
         },
-        "u":
-        {
-            "item": "advancedrocketry:item_ui"
+        "u": {
+            "item": "advancedrocketry:userinterface"
         },
-	"b":
-        {
-            "item": "libvulpes:structure_machine"
+	    "b": {
+            "item": "libvulpes:machinestructure"
         },
-	"r":
-        {
-
-            "tag": "forge:sticks/iron"
+	    "r": {
+            "tag": "forge:rods/iron"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:observatory",
         "count": 1
     }

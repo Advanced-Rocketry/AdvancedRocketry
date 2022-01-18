@@ -10,6 +10,7 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
+import zmaster587.libVulpes.util.ZUtils;
 
 public class MapGenLander {
 
@@ -19,7 +20,7 @@ public class MapGenLander {
 		World worldIn = (World)event.getWorld();
 		BlockPos position = new BlockPos(16*event.getChunk().getPos().x + 11, 0, 16*event.getChunk().getPos().z + 3);
 
-		if(DimensionManager.getInstance().getDimensionProperties(worldIn).getName().equals("Luna") && position.getZ() == 67 && position.getX() == 2347) {
+		if(DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(worldIn)).getName().equals("Luna") && position.getZ() == 67 && position.getX() == 2347) {
 
 			position = worldIn.getHeight(Type.WORLD_SURFACE, position).down();
 			
@@ -30,7 +31,7 @@ public class MapGenLander {
 			
 			position = position.up();
 
-			worldIn.setBlockState(position, AdvancedRocketryBlocks.blockEngine.getDefaultState());
+			worldIn.setBlockState(position, AdvancedRocketryBlocks.blockMonopropellantEngine.getDefaultState());
 			worldIn.setBlockState(position.add(0, 0, 3), Blocks.IRON_BARS.getDefaultState());
 			worldIn.setBlockState(position.add(0, 0, -3), Blocks.IRON_BARS.getDefaultState());
 			worldIn.setBlockState(position.add(3, 0, 0), Blocks.IRON_BARS.getDefaultState());

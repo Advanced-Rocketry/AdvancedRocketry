@@ -41,14 +41,14 @@ public class AdvancedRocketryEntities {
 		ENTITY_UIBUTTON = EntityType.Builder.<EntityUIButton>create(EntityUIButton::new, EntityClassification.MISC).size(0.25F, 0.25F).setTrackingRange(64).setUpdateInterval(20).build("uibutton");
 		
 		event.getRegistry().registerAll(
-				ENTITY_DUMMY.setRegistryName("dummy"),
-				ENTITY_ELEVATOR_CAPSULE.setRegistryName("spaceelevator"),
-				ENTITY_HOVER_CRAFT.setRegistryName("hovercraft"),
-				ENTITY_ITEM_ABDUCTED.setRegistryName("itemabducted"),
-				ENTITY_LASER_NODE.setRegistryName("lasernode"),
-				ENTITY_ROCKET.setRegistryName("rocket"),
-				ENTITY_UIPLANET.setRegistryName("uiplanet"),
-				ENTITY_UISTAR.setRegistryName("uistar"),
-				ENTITY_UIBUTTON.setRegistryName("uibutton"));
+				ENTITY_DUMMY.setRegistryName(Constants.modId, "dummy"),
+				ENTITY_ELEVATOR_CAPSULE.setRegistryName(Constants.modId, "spaceelevator"),
+				ENTITY_HOVER_CRAFT.setRegistryName(Constants.modId, "hovercraft"),
+				ENTITY_ITEM_ABDUCTED.setRegistryName(Constants.modId, "itemabducted"),
+				ENTITY_LASER_NODE.setRegistryName(Constants.modId, "lasernode"),
+				ENTITY_ROCKET.setRegistryName(Constants.modId, "rocket"),
+				ENTITY_UIPLANET.setRegistryName(Constants.modId, "uiplanet"),
+				ENTITY_UISTAR.setRegistryName(Constants.modId, "uistar"),
+				ENTITY_UIBUTTON.setRegistryName(Constants.modId, "uibutton"));
 	}
 }

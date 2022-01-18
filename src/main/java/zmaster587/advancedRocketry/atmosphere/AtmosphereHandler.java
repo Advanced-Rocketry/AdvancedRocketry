@@ -63,7 +63,7 @@ public class AtmosphereHandler {
 		ResourceLocation dimId = ZUtils.getDimensionIdentifier(world);
 		//If O2 is allowed and
 		DimensionProperties dimProp = DimensionManager.getInstance().getDimensionProperties(dimId);
-		if(ARConfiguration.getCurrentConfig().enableOxygen.get() && dimProp.hasSurface() && (ARConfiguration.getCurrentConfig().overrideGCAir.get() || dimId != ARConfiguration.getCurrentConfig().MoonId || dimProp.isNativeDimension)) {
+		if(ARConfiguration.getCurrentConfig().enableOxygen.get() && dimProp.hasSurface() && (dimId != ARConfiguration.getCurrentConfig().MoonId || dimProp.isNativeDimension)) {
 			dimensionOxygen.put(dimId, new AtmosphereHandler(dimId));
 			MinecraftForge.EVENT_BUS.register(dimensionOxygen.get(dimId));
 		}
@@ -76,9 +76,7 @@ public class AtmosphereHandler {
 	public static void unregisterWorld(World world) {
 		AtmosphereHandler handler = dimensionOxygen.remove(ZUtils.getDimensionIdentifier(world));
 		if(ARConfiguration.getCurrentConfig().enableOxygen.get() && handler != null) {
-
 			MinecraftForge.EVENT_BUS.unregister(handler);
-			FMLJavaModLoadingContext.get().getModEventBus().unregister(handler);
 		}
 	}
 
@@ -140,29 +138,6 @@ public class AtmosphereHandler {
 	public static boolean hasAtmosphereHandler(World dimId) {
 		return dimensionOxygen.containsKey(ZUtils.getDimensionIdentifier(dimId));
 	}
-
-	//Called from World.setBlockMetaDataWithNotify
-	/*public static void onBlockMetaChange(World world, int x , int y, int z) {
-		if(Configuration.enableOxygen && !world.isRemote && world.getChunkFromBlockCoords(new BlockPos(x, y, z)).isLoaded()) {
-			AtmosphereHandler handler = getOxygenHandler(world);
-			HashedBlockPosition pos = new HashedBlockPosition(x, y, z);
-
-
-			if(handler == null)
-				return; //WTF
-
-			for(AreaBlob blob : handler.getBlobWithinRadius(pos, MAX_BLOB_RADIUS)) {
-
-				if(blob.contains(pos) && !blob.isPositionAllowed(world, pos))
-					blob.removeBlock(x, y, z);
-				else if(!blob.contains(pos) && blob.isPositionAllowed(world, pos))
-					handler.onBlockRemove(pos);
-				else if(!blob.contains(pos) && !blob.isPositionAllowed(world, pos) && blob.getBlobSize() == 0) {
-					blob.addBlock(blob.getRootPosition());
-				}
-			}
-		}
-	}*/
 
 	//Called from setBlock in World.class
 	public static void onBlockChange(@Nonnull World world, @Nonnull BlockPos bpos) {

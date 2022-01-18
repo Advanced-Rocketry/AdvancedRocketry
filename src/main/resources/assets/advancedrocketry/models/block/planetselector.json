@@ -2,7 +2,7 @@
     "parent": "block/orientable",
     "textures": {
         "top": "libvulpes:blocks/machinegeneric",
-        "front": "advancedrocketry:blocks/guidancecomputer",
+        "front": "advancedrocketry:blocks/machines/planetselector",
         "side": "libvulpes:blocks/machinegeneric"
     }
 }

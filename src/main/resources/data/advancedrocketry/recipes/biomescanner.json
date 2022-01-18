@@ -1,33 +1,25 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"plp",
-	"bsb",
-	"ppp"
+    "pattern": [
+	    "plp",
+    	"bsb",
+    	"ppp"
     ],
-    "key":
-    {
-	"l":
-        {
-            "item": "advancedrocketry:sensor_biomechanger"
+    "key": {
+	    "l": {
+            "item": "advancedrocketry:compositionsensor"
         },
-	"s":
-        {
-	    "item": "libvulpes:structure_machine"
+    	"s": {
+	        "item": "libvulpes:machinestructure"
         },
-	"p":
-        {
-
-            "tag": "forge:plates/tin"
+    	"p": {
+            "tag": "forge:plates/aluminum"
         },
-	"b":
-        {
-            "item": "libvulpes:smallbattery"
+	    "b": {
+            "item": "libvulpes:batterypack"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:biomescanner",
         "count": 1
     }

@@ -19,8 +19,8 @@ import zmaster587.libVulpes.render.RenderHelper;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 public class RendererPrecisionLaserEtcher extends TileEntityRenderer<TilePrecisionLaserEtcher> {
-	WavefrontObject model;
 
+	WavefrontObject model;
 	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/precisionlaseretcher.png");
 
 	public RendererPrecisionLaserEtcher(TileEntityRendererDispatcher tile) {

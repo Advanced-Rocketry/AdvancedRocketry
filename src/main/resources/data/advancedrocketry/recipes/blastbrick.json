@@ -1,7 +1,6 @@
 {
     "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
+    "ingredients": [
         {
             "item": "minecraft:magma_cream"
         },
@@ -9,9 +8,8 @@
             "item": "minecraft:bricks"
         }
     ],
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:blastbrick",
-        "count": 16
+        "count": 4
     }
 }

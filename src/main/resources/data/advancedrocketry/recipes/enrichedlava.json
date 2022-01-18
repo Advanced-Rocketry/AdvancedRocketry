@@ -1,0 +1,35 @@
+{
+    "type": "advancedrocketry:centrifuge",
+    "fluidingredients": [
+		{
+		    "fluid": "advancedrocketry:enriched_lava",
+		    "amount": 1000
+		}
+    ],
+    "time": 600,
+    "energy": 250,
+    "itemresults": [
+        {
+       	   "tag": "forge:nuggets/iron",
+        	"count": 4
+        },
+        {
+        	"tag": "forge:nuggets/copper",
+        	"count": 3
+        },
+        {
+        	"tag": "forge:nuggets/gold",
+            "count": 2
+        },
+        {
+        	"tag": "forge:nuggets/titanium",
+        	"count": 1
+      }
+    ],
+    "fluidresults": [
+         {
+            "fluid": "minecraft:lava",
+            "amount": 1000
+         }
+    ]
+}

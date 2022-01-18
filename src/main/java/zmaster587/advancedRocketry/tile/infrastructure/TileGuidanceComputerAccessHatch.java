@@ -25,11 +25,11 @@ import zmaster587.advancedRocketry.api.IMission;
 import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.item.ItemPlanetIdentificationChip;
-import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
+import zmaster587.advancedRocketry.item.ItemPlanetChip;
+import zmaster587.advancedRocketry.item.ItemSatelliteChip;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.tile.TileGuidanceComputer;
-import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
+import zmaster587.advancedRocketry.tile.TileRocketAssembler;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.inventory.ContainerModular;
@@ -59,7 +59,7 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 	RedstoneState state;
 
 	public TileGuidanceComputerAccessHatch() {
-		super(AdvancedRocketryTileEntityType.TILE_GUIDANCE_COMPUTER_HATCH);
+		super(AdvancedRocketryTileEntityType.TILE_GUIDANCE_COMPUTER__ACCESS_HATCH);
 		buttonState = new boolean[4];
 		chipEjected = false;
 
@@ -99,8 +99,8 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 	@Override
 	public void remove() {
 		super.remove();
-		if(getMasterBlock() instanceof TileRocketAssemblingMachine)
-			((TileRocketAssemblingMachine)getMasterBlock()).removeConnectedInfrastructure(this);
+		if(getMasterBlock() instanceof TileRocketAssembler)
+			((TileRocketAssembler)getMasterBlock()).removeConnectedInfrastructure(this);
 	}
 
 	@Override
@@ -231,8 +231,8 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 		if(!chipEjected && buttonState[buttonAutoEject] && (guidanceComputer = this.rocket.storage.getGuidanceComputer()) != null ) {
 			ItemStack stack = guidanceComputer.getStackInSlot(0);
 			if(!stack.isEmpty()) {
-				if(		(stack.getItem() instanceof ItemSatelliteIdentificationChip && buttonState[buttonSatellite]) ||
-						(stack.getItem() instanceof ItemPlanetIdentificationChip && buttonState[buttonPlanet]) ||
+				if(		(stack.getItem() instanceof ItemSatelliteChip && buttonState[buttonSatellite]) ||
+						(stack.getItem() instanceof ItemPlanetChip && buttonState[buttonPlanet]) ||
 						(stack.getItem() instanceof ItemStationChip && buttonState[buttonStation])) {
 					ejectChipFrom(guidanceComputer);
 					chipEjected = true;
@@ -330,7 +330,7 @@ public class TileGuidanceComputerAccessHatch extends TilePointer implements IInf
 
 	@Override
 	public String getModularInventoryName() {
-		return "block.advancedrocketry.compaccesshatch";
+		return "block.advancedrocketry.guidancecomputeraccesshatch";
 	}
 
 	@Override

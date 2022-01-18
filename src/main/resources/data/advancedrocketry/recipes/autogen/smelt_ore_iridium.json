@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "libvulpes:oreiridium"
-  },
-  "result": "libvulpes:ingotiridium",
-  "experience": 0.0,
-  "cookingtime": 200
-}

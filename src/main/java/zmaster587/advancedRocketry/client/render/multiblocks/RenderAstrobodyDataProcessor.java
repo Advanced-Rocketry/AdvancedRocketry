@@ -22,7 +22,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class RenderAstrobodyDataProcessor extends TileEntityRenderer<TileAstrobodyDataProcessor> {
 
 	WavefrontObject model;
-
 	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/astrobodydataprocessor.png");
 
 	public RenderAstrobodyDataProcessor(TileEntityRendererDispatcher tile){

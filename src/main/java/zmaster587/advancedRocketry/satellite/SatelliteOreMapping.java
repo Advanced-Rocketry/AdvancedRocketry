@@ -25,7 +25,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.inventory.ContainerOreMappingSatellite;
 import zmaster587.advancedRocketry.inventory.ContainerRegistry;
-import zmaster587.advancedRocketry.item.ItemOreScanner;
+import zmaster587.advancedRocketry.item.tools.ItemOreScanner;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;

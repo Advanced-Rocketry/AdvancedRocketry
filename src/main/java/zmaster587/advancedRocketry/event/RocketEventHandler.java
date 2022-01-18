@@ -92,7 +92,7 @@ public class RocketEventHandler extends Screen {
 			//ForgeHooksClient. getSkyBlendColour(event.world, new BlockPos(event.getEntity().getPositionVec()));
 
 			if(ARConfiguration.getCurrentConfig().planetSkyOverride.get() && !DimensionManager.getInstance().isDimensionCreated(event.world)) {
-				DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(event.world);
+				DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(event.world));
 				prevRenderHanlder = props.getSkyRenderer();
 				props.setSkyRenderer(new RenderPlanetarySky());
 			}
@@ -110,7 +110,7 @@ public class RocketEventHandler extends Screen {
 		if(ARConfiguration.getCurrentConfig().planetSkyOverride.get() && event.world.isRemote && !event.getEntity().getPassengers().isEmpty() && event.getEntity().getPassengers().contains(Minecraft.getInstance().player)) {
 			//prepareOrbitalMap(event);
 			mapReady = true; //temp
-			DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(event.world);
+			DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(event.world));
 			prevRenderHanlder = props.getSkyRenderer();
 			props.setSkyRenderer(new RenderPlanetarySky());
 		}
@@ -125,7 +125,7 @@ public class RocketEventHandler extends Screen {
 	@OnlyIn(value=Dist.CLIENT)
 	public static void destroyOrbitalTextures(World world) {
 		if(!DimensionManager.getInstance().isDimensionCreated(ZUtils.getDimensionIdentifier(world))) {
-			DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(world);
+			DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(world));
 			props.setSkyRenderer(prevRenderHanlder);
 			prevRenderHanlder = null;
 		}
@@ -149,7 +149,7 @@ public class RocketEventHandler extends Screen {
 			outerBounds = new ClientDynamicTexture(outerImgSize, outerImgSize);
 		}
 
-		if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(event.world))) {
+		if(DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(event.world))) {
 			destroyOrbitalTextures(event.world);
 			mapReady = false;
 			return;
@@ -276,7 +276,7 @@ public class RocketEventHandler extends Screen {
 		if(!mapReady)
 			return;
 		
-		if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(Minecraft.getInstance().getRenderViewEntity().world))) {
+		if(DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(Minecraft.getInstance().getRenderViewEntity().world))) {
 			destroyOrbitalTextures(Minecraft.getInstance().getRenderViewEntity().world);
 			mapReady = false;
 			return;
@@ -308,7 +308,7 @@ public class RocketEventHandler extends Screen {
 		double size = (getImgSize/(5 * Minecraft.getInstance().getRenderViewEntity().getPosY() * (1000f / ARConfiguration.getCurrentConfig().orbit.get())));
 		
 		
-		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(Minecraft.getInstance().getRenderViewEntity().world);
+		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(Minecraft.getInstance().getRenderViewEntity().world));
 
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
@@ -349,7 +349,7 @@ public class RocketEventHandler extends Screen {
 		size = (getImgSize*100/(180-Minecraft.getInstance().getRenderViewEntity().getPosY() - deltaY));
 
 
-		for(int i = 0; i < 5 * MathHelper.clamp(( ( DimensionManager.getInstance().getDimensionProperties(Minecraft.getInstance().getRenderViewEntity().world).getAtmosphereDensity() *.01f * (float)Minecraft.getInstance().getRenderViewEntity().getPosY() -280f) )/150f, 0f, 2f); i++) {
+		for(int i = 0; i < 5 * MathHelper.clamp(( ( DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(Minecraft.getInstance().getRenderViewEntity().world)).getAtmosphereDensity() *.01f * (float)Minecraft.getInstance().getRenderViewEntity().getPosY() -280f) )/150f, 0f, 2f); i++) {
 			RenderHelper.renderTopFace(matrix, buffer, -9 + i*.6, size, size, -size , -size, (float)skyColor.x/255f, (float)skyColor.y/255f, (float)skyColor.z/255f, 0.1f);
 		}
 
@@ -445,7 +445,7 @@ public class RocketEventHandler extends Screen {
 			}
 
 			//Draw module icons
-			if(!isCreativeOrSpec && Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD) != null && Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() instanceof IModularArmor) {
+			if(!isCreativeOrSpec && Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() instanceof IModularArmor) {
 				for(EquipmentSlotType slot : EquipmentSlotType.values()) {
 					renderModuleSlots(Minecraft.getInstance().player.getItemStackFromSlot(slot), 4-slot.getIndex(), event);
 				}
@@ -700,22 +700,6 @@ public class RocketEventHandler extends Screen {
 
 		public void setRawY(int y) {
 			this.y = y;
-		}
-
-		public void setSizeModeX(int int1) {
-			modeX = int1;
-		}
-
-		public void setSizeModeY(int int1) {
-			modeY = int1;
-		}
-
-		public int getSizeModeX() {
-			return modeX;
-		}
-
-		public int getSizeModeY() {
-			return modeY;
 		}
 	}
 }

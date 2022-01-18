@@ -1,0 +1,21 @@
+{
+    "display": {
+        "icon": {
+            "item": "advancedrocketry:warpcore"
+        },
+        "title": {
+            "translate": "advancement.advancedrocketry.flightofthephoenix"
+        },
+        "description": {
+            "translate": "advancement.advancedrocketry.flightofthephoenix.desc"
+        },
+        "frame": "challenge",
+        "hidden": true
+    },
+    "parent": "advancedrocketry:normal/givingitallshesgot",
+    "criteria": {
+        "flightofpheonix": {
+            "trigger": "minecraft:impossible"
+        }
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "rvr",
+	    "dwd",
+	    "dpd"
+    ],
+    "key": {
+        "d": {
+            "tag": "forge:dusts/gold"
+        },
+        "r": {
+            "tag": "forge:dusts/redstone"
+        },
+        "p": {
+            "tag": "forge:plates/iron"
+        },
+        "w": {
+            "tag": "minecraft:wooden_slabs"
+        },
+        "v": {
+            "tag": "forge:gems/diamond"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:itemiocircuit",
+        "count": 1
+    }
+}

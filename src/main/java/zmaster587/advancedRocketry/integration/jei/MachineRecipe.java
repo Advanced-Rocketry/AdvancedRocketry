@@ -9,8 +9,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import zmaster587.libVulpes.interfaces.IRecipe;
+import zmaster587.libVulpes.recipe.RecipesMachine.LibVulpesRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine.ChanceItemStack;
-import zmaster587.libVulpes.recipe.RecipesMachine.Recipe;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-public class MachineRecipe extends Recipe implements IRecipeCategoryExtension {
+public class MachineRecipe extends LibVulpesRecipe implements IRecipeCategoryExtension {
 	private final List<List<ItemStack>> ingredients;
 	private final ArrayList<ItemStack> result;
 	private ArrayList<ChanceItemStack> resultChance;
@@ -32,21 +32,16 @@ public class MachineRecipe extends Recipe implements IRecipeCategoryExtension {
 
 
 	protected MachineRecipe(IRecipe rec) {
-		if(rec instanceof Recipe)
-		{
-			resultChance = new ArrayList<>(((Recipe) rec).getChanceOutputs());
+		if(rec instanceof LibVulpesRecipe) {
+			resultChance = new ArrayList<>(((LibVulpesRecipe) rec).getChanceOutputs());
 			result = new ArrayList<>();
-			
-			int i = -1;
+
 			float totalChance = 0;
 			for( ChanceItemStack stack : resultChance)
 				totalChance += stack.chance;
 			
-			for( ChanceItemStack stack : resultChance)
-			{
-				i++;
-				if(stack.chance == 0)
-				{
+			for( ChanceItemStack stack : resultChance) {
+				if(stack.chance == 0) {
 					result.add(stack.stack.copy());
 					continue;
 				}
@@ -55,9 +50,7 @@ public class MachineRecipe extends Recipe implements IRecipeCategoryExtension {
 				stack2.setDisplayName(new StringTextComponent(String.format("%s   Chance: %.1f%%",  stack2.getDisplayName(), 100*stack.chance/totalChance)));
 				result.add(stack2);
 			}
-		}
-		else
-		{
+		} else {
 			result  = new ArrayList<>(rec.getOutput());
 		}
 		ingredients = rec.getPossibleIngredients();
@@ -65,14 +58,23 @@ public class MachineRecipe extends Recipe implements IRecipeCategoryExtension {
 		time = rec.getTime();
 		fluidIngredients = rec.getFluidIngredients();
 		fluidOutputs = rec.getFluidOutputs();
+		name = rec.getId();
 	}
 	
 	public List<ItemStack> getResults() {
 		return result;
 	}
+
+	public List<FluidStack> getFluidResults() {
+		return fluidOutputs;
+	}
 	
 	public List<List<ItemStack>> getInputs() {
 		return ingredients;
+	}
+
+	public List<FluidStack> getFluidInputs() {
+		return fluidIngredients;
 	}
 	
 	public int getEnergy() {return energy;}
@@ -95,4 +97,8 @@ public class MachineRecipe extends Recipe implements IRecipeCategoryExtension {
 	public void setIngredients(IIngredients ingredients) {
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public ResourceLocation getId() {return name;}
+
 }

@@ -1,0 +1,8 @@
+{
+  "loader": "forge:obj",
+  "model": "advancedrocketry:models/block/models/monopropellantrocketengine.obj",
+  "flip-v": false,
+  "textures": {
+    "particle": "libvulpes:blocks/machinegeneric"
+  }
+}

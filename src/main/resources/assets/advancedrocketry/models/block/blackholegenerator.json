@@ -2,7 +2,7 @@
     "parent": "block/orientable",
     "textures": {
         "top": "libvulpes:blocks/machinegeneric",
-        "front": "advancedrocketry:blocks/monitorfrontmid",
+        "front": "advancedrocketry:blocks/multiblocks/blackholegenerator",
         "side": "libvulpes:blocks/machinegeneric"
     }
 }

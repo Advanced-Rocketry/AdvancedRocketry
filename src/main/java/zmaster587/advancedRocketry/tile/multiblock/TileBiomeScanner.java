@@ -50,7 +50,7 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 
 				{	{null,new ResourceLocation("forge", "storage_blocks/aluminum"),new ResourceLocation("forge", "storage_blocks/aluminum"),new ResourceLocation("forge", "storage_blocks/aluminum"),null},
 					{new ResourceLocation("forge", "storage_blocks/aluminum"), new ResourceLocation("forge", "storage_blocks/aluminum"), AdvancedRocketryBlocks.blockStructureTower, new ResourceLocation("forge", "storage_blocks/aluminum"), new ResourceLocation("forge", "storage_blocks/aluminum")},
-					{new ResourceLocation("forge", "storage_blocks/aluminum"), AdvancedRocketryBlocks.blockStructureTower, LibVulpesBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureTower, new ResourceLocation("forge", "storage_blocks/aluminum")},
+					{new ResourceLocation("forge", "storage_blocks/aluminum"), AdvancedRocketryBlocks.blockStructureTower, LibVulpesBlocks.blockMachineStructure, AdvancedRocketryBlocks.blockStructureTower, new ResourceLocation("forge", "storage_blocks/aluminum")},
 					{new ResourceLocation("forge", "storage_blocks/aluminum"), new ResourceLocation("forge", "storage_blocks/aluminum"), AdvancedRocketryBlocks.blockStructureTower, new ResourceLocation("forge", "storage_blocks/aluminum"), new ResourceLocation("forge", "storage_blocks/aluminum")},
 					{null,new ResourceLocation("forge", "storage_blocks/aluminum"),new ResourceLocation("forge", "storage_blocks/aluminum"),new ResourceLocation("forge", "storage_blocks/aluminum"),null}},
 

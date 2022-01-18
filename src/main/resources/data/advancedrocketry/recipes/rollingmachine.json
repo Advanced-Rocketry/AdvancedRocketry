@@ -1,45 +1,34 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"psp",
-	"abc",
-	"iti"
+    "pattern": [
+	    "psp",
+	    "abc",
+	    "iti"
     ],
-    "key":
-    {
-        "t":
-        {
-            "item": "advancedrocketry:circuit_ic_fluid_io"
+    "key": {
+        "t": {
+            "item": "advancedrocketry:fluidiocircuit"
         },
-        "s":
-        {
-            "item": "advancedrocketry:item_ui"
+        "s": {
+            "item": "advancedrocketry:userinterface"
         },
-	"a":
-        {
-            "item": "advancedrocketry:circuit_ic_item_io"
+	    "a": {
+            "item": "advancedrocketry:itemiocircuit"
         },
-	"b":
-        {
-            "item": "libvulpes:structure_machine"
+	    "b": {
+            "item": "libvulpes:machinestructure"
         },
-	"c":
-        {
-            "item": "advancedrocketry:circuit_ic_control"
+	    "c": {
+            "item": "advancedrocketry:controlcircuit"
         },
-	"p":
-        {
-
+	    "p": {
             "tag": "forge:gears/steel"
         },
-	"i":
-        {
-	    "item": "minecraft:iron_block"
+	    "i": {
+	        "item": "minecraft:iron_block"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:rollingmachine",
         "count": 1
     }

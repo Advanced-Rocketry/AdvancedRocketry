@@ -3,6 +3,7 @@ package zmaster587.advancedRocketry.inventory.modules;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -311,14 +312,14 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public List<Button> addButtons(int x, int y) {
+	public List<AbstractButton> addButtons(int x, int y) {
 
 		int screenSizeX = Minecraft.getInstance().getMainWindow().getWidth();
 		int screenSizeY = Minecraft.getInstance().getMainWindow().getHeight();
 
 		setOffset2(internalOffsetX - screenSizeX/4, internalOffsetY - screenSizeY/4);
 
-		List <Button> list = super.addButtons(x, y);
+		List <AbstractButton> list = super.addButtons(x, y);
 
 		if(clickablePlanetList != null)
 			list.addAll(clickablePlanetList.addButtons(x, y));
@@ -358,7 +359,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 		this.screenSizeX = Minecraft.getInstance().getMainWindow().getWidth();
 		this.screenSizeY = Minecraft.getInstance().getMainWindow().getHeight();
 		for(ModuleBase module : this.planetList) {
-			for(Button module2 : module.addButtons(currentPosX, currentPosY)) {
+			for(AbstractButton module2 : module.addButtons(currentPosX, currentPosY)) {
 				if(module2.x /* x */ > 128 + offsetX || clickablePlanetList == null || !clickablePlanetList.isEnabled())
 					buttonList.add( module2 );
 			}
@@ -590,7 +591,7 @@ public class ModulePlanetSelector extends ModuleContainerPan implements IButtonI
 					if(planetDefiner != null && !planetDefiner.isPlanetKnown(properties))
 						continue;
 
-					if(!properties.isMoon() && !ARConfiguration.getSpaceDimId().equals(properties.getId())) {
+					if(!properties.isMoon() && !DimensionManager.spaceId.equals(properties.getId())) {
 						ModuleButton button = new ModuleButton(0, i*18, properties.getName(), this, zmaster587.advancedRocketry.inventory.TextureResources.buttonGeneric, 128, 18);
 						button.setAdditionalData(properties.getId());
 						list2.add(button);

@@ -238,7 +238,7 @@ public abstract class SpaceObjectBase implements ISpaceObject {
 	 * @param chunk
 	 */
 	public void onModuleUnpack(IStorageChunk chunk) {
-		World worldObj = ZUtils.getWorld(ARConfiguration.getSpaceDimId());
+		World worldObj = ZUtils.getWorld(DimensionManager.spaceId);
 		chunk.pasteInWorld(worldObj, spawnLocation.x - chunk.getSizeX()/2, spawnLocation.y - chunk.getSizeY()/2, spawnLocation.z - chunk.getSizeZ()/2);
 
 	}

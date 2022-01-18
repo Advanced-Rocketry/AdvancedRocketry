@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "libvulpes:battery"
+        },
+		{
+            "item": "advancedrocketry:trackingcircuit"
+        },
+		{
+            "item": "advancedrocketry:satellitebay"
+        }
+    ],
+    "result": {
+        "item": "advancedrocketry:stationdockingport",
+        "count": 1
+    }
+}

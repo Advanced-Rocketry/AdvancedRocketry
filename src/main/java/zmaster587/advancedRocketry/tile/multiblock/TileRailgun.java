@@ -58,7 +58,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
-							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockMachineStructure,new ResourceLocation("forge","coils/copper"),null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
@@ -69,7 +69,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
-							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockMachineStructure,new ResourceLocation("forge","coils/copper"),null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
@@ -80,7 +80,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
-							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockMachineStructure,new ResourceLocation("forge","coils/copper"),null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
@@ -91,7 +91,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
-							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockMachineStructure,new ResourceLocation("forge","coils/copper"),null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
@@ -102,7 +102,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
-							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockMachineStructure,new ResourceLocation("forge","coils/copper"),null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
@@ -113,7 +113,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
-							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockMachineStructure,new ResourceLocation("forge","coils/copper"),null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
@@ -124,7 +124,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
-							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockMachineStructure,new ResourceLocation("forge","coils/copper"),null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
@@ -135,7 +135,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
-							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockMachineStructure,new ResourceLocation("forge","coils/copper"),null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
@@ -146,7 +146,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
-							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockStructureBlock,new ResourceLocation("forge","coils/copper"),null,null,null},
+							{null,null,null,new ResourceLocation("forge","coils/copper"),LibVulpesBlocks.blockMachineStructure,new ResourceLocation("forge","coils/copper"),null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","coils/copper"),null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
@@ -156,22 +156,22 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","storage_blocks/steel"),null,null,null,null},
-							{null,null,null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("forge","storage_blocks/titanium"),LibVulpesBlocks.blockAdvStructureBlock,null,null,null},
+							{null,null,null,LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("forge","storage_blocks/titanium"),LibVulpesBlocks.blockAdvancedMachineStructure,null,null,null},
 							{null,null,new ResourceLocation("forge","storage_blocks/steel"),new ResourceLocation("forge","storage_blocks/titanium"),new ResourceLocation("forge","storage_blocks/titanium"),new ResourceLocation("forge","storage_blocks/titanium"),new ResourceLocation("forge","storage_blocks/steel"),null,null},
-							{null,null,null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("forge","storage_blocks/titanium"),LibVulpesBlocks.blockAdvStructureBlock,null,null,null},
+							{null,null,null,LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("forge","storage_blocks/titanium"),LibVulpesBlocks.blockAdvancedMachineStructure,null,null,null},
 							{null,null,null,null,new ResourceLocation("forge","storage_blocks/steel"),null,null,null,null},
 							{null,null,null,null,null,null,null,null,null},
 							{null,null,null,null,null,null,null,null,null}
 					},
 					{
 							{new ResourceLocation("forge","storage_blocks/steel"),null,null,new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),null,null,new ResourceLocation("forge","storage_blocks/steel")},
-							{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slabs"),'I','c','O',new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvStructureBlock,null},
-							{null,new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slabs"),null},
-							{new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs")},
-							{new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.motors,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs")},
-							{new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs")},
-							{null,new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slabs"),null},
-							{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft","slabs"),'P','P','P',new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvStructureBlock,null},
+							{null,LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("minecraft","slabs"),'I','c','O',new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvancedMachineStructure,null},
+							{null,new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("minecraft","slabs"),null},
+							{new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs")},
+							{new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.motors,LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs")},
+							{new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs")},
+							{null,new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("minecraft","slabs"),null},
+							{null,LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("minecraft","slabs"),'P','P','P',new ResourceLocation("minecraft","slabs"),LibVulpesBlocks.blockAdvancedMachineStructure,null},
 							{new ResourceLocation("forge","storage_blocks/steel"),null,null,new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),new ResourceLocation("minecraft","slabs"),null,null,new ResourceLocation("forge","storage_blocks/steel")}
 					}
 			};
@@ -338,8 +338,8 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 
 					if(world != null && (tile = world.getTileEntity(pos)) instanceof TileRailgun && ((TileRailgun)tile).canReceiveCargo(tfrStack) &&
 							(PlanetaryTravelHelper.isTravelAnywhereInPlanetarySystem(ZUtils.getDimensionIdentifier(this.world),
-									DimensionManager.getEffectiveDimId(world, pos).getId()) ||
-									DimensionManager.getEffectiveDimId(world, pos).getId() == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(this.world, this.pos).getId()) ) {
+									DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(world), pos).getId()) ||
+									DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(world), pos).getId() == zmaster587.advancedRocketry.dimension.DimensionManager.getEffectiveDimId(ZUtils.getDimensionIdentifier(this.world), this.pos).getId()) ) {
 
 						((TileRailgun)tile).onReceiveCargo(tfrStack);
 						inv2.setInventorySlotContents(index, ItemStack.EMPTY);
@@ -491,8 +491,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public void readDataFromNetwork(PacketBuffer in, byte packetId,
-			CompoundNBT nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId, CompoundNBT nbt) {
 		if(packetId == 4)
 			nbt.putInt("minTransferSize", in.readInt());
 		else if(packetId == 5) 
@@ -502,8 +501,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public void useNetworkData(PlayerEntity player, Dist side, byte id,
-			CompoundNBT nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt) {
 		if(side.isClient()) {
 			if(id == 3) {
 				Direction dir = RotatableBlock.getFront(world.getBlockState(pos));

@@ -20,7 +20,6 @@ import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.inventory.modules.ModuleData;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
-import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
@@ -58,7 +57,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 	private TileInventoryHatch inputHatch, outputHatch;
 
 	public TileAstrobodyDataProcessor() {
-		super(AdvancedRocketryTileEntityType.TILE_ASTROBODY_DATA);
+		super(AdvancedRocketryTileEntityType.TILE_ASTROBODY_DATA_PROCESSOR);
 		dataCables = new TileDataBus[3];
 		powerPerTick = 100;
 		massProgress = distanceProgress = atmosphereProgress = -1;
@@ -135,7 +134,7 @@ public class TileAstrobodyDataProcessor extends TileMultiPowerConsumer implement
 
 	@Override
 	public String getMachineName() {
-		return "block.advancedrocketry.planetanalyser";
+		return "block.advancedrocketry.astrobodydataprocessor";
 	}
 
 	@Override

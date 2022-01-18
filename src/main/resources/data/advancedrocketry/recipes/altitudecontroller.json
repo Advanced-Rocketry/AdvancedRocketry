@@ -1,19 +1,17 @@
 {
     "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
+    "ingredients": [
         {
-	    "item": "libvulpes:structure_machine"
+	        "item": "libvulpes:machinestructure"
         },
         {
-	    "item": "advancedrocketry:circuit_ic_basic"
+	        "item": "advancedrocketry:basiccircuit"
         },
-	{
-	    "item": "advancedrocketry:item_ui"
+        {
+	        "item": "advancedrocketry:userinterface"
         }
     ],
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:altitudecontroller",
         "count": 1
     }

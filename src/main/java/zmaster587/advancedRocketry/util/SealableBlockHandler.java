@@ -89,7 +89,7 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 				return false;
 			}
 			//TODO replace with seal logic handler
-			else if (block == AdvancedRocketryBlocks.blockAirLock)
+			else if (block == AdvancedRocketryBlocks.blockSmallAirlockDoor)
 			{
 				HashedBlockPosition myPos = new HashedBlockPosition(pos);
 				if(doorPositions.contains(myPos))
@@ -107,27 +107,40 @@ public final class SealableBlockHandler implements IAtmosphereSealHandler
 	}
 
 	@Override
-	public void addUnsealableBlock(Block block)
-	{
-		if (!blockBanList.contains(block))
-		{
+	public void addUnsealableBlock(Block block) {
+		if (!blockBanList.contains(block)) {
 			blockBanList.add(block);
 		}
 		blockAllowList.remove(block);
 	}
 
+	public void addUnsealableBlocks(List<Block> blocks) {
+		for (Block block: blocks) {
+			if (!blockBanList.contains(block)) {
+				blockBanList.add(block);
+			}
+			blockAllowList.remove(block);
+		}
+	}
+
 	@Override
-	public void addSealableBlock(Block block)
-	{
-		if (!blockAllowList.contains(block))
-		{
+	public void addSealableBlock(Block block) {
+		if (!blockAllowList.contains(block)) {
 			blockAllowList.add(block);
 		}
 		blockBanList.remove(block);
 	}
+
+	public void addSealableBlocks(List<Block> blocks) {
+		for (Block block: blocks) {
+			if (!blockAllowList.contains(block)) {
+				blockAllowList.add(block);
+			}
+			blockAllowList.remove(block);
+		}
+	}
 	
-	public List<Block> getOverriddenSealableBlocks()
-	{
+	public List<Block> getOverriddenSealableBlocks() {
 		return blockAllowList;
 	}
 

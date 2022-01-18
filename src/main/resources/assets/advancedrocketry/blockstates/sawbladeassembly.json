@@ -1,0 +1,14 @@
+{
+    "defaults": {
+        "textures": {
+            "#none": "advancedrocketry:block/models/sawbladeassembly"
+        },
+        "model": "advancedrocketry:block/models/sawbladeassembly"
+    },
+    "variants": {
+        "facing=north": { "model": "advancedrocketry:block/models/sawbladeassembly" },
+        "facing=south": { "model": "advancedrocketry:block/models/sawbladeassembly", "y": 180 },
+        "facing=west":  { "model": "advancedrocketry:block/models/sawbladeassembly", "y": 270 },
+        "facing=east":  { "model": "advancedrocketry:block/models/sawbladeassembly", "y": 90 }
+    }
+}

@@ -97,7 +97,7 @@ public abstract class SatelliteBase {
 	 * @return true if the item stack is a valid controller for the satellite
 	 */
 	public boolean isAcceptableControllerItemStack(@Nonnull ItemStack stack) {
-		return !stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemSatelliteIdChip;
+		return !stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemSatelliteChip;
 	}
 	
 	/**
@@ -199,18 +199,11 @@ public abstract class SatelliteBase {
 		}
 	}
 
-	public void writeDataToNetwork(ByteBuf out, byte packetId) {
+	public void writeDataToNetwork(ByteBuf out, byte packetId) { }
 
-	}
+	public void readDataToNetwork(byte packetId, ByteBuf in) { }
 
-	public void readDataToNetwork(byte packetId, ByteBuf in) {
-
-	}
-
-	public void useNetworkData(PlayerEntity player, Dist client, byte packetId,
-			CompoundNBT nbt) {
-
-	}
+	public void useNetworkData(PlayerEntity player, Dist client, byte packetId, CompoundNBT nbt) { }
 	
 	//Server Syncing stuff
 	//Used if the satellite needs to sync in a modularGUI
@@ -219,17 +212,13 @@ public abstract class SatelliteBase {
 		return 0;
 	}
 	
-	public void onChangeReceived(int slot, int value) {
-
-	}
+	public void onChangeReceived(int slot, int value) { }
 	
 	public boolean isUpdateRequired(int localId) {
 		return false;
 	}
 	
-	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {
-
-	}
+	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) { }
 
 
 }

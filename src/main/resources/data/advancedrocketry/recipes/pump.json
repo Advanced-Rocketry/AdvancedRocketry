@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "psp",
+	    "aba",
+	    "iti"
+    ],
+    "key": {
+        "t": {
+            "tag": "forge:fans/steel"
+        },
+        "s": {
+            "item": "advancedrocketry:userinterface"
+        },
+	    "a": {
+            "item": "advancedrocketry:fluidiocircuit"
+        },
+	    "b": {
+            "item": "libvulpes:machinestructure"
+        },
+	    "p": {
+            "tag": "forge:gears/steel"
+        },
+	    "i": {
+            "tag": "forge:plates/iron"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:pump",
+        "count": 1
+    }
+}

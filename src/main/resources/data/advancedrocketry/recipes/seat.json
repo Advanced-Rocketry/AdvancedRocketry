@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "xsx"
+    ],
+    "key": {
+        "x": {
+            "tag": "minecraft:wool"
+        },
+        "s": {
+            "tag": "forge:plates/steel"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:seat",
+        "count": 1
+    }
+}

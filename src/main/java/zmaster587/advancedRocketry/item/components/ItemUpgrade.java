@@ -41,12 +41,12 @@ public class ItemUpgrade extends Item implements IArmorComponent {
 	public void onTick(World world, PlayerEntity player, ItemStack armorStack,
 			IInventory modules, ItemStack componentStack) {
 
-		if(componentStack.getItem() == AdvancedRocketryItems.itemUpgradeLegs) {
+		if(componentStack.getItem() == AdvancedRocketryItems.itemBionicLegsUpgrade) {
 			if(player.isSprinting()) {
 				int itemCount = 0;
 				for(int i = 0; i < modules.getSizeInventory(); i++) {
 					ItemStack stackInSlot = modules.getStackInSlot(i);
-					if(!stackInSlot.isEmpty() && stackInSlot.getItem() == this && stackInSlot.getItem() == AdvancedRocketryItems.itemUpgradeLegs) {
+					if(!stackInSlot.isEmpty() && stackInSlot.getItem() == this && stackInSlot.getItem() == AdvancedRocketryItems.itemBionicLegsUpgrade) {
 						//Avoid extra calculation
 						if(itemCount == 0 && stackInSlot != componentStack)
 							return;
@@ -62,7 +62,7 @@ public class ItemUpgrade extends Item implements IArmorComponent {
 				player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(speedUUID);
 				player.abilities.setWalkSpeed(0.1f);
 		}
-		else if(componentStack.getItem() == AdvancedRocketryItems.itemUpgradeFallBoots && 
+		else if(componentStack.getItem() == AdvancedRocketryItems.itemPaddedBootsUpgrade &&
 				(!ARConfiguration.getCurrentConfig().lowGravityBoots.get() || DimensionManager.getInstance().getDimensionProperties(world).getGravitationalMultiplier() < 1f))
 			player.fallDistance = 0;
 	}
@@ -85,9 +85,9 @@ public class ItemUpgrade extends Item implements IArmorComponent {
 
 	@Override
 	public boolean isAllowedInSlot(ItemStack componentStack, EquipmentSlotType targetSlot) {
-		if(componentStack.getItem() == AdvancedRocketryItems.itemUpgradeLegs)
+		if(componentStack.getItem() == AdvancedRocketryItems.itemBionicLegsUpgrade)
 			return targetSlot == EquipmentSlotType.LEGS;
-		else if(componentStack.getItem() == AdvancedRocketryItems.itemUpgradeFallBoots)
+		else if(componentStack.getItem() == AdvancedRocketryItems.itemPaddedBootsUpgrade)
 			return targetSlot == EquipmentSlotType.FEET;
 		return targetSlot == EquipmentSlotType.HEAD;
 	}

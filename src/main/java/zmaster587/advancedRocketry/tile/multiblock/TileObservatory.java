@@ -21,11 +21,11 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.inventory.modules.ModuleData;
 import zmaster587.advancedRocketry.item.ItemAsteroidChip;
-import zmaster587.advancedRocketry.item.ItemData;
-import zmaster587.advancedRocketry.tile.hatch.TileDataBus;
+import zmaster587.advancedRocketry.item.ItemDataChip;
 import zmaster587.advancedRocketry.util.Asteroid;
 import zmaster587.advancedRocketry.util.Asteroid.StackEntry;
 import zmaster587.advancedRocketry.util.IDataInventory;
@@ -58,27 +58,27 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	private static final Object[][][] structure = new Object[][][]{
 
 		{	{null, null, null, null, null},
-			{null, LibVulpesBlocks.blockStructureBlock, lens, LibVulpesBlocks.blockStructureBlock, null},
-			{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null},
-			{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null},
+			{null, LibVulpesBlocks.blockMachineStructure, lens, LibVulpesBlocks.blockMachineStructure, null},
+			{null, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, null},
+			{null, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, null},
 			{null, null, null, null, null}},
 
 			{	{null,null,null,null,null}, 
-				{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null},
-				{null, LibVulpesBlocks.blockStructureBlock, lens, LibVulpesBlocks.blockStructureBlock, null},
-				{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null},
+				{null, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, null},
+				{null, LibVulpesBlocks.blockMachineStructure, lens, LibVulpesBlocks.blockMachineStructure, null},
+				{null, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, null},
 				{null,null,null,null,null}},
 
-				{	{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null},
-					{LibVulpesBlocks.blockStructureBlock, Blocks.AIR, Blocks.AIR, Blocks.AIR, LibVulpesBlocks.blockStructureBlock},
-					{LibVulpesBlocks.blockStructureBlock, Blocks.AIR, Blocks.AIR, Blocks.AIR, LibVulpesBlocks.blockStructureBlock},
-					{LibVulpesBlocks.blockStructureBlock, Blocks.AIR, lens, Blocks.AIR, LibVulpesBlocks.blockStructureBlock},
-					{null, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, null}},
+				{	{null, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, null},
+					{LibVulpesBlocks.blockMachineStructure, Blocks.AIR, Blocks.AIR, Blocks.AIR, LibVulpesBlocks.blockMachineStructure},
+					{LibVulpesBlocks.blockMachineStructure, Blocks.AIR, Blocks.AIR, Blocks.AIR, LibVulpesBlocks.blockMachineStructure},
+					{LibVulpesBlocks.blockMachineStructure, Blocks.AIR, lens, Blocks.AIR, LibVulpesBlocks.blockMachineStructure},
+					{null, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, null}},
 
 					{	{ null,'*', 'c', '*',null}, 
-						{'*',LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock,'*'},
-						{'*',LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, '*'},
-						{'*',LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock,'*'},
+						{'*',LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure,'*'},
+						{'*',LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, '*'},
+						{'*',LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure, LibVulpesBlocks.blockMachineStructure,'*'},
 						{null,'*', '*', '*', null}},
 
 						{	{null,'*', '*', '*', null}, 
@@ -165,14 +165,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	
 	@Override
 	public void tick() {
-
-		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
-		if(timeAlive == 0 ) {
-			attemptCompleteStructure(world.getBlockState(pos));
-			timeAlive = 0x1;
-		}
-
-		if((world.isRemote && isOpen) || (!world.isRemote && isRunning() && getMachineEnabled() && ((!world.isRaining() && world.canBlockSeeSky(pos.add(0,1,0)) && !world.isDaytime()) || ZUtils.getDimensionIdentifier(world).equals(ARConfiguration.getSpaceDimId())))) {
+		if((world.isRemote && isOpen) || (!world.isRemote && isRunning() && getMachineEnabled() && ((!world.isRaining() && world.canBlockSeeSky(pos.add(0,1,0)) && !world.isDaytime()) || ZUtils.getDimensionIdentifier(world).equals(DimensionManager.spaceId)))) {
 
 			if(!isOpen) {
 				isOpen= true;
@@ -300,7 +293,7 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 
 	@Override
 	public String getMachineName() {
-		return "container.observatory";
+		return "block.advancedrocketry.observatory";
 	}
 
 	@Override
@@ -651,9 +644,9 @@ public class TileObservatory extends TileMultiPowerConsumer implements IModularI
 	public void storeData(int id) {
 		ItemStack dataChip = inv.getStackInSlot(0);
 
-		if(dataChip != ItemStack.EMPTY && dataChip.getItem() instanceof ItemData && dataChip.getCount() == 1) {
+		if(dataChip != ItemStack.EMPTY && dataChip.getItem() instanceof ItemDataChip && dataChip.getCount() == 1) {
 
-			ItemData dataItem = (ItemData)dataChip.getItem();
+			ItemDataChip dataItem = (ItemDataChip)dataChip.getItem();
 			DataStorage data = dataItem.getDataStorage(dataChip);
 
 			for(TileDataBus tile : dataCables) {

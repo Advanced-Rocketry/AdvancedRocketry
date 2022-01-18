@@ -1,37 +1,28 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"bib",
-	"csc",
-	"e e"
+    "pattern": [
+	    "bib",
+	    "csc",
+	    "e e"
     ],
-    "key":
-    {
-	"i":
-        {
-	    "item": "advancedrocketry:item_ui"
+    "key": {
+	    "i": {
+	        "item": "advancedrocketry:userinterface"
         },
-	"b":
-        {
-	    "item": "libvulpes:small2xbattery"
+	    "b": {
+	        "item": "libvulpes:batterypack"
         },
-	"e":
-        {
-	    "item": "advancedrocketry:rocketmotor"
+	    "e": {
+	        "item": "advancedrocketry:monopropellantrocketengine"
         },
-	"c":
-        {
-
+	    "c": {
             "tag": "forge:gems/dilithium"
         },
-	"s":
-        {
-	    "item": "advancedrocketry:structuretower"
+	    "s": {
+	        "item": "advancedrocketry:structuretower"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:hovercraft",
         "count": 1
     }

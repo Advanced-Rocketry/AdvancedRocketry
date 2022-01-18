@@ -17,17 +17,17 @@ import java.util.Optional;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
-import zmaster587.advancedRocketry.tile.TileFluidTank;
+import zmaster587.advancedRocketry.tile.TilePressureTank;
 import zmaster587.libVulpes.render.RenderHelper;
 
-public class RenderTank extends TileEntityRenderer<TileFluidTank> {
+public class RenderTank extends TileEntityRenderer<TilePressureTank> {
 
 	public RenderTank(TileEntityRendererDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
 	}
 
 	@Override
-	public void render(TileFluidTank tile, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+	public void render(TilePressureTank tile, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
 
         FluidStack fluid = ((IFluidHandler) tile).getFluidInTank(0);
 		ResourceLocation fluidIcon = new ResourceLocation("advancedrocketry:textures/blocks/fluid/oxygen_flow.png");

@@ -2,6 +2,6 @@
     "parent": "minecraft:block/cube_all",
     "textures": {
         "all": "advancedrocketry:blocks/fluid/lava_still.png",
-	"flowing": "advancedrocketry:blocks/lava_flow.png"
+    	"flowing": "advancedrocketry:blocks/lava_flow.png"
     }
 }

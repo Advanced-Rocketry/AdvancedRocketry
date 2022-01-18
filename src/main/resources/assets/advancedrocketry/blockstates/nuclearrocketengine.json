@@ -1,0 +1,18 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "#None": "advancedrocketry:block/models/nuclearrocketengine"
+        },
+        "model": "advancedrocketry:models/nuclearrocketengine.obj",
+        "transform": "forge:default-block"
+    },
+    "variants": {
+        "facing=north": { "model": "advancedrocketry:block/models/nuclearrocketengine", "x": 90 },
+        "facing=south": {  "model": "advancedrocketry:block/models/nuclearrocketengine", "x": 90, "y": 180 },
+        "facing=west":  { "model": "advancedrocketry:block/models/nuclearrocketengine", "x": 90, "y": 270 },
+        "facing=east":  { "model": "advancedrocketry:block/models/nuclearrocketengine", "x": 90, "y": 90 },
+        "facing=up":  { "model": "advancedrocketry:block/models/nuclearrocketengine", "x": 180 },
+        "facing=down":  { "model": "advancedrocketry:block/models/nuclearrocketengine" }
+    }
+}

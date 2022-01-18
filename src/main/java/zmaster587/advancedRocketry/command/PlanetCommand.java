@@ -25,14 +25,14 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
-import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.api.DataStorage.DataType;
 import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
-import zmaster587.advancedRocketry.item.ItemData;
+import zmaster587.advancedRocketry.item.ItemDataChip;
 import zmaster587.advancedRocketry.item.ItemMultiData;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.network.PacketDimInfo;
@@ -46,7 +46,7 @@ public class PlanetCommand {
 	public static void register(CommandDispatcher<CommandSource> dispatcher) {
 		
 
-		dispatcher.register(Commands.literal("advRocketry").then(Commands.literal("planet")
+		dispatcher.register(Commands.literal("advancedrocketry").then(Commands.literal("planet")
 				.executes((value) -> commandPlanetHelp(value.getSource()))
 				.then(Commands.literal("reset").executes((value) -> commandPlanetReset(value.getSource(), null))
 				.then(Commands.argument("dim", DimensionArgument.getDimension())).executes((value) -> commandPlanetReset(value.getSource(), DimensionArgument.getDimensionArgument(value, "dim"))) )
@@ -143,13 +143,13 @@ public class PlanetCommand {
 	{
 		PlayerEntity player;
 		ResourceLocation stationId = new ResourceLocation(SpaceObjectManager.STATION_NAMESPACE, String.valueOf(stationIdStr));
-		ServerWorld world = ZUtils.getWorld(ARConfiguration.getSpaceDimId());
+		ServerWorld world = ZUtils.getWorld(DimensionManager.spaceId);
 		if(sender.getEntity() != null && (player = (PlayerEntity) sender.getEntity()) != null) {
 			ISpaceObject object = SpaceObjectManager.getSpaceManager().getSpaceStation(stationId);
 
 			if(object != null) {
 				HashedBlockPosition vec = object.getSpawnLocation();
-				if(!ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(player.world)))
+				if(!DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(player.world)))
 					((ServerPlayerEntity) player).teleport(world, vec.x, vec.y, vec.z, 0, 0);
 				
 				player.setPositionAndUpdate(vec.x, vec.y, vec.z);
@@ -171,8 +171,8 @@ public class PlanetCommand {
 		if(sender.getEntity() != null ) {
 			stack = sender.asPlayer().getHeldItem(Hand.MAIN_HAND);
 
-			if(!stack.isEmpty() && stack.getItem() instanceof ItemData) {
-				ItemData item = (ItemData) stack.getItem();
+			if(!stack.isEmpty() && stack.getItem() instanceof ItemDataChip) {
+				ItemDataChip item = (ItemDataChip) stack.getItem();
 				int dataAmount = item.getMaxData(stack);
 				DataType dataType = null;
 
@@ -244,9 +244,8 @@ public class PlanetCommand {
 		return 0;
 	}
 	
-	private static int commandGiveStation(CommandSource sender, @Nullable PlayerEntity player, String stationIdStr)
-	{
-		ResourceLocation stationId = new ResourceLocation(stationIdStr);
+	private static int commandGiveStation(CommandSource sender, @Nullable PlayerEntity player, String stationIdStr) {
+		ResourceLocation stationId = new ResourceLocation(Constants.modId, stationIdStr);
 		if(player == null && sender.getEntity() != null)
 			try {
 				player = sender.asPlayer();
@@ -264,8 +263,7 @@ public class PlanetCommand {
 		return 0;
 	}
 
-	private static int commandPlanetDelete(CommandSource sender, ServerWorld world)
-	{
+	private static int commandPlanetDelete(CommandSource sender, ServerWorld world) {
 
 		ResourceLocation deletedDimId = ZUtils.getDimensionIdentifier(world);
 

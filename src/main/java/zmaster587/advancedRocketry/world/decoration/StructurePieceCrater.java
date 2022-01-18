@@ -22,6 +22,7 @@ import net.minecraftforge.fluids.IFluidBlock;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBiomes;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
+import zmaster587.libVulpes.util.ZUtils;
 
 public class StructurePieceCrater extends ScatteredStructurePiece {
 
@@ -58,7 +59,7 @@ public class StructurePieceCrater extends ScatteredStructurePiece {
 	public boolean func_230383_a_(ISeedReader world, StructureManager structureMgr, ChunkGenerator chunkGen, Random rand, MutableBoundingBox bb, ChunkPos chunkPos, BlockPos blockPos)
 	{
 
-		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(world.getWorld());
+		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(ZUtils.getDimensionIdentifier(world.getWorld()));
 
 		List<BlockState> ores = props.craterOres.stream()
 				.map(s-> Block.getBlockFromItem(s.getItem()).getDefaultState())

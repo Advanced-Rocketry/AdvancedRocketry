@@ -114,11 +114,10 @@ public class AdvancedRocketryBiomes {
 		return  WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_SURFACE_BUILDER, new ResourceLocation(Constants.modId, p_244192_0_), p_244192_1_);
 	}
 
-	public static void configureSurfaceBuilders()
-	{
+	public static void configureSurfaceBuilders() {
 		MOON_LUNAR_LIGHT_CONFIG = registerSurfaceBuilder("lunargenerationlight", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(AdvancedRocketryBlocks.blockMoonTurf.getDefaultState(), AdvancedRocketryBlocks.blockMoonTurf.getDefaultState(), Blocks.GRAVEL.getDefaultState())));
 		MOON_LUNAR_DARK_CONFIG = registerSurfaceBuilder("lunargenerationdark", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(AdvancedRocketryBlocks.blockMoonTurfDark.getDefaultState(), AdvancedRocketryBlocks.blockMoonTurfDark.getDefaultState(), Blocks.GRAVEL.getDefaultState())));
-		HOTDRY_CONFIG = registerSurfaceBuilder("hotdrygeneration", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(AdvancedRocketryBlocks.blockHotTurf.getDefaultState(), AdvancedRocketryBlocks.blockHotTurf.getDefaultState(), Blocks.GRAVEL.getDefaultState())));
+		HOTDRY_CONFIG = registerSurfaceBuilder("hotdrygeneration", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(AdvancedRocketryBlocks.blockOxidizedFerricSand.getDefaultState(), AdvancedRocketryBlocks.blockOxidizedFerricSand.getDefaultState(), Blocks.GRAVEL.getDefaultState())));
 		SPACE_CONFIG = registerSurfaceBuilder("spacegeneration", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState())));
 		GRAVEL_CONFIG = registerSurfaceBuilder("gravel", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState())));
 		BASALT_CONFIG = registerSurfaceBuilder("basalt", SurfaceBuilder.DEFAULT.func_242929_a(new SurfaceBuilderConfig(AdvancedRocketryBlocks.blockBasalt.getDefaultState(), AdvancedRocketryBlocks.blockBasalt.getDefaultState(), AdvancedRocketryBlocks.blockBasalt.getDefaultState())));
@@ -134,9 +133,7 @@ public class AdvancedRocketryBiomes {
 	public static StructureFeature<ProbabilityConfig, ? extends Structure<ProbabilityConfig>> CONFIGURED_VOLCANO = VOLCANO.withConfiguration(new ProbabilityConfig(0.0000001F));
 	public static StructureFeature<ProbabilityConfig, ? extends Structure<ProbabilityConfig>> CONFIGURED_GEODE = GEODE.withConfiguration(new ProbabilityConfig(0.0000001F));
 	
-	public static void registerStructures(RegistryEvent.Register<Structure<?>> evt)
-	{
-
+	public static void registerStructures(RegistryEvent.Register<Structure<?>> evt) {
 		evt.getRegistry().register(VOLCANO.setRegistryName("volcano"));
 		evt.getRegistry().register(CRATER.setRegistryName("crater"));
 		evt.getRegistry().register(GEODE.setRegistryName("geode"));
@@ -196,7 +193,7 @@ public class AdvancedRocketryBiomes {
 	public static void initFeature() {
 		CRYSTAL_FEATURE = new WorldGenLargeCrystal(NoFeatureConfig.CODEC);
 
-		ALIEN_TREE = registerTree("alientree", Feature.TREE.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(AdvancedRocketryBlocks.blockAlienWood.getDefaultState()), new SimpleBlockStateProvider(AdvancedRocketryBlocks.blockAlienLeaves.getDefaultState()), new BlobFoliagePlacer(FeatureSpread.create(2), FeatureSpread.create(0), 3), new WorldGenAlienTree(4, 2, 0), new TwoLayerFeature(1, 0, 1))).setIgnoreVines().build()));
+		ALIEN_TREE = registerTree("alientree", Feature.TREE.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(AdvancedRocketryBlocks.blockLightwoodLog.getDefaultState()), new SimpleBlockStateProvider(AdvancedRocketryBlocks.blockLightwoodLeaves.getDefaultState()), new BlobFoliagePlacer(FeatureSpread.create(2), FeatureSpread.create(0), 3), new WorldGenAlienTree(4, 2, 0), new TwoLayerFeature(1, 0, 1))).setIgnoreVines().build()));
 		CHARRED_TREE = registerTree("charredtree", Feature.TREE.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(AdvancedRocketryBlocks.blockCharcoalLog.getDefaultState()), new SimpleBlockStateProvider(Blocks.AIR.getDefaultState()), new BlobFoliagePlacer(FeatureSpread.create(0), FeatureSpread.create(0), 0), new WorldGenCharredTree(4, 2, 0, 0), new TwoLayerFeature(1, 0, 1))).setIgnoreVines().build()));
 		CRYSTAL_SPIRE = registerTree("crystal", CRYSTAL_FEATURE.withConfiguration(NoFeatureConfig.NO_FEATURE_CONFIG));		
 	}
@@ -211,9 +208,6 @@ public class AdvancedRocketryBiomes {
 	private static <FC extends IFeatureConfig> ConfiguredFeature<FC, ?> registerTree(String p_243968_0_, ConfiguredFeature<FC, ?> p_243968_1_) {
 		return Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(Constants.modId, p_243968_0_), p_243968_1_);
 	}
-
-	//
-
 
 	// BiomeGeneration settings
 	private static BiomeGenerationSettings barren;
@@ -251,8 +245,7 @@ public class AdvancedRocketryBiomes {
 	private static BiomeGenerationSettings.Builder createBuilder(ConfiguredSurfaceBuilder<?> surface, boolean space) {
 		BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder();
 		builder = builder.withSurfaceBuilder(surface);
-		if(!space)
-		{
+		if(!space) {
 			DefaultBiomeFeatures.withCavesAndCanyons(builder);
 		}
 		//Add ores
@@ -332,11 +325,11 @@ public class AdvancedRocketryBiomes {
 	}
 
 	
-	   private static int getSkyColor(float p_244206_0_) {
-		      float lvt_1_1_ = p_244206_0_ / 3.0F;
-		      lvt_1_1_ = MathHelper.clamp(lvt_1_1_, -1.0F, 1.0F);
-		      return MathHelper.hsvToRGB(0.62222224F - lvt_1_1_ * 0.05F, 0.5F + lvt_1_1_ * 0.1F, 1.0F);
-		   }
+	private static int getSkyColor(float p_244206_0_) {
+	    float lvt_1_1_ = p_244206_0_ / 3.0F;
+	    lvt_1_1_ = MathHelper.clamp(lvt_1_1_, -1.0F, 1.0F);
+	    return MathHelper.hsvToRGB(0.62222224F - lvt_1_1_ * 0.05F, 0.5F + lvt_1_1_ * 0.1F, 1.0F);
+	}
 	
 	public static void registerBiomes(RegistryEvent.Register<Biome> evt) {
 		if(CRYSTAL_FEATURE == null)
@@ -462,7 +455,6 @@ public class AdvancedRocketryBiomes {
 
 	public static Biome getBiome(String string) {
 		Biome biome;
-		int id = 0;
 		biome = getBiomeFromResourceLocation(new ResourceLocation(string));
 
 		return biome;
@@ -508,7 +500,6 @@ public class AdvancedRocketryBiomes {
 	}
 	
 	public static Registry<Biome> getBiomeRegistry() {
-		
 		return DynamicRegistries.func_239770_b_().func_230521_a_(Registry.BIOME_KEY).get();
 	}
 

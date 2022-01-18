@@ -1,13 +1,13 @@
 {
     "display": {
         "icon": {
-            "item": "advancedrocketry:spacehelmet"
+            "item": "advancedrocketry:spacesuithelmet"
         },
         "title": {
-            "translate": "advancement.suitedUp"
+            "translate": "advancement.advancedrocketry.suitedup"
         },
         "description": {
-            "translate": "advancement.suitedUp.desc"
+            "translate": "advancement.advancedrocketry.suitedup.desc"
         }
     },
     "parent": "advancedrocketry:normal/root",
@@ -17,16 +17,16 @@
             "conditions": {
                 "items": [
                     {
-                        "item": "advancedrocketry:spaceboots"
+                        "item": "advancedrocketry:spacesuitboots"
                     },
 		    {
-                        "item": "advancedrocketry:spaceleggings"
+                        "item": "advancedrocketry:spacesuitleggings"
                     },
 		    {
-                        "item": "advancedrocketry:spacehelmet"
+                        "item": "advancedrocketry:spacesuithelmet"
                     },
 		    {
-                        "item": "advancedrocketry:spacechest"
+                        "item": "advancedrocketry:spacesuitchestpiece"
                     }
                 ]
             }

@@ -22,11 +22,6 @@ public class WorldGenLargeCrystal extends Feature<NoFeatureConfig> {
 		this.block = AdvancedRocketryBlocks.blockCrystal.getDefaultState();
 	}
 
-	/*@Override
-	public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) {
-		return false;
-	}*/
-
 	@Override
 	public boolean generate(ISeedReader world, ChunkGenerator chunkGen, Random rand,
 			BlockPos pos, NoFeatureConfig config) {

@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -59,26 +60,7 @@ public class EntityLaserNode extends Entity implements IEntityAdditionalSpawnDat
 	
 	@Override
 	public void remove() {
-		this.cleanUp();
 		super.remove();
-	}
-
-	/**
-	 * Removes all the light blocks created by the laser
-	 */
-	public void cleanUp() {
-		if(!this.world.isRemote)
-		{
-			for(int h = 0; h < world.getHeight(); h++) {
-				for(int i = 0; i < 9; i++) {
-					int x = (int)this.getPosX() + (i % 3) - 1;
-					int z = (int)getPosZ() + (i / 3) - 1;
-					BlockPos pos = new BlockPos(x, h, z);
-					if(world.getBlockState(pos).getBlock() == AdvancedRocketryBlocks.blockLightSource)
-						world.setBlockState(pos, Blocks.AIR.getDefaultState());
-				}
-			}
-		}
 	}
 
 	@Override
@@ -97,11 +79,11 @@ public class EntityLaserNode extends Entity implements IEntityAdditionalSpawnDat
 				final double spread = 3;
 				final double initialSpeed = .5;
 				for(int i = 0; i < (Minecraft.getInstance().gameSettings.particles == ParticleStatus.ALL ? 20 : 5); i++)
-					AdvancedRocketry.proxy.spawnParticle("fireworksSpark",world, this.getPosX() + (this.rand.nextDouble()*spread) - (spread/2), this.getPosY(), this.getPosZ() + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble() - (initialSpeed/2), initialSpeed * this.rand.nextDouble() * 20 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
+					AdvancedRocketry.proxy.spawnParticle(ParticleTypes.FIREWORK, world, this.getPosX() + (this.rand.nextDouble()*spread) - (spread/2), this.getPosY(), this.getPosZ() + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble() - (initialSpeed/2), initialSpeed * this.rand.nextDouble() * 20 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
 
 
 				//this.worldObj.spawnParticle("tilecrack_" + this.worldObj.getBlockId((int)this.posX, (int)this.posY - 1, (int)this.posZ) + "_" + 0, this.posX + (this.rand.nextDouble()*spread) - (spread/2), this.posY + 5, this.posZ + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble(), initialSpeed * this.rand.nextDouble() * 20 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
-				AdvancedRocketry.proxy.spawnParticle("hugeexplosion", world, this.getPosX() + (this.rand.nextDouble()*spread) - (spread/2), this.getPosY(), this.getPosZ() + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble(), initialSpeed * this.rand.nextDouble() * 4 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
+				AdvancedRocketry.proxy.spawnParticle(ParticleTypes.EXPLOSION, world, this.getPosX() + (this.rand.nextDouble()*spread) - (spread/2), this.getPosY(), this.getPosZ() + (this.rand.nextDouble()*spread) - (spread/2), initialSpeed * this.rand.nextDouble(), initialSpeed * this.rand.nextDouble() * 4 + initialSpeed, initialSpeed * this.rand.nextDouble() - (initialSpeed/2));
 			}
 			//TODO: use sound setting
 			LibVulpes.proxy.playSound(world, getPositionUnderneath(), AudioRegistry.laserDrill, SoundCategory.NEUTRAL, 1.0f, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);

@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+		"s s",
+		"pbp",
+		"p p"
+    ],
+    "key": {
+        "s": {
+            "tag": "forge:rods/iron"
+        },
+		"p": {
+            "tag": "forge:plates/iron"
+        },
+		"b": {
+            "item": "advancedrocketry:sawblade"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:sawbladeassembly",
+        "count": 1
+    }
+}

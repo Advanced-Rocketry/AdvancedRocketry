@@ -61,9 +61,9 @@ public class MissionGasCollection extends MissionResourceCollection {
 
 		FuelRegistry.FuelType fuelType = rocket.getRocketFuelType();
 		if(fuelType != null) {
-			rocket.setFuelAmount(fuelType, 0);
+			rocket.stats.getFluidTank(fuelType).drain(rocket.stats.getFluidTank(fuelType).getFluidAmount(), FluidAction.EXECUTE);
 			if (fuelType == FuelRegistry.FuelType.LIQUID_BIPROPELLANT)
-				rocket.setFuelAmount(FuelRegistry.FuelType.LIQUID_OXIDIZER, 0);
+				rocket.stats.getFluidTank(FuelRegistry.FuelType.LIQUID_OXIDIZER).drain(rocket.stats.getFluidTank(FuelRegistry.FuelType.LIQUID_OXIDIZER).getFluidAmount(), FluidAction.EXECUTE);
 		}
 		rocket.readMissionPersistentNBT(missionPersistantNBT);
 

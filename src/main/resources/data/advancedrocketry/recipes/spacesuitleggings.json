@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+		"wrw",
+		"w w",
+		"w w"
+    ],
+    "key": {
+		"w": {
+	  	    "tag": "minecraft:wool",
+            "data": 32767
+        },
+		"r": {
+            "tag": "forge:rods/iron"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:spacesuitleggings",
+        "count": 1
+    }
+}

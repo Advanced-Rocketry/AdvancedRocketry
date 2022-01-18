@@ -14,6 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
@@ -38,7 +39,7 @@ public class TileStationOrientationController extends TileEntity implements ITic
 
 	private int[] progress;
 
-	private ModuleText moduleAngularVelocity, numThrusters, maxAngularAcceleration, targetRotations;
+	private ModuleText moduleAngularVelocity, targetRotations;
 
 	public TileStationOrientationController() {
 		super(AdvancedRocketryTileEntityType.TILE_ORIENTATION_CONTROLLER);
@@ -88,7 +89,7 @@ public class TileStationOrientationController extends TileEntity implements ITic
 
 	@Override
 	public void tick() {
-		if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world))) {
+		if(DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(this.world))) {
 			if(!world.isRemote) {
 				ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
 				boolean update = false;

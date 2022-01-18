@@ -1,0 +1,13 @@
+{
+    "variants": {
+        "facing=north,state=true": { "model": "advancedrocketry:block/orbitallaserdrill" },
+        "facing=south,state=true": { "model": "advancedrocketry:block/orbitallaserdrill", "y": 180 },
+        "facing=west,state=true":  { "model": "advancedrocketry:block/orbitallaserdrill", "y": 270 },
+        "facing=east,state=true":  { "model": "advancedrocketry:block/orbitallaserdrill", "y": 90 },
+        "facing=north,state=false": { "model": "advancedrocketry:block/orbitallaserdrill" },
+        "facing=south,state=false": { "model": "advancedrocketry:block/orbitallaserdrill", "y": 180 },
+        "facing=west,state=false":  { "model": "advancedrocketry:block/orbitallaserdrill", "y": 270 },
+        "facing=east,state=false":  { "model": "advancedrocketry:block/orbitallaserdrill", "y": 90 },
+        "inventory" : { "model": "advancedrocketry:block/orbitallaserdrill" }
+    }
+}

@@ -1,16 +1,14 @@
 {
     "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
+    "ingredients": [
         {
-	    "item": "advancedrocketry:concrete"
+	        "item": "advancedrocketry:concrete"
         },
         {
-	    "item": "advancedrocketry:circuit_ic_tracking"
+	        "item": "advancedrocketry:trackingcircuit"
         }
     ],
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:landingpad",
         "count": 1
     }

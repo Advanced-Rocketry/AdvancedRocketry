@@ -1,6 +1,0 @@
-{
-    "variants": {
-        "visible=false": { "model": "advancedrocketry:block/satellitehatch" },
-        "visible=true": { "model": "advancedrocketry:block/satellitehatch" }
-    }
-}

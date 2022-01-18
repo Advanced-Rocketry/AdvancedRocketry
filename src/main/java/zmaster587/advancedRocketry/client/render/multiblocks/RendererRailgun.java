@@ -22,7 +22,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class RendererRailgun extends TileEntityRenderer<TileRailgun> {
 	
 	WavefrontObject model;
-
 	ResourceLocation texture =  new ResourceLocation("advancedrocketry","textures/models/railgun.png");
 	
 	public RendererRailgun(TileEntityRendererDispatcher tile) {

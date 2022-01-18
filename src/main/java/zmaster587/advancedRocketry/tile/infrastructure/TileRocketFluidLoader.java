@@ -25,19 +25,20 @@ import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.api.IMission;
 import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
 import zmaster587.advancedRocketry.entity.EntityRocket;
-import zmaster587.advancedRocketry.tile.TileRocketAssemblingMachine;
+import zmaster587.advancedRocketry.tile.TileRocketAssembler;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.ISidedRedstoneTile;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import java.util.List;
 
-public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastructure,  ITickableTileEntity,  IButtonInventory, INetworkMachine, IGuiCallback {
+public class TileRocketFluidLoader extends TileFluidHatch implements IInfrastructure, ITickableTileEntity, IButtonInventory, INetworkMachine, IGuiCallback, ISidedRedstoneTile {
 
 	EntityRocket rocket;
 	ModuleRedstoneOutputButton redstoneControl;
@@ -46,7 +47,7 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	RedstoneState inputstate;
 	ModuleBlockSideSelector sideSelectorModule;
 
-	private final static int ALLOW_REDSTONEOUT = 2;
+	private static int ALLOW_REDSTONEOUT = 2;
 
 	public TileRocketFluidLoader(TileEntityType<?> type) {
 		super(type);
@@ -81,13 +82,13 @@ public class TileRocketFluidLoader extends TileFluidHatch  implements IInfrastru
 	@Override
 	public void remove() {
 		super.remove();
-		if(getMasterBlock() instanceof TileRocketAssemblingMachine)
-			((TileRocketAssemblingMachine)getMasterBlock()).removeConnectedInfrastructure(this);
+		if(getMasterBlock() instanceof TileRocketAssembler)
+			((TileRocketAssembler)getMasterBlock()).removeConnectedInfrastructure(this);
 	}
 
 	@Override
 	public String getModularInventoryName() {
-		return "block.advancedrocketry.floader";
+		return "block.advancedrocketry.rocketfluidloader";
 	}
 
 	@Override

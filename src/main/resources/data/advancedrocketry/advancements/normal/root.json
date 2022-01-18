@@ -4,10 +4,10 @@
             "item": "advancedrocketry:moonturf"
         },
         "title": {
-            "translate": "itemGroup.advancedRocketry"
+            "translate": "itemgroup.advancedRocketry"
         },
         "description": {
-            "translate": "itemGroup.advancedRocketry"
+            "translate": "itemgroup.advancedRocketry"
         },
         "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
         "show_toast": false,

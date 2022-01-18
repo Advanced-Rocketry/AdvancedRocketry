@@ -23,12 +23,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.advancedRocketry.AdvancedRocketry;
-import zmaster587.advancedRocketry.api.ARConfiguration;
-import zmaster587.advancedRocketry.api.IInfrastructure;
-import zmaster587.advancedRocketry.api.RocketEvent;
+import zmaster587.advancedRocketry.api.*;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketLaunchEvent;
 import zmaster587.advancedRocketry.api.RocketEvent.RocketPreLaunchEvent;
-import zmaster587.advancedRocketry.api.StatsRocket;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.advancedRocketry.client.SoundRocketEngine;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
@@ -99,20 +96,17 @@ public class EntityStationDeployedRocket extends EntityRocket {
 	
 	@Override
 	public void launch() {
-
 		if(isInFlight())
 			return;
-
 
 		if(isInOrbit()) {
 			setInFlight(true);
 			return;
 		}
-		if(getFuelAmount(getRocketFuelType()) < getFuelCapacity(getRocketFuelType()))
-			return;
+		if(stats.getFluidTank(getRocketFuelType()).getFluidAmount() < stats.getFluidTank(getRocketFuelType()).getCapacity()) return;
 
 		ISpaceObject spaceObj;
-		if( ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world) ) && (spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(getPositionVec()))) != null && spaceObj.getProperties().getParentProperties().isGasGiant() ) { //Abort if destination is invalid
+		if( DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(world) ) && (spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(getPositionVec()))) != null && spaceObj.getProperties().getParentProperties().isGasGiant() ) { //Abort if destination is invalid
 
 
 			setInFlight(true);
@@ -177,7 +171,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 							xVel = (1-xMult)*((this.rand.nextFloat() - 0.5f)/8f) + xMult*-.15f;
 							zVel = (1-zMult)*((this.rand.nextFloat() - 0.5f)/8f) + zMult*-.15f;
 
-							AdvancedRocketry.proxy.spawnParticle("rocketFlame", world, this.getPosX() + vec.x + getMotion().x, this.getPosY() + vec.y, this.getPosZ() +vec.z, xVel,(this.rand.nextFloat() - 0.5f)/8f, zVel + getMotion().z);
+							AdvancedRocketry.proxy.spawnParticle(AdvancedRocketryParticleTypes.rocketFx, world, this.getPosX() + vec.x + getMotion().x, this.getPosY() + vec.y, this.getPosZ() +vec.z, xVel,(this.rand.nextFloat() - 0.5f)/8f, zVel + getMotion().z);
 
 						}
 					}
@@ -267,7 +261,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		Iterator<ModuleBase> itr = modules.iterator();
 		while(itr.hasNext()) {
 			ModuleBase module = itr.next();
-			if(module instanceof ModuleButton && ((ModuleButton)module).buttonId == 1) {
+			if(module instanceof ModuleButton && ((ModuleButton)module).getAdditionalData().equals("unmannedremove")) {
 				itr.remove();
 				break;
 			}
@@ -344,7 +338,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		//Check again to make sure we are around a gas giant
 		ISpaceObject spaceObj;
 		setInOrbit(true);
-		if( ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(world)) && ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(this.getPositionVec()))) != null && spaceObj.getProperties().getParentProperties().isGasGiant() )) { //Abort if destination is invalid
+		if( DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(world)) && ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(new BlockPos(this.getPositionVec()))) != null && spaceObj.getProperties().getParentProperties().isGasGiant() )) { //Abort if destination is invalid
 			this.setPosition(forwardDirection.getXOffset()*64d + this.launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5d), getPosY(), forwardDirection.getZOffset()*64d + this.launchLocation.z + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5d));
 		}
 		else {

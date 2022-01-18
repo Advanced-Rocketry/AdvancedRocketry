@@ -44,8 +44,8 @@ class MiningDrill extends AbstractDrill {
 			if (event.isCanceled())
 				continue;
 
-			if (state == Blocks.AIR.getDefaultState() || state.getMaterial().isReplaceable() || state.getMaterial().isLiquid()) {
-				laser.world.setBlockState(laserPos, AdvancedRocketryBlocks.blockLightSource.getDefaultState());
+			if (state.getMaterial().isReplaceable() || state.getMaterial().isLiquid()) {
+				laser.world.setBlockState(laserPos, Blocks.AIR.getDefaultState());
 				continue;
 			}
 
@@ -57,14 +57,14 @@ class MiningDrill extends AbstractDrill {
 
 
 			if (items.isEmpty()) {
-				laser.world.setBlockState(laserPos, AdvancedRocketryBlocks.blockLightSource.getDefaultState());
+				laser.world.setBlockState(laserPos, Blocks.AIR.getDefaultState());
 				continue;
 			}
 
 			stacks = new ItemStack[items.size()];
 			stacks = items.toArray(stacks);
 
-			laser.world.setBlockState(laserPos, AdvancedRocketryBlocks.blockLightSource.getDefaultState());
+			laser.world.setBlockState(laserPos, Blocks.AIR.getDefaultState());
 		}
 
 		boolean blockInWay = false;

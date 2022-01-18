@@ -1,15 +1,6 @@
 package zmaster587.advancedRocketry.api;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.block.RotatedPillarBlock;
-import net.minecraft.block.SaplingBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.TorchBlock;
-import net.minecraft.block.WallTorchBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.particles.ParticleTypes;
@@ -19,13 +10,12 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
+import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.advancedRocketry.block.*;
-import zmaster587.advancedRocketry.block.multiblock.BlockARHatch;
+import zmaster587.advancedRocketry.block.multiblock.*;
+import zmaster587.advancedRocketry.block.plant.BlockElectricMushroom;
 import zmaster587.advancedRocketry.world.tree.AlienTree;
-import zmaster587.libVulpes.block.BlockAlphaTexture;
-import zmaster587.libVulpes.block.BlockFullyRotatable;
-import zmaster587.libVulpes.block.BlockMotor;
-import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.block.*;
 import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.inventory.GuiHandler;
@@ -42,35 +32,28 @@ public class AdvancedRocketryBlocks {
 	public static RegistryObject<FlowingFluidBlock> blockEnrichedLavaFluid;
 
 	//Blocks -------------------------------------------------------------------------------------
-	static AbstractBlock.Properties machineLineProperties = AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2f);
+	static AbstractBlock.Properties machineLineProperties = AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f);
 	static AbstractBlock.Properties crystalProperties = AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2f).sound(SoundType.GLASS);
 
-	public static Block blocksGeode = new Block(AbstractBlock.Properties.create(MaterialGeode.geode).hardnessAndResistance(6f, 2000F).harvestTool(ToolType.get("jackhammer")));
-	public static Block blockLaunchpad = new BlockLinkedHorizontalTexture(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2f, 10f));
-	public static Block blockStructureTower = new BlockAlphaTexture(machineLineProperties);
-
-
-	public static Block blockGenericSeat = new BlockSeat(AbstractBlock.Properties.create(Material.WOOL).hardnessAndResistance(0.5f));
-	public static Block blockEngine = new BlockRocketMotor(machineLineProperties);
-	public static Block blockBipropellantEngine = new BlockBipropellantRocketMotor(machineLineProperties);
-	public static Block blockAdvEngine = new BlockAdvancedRocketMotor(machineLineProperties);
-	public static Block blockFuelTank = new BlockFuelTank(machineLineProperties);
-	public static Block blockBipropellantFuelTank = new BlockBipropellantFuelTank(machineLineProperties);
-	public static Block blockOxidizerFuelTank = new BlockOxidizerFuelTank(machineLineProperties);
-	public static Block blockSawBlade = new BlockMotor(machineLineProperties,1f);
-
-	public static Block blockConcrete = new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2f, 16f));
-	public static Block blockPlatePress = new BlockSmallPlatePress(machineLineProperties);
-	public static Block blockAirLock = new DoorBlock(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f, 8f));
-	public static Block blockLandingPad = new BlockLandingPad(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f,3f));
-	public static Block blockOxygenDetection = new BlockRedstoneEmitter(machineLineProperties,"advancedrocketry:atmosphereDetector_active");
-	public static Block blockCO2Scrubber = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
+	//Lights
 	public static Block blockUnlitTorch = new BlockTorchUnlit(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().zeroHardnessAndResistance().hardnessAndResistance(0));
 	public static Block blockUnlitTorchWall = new BlockTorchUnlitWall(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().zeroHardnessAndResistance().hardnessAndResistance(0));
-
-	public static Block blockVitrifiedSand = new Block(AbstractBlock.Properties.create(Material.SAND).hardnessAndResistance(0.5f));
+	public static Block blockThermiteTorch = new TorchBlock(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().zeroHardnessAndResistance().setLightLevel((p_235470_0_) -> 15).sound(SoundType.NETHER_BRICK), ParticleTypes.FLAME);
+	public static Block blockThermiteTorchWall = new WallTorchBlock(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().zeroHardnessAndResistance().setLightLevel((p_235470_0_) -> 15).sound(SoundType.NETHER_BRICK), ParticleTypes.FLAME);
+	public static Block blockStationLight = new Block(AbstractBlock.Properties.create(Material.ROCK).setLightLevel((p_235470_0_) -> 15));
+	//World Generation blocks & plants
 	public static Block blockCharcoalLog = new RotatedPillarBlock(AbstractBlock.Properties.create(Material.WOOD));
+	public static Block blockLightwoodLog = registerLog(MaterialColor.BLUE, MaterialColor.LIGHT_BLUE);
+	public static Block blockLightwoodPlanks = new Block(AbstractBlock.Properties.create(Material.WOOD, MaterialColor.SAND).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD));
+	public static Block blockLightwoodLeaves = registerLeaves();
+	public static Block blockLightwoodSapling = new SaplingBlock(new AlienTree(), AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().zeroHardnessAndResistance().sound(SoundType.PLANT));
 	public static Block blockElectricMushroom = new BlockElectricMushroom(AbstractBlock.Properties.create(Material.PLANTS).hardnessAndResistance(0.0f));
+	public static Block blockVitrifiedSand = new Block(AbstractBlock.Properties.create(Material.SAND).hardnessAndResistance(0.5f));
+	public static Block blockMoonTurf = new Block(AbstractBlock.Properties.create(Material.EARTH, MaterialColor.SNOW).hardnessAndResistance(0.5f));
+	public static Block blockMoonTurfDark = new Block(AbstractBlock.Properties.create(Material.EARTH, MaterialColor.BROWN).hardnessAndResistance(0.5f));
+	public static Block blockOxidizedFerricSand = new Block(AbstractBlock.Properties.create(Material.EARTH, MaterialColor.NETHERRACK).hardnessAndResistance(0.5f));
+	public static Block blockBasalt = new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(5, 15));
+	public static Block blockGeode = new Block(AbstractBlock.Properties.create(MaterialGeode.geode).hardnessAndResistance(6f, 2000F).harvestTool(ToolType.get("jackhammer")));
 	public static Block blockCrystal = new BlockAlphaTexture(crystalProperties);
 	public static Block blockCrystalRed = new BlockAlphaTexture(crystalProperties);
 	public static Block blockCrystalOrange = new BlockAlphaTexture(crystalProperties);
@@ -79,7 +62,6 @@ public class AdvancedRocketryBlocks {
 	public static Block blockCrystalCyan = new BlockAlphaTexture(crystalProperties);
 	public static Block blockCrystalBlue = new BlockAlphaTexture(crystalProperties);
 	public static Block blockCrystalPurple = new BlockAlphaTexture(crystalProperties);
-
 	public static Block[] crystalBlocks = new Block[] {
 			blockCrystal,
 			blockCrystalRed,
@@ -89,190 +71,130 @@ public class AdvancedRocketryBlocks {
 			blockCrystalCyan,
 			blockCrystalBlue,
 			blockCrystalPurple};
-
+	//Rocket blocks
+	public static Block blockMonopropellantEngine = new BlockGenericRocketMotor(10, 1, FuelType.LIQUID_MONOPROPELLANT, machineLineProperties.notSolid());
+	public static Block blockAdvancedMonopropellantEngine = new BlockGenericRocketMotor(50, 3, FuelType.LIQUID_MONOPROPELLANT, machineLineProperties.notSolid());
+	public static Block blockBipropellantEngine = new BlockGenericRocketMotor(10, 1, FuelType.LIQUID_BIPROPELLANT, machineLineProperties.notSolid());
+	public static Block blockAdvancedBipropellantEngine = new BlockGenericRocketMotor(50, 3, FuelType.LIQUID_BIPROPELLANT, machineLineProperties.notSolid());
+	public static Block blockNuclearEngine = new BlockGenericRocketMotor(35, 1, FuelType.NUCLEAR_WORKING_FLUID, machineLineProperties.notSolid());
+	public static Block blockMonopropellantFuelTank = new BlockGenericFuelTank(1000, FuelType.LIQUID_MONOPROPELLANT, machineLineProperties.notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false));
+	public static Block blockBipropellantFuelTank = new BlockGenericFuelTank(1000, FuelType.LIQUID_BIPROPELLANT, machineLineProperties.notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false));
+	public static Block blockOxidizerFuelTank = new BlockGenericFuelTank(1000, FuelType.LIQUID_OXIDIZER, machineLineProperties.notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false));
+	public static Block blockNuclearWorkingFluidTank = new BlockGenericFuelTank(1000, FuelType.NUCLEAR_WORKING_FLUID, machineLineProperties.notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false));
+	public static Block blockNuclearCore = new BlockNuclearCore(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f));
+	//Rocket auxiliary
+	public static Block blockSeat = new BlockSeat(AbstractBlock.Properties.create(Material.WOOL).hardnessAndResistance(0.5f));
+	public static Block blockSatelliteBay = new BlockARHatch(machineLineProperties);
+	public static Block blockGuidanceComputer = new BlockTile(machineLineProperties,GuiHandler.guiId.MODULAR);
+	public static Block blockDrill = new BlockMiningDrill(machineLineProperties);
+	public static Block blockIntake = new BlockIntake(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3f));
+	public static Block blockLandingFloat = new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(1,1));
+	//Rocket interaction blocks
+	public static Block blockFuelingStation = new BlockTileRedstoneEmitter(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockRocketControlCenter = new BlockTileNeighborUpdate(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
+	public static Block blockSatelliteControlCenter = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockRocketLoader = new BlockARHatch(machineLineProperties);
+	public static Block blockRocketUnloader = new BlockARHatch(machineLineProperties);
+	public static Block blockFluidLoader = new BlockARHatch(machineLineProperties);
+	public static Block blockFluidUnloader = new BlockARHatch(machineLineProperties);
+	public static Block blockGuidanceComputerAccessHatch = new BlockARHatch(machineLineProperties);
+	//Rocket pad blocks
+	public static Block blockLaunchpad = new BlockLinkedHorizontalTexture(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2f, 10f));
+	public static Block blockLandingPad = new BlockLandingPad(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f,3f));
+	public static Block blockStructureTower = new BlockAlphaTexture(machineLineProperties.notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false));
+	public static Block blockRocketAssembler = new BlockTileWithMultitooltip(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
+	public static Block blockSpaceStationAssembler = new BlockTileWithMultitooltip(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockUnmannedRocketAssembler = new BlockTileWithMultitooltip(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
+    //Station interaction blocks
+	public static Block blockHolographicPlanetSelector = new BlockHalfTile(machineLineProperties,GuiHandler.guiId.MODULAR);
+	public static Block blockPlanetSelector = new BlockTile(machineLineProperties,GuiHandler.guiId.MODULARFULLSCREEN);
 	public static Block blockOrientationController = new BlockTile(machineLineProperties,  GuiHandler.guiId.MODULAR);
 	public static Block blockGravityController = new BlockTile(machineLineProperties,  GuiHandler.guiId.MODULAR);
 	public static Block blockAltitudeController = new BlockTile(machineLineProperties,  GuiHandler.guiId.MODULAR);
-	public static Block blockOxygenCharger = new BlockHalfTile(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockWarpController = new BlockWarpController(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
+	public static Block blockStationDockingPort = new BlockStationDockingPort(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3f));
+    //Oxygen system blocks
+	public static Block blockAtmosphereDetector = new BlockRedstoneEmitter(machineLineProperties,"advancedrocketry:atmospheredetector_on");
 	public static Block blockOxygenVent = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockCircleLight = new Block(AbstractBlock.Properties.create(Material.ROCK).setLightLevel((p_235470_0_) -> 14));
-	public static Block blockLens = new BlockAlphaTexture(AbstractBlock.Properties.create(Material.GLASS).hardnessAndResistance(0.3f).notSolid());
-	public static Block blockRocketBuilder = new BlockTileWithMultitooltip(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
-	public static Block blockForceField = new BlockForceField(AbstractBlock.Properties.create(Material.GLASS).hardnessAndResistance(-1.0F, 3600000.0F).noDrops().notSolid());
-	public static Block blockForceFieldProjector = new BlockForceFieldProjector(machineLineProperties);
-	public static Block blockDeployableRocketBuilder = new BlockTileWithMultitooltip(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
-	public static Block blockStationBuilder = new BlockTileWithMultitooltip(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockFuelingStation = new BlockTileRedstoneEmitter(machineLineProperties, GuiHandler.guiId.MODULAR);
-
-	public static Block blockMonitoringStation = new BlockTileNeighborUpdate(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
-
-	public static Block blockWarpShipMonitor = new BlockWarpController(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
-
-	public static Block blockSatelliteBuilder = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
-
-	public static Block blockSatelliteControlCenter = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
-
-	public static Block blockMicrowaveReceiver = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
-
-	public static Block blockCentrifuge = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
-
-	//Arcfurnace
-	public static Block blockArcFurnace = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
-	
-	public static Block blockPrecisionLaserEtcher = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
-
-	public static Block blockMoonTurf = new Block(AbstractBlock.Properties.create(Material.EARTH, MaterialColor.SNOW).hardnessAndResistance(0.5f));
-	public static Block blockMoonTurfDark = new Block(AbstractBlock.Properties.create(Material.EARTH, MaterialColor.BROWN).hardnessAndResistance(0.5f));
-	public static Block blockHotTurf = new Block(AbstractBlock.Properties.create(Material.EARTH, MaterialColor.NETHERRACK).hardnessAndResistance(0.5f));
-
-	public static Block blockDataBus = new BlockARHatch(machineLineProperties);
-	public static Block blockSatelliteHatch = new BlockARHatch(machineLineProperties);
-	public static Block blockFluidLoader = new BlockARHatch(machineLineProperties);
-	public static Block blockFluidUnloader = new BlockARHatch(machineLineProperties);
-	public static Block blockRocketLoader = new BlockARHatch(machineLineProperties);
-	public static Block blockRocketUnloader = new BlockARHatch(machineLineProperties);
-	public static Block blockguidanceHatch = new BlockARHatch(machineLineProperties);
-
-	public static Block blockAlienWood = registerLog(MaterialColor.BLUE, MaterialColor.LIGHT_BLUE);
-	public static Block blockAlienLeaves = registerLeaves();
-	public static Block blockAlienSapling = new SaplingBlock(new AlienTree(), AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().zeroHardnessAndResistance().sound(SoundType.PLANT));
-	public static Block blockAlienPlanks = new Block(AbstractBlock.Properties.create(Material.WOOD, MaterialColor.SAND).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD));
-
-	public static Block blockLightSource = new BlockLightSource(AbstractBlock.Properties.create(Material.ROCK).setLightLevel((p_235470_0_) -> 14));
-	public static Block blockBlastBrick = new BlockMultiBlockComponentVisible(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3, 15));
-	public static Block blockQuartzCrucible = new BlockQuartzCrucible(AbstractBlock.Properties.create(Material.ROCK));
-	//public static Block blockAstroBed = new BlockAstroBed(DyeColor.WHITE, ).setHardness(0.2F);
-
-	public static Block blockPrecisionAssembler = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockCuttingMachine = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockCrystallizer = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockWarpCore = new BlockWarpCore(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockChemicalReactor = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockLathe = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockRollingMachine = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockElectrolyser = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockAtmosphereTerraformer = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
-	public static Block blockPlanetAnalyser = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
-	public static Block blockObservatory = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
-	public static Block blockBlackHoleGenerator = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockPump = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
-
-	public static Block blockGuidanceComputer = new BlockTile(machineLineProperties,GuiHandler.guiId.MODULAR);
-	public static Block blockPlanetSelector = new BlockTile(machineLineProperties,GuiHandler.guiId.MODULARFULLSCREEN);
-	public static Block blockPlanetHoloSelector = new BlockHalfTile(machineLineProperties,GuiHandler.guiId.MODULAR);
-	public static Block blockBiomeScanner = new BlockMultiblockMachine(machineLineProperties,GuiHandler.guiId.MODULARNOINV);
-	public static Block blockDrill = new BlockMiningDrill(machineLineProperties);
-	public static Block blockSuitWorkStation = new BlockSuitWorkstation(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockRailgun = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockSpaceElevatorController = new BlockMultiblockMachine(machineLineProperties,  GuiHandler.guiId.MODULAR);
-	public static Block blockBeacon = new BlockBeacon(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockIntake = new BlockIntake(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3f));
-	public static Block blockPressureTank = new BlockPressurizedFluidTank(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3f));
-	public static Block blockSolarPanel = new Block(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3f));
-	public static Block blockSolarGenerator = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockDockingPort = new BlockStationModuleDockingPort(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3f));
-	public static Block blockPipeSealer = new BlockSeal(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(0.5f));
-	public static Block blockThermiteTorch = new TorchBlock(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().zeroHardnessAndResistance().setLightLevel((p_235470_0_) -> 14).sound(SoundType.WOOD), ParticleTypes.FLAME);
-	public static Block blockThermiteTorchWall = new WallTorchBlock(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().zeroHardnessAndResistance().setLightLevel((p_235470_0_) -> 14).sound(SoundType.WOOD), ParticleTypes.FLAME);
-	public static Block blockBasalt = new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(5, 15));
-	public static Block blockLandingFloat = new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(1,1));
-	public static Block blockTransciever = new BlockTransciever(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockVacuumLaser = new BlockFullyRotatable(machineLineProperties);
+	public static Block blockCO2Scrubber = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockGasChargePad = new BlockHalfTile(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockSmallAirlockDoor = new DoorBlock(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f, 8f));
 
 	public static Block blockRocketFire = new BlockRocketFire(AbstractBlock.Properties.create(Material.FIRE, MaterialColor.TNT).doesNotBlockMovement().zeroHardnessAndResistance().setLightLevel((state) -> 15));
-	public static Block blockNuclearEngine = new BlockNuclearRocketMotor(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f));
-	public static Block blockNuclearFuelTank = new BlockNuclearFuelTank(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f));
-	public static Block blockNuclearCore = new BlockNuclearCore(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f));
-	
-	
-	//Configurable stuff
-	public static Block blockGravityMachine = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
+	public static Block blockSawBlade = new BlockMotor(machineLineProperties.notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false),1f);
+	public static Block blockQuartzCrucible = new BlockQuartzCrucible(AbstractBlock.Properties.create(Material.ROCK));
+	public static Block blockLens = new BlockAlphaTexture(AbstractBlock.Properties.create(Material.GLASS).hardnessAndResistance(0.3f).notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false));
+	public static Block blockConcrete = new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2f, 16f));
+	public static Block blockBlastBrick = new BlockMultiBlockComponentVisible(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3, 15));
+	public static Block blockSeal = new BlockSeal(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(0.5f));
+	public static Block blockLaser = new BlockFullyRotatable(machineLineProperties);
+	public static Block blockForceField = new BlockForceField(AbstractBlock.Properties.create(Material.GLASS).hardnessAndResistance(-1.0F, 3600000.0F).noDrops().notSolid());
+	public static Block blockForceFieldProjector = new BlockForceFieldProjector(machineLineProperties);
+	//Misc non-multiblock machines
+	public static Block blockSuitWorkStation = new BlockSuitWorkstation(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockPressureTank = new BlockPressurizedFluidTank(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3f).notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false));
+	public static Block blockPump = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockSmallPlatePress = new BlockSmallPlatePress(machineLineProperties);
+	//MULTIBLOCK MACHINES
+	//Item processors
+	public static Block blockArcFurnace = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockRollingMachine = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockLathe = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockCrystallizer = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockCuttingMachine = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockPrecisionAssembler = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockPrecisionLaserEtcher = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+	//Fluid processors
+	public static Block blockElectrolyzer = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockChemicalReactor = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockCentrifuge = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+	//Data collection
+	public static Block blockSatelliteAssembler = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockWirelessTransceiver = new BlockTransciever(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockDataBus = new BlockARHatch(machineLineProperties);
+	public static Block blockObservatory = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
+	public static Block blockAstrobodyDataProcessor = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
+	//Energy production
+	public static Block blockSolarGenerator = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockSolarArrayPanel = new BlockSolarArrayPanel(machineLineProperties);
+	public static Block blockSolarArray = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockMicrowaveReceiver = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockBlackHoleGenerator = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+    //Station multiblocks
+	public static Block blockBiomeScanner = new BlockMultiblockMachine(machineLineProperties,GuiHandler.guiId.MODULARNOINV);
+	public static Block blockRailgun = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockSpaceElevator = new BlockMultiblockMachine(machineLineProperties,  GuiHandler.guiId.MODULAR);
+	public static Block blockBeacon = new BlockBeacon(machineLineProperties, GuiHandler.guiId.MODULAR);
+	//Near-future or far-future multiblocks
+	public static Block blockOrbitalLaserDrill = new BlockOrbitalLaserDrill(machineLineProperties);
+	public static Block blockWarpCore = new BlockWarpCore(machineLineProperties, GuiHandler.guiId.MODULAR);
+	public static Block blockAreaGravityController = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
+	public static Block blockTerraformer = new BlockMultiblockMachine(machineLineProperties, GuiHandler.guiId.MODULARNOINV);
 
-
-	public static Block blockSpaceLaser = new BlockOrbitalLaserDrill(machineLineProperties);
-	public static Block blockSolarArray = new BlockTile(machineLineProperties, GuiHandler.guiId.MODULAR);
-	public static Block blockSolarArrayPanel = new BlockAlphaTexture(machineLineProperties);
 
 
 	@SubscribeEvent(priority=EventPriority.HIGH)
-	public static void registerBlocks(RegistryEvent.Register<Block> evt)
-	{
-
-		//Cables
-		//TODO: add back after fixing the cable network
-		//AdvancedRocketryBlocks.blockFluidPipe = new BlockLiquidPipe(Material.IRON).setRegistryName("liquidPipe").setHardness(1f);
-		//AdvancedRocketryBlocks.blockDataPipe = new BlockDataCable(Material.IRON).setRegistryName("dataPipe").setHardness(1f);
-		//AdvancedRocketryBlocks.blockEnergyPipe = new BlockEnergyCable(Material.IRON).setRegistryName("energyPipe").setHardness(1f);
-
-		//LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockDataPipe.setRegistryName("dataPipe"));
-		//LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockEnergyPipe.setRegistryName("energyPipe"));
-		//LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockFluidPipe.setRegistryName("liquidPipe"));
-		evt.getRegistry().registerAll(AdvancedRocketryBlocks.blockLaunchpad.setRegistryName("launchpad"),
-				AdvancedRocketryBlocks.blockRocketBuilder.setRegistryName("rocketassembler"),
-				AdvancedRocketryBlocks.blockStructureTower.setRegistryName("structuretower"),
-				AdvancedRocketryBlocks.blockGenericSeat.setRegistryName("seat"),
-				AdvancedRocketryBlocks.blockEngine.setRegistryName("rocketmotor"),
-				AdvancedRocketryBlocks.blockAdvEngine.setRegistryName("advrocketmotor"),
-				AdvancedRocketryBlocks.blockBipropellantEngine.setRegistryName("bipropellantrocketmotor"),
-				AdvancedRocketryBlocks.blockFuelTank.setRegistryName("fueltank"),
-				AdvancedRocketryBlocks.blockBipropellantFuelTank.setRegistryName("bipropellantfueltank"),
-				AdvancedRocketryBlocks.blockOxidizerFuelTank.setRegistryName("oxidizerfueltank"),
-				AdvancedRocketryBlocks.blockFuelingStation.setRegistryName("fuelingstation"),
-				AdvancedRocketryBlocks.blockMonitoringStation.setRegistryName("monitoringstation"),
-				AdvancedRocketryBlocks.blockSatelliteBuilder.setRegistryName("satellitebuilder"),
-				AdvancedRocketryBlocks.blockMoonTurf.setRegistryName("moonturf"),
-				AdvancedRocketryBlocks.blockMoonTurfDark.setRegistryName("moonturf_dark"),
-				AdvancedRocketryBlocks.blockHotTurf.setRegistryName("hotturf"),
-				AdvancedRocketryBlocks.blockPrecisionAssembler.setRegistryName("precisionassemblingmachine"),
-				AdvancedRocketryBlocks.blockBlastBrick.setRegistryName("blastbrick"),
-				AdvancedRocketryBlocks.blockDataBus.setRegistryName("databus"),
-				AdvancedRocketryBlocks.blockSatelliteHatch.setRegistryName("satbay"),
-				AdvancedRocketryBlocks.blockFluidLoader.setRegistryName("floader"),
-				AdvancedRocketryBlocks.blockFluidUnloader.setRegistryName("funloader"),
-				AdvancedRocketryBlocks.blockRocketLoader.setRegistryName("rloader"),
-				AdvancedRocketryBlocks.blockRocketUnloader.setRegistryName("runloader"),
-				AdvancedRocketryBlocks.blockguidanceHatch.setRegistryName("compaccesshatch"),
-				AdvancedRocketryBlocks.blockQuartzCrucible.setRegistryName("qcrucible"),
-				AdvancedRocketryBlocks.blockCrystallizer.setRegistryName("crystallizer"),
-				AdvancedRocketryBlocks.blockCuttingMachine.setRegistryName("cuttingmachine"),
-				AdvancedRocketryBlocks.blockAlienWood.setRegistryName("alienwood"),
-				AdvancedRocketryBlocks.blockAlienLeaves.setRegistryName("alienleaves"),
-				AdvancedRocketryBlocks.blockAlienSapling.setRegistryName("aliensapling"),
-				AdvancedRocketryBlocks.blockObservatory.setRegistryName("observatory"),
-				AdvancedRocketryBlocks.blockBlackHoleGenerator.setRegistryName("blackholegenerator"),
-				AdvancedRocketryBlocks.blockConcrete.setRegistryName("concrete"),
-				AdvancedRocketryBlocks.blockPlanetSelector.setRegistryName("planetselector"),
-				AdvancedRocketryBlocks.blockSatelliteControlCenter.setRegistryName("satellitecontrolcenter"),
-				AdvancedRocketryBlocks.blockPlanetAnalyser.setRegistryName("planetanalyser"),
-				AdvancedRocketryBlocks.blockGuidanceComputer.setRegistryName("guidancecomputer"),
-				AdvancedRocketryBlocks.blockArcFurnace.setRegistryName("arcfurnace"),
-				AdvancedRocketryBlocks.blockPrecisionLaserEtcher.setRegistryName("precisionlaseretcher"),
-				AdvancedRocketryBlocks.blockSawBlade.setRegistryName("sawbladeassbly"),
-				AdvancedRocketryBlocks.blockLathe.setRegistryName("lathe"),
-				AdvancedRocketryBlocks.blockRollingMachine.setRegistryName("rollingmachine"),
-				AdvancedRocketryBlocks.blockPlatePress.setRegistryName("platepress"),
-				AdvancedRocketryBlocks.blockStationBuilder.setRegistryName("stationbuilder"),
-				AdvancedRocketryBlocks.blockElectrolyser.setRegistryName("electrolyser"),
-				AdvancedRocketryBlocks.blockChemicalReactor.setRegistryName("chemicalreactor"),
-				AdvancedRocketryBlocks.blockCO2Scrubber.setRegistryName("oxygenscrubber"),
-				AdvancedRocketryBlocks.blockOxygenVent.setRegistryName("oxygenvent"),
-				AdvancedRocketryBlocks.blockOxygenCharger.setRegistryName("oxygencharger"),
-				AdvancedRocketryBlocks.blockAirLock.setRegistryName("airlock_door"),
-				AdvancedRocketryBlocks.blockLandingPad.setRegistryName("landingpad"),
-				AdvancedRocketryBlocks.blockWarpCore.setRegistryName("warpcore"),
-				AdvancedRocketryBlocks.blockWarpShipMonitor.setRegistryName("stationmonitor"),
-				AdvancedRocketryBlocks.blockOxygenDetection.setRegistryName("atmospheredetector"),
+	public static void registerBlocks(RegistryEvent.Register<Block> evt) {
+		evt.getRegistry().registerAll(
+				//Lights
 				AdvancedRocketryBlocks.blockUnlitTorch.setRegistryName("unlittorch"),
 				AdvancedRocketryBlocks.blockUnlitTorchWall.setRegistryName("unlittorch_wall"),
-				AdvancedRocketryBlocks.blocksGeode.setRegistryName("geode"),
-				//AdvancedRocketryBlocks.blockOxygenFluid.setRegistryName("oxygenfluid"),
-				//AdvancedRocketryBlocks.blockHydrogenFluid.setRegistryName("hydrogenfluid"),
-				//AdvancedRocketryBlocks.blockFuelFluid.setRegistryName("rocketfuel"),
-				//AdvancedRocketryBlocks.blockNitrogenFluid.setRegistryName("nitrogenfluid"),
-				//AdvancedRocketryBlocks.blockEnrichedLavaFluid.setRegistryName("enrichedlavafluid"),
-				AdvancedRocketryBlocks.blockVitrifiedSand.setRegistryName("vitrifiedsand"),
+				AdvancedRocketryBlocks.blockThermiteTorch.setRegistryName("thermitetorch"),
+				AdvancedRocketryBlocks.blockThermiteTorchWall.setRegistryName("thermitetorch_wall"),
+				AdvancedRocketryBlocks.blockStationLight.setRegistryName("stationlight"),
+				//World generation blocks & plants
 				AdvancedRocketryBlocks.blockCharcoalLog.setRegistryName("charcoallog"),
+				AdvancedRocketryBlocks.blockLightwoodLog.setRegistryName("lightwoodlog"),
+				AdvancedRocketryBlocks.blockLightwoodPlanks.setRegistryName("lightwoodplanks"),
+				AdvancedRocketryBlocks.blockLightwoodLeaves.setRegistryName("lightwoodleaves"),
+				AdvancedRocketryBlocks.blockLightwoodSapling.setRegistryName("lightwoodsapling"),
 				AdvancedRocketryBlocks.blockElectricMushroom.setRegistryName("electricmushroom"),
+				AdvancedRocketryBlocks.blockVitrifiedSand.setRegistryName("vitrifiedsand"),
+				AdvancedRocketryBlocks.blockMoonTurf.setRegistryName("moonturf"),
+				AdvancedRocketryBlocks.blockMoonTurfDark.setRegistryName("moonturf_dark"),
+				AdvancedRocketryBlocks.blockOxidizedFerricSand.setRegistryName("oxidizedferricsand"),
+				AdvancedRocketryBlocks.blockBasalt.setRegistryName("basalt"),
+				AdvancedRocketryBlocks.blockGeode.setRegistryName("geode"),
 				AdvancedRocketryBlocks.blockCrystal.setRegistryName("crystal"),
 				AdvancedRocketryBlocks.blockCrystalRed.setRegistryName("crystal_red"),
 				AdvancedRocketryBlocks.blockCrystalOrange.setRegistryName("crystal_orange"),
@@ -281,52 +203,106 @@ public class AdvancedRocketryBlocks {
 				AdvancedRocketryBlocks.blockCrystalCyan.setRegistryName("crystal_cyan"),
 				AdvancedRocketryBlocks.blockCrystalBlue.setRegistryName("crystal_blue"),
 				AdvancedRocketryBlocks.blockCrystalPurple.setRegistryName("crystal_purple"),
+				//Rocket blocks
+				AdvancedRocketryBlocks.blockMonopropellantEngine.setRegistryName("monopropellantrocketengine"),
+				AdvancedRocketryBlocks.blockAdvancedMonopropellantEngine.setRegistryName("advancedmonopropellantrocketengine"),
+				AdvancedRocketryBlocks.blockBipropellantEngine.setRegistryName("bipropellantrocketengine"),
+				AdvancedRocketryBlocks.blockAdvancedBipropellantEngine.setRegistryName("advancedbipropellantrocketengine"),
+				AdvancedRocketryBlocks.blockNuclearEngine.setRegistryName("nuclearrocketengine"),
+				AdvancedRocketryBlocks.blockMonopropellantFuelTank.setRegistryName("monopropellantfueltank"),
+				AdvancedRocketryBlocks.blockBipropellantFuelTank.setRegistryName("bipropellantfueltank"),
+				AdvancedRocketryBlocks.blockOxidizerFuelTank.setRegistryName("oxidizerfueltank"),
+				AdvancedRocketryBlocks.blockNuclearWorkingFluidTank.setRegistryName("nuclearworkingfluidtank"),
+				AdvancedRocketryBlocks.blockNuclearCore.setRegistryName("nuclearcore"),
+				//Rocket auxiliary
+				AdvancedRocketryBlocks.blockSeat.setRegistryName("seat"),
+				AdvancedRocketryBlocks.blockSatelliteBay.setRegistryName("satellitebay"),
+				AdvancedRocketryBlocks.blockGuidanceComputer.setRegistryName("guidancecomputer"),
+				AdvancedRocketryBlocks.blockDrill.setRegistryName("drill"),
+				AdvancedRocketryBlocks.blockIntake.setRegistryName("intake"),
+				AdvancedRocketryBlocks.blockLandingFloat.setRegistryName("landingfloat"),
+                //Rocket interaction
+				AdvancedRocketryBlocks.blockFuelingStation.setRegistryName("fuelingstation"),
+				AdvancedRocketryBlocks.blockRocketControlCenter.setRegistryName("rocketcontrolcenter"),
+				AdvancedRocketryBlocks.blockSatelliteControlCenter.setRegistryName("satellitecontrolcenter"),
+				AdvancedRocketryBlocks.blockRocketLoader.setRegistryName("rocketloader"),
+				AdvancedRocketryBlocks.blockRocketUnloader.setRegistryName("rocketunloader"),
+				AdvancedRocketryBlocks.blockFluidLoader.setRegistryName("rocketfluidloader"),
+				AdvancedRocketryBlocks.blockFluidUnloader.setRegistryName("rocketfluidunloader"),
+				AdvancedRocketryBlocks.blockGuidanceComputerAccessHatch.setRegistryName("guidancecomputeraccesshatch"),
+                //Rocket pad blocks
+				AdvancedRocketryBlocks.blockLaunchpad.setRegistryName("launchpad"),
+				AdvancedRocketryBlocks.blockLandingPad.setRegistryName("landingpad"),
+				AdvancedRocketryBlocks.blockStructureTower.setRegistryName("structuretower"),
+				AdvancedRocketryBlocks.blockRocketAssembler.setRegistryName("rocketassembler"),
+				AdvancedRocketryBlocks.blockSpaceStationAssembler.setRegistryName("spacestationassembler"),
+				AdvancedRocketryBlocks.blockUnmannedRocketAssembler.setRegistryName("unmannedrocketassembler"),
+                //Station interaction blocks
+				AdvancedRocketryBlocks.blockHolographicPlanetSelector.setRegistryName("holographicplanetselector"),
+				AdvancedRocketryBlocks.blockPlanetSelector.setRegistryName("planetselector"),
 				AdvancedRocketryBlocks.blockOrientationController.setRegistryName("orientationcontroller"),
 				AdvancedRocketryBlocks.blockGravityController.setRegistryName("gravitycontroller"),
-				AdvancedRocketryBlocks.blockDrill.setRegistryName("drill"),
-				AdvancedRocketryBlocks.blockMicrowaveReceiver.setRegistryName("microwavereciever"),
-				AdvancedRocketryBlocks.blockLightSource.setRegistryName("lightsource"),
-				AdvancedRocketryBlocks.blockSolarPanel.setRegistryName("solarpanel"),
-				AdvancedRocketryBlocks.blockSuitWorkStation.setRegistryName("suitworkstation"),
-				AdvancedRocketryBlocks.blockBiomeScanner.setRegistryName("biomescanner"),
-				AdvancedRocketryBlocks.blockAtmosphereTerraformer.setRegistryName("terraformer"),
-				AdvancedRocketryBlocks.blockDeployableRocketBuilder.setRegistryName("deployablerocketbuilder"),
-				AdvancedRocketryBlocks.blockPressureTank.setRegistryName("liquidtank"), 
-				AdvancedRocketryBlocks.blockIntake.setRegistryName("intake"),
-				AdvancedRocketryBlocks.blockCircleLight.setRegistryName("circlelight"),
-				AdvancedRocketryBlocks.blockSolarGenerator.setRegistryName("solargenerator"),
-				AdvancedRocketryBlocks.blockDockingPort.setRegistryName("stationmarker"),
 				AdvancedRocketryBlocks.blockAltitudeController.setRegistryName("altitudecontroller"),
-				AdvancedRocketryBlocks.blockRailgun .setRegistryName("railgun"),
-				AdvancedRocketryBlocks.blockPlanetHoloSelector.setRegistryName("planetholoselector"),
-				AdvancedRocketryBlocks.blockLens.setRegistryName("blocklens"),
+				AdvancedRocketryBlocks.blockWarpController.setRegistryName("warpcontroller"),
+				AdvancedRocketryBlocks.blockStationDockingPort.setRegistryName("stationdockingport"),
+                //Oxygen system blocks
+				AdvancedRocketryBlocks.blockAtmosphereDetector.setRegistryName("atmospheredetector"),
+				AdvancedRocketryBlocks.blockOxygenVent.setRegistryName("oxygenvent"),
+				AdvancedRocketryBlocks.blockCO2Scrubber.setRegistryName("oxygenscrubber"),
+				AdvancedRocketryBlocks.blockGasChargePad.setRegistryName("gaschargepad"),
+				AdvancedRocketryBlocks.blockSmallAirlockDoor.setRegistryName("airlock_door"),
+
+				AdvancedRocketryBlocks.blockRocketFire.setRegistryName("rocketfire"),
+				AdvancedRocketryBlocks.blockSawBlade.setRegistryName("sawbladeassembly"),
+				AdvancedRocketryBlocks.blockQuartzCrucible.setRegistryName("quartzcrucible"),
+				AdvancedRocketryBlocks.blockLens.setRegistryName("lens"),
+				AdvancedRocketryBlocks.blockConcrete.setRegistryName("concrete"),
+				AdvancedRocketryBlocks.blockBlastBrick.setRegistryName("blastbrick"),
+				AdvancedRocketryBlocks.blockSeal.setRegistryName("seal"),
+				AdvancedRocketryBlocks.blockLaser.setRegistryName("laser"),
 				AdvancedRocketryBlocks.blockForceField.setRegistryName("forcefield"),
 				AdvancedRocketryBlocks.blockForceFieldProjector.setRegistryName("forcefieldprojector"),
-				AdvancedRocketryBlocks.blockPipeSealer.setRegistryName("pipesealer"),
-				AdvancedRocketryBlocks.blockSpaceElevatorController.setRegistryName("spaceelevatorcontroller"),
-				AdvancedRocketryBlocks.blockBeacon.setRegistryName("beacon"),
-				AdvancedRocketryBlocks.blockAlienPlanks.setRegistryName("planks"),
-				AdvancedRocketryBlocks.blockThermiteTorch.setRegistryName("thermitetorch"),
-				AdvancedRocketryBlocks.blockThermiteTorchWall.setRegistryName("thermitetorch_wall"),
-				AdvancedRocketryBlocks.blockTransciever.setRegistryName("wirelesstransciever"),
-				AdvancedRocketryBlocks.blockVacuumLaser.setRegistryName("vacuumlaser"),
-				AdvancedRocketryBlocks.blockPump.setRegistryName("blockpump"),
+				//Misc non-multiblock machines
+				AdvancedRocketryBlocks.blockSuitWorkStation.setRegistryName("suitworkstation"),
+				AdvancedRocketryBlocks.blockPressureTank.setRegistryName("pressuretank"),
+				AdvancedRocketryBlocks.blockPump.setRegistryName("pump"),
+				AdvancedRocketryBlocks.blockSmallPlatePress.setRegistryName("smallplatepress"),
+				//MULTIBLOCK MACHINES
+	 			//Item processors
+				AdvancedRocketryBlocks.blockArcFurnace.setRegistryName("arcfurnace"),
+				AdvancedRocketryBlocks.blockRollingMachine.setRegistryName("rollingmachine"),
+				AdvancedRocketryBlocks.blockLathe.setRegistryName("lathe"),
+				AdvancedRocketryBlocks.blockCrystallizer.setRegistryName("crystallizer"),
+				AdvancedRocketryBlocks.blockCuttingMachine.setRegistryName("cuttingmachine"),
+				AdvancedRocketryBlocks.blockPrecisionAssembler.setRegistryName("precisionassembler"),
+				AdvancedRocketryBlocks.blockPrecisionLaserEtcher.setRegistryName("precisionlaseretcher"),
+				//Fluid processors
+				AdvancedRocketryBlocks.blockElectrolyzer.setRegistryName("electrolyzer"),
+				AdvancedRocketryBlocks.blockChemicalReactor.setRegistryName("chemicalreactor"),
 				AdvancedRocketryBlocks.blockCentrifuge.setRegistryName("centrifuge"),
-				AdvancedRocketryBlocks.blockBasalt.setRegistryName("basalt"),
-				AdvancedRocketryBlocks.blockLandingFloat.setRegistryName("landingfloat"),
-				AdvancedRocketryBlocks.blockSolarArray.setRegistryName("solararray"),
+				//Data collection
+				AdvancedRocketryBlocks.blockSatelliteAssembler.setRegistryName("satelliteassembler"),
+				AdvancedRocketryBlocks.blockWirelessTransceiver.setRegistryName("wirelesstransceiver"),
+				AdvancedRocketryBlocks.blockDataBus.setRegistryName("databus"),
+				AdvancedRocketryBlocks.blockObservatory.setRegistryName("observatory"),
+				AdvancedRocketryBlocks.blockAstrobodyDataProcessor.setRegistryName("astrobodydataprocessor"),
+				//Energy production
+				AdvancedRocketryBlocks.blockSolarGenerator.setRegistryName("solargenerator"),
 				AdvancedRocketryBlocks.blockSolarArrayPanel.setRegistryName("solararraypanel"),
-				AdvancedRocketryBlocks.blockRocketFire.setRegistryName("rocketfire"),
-				AdvancedRocketryBlocks.blockNuclearCore.setRegistryName("nuclearcore"),
-				AdvancedRocketryBlocks.blockNuclearEngine.setRegistryName("nuclearengine"),
-				AdvancedRocketryBlocks.blockNuclearFuelTank.setRegistryName("nucleartank"));
-
-		//if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableGravityController.get())
-		evt.getRegistry().register(AdvancedRocketryBlocks.blockGravityMachine.setRegistryName("gravitymachine"));
-
-		//TODO, use different mechanism to enable/disable drill
-		//if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableLaserDrill.get())
-		evt.getRegistry().register(AdvancedRocketryBlocks.blockSpaceLaser.setRegistryName("spacelaser"));
+				AdvancedRocketryBlocks.blockSolarArray.setRegistryName("solararray"),
+				AdvancedRocketryBlocks.blockMicrowaveReceiver.setRegistryName("microwavereceiver"),
+				AdvancedRocketryBlocks.blockBlackHoleGenerator.setRegistryName("blackholegenerator"),
+                //Station multiblocks
+				AdvancedRocketryBlocks.blockBiomeScanner.setRegistryName("biomescanner"),
+				AdvancedRocketryBlocks.blockRailgun .setRegistryName("railgun"),
+				AdvancedRocketryBlocks.blockSpaceElevator.setRegistryName("spaceelevator"),
+				AdvancedRocketryBlocks.blockBeacon.setRegistryName("beacon"),
+				//Near-future or far-future multiblocks
+				AdvancedRocketryBlocks.blockOrbitalLaserDrill.setRegistryName("orbitallaserdrill"),
+				AdvancedRocketryBlocks.blockWarpCore.setRegistryName("warpcore"),
+				AdvancedRocketryBlocks.blockAreaGravityController.setRegistryName("areagravitycontroller"),
+				AdvancedRocketryBlocks.blockTerraformer.setRegistryName("terraformer")
+				);
 	}
 
 	private static RotatedPillarBlock registerLog(MaterialColor p_235430_0_, MaterialColor p_235430_1_) {

@@ -38,13 +38,13 @@ import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
 import zmaster587.libVulpes.network.PacketHandler;
-import zmaster587.libVulpes.tile.TileEntityRFConsumer;
+import zmaster587.libVulpes.tile.TileEntityFEConsumer;
 import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IModularInventory {
+public class TilePump extends TileEntityFEConsumer implements IFluidHandler, IModularInventory {
 
 	private FluidTank tank;
 	private List<BlockPos> cache;
@@ -228,7 +228,7 @@ public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IMo
 
 	@Override
 	public String getModularInventoryName() {
-		return "block.advancedrocketry.blockpump";
+		return "block.advancedrocketry.pump";
 	}
 
 	@Override

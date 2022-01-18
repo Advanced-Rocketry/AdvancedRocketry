@@ -1,36 +1,28 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	" c ",
-	"dbt",
-	"scs"
+    "pattern": [
+	    " c ",
+    	"dbt",
+	    "scs"
     ],
-    "key":
-    {
-	"d":
-        {
-	    "item": "advancedrocketry:circuit_ic_control"
+    "key": {
+    	"d": {
+	         "item": "advancedrocketry:controlcircuit"
         },
-	"t":
-        {
-	    "item": "advancedrocketry:circuit_ic_tracking"
+    	"t": {
+              "item": "advancedrocketry:trackingcircuit"
         },
-	"b":
-        {
-	    "item": "libvulpes:structure_machine"
+	    "b": {
+    	    "item": "libvulpes:machinestructure"
         },
-	"c":
-        {
+    	"c": {
             "tag": "forge:coils/copper"
         },
-	"s":
-        {
+    	"s": {
             "tag": "forge:sheets/iron"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:beacon",
         "count": 1
     }

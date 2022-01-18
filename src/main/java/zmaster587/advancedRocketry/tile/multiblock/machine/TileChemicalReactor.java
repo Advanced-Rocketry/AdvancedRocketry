@@ -79,7 +79,7 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 		}
 
 		//If airbreathing enchantment
-		if(flag && getOutputs() == null) {
+		if(flag && getOutputs().isEmpty()) {
 			if(enabled && (recipe = getRecipe(getMachineRecipeList())) != null && canProcessRecipe(recipe)) {
 				consumeItemsSpecial(recipe);
 				setOutputFluids(new LinkedList<>());
@@ -90,12 +90,6 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 
 				markDirty();
 				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
-
-				setMachineRunning(true); //turn on machine
-
-			}
-			else {
-				setMachineRunning(false);
 			}
 		}
 		else {
@@ -134,9 +128,8 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 			}
 		}
 	}
-	
-	@Override
-	public void registerRecipes() {
+
+	public static void registerRecipes() {
 		//Chemical Reactor
 		if(ARConfiguration.getCurrentConfig().enableOxygen.get()) {
 			for(ResourceLocation key : ForgeRegistries.ITEMS.getKeys()) {
@@ -147,9 +140,9 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 					enchanted.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
 	
 					if(((ArmorItem)item).getEquipmentSlot() == EquipmentSlotType.CHEST)
-						RecipesMachine.getInstance().addRecipe(key, RecipeChemicalReactor.INSTANCE, TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack(new ResourceLocation("forge","sheets/titaniumaluminide"), 8), new ItemStack(AdvancedRocketryItems.itemPressureTankSuperHigh, 1));
+						RecipesMachine.getInstance().addRecipe(key, RecipeChemicalReactor.INSTANCE, TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(AdvancedRocketryBlocks.blockSeal, 1), new NumberedOreDictStack(new ResourceLocation("forge","sheets/titaniumaluminide"), 8), new ItemStack(AdvancedRocketryItems.itemTitaniumPressureTank, 1));
 					else
-						RecipesMachine.getInstance().addRecipe(key, RecipeChemicalReactor.INSTANCE, TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack(new ResourceLocation("forge","sheets/titaniumaluminide"), 4));
+						RecipesMachine.getInstance().addRecipe(key, RecipeChemicalReactor.INSTANCE, TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(AdvancedRocketryBlocks.blockSeal, 1), new NumberedOreDictStack(new ResourceLocation("forge","sheets/titaniumaluminide"), 4));
 	
 				}
 			}

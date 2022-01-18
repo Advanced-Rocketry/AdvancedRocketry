@@ -4,10 +4,10 @@
             "item": "advancedrocketry:crystallizer"
         },
         "title": {
-            "translate": "advancement.crystalline"
+            "translate": "advancement.advancedrocketry.crystalline"
         },
         "description": {
-            "translate": "advancement.crystalline.desc"
+            "translate": "advancemen.advancedrocketry.crystalline.desc"
         }
     },
     "parent": "advancedrocketry:normal/holographic",

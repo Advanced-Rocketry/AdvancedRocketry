@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "axis=y":    { "model": "advancedrocketry:block/lightwoodlog" },
+        "axis=z":     { "model": "advancedrocketry:block/lightwoodlog", "x": 90 },
+        "axis=x":     { "model": "advancedrocketry:block/lightwoodlog", "x": 90, "y": 90 }
+    }
+}

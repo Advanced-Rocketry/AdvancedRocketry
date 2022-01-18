@@ -1,0 +1,30 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+		"tst",
+		"pbp",
+		"cpc"
+    ],
+    "key": {
+        "s": {
+            "item": "advancedrocketry:userinterface"
+        },
+        "t": {
+            "item": "advancedrocketry:trackingcircuit"
+        },
+		"b": {
+            "item": "libvulpes:machinestructure"
+        },
+		"p": {
+
+            "tag": "forge:plates/aluminum"
+        },
+		"c": {
+	    	"item": "advancedrocketry:planetchip"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:astrobodydataprocessor",
+        "count": 1
+    }
+}

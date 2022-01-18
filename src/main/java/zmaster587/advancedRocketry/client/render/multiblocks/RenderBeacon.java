@@ -22,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class RenderBeacon extends TileEntityRenderer<TileBeacon> {
 
 	WavefrontObject model;
-	public ResourceLocation baseTexture =  new ResourceLocation("advancedrocketry","textures/models/beacon.jpg");
+	public ResourceLocation baseTexture =  new ResourceLocation("advancedrocketry","textures/models/beacon.png");
 
 	public RenderBeacon(TileEntityRendererDispatcher disp) {
 		super(disp);

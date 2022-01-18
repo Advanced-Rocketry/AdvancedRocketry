@@ -1,41 +1,28 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	" pt",
-	"imp",
-	"di "
+    "pattern": [
+	    " pt",
+	    "imp",
+	    "di "
     ],
-    "key":
-    {
-	"d":
-        {
-
+    "key": {
+	    "d": {
             "tag": "forge:gems/diamond"
         },
-	"t":
-        {
-
-            "tag": "forge:sticks/titanium"
+	    "t": {
+            "tag": "forge:rods/titanium"
         },
-	"i":
-        {
-
-            "tag": "forge:sticks/iron"
+	    "i": {
+            "tag": "forge:rods/iron"
         },
-	"p":
-        {
-
+	    "p": {
             "tag": "forge:plates/aluminum"
         },
-	"m":
-        {
-
+	    "m": {
             "tag": "forge:motors"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:jackhammer",
         "count": 1
     }

@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "owo",
+        "rpr"
+    ],
+    "key": {
+        "o": {
+	        "item": "advancedrocketry:opticalsensor"
+        },
+        "w": {
+            "tag": "forge:gems/dilithium"
+        },
+        "p": {
+	        "item": "advancedrocketry:basiccircuit"
+        },
+        "r": {
+	        "item": "advancedrocketry:siliconwafer"
+        }
+    },
+    "result": {
+	    "item": "advancedrocketry:masssensor",
+        "count": 1
+    }
+}

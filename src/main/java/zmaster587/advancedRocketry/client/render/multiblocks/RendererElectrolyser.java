@@ -24,7 +24,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class RendererElectrolyser extends TileEntityRenderer<TileElectrolyser> {
 
 	WavefrontObject model;
-
 	ResourceLocation texture = new ResourceLocation("advancedrocketry","textures/models/electrolyser.png");
 
 	public RendererElectrolyser(TileEntityRendererDispatcher tile) {

@@ -1,0 +1,19 @@
+{
+    "type": "advancedrocketry:precisionassembler",
+    "itemingredients": [
+        {
+            "tag": "forge:motors"
+        },
+        {
+            "item": "advancedrocketry:advancedcircuit"
+        },
+		{
+	   	     "item": "advancedrocketry:controlcircuit"
+        }
+    ],
+    "time": 200,
+    "energy": 1,
+    "itemresults": {
+		"item": "advancedrocketry:bioniclegsupgrade"
+    }
+}

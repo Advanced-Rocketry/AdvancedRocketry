@@ -101,7 +101,7 @@ public class ItemSatellite extends ItemIdWithName {
 				nbt = stack.getTag();
 			else
 				nbt = new CompoundNBT();
-			//Stick the properties into the NBT of the stack
+			//rod the properties into the NBT of the stack
 			properties.writeToNBT(nbt);
 			stack.setTag(nbt);
 

@@ -1,8 +1,0 @@
-{
-    "parent": "block/orientable",
-    "textures": {
-        "top": "advancedrocketry:blocks/warpcore",
-        "front": "advancedrocketry:blocks/forcefieldprojector_off",
-        "side": "advancedrocketry:blocks/forcefieldprojector_off"
-    }
-}

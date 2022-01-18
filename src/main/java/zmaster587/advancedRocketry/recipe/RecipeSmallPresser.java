@@ -1,6 +1,6 @@
 package zmaster587.advancedRocketry.recipe;
 
-import zmaster587.advancedRocketry.block.BlockSmallPlatePress;
+import zmaster587.advancedRocketry.block.multiblock.BlockSmallPlatePress;
 import zmaster587.libVulpes.recipe.RecipeMachineFactory;
 
 public class RecipeSmallPresser extends RecipeMachineFactory {

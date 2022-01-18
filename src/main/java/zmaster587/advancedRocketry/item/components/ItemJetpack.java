@@ -27,6 +27,7 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryFluids;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
+import zmaster587.advancedRocketry.api.AdvancedRocketryParticleTypes;
 import zmaster587.advancedRocketry.event.RocketEventHandler;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.api.IArmorComponent;
@@ -71,10 +72,10 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 				if(!stack.isEmpty()) {
 					Item item = stack.getItem();
 
-					if (item.getItem() == AdvancedRocketryItems.itemUpgradeHover)
+					if (item.getItem() == AdvancedRocketryItems.itemHoverUpgrade)
 						if(stack.getDamage() == 0)
 							allowsHover = true;
-						else if(stack.getItem() == AdvancedRocketryItems.itemUpgradeFlightSpeed)
+						else if(stack.getItem() == AdvancedRocketryItems.itemFlightSpeedUpgrade)
 							speedUpgrades++;
 				}
 			}
@@ -204,15 +205,15 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 				double zPos = player.getPosZ() + MathHelper.sin(playerRot)*.4f;
 
 				float ejectSpeed = mode == MODES.HOVER ? 0.1f : 0.3f;
-				//AdvancedRocketry.proxy.spawnParticle("smallRocketFlame", player.worldObj, xPos, player.posY - 0.75, zPos, (player.worldObj.rand.nextFloat() - 0.5f)/18f,-.1 ,(player.worldObj.rand.nextFloat() - 0.5f)/18f);
+				//AdvancedRocketry.proxy.spawnParticle(AdvancedRocketryParticleTypes.rocketFx, player.worldObj, xPos, player.posY - 0.75, zPos, (player.worldObj.rand.nextFloat() - 0.5f)/18f,-.1 ,(player.worldObj.rand.nextFloat() - 0.5f)/18f);
 
-				AdvancedRocketry.proxy.spawnParticle("smallRocketFlame", player.world, xPos, player.getPosY() + 0.75, zPos, 0, player.getMotion().y -ejectSpeed ,0);
+				AdvancedRocketry.proxy.spawnParticle(AdvancedRocketryParticleTypes.rocketFx, player.world, xPos, player.getPosY() + 0.75, zPos, 0, player.getMotion().y -ejectSpeed ,0);
 
 				playerRot = (float) ((Math.PI/180f)*(player.rotationYaw - 125));
 				xPos = player.getPosX() + MathHelper.cos(playerRot)*.4f;
 				zPos = player.getPosZ() + MathHelper.sin(playerRot)*.4f;
 
-				AdvancedRocketry.proxy.spawnParticle("smallRocketFlame", player.world, xPos, player.getPosY() + 0.75, zPos, 0, player.getMotion().y -ejectSpeed ,0);
+				AdvancedRocketry.proxy.spawnParticle(AdvancedRocketryParticleTypes.rocketFx, player.world, xPos, player.getPosY() + 0.75, zPos, 0, player.getMotion().y -ejectSpeed ,0);
 			}
 
 			if(player.getMotion().y > -1) {
@@ -261,7 +262,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		if(helm != null && helm.getItem() instanceof IModularArmor) {
 			List<ItemStack> helmInv = ((IModularArmor)helm.getItem()).getComponents(helm);
 			for(ItemStack helmStack : helmInv) 
-				if (stack != null && helmStack.getItem() == AdvancedRocketryItems.itemUpgradeHover && helmStack.getDamage() == 0) {
+				if (stack != null && helmStack.getItem() == AdvancedRocketryItems.itemHoverUpgrade && helmStack.getDamage() == 0) {
 					mode = 1;
 					break;
 				}

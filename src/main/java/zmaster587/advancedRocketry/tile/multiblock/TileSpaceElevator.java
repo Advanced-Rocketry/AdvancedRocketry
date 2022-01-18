@@ -58,13 +58,13 @@ boolean openFullScreen = false;
 			{
 				{null,null,null,'P','c','P',null,null,null},
 				{new ResourceLocation("forge", "storage_blocks/steel"),null,null,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),null,null,new ResourceLocation("forge", "storage_blocks/steel")},
-				{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,null},
-				{null,new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),null},
-				{new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs")},
-				{new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.motors,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs")},
-				{new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs")},
-				{null,new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),null},
-				{null,LibVulpesBlocks.blockAdvStructureBlock,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvStructureBlock,null},
+				{null,LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvancedMachineStructure,null},
+				{null,new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("minecraft", "slabs"),null},
+				{new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs")},
+				{new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.motors,LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs")},
+				{new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs")},
+				{null,new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("minecraft", "slabs"),null},
+				{null,LibVulpesBlocks.blockAdvancedMachineStructure,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),LibVulpesBlocks.blockAdvancedMachineStructure,null},
 				{new ResourceLocation("forge", "storage_blocks/steel"),null,null,new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),new ResourceLocation("minecraft", "slabs"),null,null,new ResourceLocation("forge", "storage_blocks/steel")}
 			}
 		};
@@ -410,12 +410,7 @@ boolean openFullScreen = false;
 	}
 
 	@Override
-	public String getModularInventoryName() { return "block.advancedrocketry.spaceelevatorcontroller"; }
-
-	@Override
-	public boolean isUsableByPlayer(PlayerEntity player) {
-		return true;
-	}
+	public String getModularInventoryName() { return "block.advancedrocketry.spaceelevator"; }
 
 	@Override
 	public void writeNetworkData(CompoundNBT nbt) {

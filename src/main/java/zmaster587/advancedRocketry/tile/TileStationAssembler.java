@@ -16,7 +16,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.api.Constants;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.inventory.TextureResources;
-import zmaster587.advancedRocketry.item.ItemPackedStructure;
+import zmaster587.advancedRocketry.item.ItemSpaceStationContainer;
 import zmaster587.advancedRocketry.item.ItemStationChip;
 import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
@@ -32,7 +32,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileStationAssembler extends TileRocketAssemblingMachine implements IInventory {
+public class TileStationAssembler extends TileRocketAssembler implements IInventory {
 
 	EmbeddedInventory inventory;
 	ResourceLocation storedId;
@@ -48,7 +48,7 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 	public boolean canScan() {
 		if(!super.canScan())
 			return false;
-		ItemStack stack = new ItemStack(AdvancedRocketryBlocks.blockSatelliteHatch,1);
+		ItemStack stack = new ItemStack(AdvancedRocketryBlocks.blockSatelliteBay,1);
 
 		if(inventory.getStackInSlot(0).isEmpty() || !stack.isItemEqual(inventory.getStackInSlot(0))) {
 			status = ErrorCodes.NOSATELLITEHATCH;
@@ -129,16 +129,16 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 				spaceStationObject = new SpaceStationObject();
 				SpaceObjectManager.getSpaceManager().registerSpaceObject(spaceStationObject, Constants.INVALID_PLANET);
 
-				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1);
+				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStationContainer,1);
 				ItemStationChip.setUUID(outputStack, spaceStationObject.getId());
 
 			}
 			else {
-				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStation,1);
+				outputStack = new ItemStack(AdvancedRocketryItems.itemSpaceStationContainer,1);
 				ItemStationChip.setUUID(outputStack, storedId);
 			}
 
-			((ItemPackedStructure)outputStack.getItem()).setStructure(outputStack, storageChunk);
+			((ItemSpaceStationContainer)outputStack.getItem()).setStructure(outputStack, storageChunk);
 
 			inventory.setInventorySlotContents(2, outputStack);
 
@@ -215,7 +215,7 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 		super.write(nbt);
 		inventory.write(nbt);
 		if(storedId != null) {
-			nbt.putString("storedID", storedId.toString());
+			nbt.putString("storedID", storedId.toString().split(":")[1]);
 		}
 		return nbt;
 	}
@@ -224,7 +224,7 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 		super.read(state, nbt);
 		inventory.readFromNBT(nbt);
 		if(nbt.contains("storedID")) {
-			storedId = new ResourceLocation(nbt.getString("storedID"));
+			storedId = new ResourceLocation(Constants.modId, nbt.getString("storedID"));
 		}
 	}
 

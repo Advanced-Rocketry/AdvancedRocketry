@@ -143,6 +143,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 		matrix.push();
 		//GL11.glDisable(GL11.GL_BLEND);
 
+
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		RenderSystem.disableFog();
 
@@ -151,8 +152,8 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 		RenderSystem.blendFunc(GL11.GL_ONE, GL11.GL_ZERO);
 		mc.getTextureManager().bindTexture(getTextureForPlanet(properties));
 
-		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+		RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 		//int k = mc.theWorld.getMoonPhase();
 		//int l = k % 4;
 		//int i1 = k / 4 % 2;

@@ -1,5 +1,0 @@
-{
-  "loader": "forge:obj",
-  "model": "advancedrocketry:models/block/models/rocketmotor.obj",
-  "flip-v": false
-}

@@ -2,12 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "###",
-    "###",
+    "#i#",
     "###"
   ],
   "key": {
     "#": {
       "tag": "forge:ingots/titaniumaluminide"
+    },
+    "i": {
+      "item": "advancedrocketry:ingottitaniumaluminide"
     }
   },
   "result": {

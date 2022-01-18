@@ -1,13 +1,13 @@
 {
     "display": {
         "icon": {
-            "item": "advancedrocketry:electrolyser"
+            "item": "advancedrocketry:electrolyzer"
         },
         "title": {
-            "translate": "advancement.electrifying"
+            "translate": "advancement.advancedrocketry.electrifying"
         },
         "description": {
-            "translate": "advancement.electrifying.desc"
+            "translate": "advancement.advancedrocketry.electrifying.desc"
         }
     },
     "parent": "advancedrocketry:normal/holographic",
@@ -17,7 +17,7 @@
             "conditions": {
                 "items": [
                     {
-                        "item": "advancedrocketry:electrolyser"
+                        "item": "advancedrocketry:electrolyzer"
                     }
                 ]
             }

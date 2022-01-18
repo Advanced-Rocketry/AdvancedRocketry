@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " r ",
+        "sss",
+        "cwc"
+    ],
+    "key": {
+      "r": {
+        "tag": "forge:rods/copper"
+        },
+        "s": {
+            "tag": "forge:sheets/aluminum"
+        },
+        "c": {
+            "item": "advancedrocketry:basiccircuit"
+        },
+        "w": {
+            "item": "advancedrocketry:orescanner"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:oresensor"
+    }
+}

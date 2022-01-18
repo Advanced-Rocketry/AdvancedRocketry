@@ -1,9 +1,0 @@
-{
-    "parent": "advancedrocketry:block/orientablebottom",
-    "textures": {
-        "top": "libvulpes:blocks/machinegeneric",
-        "front": "advancedrocketry:blocks/laserfront",
-        "side": "advancedrocketry:blocks/monitorside",
-        "bottom": "advancedrocketry:blocks/laserbottom"
-    }
-}

@@ -23,8 +23,8 @@ public class CableTickHandler {
 		try {
 			if(tick.phase == Phase.END) {
 				NetworkRegistry.dataNetwork.tickAllNetworks();
-				NetworkRegistry.energyNetwork.tickAllNetworks();
-				NetworkRegistry.liquidNetwork.tickAllNetworks();
+				//NetworkRegistry.energyNetwork.tickAllNetworks();
+				//NetworkRegistry.liquidNetwork.tickAllNetworks();
 			}
 		} catch (ConcurrentModificationException e) {
 			e.printStackTrace();
@@ -52,7 +52,6 @@ public class CableTickHandler {
 
 	@SubscribeEvent
 	public void onBlockBroken(BreakEvent event) {
-
 		if(event.getState().getBlock().hasTileEntity(event.getState())) {
 
 			TileEntity homeTile = event.getWorld().getTileEntity(event.getPos());

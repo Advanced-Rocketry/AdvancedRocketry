@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.ZUtils;
 
@@ -72,45 +73,6 @@ public abstract class EntityRocketBase extends Entity {
 	public abstract void launch();
 
 	/**
-	 * @param fuelType the fuel type to use
-	 * @return the amount of fuel stored in the rocket
-	 */
-	public abstract int getFuelAmount(@Nullable FuelRegistry.FuelType fuelType);
-
-	/**
-	 * Adds fuel and updates the datawatcher
-	 * @param fuelType the fuel type to use
-	 * @param amount amount of fuel to add
-	 * @return the amount of fuel added
-	 */
-	public abstract int addFuelAmount(@Nonnull FuelRegistry.FuelType fuelType, int amount);
-
-	/**
-	 * Updates the data option
-	 * @param fuelType the fuel type to use
-	 * @param amt sets the amount of monopropellant fuel in the rocket
-	 */
-	public abstract void setFuelAmount(@Nonnull FuelRegistry.FuelType fuelType, int amt);
-
-	/**
-	 * @param fuelType sets the type of fuel to set a rate for
-	 * @param rate sets the rate of fuel in the rocket
-	 */
-	public abstract void setFuelConsumptionRate(@Nonnull FuelRegistry.FuelType fuelType, int rate);
-
-	/**
-	 * @param fuelType is the fuel type to get
-	 * @return gets the fuel capacity of the rocket
-	 */
-	public abstract int getFuelCapacity(@Nullable FuelRegistry.FuelType fuelType);
-
-	/**
-	 * @param fuelType is the fuel type to get
-	 * @return the rate of fuel consumption for the rocket
-	 */
-	public abstract int getFuelConsumptionRate(@Nullable FuelRegistry.FuelType fuelType);
-
-	/**
 	 * @return the fuel type that this rocket uses, null if the rocket does not use any
 	 */
 	@Nullable
@@ -130,16 +92,11 @@ public abstract class EntityRocketBase extends Entity {
 		return "";
 	}
 	
-	/**
-	 * @return the stats used to represent the rocket
-	 */
-	public abstract StatsRocket getRocketStats();
-	
 	/**Called when orbit is reached by a rocket*/
 	public void onOrbitReached() {
 		MinecraftForge.EVENT_BUS.post(new RocketEvent.RocketReachesOrbitEvent(this));
 		
-		if(ARConfiguration.getSpaceDimId().equals(ZUtils.getDimensionIdentifier(this.world)) ) {
+		if(DimensionManager.spaceId.equals(ZUtils.getDimensionIdentifier(this.world)) ) {
 			ISpaceObject station = AdvancedRocketryAPI.spaceObjectManager.getSpaceStationFromBlockCoords(new BlockPos(this.getPositionVec()));
 
 			if(station != null) {

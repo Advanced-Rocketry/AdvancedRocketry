@@ -1,41 +1,32 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"aga",
-	"ice", 
-	"aba"
+    "pattern": [
+	    "aga",
+    	"ice",
+    	"aba"
     ],
-    "key":
-    {
-        "a":
-        {
+    "key": {
+        "a": {
             "item": "minecraft:nether_brick"
         },
-        "g":
-        {
-            "item": "advancedrocketry:item_ui"
+        "g": {
+            "item": "advancedrocketry:userinterface"
         },
-	"i":
-        {
-            "item": "advancedrocketry:circuit_ic_control"
+	    "i": {
+            "item": "advancedrocketry:controlcircuit"
         },
-	"e":
-        {
-            "item": "advancedrocketry:circuit_ic_item_io"
+    	"e": {
+            "item": "advancedrocketry:itemiocircuit"
         },
-	"c":
-        {
+    	"c": {
             "item": "advancedrocketry:blastbrick"
         },
-	"b":
-        {
+	    "b": {
 
             "tag": "forge:ingots/copper"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "advancedrocketry:arcfurnace",
         "count": 1
     }

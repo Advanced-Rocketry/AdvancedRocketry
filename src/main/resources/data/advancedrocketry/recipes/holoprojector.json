@@ -1,34 +1,25 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
+    "pattern": [
         "owo",
         "rpr"
     ],
-    "key":
-    {
-        "o":
-        {
-            "item": "advancedrocketry:sensor_optical"
+    "key": {
+        "o": {
+            "item": "advancedrocketry:opticalsensor"
         },
-        "w":
-        {
+        "w": {
 
             "tag": "forge:dusts/redstone"
         },
-	"r":
-        {
-
+	    "r": {
             "tag": "forge:dusts/redstone"
         },
-	"p":
-        {
-
+	    "p": {
             "tag": "forge:plates/iron"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "libvulpes:holo_projector",
         "count": 1
     }

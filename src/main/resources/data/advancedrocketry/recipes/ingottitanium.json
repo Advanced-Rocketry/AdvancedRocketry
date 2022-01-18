@@ -1,15 +1,13 @@
 {
     "type": "advancedrocketry:electricarcfurnace",
-    "itemingredients":
-    [
+    "itemingredients": [
         {
-	    "item": "libvulpes:orerutile"
+	        "item": "libvulpes:orerutile"
         }
     ],
     "time": 12000,
     "energy": 1,
-    "itemresults":
-    {
-            "tag": "forge:ingots/titanium"
+    "itemresults": {
+        "tag": "forge:ingots/titanium"
     }
 }

@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+	    "sss",
+	    " t ",
+	    "t t"
+    ],
+    "key": {
+        "s": {
+            "tag": "forge:ingots/titaniumiridium"
+        },
+	    "t": {
+            "tag": "forge:plates/titaniumaluminide"
+        }
+    },
+    "result": {
+        "item": "advancedrocketry:advancedbipropellantrocketengine"
+    }
+}

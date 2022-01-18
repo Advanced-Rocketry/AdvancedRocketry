@@ -2,7 +2,7 @@
     "parent": "block/orientable",
     "textures": {
         "top": "libvulpes:blocks/machinegeneric",
-        "front": "advancedrocketry:blocks/machineelectrolzyer",
+        "front": "advancedrocketry:blocks/multiblocks/centrifuge",
         "side": "libvulpes:blocks/machinegeneric"
     }
 }

@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.advancedRocketry.AdvancedRocketry;
+import zmaster587.advancedRocketry.api.AdvancedRocketryParticleTypes;
 import zmaster587.advancedRocketry.api.AdvancedRocketryTileEntityType;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.advancedRocketry.util.AudioRegistry;
@@ -49,13 +50,13 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 		{{null, null, null},
 			{null, 'c', null},
 			{null, null, null}},
-			{{null, LibVulpesBlocks.blockAdvStructureBlock, null},
-				{LibVulpesBlocks.blockAdvStructureBlock, 'P', LibVulpesBlocks.blockAdvStructureBlock},
-				{null, LibVulpesBlocks.blockAdvStructureBlock, null}}
+			{{null, LibVulpesBlocks.blockAdvancedMachineStructure, null},
+				{LibVulpesBlocks.blockAdvancedMachineStructure, 'P', LibVulpesBlocks.blockAdvancedMachineStructure},
+				{null, LibVulpesBlocks.blockAdvancedMachineStructure, null}}
 	};
 
 	public TileAreaGravityController() {
-		super(AdvancedRocketryTileEntityType.TILE_GRAVITY_CONTROLLER);
+		super(AdvancedRocketryTileEntityType.TILE_AREA_GRAVITY_CONTROLLER);
 		//numGravPylons = new ModuleText(10, 25, "Number Of Thrusters: ", 0xaa2020);
 		textRadius = new ModuleText(6, 82, LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.radius") + "5", 0x202020);
 		targetGrav = new ModuleText(6, 110, LibVulpes.proxy.getLocalizedString("msg.gravitycontroller.targetgrav"), 0x202020);
@@ -141,23 +142,6 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 
 	@Override
 	public void tick() {
-
-		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
-		if(timeAlive == 0) {
-			if(!world.isRemote) {
-				if(isComplete())
-					canRender = completeStructure = completeStructure(world.getBlockState(pos));
-			}
-			else {
-				SoundEvent str;
-				if((str = getSound()) != null) {
-					playMachineSound(str);
-				}
-			}
-
-			timeAlive = 0x1;
-		}
-
 		if(isRunning()) {
 			if(!world.isRemote) {
 
@@ -183,13 +167,10 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 					world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
 				}
 
-			}
-			else
+			} else
 				updateText();
 
 			List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos()).grow(getRadius(), getRadius() , getRadius()));
-
-
 
 			for(Entity e : entities) {
 				boolean additive = true;
@@ -205,14 +186,10 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 								additive = false;
 
 							if(e instanceof LivingEntity) {
-								{
-									
-									e.setMotion(e.getMotion().add(dir.getXOffset()*GravityHandler.LIVING_OFFSET*currentProgress,
-									dir.getYOffset()*GravityHandler.LIVING_OFFSET*currentProgress,
-									dir.getZOffset()*GravityHandler.LIVING_OFFSET*currentProgress));
-								}
-							}
-							else if (e instanceof ItemEntity || e instanceof ArrowEntity) {
+								e.setMotion(e.getMotion().add(dir.getXOffset()*GravityHandler.LIVING_OFFSET*currentProgress,
+								dir.getYOffset()*GravityHandler.LIVING_OFFSET*currentProgress,
+								dir.getZOffset()*GravityHandler.LIVING_OFFSET*currentProgress));
+							} else if (e instanceof ItemEntity || e instanceof ArrowEntity) {
 								e.setMotion(e.getMotion().add(dir.getXOffset()*GravityHandler.OTHER_OFFSET*currentProgress,
 								dir.getYOffset()*GravityHandler.OTHER_OFFSET*currentProgress,
 								dir.getZOffset()*GravityHandler.OTHER_OFFSET*currentProgress));
@@ -222,9 +199,8 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 							//TODO: tornados for planets
 							if(world.isRemote) {
 								if(Minecraft.getInstance().gameSettings.particles == ParticleStatus.ALL)
-									AdvancedRocketry.proxy.spawnParticle("gravityEffect", world, e.getPosX(), e.getPosY(), e.getPosZ(), .2f*dir.getXOffset()*currentProgress, .2f*dir.getYOffset()*currentProgress, .2f*dir.getZOffset()*currentProgress);
+									AdvancedRocketry.proxy.spawnParticle(AdvancedRocketryParticleTypes.fxGravityEffect, world, e.getPosX(), e.getPosY(), e.getPosZ(), .2f*dir.getXOffset()*currentProgress, .2f*dir.getYOffset()*currentProgress, .2f*dir.getZOffset()*currentProgress);
 							}
-
 						}
 					}
 				}
@@ -253,7 +229,7 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 
 	@Override
 	public String getModularInventoryName() {
-		return "block.advancedrocketry.gravitymachine";
+		return "block.advancedrocketry.areagravitycontroller";
 	}
 
 	@Override
