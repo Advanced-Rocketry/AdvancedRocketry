@@ -22,22 +22,12 @@ val jeiVersion: String by project
 val icVersion: String by project
 val gcVersion: String by project
 
-val bambooshortPlanName: String? by project
-
 group = "zmaster587.advancedRocketry"
 setProperty("archivesBaseName", archiveBase)
 
 val buildNumber: String by lazy {
     if (System.getenv("BUILD_NUMBER") != null) {
         "-${System.getenv("BUILD_NUMBER")}"
-    } else if (project.hasProperty("bambooBuildNumber")) {
-        "-" + project.property("bambooBuildNumber")
-    } else if (System.getenv("DRONE_BUILD_NUMBER") != null) {
-        "-${System.getenv("DRONE_BUILD_NUMBER")}"
-    } else if (System.getenv("TRAVIS_BUILD_NUMBER") != null) {
-        "-${System.getenv("TRAVIS_BUILD_NUMBER")}"
-    } else if (project.hasProperty("sbmBuild")) {
-        "-" + project.property("sbmBuild")
     } else {
         getDate()
     }
@@ -223,23 +213,6 @@ tasks.withType(Jar::class) {
 
 val deobfJar by tasks.registering(Jar::class) {
     from(sourceSets["main"].output)
-    //if project name is BBM-Dev it makes the deobf jar deobf-dev if not its just deobf
-    if (bambooshortPlanName == "BBM-Dev")
-        archiveClassifier.set("deobf-dev")
-    else
-        archiveClassifier.set("deobf")
-    //sets where the jars go to.
-    destinationDirectory.set(file("output"))
-}
-
-tasks.jar {
-    //if project has the property BBM-Dev then it appends dev to indicate the dev branch
-    if (bambooshortPlanName == "BBM-Dev")
-        archiveClassifier.set("universal-dev")
-    else
-        archiveClassifier.set("universal")
-    //sets where the jars go to.
-    destinationDirectory.set(file("output"))
 }
 
 tasks.build {
