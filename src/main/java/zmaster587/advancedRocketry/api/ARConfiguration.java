@@ -167,6 +167,7 @@ public class ARConfiguration {
 			out.writeFloat(asteroid.richnessVariability);		//variability of richness
 			out.writeFloat(asteroid.probability);				//probability of the asteroid spawning
 			out.writeFloat(asteroid.timeMultiplier);
+			out.writeItemStack(asteroid.baseStack);
 			
 			out.writeInt(asteroid.stackProbabilities.size());
 			for(int i = 0; i < asteroid.stackProbabilities.size(); i++)
@@ -245,6 +246,12 @@ public class ARConfiguration {
 			asteroid.richnessVariability = in.readFloat();		//variability of richness
 			asteroid.probability = in.readFloat();				//probability of the asteroid spawning
 			asteroid.timeMultiplier = in.readFloat();
+			try {
+				asteroid.baseStack = in.readItemStack();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 			
 			int size = in.readInt();
 			for(int i = 0; i < size; i++)
