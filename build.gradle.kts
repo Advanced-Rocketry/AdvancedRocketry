@@ -102,12 +102,10 @@ fancyGradle {
 
 repositories {
     mavenCentral()
-    ivy {
+    maven {
         name = "LibVulpes"
-        artifactPattern("http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/1.12/$libVulpesBuildNum/artifact/output/[module]-[revision].[ext]")
-        metadataSources {
-            artifact()
-        }
+        url = uri("http://maven.dmodoomsirius.me/")
+        isAllowInsecureProtocol = true
     }
     maven {
         name = "mezz.jei"
@@ -135,7 +133,7 @@ dependencies {
     minecraft(group = "net.minecraftforge", name = "forge", version = "$mcVersion-$forgeVersion")
 
     compileOnly("net.industrial-craft:industrialcraft-2:$icVersion:dev")
-    implementation("zmaster587.libVulpes:LibVulpes:$mcVersion-$libVulpesVersion-$libVulpesBuildNum-deobf")
+    //implementation("zmaster587.libVulpes:LibVulpes:$mcVersion-$libVulpesVersion-$libVulpesBuildNum-deobf")
 
     compileOnly("micdoodle8.mods:galacticraft-api:$gcVersion")
     compileOnly("micdoodle8.mods:galacticraft-core:$gcVersion")
@@ -144,6 +142,7 @@ dependencies {
 
     compileOnly(fg.deobf("mezz.jei:jei_${mcVersion}:${jeiVersion}:api"))
     runtimeOnly(fg.deobf("mezz.jei:jei_${mcVersion}:${jeiVersion}"))
+    implementation ("zmaster587.libVulpes:libVulpes:1.12.2-0.4.2+:deobf")
 }
 
 tasks.processResources {
