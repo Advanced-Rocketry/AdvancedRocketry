@@ -43,6 +43,8 @@ minecraft {
     version = "1.12.2-14.23.4.2739"
     runDir = "run"
     mappings = "snapshot_20170624"
+    mappings = "snapshot_20170624"
+    //mappings = "snapshot_20171003"
     
     replaceIn "src/main/java/zmaster587/advancedRocketry/AdvancedRocketry.java"
     replace "@MAJOR@", project.version_major

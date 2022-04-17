@@ -4,36 +4,40 @@ apply from: "https://raw.githubusercontent.com/ReadOnlyDevelopment/gradle/galact
 
 repositories {
     mavenCentral()
+    maven { 
+        name = 'forge'
+        url = "https://files.minecraftforge.net/maven" 
+    }
     /*ivy {
-        url "https://micdoodle8.com/new-builds/"
-        layout 'pattern', {
-            artifact "[organization]/${GCBuild}/[module]-[revision].jar"
-        }
-        metadataSources {
-            artifact()
-        }
-    }*/
-    ivy {
             name "LibVulpes"
             artifactPattern "http://65.78.115.159:8080/job/LibVulpes/job/libVulpes/job/1.12/" + project.libVulpesBuildNum +"/artifact/output/[module]-[revision].[ext]"
-        }
+        }*/
+    
     maven {
             name = "mezz.jei"
-            url = "https://dvs1.progwml6.com/files/maven/"
+            url = "http://dvs1.progwml6.com/files/maven/"
         }
-    ivy {
-            name "industrialcraft-2"
-            artifactPattern "http://jenkins.ic2.player.to/job/IC2_111/39/artifact/build/libs/[module]-[revision].[ext]"
-        }
-    /*ivy {
-            name "Tesla"
-            artifactPattern "https://addons-origin.cursecdn.com/files/2347/256/[module]-[revision].[ext]"
-        }*/
     maven {
         // location of a maven mirror for JEI files, as a fallback
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
     }
+    maven {
+            name = "LibVulpes"
+            url = "http://maven.dmodoomsirius.me/"
+        }
+    ivy {
+            name "industrialcraft-2"
+            artifactPattern "http://jenkins.ic2.player.to/job/IC2_111/39/artifact/build/libs/[module]-[revision].[ext]"
+        metadataSources {
+            artifact()
+       }
+        }
+    /*ivy {
+            name "Tesla"
+            artifactPattern "https://addons-origin.cursecdn.com/files/2347/256/[module]-[revision].[ext]"
+        }*/
+    
     /*flatDir {
         dirs 'libs'
     }*/
@@ -45,7 +49,8 @@ dependencies {
     //compile name: 'Tesla', version: '1.11-1.3.0.51-deobf', ext: 'jar'
     //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
     //compileOnly name: 'LibVulpes', version: '1.12.2-' + project.libVulpesVersion  + '-deobf', ext: 'jar'
-    compileOnly name: 'LibVulpes', version: '1.12.2-' + project.libVulpesVersion  + '-' + project.libVulpesBuildNum + '-deobf', ext: 'jar'
+    //compileOnly name: 'LibVulpes', version: '1.12.2-' + project.libVulpesVersion  + '-' + project.libVulpesBuildNum + '-deobf', ext: 'jar'
+    compileOnly "zmaster587.libVulpes:libVulpes:1.12.2-0.4.2+"
     
     
     // compile against the JEI API but do not include it at runtime
