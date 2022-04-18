@@ -102,10 +102,9 @@ fancyGradle {
 
 repositories {
     mavenCentral()
-    maven {
-        name = "LibVulpes"
-        url = uri("http://maven.dmodoomsirius.me/")
-        isAllowInsecureProtocol = true
+    maven{
+        name = "forge"
+        url = uri("https://files.minecraftforge.net/maven")
     }
     maven {
         name = "mezz.jei"
@@ -123,6 +122,11 @@ repositories {
     maven {
         name = "Galacticraft"
         url = uri("https://maven.galacticraft.dev")
+    }
+    maven {
+        name = "LibVulpes"
+        url = uri("http://maven.dmodoomsirius.me/")
+        isAllowInsecureProtocol = true
     }
     flatDir {
         dirs("libs")
