@@ -102,10 +102,6 @@ fancyGradle {
 
 repositories {
     mavenCentral()
-    maven{
-        name = "forge"
-        url = uri("https://files.minecraftforge.net/maven")
-    }
     maven {
         name = "mezz.jei"
         url = uri("https://dvs1.progwml6.com/files/maven/")
