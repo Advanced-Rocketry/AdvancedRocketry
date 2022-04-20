@@ -3,6 +3,7 @@ import com.matthewprenger.cursegradle.CurseProject
 import com.matthewprenger.cursegradle.CurseRelation
 import org.ajoberstar.grgit.Grgit
 import org.gradle.internal.jvm.Jvm
+import se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
 import java.util.Date
 import java.text.SimpleDateFormat
 import java.util.TimeZone
@@ -13,8 +14,8 @@ plugins {
     id("wtf.gofancy.fancygradle") version "1.1.+"
     id("org.ajoberstar.grgit") version "4.1.1"
     id("com.matthewprenger.cursegradle") version "1.4.0"
-     `maven-publish`
-
+    id("se.bjurr.gitchangelog.git-changelog-gradle-plugin") version "1.72.0"
+    `maven-publish`
 }
 
 val mcVersion: String by project
@@ -27,6 +28,8 @@ val libVulpesBuildNum: String by project
 val jeiVersion: String by project
 val icVersion: String by project
 val gcVersion: String by project
+
+val startGitRev: String by project
 
 group = "zmaster587.advancedRocketry"
 setProperty("archivesBaseName", archiveBase)
@@ -48,6 +51,7 @@ tasks.compileJava {
     sourceCompatibility = "1.8"
     targetCompatibility = "1.8"
 }
+
 
 minecraft {
     mappings("snapshot", "20170624-1.12")
@@ -218,6 +222,35 @@ tasks.build {
     dependsOn(deobfJar)
 }
 
+val makeChangelog by tasks.creating(GitChangelogTask::class.java) {
+    file = file("changelog.html")
+    untaggedName = "Current release ${project.version}"
+
+    //Get the last commit from the cache or config if no cache exists
+    val lastHashFile = file("lasthash.txt")
+    
+    fromCommit = if (!lastHashFile.exists())
+        startGitRev
+    else
+        lastHashFile.readText()
+
+    lastHashFile.writeText(gitHash)
+
+    toRef = "HEAD"
+    gitHubIssuePattern = "nonada123";
+    templateContent = """
+        {{#tags}}
+          <h3>{{name}}</h3>
+          <ul>
+            {{#commits}}
+            <li> <a href="https://github.com/zmaster587/AdvancedRocketry/commit/{{hash}}" target=_blank> {{{message}}}</a>
+        </li>
+            {{/commits}}
+          </ul>
+        {{/tags}}
+    """.trimIndent()
+}
+
 curseforge {
     apiKey = (project.findProperty("thecursedkey") as String?).orEmpty()
 
@@ -240,6 +273,10 @@ curseforge {
     })
 }
 
+tasks.curseforge {
+    dependsOn(makeChangelog)
+}
+
 publishing {
     repositories {
         maven {
@@ -255,9 +292,15 @@ publishing {
 
             artifact(tasks.jar.get())
             artifact(deobfJar.get())
+            artifact(makeChangelog.file)
         }
     }
 }
+
+tasks.publish {
+    dependsOn(makeChangelog)
+}
+
 idea {
     module {
         inheritOutputDirs = true
