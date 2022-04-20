@@ -228,7 +228,7 @@ val makeChangelog by tasks.creating(GitChangelogTask::class.java) {
 
     //Get the last commit from the cache or config if no cache exists
     val lastHashFile = file("lasthash.txt")
-    
+
     fromCommit = if (!lastHashFile.exists())
         startGitRev
     else
@@ -264,10 +264,10 @@ curseforge {
         // Why is it hardcoded to beta tho?..
         releaseType = "beta"
         addGameVersion(mcVersion)
-        mainArtifact(tasks.jar, closureOf<CurseArtifact> {
+        mmainArtifact(tasks.jar.get(), closureOf<CurseArtifact> {
             displayName = "AdvancedRocketry ${ project.version } build $buildNumber for $mcVersion"
-        })
-        addArtifact(deobfJar, closureOf<CurseArtifact> {
+            })
+        addArtifact(deobfJar.get(), closureOf<CurseArtifact> {
             displayName = "AdvancedRocketry ${ project.version }-deobf build $buildNumber for $mcVersion"
         })
     })
