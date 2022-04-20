@@ -13,6 +13,7 @@ plugins {
     id("wtf.gofancy.fancygradle") version "1.1.+"
     id("org.ajoberstar.grgit") version "4.1.1"
     id("com.matthewprenger.cursegradle") version "1.4.0"
+     `maven-publish`
 }
 
 val mcVersion: String by project
@@ -236,6 +237,26 @@ curseforge {
             displayName = "AdvancedRocketry ${ project.version }-deobf build $buildNumber for $mcVersion"
         })
     })
+}
+
+publishing {
+publishing {
+    repositories {
+        maven {
+            url = if (project.findProperty("local") == "true")
+                uri("$buildDir/build/maven")
+            else
+                uri("file:///usr/share/nginx/maven/")
+        }
+    }
+    publications {
+        register("mavenJava", MavenPublication::class) {
+            from(components["java"])
+
+            artifact(tasks.jar.get())
+            artifact(deobfJar.get())
+        }
+    }
 }
 
 idea {
