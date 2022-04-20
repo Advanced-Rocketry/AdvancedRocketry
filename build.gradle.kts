@@ -1,3 +1,6 @@
+import com.matthewprenger.cursegradle.CurseArtifact
+import com.matthewprenger.cursegradle.CurseProject
+import com.matthewprenger.cursegradle.CurseRelation
 import org.ajoberstar.grgit.Grgit
 import org.gradle.internal.jvm.Jvm
 import java.util.Date
@@ -9,6 +12,7 @@ plugins {
     id("net.minecraftforge.gradle") version "5.1.+"
     id("wtf.gofancy.fancygradle") version "1.1.+"
     id("org.ajoberstar.grgit") version "4.1.1"
+    id("com.matthewprenger.cursegradle") version "1.4.0"
 }
 
 val mcVersion: String by project
@@ -25,13 +29,7 @@ val gcVersion: String by project
 group = "zmaster587.advancedRocketry"
 setProperty("archivesBaseName", archiveBase)
 
-val buildNumber: String by lazy {
-    if (System.getenv("BUILD_NUMBER") != null) {
-        "-${System.getenv("BUILD_NUMBER")}"
-    } else {
-        getDate()
-    }
-}
+val buildNumber: String by lazy { System.getenv("BUILD_NUMBER") ?: getDate() }
 
 fun getDate(): String {
     val format = SimpleDateFormat("HH-mm-dd-MM-yyyy")
@@ -216,6 +214,28 @@ val deobfJar by tasks.registering(Jar::class) {
 
 tasks.build {
     dependsOn(deobfJar)
+}
+
+curseforge {
+    apiKey = (project.findProperty("thecursedkey") as String?).orEmpty()
+
+    project(closureOf<CurseProject> {
+        id = "236542"
+        relations(closureOf<CurseRelation> {
+            requiredDependency("libvulpes")
+        })
+        changelog = file("changelog.html")
+        changelogType = "html"
+        // Why is it hardcoded to beta tho?..
+        releaseType = "beta"
+        addGameVersion(mcVersion)
+        mainArtifact(tasks.jar, closureOf<CurseArtifact> {
+            displayName = "AdvancedRocketry ${ project.version } build $buildNumber for $mcVersion"
+        })
+        addArtifact(deobfJar, closureOf<CurseArtifact> {
+            displayName = "AdvancedRocketry ${ project.version }-deobf build $buildNumber for $mcVersion"
+        })
+    })
 }
 
 idea {
