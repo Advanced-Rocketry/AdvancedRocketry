@@ -14,6 +14,7 @@ plugins {
     id("org.ajoberstar.grgit") version "4.1.1"
     id("com.matthewprenger.cursegradle") version "1.4.0"
      `maven-publish`
+
 }
 
 val mcVersion: String by project
@@ -240,7 +241,6 @@ curseforge {
 }
 
 publishing {
-publishing {
     repositories {
         maven {
             url = if (project.findProperty("local") == "true")
@@ -258,7 +258,6 @@ publishing {
         }
     }
 }
-
 idea {
     module {
         inheritOutputDirs = true
