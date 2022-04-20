@@ -264,7 +264,7 @@ curseforge {
         // Why is it hardcoded to beta tho?..
         releaseType = "beta"
         addGameVersion(mcVersion)
-        mmainArtifact(tasks.jar.get(), closureOf<CurseArtifact> {
+        mainArtifact(tasks.jar.get(), closureOf<CurseArtifact> {
             displayName = "AdvancedRocketry ${ project.version } build $buildNumber for $mcVersion"
             })
         addArtifact(deobfJar.get(), closureOf<CurseArtifact> {
