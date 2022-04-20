@@ -288,9 +288,9 @@ publishing {
     }
     publications {
         register("mavenJava", MavenPublication::class) {
-            from(components["java"])
+            //from(components["java"])
 
-            artifact(tasks.jar.get())
+            //artifact(tasks.jar.get())
             artifact(deobfJar.get())
             artifact(makeChangelog.file)
         }
