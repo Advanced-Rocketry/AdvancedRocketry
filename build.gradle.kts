@@ -200,7 +200,7 @@ val gitHash: String by lazy {
 
 // Name pattern: [archiveBaseName]-[archiveAppendix]-[archiveVersion]-[archiveClassifier].[archiveExtension]
 tasks.withType(Jar::class) {
-    archiveAppendix.set(mcVersion)
+    //archiveAppendix.set(mcVersion)
     manifest {
         attributes(
                 "Built-By" to System.getProperty("user.name"),
