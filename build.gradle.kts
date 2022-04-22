@@ -216,6 +216,7 @@ tasks.withType(Jar::class) {
 
 val deobfJar by tasks.registering(Jar::class) {
     from(sourceSets["main"].output)
+    classifier = "deobf"
 }
 
 tasks.build {
