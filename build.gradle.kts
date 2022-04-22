@@ -298,6 +298,10 @@ publishing {
     }
 }
 
+tasks.curseforge {
+  dependsOn("reobfJar")
+}
+
 tasks.publish {
     dependsOn(makeChangelog)
 }
