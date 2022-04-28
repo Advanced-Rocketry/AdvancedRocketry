@@ -1,7 +1,7 @@
 # AdvancedRocketry
 Advanced Rocketry is a mod about space, exploration, and resources
 
-<b>Advanced Rocketry does not support anything other than Forge at this point - be it Fabric (for 1.13+) or Sponge or similar for 1.12</b> 
+<b>Advanced Rocketry does not support anything other than Forge at this point - be it Fabric or Sponge </b> 
 
 <b>Please be aware Sponge compatibility issues may never be fixed.</b>
 
@@ -30,14 +30,14 @@ Current Features:
    - Research system that allows for undiscovered planets
      - Requires data and artifact to be able to find planets
      - Active beacons also make planets visible
- - Basic machinery (to be redone at future date)
+ - Basic machinery
  - Many types of hazardous atmospheres
    - High-Pressure atmospheres 
    - Very High Pressure atmospheres
    - Hot atmospheres
    - Superheated atmospheres
    - Vacuum
-   - Low-Oxygen variants of all normal atmospheres
+   - Low-Oxygen atmospheres
  - Data collection of planets (not currently fully featured)
  - Gravity generators for space stations
  - Gravity generators for local areas on planets
@@ -48,10 +48,11 @@ Current Features:
    - Oribtal solar power satellites
      - Used with the microwave reciever multiblock for power
    - Ore Scanning Satellite
+   - Biome changing satellites
  - Asteroid mining
    - Automated Harvesting
    - Research System
-      - Random asteroid parameters ( size, composition, location (polar coords)
+      - Random asteroid parameters (size, composition, richness)
       - Research can be done to determine properties
    - Manual Harvesting
       - Player can select as a destination
@@ -59,35 +60,36 @@ Current Features:
  - Gas Giant gas/fluid mining
  - Railguns to transfer goods between planets and stations
  - Support GTEU, EU, FE, Tesla, and RF as power supplies
+ - Terraforming
 
 
 
 
 Future Features:
 
- - Other engine types for space ships(NTR/ion)
- - Terraforming
- - Orbital factories
  - Rovers (maybe? planetary exploration?)
- - Docking (maybe..)
  - Planetary Mapping System (feasible?)
  - More Satellites
    - Weather Control Satellite
    - Mapping satellite (feasible?)
- - Clean Rooms
- - Research Tree (possible use for planetary data, hire villagers as scientists for you lab!)
- - Remove RF dependance
+ - Clean Rooms (maybe)
  - Stations can be positioned over certain locations on planets
- - Colony management system (seed testificates throughout the universe?)
  - Telescopes - 
    - Water Detectors (increases info on %dry) ~ space only
    - Chemical Detectors (increases chance of finding planets rich in certain ores) ~ space only
    - Atmospheric Detectors (increases info on pressure; when combined with chemical can detect if planet has harvestable/hazardous gasses) ~ ground and space 
    - Temperature Detector (increases info on planetary temperature) ~ space only
    - Star Scanner (increases the likelihood of finding planets orbiting a star; higher level allows for smaller planets) ~ ground and Space
-   - Radio interferometry (lets you discover black holes and get any data quickly  ~ ground only
- - Hardmode
-   - Must protect space stations from meteors
-   - Rockets require life support
-   - Space ships require stasis chamber and must be provided with food (unless warp)  -  tranz9999
-   - Heat system for machines and plasma engine
+   - Radio interferometry (lets you discover black holes and get any data quickly)  ~ ground only
+ - Possibility of rockets requiring life support for the player, without which they die
+ - Larger rocket engines
+   - T3 engines for nuclear and bipropellant
+   - _Possible_ T4 engine that is a mini fusion reactor, but unlikely. Up to discrection
+ - Warp core rework
+   - Requires data to function
+   - More data can be used to speed the travel time, past the minimum (maybe)
+   - Model redo + possibly some auxilary models for auxilary computation banks required for longer jumps
+ - Terraformer rework
+   - Completely redo model and concept
+   - Split terraformer up into a large center with multiple required buildings
+   - Up gas costs signficantly

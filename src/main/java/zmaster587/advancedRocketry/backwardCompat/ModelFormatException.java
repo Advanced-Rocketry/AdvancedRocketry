@@ -4,16 +4,16 @@ import java.io.IOException;
 
 public class ModelFormatException extends Exception {
 
-	public ModelFormatException(String string, IOException e) {
-		// TODO Auto-generated constructor stub
+	public ModelFormatException(String format, IOException e) {
+		super(format, e);
 	}
 
 	public ModelFormatException(String format, NumberFormatException e) {
-		// TODO Auto-generated constructor stub
+		super(format, e);
 	}
 
-	public ModelFormatException(String string) {
-		// TODO Auto-generated constructor stub
+	public ModelFormatException(String msg) {
+		super(msg);
 	}
 
 }

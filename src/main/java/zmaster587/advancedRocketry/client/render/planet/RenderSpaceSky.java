@@ -38,7 +38,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 	}
 	
 	@Override
-	public void renderPlanet2(BufferBuilder buffer, DimensionProperties properties, float size, float alphaMultiplier, double shadowAngle, boolean hasRing, float[] shadowColorMultiplier) {
+	public void renderPlanet2(BufferBuilder buffer, DimensionProperties properties, float size, float alphaMultiplier, double shadowAngle, boolean hasRing, float[] shadowColorMultiplier, float alphaMultiplier2) {
 		//ResourceLocation icon, int locationX, int locationY, double zLevel, float planetOrbitalDistance, float alphaMultiplier, double angle, boolean hasAtmosphere, float[] atmColor, float[] ringColor, boolean isGasgiant, boolean hasRings, boolean hasDecorators) {
 
 		ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(mc.player.getPosition());
@@ -203,6 +203,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				mc.renderEngine.bindTexture(DimensionProperties.getAtmosphereLEOResource());
+				GlStateManager.color(atmColor[0], atmColor[1], atmColor[2], 0.5f);
 
 				double dist = -5D - 4*(planetOrbitalDistance)/200D;
 				double scalingMult = 1D - 0.9*(planetOrbitalDistance)/200D;
@@ -210,8 +211,6 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 				int maxAmt = 6;
 				float lng = (float) (Minecraft.getSystemTime()/100000d % 1);
 				for(int i = 0; i < maxAmt; i++) {
-					GlStateManager.color(0.05f*(maxAmt-i/6f), .4f*(i/6f), 1f, 0.4f);
-
 					//IDK it looks pretty
 					Xoffset = lng*(i-(maxAmt/4f));
 					float Yoffset = -lng*i;
@@ -235,7 +234,7 @@ public class RenderSpaceSky extends RenderPlanetarySky {
 				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-				GlStateManager.color(0.5f,0.5f,1, 0.08f);
+				GlStateManager.color(atmColor[0], atmColor[1], atmColor[2], 0.08f);
 
 
 				for(int i = 0; i < 5 ; i++) {

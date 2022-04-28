@@ -140,14 +140,13 @@ import java.util.*;
 import java.util.Map.Entry;
 
 
-@Mod(modid="advancedrocketry", name="Advanced Rocketry", version="@MAJOR@.@MINOR@.@REVIS@.@BUILD@", dependencies="required-after:libvulpes@[%LIBVULPESVERSION%,)")
+@Mod(modid="advancedrocketry")
 public class AdvancedRocketry {
-
 
 	@SidedProxy(clientSide="zmaster587.advancedRocketry.client.ClientProxy", serverSide="zmaster587.advancedRocketry.common.CommonProxy")
 	public static CommonProxy proxy;
 
-	public final static String version = "@MAJOR@.@MINOR@.@REVIS@@BUILD@";
+	public static String version;
 
 	@Instance(value = Constants.modId)
 	public static AdvancedRocketry instance;
@@ -282,6 +281,8 @@ public class AdvancedRocketry {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		version = event.getModMetadata().version;
+
 		//Init API
 		DimensionManager.planetWorldProvider = WorldProviderPlanet.class;
 		AdvancedRocketryAPI.atomsphereSealHandler = SealableBlockHandler.INSTANCE;
@@ -504,7 +505,7 @@ public class AdvancedRocketry {
 		//Suit Component Registration
 		AdvancedRocketryItems.itemJetpack = new ItemJetpack().setCreativeTab(tabAdvRocketry).setUnlocalizedName("jetPack");
 		AdvancedRocketryItems.itemPressureTank = new ItemPressureTank(4, (int)(1000 * ARConfiguration.getCurrentConfig().suitTankCapacity)).setCreativeTab(tabAdvRocketry).setUnlocalizedName("advancedrocketry:pressureTank");
-		AdvancedRocketryItems.itemUpgrade = new ItemUpgrade(5).setCreativeTab(tabAdvRocketry).setUnlocalizedName("advancedrocketry:itemUpgrade");
+		AdvancedRocketryItems.itemUpgrade = new ItemUpgrade(6).setCreativeTab(tabAdvRocketry).setUnlocalizedName("advancedrocketry:itemUpgrade");
 		AdvancedRocketryItems.itemAtmAnalyser = new ItemAtmosphereAnalzer().setCreativeTab(tabAdvRocketry).setUnlocalizedName("atmAnalyser");
 		AdvancedRocketryItems.itemBeaconFinder = new ItemBeaconFinder().setCreativeTab(tabAdvRocketry).setUnlocalizedName("beaconFinder");
 
@@ -775,7 +776,7 @@ public class AdvancedRocketry {
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockLens.setRegistryName("blockLens"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockSolarPanel.setRegistryName("solarPanel"));
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockSolarArrayPanel.setRegistryName("solararraypanel"));
-		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockQuartzCrucible.setRegistryName("quartzcrucible"));
+		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockQuartzCrucible.setRegistryName("quartzcrucible"), null, false);
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockSawBlade.setRegistryName("sawBlade"));
 		//Singleblock machines
 		LibVulpesBlocks.registerBlock(AdvancedRocketryBlocks.blockPlatePress.setRegistryName("platepress"));

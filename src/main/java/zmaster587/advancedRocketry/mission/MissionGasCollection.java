@@ -9,6 +9,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.IInfrastructure;
@@ -42,14 +43,10 @@ public class MissionGasCollection extends MissionResourceCollection {
 	public void onMissionComplete() {
 
 		if((int)rocketStats.getStatTag("intakePower") > 0 && gasFluid != null) {
-			int amountOfGas = Integer.MAX_VALUE;
 			Fluid type = gasFluid;//FluidRegistry.getFluid("hydrogen");
 			//Fill gas tanks
 			for(TileEntity tile : this.rocketStorage.getFluidTiles()) {
-				amountOfGas -= ((IFluidHandler)tile).fill(new FluidStack(type, amountOfGas), true);
-
-				if(amountOfGas == 0)
-					break;
+				tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(new FluidStack(type, 64000), true);
 			}
 		}
 

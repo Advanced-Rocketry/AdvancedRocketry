@@ -56,9 +56,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 
 	//TODO: possibly optimize with GL lists
 	@Override
-	public void doRender(@Nonnull Entity entity, double x,
-			double y, double z, float f1,
-			float f2) {
+	public void doRender(@Nonnull Entity entity, double x, double y, double z, float f1, float f2) {
 
 		StorageChunk storage  = ((EntityRocket)entity).storage;
 
@@ -73,12 +71,9 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 		float halfy = storage.getSizeY()/2f;
 		float halfz = storage.getSizeZ()/2f;
 
-		/*if(entity.getPassengers().contains(Minecraft.getMinecraft().player)) {
-			float angle = (float)(((EntityRocket)entity).getRCSRotateProgress()*0.9f*Math.PI/180f);
-			y = ((EntityRocket)entity).stats.getSeatY();
-			y= (0.5-((EntityRocket)entity).stats.getSeatY())*MathHelper.cos(angle) + (0)*MathHelper.sin(angle);
-			//y = +0.5 -((EntityRocket)entity).stats.getSeatY();
-		}*/
+		if(Minecraft.getMinecraft().player != null && entity.getPassengers().contains(Minecraft.getMinecraft().player)) {
+			y = -((EntityRocket)entity).stats.getSeatY();
+		}
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)x, (float)y, (float)z);
