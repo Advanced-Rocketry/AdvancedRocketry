@@ -42,9 +42,9 @@ fun getDate(): String {
     return format.format(Date())
 }
 
-version = "$mcVersion-$modVersion-$buildNumber"
+version = "$modVersion-$buildNumber"
 
-println("$archiveBase v$version")
+println("$archiveBase v$mcVersion-$version")
 
 //sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 tasks.compileJava {
@@ -225,7 +225,7 @@ tasks.build {
 
 val makeChangelog by tasks.creating(GitChangelogTask::class.java) {
     file = file("changelog.html")
-    untaggedName = "Current release ${project.version}"
+    untaggedName = "Current release ${mcVersion}-${project.version}"
 
     //Get the last commit from the cache or config if no cache exists
     val lastHashFile = file("lasthash.txt")
