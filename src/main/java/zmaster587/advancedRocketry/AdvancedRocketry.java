@@ -1129,6 +1129,9 @@ public class AdvancedRocketry {
 	public void serverStarting(FMLServerStartingEvent event) {
 		event.registerServerCommand(new WorldCommand());
 
+		//Regenerate Chemical Reactor armor recipes
+		TileChemicalReactor.reloadRecipes();
+
 		
 		//Open ore files
 
