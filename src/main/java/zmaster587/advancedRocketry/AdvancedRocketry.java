@@ -1130,7 +1130,7 @@ public class AdvancedRocketry {
 		event.registerServerCommand(new WorldCommand());
 
 		//Regenerate Chemical Reactor armor recipes
-		TileChemicalReactor.reloadRecipes();
+		TileChemicalReactor.reloadRecipesSpecial();
 
 		
 		//Open ore files
