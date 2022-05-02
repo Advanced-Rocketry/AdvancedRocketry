@@ -270,14 +270,14 @@ public class WorldCommand implements ICommand {
 			AdvancedRocketry.machineRecipes.createAutoGennedRecipes(AdvancedRocketry.modProducts);
 			AdvancedRocketry.machineRecipes.registerXMLRecipes();
 
-			sender.sendMessage(new TextComponentString("Recipes Reloaded"));
+			sender.sendMessage(new TextComponentString("Recipes reloaded"));
 
 			CompatibilityMgr.reloadRecipes();
 		} catch (Exception e) {
-			sender.sendMessage(new TextComponentString("Serious error has occured!  Possible recipe corruption"));
+			e.printStackTrace();
+			sender.sendMessage(new TextComponentString("Serious error has occurred! Possible recipe corruption"));
 			sender.sendMessage(new TextComponentString("Please check logs!"));
-			sender.sendMessage(new TextComponentString("You may be able to recify this error by repairing the XML and/or"));
-			sender.sendMessage(new TextComponentString("restarting the game"));
+			sender.sendMessage(new TextComponentString("You may be able to rectify this error by repairing the XML and/or restarting the game"));
 		}
 	}
 	
@@ -285,7 +285,7 @@ public class WorldCommand implements ICommand {
 	{
 		if(cmdstring.length >= 2) {
 			if( cmdstring[1].equalsIgnoreCase("help")) {
-				sender.sendMessage(new TextComponentString(cmdstring[0] + " <amount> - sets your gravity to amount where 1 is earthlike"));
+				sender.sendMessage(new TextComponentString(cmdstring[0] + " <amount> - sets your gravity to amount where 1 is Earth-like"));
 				return;
 			}
 			if(sender instanceof Entity) {
