@@ -35,11 +35,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TileChemicalReactor extends TileMultiblockMachine {
-	public static final Object[][][] structure = { 
+	public static final Object[][][] structure = {
 		{{null, 'c',null},
 			{'L', 'I','L'}},
 
-			{{'P', LibVulpesBlocks.motors, 'P'}, 
+			{{'P', LibVulpesBlocks.motors, 'P'},
 				{'l', 'O', 'l'}},
 
 	};
@@ -125,12 +125,54 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 
 			for(ResourceLocation key : Item.REGISTRY.getKeys()) {
 				Item item = Item.REGISTRY.getObject(key);
-	
-				if(item instanceof ItemArmor && !(item instanceof ItemSpaceArmor)) {
-					ItemStack enchanted = new ItemStack(item);
-					enchanted.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
+				registerRecipe(recipesMachine, item);
+			}
 
-					//TODO: fix lore not appearing
+			//Create the internal special recipes list based on what recipes were added by the above generation
+			for(IRecipe recipe : recipes) {
+				if(!originalRecipes.contains(recipe)) {
+					recipesSpecial.add(recipe);
+				}
+			}
+		}
+	}
+
+	public static void reloadRecipesSpecial() {
+		//Chemical Reactor
+		if(ARConfiguration.getCurrentConfig().enableOxygen) {
+			RecipesMachine recipesMachine = RecipesMachine.getInstance();
+			List<IRecipe> recipes = recipesMachine.getRecipes(TileChemicalReactor.class);
+
+			//Forget any special recipes removed by another mod since generation
+			recipesSpecial.retainAll(recipes);
+
+			//Clear special recipes from the registry
+			recipes.removeAll(recipesSpecial);
+
+			List<IRecipe> originalRecipes = new LinkedList<>(recipes);
+
+			//Regenerate special recipes, but only those that weren't removed by another mod since first generation
+			for(IRecipe recipe : recipesSpecial) {
+				Item item = recipe.getOutput().get(0).getItem();
+				registerRecipe(recipesMachine, item);
+			}
+
+			//Recreate the internal special recipes list based on what recipes were added by the above generation
+			recipesSpecial.clear();
+			for(IRecipe recipe : recipes) {
+				if(!originalRecipes.contains(recipe)) {
+					recipesSpecial.add(recipe);
+				}
+			}
+		}
+	}
+
+	public static void registerRecipe(RecipesMachine recipesMachine, Item item) {
+		if(item instanceof ItemArmor && !(item instanceof ItemSpaceArmor)) {
+			ItemStack enchanted = new ItemStack(item);
+			enchanted.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
+
+			//TODO: fix lore not appearing
 					/*NBTTagCompound tag = enchanted.getTagCompound();
 					if(tag == null) {
 						enchanted.setTagCompound(tag = new NBTTagCompound());
@@ -153,30 +195,12 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 							loreTag.appendTag(new NBTTagString("§eThis recipe adds the Airtight Seal enchantment"));
 						}
 					}*/
-	
-					if(((ItemArmor)item).armorType == EntityEquipmentSlot.CHEST)
-						recipesMachine.addRecipe(TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack("sheetTitaniumAluminide", 4), new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3));
-					else
-						recipesMachine.addRecipe(TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack("sheetTitaniumAluminide", 4));
-				}
-			}
 
-			for(IRecipe recipe : recipes) {
-				if(!originalRecipes.contains(recipe)) {
-					recipesSpecial.add(recipe);
-				}
-			}
+			if(((ItemArmor)item).armorType == EntityEquipmentSlot.CHEST)
+				recipesMachine.addRecipe(TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack("sheetTitaniumAluminide", 4), new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3));
+			else
+				recipesMachine.addRecipe(TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack("sheetTitaniumAluminide", 4));
 		}
-	}
-
-	public static void clearRecipesSpecial() {
-		RecipesMachine.getInstance().getRecipes(TileChemicalReactor.class).removeAll(recipesSpecial);
-		recipesSpecial.clear();
-	}
-
-	public static void reloadRecipesSpecial() {
-		clearRecipesSpecial();
-		new TileChemicalReactor().registerRecipes();
 	}
 
 	@Override
