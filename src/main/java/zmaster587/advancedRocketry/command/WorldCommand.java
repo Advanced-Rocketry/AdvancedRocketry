@@ -487,6 +487,7 @@ public class WorldCommand implements ICommand {
 			} catch(NumberFormatException e) {
 				e.printStackTrace();
 				sender.sendMessage(new TextComponentString("Failed to parse integer " + cmdstring[2]));
+				return;
 			}
 		}
 
@@ -498,7 +499,6 @@ public class WorldCommand implements ICommand {
 				if(!DimensionManager.getInstance().isDimensionCreated(starId)) {
 					sender.sendMessage(new TextComponentString("Invalid planet ID"));
 					sender.sendMessage(new TextComponentString(cmdstring[0] + " " + cmdstring[1] + "[planetId] [moon] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
-
 					return;
 				}
 			}
