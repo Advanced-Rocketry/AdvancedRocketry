@@ -263,7 +263,7 @@ curseforge {
         changelog = file("changelog.html")
         changelogType = "html"
         // Why is it hardcoded to beta tho?..
-        releaseType = "beta"
+        releaseType = "release"
         addGameVersion(mcVersion)
         mainArtifact(tasks.jar.get(), closureOf<CurseArtifact> {
             displayName = "AdvancedRocketry ${ project.version } build $buildNumber for $mcVersion"
@@ -291,7 +291,7 @@ publishing {
         register("mavenJava", MavenPublication::class) {
             //from(components["java"])
 
-            //artifact(tasks.jar.get())
+            artifact(tasks.jar.get())
             artifact(deobfJar.get())
             artifact(makeChangelog.file)
         }
