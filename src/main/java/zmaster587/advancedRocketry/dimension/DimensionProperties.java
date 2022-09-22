@@ -189,7 +189,7 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		PlanetIcons(ResourceLocation resource, ResourceLocation leo) {
 			this.resource = resource;
 
-			this.resourceLEO = atmosphereLEO;
+			this.resourceLEO = leo;
 		}
 
 		public ResourceLocation getResource() {
@@ -1129,14 +1129,14 @@ public class DimensionProperties implements Cloneable, IDimensionProperties {
 		else if(Temps.getTempFromValue(averageTemperature).hotterThan(Temps.FRIGID)) {
 
 			for (Biome biome : Biome.REGISTRY) {
-				if (biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
+				if (biome != null && BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
 				}
 			}
 		}
 		else {
 			for (Biome biome : Biome.REGISTRY) {
-				if (biome != null && !BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
+				if (biome != null && BiomeDictionary.getTypes(biome).contains(BiomeDictionary.Type.COLD) && !isBiomeblackListed(biome)) {
 					viableBiomes.add(biome);
 				}
 			}
