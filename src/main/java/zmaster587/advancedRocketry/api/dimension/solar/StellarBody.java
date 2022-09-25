@@ -190,9 +190,8 @@ public class StellarBody {
 		else {
 			color[1] = temperature - 60;
 			color[1] = 288f * (float)Math.pow(color[1], -0.07551);
-
+			color[1] = MathHelper.clamp(color[1]/255f, 0f, 1f);
 		}
-		color[1] = MathHelper.clamp(color[1]/255f, 0f, 1f);
 
 
 		//Calculate Blue
