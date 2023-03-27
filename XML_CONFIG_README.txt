@@ -268,6 +268,7 @@ and modded biome ids.  If this tag is not included then the planet will automati
 atmosphere density, gravitationalMultiplier, and distance from the sun.
 
 A list of vanilla biomes can be found at http://minecraft.gamepedia.com/Biome
+Also can use the command:"/advancedRocketry planet list" to create a dumplist of all biomes from vanilla and installed mods into the instance folder
 
 Example usage; Planet will generate only ocean and ice plains
 <galaxy>
