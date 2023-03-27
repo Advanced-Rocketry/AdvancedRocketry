@@ -225,7 +225,7 @@ Example usage; specifes a planet to start exactly opposite the sun from Earth
 
 ------------------------------------------------------------------------------------------------------------------------------
 
-The "orbitalTheta" tag specifes the angle of the plane on which the planet rotates around the star or it's host planet, 90 will cause the planet or sun to rise and set in the north and south (the planet would orbit such that it would pass over both poles) whereas 0 with be the normal procession (like orbit over the equator)
+The "orbitalPhi" tag specifes the angle of the plane on which the planet rotates around the star or it's host planet, 90 will cause the planet or sun to rise and set in the north and south (the planet would orbit such that it would pass over both poles) whereas 0 with be the normal procession (like orbit over the equator)
 
 Max: 360
 Default: 0
@@ -251,11 +251,11 @@ Max: 2^31 - 1 = 2,147,483,647 (java has no unsigned int...)
 Default: 24000
 Min: 1
 
-Example usage; specifes a planet to start exactly opposite the sun from Earth
+Example usage; specifies a planet named Beebop to have a 10 minute day/night cycle
 <galaxy>
 <star name="Sol" temp="100" x="0" y="0" numPlanets="1">
     <planet name="Earth">
-        <orbitalTheta>180</orbitalTheta>
+        <rotationalPeriod>12000</rotationalPeriod>
         ...
     </planet>
 </star>
