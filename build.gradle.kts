@@ -10,8 +10,8 @@ import java.util.TimeZone
 
 plugins {
     idea
-    id("net.minecraftforge.gradle") version "5.1.+"
-    id("wtf.gofancy.fancygradle") version "1.1.+"
+    id("net.minecraftforge.gradle") version "6.+"
+    id("wtf.gofancy.fancygradle") version "1.+"
     id("org.ajoberstar.grgit") version "4.1.1"
     id("com.matthewprenger.cursegradle") version "1.4.0"
     id("se.bjurr.gitchangelog.git-changelog-gradle-plugin") version "1.72.0"
@@ -45,6 +45,12 @@ fun getDate(): String {
 version = "$mcVersion-$modVersion-$buildNumber"
 
 println("$archiveBase v$version")
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+}
 
 //sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 tasks.compileJava {
@@ -121,7 +127,7 @@ repositories {
     }
     maven {
         name = "Galacticraft"
-        url = uri("https://maven.galacticraft.dev")
+        url = uri("https://maven.galacticraft.dev/repository/legacy-releases/")
     }
     maven {
         name = "LibVulpes"
@@ -139,10 +145,7 @@ dependencies {
     compileOnly("net.industrial-craft:industrialcraft-2:$icVersion:dev")
     //implementation("zmaster587.libVulpes:LibVulpes:$mcVersion-$libVulpesVersion-$libVulpesBuildNum-deobf")
 
-    compileOnly("micdoodle8.mods:galacticraft-api:$gcVersion")
-    compileOnly("micdoodle8.mods:galacticraft-core:$gcVersion")
-    compileOnly("micdoodle8.mods:galacticraft-planets:$gcVersion")
-    compileOnly("micdoodle8.mods:micdoodlecore:$gcVersion")
+    compileOnly(fg.deobf("dev.galacticraft:galacticraft-legacy:$gcVersion"))
 
     compileOnly(fg.deobf("mezz.jei:jei_${mcVersion}:${jeiVersion}:api"))
     runtimeOnly(fg.deobf("mezz.jei:jei_${mcVersion}:${jeiVersion}"))
@@ -216,7 +219,7 @@ tasks.withType(Jar::class) {
 
 val deobfJar by tasks.registering(Jar::class) {
     from(sourceSets["main"].output)
-    classifier = "deobf"
+    archiveClassifier.set("deobf")
 }
 
 tasks.build {
