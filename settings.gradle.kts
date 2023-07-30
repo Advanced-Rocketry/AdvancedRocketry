@@ -1,12 +1,4 @@
 pluginManagement {
-    resolutionStrategy {
-        eachPlugin {
-            if (requested.id.id == "net.minecraftforge.gradle") {
-                useModule("${requested.id}:ForgeGradle:${requested.version}")
-            }
-        }
-    }
-
     repositories {
         gradlePluginPortal()
         maven {
@@ -15,7 +7,7 @@ pluginManagement {
         }
         maven {
             name = "FancyGradle"
-            url = uri("https://gitlab.com/api/v4/projects/26758973/packages/maven")
+            url = uri("https://maven.gofancy.wtf/releases")
         }
     }
 }
