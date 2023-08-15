@@ -57,43 +57,45 @@ public class WorldCommand implements ICommand {
 
 	private List<String> aliases;
 	public WorldCommand() {
+
 		aliases = new ArrayList<>();
-		aliases.add("advancedRocketry");
-		aliases.add("advRocketry");
+		aliases.add("advancedrocketry");
+		aliases.add("advrocketry");
+		aliases.add("ar");
 	}
 
 	@Override
 	@Nonnull
 	public String getName() {
-		return "advancedRocketry";
+		return "advancedrocketry";
 	}
 
-	@Override
 	@Nonnull
+	@Override
 	public String getUsage(@Nullable ICommandSender sender) {
-		return "advancedRocketry help";
+		return "advancedrocketry help";
 	}
 
-	@Override
 	@Nonnull
+	@Override
 	public List<String> getAliases() {
 		return aliases;
 	}
 
 	private void commandAddTorch(ICommandSender sender, String[] cmdstring) {
-		
+
 		if(cmdstring.length >= 2 && cmdstring[1].equalsIgnoreCase("help"))
 		{
 			sender.sendMessage(new TextComponentString( aliases.get(0) + " " + cmdstring[0] +  " - Adds the currently held block to the list of objects that drop when there's no atmosphere"));
 			return;
 		}
-		
+
 		Entity player = sender.getCommandSenderEntity();
 		if(!(player instanceof EntityPlayer)) {
 			sender.sendMessage(new TextComponentString("Not a player entity"));
 			return;
 		}
-		
+
 		Block block = Block.getBlockFromItem(((EntityPlayer)player).getHeldItemMainhand().getItem());
 		if (block != Blocks.AIR)
 		{
@@ -101,29 +103,29 @@ public class WorldCommand implements ICommand {
 				sender.sendMessage(new TextComponentString(block.getLocalizedName() + " is already in the torch list"));
 			else
 			{
-				
+
 				ARConfiguration.getCurrentConfig().addTorchblock(block);
-				
+
 				sender.sendMessage(new TextComponentString(block.getLocalizedName() + " added to the torch list"));
 			}
 		}
 		else
 			sender.sendMessage(new TextComponentString("Held block cannot be added to torch list"));
 	}
-	
+
 	private void commandAddSolidBlockOverride(ICommandSender sender, String[] cmdstring) {
 		if(cmdstring.length >= 2 && cmdstring[1].equalsIgnoreCase("help"))
 		{
 			sender.sendMessage(new TextComponentString( aliases.get(0) + " " + cmdstring[0] +  " - Adds the currently held block to the list of blocks that can hold a seal"));
 			return;
 		}
-		
+
 		Entity player = sender.getCommandSenderEntity();
 		if(!(player instanceof EntityPlayer)) {
 			sender.sendMessage(new TextComponentString("Not a player entity"));
 			return;
 		}
-		
+
 		Block block = Block.getBlockFromItem(((EntityPlayer)player).getHeldItemMainhand().getItem());
 		if (block != Blocks.AIR)
 		{
@@ -131,25 +133,25 @@ public class WorldCommand implements ICommand {
 				sender.sendMessage(new TextComponentString(block.getLocalizedName() + " is already in the sealed blocks list"));
 			else
 			{
-				
+
 				ARConfiguration.getCurrentConfig().addSealedBlock(block);
-				
+
 				sender.sendMessage(new TextComponentString(block.getLocalizedName() + " added to the sealed block list"));
 			}
 		}
 		else
 			sender.sendMessage(new TextComponentString("Held block cannot be added to sealed block list"));
 	}
-	
+
 	private void commandGiveStation(ICommandSender sender, String[] cmdstring)
 	{
 		if(cmdstring.length < 2 || cmdstring[1].equalsIgnoreCase("help"))
 		{
 			sender.sendMessage(new TextComponentString(aliases.get(0) + " " + cmdstring[0] +  " - Gives the player playerName (if supplied) a spacestation with ID stationID"));
-			sender.sendMessage(new TextComponentString("Usage: /advRocketry " + cmdstring[0] + " <stationId> [PlayerName]"));
+			sender.sendMessage(new TextComponentString("Usage: /advrocketry " + cmdstring[0] + " <stationId> [PlayerName]"));
 			return;
 		}
-		
+
 		EntityPlayer player = null;
 		if(cmdstring.length >= 3) {
 			player = getPlayerByName(cmdstring[2]);
@@ -160,7 +162,7 @@ public class WorldCommand implements ICommand {
 		}
 		else if(sender.getCommandSenderEntity() != null)
 			player = ((EntityPlayer)sender);
-	
+
 		if(player != null) {
 			int stationId = Integer.parseInt(cmdstring[1]);
 			ItemStack stack = new ItemStack(AdvancedRocketryItems.itemSpaceStationChip);
@@ -168,14 +170,14 @@ public class WorldCommand implements ICommand {
 			player.inventory.addItemStackToInventory(stack);
 		}
 		else
-			sender.sendMessage(new TextComponentString("Usage: /advRocketry " + cmdstring[0] + " <stationId> [PlayerName]"));
+			sender.sendMessage(new TextComponentString("Usage: /advrocketry " + cmdstring[0] + " <stationId> [PlayerName]"));
 	}
-	
+
 	private void commandFillData(ICommandSender sender, String[] cmdstring)
 	{
 		if(cmdstring.length < 2)
 			return;
-		
+
 		ItemStack stack;
 		if(sender.getCommandSenderEntity() != null ) {
 			stack = ((EntityPlayer)sender.getCommandSenderEntity()).getHeldItem(EnumHand.MAIN_HAND);
@@ -192,25 +194,26 @@ public class WorldCommand implements ICommand {
 				int dataAmount = item.getMaxData(stack.getItemDamage());
 				DataType dataType;
 
-				try {
-					dataType = DataType.valueOf(cmdstring[1].toUpperCase(Locale.ENGLISH));
-				} catch (IllegalArgumentException e) {
-					sender.sendMessage(new TextComponentString("Did you mean: /advRocketry" + cmdstring[0] + " [datatype] [amountFill]"));
-					sender.sendMessage(new TextComponentString("Not a valid datatype"));
-					StringBuilder value = new StringBuilder();
-					for(DataType data : DataType.values())
-						if(!data.name().equals("UNDEFINED"))
-							value.append(data.name().toLowerCase()).append(", ");
+					try {
+						dataType = DataType.valueOf(cmdstring[1].toUpperCase(Locale.ENGLISH));
+					} catch (IllegalArgumentException e) {
+						sender.sendMessage(new TextComponentString("Did you mean: /advrocketry" + cmdstring[0] + " [datatype] [amountFill]"));
+						sender.sendMessage(new TextComponentString("Not a valid datatype"));
+						StringBuilder value = new StringBuilder();
+						for(DataType data : DataType.values()) {
+							if (!data.name().equals("UNDEFINED")) {
+								value.append(data.name().toLowerCase()).append(", ");
+							}
+						}
 
-					sender.sendMessage(new TextComponentString("Try " + value));
-
-					return;
+						sender.sendMessage(new TextComponentString("Try " + value));
+						return;
 				}
 				if(cmdstring.length >= 3)
 					try {
 						dataAmount = Integer.parseInt(cmdstring[2]);
 					} catch(NumberFormatException e) {
-						sender.sendMessage(new TextComponentString("Did you mean: /advRocketry" + cmdstring[0] + " [datatype] [amountFill]"));
+						sender.sendMessage(new TextComponentString("Did you mean: /advrocketry" + cmdstring[0] + " [datatype] [amountFill]"));
 						sender.sendMessage(new TextComponentString("Not a valid number"));
 						return;
 					}
@@ -226,12 +229,14 @@ public class WorldCommand implements ICommand {
 				try {
 					dataType = DataType.valueOf(cmdstring[1].toUpperCase(Locale.ENGLISH));
 				} catch (IllegalArgumentException e) {
-					sender.sendMessage(new TextComponentString("Did you mean: /advRocketry" + cmdstring[0] + " [datatype] [amountFill]"));
+					sender.sendMessage(new TextComponentString("Did you mean: /advrocketry" + cmdstring[0] + " [datatype] [amountFill]"));
 					sender.sendMessage(new TextComponentString("Not a valid datatype"));
 					StringBuilder value = new StringBuilder();
-					for(DataType data : DataType.values())
-						if(!data.name().equals("UNDEFINED"))
+					for(DataType data : DataType.values()) {
+						if (!data.name().equals("UNDEFINED")) {
 							value.append(data.name().toLowerCase()).append(", ");
+						}
+					}
 
 					sender.sendMessage(new TextComponentString("Try " + value));
 					return;
@@ -240,7 +245,7 @@ public class WorldCommand implements ICommand {
 					try {
 						dataAmount = Integer.parseInt(cmdstring[2]);
 					} catch(NumberFormatException e) {
-						sender.sendMessage(new TextComponentString("Did you mean: /advRocketry" + cmdstring[0] + " [datatype] [amountFill]"));
+						sender.sendMessage(new TextComponentString("Did you mean: /advrocketry" + cmdstring[0] + " [datatype] [amountFill]"));
 						sender.sendMessage(new TextComponentString("Not a valid number"));
 						return;
 					}
@@ -250,20 +255,20 @@ public class WorldCommand implements ICommand {
 				sender.sendMessage(new TextComponentString("Data filled!"));
 			}
 			else
-				sender.sendMessage(new TextComponentString("Not Holding data item"));
+				sender.sendMessage(new TextComponentString("Not holding data item"));
 		}
 		else
 			sender.sendMessage(new TextComponentString("Ghosts don't have items!"));
 	}
-	
-	
+
+
 	private void commandReloadRecipes(ICommandSender sender, String[] cmdstring)
 	{
 		if(cmdstring.length >= 2 && cmdstring[1].equalsIgnoreCase("help")) {
 			sender.sendMessage(new TextComponentString(aliases.get(0) + " " + cmdstring[0] + " - Reloads recipes from the XML files in the config folder"));
 			return;
 		}
-		
+
 		try {
 			AdvancedRocketry.machineRecipes.clearAllMachineRecipes();
 			AdvancedRocketry.machineRecipes.registerAllMachineRecipes();
@@ -280,7 +285,7 @@ public class WorldCommand implements ICommand {
 			sender.sendMessage(new TextComponentString("restarting the game"));
 		}
 	}
-	
+
 	private void commandSetGravity(ICommandSender sender, String[] cmdstring)
 	{
 		if(cmdstring.length >= 2) {
@@ -314,10 +319,10 @@ public class WorldCommand implements ICommand {
 		else {
 			sender.sendMessage(new TextComponentString(aliases.get(0) + " " + cmdstring[0] + " gravity_multiplier [playerName]"));
 			sender.sendMessage(new TextComponentString(""));
-			sender.sendMessage(new TextComponentString("use 0 as the gravity_multiplier to allow regular planet gravity to take over"));
+			sender.sendMessage(new TextComponentString("Use 0 as the gravity_multiplier to allow regular planet gravity to take over"));
 		}
 	}
-	
+
 	private void commandGoto(ICommandSender sender, String[] cmdstring)
 	{
 		EntityPlayer player;
@@ -363,16 +368,16 @@ public class WorldCommand implements ICommand {
 				sender.sendMessage(new TextComponentString(cmdstring[0] + " <dimId>"));
 				sender.sendMessage(new TextComponentString(cmdstring[0] + "station <station ID>"));
 			}
-		}					
-		else 
+		}
+		else
 			sender.sendMessage(new TextComponentString("Must be a player to use this command"));
 	}
-	
+
 	private void commandFetch(ICommandSender sender, String[] cmdstring)
 	{
 		if(cmdstring.length < 2)
 			return;
-		
+
 		EntityPlayer me = (EntityPlayer) sender.getCommandSenderEntity();
 		EntityPlayer player = getPlayerByName(cmdstring[1]);
 		System.out.println(cmdstring[1] + "   " + sender.getCommandSenderEntity());
@@ -385,15 +390,15 @@ public class WorldCommand implements ICommand {
 			player.setPosition(me.posX, me.posY, me.posZ);
 		}
 	}
-	
+
 	private void commandPlanetList(ICommandSender sender, String[] cmdstring)
 	{
 		sender.sendMessage(new TextComponentString("Dimensions:"));
 		for(int i : DimensionManager.getInstance().getRegisteredDimensions()) {
-			sender.sendMessage(new TextComponentString("DIM" + i + ":  " + DimensionManager.getInstance().getDimensionProperties(i).getName())); 
+			sender.sendMessage(new TextComponentString("DIM" + i + ":  " + DimensionManager.getInstance().getDimensionProperties(i).getName()));
 		}
 	}
-	
+
 	private void commandPlanetHelp(ICommandSender sender, String[] cmdstring)
 	{
 		sender.sendMessage(new TextComponentString("Planet:"));
@@ -404,7 +409,7 @@ public class WorldCommand implements ICommand {
 		sender.sendMessage(new TextComponentString("planet set [property]"));
 		sender.sendMessage(new TextComponentString("planet get [property]"));
 	}
-	
+
 	private void commandPlanetReset(ICommandSender sender, String[] cmdstring)
 	{
 		int dimId;
@@ -429,7 +434,7 @@ public class WorldCommand implements ICommand {
 			}
 		}
 	}
-	
+
 	private void commandPlanetDelete(ICommandSender sender, String[] cmdstring)
 	{
 		if(cmdstring.length == 3) {
@@ -460,14 +465,14 @@ public class WorldCommand implements ICommand {
 				}
 
 			} catch(NumberFormatException exception) {
-				sender.sendMessage(new TextComponentString("Invalid Argument"));
+				sender.sendMessage(new TextComponentString("Invalid argument"));
 			}
 		}
 		else {
 			sender.sendMessage(new TextComponentString(cmdstring[0] + " " + cmdstring[1] + " " + cmdstring[2] + " <dimid>"));
 		}
 	}
-	
+
 	private void commandPlanetGenerate(ICommandSender sender, String[] cmdstring)
 	{
 		int gasOffset = 0;
@@ -479,9 +484,10 @@ public class WorldCommand implements ICommand {
 			try {
 				starId = Integer.parseInt(cmdstring[2]);
 				gasOffset++;
-
 			} catch(NumberFormatException e) {
-
+				e.printStackTrace();
+				sender.sendMessage(new TextComponentString("Failed to parse integer " + cmdstring[2]));
+				return;
 			}
 		}
 
@@ -493,7 +499,6 @@ public class WorldCommand implements ICommand {
 				if(!DimensionManager.getInstance().isDimensionCreated(starId)) {
 					sender.sendMessage(new TextComponentString("Invalid planet ID"));
 					sender.sendMessage(new TextComponentString(cmdstring[0] + " " + cmdstring[1] + "[planetId] [moon] [gas] <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
-
 					return;
 				}
 			}
@@ -511,7 +516,7 @@ public class WorldCommand implements ICommand {
 		}
 
 		try {
-			//Advancedrocketry planet generate <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>
+			//advancedrocketry planet generate <name> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>
 			if(cmdstring.length == 6 + gasOffset) {
 
 				int planetId = starId;
@@ -527,14 +532,14 @@ public class WorldCommand implements ICommand {
 				if(properties == null)
 					sender.sendMessage(new TextComponentString("Dimension: " + cmdstring[2 + gasOffset] + " failed to generate!"));
 				else
-					sender.sendMessage(new TextComponentString("Dimension: " + cmdstring[2 + gasOffset] + " Generated!"));
+					sender.sendMessage(new TextComponentString("Dimension: " + cmdstring[2 + gasOffset] + " generated!"));
 
 				if(moon) {
 					properties.setParentPlanet(DimensionManager.getInstance().getDimensionProperties(planetId));
 					DimensionManager.getInstance().getStar(starId).removePlanet(properties);
 				}
 
-				sender.sendMessage(new TextComponentString("Dimension Generated!"));
+				sender.sendMessage(new TextComponentString("Dimension generated!"));
 			}
 			else if(cmdstring.length == 9  + gasOffset) {
 
@@ -552,7 +557,7 @@ public class WorldCommand implements ICommand {
 				if(properties == null)
 					sender.sendMessage(new TextComponentString("Dimension: " + cmdstring[2 + gasOffset] + " failed to generate!"));
 				else
-					sender.sendMessage(new TextComponentString("Dimension: " + cmdstring[2 + gasOffset] + " Generated!"));
+					sender.sendMessage(new TextComponentString("Dimension: " + cmdstring[2 + gasOffset] + " generated!"));
 
 				if(moon) {
 					properties.setParentPlanet(DimensionManager.getInstance().getDimensionProperties(planetId));
@@ -570,23 +575,23 @@ public class WorldCommand implements ICommand {
 			sender.sendMessage(new TextComponentString(cmdstring[0] + " " + cmdstring[1] + " [starId] [moon] [gas] <name> <atmosphere base value> <distance base value> <gravity base value> <atmosphereRandomness> <distanceRandomness> <gravityRandomness>"));
 		}
 	}
-	
+
 	private void commandPlanetSet(ICommandSender sender, String[] cmdstring)
 	{
 		if(cmdstring.length < 3)
 			return;
-		
+
 		int dimId;
 		if( !DimensionManager.getInstance().isDimensionCreated((dimId = sender.getEntityWorld().provider.getDimension())))
 			return;
 
 		int commandOffset = 0;
-		
+
 		if(cmdstring.length > 3) {
 			try {
 				dimId = Integer.parseInt(cmdstring[2]);
 				commandOffset = 1;
-			} 
+			}
 			catch (NumberFormatException e) {
 				//XXX: Ugh... ordering sucks, what properties does the dimension class have if you don't know what dim it is yet?
 				//sender.sendMessage(new TextComponentString("Invalid Property or Dimension"));
@@ -594,7 +599,7 @@ public class WorldCommand implements ICommand {
 		}
 
 		if(!DimensionManager.getInstance().isDimensionCreated(dimId)) {
-			sender.sendMessage(new TextComponentString("Invalid Dimensions"));
+			sender.sendMessage(new TextComponentString("Invalid dimensions"));
 			return;
 		}
 
@@ -648,7 +653,7 @@ public class WorldCommand implements ICommand {
 						field.set(properties, Integer.parseInt(cmdstring[3 + commandOffset]));
 					else if(Float.TYPE == field.getType())
 						field.set(properties, Float.parseFloat(cmdstring[3 + commandOffset]));
-					else if(Double.TYPE == field.getType()) 
+					else if(Double.TYPE == field.getType())
 						field.set(properties, Double.parseDouble(cmdstring[3 + commandOffset]));
 					else if(Boolean.TYPE == field.getType())
 						field.set(properties, Boolean.parseBoolean(cmdstring[3 + commandOffset]));
@@ -660,17 +665,17 @@ public class WorldCommand implements ICommand {
 			}
 			PacketHandler.sendToAll(new PacketDimInfo(dimId, properties));
 		} catch (NumberFormatException e) {
-			sender.sendMessage(new TextComponentString("Invalid Argument for parameter " + cmdstring[2 + commandOffset]));
+			sender.sendMessage(new TextComponentString("Invalid argument for parameter " + cmdstring[2 + commandOffset]));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void commandPlanetGet(ICommandSender sender, String[] cmdstring)
 	{
 		if (cmdstring.length < 3)
 			return;
-		
+
 		int dimId;
 		if( !DimensionManager.getInstance().isDimensionCreated((dimId = sender.getEntityWorld().provider.getDimension())))
 			return;
@@ -679,21 +684,21 @@ public class WorldCommand implements ICommand {
 			try {
 				dimId = Integer.parseInt(cmdstring[2]);
 				commandOffset = 1;
-			} 
+			}
 			catch (NumberFormatException e) {
-				sender.sendMessage(new TextComponentString("Invalid Dimensions"));
+				sender.sendMessage(new TextComponentString("Invalid dimensions"));
 			}
 		}
 
 		if(!DimensionManager.getInstance().isDimensionCreated(dimId)) {
-			sender.sendMessage(new TextComponentString("Invalid Dimensions"));
+			sender.sendMessage(new TextComponentString("Invalid dimensions"));
 			return;
 		}
 
 		DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(dimId);
 		if(cmdstring[2 + commandOffset].equalsIgnoreCase("atmosphereDensity")) {
 			sender.sendMessage(new TextComponentString(Integer.toString(properties.getAtmosphereDensity())));
-		} 
+		}
 		else {
 			try {
 				Field field = properties.getClass().getDeclaredField(cmdstring[2 + commandOffset]);
@@ -703,11 +708,11 @@ public class WorldCommand implements ICommand {
 			} catch (Exception e) {
 
 				e.printStackTrace();
-				sender.sendMessage(new TextComponentString("An error has occured, please check logs"));
+				sender.sendMessage(new TextComponentString("An error has occurred, please check logs"));
 			}
 		}
 	}
-	
+
 	private void commandStarGet(ICommandSender sender, String[] cmdstring)
 	{
 		try {
@@ -733,7 +738,7 @@ public class WorldCommand implements ICommand {
 			sender.sendMessage(new TextComponentString("Error: " + cmdstring[3] + " is not a valid star ID"));
 		}
 	}
-	
+
 	private void commandStarSet(ICommandSender sender, String[] cmdstring)
 	{
 		try {
@@ -765,36 +770,36 @@ public class WorldCommand implements ICommand {
 			sender.sendMessage(new TextComponentString("Error: " + cmdstring[3] + " is not a valid star ID"));
 		}
 	}
-	
+
 	private void commandBiomeDump(ICommandSender sender, String[] cmdstring)
 	{
-		
+
 		if(cmdstring.length >= 2 && cmdstring[1].compareToIgnoreCase("help") == 0)
 		{
 			sender.sendMessage(new TextComponentString("Developer command: Dumps biome info to BiomeDump.txt!"));
 			return;
 		}
-		
+
 		try {
 			File file = new File("./BiomeDump.txt");
 			if(!file.exists())
 				file.createNewFile();
 
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-			
+
 			writer.append("ID\tResource name\n");
 			for(ResourceLocation resource : Biome.REGISTRY.getKeys()) {
 				writer.append(String.valueOf(Biome.getIdForBiome(Biome.REGISTRY.getObject(resource)))).append("\t").append(resource.toString()).append("\n");
 			}
-			
+
 			writer.close();
-			sender.sendMessage(new TextComponentString("The File \"BiomeDump.txt\" has been written to the current directory"));
-		} 
+			sender.sendMessage(new TextComponentString("The file \"BiomeDump.txt\" has been written to the current directory"));
+		}
 		catch(Exception e) {
-			sender.sendMessage(new TextComponentString("An error has occured writing to the file"));
+			sender.sendMessage(new TextComponentString("An error has occurred writing to the file"));
 		}
 	}
-	
+
 	private void commandStarGenerate(ICommandSender sender, String[] cmdstring)
 	{
 		try {
@@ -811,7 +816,7 @@ public class WorldCommand implements ICommand {
 			if(star.getId() != -1) {
 				DimensionManager.getInstance().addStar(star);
 				PacketHandler.sendToAll(new PacketStellarInfo(star.getId(), star));
-				sender.sendMessage(new TextComponentString("star Added!"));
+				sender.sendMessage(new TextComponentString("Star added!"));
 			}
 			else
 				sender.sendMessage(new TextComponentString("Why can't I hold all these stars! (either you have an insane number of stars or something really broke!)"));
@@ -820,10 +825,10 @@ public class WorldCommand implements ICommand {
 			sender.sendMessage(new TextComponentString("star generate <name> <temp> <x> <y>"));
 		}
 	}
-	
+
 	private void commandBeginTest(ICommandSender sender, String[] cmdstring)
 	{
-		if(cmdstring.length >= 2 && cmdstring[1].compareToIgnoreCase("help") == 0)
+		if(cmdstring.length >= 2 && cmdstring[1].equalsIgnoreCase("help"))
 		{
 			sender.sendMessage(new TextComponentString("Developer command: Runs system tests, debug only!"));
 			return;
@@ -836,7 +841,7 @@ public class WorldCommand implements ICommand {
 			IngameTestOrchestrator.runTests(player.getEntityWorld(), player);
 		}
 	}
-	
+
 	private void commandPlanet(ICommandSender sender, String[] cmdstring)
 	{
 		if(cmdstring.length < 2)
@@ -844,8 +849,8 @@ public class WorldCommand implements ICommand {
 			commandPlanetHelp(sender, cmdstring);
 			return;
 		}
-		
-		switch(cmdstring[1])
+
+		switch(cmdstring[1].toLowerCase())
 		{
 		case "reset":
 			commandPlanetReset(sender, cmdstring);
@@ -870,7 +875,7 @@ public class WorldCommand implements ICommand {
 			commandPlanetHelp(sender, cmdstring);
 		}
 	}
-	
+
 	private void commandStar(ICommandSender sender, String[] cmdstring)
 	{
 		if(cmdstring.length > 1) {
@@ -897,17 +902,17 @@ public class WorldCommand implements ICommand {
 			}
 		}
 	}
-	
+
 	@Override
 	@ParametersAreNonnullByDefault
 	public void execute(MinecraftServer server, ICommandSender sender, String[] string) {
 
-		//advRocketry planet set <var value>
+		//advrocketry planet set <var value>
 		int opLevel = 2;
 		if(string.length == 0 || string[0].equalsIgnoreCase("help")) {
 			sender.sendMessage(new TextComponentString("Subcommands:"));
 			sender.sendMessage(new TextComponentString("planet"));
-			sender.sendMessage(new TextComponentString("filldata"));
+			sender.sendMessage(new TextComponentString("fillData"));
 			sender.sendMessage(new TextComponentString("goto"));
 			sender.sendMessage(new TextComponentString("star"));
 			sender.sendMessage(new TextComponentString("fetch"));
@@ -915,21 +920,23 @@ public class WorldCommand implements ICommand {
 			sender.sendMessage(new TextComponentString("reloadRecipes"));
 			sender.sendMessage(new TextComponentString("setGravity"));
 			sender.sendMessage(new TextComponentString("addTorch"));
-			sender.sendMessage(new TextComponentString("[Enter /advRocketry <subcommand> help for more info]"));
+			sender.sendMessage(new TextComponentString("[Enter /advrocketry <subcommand> help for more info]"));
+			//print help and return
+			return;
 		}
 		
-		switch(string[0])
+		switch(string[0].toLowerCase())
 		{
-		case "dumpBiomes":
+		case "dumpbiomes":
 			commandBiomeDump(sender, string);
 			break;
-		case "beginTest":
+		case "begintest":
 			commandBeginTest(sender, string);
 			break;
-		case "addTorch":
+		case "addtorch":
 			commandAddTorch(sender, string);
 			break;
-		case "addSolidBlockOverride":
+		case "addsolidblockoverride":
 			commandAddSolidBlockOverride(sender, string);
 			break;
 		case "givestation":
@@ -938,10 +945,10 @@ public class WorldCommand implements ICommand {
 		case "filldata":
 			commandFillData(sender, string);
 			break;
-		case "reloadRecipes":
+		case "reloadrecipes":
 			commandReloadRecipes(sender, string);
 			break;
-		case "setGravity":
+		case "setgravity":
 			commandSetGravity(sender, string);
 			break;
 		case "goto":
@@ -988,10 +995,10 @@ public class WorldCommand implements ICommand {
 			list.add("goto");
 			list.add("fetch");
 			list.add("star");
-			list.add("filldata");
+			list.add("fillData");
 			list.add("setGravity");
 			list.add("reloadRecipes");
-			list.add("givestation");
+			list.add("giveStation");
 			list.add("dumpBiomes");
 			list.add("addTorch");
 			list.add("addSolidBlockOverride");
