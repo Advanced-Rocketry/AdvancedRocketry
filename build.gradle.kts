@@ -42,9 +42,9 @@ fun getDate(): String {
     return format.format(Date())
 }
 
-version = "$mcVersion-$modVersion-$buildNumber"
+version = "$modVersion-$buildNumber"
 
-println("$archiveBase v$version")
+println("$archiveBase v$mcVersion-$version")
 
 java {
     toolchain {
@@ -203,7 +203,7 @@ val gitHash: String by lazy {
 
 // Name pattern: [archiveBaseName]-[archiveAppendix]-[archiveVersion]-[archiveClassifier].[archiveExtension]
 tasks.withType(Jar::class) {
-    //archiveAppendix.set(mcVersion)
+    archiveAppendix.set(mcVersion)
     manifest {
         attributes(
                 "Built-By" to System.getProperty("user.name"),
@@ -228,7 +228,7 @@ tasks.build {
 
 val makeChangelog by tasks.creating(GitChangelogTask::class.java) {
     file = file("changelog.html")
-    untaggedName = "Current release ${project.version}"
+    untaggedName = "Current release ${mcVersion}-${project.version}"
 
     //Get the last commit from the cache or config if no cache exists
     val lastHashFile = file("lasthash.txt")

@@ -1,13 +1,13 @@
 package zmaster587.advancedRocketry.tile.multiblock.machine;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -35,14 +35,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TileChemicalReactor extends TileMultiblockMachine {
-	public static final Object[][][] structure = { 
+	public static final Object[][][] structure = {
 		{{null, 'c',null},
 			{'L', 'I','L'}},
 
-			{{'P', LibVulpesBlocks.motors, 'P'}, 
+			{{'P', LibVulpesBlocks.motors, 'P'},
 				{'l', 'O', 'l'}},
 
 	};
+
+	private static List<IRecipe> recipesSpecial = new LinkedList<>();
 
 	@Override
 	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) { return true; }
@@ -51,48 +53,28 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 	//This includes recipe management etc
 	@Override
 	public void onInventoryUpdated() {
-		//If we are already processing something don't bother
 		IRecipe recipe;
-		boolean flag = false;
-		if(getOutputs() == null && (recipe = getRecipe(getMachineRecipeList())) != null && canProcessRecipe(recipe))
-		{
-			if(!recipe.getOutput().isEmpty()) {
-			NBTTagList list = recipe.getOutput().get(0).getEnchantmentTagList();
 
-			/*
-				for( int i = 0 ; i < list.tagCount(); i++ ) {
-					NBTTagCompound tag = (NBTTagCompound)list.get(i);
-					if(tag.getInteger("id") == Enchantment.getEnchantmentID(AdvancedRocketryAPI.enchantmentSpaceProtection) ) {
-
-						flag = true;
-						break;
-					}
-				}
-			 */
-				flag = true;
-
-			}
-		}
-
+		//If we are already processing something don't bother
 		//If airbreathing enchantment
-		if(flag && getOutputs() == null) {
-			if(enabled && (recipe = getRecipe(getMachineRecipeList())) != null && canProcessRecipe(recipe)) {
-				consumeItemsSpecial(recipe);
-				setOutputFluids(new LinkedList<>());
-				powerPerTick = (int)Math.ceil((getPowerMultiplierForRecipe(recipe)*recipe.getPower()));
-				completionTime = Math.max((int)(getTimeMultiplierForRecipe(recipe)*recipe.getTime()), 1);
-
-				
-
-				markDirty();
-				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
-
-				setMachineRunning(true); //turn on machine
-
-			}
-			else {
+		if(getOutputs() == null && (recipe = getRecipe(getMachineRecipeList())) != null && canProcessRecipe(recipe) && !recipe.getOutput().isEmpty()
+				&& EnchantmentHelper.getEnchantmentLevel(AdvancedRocketryAPI.enchantmentSpaceProtection, recipe.getOutput().get(0)) == 1) {
+			if(!enabled) {
 				setMachineRunning(false);
+				return;
 			}
+
+			consumeItemsSpecial(recipe);
+			setOutputFluids(new LinkedList<>());
+			powerPerTick = (int)Math.ceil((getPowerMultiplierForRecipe(recipe)*recipe.getPower()));
+			completionTime = Math.max((int)(getTimeMultiplierForRecipe(recipe)*recipe.getTime()), 1);
+
+
+
+			markDirty();
+			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
+
+			setMachineRunning(true); //turn on machine
 		}
 		else {
 			super.onInventoryUpdated();
@@ -109,12 +91,15 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 			for (IInventory hatch : itemInPorts) {
 				for (int i = 0; i < hatch.getSizeInventory(); i++) {
 					ItemStack stackInSlot = hatch.getStackInSlot(i);
-					for (ItemStack stack : ingredient) {
-						if (!stackInSlot.isEmpty() && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.getItem() == stack.getItem() && (stackInSlot.getItemDamage() == stack.getItemDamage() || stack.getItemDamage() == OreDictionary.WILDCARD_VALUE))) {
+					for(ItemStack stack : ingredient) {
+						if(!stackInSlot.isEmpty() && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.getItem() == stack.getItem() && (stackInSlot.getItemDamage() == stack.getItemDamage() || stack.getItemDamage() == OreDictionary.WILDCARD_VALUE))) {
 							ItemStack stack2 = hatch.decrStackSize(i, stack.getCount());
 
-							if (stack2.getItem() instanceof ItemArmor) {
-								stack2.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
+							if(stack2.getItem() instanceof ItemArmor) {
+								if(EnchantmentHelper.getEnchantmentLevel(AdvancedRocketryAPI.enchantmentSpaceProtection, stack2) == 0) {
+									stack2.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
+								}
+
 								List<ItemStack> list = new LinkedList<>();
 								list.add(stack2);
 								setOutputs(list);
@@ -129,25 +114,92 @@ public class TileChemicalReactor extends TileMultiblockMachine {
 			}
 		}
 	}
-	
+
 	@Override
 	public void registerRecipes() {
 		//Chemical Reactor
 		if(ARConfiguration.getCurrentConfig().enableOxygen) {
+			RecipesMachine recipesMachine = RecipesMachine.getInstance();
+			List<IRecipe> recipes = recipesMachine.getRecipes(TileChemicalReactor.class);
+			List<IRecipe> originalRecipes = new LinkedList<>(recipes);
+
 			for(ResourceLocation key : Item.REGISTRY.getKeys()) {
 				Item item = Item.REGISTRY.getObject(key);
-	
-				if(item instanceof ItemArmor && !(item instanceof ItemSpaceArmor)) {
-					ItemStack enchanted = new ItemStack(item);
-					enchanted.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
-	
-					if(((ItemArmor)item).armorType == EntityEquipmentSlot.CHEST)
-						RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack("sheetTitaniumAluminide", 4), new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3));
-					else
-						RecipesMachine.getInstance().addRecipe(TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack("sheetTitaniumAluminide", 4));
-	
+				registerRecipe(recipesMachine, item);
+			}
+
+			//Create the internal special recipes list based on what recipes were added by the above generation
+			for(IRecipe recipe : recipes) {
+				if(!originalRecipes.contains(recipe)) {
+					recipesSpecial.add(recipe);
 				}
 			}
+		}
+	}
+
+	public static void reloadRecipesSpecial() {
+		//Chemical Reactor
+		if(ARConfiguration.getCurrentConfig().enableOxygen) {
+			RecipesMachine recipesMachine = RecipesMachine.getInstance();
+			List<IRecipe> recipes = recipesMachine.getRecipes(TileChemicalReactor.class);
+
+			//Forget any special recipes removed by another mod since generation
+			recipesSpecial.retainAll(recipes);
+
+			//Clear special recipes from the registry
+			recipes.removeAll(recipesSpecial);
+
+			List<IRecipe> originalRecipes = new LinkedList<>(recipes);
+
+			//Regenerate special recipes, but only those that weren't removed by another mod since first generation
+			for(IRecipe recipe : recipesSpecial) {
+				Item item = recipe.getOutput().get(0).getItem();
+				registerRecipe(recipesMachine, item);
+			}
+
+			//Recreate the internal special recipes list based on what recipes were added by the above generation
+			recipesSpecial.clear();
+			for(IRecipe recipe : recipes) {
+				if(!originalRecipes.contains(recipe)) {
+					recipesSpecial.add(recipe);
+				}
+			}
+		}
+	}
+
+	public static void registerRecipe(RecipesMachine recipesMachine, Item item) {
+		if(item instanceof ItemArmor && !(item instanceof ItemSpaceArmor)) {
+			ItemStack enchanted = new ItemStack(item);
+			enchanted.addEnchantment(AdvancedRocketryAPI.enchantmentSpaceProtection, 1);
+
+			//TODO: fix lore not appearing
+					/*NBTTagCompound tag = enchanted.getTagCompound();
+					if(tag == null) {
+						enchanted.setTagCompound(tag = new NBTTagCompound());
+					}
+
+					if(!tag.hasKey("display")) {
+						tag.setTag("display", new NBTTagCompound());
+					}
+
+					if(tag.getTagId("display") == 10) {
+						NBTTagCompound displayTag = tag.getCompoundTag("display");
+
+						if(!displayTag.hasKey("Lore")) {
+							displayTag.setTag("Lore", new NBTTagList());
+						}
+
+						if (displayTag.getTagId("Lore") == 9) {
+							NBTTagList loreTag = displayTag.getTagList("Lore", 8);
+
+							loreTag.appendTag(new NBTTagString("§eThis recipe adds the Airtight Seal enchantment"));
+						}
+					}*/
+
+			if(((ItemArmor)item).armorType == EntityEquipmentSlot.CHEST)
+				recipesMachine.addRecipe(TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack("sheetTitaniumAluminide", 4), new ItemStack(AdvancedRocketryItems.itemPressureTank, 1, 3));
+			else
+				recipesMachine.addRecipe(TileChemicalReactor.class, enchanted, 100, 10, new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(AdvancedRocketryBlocks.blockPipeSealer, 1), new NumberedOreDictStack("sheetTitaniumAluminide", 4));
 		}
 	}
 
