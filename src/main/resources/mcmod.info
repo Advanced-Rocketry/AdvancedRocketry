@@ -1,18 +1,18 @@
 [
 {
-  "modid": "advancedrocketry",
-  "name": "Advanced Rocketry",
+  "modid": "${modid}",
+  "name": "Advanced Rocketry: Unofficial",
   "description": "A space mod for minecraft, adds planets, rockets, and some machines",
-  "version": "${advRocketryVersion}",
-  "mcversion": "${mcVersion}",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
   "url": "http://minecraft.curseforge.com/projects/advanced-rocketry",
   "updateUrl": "",
-  "authorList": ["zmaster587"],
+  "authorList": ["zmaster587", "Ghzdude"],
   "credits": "",
   "logoFile": "",
   "screenshots": [],
   "useDependencyInformation": true,
-  "requiredMods": ["libvulpes@${libVulpesVersion}"],
+  "requiredMods": ["libvulpes"],
   "dependencies": ["libvulpes"]
 }
 ]
