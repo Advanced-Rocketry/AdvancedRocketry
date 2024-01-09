@@ -19,8 +19,8 @@ import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class EntityHoverCraft extends Entity implements IInventory, INetworkEntity {
 
@@ -124,7 +124,7 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 		return true;
 	}
 	@Override
-	public boolean attackEntityFrom(@Nonnull DamageSource par1DamageSource, float par2)
+	public boolean attackEntityFrom(@NotNull DamageSource par1DamageSource, float par2)
 	{
 		if(!this.world.isRemote && !this.isDead && par1DamageSource.getImmediateSource() instanceof EntityPlayer && !this.getPassengers().contains(par1DamageSource.getImmediateSource()))
 		{
@@ -150,19 +150,19 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack decrStackSize(int slot, int amt) {
 		return inv.decrStackSize(slot, amt);
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack getStackInSlot(int i) {
 		return inv.getStackInSlot(i);
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, @Nonnull ItemStack itemstack) {
+	public void setInventorySlotContents(int slot, @NotNull ItemStack itemstack) {
 		inv.setInventorySlotContents(slot, itemstack);
 	}
 	
@@ -263,7 +263,7 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack removeStackFromSlot(int index) {
 		return inv.removeStackFromSlot(index);
 	}
@@ -289,7 +289,7 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
+	public boolean isItemValidForSlot(int index, @NotNull ItemStack stack) {
 		return inv.isItemValidForSlot(index, stack);
 	}
 
@@ -319,12 +319,12 @@ public class EntityHoverCraft extends Entity implements IInventory, INetworkEnti
 	}
 
 	@Override
-	protected void readEntityFromNBT(@Nonnull NBTTagCompound compound) {
+	protected void readEntityFromNBT(@NotNull NBTTagCompound compound) {
 		inv.readFromNBT(compound);
 	}
 
 	@Override
-	protected void writeEntityToNBT(@Nonnull NBTTagCompound compound) {
+	protected void writeEntityToNBT(@NotNull NBTTagCompound compound) {
 		inv.writeToNBT(compound);
 	}
 }

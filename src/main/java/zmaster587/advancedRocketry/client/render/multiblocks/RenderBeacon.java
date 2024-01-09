@@ -42,7 +42,7 @@ public class RenderBeacon extends TileEntitySpecialRenderer {
 		GL11.glTranslated(x + 0.5, y, z + .5);
 		//Rotate and move the model into position
 		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
-		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
+		GL11.glRotatef((front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, 1, 0);
 		//GL11.glTranslated(2f, 0, 0f);
 		bindTexture(baseTexture);
 		model.renderOnly("Base");

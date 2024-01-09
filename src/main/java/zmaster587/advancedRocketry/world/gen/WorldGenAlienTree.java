@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 public class WorldGenAlienTree extends WorldGenAbstractTree {
@@ -28,7 +28,7 @@ public class WorldGenAlienTree extends WorldGenAbstractTree {
 	}
 
 	@Override
-	public boolean generate(@Nonnull World world, Random random, BlockPos pos) {
+	public boolean generate(@NotNull World world, Random random, BlockPos pos) {
 		int treeHeight = random.nextInt(10) + 20;
 		boolean flag = true;
 

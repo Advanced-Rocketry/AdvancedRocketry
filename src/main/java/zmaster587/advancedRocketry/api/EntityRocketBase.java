@@ -7,8 +7,8 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry;
 import zmaster587.advancedRocketry.api.stations.ISpaceObject;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -71,20 +71,20 @@ public abstract class EntityRocketBase extends Entity {
 	 * @param amount amount of fuel to add
 	 * @return the amount of fuel added
 	 */
-	public abstract int addFuelAmount(@Nonnull FuelRegistry.FuelType fuelType, int amount);
+	public abstract int addFuelAmount(@NotNull FuelRegistry.FuelType fuelType, int amount);
 
 	/**
 	 * Updates the data option
 	 * @param fuelType
 	 * @param amt sets the amount of monopropellant fuel in the rocket
 	 */
-	public abstract void setFuelAmount(@Nonnull FuelRegistry.FuelType fuelType, int amt);
+	public abstract void setFuelAmount(@NotNull FuelRegistry.FuelType fuelType, int amt);
 
 	/**
 	 * @param fuelType sets the type of fuel to set a rate for
 	 * @param rate sets the rate of fuel in the rocket
 	 */
-	public abstract void setFuelConsumptionRate(@Nonnull FuelRegistry.FuelType fuelType, int rate);
+	public abstract void setFuelConsumptionRate(@NotNull FuelRegistry.FuelType fuelType, int rate);
 
 	/**
 	 * @param fuelType is the fuel type to get

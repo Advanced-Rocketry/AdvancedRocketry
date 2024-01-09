@@ -39,7 +39,7 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class TileSpaceElevator extends TileMultiPowerConsumer implements IModularInventory, ILinkableTile, ITickable {
@@ -243,12 +243,12 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 
 	public double getLandingLocationX() {
 		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
-		return getPos().getX() + facing.getFrontOffsetX()*-5 - facing.getFrontOffsetZ()*2 + 0.5;
+		return getPos().getX() + facing.getXOffset()*-5 - facing.getZOffset()*2 + 0.5;
 	}
 
 	public double getLandingLocationZ() {
 		EnumFacing facing = RotatableBlock.getFront(world.getBlockState(getPos()));
-		return getPos().getZ() + facing.getFrontOffsetX()*2 + facing.getFrontOffsetZ()*-5 + 0.5;
+		return getPos().getZ() + facing.getXOffset()*2 + facing.getZOffset()*-5 + 0.5;
 	}
 
 
@@ -285,7 +285,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 	}
 
 	@Override
-	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
+	public boolean onLinkStart(@NotNull ItemStack item, TileEntity entity,
 							   EntityPlayer player, World world) {
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, world.provider.getDimension());
@@ -299,7 +299,7 @@ public class TileSpaceElevator extends TileMultiPowerConsumer implements IModula
 	}
 
 	@Override
-	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
+	public boolean onLinkComplete(@NotNull ItemStack item, TileEntity entity,
 			EntityPlayer player, World myWorld) {
 
 		if(!myWorld.isRemote) {

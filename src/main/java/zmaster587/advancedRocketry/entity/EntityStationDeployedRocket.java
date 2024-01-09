@@ -167,7 +167,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				if(ticket != null) {
 					ticket.bindEntity(this);
 					for(int i = 0; i < 9; i++)
-						ForgeChunkManager.forceChunk(ticket, new ChunkPos(forwardDirection.getFrontOffsetX()*i + (launchLocation.x >> 4), forwardDirection.getFrontOffsetZ()*i + (launchLocation.z >> 4)));
+						ForgeChunkManager.forceChunk(ticket, new ChunkPos(forwardDirection.getXOffset()*i + (launchLocation.x >> 4), forwardDirection.getZOffset()*i + (launchLocation.z >> 4)));
 				}
 			}
 			
@@ -180,8 +180,8 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				if(world.isRemote && Minecraft.getMinecraft().gameSettings.particleSetting < 2) {
 					for(Vector3F<Float> vec : stats.getEngineLocations()) {
 
-						float xMult = Math.abs(forwardDirection.getFrontOffsetX());
-						float zMult = Math.abs(forwardDirection.getFrontOffsetZ());
+						float xMult = Math.abs(forwardDirection.getXOffset());
+						float zMult = Math.abs(forwardDirection.getZOffset());
 						float xVel, zVel;
 
 						for(int i = 0; i < 4; i++) {
@@ -207,18 +207,18 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				if(isCoasting) {
 					dir = launchDirection.getOpposite();
 					float speed = 0.075f;
-					motionX = speed*dir.getFrontOffsetX();
-					motionY = speed*dir.getFrontOffsetY();
-					motionZ = speed*dir.getFrontOffsetZ();
+					motionX = speed*dir.getXOffset();
+					motionY = speed*dir.getYOffset();
+					motionZ = speed*dir.getZOffset();
 				}
 				else {
 					dir = forwardDirection.getOpposite();
 
 					float acc = 0.01f;
 
-					motionX = acc*(launchLocation.x - this.posX + (storage.getSizeX() % 2 == 0 ? 0 : 0.5f)) + 0.01*dir.getFrontOffsetX();
+					motionX = acc*(launchLocation.x - this.posX + (storage.getSizeX() % 2 == 0 ? 0 : 0.5f)) + 0.01*dir.getXOffset();
 					motionY = 0;//acc*(launchLocation.y - this.posY) + 0.01*dir.offsetY;
-					motionZ = acc*(launchLocation.z - this.posZ + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5f)) + 0.01*dir.getFrontOffsetZ();
+					motionZ = acc*(launchLocation.z - this.posZ + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5f)) + 0.01*dir.getZOffset();
 
 				}
 
@@ -247,15 +247,15 @@ public class EntityStationDeployedRocket extends EntityRocket {
 				//Coast away from the station
 				if(isCoasting) {
 					float speed = 0.01f;//(float)Math.min(0.2f, Math.abs(motionY) + 0.0001f);
-					motionX = speed*launchDirection.getFrontOffsetX() * ( 2.1*storage.getSizeX() - Math.abs(2*storage.getSizeX() - Math.abs(this.posX - launchLocation.x)) + 0.05);
-					motionY = speed*launchDirection.getFrontOffsetY() * ( 2.1*storage.getSizeY() - Math.abs(2*storage.getSizeY() - Math.abs(this.posY - launchLocation.y)) + 0.05);
-					motionZ = speed*launchDirection.getFrontOffsetZ() * ( 2.1*storage.getSizeZ() - Math.abs(2*storage.getSizeZ() - Math.abs(this.posZ - launchLocation.z)) + 0.05);
+					motionX = speed*launchDirection.getXOffset() * ( 2.1*storage.getSizeX() - Math.abs(2*storage.getSizeX() - Math.abs(this.posX - launchLocation.x)) + 0.05);
+					motionY = speed*launchDirection.getYOffset() * ( 2.1*storage.getSizeY() - Math.abs(2*storage.getSizeY() - Math.abs(this.posY - launchLocation.y)) + 0.05);
+					motionZ = speed*launchDirection.getZOffset() * ( 2.1*storage.getSizeZ() - Math.abs(2*storage.getSizeZ() - Math.abs(this.posZ - launchLocation.z)) + 0.05);
 				}
 				else {
 					float acc = 0.01f;
-					motionX += acc*forwardDirection.getFrontOffsetX();
-					motionY += acc*forwardDirection.getFrontOffsetY();
-					motionZ += acc*forwardDirection.getFrontOffsetZ();
+					motionX += acc*forwardDirection.getXOffset();
+					motionY += acc*forwardDirection.getYOffset();
+					motionZ += acc*forwardDirection.getZOffset();
 
 				}
 				if(!world.isRemote && this.getDistance(launchLocation.x, launchLocation.y, launchLocation.z) > 128) {
@@ -360,7 +360,7 @@ public class EntityStationDeployedRocket extends EntityRocket {
 		ISpaceObject spaceObj;
 		setInOrbit(true);
 		if( world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId && ((spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.getPosition())) != null && spaceObj.getProperties().getParentProperties().isGasGiant() )) { //Abort if destination is invalid
-			this.setPosition(forwardDirection.getFrontOffsetX()*64d + this.launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5d), posY, forwardDirection.getFrontOffsetZ()*64d + this.launchLocation.z + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5d));	
+			this.setPosition(forwardDirection.getXOffset()*64d + this.launchLocation.x + (storage.getSizeX() % 2 == 0 ? 0 : 0.5d), posY, forwardDirection.getZOffset()*64d + this.launchLocation.z + (storage.getSizeZ() % 2 == 0 ? 0 : 0.5d));	
 		}
 		else {
 			setInOrbit(true);

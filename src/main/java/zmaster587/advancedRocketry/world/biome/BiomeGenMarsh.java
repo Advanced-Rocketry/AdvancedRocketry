@@ -7,7 +7,7 @@ import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenShrub;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 public class BiomeGenMarsh extends Biome {
@@ -48,7 +48,7 @@ public class BiomeGenMarsh extends Biome {
 	}
 	
 	@Override
-	@Nonnull
+	@NotNull
 	public WorldGenAbstractTree getRandomTreeFeature(Random rand) {
 		return new WorldGenShrub(Blocks.LOG.getDefaultState(), Blocks.LEAVES.getDefaultState());
 	}

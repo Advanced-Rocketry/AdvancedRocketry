@@ -31,7 +31,7 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +61,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack itemStack) {
+	public boolean isItemValidForSlot(int slot, @NotNull ItemStack itemStack) {
 		Item item = itemStack.getItem();
 
 		return slot == 0 &&
@@ -337,7 +337,7 @@ public class TileGuidanceComputer extends TileInventoryHatch implements IModular
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
+	public void setInventorySlotContents(int slot, @NotNull ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
 
 		//If the item in the slot is modified then reset dimid

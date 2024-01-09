@@ -29,7 +29,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerProducer;
 import zmaster587.libVulpes.util.MultiBattery;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -121,7 +121,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 			attemptFire();
 		}
 
-		@Nonnull
+		@NotNull
 		private ItemStack consumeItem()
 		{
 			for (IInventory i : getItemInPorts())
@@ -139,7 +139,7 @@ public class TileBlackHoleGenerator extends TileMultiPowerProducer implements IT
 			return ItemStack.EMPTY;
 		}
 		
-		private int getTimeFromStack(@Nonnull ItemStack stack)
+		private int getTimeFromStack(@NotNull ItemStack stack)
 		{
 			for(Entry<ItemStack, Integer>  i : ARConfiguration.getCurrentConfig().blackHoleGeneratorBlocks.entrySet()) {
 				if(i.getKey().getItem() == stack.getItem() && i.getKey().getItemDamage() == stack.getItemDamage())

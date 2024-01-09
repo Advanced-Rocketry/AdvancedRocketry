@@ -37,7 +37,7 @@ public class RendererPrecisionLaserEtcher extends TileEntitySpecialRenderer {
 		//Rotate and move the model into position
 		GL11.glTranslated(x + .5f, y, z + 0.5f);
 		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
-		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 0 : 180) + front.getFrontOffsetZ()*90f, 0, 1, 0);
+		GL11.glRotatef((front.getXOffset() == 1 ? 0 : 180) + front.getZOffset()*90f, 0, 1, 0);
 		GL11.glTranslated(0.5f, 0f, 1.5f);
 
 

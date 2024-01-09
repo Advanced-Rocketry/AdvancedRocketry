@@ -21,7 +21,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleImage;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -113,7 +113,7 @@ public class TileBiomeScanner extends TileMultiPowerConsumer {
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public AxisAlignedBB getRenderBoundingBox() {
 
 		return new AxisAlignedBB(pos.add(-5,-3,-5),pos.add(5,3,5));

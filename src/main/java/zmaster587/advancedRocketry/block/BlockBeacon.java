@@ -37,7 +37,7 @@ public class BlockBeacon extends BlockMultiblockMachine {
 		if(worldIn.getTileEntity(pos) instanceof TileBeacon && ((TileBeacon)worldIn.getTileEntity(pos)).getMachineEnabled()) {
 			EnumFacing enumfacing = stateIn.getValue(FACING);
 			for(int i = 0; i < 10; i++)
-				AdvancedRocketry.proxy.spawnParticle("reddust", worldIn, pos.getX() - enumfacing.getFrontOffsetX() + worldIn.rand.nextDouble(), pos.getY() + 5 - worldIn.rand.nextDouble(), pos.getZ() - enumfacing.getFrontOffsetZ() + worldIn.rand.nextDouble(), 0, 0, 0);
+				AdvancedRocketry.proxy.spawnParticle("reddust", worldIn, pos.getX() - enumfacing.getXOffset() + worldIn.rand.nextDouble(), pos.getY() + 5 - worldIn.rand.nextDouble(), pos.getZ() - enumfacing.getZOffset() + worldIn.rand.nextDouble(), 0, 0, 0);
 		}
 	}
 }

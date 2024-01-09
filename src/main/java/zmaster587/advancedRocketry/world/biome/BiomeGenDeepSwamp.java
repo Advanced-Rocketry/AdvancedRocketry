@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.world.gen.WorldGenNoTree;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 public class BiomeGenDeepSwamp extends Biome {
@@ -44,20 +44,20 @@ public class BiomeGenDeepSwamp extends Biome {
 	}
 	
 	@Override
-    @Nonnull
+    @NotNull
 	public WorldGenAbstractTree getRandomTreeFeature(Random rand) {
 		return SWAMP_FEATURE;
 	}
 	
 	@Override
-    @Nonnull
+    @NotNull
 	public EnumFlowerType pickRandomFlower(Random rand, BlockPos pos) {
 		return EnumFlowerType.BLUE_ORCHID;
 	}
 	
 	@Override
 	public void genTerrainBlocks(World worldIn, Random rand,
-			@Nonnull ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal) {
+			@NotNull ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal) {
 		
 		double d0 = GRASS_COLOR_NOISE.getValue((double)x * 0.25D, (double)z * 0.25D);
 

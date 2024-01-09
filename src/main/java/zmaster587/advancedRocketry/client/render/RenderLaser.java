@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.entity.EntityLaserNode;
 import zmaster587.libVulpes.render.RenderHelper;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class RenderLaser extends Render implements IRenderFactory<EntityLaserNode> {
 

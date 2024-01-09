@@ -29,8 +29,8 @@ import zmaster587.advancedRocketry.api.IInfrastructure;
 import zmaster587.advancedRocketry.entity.EntityRocket;
 import zmaster587.advancedRocketry.util.StorageChunk;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class RendererRocket extends Render implements IRenderFactory<EntityRocket> {
 
@@ -40,7 +40,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 	Class tileEntityBlockChiseled;
 	Method getState;
 
-	public RendererRocket(@Nonnull RenderManager manager) {
+	public RendererRocket(@NotNull RenderManager manager) {
 		super(manager);
 
 		try {
@@ -56,7 +56,7 @@ public class RendererRocket extends Render implements IRenderFactory<EntityRocke
 
 	//TODO: possibly optimize with GL lists
 	@Override
-	public void doRender(@Nonnull Entity entity, double x, double y, double z, float f1, float f2) {
+	public void doRender(@NotNull Entity entity, double x, double y, double z, float f1, float f2) {
 
 		StorageChunk storage  = ((EntityRocket)entity).storage;
 

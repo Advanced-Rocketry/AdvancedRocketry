@@ -31,7 +31,7 @@ import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -119,7 +119,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	 * @return dimension properties of the object
 	 */
 	@Override
-	@Nonnull
+	@NotNull
 	public DimensionProperties getProperties() {
 		return properties;
 	}
@@ -132,7 +132,7 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void setProperties(@Nonnull IDimensionProperties properties) {
+	public void setProperties(@NotNull IDimensionProperties properties) {
 		this.properties = (DimensionProperties)properties;
 	}
 
@@ -646,11 +646,11 @@ public class SpaceStationObject implements ISpaceObject, IPlanetDefiner {
 					}
 				}
 				else if(cross.getOpposite() != moduleFacing)
-					chunk.rotateBy(stationFacing.getFrontOffsetY() == 0 ? cross : cross.getOpposite());
+					chunk.rotateBy(stationFacing.getYOffset() == 0 ? cross : cross.getOpposite());
 
-				int xCoord = (stationFacing.getFrontOffsetX() == 0 ? -srcTile.getPos().getX() : srcTile.getPos().getX()*stationFacing.getFrontOffsetX()) + stationFacing.getFrontOffsetX() + destTile.getPos().getX();
-				int yCoord = (stationFacing.getFrontOffsetY() == 0 ? -srcTile.getPos().getY() : srcTile.getPos().getY()*stationFacing.getFrontOffsetY()) + stationFacing.getFrontOffsetY() + destTile.getPos().getY();
-				int zCoord = (stationFacing.getFrontOffsetZ() == 0 ? -srcTile.getPos().getZ() : srcTile.getPos().getZ()*stationFacing.getFrontOffsetZ()) + stationFacing.getFrontOffsetZ() + destTile.getPos().getZ();
+				int xCoord = (stationFacing.getXOffset() == 0 ? -srcTile.getPos().getX() : srcTile.getPos().getX()*stationFacing.getXOffset()) + stationFacing.getXOffset() + destTile.getPos().getX();
+				int yCoord = (stationFacing.getYOffset() == 0 ? -srcTile.getPos().getY() : srcTile.getPos().getY()*stationFacing.getYOffset()) + stationFacing.getYOffset() + destTile.getPos().getY();
+				int zCoord = (stationFacing.getZOffset() == 0 ? -srcTile.getPos().getZ() : srcTile.getPos().getZ()*stationFacing.getZOffset()) + stationFacing.getZOffset() + destTile.getPos().getZ();
 				chunk.pasteInWorld(worldObj, xCoord, yCoord, zCoord);
 				worldObj.setBlockToAir(destTile.getPos().offset(stationFacing));
 				worldObj.setBlockToAir(destTile.getPos());

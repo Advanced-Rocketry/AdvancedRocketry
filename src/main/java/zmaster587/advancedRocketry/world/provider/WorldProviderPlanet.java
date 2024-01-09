@@ -41,8 +41,8 @@ import zmaster587.advancedRocketry.world.ChunkManagerPlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderCavePlanet;
 import zmaster587.advancedRocketry.world.ChunkProviderPlanet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 
 public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProvider {
@@ -61,7 +61,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}*/
 
 	@Override
-	@Nonnull
+	@NotNull
 	public IChunkGenerator createChunkGenerator() {
 		int genType = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGenType();
 		if(genType == 1)
@@ -152,7 +152,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}
 
 	@Override
-	public int getRespawnDimension(@Nonnull EntityPlayerMP player) {
+	public int getRespawnDimension(@NotNull EntityPlayerMP player) {
 		if(ARConfiguration.getCurrentConfig().canPlayerRespawnInSpace) {
 			BlockPos coords = player.getBedLocation(getDimension());
 			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(player.world.provider.getDimension());
@@ -167,8 +167,8 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}
 	
 	@Override
-	@Nonnull
-	public WorldSleepResult canSleepAt(@Nonnull EntityPlayer player, @Nonnull BlockPos pos) {
+	@NotNull
+	public WorldSleepResult canSleepAt(@NotNull EntityPlayer player, @NotNull BlockPos pos) {
 		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(player.world.provider.getDimension());
 
 		if (ARConfiguration.getCurrentConfig().forcePlayerRespawnInSpace || AtmosphereHandler.hasAtmosphereHandler(player.world.provider.getDimension()) && atmhandler != null && atmhandler.getAtmosphereType(pos).isBreathable()) {
@@ -274,7 +274,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 		return f2*super.getSunBrightness(partialTicks);
 	}
 
-	private float eclipseValue(@Nonnull DimensionProperties properties, float lightValue, double partialTicks) {
+	private float eclipseValue(@NotNull DimensionProperties properties, float lightValue, double partialTicks) {
 		
 		double currentTheta = (((partialTicks*properties.orbitTheta + ((1-partialTicks)*properties.prevOrbitalTheta)) * 180/Math.PI)  % 360d);
 		int solarDistance = properties.getSolarOrbitalDistance();
@@ -310,8 +310,8 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}
 
 	@Override
-	@Nonnull
-	public Vec3d getSkyColor(@Nonnull Entity cameraEntity, float partialTicks) {
+	@NotNull
+	public Vec3d getSkyColor(@NotNull Entity cameraEntity, float partialTicks) {
 		//Multiplied by brightness value to make dark atmospheres actually dark
 		float[] vec = getDimensionProperties(new BlockPos((int) cameraEntity.posX, 0, (int) cameraEntity.posZ)).skyColor;
 		if (cameraEntity.world.provider instanceof WorldProviderPlanet && cameraEntity instanceof EntityPlayer) {
@@ -324,7 +324,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	@Nonnull
+	@NotNull
 	public Vec3d getFogColor(float p_76562_1_, float p_76562_2_) {
         EntityPlayer cameraEntity = Minecraft.getMinecraft().player;
 
@@ -459,7 +459,7 @@ public class WorldProviderPlanet extends WorldProvider implements IPlanetaryProv
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public DimensionType getDimensionType() {
 		return DimensionManager.PlanetDimensionType;
 	}

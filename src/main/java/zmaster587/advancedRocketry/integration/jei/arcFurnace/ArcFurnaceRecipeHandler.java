@@ -4,26 +4,26 @@ import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import zmaster587.advancedRocketry.integration.jei.ARPlugin;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ArcFurnaceRecipeHandler implements IRecipeHandler<ArcFurnaceWrapper> {
 
 	@Override
-	@Nonnull
+	@NotNull
 	public Class<ArcFurnaceWrapper> getRecipeClass() {
 		return ArcFurnaceWrapper.class;
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public String getRecipeCategoryUid(@Nullable ArcFurnaceWrapper recipe) {
 		return ARPlugin.arcFurnaceUUID;
 	}
 
 	@Override
-	@Nonnull
-	public IRecipeWrapper getRecipeWrapper(@Nonnull ArcFurnaceWrapper recipe) {
+	@NotNull
+	public IRecipeWrapper getRecipeWrapper(@NotNull ArcFurnaceWrapper recipe) {
 		return recipe;
 	}
 

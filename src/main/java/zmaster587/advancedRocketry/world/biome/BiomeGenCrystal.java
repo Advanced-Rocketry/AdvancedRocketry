@@ -10,7 +10,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.world.decoration.MapGenLargeCrystal;
 import zmaster587.advancedRocketry.world.gen.WorldGenLargeCrystal;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 public class BiomeGenCrystal extends Biome  {
@@ -37,7 +37,7 @@ public class BiomeGenCrystal extends Biome  {
 	
 	@Override
 	public void genTerrainBlocks(World worldIn, Random rand,
-								 @Nonnull ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal) {
+								 @NotNull ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal) {
 		super.genTerrainBlocks(worldIn, rand, chunkPrimerIn, x, z, noiseVal);
 		
 		if(x % 16 == 0 && z % 16 == 0 )

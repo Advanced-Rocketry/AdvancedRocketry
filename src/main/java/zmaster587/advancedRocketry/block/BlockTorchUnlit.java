@@ -17,10 +17,10 @@ import zmaster587.advancedRocketry.api.ARConfiguration;
 import zmaster587.advancedRocketry.api.AdvancedRocketryBlocks;
 import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.ParametersAreNullableByDefault;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -33,16 +33,16 @@ public class BlockTorchUnlit extends BlockTorch {
 	}
 
 	@Override
-	@Nonnull
-	@ParametersAreNonnullByDefault
+	@NotNull
+	
 	public ItemStack getPickBlock(IBlockState state, @Nullable RayTraceResult target,
 			World world, BlockPos pos, @Nullable EntityPlayer player) {
 		return ARConfiguration.getCurrentConfig().dropExTorches ? super.getPickBlock(state, target, world, pos, player) : new ItemStack(Blocks.TORCH);
 	}
 
 	@Override
-	@Nonnull
-	@ParametersAreNullableByDefault
+	@NotNull
+	
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
 			IBlockState state, int fortune) {
 		ArrayList<ItemStack> ret = new ArrayList<>();
@@ -54,8 +54,8 @@ public class BlockTorchUnlit extends BlockTorch {
 	}
 
 	@Override
-	public boolean onBlockActivated(@Nonnull World world, @Nonnull BlockPos pos,
-			@Nonnull IBlockState state, @Nonnull EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
+	public boolean onBlockActivated(@NotNull World world, @NotNull BlockPos pos,
+			@NotNull IBlockState state, @NotNull EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
 			float hitZ) {
 
 		if(!player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()) {

@@ -10,7 +10,7 @@ import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 import zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill.TileOrbitalLaserDrill;
 import zmaster587.libVulpes.gui.SlotSingleItem;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerOrbitalLaserDrill extends Container {
 
@@ -126,7 +126,7 @@ public class ContainerOrbitalLaserDrill extends Container {
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack transferStackInSlot(EntityPlayer player, int slot)
 	{
 		ItemStack stack = ItemStack.EMPTY;
@@ -166,7 +166,7 @@ public class ContainerOrbitalLaserDrill extends Container {
 
 
 	@Override
-	public boolean canInteractWith(@Nonnull EntityPlayer entityplayer) {
+	public boolean canInteractWith(@NotNull EntityPlayer entityplayer) {
 		return laserTile.isUsableByPlayer(entityplayer);
 	}
 }

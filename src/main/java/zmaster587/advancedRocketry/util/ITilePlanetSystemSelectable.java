@@ -2,11 +2,11 @@ package zmaster587.advancedRocketry.util;
 
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public interface ITilePlanetSystemSelectable {
-	@Nonnull
+	@NotNull
 	ItemStack getChipWithId(int id);
 	
 	void setSelectedPlanetId(int id);

@@ -41,7 +41,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine.NetworkPackets
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.IconResource;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -571,19 +571,19 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack getStackInSlot(int index) {
 		return inv.getStackInSlot(index);
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack decrStackSize(int index, int count) {
 		return inv.decrStackSize(index, count);
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack removeStackFromSlot(int index) {
 		ItemStack stack = inv.removeStackFromSlot(index);
 		if(world.isRemote)
@@ -592,7 +592,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	}
 
 	@Override
-	public void setInventorySlotContents(int index, @Nonnull ItemStack stack) {
+	public void setInventorySlotContents(int index, @NotNull ItemStack stack) {
 		inv.setInventorySlotContents(index, stack);
 		if(world.isRemote)
 			setText();
@@ -614,7 +614,7 @@ public class TileAtmosphereTerraformer extends TileMultiPowerConsumer implements
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
+	public boolean isItemValidForSlot(int index, @NotNull ItemStack stack) {
 		return inv.isItemValidForSlot(index, stack);
 	}
 

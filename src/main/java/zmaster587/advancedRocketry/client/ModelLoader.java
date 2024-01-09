@@ -7,7 +7,7 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import zmaster587.advancedRocketry.client.model.ModelRocket;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ModelLoader implements ICustomModelLoader
 {
@@ -23,7 +23,7 @@ public class ModelLoader implements ICustomModelLoader
 
 	// When called for our Block3DWeb's ModelResourceLocation, return our WebModel.
 	@Override
-	@Nonnull
+	@NotNull
 	public IModel loadModel(ResourceLocation resourceLocation) {
 		/*if (!resourcePath.startsWith(SMART_MODEL_RESOURCE_LOCATION)) {
 			assert false : "loadModel expected " + SMART_MODEL_RESOURCE_LOCATION + " but found " + resourcePath;
@@ -42,7 +42,7 @@ public class ModelLoader implements ICustomModelLoader
 
 	// don't need it for this example; you might.  We have to implement it anyway.
 	@Override
-	public void onResourceManagerReload(@Nonnull IResourceManager resourceManager) {
+	public void onResourceManagerReload(@NotNull IResourceManager resourceManager) {
         this.resourceManager = resourceManager;
 	}
 

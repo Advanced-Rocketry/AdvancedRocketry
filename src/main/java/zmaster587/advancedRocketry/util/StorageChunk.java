@@ -43,8 +43,8 @@ import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -140,7 +140,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public IBlockState getBlockState(BlockPos pos) {
 		int x = pos.getX();
 		int y = pos.getY();
@@ -567,7 +567,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 
 	@Override
-	public TileEntity getTileEntity(@Nonnull BlockPos pos) {
+	public TileEntity getTileEntity(@NotNull BlockPos pos) {
 		for(TileEntity tileE : tileEntities) {
 			if( tileE.getPos().compareTo(pos) == 0)
 				return tileE;
@@ -584,23 +584,23 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public Biome getBiome(@Nullable BlockPos pos) {
 		//Don't care, gen ocean
 		return Biomes.OCEAN;
 	}
 
 	@Override
-	public boolean isSideSolid(BlockPos pos, @Nonnull EnumFacing side, boolean _default) {
+	public boolean isSideSolid(BlockPos pos, @NotNull EnumFacing side, boolean _default) {
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();
-		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ  || x + side.getFrontOffsetX() < 0 
-				|| x + side.getFrontOffsetX() >= sizeX || y + side.getFrontOffsetY() < 0 || y + side.getFrontOffsetY() >= sizeY 
-				|| z + side.getFrontOffsetZ() < 0 || z + side.getFrontOffsetZ() >= sizeZ)
+		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ  || x + side.getXOffset() < 0 
+				|| x + side.getXOffset() >= sizeX || y + side.getYOffset() < 0 || y + side.getYOffset() >= sizeY 
+				|| z + side.getZOffset() < 0 || z + side.getZOffset() >= sizeZ)
 			return false;
 
-		return blocks[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()].isSideSolid(blocks[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()].getStateFromMeta(metas[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()]), this, pos.offset(side), side.getOpposite());
+		return blocks[x + side.getXOffset()][y + side.getYOffset()][z + side.getZOffset()].isSideSolid(blocks[x + side.getXOffset()][y + side.getYOffset()][z + side.getZOffset()].getStateFromMeta(metas[x + side.getXOffset()][y + side.getYOffset()][z + side.getZOffset()]), this, pos.offset(side), side.getOpposite());
 
 	}
 
@@ -816,7 +816,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public WorldType getWorldType() {
 		return WorldType.CUSTOMIZED;
 	}

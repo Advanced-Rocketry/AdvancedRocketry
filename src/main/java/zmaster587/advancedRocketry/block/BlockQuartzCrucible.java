@@ -13,8 +13,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNullableByDefault;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Random;
 
 public class BlockQuartzCrucible extends BlockCauldron {
@@ -25,7 +25,7 @@ public class BlockQuartzCrucible extends BlockCauldron {
 
 	
 	@Override
-	@ParametersAreNullableByDefault
+	
 	public boolean onBlockActivated(World worldIn, BlockPos pos,
 			IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY,
 			float hitZ) {
@@ -37,13 +37,13 @@ public class BlockQuartzCrucible extends BlockCauldron {
 	}
     
 	@Override
-	@Nonnull
+	@NotNull
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 		return AdvancedRocketryItems.itemQuartzCrucible;
 	}
 	
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
 		
 		return new ItemStack(AdvancedRocketryItems.itemQuartzCrucible);//getItemPicked(worldIn, pos, ar3, par4)

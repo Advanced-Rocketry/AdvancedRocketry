@@ -18,7 +18,7 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.VulpineMath;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.nio.IntBuffer;
 
@@ -81,7 +81,7 @@ public class GuiOreMappingSatellite extends GuiContainer {
 	class ItemMapper implements Runnable {
 		private ItemStack myBlock;
 
-		ItemMapper(@Nonnull ItemStack block) {
+		ItemMapper(@NotNull ItemStack block) {
 			//Copy so we don't have any possible CME or oddness due to that
 			myBlock = block.copy();
 		}

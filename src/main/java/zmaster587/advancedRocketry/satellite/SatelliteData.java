@@ -18,7 +18,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.util.IDataInventory;
 import zmaster587.libVulpes.util.ZUtils;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class SatelliteData extends SatelliteBase {
 	DataStorage data;
@@ -40,14 +40,14 @@ public abstract class SatelliteData extends SatelliteBase {
 	}
 
 	@Override
-	public boolean acceptsItemInConstruction(@Nonnull ItemStack item) {
+	public boolean acceptsItemInConstruction(@NotNull ItemStack item) {
 		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
 
 		return super.acceptsItemInConstruction(item) || SatelliteProperties.Property.DATA.isOfType(flag);
 	}
 
 	@Override
-	public void setProperties(@Nonnull ItemStack satelliteProperties) {
+	public void setProperties(@NotNull ItemStack satelliteProperties) {
 		super.setProperties(satelliteProperties);
 		data.setMaxData(this.satelliteProperties.getMaxDataStorage());
 	}

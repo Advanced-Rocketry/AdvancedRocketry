@@ -18,8 +18,8 @@ import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.util.List;
 
@@ -196,7 +196,7 @@ public class ChunkManagerPlanet extends BiomeProvider {
 		}
 	}
 
-	@Nonnull
+	@NotNull
 	public Biome[] getBiomesForGeneration(@Nullable Biome[] biomes, int x, int z, int width, int height)
 	{
 		GenLayerBiomePlanet.setupBiomesForUse(this.biomes);
@@ -249,7 +249,7 @@ public class ChunkManagerPlanet extends BiomeProvider {
 	 * don't check biomeCache to avoid infinite loop in BiomeCacheBlock)
 	 */
 	@Override
-	@Nonnull
+	@NotNull
 	public Biome[] getBiomes(@Nullable Biome[] listToReuse, int x, int z, int width, int length, boolean cacheFlag) {
 
 		GenLayerBiomePlanet.setupBiomesForUse(biomes);

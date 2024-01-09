@@ -34,7 +34,7 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class TileRocketLoader extends TileInventoryHatch implements IInfrastructure, ITickable,  IButtonInventory, INetworkMachine, IGuiCallback  {
@@ -232,7 +232,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 	}
 
 	@Override
-	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
+	public boolean onLinkStart(@NotNull ItemStack item, TileEntity entity,
 							   EntityPlayer player, World world) {
 
 		ItemLinker.setMasterCoords(item, this.pos);
@@ -248,7 +248,7 @@ public class TileRocketLoader extends TileInventoryHatch implements IInfrastruct
 	}
 
 	@Override
-	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
+	public boolean onLinkComplete(@NotNull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("msg.linker.error.firstMachine"));

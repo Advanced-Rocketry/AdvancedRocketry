@@ -46,7 +46,7 @@ import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -539,7 +539,7 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		inv.writeToNBT(compound);
 		data.writeToNBT(compound);
@@ -548,7 +548,7 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public NBTTagCompound getUpdateTag() {
 		return writeToNBT(new NBTTagCompound());
 	}
@@ -706,28 +706,28 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack getStackInSlot(int index) {
 		return inv.getStackInSlot(index);
 	}
 
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack decrStackSize(int index, int count) {
 		return inv.decrStackSize(index, count);
 	}
 
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack removeStackFromSlot(int index) {
 		return inv.removeStackFromSlot(index);
 	}
 
 
 	@Override
-	public void setInventorySlotContents(int index, @Nonnull ItemStack stack) {
+	public void setInventorySlotContents(int index, @NotNull ItemStack stack) {
 		inv.setInventorySlotContents(index, stack);
 
 	}
@@ -764,7 +764,7 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 
 
 	@Override
-	public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
+	public boolean isItemValidForSlot(int index, @NotNull ItemStack stack) {
 		return inv.isItemValidForSlot(index, stack);
 	}
 
@@ -794,7 +794,7 @@ public class TileWarpController extends TileEntity implements ITickable, IModula
 
 
 	@Override
-	@Nonnull
+	@NotNull
 	public String getName() {
 		return getModularInventoryName();
 	}

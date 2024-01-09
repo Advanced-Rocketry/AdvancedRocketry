@@ -6,8 +6,8 @@ import zmaster587.advancedRocketry.api.util.IBlobHandler;
 import zmaster587.libVulpes.util.AdjacencyGraph;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +20,7 @@ public class AreaBlob {
 	//Data stored by this blob
 	private Object data;
 
-	public AreaBlob(@Nonnull IBlobHandler blobHandler) {
+	public AreaBlob(@NotNull IBlobHandler blobHandler) {
 		this.blobHandler = blobHandler;
 		graph = new AdjacencyGraph<>();
 		data = null;
@@ -49,7 +49,7 @@ public class AreaBlob {
 	 * @param y
 	 * @param z
 	 */
-	public void addBlock(int x, int y , int z, @Nonnull List<AreaBlob> otherBlobs) {
+	public void addBlock(int x, int y , int z, @NotNull List<AreaBlob> otherBlobs) {
 		HashedBlockPosition blockPos = new HashedBlockPosition(x, y, z);
 		addBlock(blockPos, otherBlobs);
 	}
@@ -58,7 +58,7 @@ public class AreaBlob {
 	 * Adds a block to the graph
 	 * @param blockPos block to add
 	 */
-	public void addBlock(@Nonnull HashedBlockPosition blockPos, List<AreaBlob> otherBlobs) {
+	public void addBlock(@NotNull HashedBlockPosition blockPos, List<AreaBlob> otherBlobs) {
 		if(!graph.contains(blockPos) && blobHandler.canFormBlob()) {
 			graph.add(blockPos, getPositionsToAdd(blockPos));
 		}
@@ -67,7 +67,7 @@ public class AreaBlob {
 	/**
 	 * @return the BlockPosition of the root of the blob
 	 */
-	@Nonnull
+	@NotNull
 	public HashedBlockPosition getRootPosition() {
 		return blobHandler.getRootPosition();
 	}
@@ -77,8 +77,8 @@ public class AreaBlob {
 	 * @param blockPos block to find things adjacent to
 	 * @return list containing valid adjacent blocks
 	 */
-	@Nonnull
-	protected HashSet<HashedBlockPosition> getPositionsToAdd(@Nonnull HashedBlockPosition blockPos) {
+	@NotNull
+	protected HashSet<HashedBlockPosition> getPositionsToAdd(@NotNull HashedBlockPosition blockPos) {
 		HashSet<HashedBlockPosition> set = new HashSet<>();
 		
 		for(EnumFacing direction : EnumFacing.values()) {
@@ -95,7 +95,7 @@ public class AreaBlob {
 	 * Given a block position returns whether or not it exists in the graph
 	 * @return true if the block exists in the blob
 	 */
-	public boolean contains(@Nonnull HashedBlockPosition position) {
+	public boolean contains(@NotNull HashedBlockPosition position) {
 		boolean contains;
 		
 		synchronized (graph) {
@@ -128,7 +128,7 @@ public class AreaBlob {
 	 * Removes the block at the given coords for this blob
 	 * @param blockPos
 	 */
-	public void removeBlock(@Nonnull HashedBlockPosition blockPos) {
+	public void removeBlock(@NotNull HashedBlockPosition blockPos) {
 		//HashedBlockPosition blockPos = new HashedBlockPosition(x, y, z);
 		graph.remove(blockPos);
 		

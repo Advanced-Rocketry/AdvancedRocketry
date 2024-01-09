@@ -4,7 +4,7 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.Biome;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class BiomeGenSpace extends Biome {
 	}
 	
 	@Override
-	@Nonnull
+	@NotNull
 	public List<Biome.SpawnListEntry> getSpawnableList(EnumCreatureType p_76747_1_) {
 		return new LinkedList<>();
 	}

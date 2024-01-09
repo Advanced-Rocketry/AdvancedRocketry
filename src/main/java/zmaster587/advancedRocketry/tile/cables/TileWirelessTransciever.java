@@ -32,7 +32,7 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.util.INetworkMachine;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 
 
 	@Override
-	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
+	public boolean onLinkStart(@NotNull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
 
 		ItemLinker.setMasterCoords(item, getPos());
 
@@ -75,7 +75,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	}
 
 	@Override
-	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
+	public boolean onLinkComplete(@NotNull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
 		BlockPos pos = ItemLinker.getMasterCoords(item);
 
 		TileEntity tile = world.getTileEntity(pos);
@@ -242,7 +242,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		nbt.setBoolean("mode", extractMode);
 		nbt.setBoolean("enabled", enabled);
@@ -290,7 +290,7 @@ public class TileWirelessTransciever extends TileEntity implements INetworkMachi
 			if (state.getBlock() instanceof RotatableBlock) {
 				EnumFacing facing = RotatableBlock.getFront(state).getOpposite();
 
-				TileEntity tile = world.getTileEntity(getPos().add(facing.getFrontOffsetX(),facing.getFrontOffsetY(),facing.getFrontOffsetZ()));
+				TileEntity tile = world.getTileEntity(getPos().add(facing.getXOffset(),facing.getYOffset(),facing.getZOffset()));
 
 				if( tile instanceof IDataHandler && !(tile instanceof TileWirelessTransciever))
 				{

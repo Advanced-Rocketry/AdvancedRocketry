@@ -44,7 +44,7 @@ public class RendererPipe extends TileEntitySpecialRenderer {
 
 				EnumFacing dir = EnumFacing.values()[i];
 
-				GL11.glTranslated(0.5*dir.getFrontOffsetX(), 0.5*dir.getFrontOffsetY(), 0.5*dir.getFrontOffsetZ());
+				GL11.glTranslated(0.5*dir.getXOffset(), 0.5*dir.getYOffset(), 0.5*dir.getZOffset());
 				
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
 

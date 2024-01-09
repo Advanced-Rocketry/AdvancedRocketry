@@ -12,7 +12,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.libVulpes.LibVulpes;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class ItemSatelliteIdentificationChip extends Item implements ISatelliteIdItem {
@@ -24,7 +24,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		return false;
 	}
 
-	public static SatelliteBase getSatellite(@Nonnull ItemStack stack) {
+	public static SatelliteBase getSatellite(@NotNull ItemStack stack) {
 		if(stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
 
@@ -51,7 +51,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		return null;
 	}
 
-	public void setSatellite(@Nonnull ItemStack stack, SatelliteBase satellite) {
+	public void setSatellite(@NotNull ItemStack stack, SatelliteBase satellite) {
 		NBTTagCompound nbt;
 		if(stack.hasTagCompound())
 			nbt = stack.getTagCompound();
@@ -68,7 +68,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	 * @param stack itemStack
 	 * @param satellite properties of satellite to set info with
 	 */
-	public void setSatellite(@Nonnull ItemStack stack, SatelliteProperties satellite) {
+	public void setSatellite(@NotNull ItemStack stack, SatelliteProperties satellite) {
 		erase(stack);
 		SatelliteBase satellite2 = SatelliteRegistry.getNewSatellite(satellite.getSatelliteType());
 		if(satellite2 != null) {
@@ -86,11 +86,11 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		}
 	}
 
-	public void erase(@Nonnull ItemStack stack) {
+	public void erase(@NotNull ItemStack stack) {
 		stack.setTagCompound(null);
 	}
 
-	public void setDim(@Nonnull ItemStack stack, int dimId) {
+	public void setDim(@NotNull ItemStack stack, int dimId) {
 		NBTTagCompound nbt;
 		if(stack.hasTagCompound())
 			nbt = stack.getTagCompound();
@@ -100,7 +100,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		nbt.setInteger("dimId", dimId);
 	}
 
-	public String getSatelliteName(@Nonnull ItemStack stack) {
+	public String getSatelliteName(@NotNull ItemStack stack) {
 		if(stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
 
@@ -109,7 +109,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 		return "";
 	}
 
-	public int getWorldId(@Nonnull ItemStack stack) {
+	public int getWorldId(@NotNull ItemStack stack) {
 		NBTTagCompound nbt;
 
 		if(stack.hasTagCompound() && (nbt = stack.getTagCompound()).hasKey("dimId") ) {
@@ -121,7 +121,7 @@ public class ItemSatelliteIdentificationChip extends Item implements ISatelliteI
 	}
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
+	public void addInformation(@NotNull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
 		int worldId = getWorldId(stack);
 		long satId = SatelliteRegistry.getSatelliteId(stack);
 

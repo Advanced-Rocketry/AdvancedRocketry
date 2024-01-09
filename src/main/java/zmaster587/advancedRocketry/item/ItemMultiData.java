@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.api.DataStorage;
 import zmaster587.advancedRocketry.world.util.MultiData;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class ItemMultiData extends Item {
@@ -21,7 +21,7 @@ public class ItemMultiData extends Item {
 		super();
 	}
 
-	public void setMaxData(@Nonnull ItemStack stack, int amount) {
+	public void setMaxData(@NotNull ItemStack stack, int amount) {
 		MultiData data = getDataStorage(stack);
 		data.setMaxData(amount);
 
@@ -36,15 +36,15 @@ public class ItemMultiData extends Item {
 		stack.setTagCompound(nbt);
 	}
 
-	public int getData(@Nonnull ItemStack stack, DataStorage.DataType type) {
+	public int getData(@NotNull ItemStack stack, DataStorage.DataType type) {
 		return getDataStorage(stack).getDataAmount(type);
 	}
 	
-	public int getMaxData(@Nonnull ItemStack stack) {
+	public int getMaxData(@NotNull ItemStack stack) {
 		return getDataStorage(stack).getMaxData();
 	}
 
-	private MultiData getDataStorage(@Nonnull ItemStack item) {
+	private MultiData getDataStorage(@NotNull ItemStack item) {
 
 		MultiData data = new MultiData();
 
@@ -58,12 +58,12 @@ public class ItemMultiData extends Item {
 		return data;
 	}
 
-	public boolean isFull(@Nonnull ItemStack item,  DataStorage.DataType dataType) {
+	public boolean isFull(@NotNull ItemStack item,  DataStorage.DataType dataType) {
 		return getDataStorage(item).getMaxData() == getData(item, dataType);
 		
 	}
 	
-	public int addData(@Nonnull ItemStack item, int amount, DataStorage.DataType dataType) {
+	public int addData(@NotNull ItemStack item, int amount, DataStorage.DataType dataType) {
 		MultiData data = getDataStorage(item);
 
 		int amt = data.addData(amount, dataType, EnumFacing.DOWN,true);
@@ -80,7 +80,7 @@ public class ItemMultiData extends Item {
 		return amt;
 	}
 
-	public int removeData(@Nonnull ItemStack item, int amount, DataStorage.DataType dataType) {
+	public int removeData(@NotNull ItemStack item, int amount, DataStorage.DataType dataType) {
 		MultiData data = getDataStorage(item);
 
 		int amt = data.extractData(amount, dataType, EnumFacing.DOWN, true);
@@ -97,7 +97,7 @@ public class ItemMultiData extends Item {
 		return amt;
 	}
 
-	public void setData(@Nonnull ItemStack item, int amount, DataStorage.DataType dataType) {
+	public void setData(@NotNull ItemStack item, int amount, DataStorage.DataType dataType) {
 		MultiData data = getDataStorage(item);
 
 		data.setDataAmount(amount, dataType);
@@ -114,7 +114,7 @@ public class ItemMultiData extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
+	public void addInformation(@NotNull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
 		super.addInformation(stack, player, list, bool);
 
 		MultiData data = getDataStorage(stack);

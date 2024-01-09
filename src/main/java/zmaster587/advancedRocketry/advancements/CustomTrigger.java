@@ -10,8 +10,8 @@ import net.minecraft.advancements.critereon.AbstractCriterionInstance;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 
 public class CustomTrigger implements ICriterionTrigger
@@ -35,7 +35,7 @@ public class CustomTrigger implements ICriterionTrigger
      * @see net.minecraft.advancements.ICriterionTrigger#getId()
      */
     @Override
-    @Nonnull
+    @NotNull
     public ResourceLocation getId()
         {
             return ID;
@@ -45,7 +45,7 @@ public class CustomTrigger implements ICriterionTrigger
      * @see net.minecraft.advancements.ICriterionTrigger#addListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
-    @ParametersAreNonnullByDefault
+    
     public void addListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener listener)
     {
         CustomTrigger.Listeners tameAnimalTrigger$listeners = this.listeners.get(playerAdvancementsIn);
@@ -63,7 +63,7 @@ public class CustomTrigger implements ICriterionTrigger
      * @see net.minecraft.advancements.ICriterionTrigger#removeListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
-    @ParametersAreNonnullByDefault
+    
     public void removeListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener listener)
     {
         CustomTrigger.Listeners tameanimaltrigger$listeners = this.listeners.get(playerAdvancementsIn);
@@ -83,7 +83,7 @@ public class CustomTrigger implements ICriterionTrigger
      * @see net.minecraft.advancements.ICriterionTrigger#removeAllListeners(net.minecraft.advancements.PlayerAdvancements)
      */
     @Override
-    public void removeAllListeners(@Nonnull PlayerAdvancements playerAdvancementsIn)
+    public void removeAllListeners(@NotNull PlayerAdvancements playerAdvancementsIn)
     {
         this.listeners.remove(playerAdvancementsIn);
     }
@@ -96,7 +96,7 @@ public class CustomTrigger implements ICriterionTrigger
      * @return the tame bird trigger. instance
      */
     @Override
-    @Nonnull
+    @NotNull
     public CustomTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context)
     {
         return new CustomTrigger.Instance(this.getId());

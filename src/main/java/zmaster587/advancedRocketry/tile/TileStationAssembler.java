@@ -21,7 +21,7 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -227,21 +227,21 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack getStackInSlot(int slot) {
 		return inventory.getStackInSlot(slot);
 	}
 
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack decrStackSize(int slot, int amt) {
 		return inventory.decrStackSize(slot, amt);
 	}
 
 
 	@Override
-	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
+	public void setInventorySlotContents(int slot, @NotNull ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 	}
 
@@ -265,7 +265,7 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 
 
 	@Override
-	public boolean isUsableByPlayer(@Nonnull EntityPlayer player) {
+	public boolean isUsableByPlayer(@NotNull EntityPlayer player) {
 		return inventory.isUsableByPlayer(player);
 	}
 
@@ -287,12 +287,12 @@ public class TileStationAssembler extends TileRocketAssemblingMachine implements
 
 
 	@Override
-	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @NotNull ItemStack stack) {
 		return inventory.isItemValidForSlot(slot, stack);
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack removeStackFromSlot(int index) {
 		return inventory.removeStackFromSlot(index);
 	}

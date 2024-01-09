@@ -16,7 +16,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.INetworkMachine;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -124,7 +124,7 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
+	public void setInventorySlotContents(int slot, @NotNull ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 		ItemStack itemStack = inventory.getStackInSlot(0);
 
@@ -145,12 +145,12 @@ public class TileDataBus extends TileInventoryHatch implements IDataInventory, I
 	}
 
 	@Override
-	public boolean canExtractItem(int index, @Nonnull ItemStack stack, EnumFacing direction) {
+	public boolean canExtractItem(int index, @NotNull ItemStack stack, EnumFacing direction) {
 		return index == 1;
 	}
 
 	@Override
-	public boolean canInsertItem(int index, @Nonnull ItemStack itemStackIn, EnumFacing direction) {
+	public boolean canInsertItem(int index, @NotNull ItemStack itemStackIn, EnumFacing direction) {
 		return index == 0 && isItemValidForSlot(index, itemStackIn);
 	}
 

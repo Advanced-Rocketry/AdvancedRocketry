@@ -56,7 +56,7 @@ public class RendererSpaceElevator extends TileEntitySpecialRenderer {
 		} else {
 			GL11.glRotatef(rotationAmount, 0, 0, 1);
 		}
-		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
+		GL11.glRotatef((front.getXOffset() == 1 ? 180 : 0) + front.getZOffset()*90f, 0, 1, 0);
 		float yOffset = (multiBlockTile.isAnchorOnSpaceStation()) ? -1f : 0;
 		GL11.glTranslated(4.5f, yOffset, 0.5f);
 

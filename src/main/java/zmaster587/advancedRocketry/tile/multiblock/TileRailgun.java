@@ -40,8 +40,8 @@ import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.ZUtils;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class TileRailgun extends TileMultiPowerConsumer implements IInventory, ILinkableTile, IGuiCallback {
@@ -354,9 +354,9 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 
 						EnumFacing dir = RotatableBlock.getFront(world.getBlockState(pos));
 
-						EntityItemAbducted ent = new EntityItemAbducted(this.world, this.pos.getX() - 2*dir.getFrontOffsetX() + 0.5f, this.pos.getY() + 5, this.pos.getZ() - 2*dir.getFrontOffsetZ() + 0.5f, tfrStack);
+						EntityItemAbducted ent = new EntityItemAbducted(this.world, this.pos.getX() - 2*dir.getXOffset() + 0.5f, this.pos.getY() + 5, this.pos.getZ() - 2*dir.getZOffset() + 0.5f, tfrStack);
 						this.world.spawnEntity(ent);
-						PacketHandler.sendToNearby(new PacketMachine(this, (byte) 3), this.world.provider.getDimension(), this.pos.getX() - dir.getFrontOffsetX(), this.pos.getY() + 5, this.pos.getZ() - dir.getFrontOffsetZ(),  64d);
+						PacketHandler.sendToNearby(new PacketMachine(this, (byte) 3), this.world.provider.getDimension(), this.pos.getX() - dir.getXOffset(), this.pos.getY() + 5, this.pos.getZ() - dir.getZOffset(),  64d);
 						return true;
 					}
 				}
@@ -365,7 +365,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		return false;
 	}
 
-	public boolean canReceiveCargo(@Nonnull ItemStack stack) {
+	public boolean canReceiveCargo(@NotNull ItemStack stack) {
 		for(IInventory inv : this.itemOutPorts) {
 			if(ZUtils.numEmptySlots(inv) > 0)
 				return true;
@@ -374,7 +374,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		return false;
 	}
 
-	public void onReceiveCargo(@Nonnull ItemStack stack) {
+	public void onReceiveCargo(@NotNull ItemStack stack) {
 		for(IInventory inv : this.itemOutPorts) {
 			if(ZUtils.doesInvHaveRoom(stack, inv)) {
 				ZUtils.mergeInventory(stack, inv);
@@ -389,7 +389,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public AxisAlignedBB getRenderBoundingBox() {
 		return new AxisAlignedBB(this.pos.getX() -5, this.pos.getY(), this.pos.getZ() - 5, this.pos.getX() + 5, this.pos.getY() +10, this.pos.getZ() + 5);
 	}
@@ -400,20 +400,20 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack getStackInSlot(int i) {
 		return inv.getStackInSlot(i);
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack decrStackSize(int i, int j) {
 		return inv.decrStackSize(i, j);
 	}
 
 
 	@Override
-	public void setInventorySlotContents(int i, @Nonnull ItemStack j) {
+	public void setInventorySlotContents(int i, @NotNull ItemStack j) {
 		inv.setInventorySlotContents(i, j);
 
 	}
@@ -444,12 +444,12 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int i, @Nonnull ItemStack stack) {
+	public boolean isItemValidForSlot(int i, @NotNull ItemStack stack) {
 		return stack.isEmpty() || stack.getItem() instanceof ItemLinker;
 	}
 
 	@Override
-	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
+	public boolean onLinkStart(@NotNull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		ItemLinker.setMasterCoords(item, this.getPos());
 		ItemLinker.setDimId(item, world.provider.getDimension());
@@ -459,7 +459,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
+	public boolean onLinkComplete(@NotNull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		return false;
 	}
@@ -552,7 +552,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public String getName() {
 		return getMachineName();
 	}
@@ -563,7 +563,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack removeStackFromSlot(int index) {
 		return inv.removeStackFromSlot(index);
 	}

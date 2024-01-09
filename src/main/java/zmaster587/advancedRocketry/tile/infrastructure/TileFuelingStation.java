@@ -37,7 +37,7 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,7 +163,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
+	public void setInventorySlotContents(int slot, @NotNull ItemStack stack) {
 
 		super.setInventorySlotContents(slot, stack);
 		while(useBucket(0, getStackInSlot(0)));
@@ -176,12 +176,12 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	 * @param stack the itemstack to work fluid handling on
 	 * @return boolean on whether the fluid stack was successfully filled from or not, returns false if the stack cannot be extracted from or has no fluid left
 	 */
-	private boolean useBucket(int slot, @Nonnull ItemStack stack) {
+	private boolean useBucket(int slot, @NotNull ItemStack stack) {
 		return FluidUtils.attemptDrainContainerIInv(inventory, tank, stack, 0, 1);
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @NotNull ItemStack stack) {
 		if(stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP)) {
 			FluidStack fstack = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP).getTankProperties()[0].getContents();
 			return fstack != null && canFill(fstack.getFluid());
@@ -210,7 +210,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
-	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
+	public boolean onLinkStart(@NotNull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 
 		ItemLinker.setMasterCoords(item, pos);
@@ -237,7 +237,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
-	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
+	public boolean onLinkComplete(@NotNull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("msg.linker.error.firstMachine"));
@@ -245,7 +245,7 @@ public class TileFuelingStation extends TileInventoriedRFConsumerTank implements
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public int[] getSlotsForFace(EnumFacing side) {
 		if(side == EnumFacing.DOWN)
 			return  new int[]{1};

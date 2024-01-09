@@ -15,10 +15,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.advancedRocketry.world.gen.WorldGenAlienTree;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.ParametersAreNullableByDefault;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+
 import java.util.List;
 import java.util.Random;
 
@@ -56,18 +56,18 @@ public class BlockLightwoodSapling extends BlockBush implements IGrowable {
         }
     }
 
-    @ParametersAreNullableByDefault
+    
     public boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient)
     {
         return true;
     }
 
-    public boolean canUseBonemeal(World worldIn, @Nonnull Random rand, @Nullable BlockPos pos, @Nullable IBlockState state)
+    public boolean canUseBonemeal(World worldIn, @NotNull Random rand, @Nullable BlockPos pos, @Nullable IBlockState state)
     {
         return (double)worldIn.rand.nextFloat() < 0.45D;
     }
 
-    @ParametersAreNonnullByDefault
+    
     public void grow(World worldIn, Random rand, BlockPos pos, IBlockState state)
     {
         if (state.getValue(STAGE) == 0)
@@ -83,7 +83,7 @@ public class BlockLightwoodSapling extends BlockBush implements IGrowable {
     /**
      * Convert the given metadata into a BlockState for this Block
      */
-    @Nonnull
+    @NotNull
     public IBlockState getStateFromMeta(int meta)
     {
         return this.getDefaultState().withProperty(STAGE, (meta & 8) >> 3);
@@ -99,7 +99,7 @@ public class BlockLightwoodSapling extends BlockBush implements IGrowable {
         return i;
     }
 
-    @Nonnull
+    @NotNull
     protected BlockStateContainer createBlockState()
     {
         return new BlockStateContainer(this, STAGE);

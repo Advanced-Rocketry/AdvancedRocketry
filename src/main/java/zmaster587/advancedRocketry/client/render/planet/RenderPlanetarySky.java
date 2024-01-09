@@ -183,9 +183,9 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 			atmosphere = planetaryProvider.getAtmosphereDensityFromHeight(mc.getRenderViewEntity().posY, mc.player.getPosition());
 			EnumFacing dir = getRotationAxis(properties, mc.player.getPosition());
-			axis.x = (float) dir.getFrontOffsetX();
-			axis.y = (float) dir.getFrontOffsetY();
-			axis.z = (float) dir.getFrontOffsetZ();
+			axis.x = (float) dir.getXOffset();
+			axis.y = (float) dir.getYOffset();
+			axis.z = (float) dir.getZOffset();
 
 			myPhi = properties.orbitalPhi;
 			myTheta = properties.orbitTheta;
@@ -228,9 +228,9 @@ public class RenderPlanetarySky extends IRenderHandler {
 
 			atmosphere = properties.getAtmosphereDensityAtHeight(mc.getRenderViewEntity().posY);//planetaryProvider.getAtmosphereDensityFromHeight(mc.getRenderViewEntity().posY, mc.player.getPosition());
 			EnumFacing dir = getRotationAxis(properties, mc.player.getPosition());
-			axis.x = (float) dir.getFrontOffsetX();
-			axis.y = (float) dir.getFrontOffsetY();
-			axis.z = (float) dir.getFrontOffsetZ();
+			axis.x = (float) dir.getXOffset();
+			axis.y = (float) dir.getYOffset();
+			axis.z = (float) dir.getZOffset();
 
 			myPhi = properties.orbitalPhi;
 			myTheta = properties.orbitTheta;
@@ -448,7 +448,7 @@ public class RenderPlanetarySky extends IRenderHandler {
 				for(int i = -3; i < 5; i++) {
 					GL11.glPushMatrix();
 					double magnitude = i*-100 + (((System.currentTimeMillis()) + 50) % 2000)/20f;
-					GL11.glTranslated(-travelDirection.getFrontOffsetZ()*magnitude, 0, travelDirection.getFrontOffsetX()*magnitude);
+					GL11.glTranslated(-travelDirection.getZOffset()*magnitude, 0, travelDirection.getXOffset()*magnitude);
 					GL11.glCallList(this.starGLCallList);
 					GL11.glPopMatrix();
 				}

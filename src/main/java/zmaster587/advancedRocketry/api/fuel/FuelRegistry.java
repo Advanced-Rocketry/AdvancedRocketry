@@ -3,8 +3,8 @@ package zmaster587.advancedRocketry.api.fuel;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 
 public class FuelRegistry {
@@ -31,7 +31,7 @@ public class FuelRegistry {
 		 * @param entry FuelEntry to add
 		 * @return true if successfully added, false if already exists
 		 */
-		public boolean addFuel(@Nonnull FuelEntry entry) {
+		public boolean addFuel(@NotNull FuelEntry entry) {
 			entry.type = this;
 			return !fuels.add(entry);
 		}
@@ -40,7 +40,7 @@ public class FuelRegistry {
 		 * @param stack
 		 * @return true if the itemStack is a fuel Source
 		 */
-		public boolean isFuel(@Nonnull ItemStack stack) {
+		public boolean isFuel(@NotNull ItemStack stack) {
 			return isFuel((Object)stack);
 		}
 		
@@ -71,7 +71,7 @@ public class FuelRegistry {
 		
 		//Returns the fuel if it exists otherwise null (Helper)
 
-		public FuelEntry getFuel(@Nonnull ItemStack stack) {
+		public FuelEntry getFuel(@NotNull ItemStack stack) {
 			return getFuel((Object)stack);
 		}
 		
@@ -112,7 +112,7 @@ public class FuelRegistry {
 		 * @param fuel ItemStack or Fluid to register as fuel
 		 * @param multiplier how many fuel points one unit of this object is worth
 		 */
-		public FuelEntry(@Nonnull Object fuel, float multiplier) {
+		public FuelEntry(@NotNull Object fuel, float multiplier) {
 			this.fuel = fuel;
 			this.multiplier = multiplier;
 		}
@@ -154,7 +154,7 @@ public class FuelRegistry {
 	 * @param multiplier amount of fuel points 1mb is worth
 	 * @return true if successfully added to the registry, false if it already exists
 	 */
-	public boolean registerFuel(@Nonnull FuelType type ,Fluid fluid, float multiplier) {
+	public boolean registerFuel(@NotNull FuelType type ,Fluid fluid, float multiplier) {
 		FuelEntry entry = new FuelEntry(fluid, multiplier);
 		
 		return type.addFuel(entry);
@@ -167,7 +167,7 @@ public class FuelRegistry {
 	 * @param multiplier amount of fuel points one item is worth
 	 * @return true if successfully added to the registry, false if it already exists
 	 */
-	public boolean registerFuel(@Nonnull FuelType type, @Nonnull ItemStack item, float multiplier) {
+	public boolean registerFuel(@NotNull FuelType type, @NotNull ItemStack item, float multiplier) {
 		FuelEntry entry = new FuelEntry(item, multiplier);
 		return type.addFuel(entry);
 	}
@@ -177,7 +177,7 @@ public class FuelRegistry {
 	 * @param stack ItemStack to check
 	 * @return true if the itemStack has been registered as {@link FuelType} fuel
 	 */
-	public boolean isFuel(@Nullable FuelType type, @Nonnull ItemStack stack) {
+	public boolean isFuel(@Nullable FuelType type, @NotNull ItemStack stack) {
 		return isFuel(type, (Object)stack);
 	}
 	
@@ -202,7 +202,7 @@ public class FuelRegistry {
 	 * @param stack itemStack to check against
 	 * @return the amount of fuel points one item of this stack is worth
 	 */
-	public float getMultiplier(@Nullable FuelType type, @Nonnull ItemStack stack) {
+	public float getMultiplier(@Nullable FuelType type, @NotNull ItemStack stack) {
 		return getMultiplier(type, (Object)stack);
 	}
 	

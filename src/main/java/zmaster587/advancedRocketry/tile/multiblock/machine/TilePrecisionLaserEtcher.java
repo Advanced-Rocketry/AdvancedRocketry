@@ -21,7 +21,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements IModularInventory {
@@ -79,13 +79,13 @@ public class TilePrecisionLaserEtcher extends TileMultiblockMachine implements I
 	}
 	
 	@Override
-	@Nonnull
+	@NotNull
 	public AxisAlignedBB getRenderBoundingBox() {
 		
 		return new AxisAlignedBB(pos.add(-3,-2,-3),pos.add(3,2,3));
 	}
 
-	private boolean isLensItem (@Nonnull ItemStack stack) {
+	private boolean isLensItem (@NotNull ItemStack stack) {
 		int[] oreIds = OreDictionary.getOreIDs(stack);
 		for (int oreId : oreIds) {
 			if (OreDictionary.getOreName(oreId).contains("lensPrecisionLaserEtcher")) {

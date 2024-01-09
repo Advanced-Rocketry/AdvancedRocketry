@@ -45,8 +45,8 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.IconResource;
 import zmaster587.libVulpes.util.ZUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -168,7 +168,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 
 	public float getNeededThrust() {return getWeight();}
 
-	public float getNeededFuel(@Nonnull FuelType fuelType) { return getAcceleration( getGravityMultiplier() ) > 0 ? 2*stats.getBaseFuelRate(fuelType)*MathHelper.sqrt((2*(ARConfiguration.getCurrentConfig().orbit-this.getPos().getY()))/getAcceleration(getGravityMultiplier())) : 0; }
+	public float getNeededFuel(@NotNull FuelType fuelType) { return getAcceleration( getGravityMultiplier() ) > 0 ? 2*stats.getBaseFuelRate(fuelType)*MathHelper.sqrt((2*(ARConfiguration.getCurrentConfig().orbit-this.getPos().getY()))/getAcceleration(getGravityMultiplier())) : 0; }
 
 	public float getGravityMultiplier () { return DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension()).getGravitationalMultiplier(); }
 
@@ -487,8 +487,8 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 		EnumFacing direction = RotatableBlock.getFront(world.getBlockState(pos)).getOpposite();
 		int xMin, zMin, xMax, zMax;
 		int yCurrent = pos.getY() -1;
-		int xCurrent = pos.getX() + direction.getFrontOffsetX();
-		int zCurrent = pos.getZ() + direction.getFrontOffsetZ();
+		int xCurrent = pos.getX() + direction.getXOffset();
+		int zCurrent = pos.getZ() + direction.getZOffset();
 		xMax = xMin = xCurrent;
 		zMax = zMin = zCurrent;
 		int xSize, zSize;
@@ -499,7 +499,7 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 			return null;
 
 		//Get min and maximum Z/X bounds
-		if(direction.getFrontOffsetX() != 0) {
+		if(direction.getXOffset() != 0) {
 			xSize = ZUtils.getContinuousBlockLength(world, direction, currPos, MAX_SIZE, viableBlocks);
 			zMin = ZUtils.getContinuousBlockLength(world, EnumFacing.NORTH, currPos, MAX_SIZE, viableBlocks);
 			zMax = ZUtils.getContinuousBlockLength(world, EnumFacing.SOUTH, currPos.add(0,0,1), MAX_SIZE - zMin, viableBlocks);
@@ -508,11 +508,11 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 			zMin = zCurrent - zMin + 1;
 			zMax = zCurrent + zMax;
 
-			if(direction.getFrontOffsetX() > 0) {
+			if(direction.getXOffset() > 0) {
 				xMax = xCurrent + xSize-1;
 			}
 
-			if(direction.getFrontOffsetX() < 0) {
+			if(direction.getXOffset() < 0) {
 				xMin = xCurrent - xSize+1;
 			}
 		}
@@ -525,11 +525,11 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 			xMin = xCurrent - xMin + 1;
 			xMax = xCurrent + xMax;
 
-			if(direction.getFrontOffsetZ() > 0) {
+			if(direction.getZOffset() > 0) {
 				zMax = zCurrent + zSize-1;
 			}
 
-			if(direction.getFrontOffsetZ() < 0) {
+			if(direction.getZOffset() < 0) {
 				zMin = zCurrent - zSize+1;
 			}
 		}
@@ -914,13 +914,13 @@ public class TileRocketAssemblingMachine extends TileEntityRFConsumer implements
 	}
 
 	@Override
-	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
+	public boolean onLinkStart(@NotNull ItemStack item, TileEntity entity,
 							   EntityPlayer player, World world) {
 		return true;
 	}
 
 	@Override
-	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
+	public boolean onLinkComplete(@NotNull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		TileEntity tile = world.getTileEntity(ItemLinker.getMasterCoords(item));
 

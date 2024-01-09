@@ -20,8 +20,8 @@ import zmaster587.libVulpes.tile.TileInventoriedRFConsumerTank;
 import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.IconResource;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,13 +31,13 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public int[] getSlotsForFace(@Nullable EnumFacing side) {
 		return new int[] {};
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @NotNull ItemStack stack) {
 		return false;
 	}
 
@@ -148,12 +148,12 @@ public class TileGasChargePad extends TileInventoriedRFConsumerTank implements I
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
+	public void setInventorySlotContents(int slot, @NotNull ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
 		while(useBucket(0, getStackInSlot(0)));
 	}
 	
-	private boolean useBucket(int slot, @Nonnull ItemStack stack) {
+	private boolean useBucket(int slot, @NotNull ItemStack stack) {
 		return FluidUtils.attemptDrainContainerIInv(inventory, tank, stack, 0, 1);
 	}
 

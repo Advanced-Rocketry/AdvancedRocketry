@@ -33,7 +33,7 @@ import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import java.util.List;
 import java.util.Random;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.*;
 

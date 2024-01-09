@@ -40,9 +40,9 @@ import zmaster587.advancedRocketry.world.util.TeleporterNoPortalSeekBlock;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -65,18 +65,18 @@ public class WorldCommand implements ICommand {
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public String getName() {
 		return "advancedrocketry";
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public String getUsage(@Nullable ICommandSender sender) {
 		return "advancedrocketry help";
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public List<String> getAliases() {
 		return aliases;
@@ -904,7 +904,7 @@ public class WorldCommand implements ICommand {
 	}
 
 	@Override
-	@ParametersAreNonnullByDefault
+	
 	public void execute(MinecraftServer server, ICommandSender sender, String[] string) {
 
 		//advrocketry planet set <var value>
@@ -977,14 +977,14 @@ public class WorldCommand implements ICommand {
 	}
 
 	@Override
-	public boolean checkPermission(@Nonnull MinecraftServer server, ICommandSender sender) {
+	public boolean checkPermission(@NotNull MinecraftServer server, ICommandSender sender) {
 		return sender.canUseCommand(2, getName());
 
 	}
 
 	@Override
-	@Nonnull
-	@ParametersAreNonnullByDefault
+	@NotNull
+	
 	public List<String> getTabCompletions(MinecraftServer server,
 			ICommandSender sender, String[] string, @Nullable BlockPos targetPos) {
 		ArrayList<String> list = new ArrayList<>();
@@ -1032,7 +1032,7 @@ public class WorldCommand implements ICommand {
 	}
 
 	@Override
-	public boolean isUsernameIndex(@Nonnull String[] string, int number) {
+	public boolean isUsernameIndex(@NotNull String[] string, int number) {
 		return number == 1 && string[0].equalsIgnoreCase("fetch");
 	}
 	@Override

@@ -26,10 +26,10 @@ import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.util.FluidUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.ParametersAreNullableByDefault;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class BlockPressurizedFluidTank extends Block {
 	
 	public BlockPressurizedFluidTank(Material material) {
 		super(material);
-		isBlockContainer = true;
+//		isBlockContainer = true;
 	}
 
 	@Override
@@ -60,22 +60,22 @@ public class BlockPressurizedFluidTank extends Block {
 	}
 
 	@Override
-	@ParametersAreNullableByDefault
+
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileFluidTank((int) (64000 * ARConfiguration.getCurrentConfig().blockTankCapacity));
 	}
 	
 	@Override
-	@Nonnull
-	@ParametersAreNullableByDefault
+	@NotNull
+	
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
 			IBlockState state, int fortune) {
 		return new LinkedList<>();
 	}
 	
 	@Override
-	@ParametersAreNonnullByDefault
-	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @Nonnull ItemStack stack) {
+	
+	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @NotNull ItemStack stack) {
 
 		if(te instanceof TileFluidTank) {
 			IFluidHandler fluid = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN);
@@ -110,11 +110,11 @@ public class BlockPressurizedFluidTank extends Block {
 	}
 	
 	@Override
-	@ParametersAreNonnullByDefault
+
 	public boolean shouldSideBeRendered(IBlockState blockState,
 			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		
-		if(side.getFrontOffsetY() != 0) {
+		if(side.getYOffset() != 0) {
 			if(blockAccess.getBlockState(pos).getBlock() == this)
 			return true;
 		}
@@ -123,7 +123,7 @@ public class BlockPressurizedFluidTank extends Block {
 	}
 	
 	@Override
-	@Nonnull
+	@NotNull
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source,
 			BlockPos pos) {
 		return bb;
@@ -143,11 +143,11 @@ public class BlockPressurizedFluidTank extends Block {
 	}
 	
 	@Override
-	@Nonnull
-	public BlockRenderLayer getBlockLayer() {
+	@NotNull
+	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.CUTOUT;
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;

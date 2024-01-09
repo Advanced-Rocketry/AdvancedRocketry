@@ -5,7 +5,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.item.ItemData;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class SlotData extends Slot {
 
@@ -16,7 +16,7 @@ public class SlotData extends Slot {
 	}
 
 	@Override
-	public boolean isItemValid(@Nonnull ItemStack stack) {
+	public boolean isItemValid(@NotNull ItemStack stack) {
 		if(stack.isEmpty() || stack.getItem() instanceof ItemData)
 			return super.isItemValid(stack);
 		return false;

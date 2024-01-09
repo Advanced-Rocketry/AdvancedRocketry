@@ -11,7 +11,7 @@ import zmaster587.advancedRocketry.stations.SpaceObjectManager;
 import zmaster587.advancedRocketry.stations.SpaceStationObject;
 import zmaster587.libVulpes.block.BlockTile;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class BlockWarpController extends BlockTile {
 
@@ -21,7 +21,7 @@ public class BlockWarpController extends BlockTile {
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
-			EntityLivingBase placer, @Nonnull ItemStack stack) {
+			EntityLivingBase placer, @NotNull ItemStack stack) {
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
 		
 		ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);

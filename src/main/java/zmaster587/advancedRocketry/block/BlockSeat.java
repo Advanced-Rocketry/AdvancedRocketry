@@ -15,9 +15,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.entity.EntityDummy;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNullableByDefault;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 public class BlockSeat extends Block {
@@ -34,8 +34,8 @@ public class BlockSeat extends Block {
 	}
 
 	@Override
-	@Nonnull
-	public BlockRenderLayer getBlockLayer() {
+	@NotNull
+	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.CUTOUT;
 	}
 	
@@ -50,17 +50,17 @@ public class BlockSeat extends Block {
     }
 	
 	@Override
-	@ParametersAreNullableByDefault
+	
 	public boolean isSideSolid(IBlockState base_state, IBlockAccess world,
 			BlockPos pos, EnumFacing side) {
 		return side == EnumFacing.DOWN;
 	}
-	
+
 	//If the block is destroyed remove any mounting associated with it
 	@Override
-	public void onBlockDestroyedByExplosion(World world, BlockPos pos,
+	public void onBlockExploded(World world, BlockPos pos,
 			Explosion explosionIn) {
-		super.onBlockDestroyedByExplosion(world, pos, explosionIn);
+		super.onBlockExploded(world, pos, explosionIn);
 		
 		List<EntityDummy> list = world.getEntitiesWithinAABB(EntityDummy.class, new AxisAlignedBB(pos, pos.add(1,1,1)));
 
@@ -73,7 +73,7 @@ public class BlockSeat extends Block {
 	}
 	
 	@Override
-	@Nonnull
+	@NotNull
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source,
 			BlockPos pos) {
 		return bb;

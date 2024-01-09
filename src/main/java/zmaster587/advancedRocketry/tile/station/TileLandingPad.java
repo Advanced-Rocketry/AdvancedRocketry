@@ -39,7 +39,7 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.INetworkMachine;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -94,7 +94,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	@Override
-	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity,
+	public boolean onLinkStart(@NotNull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 		ItemLinker.setMasterCoords(item, getPos());
 		ItemLinker.setDimId(item, world.provider.getDimension());
@@ -107,7 +107,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	@Override
-	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity,
+	public boolean onLinkComplete(@NotNull ItemStack item, TileEntity entity,
 			EntityPlayer player, World world) {
 
 		TileEntity tile = world.getTileEntity(ItemLinker.getMasterCoords(item));
@@ -229,7 +229,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
+	public void setInventorySlotContents(int slot, @NotNull ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
 
 		if(!stack.isEmpty()) {
@@ -265,7 +265,7 @@ public class TileLandingPad extends TileInventoryHatch implements ILinkableTile,
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @NotNull ItemStack stack) {
 		return stack.getItem() == LibVulpesItems.itemLinker;
 	}
 

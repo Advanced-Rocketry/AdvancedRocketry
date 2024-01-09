@@ -72,7 +72,7 @@ import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -210,7 +210,7 @@ public class PlanetEventHandler {
 	}
 
 	@SubscribeEvent
-	public void sleepEvent(@Nonnull PlayerSleepInBedEvent event) {
+	public void sleepEvent(@NotNull PlayerSleepInBedEvent event) {
 
 		if(event.getEntity().world.provider instanceof WorldProviderPlanet) {
 			WorldProvider provider = event.getEntity().world.provider;
@@ -224,7 +224,7 @@ public class PlanetEventHandler {
 	}
 
 	@SubscribeEvent
-	public void blockPlacedEvent(@Nonnull PlaceEvent event) {
+	public void blockPlacedEvent(@NotNull PlaceEvent event) {
 		WorldProvider provider = event.getWorld().provider;
 		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(provider.getDimension());
 
@@ -244,7 +244,7 @@ public class PlanetEventHandler {
 	}
 	
 	@SubscribeEvent
-	public void blockRightClicked(@Nonnull RightClickBlock event) {
+	public void blockRightClicked(@NotNull RightClickBlock event) {
 		EnumFacing direction = event.getFace();
 		WorldProvider provider = event.getWorld().provider;
 		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(provider.getDimension());

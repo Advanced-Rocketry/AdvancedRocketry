@@ -8,8 +8,8 @@ import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import zmaster587.advancedRocketry.world.gen.WorldGenAlienTree;
 import zmaster587.advancedRocketry.world.gen.WorldGenNoTree;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Random;
 
 public class BiomeGenAlienForest extends Biome {
@@ -26,7 +26,7 @@ public class BiomeGenAlienForest extends Biome {
 	}
 
 	@Override
-	@ParametersAreNonnullByDefault
+	
 	public void decorate(World worldIn, Random rand, BlockPos pos) {
 		//int xCoord = (chunkX << 4) + 8;
 		//int zCoord = (chunkZ << 4) + 8;
@@ -41,7 +41,7 @@ public class BiomeGenAlienForest extends Biome {
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public WorldGenAbstractTree getRandomTreeFeature(Random rand) {
 		return noTree;
 	}

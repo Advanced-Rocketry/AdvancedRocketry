@@ -17,7 +17,7 @@ import zmaster587.advancedRocketry.network.PacketAirParticle;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
@@ -33,7 +33,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	private HashedBlockPosition blockPos;
 	private List<AreaBlob> nearbyBlobs;
 
-	public AtmosphereBlob(@Nonnull IBlobHandler blobHandler) {
+	public AtmosphereBlob(@NotNull IBlobHandler blobHandler) {
 		super(blobHandler);
 		executing = false;
 	}
@@ -46,7 +46,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	 * Called when a block can no longer be filled with air
 	 */
 	@Override
-	public void removeBlock(@Nonnull HashedBlockPosition blockPos) {
+	public void removeBlock(@NotNull HashedBlockPosition blockPos) {
 
 		synchronized (graph) {
 			graph.remove(blockPos);
@@ -61,7 +61,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	}
 
 	@Override
-	public boolean isPositionAllowed(@Nonnull World world, @Nonnull HashedBlockPosition pos, List<AreaBlob> otherBlobs) {
+	public boolean isPositionAllowed(@NotNull World world, @NotNull HashedBlockPosition pos, List<AreaBlob> otherBlobs) {
 		for(AreaBlob blob : otherBlobs) {
 			if(blob.contains(pos) && blob != this)
 				return false;
@@ -71,7 +71,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	}
 
 	@Override
-	public void addBlock(@Nonnull HashedBlockPosition blockPos, List<AreaBlob> nearbyBlobs) {
+	public void addBlock(@NotNull HashedBlockPosition blockPos, List<AreaBlob> nearbyBlobs) {
 
 		if(blobHandler.canFormBlob()) {
 
@@ -175,7 +175,7 @@ public class AtmosphereBlob extends AreaBlob implements Runnable {
 	 * @param world
 	 * @param blocks Collection containing affected locations
 	 */
-	protected void runEffectOnWorldBlocks(@Nonnull World world, @Nonnull Collection<HashedBlockPosition> blocks) {
+	protected void runEffectOnWorldBlocks(@NotNull World world, @NotNull Collection<HashedBlockPosition> blocks) {
 		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(world.provider.getDimension());
 
 		if(atmhandler != null &&  !atmhandler.getDefaultAtmosphereType().allowsCombustion()) {

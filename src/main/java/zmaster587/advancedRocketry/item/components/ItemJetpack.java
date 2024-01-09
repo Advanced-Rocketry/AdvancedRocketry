@@ -31,7 +31,7 @@ import zmaster587.libVulpes.client.ResourceIcon;
 import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.InputSyncHandler;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
@@ -49,7 +49,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
 	@Override
 	public void onTick(World world, EntityPlayer player,
-					   @Nonnull ItemStack armorStack, IInventory inv, @Nonnull ItemStack componentStack) {
+					   @NotNull ItemStack armorStack, IInventory inv, @NotNull ItemStack componentStack) {
 
 		if(player.capabilities.isCreativeMode) {
 			return;
@@ -128,32 +128,32 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
 
 	@Override
-	public boolean onComponentAdded(World world, @Nonnull ItemStack armorStack) {
+	public boolean onComponentAdded(World world, @NotNull ItemStack armorStack) {
 		return true;
 	}
 
 	@Override
-	public void onComponentRemoved(World world, @Nonnull ItemStack armorStack) {
+	public void onComponentRemoved(World world, @NotNull ItemStack armorStack) {
 
 	}
 
 	@Override
-	public void onArmorDamaged(EntityLivingBase entity, @Nonnull ItemStack armorStack,
-							   @Nonnull ItemStack componentStack, DamageSource source, int damage) {
+	public void onArmorDamaged(EntityLivingBase entity, @NotNull ItemStack armorStack,
+							   @NotNull ItemStack componentStack, DamageSource source, int damage) {
 	}
 
 	@Override
-	public boolean isActive(@Nonnull ItemStack stack, EntityPlayer player) {
+	public boolean isActive(@NotNull ItemStack stack, EntityPlayer player) {
 		return InputSyncHandler.isSpaceDown(player);
 	}
 
 	@Override
-	public boolean isEnabled(@Nonnull ItemStack stack) {
+	public boolean isEnabled(@NotNull ItemStack stack) {
 		return stack.hasTagCompound() && stack.getTagCompound().getBoolean("enabled");
 	}
 
 	@Override
-	public void setEnabledState(@Nonnull ItemStack stack, boolean state) {
+	public void setEnabledState(@NotNull ItemStack stack, boolean state) {
 		NBTTagCompound nbt;
 		if(stack.hasTagCompound()) {
 			nbt = stack.getTagCompound();
@@ -187,7 +187,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 	}
 	
 	@Override
-	public void onAccelerate(@Nonnull ItemStack stack, IInventory inv, EntityPlayer player) {
+	public void onAccelerate(@NotNull ItemStack stack, IInventory inv, EntityPlayer player) {
 		boolean hasFuel = hasFuel(inv);
 
 		MODES mode = getMode(stack);
@@ -223,19 +223,19 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public ResourceIcon getComponentIcon(@Nonnull ItemStack armorStack) {
+	public ResourceIcon getComponentIcon(@NotNull ItemStack armorStack) {
 		
 		return isEnabled(armorStack) ? getMode(armorStack) == MODES.HOVER ? new ResourceIcon(TextureResources.jetpackIconHover) : new ResourceIcon(TextureResources.jetpackIconEnabled) : new ResourceIcon(TextureResources.jetpackIconDisabled);
 	}
 
-	private MODES getMode(@Nonnull ItemStack stack) {
+	private MODES getMode(@NotNull ItemStack stack) {
 		if(stack.hasTagCompound())
 			return MODES.values()[stack.getTagCompound().getInteger("mode")];
 
 		return MODES.values()[0];
 	}
 
-	private void setHeight(@Nonnull ItemStack stack, float height) {
+	private void setHeight(@NotNull ItemStack stack, float height) {
 		if(stack.hasTagCompound())
 			stack.getTagCompound().setFloat("height", height);
 		else {
@@ -245,14 +245,14 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 		}
 	}
 
-	private float getHeight(@Nonnull ItemStack stack) {
+	private float getHeight(@NotNull ItemStack stack) {
 		if(stack.hasTagCompound())
 			return stack.getTagCompound().getFloat("height");
 		return 0;
 	}
 
 	@Override
-	public void changeMode(@Nonnull ItemStack stack, IInventory modules, EntityPlayer player) {
+	public void changeMode(@NotNull ItemStack stack, IInventory modules, EntityPlayer player) {
 		NBTTagCompound nbt;
 		int mode = 0;
 
@@ -288,7 +288,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 			setHeight(stack, (float)player.posY + player.height);
 	}
 	
-	private void flagModeSwitched(@Nonnull ItemStack stack) {
+	private void flagModeSwitched(@NotNull ItemStack stack) {
 		NBTTagCompound nbt;
 		if(stack.hasTagCompound()) {
 			nbt = stack.getTagCompound();
@@ -303,7 +303,7 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 	}
 	
 	
-	private boolean hasModeSwitched(@Nonnull ItemStack stack) {
+	private boolean hasModeSwitched(@NotNull ItemStack stack) {
 		NBTTagCompound nbt;
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("modeSwitch")) {
 			nbt = stack.getTagCompound();
@@ -317,14 +317,14 @@ public class ItemJetpack extends Item implements IArmorComponent, IJetPack {
 	}
 
 	@Override
-	public boolean isAllowedInSlot(@Nonnull ItemStack stack, EntityEquipmentSlot slot) {
+	public boolean isAllowedInSlot(@NotNull ItemStack stack, EntityEquipmentSlot slot) {
 		return slot == EntityEquipmentSlot.CHEST;
 	}
 
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void renderScreen(@Nonnull ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Gui gui) {
+	public void renderScreen(@NotNull ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Gui gui) {
 		int amt = 0, maxAmt = 0;
 		for (ItemStack currentStack : modules) {
 			if (FluidUtils.containsFluid(currentStack, AdvancedRocketryFluids.fluidHydrogen)) {

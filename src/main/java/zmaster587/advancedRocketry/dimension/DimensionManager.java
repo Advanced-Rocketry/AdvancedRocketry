@@ -40,7 +40,7 @@ import zmaster587.advancedRocketry.world.provider.WorldProviderPlanet;
 import zmaster587.advancedRocketry.world.provider.WorldProviderSpace;
 import zmaster587.libVulpes.network.PacketHandler;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
@@ -389,7 +389,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param properties {@link DimensionProperties} to register
 	 * @return false if the dimension has not been registered, true if it is being newly registered
 	 */
-	public boolean registerDim(@Nonnull DimensionProperties properties, boolean registerWithForge) {
+	public boolean registerDim(@NotNull DimensionProperties properties, boolean registerWithForge) {
 		boolean bool = registerDimNoUpdate(properties, registerWithForge);
 
 		if(bool)
@@ -403,7 +403,7 @@ public class DimensionManager implements IGalaxy {
 	 * @param registerWithForge if true also registers the dimension with forge
 	 * @return true if the dimension has NOT been registered before, false if the dimension IS registered exist already
 	 */
-	public boolean registerDimNoUpdate(@Nonnull DimensionProperties properties, boolean registerWithForge) {
+	public boolean registerDimNoUpdate(@NotNull DimensionProperties properties, boolean registerWithForge) {
 		int dimId = properties.getId();
 
 		if(dimensionList.containsKey(dimId))

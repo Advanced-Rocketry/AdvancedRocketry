@@ -11,7 +11,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import zmaster587.advancedRocketry.api.IFuelTank;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Locale;
 
 public class BlockFuelTank extends Block implements IFuelTank{
@@ -24,7 +24,7 @@ public class BlockFuelTank extends Block implements IFuelTank{
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public IBlockState getStateFromMeta(int meta) {
 		return this.getDefaultState().withProperty(TANKSTATES, TankStates.values()[meta]);
 	}
@@ -35,14 +35,14 @@ public class BlockFuelTank extends Block implements IFuelTank{
 	}
 	
 	@Override
-	@Nonnull
+	@NotNull
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, TANKSTATES);
 	}
 
 	@Override
-	@Nonnull
-	public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess world,
+	@NotNull
+	public IBlockState getActualState(@NotNull IBlockState state, IBlockAccess world,
 			BlockPos pos) {
 		int i = world.getBlockState(pos.add(0,1,0)).getBlock() == this ? 1 : 0;
 		i += world.getBlockState(pos.add(0,-1,0)).getBlock() == this ? 2 : 0;

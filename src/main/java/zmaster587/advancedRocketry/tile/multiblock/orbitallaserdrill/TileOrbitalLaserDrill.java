@@ -37,8 +37,8 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.MultiInventory;
 import zmaster587.libVulpes.util.ZUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -137,7 +137,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	//Required so we see the laser
 	@SideOnly(Side.CLIENT)
 	@Override
-	@Nonnull
+	@NotNull
 	public AxisAlignedBB getRenderBoundingBox() {
 		return new AxisAlignedBB(this.pos.getX() -5, this.pos.getY() - 1000, this.pos.getZ() - 5, this.pos.getX() + 5, this.pos.getY() +50, this.pos.getZ() + 5);
 	}
@@ -338,8 +338,8 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 							}
 						}
 
-						this.laserX += 3*prevDir.getFrontOffsetX();
-						this.laserZ += 3*prevDir.getFrontOffsetZ();
+						this.laserX += 3*prevDir.getXOffset();
+						this.laserZ += 3*prevDir.getZOffset();
 					}
 				}
 				//TODO: unneeded?
@@ -521,7 +521,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack getStackInSlot(int i) {
 		if(i == 0)
 			return lens;
@@ -532,7 +532,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack decrStackSize(int i, int j) {
 		ItemStack ret;
 
@@ -545,7 +545,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	}
 
 	@Override
-	public void setInventorySlotContents(int i, @Nonnull ItemStack itemstack) {
+	public void setInventorySlotContents(int i, @NotNull ItemStack itemstack) {
 
 		//TODO: add gregcipies
 		if(i == 0)
@@ -560,7 +560,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public String getName() {
 		return getMachineName();
 	}
@@ -593,24 +593,24 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public int[] getSlotsForFace(EnumFacing side) {
 		return new int[] {};
 	}
 
 	
 	@Override
-	public boolean canInsertItem(int index, @Nonnull ItemStack itemStackIn, @Nullable EnumFacing direction) {
+	public boolean canInsertItem(int index, @NotNull ItemStack itemStackIn, @Nullable EnumFacing direction) {
 		return false;
 	}
 	
 	@Override
-	public boolean canExtractItem(int index, @Nonnull ItemStack stack, @Nullable EnumFacing direction) {
+	public boolean canExtractItem(int index, @NotNull ItemStack stack, @Nullable EnumFacing direction) {
 		return false;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int i, @Nonnull ItemStack itemstack) {
+	public boolean isItemValidForSlot(int i, @NotNull ItemStack itemstack) {
 		if(i == 0)
 			return AdvancedRocketryItems.itemLens == itemstack.getItem();
 
@@ -730,7 +730,7 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack removeStackFromSlot(int index) {
 		return ItemStack.EMPTY;
 	}

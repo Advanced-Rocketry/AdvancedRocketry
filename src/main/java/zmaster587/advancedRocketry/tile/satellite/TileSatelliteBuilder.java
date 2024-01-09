@@ -22,8 +22,8 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -225,7 +225,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack getStackInSlot(int slot) {
 		if(slot < outputSlot) {
 			ItemStack chassis = getStackInSlot(chassisSlot);
@@ -240,7 +240,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack decrStackSize(int slot, int amt) {
 		if(slot < outputSlot) {
 			ItemStack chassis = getStackInSlot(chassisSlot);
@@ -260,7 +260,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 
 
 	@Override
-	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
+	public void setInventorySlotContents(int slot, @NotNull ItemStack stack) {
 		if(slot < outputSlot) {
 			ItemStack chassis = getStackInSlot(chassisSlot);
 
@@ -290,17 +290,17 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	}
 
 	@Override
-	public void openInventory(@Nonnull EntityPlayer player) {
+	public void openInventory(@NotNull EntityPlayer player) {
 		inventory.openInventory(player);
 	}
 
 	@Override
-	public void closeInventory(@Nonnull EntityPlayer player) {
+	public void closeInventory(@NotNull EntityPlayer player) {
 		inventory.closeInventory(player);
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @NotNull ItemStack stack) {
 		if(slot < outputSlot) {
 			ItemStack chassis = getStackInSlot(chassisSlot);
 
@@ -335,7 +335,7 @@ public class TileSatelliteBuilder extends TileMultiPowerConsumer implements IMod
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack removeStackFromSlot(int index) {
 		if(index < outputSlot) {
 			ItemStack chassis = getStackInSlot(chassisSlot);

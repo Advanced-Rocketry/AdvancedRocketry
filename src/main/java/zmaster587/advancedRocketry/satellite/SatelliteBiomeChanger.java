@@ -16,7 +16,7 @@ import zmaster587.advancedRocketry.util.BiomeHandler;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class SatelliteBiomeChanger extends SatelliteBase  {
@@ -67,8 +67,8 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 	}
 
 	@Override
-	@Nonnull
-	public ItemStack getControllerItemStack(@Nonnull ItemStack satIdChip,
+	@NotNull
+	public ItemStack getControllerItemStack(@NotNull ItemStack satIdChip,
 											SatelliteProperties properties) {
 
 		ItemBiomeChanger idChipItem = (ItemBiomeChanger)satIdChip.getItem();
@@ -77,7 +77,7 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 	}
 
 	@Override
-	public boolean isAcceptableControllerItemStack(@Nonnull ItemStack stack) {
+	public boolean isAcceptableControllerItemStack(@NotNull ItemStack stack) {
 		return !stack.isEmpty() && stack.getItem() instanceof ItemBiomeChanger;
 	}
 

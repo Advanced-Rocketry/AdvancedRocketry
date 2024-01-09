@@ -39,8 +39,8 @@ public class TileCuttingMachine extends TileMultiblockMachine implements IModula
 		if(isRunning() && world.getTotalWorldTime() % 10 == 0) {
 			EnumFacing back = RotatableBlock.getFront(world.getBlockState(pos)).getOpposite();
 
-			float xCoord = this.getPos().getX() + (0.5f*back.getFrontOffsetX()); 
-			float zCoord = this.getPos().getZ() + (0.5f*back.getFrontOffsetZ());
+			float xCoord = this.getPos().getX() + (0.5f*back.getXOffset()); 
+			float zCoord = this.getPos().getZ() + (0.5f*back.getZOffset());
 
 			for(EntityLivingBase entity : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(xCoord, this.getPos().getY() + 1, zCoord, xCoord + 1, this.getPos().getY() + 1.5f, zCoord + 1))) {
 				entity.attackEntityFrom(DamageSource.CACTUS, 1f);

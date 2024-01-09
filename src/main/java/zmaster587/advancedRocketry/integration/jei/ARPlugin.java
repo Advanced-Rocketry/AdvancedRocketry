@@ -44,7 +44,7 @@ import zmaster587.advancedRocketry.integration.jei.sawmill.SawMillRecipeMaker;
 import zmaster587.advancedRocketry.tile.multiblock.machine.*;
 import zmaster587.libVulpes.inventory.GuiModular;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.List;
 
@@ -92,7 +92,7 @@ public class ARPlugin implements IModPlugin {
 		
 		registry.addAdvancedGuiHandlers(new IAdvancedGuiHandler<GuiModular>() {
 			@Override
-			@Nonnull
+			@NotNull
 			public Class<GuiModular> getGuiContainerClass() {
 				return GuiModular.class;
 			}

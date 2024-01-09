@@ -11,8 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Random;
 
 public class BlockCharcoalLog extends BlockLog {
@@ -24,7 +24,7 @@ public class BlockCharcoalLog extends BlockLog {
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, LOG_AXIS);
@@ -36,7 +36,7 @@ public class BlockCharcoalLog extends BlockLog {
 	}
 	
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack getItem(World worldIn, BlockPos pos, @Nullable IBlockState state) {
         Item item = Item.getItemFromBlock(this);
         return item.equals(Items.AIR) ? ItemStack.EMPTY : new ItemStack(item, 1, 0);
@@ -44,7 +44,7 @@ public class BlockCharcoalLog extends BlockLog {
 	
 	
 	
-    @Nonnull
+    @NotNull
 	public IBlockState getStateFromMeta(int meta)
     {
         IBlockState iblockstate = this.getDefaultState();
@@ -87,7 +87,7 @@ public class BlockCharcoalLog extends BlockLog {
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 		return Items.COAL;
 	}
@@ -97,7 +97,7 @@ public class BlockCharcoalLog extends BlockLog {
 		return 1;
 	}
 
-	public int quantityDroppedWithBonus(int i, @Nonnull Random rand)
+	public int quantityDroppedWithBonus(int i, @NotNull Random rand)
 	{
 		return this.quantityDropped(rand) + (i > 0 ? rand.nextInt(i) : 0);
 	}

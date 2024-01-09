@@ -18,7 +18,7 @@ import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.render.RenderHelper;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.nio.IntBuffer;
 
 @SideOnly(Side.CLIENT)
@@ -75,7 +75,7 @@ public class ModuleOreMapper extends ModuleBase {
     class ItemMapper implements Runnable {
         private ItemStack myBlock;
 
-        ItemMapper(@Nonnull ItemStack block) {
+        ItemMapper(@NotNull ItemStack block) {
             //Copy so we don't have any possible CME or oddness due to that
             myBlock = block.copy();
         }

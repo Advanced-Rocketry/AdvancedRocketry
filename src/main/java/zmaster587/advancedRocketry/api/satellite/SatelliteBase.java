@@ -15,7 +15,7 @@ import zmaster587.advancedRocketry.api.ISatelliteIdItem;
 import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.libVulpes.util.UniversalBattery;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class SatelliteBase {
 	
@@ -40,7 +40,7 @@ public abstract class SatelliteBase {
 
 	}
 	
-	public boolean acceptsItemInConstruction(@Nonnull ItemStack item) {
+	public boolean acceptsItemInConstruction(@NotNull ItemStack item) {
 		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
 		return SatelliteProperties.Property.MAIN.isOfType(flag) || SatelliteProperties.Property.POWER_GEN.isOfType(flag) || SatelliteProperties.Property.BATTERY.isOfType(flag);
 	}
@@ -82,8 +82,8 @@ public abstract class SatelliteBase {
 	/**
 	 * @return an item that can be used to control the satellite, normally a satellite ID chip but can be something else
 	 */
-	@Nonnull
-	public ItemStack getControllerItemStack(@Nonnull ItemStack satIdChip, SatelliteProperties properties) {
+	@NotNull
+	public ItemStack getControllerItemStack(@NotNull ItemStack satIdChip, SatelliteProperties properties) {
 		ISatelliteIdItem idChipItem = (ISatelliteIdItem)satIdChip.getItem();
 		idChipItem.setSatellite(satIdChip, properties);
 		return satIdChip;
@@ -93,7 +93,7 @@ public abstract class SatelliteBase {
 	 * @param stack stack to check (can be null)
 	 * @return true if the item stack is a valid controller for the satellite
 	 */
-	public boolean isAcceptableControllerItemStack(@Nonnull ItemStack stack) {
+	public boolean isAcceptableControllerItemStack(@NotNull ItemStack stack) {
 		return !stack.isEmpty() && stack.getItem() == AdvancedRocketryItems.itemSatelliteIdChip;
 	}
 	
@@ -156,13 +156,13 @@ public abstract class SatelliteBase {
 	/**
 	 * @param stack satelliteProperties to assign to this satellite
 	 */
-	public void setProperties(@Nonnull ItemStack stack) {
+	public void setProperties(@NotNull ItemStack stack) {
 		this.satelliteProperties = SatelliteRegistry.getSatelliteProperties(stack);
 		this.battery.setMaxEnergyStored(satelliteProperties.getPowerStorage());
 		this.satellite = stack;
 	}
 
-	@Nonnull
+	@NotNull
 	public ItemStack getItemStackFromSatellite() {
 		return satellite;
 	}

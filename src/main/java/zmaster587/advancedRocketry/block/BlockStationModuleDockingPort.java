@@ -16,9 +16,9 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.block.BlockFullyRotatable;
 import zmaster587.libVulpes.inventory.GuiHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.ParametersAreNullableByDefault;
+import org.jetbrains.annotations.NotNull;
+
+
 
 public class BlockStationModuleDockingPort extends BlockFullyRotatable {
 
@@ -32,7 +32,7 @@ public class BlockStationModuleDockingPort extends BlockFullyRotatable {
 	}
 	
 	@Override
-	@ParametersAreNullableByDefault
+	
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileDockingPort();
 	}
@@ -48,7 +48,7 @@ public class BlockStationModuleDockingPort extends BlockFullyRotatable {
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
-			EntityLivingBase placer, @Nonnull ItemStack stack) {
+			EntityLivingBase placer, @NotNull ItemStack stack) {
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileDockingPort) {
@@ -57,7 +57,7 @@ public class BlockStationModuleDockingPort extends BlockFullyRotatable {
 	}
 	
 	@Override
-	@ParametersAreNonnullByDefault
+
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileLandingPad) {

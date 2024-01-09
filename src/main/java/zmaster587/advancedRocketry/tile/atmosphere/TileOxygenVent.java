@@ -40,8 +40,8 @@ import zmaster587.libVulpes.util.IAdjBlockUpdate;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -363,13 +363,13 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	
 	
 	@Override
-	@Nonnull
+	@NotNull
 	public int[] getSlotsForFace(@Nullable EnumFacing side) {
 		return new int[]{};
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack itemStack) {
+	public boolean isItemValidForSlot(int slot, @NotNull ItemStack itemStack) {
 		return false;
 	}
 
@@ -384,7 +384,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public HashedBlockPosition getRootPosition() {
 		return new HashedBlockPosition(pos);
 	}
@@ -404,7 +404,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 	}
 	
 	@Override
-	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
+	public void setInventorySlotContents(int slot, @NotNull ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
 		
 		while(FluidUtils.attemptDrainContainerIInv(inventory, this.tank, getStackInSlot(0), 0, 1));

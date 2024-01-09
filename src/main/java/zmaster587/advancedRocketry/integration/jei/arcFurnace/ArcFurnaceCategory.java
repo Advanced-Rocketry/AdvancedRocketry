@@ -6,7 +6,7 @@ import zmaster587.advancedRocketry.integration.jei.MachineCategoryTemplate;
 import zmaster587.advancedRocketry.inventory.TextureResources;
 import zmaster587.libVulpes.LibVulpes;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ArcFurnaceCategory extends MachineCategoryTemplate<ArcFurnaceWrapper> {
 
@@ -15,19 +15,19 @@ public class ArcFurnaceCategory extends MachineCategoryTemplate<ArcFurnaceWrappe
 	}
 	
 	@Override
-	@Nonnull
+	@NotNull
 	public String getUid() {
 		return ARPlugin.arcFurnaceUUID;
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public String getTitle() {
 		return LibVulpes.proxy.getLocalizedString("tile.electricArcFurnace.name");
 	}
 
     @Override
-	@Nonnull
+	@NotNull
     public String getModName()
     {
         return "Advanced Rocketry";

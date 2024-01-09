@@ -10,7 +10,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -208,7 +208,7 @@ public class XMLAsteroidLoader {
 		return mapping;
 	}
 
-	@Nonnull
+	@NotNull
 	public static ItemStack getStack(String text) {
 		//Backwards compat, " " used to be the delimiter
 		String[] splitStr = text.contains(";") ? text.split(";") : text.split(" ");

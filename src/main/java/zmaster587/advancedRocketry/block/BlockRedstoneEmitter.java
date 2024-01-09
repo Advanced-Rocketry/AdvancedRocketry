@@ -16,8 +16,8 @@ import zmaster587.advancedRocketry.tile.atmosphere.TileAtmosphereDetector;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNullableByDefault;
+import org.jetbrains.annotations.NotNull;
+
 
 public class BlockRedstoneEmitter extends Block {
 	
@@ -29,13 +29,13 @@ public class BlockRedstoneEmitter extends Block {
 	}
 	
 	@Override
-	@Nonnull
+	@NotNull
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, POWERED);
 	}
 	
 	@Override
-	@Nonnull
+	@NotNull
 	public IBlockState getStateFromMeta(int meta) {
 		return this.getDefaultState().withProperty(POWERED, (meta & 8) == 8);
 	}
@@ -69,7 +69,7 @@ public class BlockRedstoneEmitter extends Block {
 	}
 	
 	@Override
-	@ParametersAreNullableByDefault
+	
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileAtmosphereDetector();
 	}

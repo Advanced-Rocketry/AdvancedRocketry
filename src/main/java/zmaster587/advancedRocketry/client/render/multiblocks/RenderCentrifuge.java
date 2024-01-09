@@ -40,7 +40,7 @@ public class RenderCentrifuge extends TileEntitySpecialRenderer {
 		//Rotate and move the model into position
 		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
 		GL11.glTranslated(x + 0.5, y, z + 0.5);
-		GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) - front.getFrontOffsetX()*90f, 0, 1, 0);
+		GL11.glRotatef((front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0, 1, 0);
 		GL11.glTranslated(-0.5f, -1f, 1.5f);
 
 		bindTexture(texture);

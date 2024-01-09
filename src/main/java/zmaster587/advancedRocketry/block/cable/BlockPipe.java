@@ -14,8 +14,8 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.tile.cables.TileDataPipe;
 import zmaster587.advancedRocketry.tile.cables.TilePipe;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNullableByDefault;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Random;
 
 public class BlockPipe extends Block {
@@ -28,7 +28,7 @@ public class BlockPipe extends Block {
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source,
 			BlockPos pos) {
 		return bb;
@@ -56,7 +56,7 @@ public class BlockPipe extends Block {
 	}
 
 	@Override
-	@ParametersAreNullableByDefault
+	
 	public boolean shouldSideBeRendered(IBlockState blockState,
 			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		return true;
@@ -76,13 +76,13 @@ public class BlockPipe extends Block {
 	
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state,
-			EntityLivingBase placer, @Nonnull ItemStack stack) {
+			EntityLivingBase placer, @NotNull ItemStack stack) {
 		((TilePipe)worldIn.getTileEntity(pos)).onPlaced();
 	}
 
 
 	@Override
-	@ParametersAreNullableByDefault
+	
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileDataPipe();
 	}

@@ -104,9 +104,9 @@ public class TileSolarArray extends TileMultiPowerProducer implements ITickable 
 		for(int y = 0; y < structure.length; ++y) {
 			for(int z = 0; z < structure[0].length; ++z) {
 				for(int x = 0; x < structure[0][0].length; ++x) {
-					int globalX = this.pos.getX() + (x - offset.x) * front.getFrontOffsetZ() - (z - offset.z) * front.getFrontOffsetX();
+					int globalX = this.pos.getX() + (x - offset.x) * front.getZOffset() - (z - offset.z) * front.getXOffset();
 					int globalY = this.pos.getY() - y + offset.y;
-					int globalZ = this.pos.getZ() - (x - offset.x) * front.getFrontOffsetX() - (z - offset.z) * front.getFrontOffsetZ();
+					int globalZ = this.pos.getZ() - (x - offset.x) * front.getXOffset() - (z - offset.z) * front.getZOffset();
 					if (world.getBlockState(new BlockPos(globalX, globalY, globalZ)).getBlock() == AdvancedRocketryBlocks.blockSolarArrayPanel) {
 						numPanels++;
 					}

@@ -16,7 +16,7 @@ public class BlockOrbitalLaserDrill extends BlockMultiblockMachine {
 
 	public BlockOrbitalLaserDrill() {
 		super(TileOrbitalLaserDrill.class, GuiHandler.guiId.MODULAR.ordinal());
-		setTickRandomly(true).setUnlocalizedName("spaceLaser");
+		setTickRandomly(true).setTranslationKey("spaceLaser");
 	}
 
 	@Override
@@ -44,8 +44,8 @@ public class BlockOrbitalLaserDrill extends BlockMultiblockMachine {
 	}
 
 	@Override
-	public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn) {
-		super.onBlockDestroyedByExplosion(worldIn, pos, explosionIn);
+	public void onBlockExploded(World worldIn, BlockPos pos, Explosion explosionIn) {
+		super.onBlockExploded(worldIn, pos, explosionIn);
 		if (worldIn.getTileEntity(pos) instanceof TileOrbitalLaserDrill)
 		    ((TileOrbitalLaserDrill)worldIn.getTileEntity(pos)).onDestroy();
 	}

@@ -26,38 +26,38 @@ import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class ItemBeaconFinder extends Item implements IArmorComponent {
 
 	@Override
-	public void onTick(World world, EntityPlayer player, @Nonnull ItemStack armorStack, IInventory modules, @Nonnull ItemStack componentStack) {
+	public void onTick(World world, EntityPlayer player, @NotNull ItemStack armorStack, IInventory modules, @NotNull ItemStack componentStack) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public boolean onComponentAdded(World world, @Nonnull ItemStack armorStack) {
+	public boolean onComponentAdded(World world, @NotNull ItemStack armorStack) {
 		return true;
 	}
 
 	@Override
-	public void onComponentRemoved(World world, @Nonnull ItemStack armorStack) {
+	public void onComponentRemoved(World world, @NotNull ItemStack armorStack) {
 	}
 
 	@Override
-	public void onArmorDamaged(EntityLivingBase entity, @Nonnull ItemStack armorStack, @Nonnull ItemStack componentStack, DamageSource source, int damage) {
+	public void onArmorDamaged(EntityLivingBase entity, @NotNull ItemStack armorStack, @NotNull ItemStack componentStack, DamageSource source, int damage) {
 	}
 
 	@Override
-	public boolean isAllowedInSlot(@Nonnull ItemStack componentStack, EntityEquipmentSlot armorType) {
+	public boolean isAllowedInSlot(@NotNull ItemStack componentStack, EntityEquipmentSlot armorType) {
 		return armorType == EntityEquipmentSlot.HEAD;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void renderScreen(@Nonnull ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Gui gui) {
+	public void renderScreen(@NotNull ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Gui gui) {
 		
 		int dimid = Minecraft.getMinecraft().world.provider.getDimension();
 		
@@ -96,7 +96,7 @@ public class ItemBeaconFinder extends Item implements IArmorComponent {
 	}
 
 	@Override
-	public ResourceIcon getComponentIcon(@Nonnull ItemStack armorStack) {
+	public ResourceIcon getComponentIcon(@NotNull ItemStack armorStack) {
 		return null;
 	}
 

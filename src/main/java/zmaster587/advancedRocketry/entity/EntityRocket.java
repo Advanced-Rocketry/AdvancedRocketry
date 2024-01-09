@@ -80,8 +80,8 @@ import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class EntityRocket extends EntityRocketBase implements INetworkEntity, IModularInventory, IProgressBar, IButtonInventory, ISelectionNotify, IPlanetDefiner {
@@ -431,7 +431,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 * @param amount amount of fuel to add
 	 * @return the amount of fuel added
 	 */
-	public int addFuelAmount(@Nonnull FuelType fuelType, int amount) {
+	public int addFuelAmount(@NotNull FuelType fuelType, int amount) {
 		int ret = stats.addFuelAmount(fuelType, amount);
 		setFuelAmount(fuelType, stats.getFuelAmount(fuelType));
 		return ret;
@@ -442,7 +442,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 * @param fuelType
 	 * @param amt sets the amount of monopropellant fuel in the rocket
 	 */
-	public void setFuelAmount(@Nonnull FuelType fuelType, int amt) {
+	public void setFuelAmount(@NotNull FuelType fuelType, int amt) {
 		if (fuelType == FuelType.LIQUID_MONOPROPELLANT) {
 			dataManager.set(fuelLevelMonopropellant, amt);
 			dataManager.setDirty(fuelLevelMonopropellant);
@@ -462,7 +462,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	 * @param fuelType sets the type of fuel to set a rate for
 	 * @param rate sets the rate of fuel in the rocket
 	 */
-	public void setFuelConsumptionRate(@Nonnull FuelType fuelType, int rate) { stats.setFuelRate(fuelType, rate); }
+	public void setFuelConsumptionRate(@NotNull FuelType fuelType, int rate) { stats.setFuelRate(fuelType, rate); }
 
 	/**
 	 * @param fuelType is the fuel type to get
@@ -572,7 +572,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 		}
 	}
 
-	protected boolean interact(@Nonnull EntityPlayer player) {
+	protected boolean interact(@NotNull EntityPlayer player) {
 		//Actual interact code needs to be moved to a packet receive on the server
 
 		ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
@@ -1957,7 +1957,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	}
 
 	@Override
-	protected void writeEntityToNBT(@Nonnull NBTTagCompound nbt) {
+	protected void writeEntityToNBT(@NotNull NBTTagCompound nbt) {
 
 		writeNetworkableNBT(nbt);
 		if(storage != null) {
@@ -2184,7 +2184,7 @@ public class EntityRocket extends EntityRocketBase implements INetworkEntity, IM
 	}
 
 	@Override
-	public void updatePassenger(@Nonnull Entity entity)
+	public void updatePassenger(@NotNull Entity entity)
 	{
 		//Bind player to the seat
 		if(this.storage != null) {

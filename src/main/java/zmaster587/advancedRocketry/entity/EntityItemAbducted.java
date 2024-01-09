@@ -11,7 +11,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class EntityItemAbducted extends Entity {
 
@@ -22,7 +22,7 @@ public class EntityItemAbducted extends Entity {
 	private EntityItem itemEntity;
 	
 	public EntityItemAbducted(World par1World, double par2, double par4,
-			double par6, @Nonnull ItemStack par8ItemStack) {
+			double par6, @NotNull ItemStack par8ItemStack) {
 		super(par1World);
 		
 		this.setEntityItemStack(par8ItemStack);
@@ -90,7 +90,7 @@ public class EntityItemAbducted extends Entity {
      * Returns the ItemStack corresponding to the Entity (Note: if no item exists, will log an error but still return an
      * ItemStack containing Block.stone)
      */
-    @Nonnull
+    @NotNull
     public ItemStack getEntityItem()
     {
         ItemStack itemstack = this.getDataManager().get(ITEM);
@@ -108,7 +108,7 @@ public class EntityItemAbducted extends Entity {
     /**
      * Sets the ItemStack for this entity
      */
-    public void setEntityItemStack(@Nonnull ItemStack stack)
+    public void setEntityItemStack(@NotNull ItemStack stack)
     {
         this.getDataManager().set(ITEM, stack);
         this.getDataManager().setDirty(ITEM);

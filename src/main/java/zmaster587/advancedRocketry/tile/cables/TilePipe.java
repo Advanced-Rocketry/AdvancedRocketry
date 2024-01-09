@@ -7,7 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import zmaster587.advancedRocketry.cable.HandlerCableNetwork;
 import zmaster587.advancedRocketry.cable.NetworkRegistry;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class TilePipe extends TileEntity {
 
@@ -62,7 +62,7 @@ public class TilePipe extends TileEntity {
 	}
 	
 	@Override
-	@Nonnull
+	@NotNull
 	public NBTTagCompound getUpdateTag() {
 		NBTTagCompound nbt = super.getUpdateTag();
 		
@@ -80,7 +80,7 @@ public class TilePipe extends TileEntity {
 	}
 	
 	@Override
-    public void handleUpdateTag(@Nonnull NBTTagCompound tag)
+    public void handleUpdateTag(@NotNull NBTTagCompound tag)
     {
         super.handleUpdateTag(tag);
         

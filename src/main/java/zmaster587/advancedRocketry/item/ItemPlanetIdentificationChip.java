@@ -10,7 +10,7 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
 import zmaster587.libVulpes.LibVulpes;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class ItemPlanetIdentificationChip extends ItemIdWithName {
@@ -31,7 +31,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 * @param stack itemStack of this item-type
 	 * @return the DimensionProperties of the dimId stored on the item or null if invalid
 	 */
-	public DimensionProperties getDimension(@Nonnull ItemStack stack) {
+	public DimensionProperties getDimension(@NotNull ItemStack stack) {
 		if(stack.hasTagCompound()) {
 			return DimensionManager.getInstance().getDimensionProperties(stack.getTagCompound().getInteger(dimensionIdIdentifier));
 		}
@@ -42,7 +42,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 * @param stack ItemStack to check against
 	 * @return true of the dimension stored on the stack exists and is valid
 	 */
-	public boolean hasValidDimension(@Nonnull ItemStack stack) {
+	public boolean hasValidDimension(@NotNull ItemStack stack) {
 
 		if(stack.hasTagCompound()) {
 			int dimId = stack.getTagCompound().getInteger(dimensionIdIdentifier);
@@ -56,7 +56,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 * Removes any Information and reset the stack to a default state
 	 * @param stack stack to erase
 	 */
-	public void erase(@Nonnull ItemStack stack) {
+	public void erase(@NotNull ItemStack stack) {
 		stack.setTagCompound(null);
 	}
 
@@ -65,7 +65,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 * @param stack itemStack to operate on
 	 * @param dimensionId dimension Id number
 	 */
-	public void setDimensionId(@Nonnull ItemStack stack, int dimensionId) {
+	public void setDimensionId(@NotNull ItemStack stack, int dimensionId) {
 
 		NBTTagCompound nbt;
 		if(dimensionId == Constants.INVALID_PLANET) {
@@ -94,7 +94,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 * @param stack stack to get the dimId from
 	 * @return id of the dimension stored or Constants.INVALID_PLANET if invalid
 	 */
-	public int getDimensionId(@Nonnull ItemStack stack) {
+	public int getDimensionId(@NotNull ItemStack stack) {
 		if(stack.hasTagCompound())
 			return stack.getTagCompound().getInteger(dimensionIdIdentifier);
 		return Constants.INVALID_PLANET;
@@ -105,19 +105,19 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	 * @param stack stack to get the DimensionProperties object from
 	 * @return DimensionProperties Object of the relevent dimension or null if invalid
 	 */
-	public DimensionProperties getDimensionProperties(@Nonnull ItemStack stack) {
+	public DimensionProperties getDimensionProperties(@NotNull ItemStack stack) {
 		if(stack.hasTagCompound())
 			return DimensionManager.getInstance().getDimensionProperties(stack.getTagCompound().getInteger(dimensionIdIdentifier));
 		return null;
 	}
 
-	public Long getUUID(@Nonnull ItemStack stack) {
+	public Long getUUID(@NotNull ItemStack stack) {
 		if(stack.hasTagCompound())
 			return stack.getTagCompound().getLong(uuidIdentifier);
 		return null;
 	}
 
-	public void setUUID(@Nonnull ItemStack stack, long uuid) {
+	public void setUUID(@NotNull ItemStack stack, long uuid) {
 		NBTTagCompound nbt;
 		if(stack.hasTagCompound())
 			nbt = stack.getTagCompound();
@@ -129,7 +129,7 @@ public class ItemPlanetIdentificationChip extends ItemIdWithName {
 	}
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list,
+	public void addInformation(@NotNull ItemStack stack, World player, List<String> list,
                                ITooltipFlag bool){
 
 		if(!stack.hasTagCompound()) {

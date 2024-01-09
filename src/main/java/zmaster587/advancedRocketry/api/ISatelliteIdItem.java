@@ -3,8 +3,8 @@ package zmaster587.advancedRocketry.api;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public interface ISatelliteIdItem {
-	void setSatellite(@Nonnull ItemStack stack, SatelliteProperties properties);
+	void setSatellite(@NotNull ItemStack stack, SatelliteProperties properties);
 }

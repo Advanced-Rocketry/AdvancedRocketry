@@ -13,12 +13,12 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.ZUtils;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class ItemSatellite extends ItemIdWithName {
 
-	public EmbeddedInventory readInvFromNBT(@Nonnull ItemStack stackIn) {
+	public EmbeddedInventory readInvFromNBT(@NotNull ItemStack stackIn) {
 		EmbeddedInventory inv = new EmbeddedInventory(7);
 		if(!stackIn.hasTagCompound() || !stackIn.getTagCompound().hasKey("inv"))
 			return inv;
@@ -27,7 +27,7 @@ public class ItemSatellite extends ItemIdWithName {
 		return inv;
 	}
 
-	public void writeInvToNBT(@Nonnull ItemStack stackIn, EmbeddedInventory inv) {
+	public void writeInvToNBT(@NotNull ItemStack stackIn, EmbeddedInventory inv) {
 		NBTTagCompound nbt = new NBTTagCompound();
 		if(!stackIn.hasTagCompound())
 			stackIn.setTagCompound(nbt);
@@ -39,7 +39,7 @@ public class ItemSatellite extends ItemIdWithName {
 		nbt.setTag("inv", tag);
 	}
 
-	public void setSatellite(@Nonnull ItemStack stack, SatelliteProperties properties) {
+	public void setSatellite(@NotNull ItemStack stack, SatelliteProperties properties) {
 
 		SatelliteBase testSatellite = SatelliteRegistry.getNewSatellite(properties.getSatelliteType());
 		if(testSatellite != null) {
@@ -63,7 +63,7 @@ public class ItemSatellite extends ItemIdWithName {
 
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
+	public void addInformation(@NotNull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
 		if (stack.getItem() instanceof ItemSatellite && SatelliteRegistry.getSatelliteProperties(stack) != null) {
 			SatelliteProperties properties = SatelliteRegistry.getSatelliteProperties(stack);
 

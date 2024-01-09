@@ -23,8 +23,8 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class BlockSmallPlatePress extends BlockPistonBase {
@@ -52,7 +52,7 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
-			EntityLivingBase placer, @Nonnull ItemStack stack) {
+			EntityLivingBase placer, @NotNull ItemStack stack) {
 		if (!world.isRemote)
 		{
 			this.checkForMove(world, pos, state);
@@ -113,7 +113,7 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 	}
 	
 	@Override
-	@ParametersAreNonnullByDefault
+	
 	public void neighborChanged(IBlockState state, World world, BlockPos pos,
 			Block blockIn, BlockPos fromPos) {
 		if (!world.isRemote)
@@ -122,7 +122,7 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 		}
 	}
 
-	@Nonnull
+	@NotNull
 	private ItemStack getRecipe(World world, BlockPos pos, IBlockState state) {
 		if(world.isAirBlock(pos.add(0, -1, 0)))
 			return ItemStack.EMPTY;
@@ -140,7 +140,7 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 		ItemStack stack = ItemStack.EMPTY;
 
 		for(IRecipe recipe : recipes) {
-			for(@Nonnull ItemStack stack2 : recipe.getIngredients().get(0))
+			for(@NotNull ItemStack stack2 : recipe.getIngredients().get(0))
 				if(stack2.isItemEqual(stackInWorld)) {
 					stack = recipe.getOutput().get(0);
 					break;
@@ -236,7 +236,7 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 		}
 	}
 
-	public boolean eventReceived(IBlockState state, World worldIn, @Nonnull BlockPos pos, int id, int param)
+	public boolean eventReceived(IBlockState state, World worldIn, @NotNull BlockPos pos, int id, int param)
 	{
 		EnumFacing enumfacing = EnumFacing.DOWN;
 
@@ -280,7 +280,7 @@ public class BlockSmallPlatePress extends BlockPistonBase {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+	public void addInformation(@NotNull ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 		super.addInformation(stack, player, tooltip, advanced);
 		tooltip.add(ChatFormatting.DARK_GRAY + "" + ChatFormatting.ITALIC + LibVulpes.proxy.getLocalizedString("machine.tooltip.smallplatepress"));
 	}

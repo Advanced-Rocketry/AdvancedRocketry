@@ -16,7 +16,7 @@ public class BlockLightSource extends Block {
 
 	public BlockLightSource() {
 		super(Material.GLASS);
-		setUnlocalizedName("lightSource");
+		setTranslationKey("lightSource");
 		setLightLevel(1F);
 	}
 

@@ -34,8 +34,8 @@ import zmaster587.libVulpes.api.IModularArmor;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.IconResource;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 /**
@@ -54,12 +54,12 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	}
 
 	@Override
-	public boolean canBeExternallyModified(@Nonnull ItemStack armor, int slot) {
+	public boolean canBeExternallyModified(@NotNull ItemStack armor, int slot) {
 		return true;
 	}
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World p_77624_2_, List<String> list, ITooltipFlag p_77624_4_) {
+	public void addInformation(@NotNull ItemStack stack, World p_77624_2_, List<String> list, ITooltipFlag p_77624_4_) {
 		super.addInformation(stack, p_77624_2_, list, p_77624_4_);
 
 		list.add(LibVulpes.proxy.getLocalizedString("msg.modules"));
@@ -74,7 +74,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 		return false;
 	}
 	@Override
-	public void setDamage(@Nonnull ItemStack stack, int damage) {
+	public void setDamage(@NotNull ItemStack stack, int damage) {
 		//Dummy out
 	}
 	
@@ -93,7 +93,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 		return super.getArmorModel(entityLiving, itemStack, armorSlot, _default);
 	}
 
-	public int getColor(@Nonnull ItemStack stack)
+	public int getColor(@NotNull ItemStack stack)
 	{
 
 		NBTTagCompound nbttagcompound = stack.getTagCompound();
@@ -112,13 +112,13 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 
 	}
 	@Override
-	public ArmorProperties getProperties(EntityLivingBase player, @Nonnull ItemStack armor, DamageSource source, double damage, int slot) {
+	public ArmorProperties getProperties(EntityLivingBase player, @NotNull ItemStack armor, DamageSource source, double damage, int slot) {
 		if(!source.isUnblockable())
 			return new ArmorProperties(0, 0, 1);
 		return new ArmorProperties(0, 0, 0);
 	}
 
-	private EmbeddedInventory loadEmbeddedInventory(@Nonnull ItemStack stack) {
+	private EmbeddedInventory loadEmbeddedInventory(@NotNull ItemStack stack) {
 		if(stack.hasTagCompound()) {
 			EmbeddedInventory inv = new EmbeddedInventory(numModules);
 			inv.readFromNBT(stack.getTagCompound());
@@ -127,7 +127,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 		return new EmbeddedInventory(numModules);
 	}
 
-	protected void saveEmbeddedInventory(@Nonnull ItemStack stack, EmbeddedInventory inv) {
+	protected void saveEmbeddedInventory(@NotNull ItemStack stack, EmbeddedInventory inv) {
 		if(stack.hasTagCompound()) {
 			inv.writeToNBT(stack.getTagCompound());
 		}
@@ -139,7 +139,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	}
 
 	@Override
-	public void onArmorTick(World world, EntityPlayer player, @Nonnull ItemStack armor) {
+	public void onArmorTick(World world, EntityPlayer player, @NotNull ItemStack armor) {
 		super.onArmorTick(world, player, armor);
 
 		if(armor.hasTagCompound()) {
@@ -160,7 +160,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	}
 
 	@Override
-	public String getArmorTexture(@Nonnull ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+	public String getArmorTexture(@NotNull ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
 
 		if(type != null) {
 			if(stack.getItem() == AdvancedRocketryItems.itemSpaceSuit_Leggings)
@@ -174,12 +174,12 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	}
 
 	@Override
-	public int getArmorDisplay(EntityPlayer player, @Nonnull ItemStack armor, int slot) {
+	public int getArmorDisplay(EntityPlayer player, @NotNull ItemStack armor, int slot) {
 		return 1;
 	}
 
 	@Override
-	public void damageArmor(EntityLivingBase entity, @Nonnull ItemStack armor,
+	public void damageArmor(EntityLivingBase entity, @NotNull ItemStack armor,
 			DamageSource source, int damage, int slot) {
 		// TODO Handle armor damage
 
@@ -199,7 +199,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	}
 
 	@Override
-	public void addArmorComponent(World world, @Nonnull ItemStack armor, @Nonnull ItemStack component, int slot) {
+	public void addArmorComponent(World world, @NotNull ItemStack armor, @NotNull ItemStack component, int slot) {
 
 		EmbeddedInventory inv = loadEmbeddedInventory(armor);
 
@@ -210,8 +210,8 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 		}
 	}
 
-	@Nonnull
-	public ItemStack removeComponent(World world, @Nonnull ItemStack armor, int index) {
+	@NotNull
+	public ItemStack removeComponent(World world, @NotNull ItemStack armor, int index) {
 		EmbeddedInventory inv = loadEmbeddedInventory(armor);
 		ItemStack stack = inv.getStackInSlot(index);
 		inv.setInventorySlotContents(index, ItemStack.EMPTY);
@@ -227,7 +227,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 		return stack;
 	}
 
-	public List<ItemStack> getComponents(@Nonnull ItemStack armor) {
+	public List<ItemStack> getComponents(@NotNull ItemStack armor) {
 
 		List<ItemStack> list = new LinkedList<>();
 
@@ -244,28 +244,28 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 	}
 
 	@Override
-	public boolean protectsFromSubstance(IAtmosphere atmosphere, @Nonnull ItemStack stack, boolean commitProtection) {
+	public boolean protectsFromSubstance(IAtmosphere atmosphere, @NotNull ItemStack stack, boolean commitProtection) {
 		return (atmosphere == AtmosphereType.SUPERHIGHPRESSURE || atmosphere == AtmosphereType.HIGHPRESSURE || atmosphere == AtmosphereType.VACUUM || atmosphere == AtmosphereType.VERYHOT || atmosphere == AtmosphereType.SUPERHEATED || atmosphere == AtmosphereType.LOWOXYGEN || atmosphere == AtmosphereType.SUPERHIGHPRESSURENOO2 || atmosphere == AtmosphereType.HIGHPRESSURENOO2 || atmosphere == AtmosphereType.VERYHOTNOO2|| atmosphere == AtmosphereType.SUPERHEATEDNOO2  || atmosphere == AtmosphereType.NOO2);
 	}
 
 	@Override
-	public int getNumSlots(@Nonnull ItemStack stack) {
+	public int getNumSlots(@NotNull ItemStack stack) {
 		return loadEmbeddedInventory(stack).getSizeInventory();
 	}
 
 	@Override
-	@Nonnull
-	public ItemStack getComponentInSlot(@Nonnull ItemStack stack, int slot) {
+	@NotNull
+	public ItemStack getComponentInSlot(@NotNull ItemStack stack, int slot) {
 		return loadEmbeddedInventory(stack).getStackInSlot(slot);
 	}
 
 	@Override
-	public IInventory loadModuleInventory(@Nonnull ItemStack stack) {
+	public IInventory loadModuleInventory(@NotNull ItemStack stack) {
 		return loadEmbeddedInventory(stack);
 	}
 
 	@Override
-	public void saveModuleInventory(@Nonnull ItemStack stack, IInventory inv) {
+	public void saveModuleInventory(@NotNull ItemStack stack, IInventory inv) {
 		saveEmbeddedInventory(stack, (EmbeddedInventory)inv);
 	}
 
@@ -282,7 +282,7 @@ public class ItemSpaceArmor extends ItemArmor implements ISpecialArmor, ICapabil
 		return null;
 	}
 
-	public boolean isItemValidForSlot(@Nonnull ItemStack stack, int slot) {
+	public boolean isItemValidForSlot(@NotNull ItemStack stack, int slot) {
 		return true;	
 	}
 

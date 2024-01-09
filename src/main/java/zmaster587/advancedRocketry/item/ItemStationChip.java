@@ -31,8 +31,8 @@ import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketItemModifcation;
 import zmaster587.libVulpes.util.Vector3F;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jetbrains.annotations.NotNull;
+
 import javax.naming.directory.NoSuchAttributeException;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,8 +58,8 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	}
 
 	@Override
-	@ParametersAreNonnullByDefault
-	@Nonnull
+	
+	@NotNull
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
 		ItemStack stack = playerIn.getHeldItem(hand);
 		if(!playerIn.world.isRemote && !stack.isEmpty() && playerIn.isSneaking())
@@ -130,13 +130,13 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	}
 
 
-	private void setTempName(@Nonnull ItemStack stack, String string)
+	private void setTempName(@NotNull ItemStack stack, String string)
 	{
 		if(stack.hasTagCompound())
 			stack.getTagCompound().setString(TMPNAME, string);
 	}
 
-	private String getTempName(@Nonnull ItemStack stack)
+	private String getTempName(@NotNull ItemStack stack)
 	{
 		if(stack.hasTagCompound())
 			return stack.getTagCompound().getString(TMPNAME);
@@ -144,7 +144,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id, @Nonnull ItemStack stack) {
+	public void writeDataToNetwork(ByteBuf out, byte id, @NotNull ItemStack stack) {
 		if(id == BUTTON_ID_ADD)
 		{
 			String str = getTempName(stack);
@@ -157,7 +157,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte id, NBTTagCompound nbt, @Nonnull ItemStack stack) {
+	public void readDataFromNetwork(ByteBuf in, byte id, NBTTagCompound nbt, @NotNull ItemStack stack) {
 		if(id == BUTTON_ID_ADD)
 		{
 			short len = in.readShort();
@@ -168,7 +168,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt, @Nonnull ItemStack stack) {
+	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt, @NotNull ItemStack stack) {
 		if(!player.world.isRemote)
 		{
 			int dimId = DimensionManager.getEffectiveDimId(player.world, new BlockPos(player)).getId();
@@ -218,7 +218,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		return player.getHeldItem(player.getActiveHand()).getItem() == this;
 	}
 
-	public int getSelectionId(@Nonnull ItemStack stack, int dimid)
+	public int getSelectionId(@NotNull ItemStack stack, int dimid)
 	{
 		if(stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
@@ -232,7 +232,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		return 0;
 	}
 
-	public void setSelectionId(@Nonnull ItemStack stack, int dimid, int slotId)
+	public void setSelectionId(@NotNull ItemStack stack, int dimid, int slotId)
 	{
 		if(stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
@@ -243,7 +243,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		}
 	}
 
-	public List<LandingLocation> getLandingLocations(@Nonnull ItemStack stack, int dimid)
+	public List<LandingLocation> getLandingLocations(@NotNull ItemStack stack, int dimid)
 	{
 		List<LandingLocation> retList = new LinkedList<>();
 
@@ -278,7 +278,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		return retList;
 	}
 
-	public void setLandingLocations(@Nonnull ItemStack stack, int dimid, List<LandingLocation> locations)
+	public void setLandingLocations(@NotNull ItemStack stack, int dimid, List<LandingLocation> locations)
 	{
 		if(stack.hasTagCompound()) {
 			NBTTagCompound stackNBT = stack.getTagCompound();
@@ -304,11 +304,11 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		}
 	}
 
-	public void setTakeoffCoords(@Nonnull ItemStack stack, Vector3F<Float> pos, int dimid, int slot) {
+	public void setTakeoffCoords(@NotNull ItemStack stack, Vector3F<Float> pos, int dimid, int slot) {
 		setTakeoffCoords(stack, pos.x, pos.y, pos.z, dimid, slot);
 	}
 
-	public void setTakeoffCoords(@Nonnull ItemStack stack, float x, float y, float z, int dimid, int slot) {
+	public void setTakeoffCoords(@NotNull ItemStack stack, float x, float y, float z, int dimid, int slot) {
 
 		LandingLocation landingLoc = new LandingLocation("Last", x,y,z);
 
@@ -327,7 +327,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 	 * @param dimid
 	 * @return Vector3F containing the takeoff coords or null if there is none
 	 */
-	public LandingLocation getTakeoffCoords(@Nonnull ItemStack stack, int dimid) {
+	public LandingLocation getTakeoffCoords(@NotNull ItemStack stack, int dimid) {
 		if(stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
 			if(nbt.hasKey("dimid" + dimid)) {
@@ -348,13 +348,13 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 		return null;
 	}
 
-	public static int getUUID(@Nonnull ItemStack stack) {
+	public static int getUUID(@NotNull ItemStack stack) {
 		if(stack.hasTagCompound())
 			return stack.getTagCompound().getInteger(uuidIdentifier);
 		return 0;
 	}
 
-	public static void setUUID(@Nonnull ItemStack stack, int uuid) {
+	public static void setUUID(@NotNull ItemStack stack, int uuid) {
 		NBTTagCompound nbt;
 		if(stack.hasTagCompound())
 			nbt = stack.getTagCompound();
@@ -367,7 +367,7 @@ public class ItemStationChip extends ItemIdWithName implements IModularInventory
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
+	public void addInformation(@NotNull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
 		if(getUUID(stack) == 0)
 			list.add(ChatFormatting.GRAY + LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
 		else {

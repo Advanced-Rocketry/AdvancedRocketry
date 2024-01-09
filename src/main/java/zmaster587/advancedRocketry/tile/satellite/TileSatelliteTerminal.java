@@ -27,8 +27,8 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.TileInventoriedRFConsumer;
 import zmaster587.libVulpes.util.INetworkMachine;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public int[] getSlotsForFace(@Nullable EnumFacing side) {
 		return new int[0];
 	}
@@ -59,7 +59,7 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @NotNull ItemStack stack) {
 		return true;
 	}
 
@@ -105,7 +105,7 @@ public class TileSatelliteTerminal extends TileInventoriedRFConsumer implements 
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
+	public void setInventorySlotContents(int slot, @NotNull ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
 		satellite = getSatelliteFromSlot(0);
 		updateInventoryInfo();

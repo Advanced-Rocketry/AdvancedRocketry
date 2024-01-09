@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.api.armor;
 import net.minecraft.item.ItemStack;
 import zmaster587.advancedRocketry.api.IAtmosphere;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public interface IProtectiveArmor {
 	/**
@@ -12,5 +12,5 @@ public interface IProtectiveArmor {
 	 * commitProtection true if actually running protection, this exists so that it is possible to check if an armor protects
 	 * without performing actual item/fluid consumption.  This should only be true when called from AtmosphereHandler to prevent double consumtion
 	 */
-	boolean protectsFromSubstance(IAtmosphere atmosphere, @Nonnull ItemStack stack, boolean commitProtection);
+	boolean protectsFromSubstance(IAtmosphere atmosphere, @NotNull ItemStack stack, boolean commitProtection);
 }

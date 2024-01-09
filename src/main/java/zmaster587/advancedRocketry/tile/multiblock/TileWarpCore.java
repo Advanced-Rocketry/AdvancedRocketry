@@ -16,7 +16,7 @@ import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.ZUtils;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class TileWarpCore extends TileMultiBlock {
 	private SpaceStationObject station;
@@ -90,7 +90,7 @@ public class TileWarpCore extends TileMultiBlock {
 	}
 	
 	@Override
-	@Nonnull
+	@NotNull
 	public AxisAlignedBB getRenderBoundingBox() {
 		
 		return new AxisAlignedBB(pos.add(-2,-2,-2),pos.add(2,2,2));

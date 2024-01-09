@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.LibVulpes;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class ItemAsteroidChip  extends ItemMultiData {
@@ -27,17 +27,17 @@ public class ItemAsteroidChip  extends ItemMultiData {
 	 * Removes any Information and reset the stack to a default state
 	 * @param stack stack to erase
 	 */
-	public void erase(@Nonnull ItemStack stack) {
+	public void erase(@NotNull ItemStack stack) {
 		stack.setTagCompound(null);
 	}
 
-	public Long getUUID(@Nonnull ItemStack stack) {
+	public Long getUUID(@NotNull ItemStack stack) {
 		if(stack.hasTagCompound())
 			return stack.getTagCompound().getLong(uuidIdentifier);
 		return null;
 	}
 
-	public void setUUID(@Nonnull ItemStack stack, long uuid) {
+	public void setUUID(@NotNull ItemStack stack, long uuid) {
 		NBTTagCompound nbt;
 		if(stack.hasTagCompound())
 			nbt = stack.getTagCompound();
@@ -48,13 +48,13 @@ public class ItemAsteroidChip  extends ItemMultiData {
 		stack.setTagCompound(nbt);
 	}
 	
-	public String getType(@Nonnull ItemStack stack) {
+	public String getType(@NotNull ItemStack stack) {
 		if(stack.hasTagCompound())
 			return stack.getTagCompound().getString(astType);
 		return null;
 	}
 
-	public void setType(@Nonnull ItemStack stack, String type) {
+	public void setType(@NotNull ItemStack stack, String type) {
 		NBTTagCompound nbt;
 		if(stack.hasTagCompound())
 			nbt = stack.getTagCompound();
@@ -66,7 +66,7 @@ public class ItemAsteroidChip  extends ItemMultiData {
 	}
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
+	public void addInformation(@NotNull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
 
 		if(!stack.hasTagCompound()) {
 			list.add(LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));

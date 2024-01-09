@@ -38,7 +38,7 @@ public class RendererChemicalReactor  extends TileEntitySpecialRenderer {
 		GL11.glTranslated(x+.5f, y, z + 0.5f);
 		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
 
-		GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) - front.getFrontOffsetX()*90f, 0, 1, 0);
+		GL11.glRotatef((front.getZOffset() == 1 ? 180 : 0) - front.getXOffset()*90f, 0, 1, 0);
 		GL11.glTranslated(1.5f, -1.0f, -.5f);
 
 		bindTexture(texture);

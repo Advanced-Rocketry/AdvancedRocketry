@@ -22,7 +22,7 @@ import zmaster587.advancedRocketry.network.PacketStationUpdate;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class SpaceObjectManager implements ISpaceObjectManager {
@@ -113,7 +113,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * Gets the object at the location of passed Block x and z
 	 * @return Space object occupying the block coords of null if none
 	 */
-	public ISpaceObject getSpaceStationFromBlockCoords(@Nonnull BlockPos pos) {
+	public ISpaceObject getSpaceStationFromBlockCoords(@NotNull BlockPos pos) {
 
 		int x = pos.getX(); int z = pos.getZ();
 		x = Math.round((x)/(2f*ARConfiguration.getCurrentConfig().stationSize));
@@ -140,7 +140,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * @param dimId
 	 * @param stationId
 	 */
-	public void registerSpaceObject(@Nonnull ISpaceObject spaceObject, int dimId, int stationId) {
+	public void registerSpaceObject(@NotNull ISpaceObject spaceObject, int dimId, int stationId) {
 		spaceObject.setId(stationId);
 		stationLocations.put(stationId, spaceObject);
 
@@ -189,7 +189,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * @param dimId dimid to orbit around
 	 * @param expireTime time at which to expire the dimension
 	 */
-	public void registerTemporarySpaceObject(@Nonnull ISpaceObject spaceObject, int dimId, long expireTime) {
+	public void registerTemporarySpaceObject(@NotNull ISpaceObject spaceObject, int dimId, long expireTime) {
 		int nextDimId = getNextStationId();
 		temporaryDimensions.put(nextDimId, expireTime);
 		temporaryDimensionPlayerNumber.put(dimId, 0);
@@ -201,7 +201,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * @param spaceObject
 	 * @param dimId dimension to place it in orbit around, Constants.INVALID_PLANET for undefined
 	 */
-	public void registerSpaceObject(@Nonnull ISpaceObject spaceObject, int dimId) {
+	public void registerSpaceObject(@NotNull ISpaceObject spaceObject, int dimId) {
 		registerSpaceObject(spaceObject, dimId, getNextStationId());
 		PacketHandler.sendToAll(new PacketSpaceStationInfo(spaceObject.getId(), spaceObject));
 	}
@@ -222,7 +222,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * @param dimId dimension to place it in orbit around, Constants.INVALID_PLANET for undefined
 	 */
 	@SideOnly(Side.CLIENT)
-	public void registerSpaceObjectClient(@Nonnull ISpaceObject spaceObject, int dimId, int stationId) {
+	public void registerSpaceObjectClient(@NotNull ISpaceObject spaceObject, int dimId, int stationId) {
 		registerSpaceObject(spaceObject, dimId, stationId);
 	}
 
@@ -240,7 +240,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * TODO: prevent inf loop if nowhere to fall!
 	 */
 	@SubscribeEvent
-	public void onPlayerTick(@Nonnull PlayerTickEvent event) {
+	public void onPlayerTick(@NotNull PlayerTickEvent event) {
 		if(event.player.world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 
 			if(event.player.posY < 0 && !event.player.world.isRemote) {
@@ -349,7 +349,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 
 	}*/
 
-	public void moveStationToBody(@Nonnull ISpaceObject station, int dimId) {
+	public void moveStationToBody(@NotNull ISpaceObject station, int dimId) {
 		moveStationToBody(station, dimId, true);
 	}
 
@@ -358,7 +358,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * @param station
 	 * @param dimId
 	 */
-	public void moveStationToBody(@Nonnull ISpaceObject station, int dimId, boolean update) {
+	public void moveStationToBody(@NotNull ISpaceObject station, int dimId, boolean update) {
 		//Remove station from the planet it's in orbit around before moving it!
 		if(spaceStationOrbitMap.get(station.getOrbitingPlanetId()) != null) {
 			spaceStationOrbitMap.get(station.getOrbitingPlanetId()).remove(station);
@@ -384,7 +384,7 @@ public class SpaceObjectManager implements ISpaceObjectManager {
 	 * @param dimId
 	 * @param timeDelta time in ticks to fully make the jump
 	 */
-	public void moveStationToBody(@Nonnull ISpaceObject station, int dimId, int timeDelta) {
+	public void moveStationToBody(@NotNull ISpaceObject station, int dimId, int timeDelta) {
 		//Remove station from the planet it's in orbit around before moving it!
 		if(station.getOrbitingPlanetId() != WARPDIMID && spaceStationOrbitMap.get(station.getOrbitingPlanetId()) != null) {
 			spaceStationOrbitMap.get(station.getOrbitingPlanetId()).remove(station);

@@ -28,7 +28,7 @@ import zmaster587.libVulpes.network.INetworkItem;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketItemModifcation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -64,7 +64,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	}
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag arg5) {
+	public void addInformation(@NotNull ItemStack stack, World player, List<String> list, ITooltipFlag arg5) {
 
 		SatelliteBase sat = SatelliteRegistry.getSatellite(stack);
 
@@ -89,8 +89,8 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 
 
 	@Override
-	@Nonnull
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @Nonnull EnumHand hand) {
+	@NotNull
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @NotNull EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
 		if(!world.isRemote) {
 			SatelliteBase sat = SatelliteRegistry.getSatellite(stack);
@@ -111,7 +111,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 		return super.onItemRightClick(world, player, hand);
 	}
 
-	private int getBiomeId(@Nonnull ItemStack stack) {
+	private int getBiomeId(@NotNull ItemStack stack) {
 		SatelliteBase sat = getSatellite(stack);
 		if(sat instanceof SatelliteBiomeChanger)
 			return Biome.getIdForBiome(((SatelliteBiomeChanger)sat).getBiome());
@@ -119,7 +119,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 			return -1;
 	}
 
-	private void setBiomeId(@Nonnull ItemStack stack, Biome id) {
+	private void setBiomeId(@NotNull ItemStack stack, Biome id) {
 		if(id != null) {
 			SatelliteBase sat = getSatellite(stack);
 			if(sat instanceof SatelliteBiomeChanger) {
@@ -149,7 +149,7 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id, @Nonnull ItemStack stack) {
+	public void writeDataToNetwork(ByteBuf out, byte id, @NotNull ItemStack stack) {
 		if(id == 0) {
 			out.writeInt(getBiomeId(stack));
 		}
@@ -157,14 +157,14 @@ public class ItemBiomeChanger extends ItemSatelliteIdentificationChip implements
 
 	@Override
 	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt, @Nonnull ItemStack stack) {
+			NBTTagCompound nbt, @NotNull ItemStack stack) {
 		if(packetId == 0) {
 			nbt.setInteger("biome", in.readInt());
 		}
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt, @Nonnull ItemStack stack) {
+	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt, @NotNull ItemStack stack) {
 		if(id == -1) {
 			//If -1 then discover current biome
 			((SatelliteBiomeChanger)getSatellite(stack)).addBiome(player.world.getBiome(new BlockPos((int)player.posX, 0, (int)player.posZ)));

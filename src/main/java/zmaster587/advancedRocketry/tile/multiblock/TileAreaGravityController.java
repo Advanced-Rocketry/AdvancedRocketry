@@ -203,22 +203,22 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 
 							if(e instanceof EntityLivingBase) {
 								{
-									e.motionX += dir.getFrontOffsetX()*GravityHandler.LIVING_OFFSET*currentProgress;
-									e.motionY += dir.getFrontOffsetY()*GravityHandler.LIVING_OFFSET*currentProgress;
-									e.motionZ += dir.getFrontOffsetZ()*GravityHandler.LIVING_OFFSET*currentProgress;
+									e.motionX += dir.getXOffset()*GravityHandler.LIVING_OFFSET*currentProgress;
+									e.motionY += dir.getYOffset()*GravityHandler.LIVING_OFFSET*currentProgress;
+									e.motionZ += dir.getZOffset()*GravityHandler.LIVING_OFFSET*currentProgress;
 								}
 							}
 							else if (e instanceof EntityItem || e instanceof EntityArrow) {
-								e.motionX += dir.getFrontOffsetX()*GravityHandler.OTHER_OFFSET *currentProgress;
-								e.motionY += dir.getFrontOffsetY()*GravityHandler.OTHER_OFFSET *currentProgress;
-								e.motionZ += dir.getFrontOffsetZ()*GravityHandler.OTHER_OFFSET *currentProgress;
+								e.motionX += dir.getXOffset()*GravityHandler.OTHER_OFFSET *currentProgress;
+								e.motionY += dir.getYOffset()*GravityHandler.OTHER_OFFSET *currentProgress;
+								e.motionZ += dir.getZOffset()*GravityHandler.OTHER_OFFSET *currentProgress;
 							}
 
 							//Spawn particle effect
 							//TODO: tornados for planets
 							if(world.isRemote) {
 								if(Minecraft.getMinecraft().gameSettings.particleSetting == 0 && !(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && Minecraft.getMinecraft().player == e))
-									AdvancedRocketry.proxy.spawnParticle("gravityEffect", world, e.posX, e.posY, e.posZ, .2f*dir.getFrontOffsetX()*currentProgress, .2f*dir.getFrontOffsetY()*currentProgress, .2f*dir.getFrontOffsetZ()*currentProgress);
+									AdvancedRocketry.proxy.spawnParticle("gravityEffect", world, e.posX, e.posY, e.posZ, .2f*dir.getXOffset()*currentProgress, .2f*dir.getYOffset()*currentProgress, .2f*dir.getZOffset()*currentProgress);
 							}
 
 						}

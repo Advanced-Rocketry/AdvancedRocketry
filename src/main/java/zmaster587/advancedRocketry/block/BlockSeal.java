@@ -13,9 +13,9 @@ import zmaster587.advancedRocketry.atmosphere.AtmosphereHandler;
 import zmaster587.advancedRocketry.tile.atmosphere.TileSeal;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -37,13 +37,13 @@ public class BlockSeal extends Block {
 	}
 	
 	@Override
-	@Nonnull
+	@NotNull
 	public TileEntity createTileEntity(@Nullable World world, @Nullable IBlockState state) {
 		return new TileSeal();
 	}
 	
 	@Override
-	@ParametersAreNonnullByDefault
+	
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		super.breakBlock(worldIn, pos, state);
 		
@@ -59,7 +59,7 @@ public class BlockSeal extends Block {
 		}
 	}
 	
-	public void removeSeal(@Nonnull World worldIn, @Nonnull BlockPos pos) {
+	public void removeSeal(@NotNull World worldIn, @NotNull BlockPos pos) {
 		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension());
 		if(atmhandler == null)
 			return;
@@ -70,7 +70,7 @@ public class BlockSeal extends Block {
 		}
 	}
 	
-	public void clearBlob(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nullable IBlockState state) {
+	public void clearBlob(@NotNull World worldIn, @NotNull BlockPos pos, @Nullable IBlockState state) {
 		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension());
 		if(atmhandler == null)
 			return;
@@ -84,7 +84,7 @@ public class BlockSeal extends Block {
 	}
 
 	@Override
-	public void onBlockAdded(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nullable IBlockState state) {
+	public void onBlockAdded(@NotNull World worldIn, @NotNull BlockPos pos, @Nullable IBlockState state) {
 		super.onBlockAdded(worldIn, pos, state);
 
 		checkCompleteness(worldIn, pos);
@@ -94,14 +94,14 @@ public class BlockSeal extends Block {
 		}
 	}
 	
-	public void fireCheckAllDirections(@Nonnull World worldIn, @Nonnull BlockPos startBlock, @Nonnull EnumFacing directionFrom) {
+	public void fireCheckAllDirections(@NotNull World worldIn, @NotNull BlockPos startBlock, @NotNull EnumFacing directionFrom) {
 		for(EnumFacing dir : EnumFacing.VALUES) {
 			if(directionFrom.getOpposite() != dir)
 				fireCheck(worldIn, startBlock.offset(dir));
 		}
 	}
 	
-	private void fireCheck(@Nonnull World worldIn, @Nonnull BlockPos pos) {
+	private void fireCheck(@NotNull World worldIn, @NotNull BlockPos pos) {
 		Block block = worldIn.getBlockState(pos).getBlock();
 		if(block == this) {
 			BlockSeal blockSeal = (BlockSeal)block;
@@ -109,7 +109,7 @@ public class BlockSeal extends Block {
 		}
 	}
 
-	private boolean checkCompleteness(@Nonnull World worldIn, @Nonnull BlockPos pos) {
+	private boolean checkCompleteness(@NotNull World worldIn, @NotNull BlockPos pos) {
 		AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(worldIn.provider.getDimension());
 		if(atmhandler == null)
 			return false;
@@ -160,7 +160,7 @@ public class BlockSeal extends Block {
 		World world;
 		BlockPos pos;
 		
-		public BlobHandler(@Nonnull World world, @Nonnull BlockPos pos) {
+		public BlobHandler(@NotNull World world, @NotNull BlockPos pos) {
 			this.world = world;
 			this.pos = pos;
 		}
@@ -185,7 +185,7 @@ public class BlockSeal extends Block {
 		}
 
 		@Override
-		@Nonnull
+		@NotNull
 		public HashedBlockPosition getRootPosition() {
 			return new HashedBlockPosition(pos);
 		}

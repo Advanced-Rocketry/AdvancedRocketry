@@ -8,7 +8,7 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.item.ItemSatellite;
 import zmaster587.advancedRocketry.item.ItemSatelliteIdentificationChip;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
@@ -23,7 +23,7 @@ public class SatelliteRegistry {
 	 * @param stack stack to register, stacksize insensitive
 	 * @param properties Satellite Properties to register the ItemStack with
 	 */
-	public static void registerSatelliteProperty(@Nonnull ItemStack stack, SatelliteProperties properties) {
+	public static void registerSatelliteProperty(@NotNull ItemStack stack, SatelliteProperties properties) {
 		if(stack.isEmpty()) {
 			Logger.getLogger(Constants.modId).warning("Empty satellite property being registered!");
 		}
@@ -37,7 +37,7 @@ public class SatelliteRegistry {
 	 * @param stack ItemStack to get the SatelliteProperties of, stacksize insensitive
 	 * @return the registered SatelliteProperties of the stack, or null if not registered
 	 */
-	public static SatelliteProperties getSatelliteProperty(@Nonnull ItemStack stack) {
+	public static SatelliteProperties getSatelliteProperty(@NotNull ItemStack stack) {
 		
 		for(ItemStack keyStack : itemPropertiesRegistry.keySet()) {
 			if(keyStack.getItem() == stack.getItem() && ( !keyStack.getHasSubtypes() || keyStack.getItemDamage() == stack.getItemDamage()) ) {
@@ -106,7 +106,7 @@ public class SatelliteRegistry {
 	 * @param stack Satellite Chip or Satellite Chassis to get the ID of
 	 * @return ID of the satellite, or -1 if not found
 	 */
-	public static long getSatelliteId(@Nonnull ItemStack stack) {
+	public static long getSatelliteId(@NotNull ItemStack stack) {
 		if(stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
 
@@ -124,13 +124,13 @@ public class SatelliteRegistry {
 	 * @param stack Satellite Chip or Satellite Chassis to get the SatelliteBase of
 	 * @return SatelliteBase the satellite is, or null if not found
 	 */
-	public static SatelliteBase getSatellite(@Nonnull ItemStack stack) {
+	public static SatelliteBase getSatellite(@NotNull ItemStack stack) {
 		if (SatelliteRegistry.getSatelliteId(stack) != -1)
 			return DimensionManager.getInstance().getSatellite(SatelliteRegistry.getSatelliteId(stack));
 		return null;
 	}
 
-	public static SatelliteProperties getSatelliteProperties(@Nonnull ItemStack stack) {
+	public static SatelliteProperties getSatelliteProperties(@NotNull ItemStack stack) {
 		if (SatelliteRegistry.getSatelliteId(stack) != -1) {
 			NBTTagCompound nbt = stack.getTagCompound();
 

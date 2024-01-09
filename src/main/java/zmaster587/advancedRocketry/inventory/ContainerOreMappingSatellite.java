@@ -9,8 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.advancedRocketry.satellite.SatelliteOreMapping;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ContainerOreMappingSatellite extends Container {
 
@@ -28,7 +28,7 @@ public class ContainerOreMappingSatellite extends Container {
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack slotClick(int slot, int dragType, ClickType clickTypeIn,
 			EntityPlayer player) {
 		//Check if slot exists
@@ -61,7 +61,7 @@ public class ContainerOreMappingSatellite extends Container {
 
 	//int slot.. slot being taken from
 	@Override
-	@Nonnull
+	@NotNull
 	public ItemStack transferStackInSlot(EntityPlayer player, int p_82846_2_)
 	{
 		ItemStack itemstack = ItemStack.EMPTY;

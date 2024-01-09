@@ -8,8 +8,8 @@ import zmaster587.advancedRocketry.api.fuel.FuelRegistry.FuelType;
 import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -305,7 +305,7 @@ public class StatsRocket {
 	 * @param type
 	 * @param amt
 	 */
-	public void setFuelAmount(@Nonnull FuelRegistry.FuelType type, int amt) {
+	public void setFuelAmount(@NotNull FuelRegistry.FuelType type, int amt) {
 		switch(type) {
             case WARP:
                 fuelWarp = amt;
@@ -335,7 +335,7 @@ public class StatsRocket {
 	 * @param type
 	 * @param rate
 	 */
-	public void setFuelRate(@Nonnull FuelRegistry.FuelType type, int rate) {
+	public void setFuelRate(@NotNull FuelRegistry.FuelType type, int rate) {
 		switch(type) {
 		case WARP:
 			fuelRateWarp = rate;
@@ -365,7 +365,7 @@ public class StatsRocket {
 	 * @param type
 	 * @param rate
 	 */
-	public void setBaseFuelRate(@Nonnull FuelRegistry.FuelType type, int rate) {
+	public void setBaseFuelRate(@NotNull FuelRegistry.FuelType type, int rate) {
 		switch(type) {
 			case WARP:
 				fuelBaseRateWarp = rate;
@@ -395,7 +395,7 @@ public class StatsRocket {
 	 * @param type
 	 * @param amt
 	 */
-	public void setFuelCapacity(@Nonnull FuelRegistry.FuelType type, int amt) {
+	public void setFuelCapacity(@NotNull FuelRegistry.FuelType type, int amt) {
 		switch(type) {
 		case WARP:
 			fuelCapacityWarp = amt;
@@ -426,7 +426,7 @@ public class StatsRocket {
 	 * @param amt amount of fuel to add
 	 * @return amount of fuel added
 	 */
-	public int addFuelAmount(@Nonnull FuelRegistry.FuelType type, int amt) {
+	public int addFuelAmount(@NotNull FuelRegistry.FuelType type, int amt) {
 		//TODO: finish other ones
 		switch(type) {
 		case WARP:

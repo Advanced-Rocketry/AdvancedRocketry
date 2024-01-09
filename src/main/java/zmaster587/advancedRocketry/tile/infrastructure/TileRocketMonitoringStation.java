@@ -30,7 +30,7 @@ import zmaster587.libVulpes.util.IAdjBlockUpdate;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -103,7 +103,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 
 
 	@Override
-	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
+	public boolean onLinkStart(@NotNull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
 		ItemLinker.setMasterCoords(item, getPos());
 		if(linkedRocket != null) {
 			linkedRocket.unlinkInfrastructure(this);
@@ -120,7 +120,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 	}
 
 	@Override
-	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
+	public boolean onLinkComplete(@NotNull ItemStack item, TileEntity entity, EntityPlayer player, World world) {
 		if(player.world.isRemote)
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("msg.linker.error.firstMachine"));
 		return false;

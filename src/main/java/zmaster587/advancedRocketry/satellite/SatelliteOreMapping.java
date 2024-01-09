@@ -14,7 +14,7 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import zmaster587.advancedRocketry.item.ItemOreScanner;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,19 +37,19 @@ public class SatelliteOreMapping extends SatelliteBase  {
 		return "Operational";
 	}
 
-	public boolean acceptsItemInConstruction(@Nonnull ItemStack item) {
+	public boolean acceptsItemInConstruction(@NotNull ItemStack item) {
 		int flag = SatelliteRegistry.getSatelliteProperty(item).getPropertyFlag();
 		return super.acceptsItemInConstruction(item) || SatelliteProperties.Property.DATA.isOfType(flag);
 	}
 
 	@Override
-	public boolean isAcceptableControllerItemStack(@Nonnull ItemStack stack) {
+	public boolean isAcceptableControllerItemStack(@NotNull ItemStack stack) {
 		return !stack.isEmpty() && stack.getItem() instanceof ItemOreScanner;
 	}
 
 	@Override
-	@Nonnull
-	public ItemStack getControllerItemStack(@Nonnull ItemStack satIdChip,
+	@NotNull
+	public ItemStack getControllerItemStack(@NotNull ItemStack satIdChip,
 											SatelliteProperties properties) {
 		ItemStack stack = new ItemStack(AdvancedRocketryItems.itemOreScanner);
 		ItemOreScanner scanner = (ItemOreScanner)AdvancedRocketryItems.itemOreScanner;
@@ -69,7 +69,7 @@ public class SatelliteOreMapping extends SatelliteBase  {
 		return battery.extractEnergy(1000, true) == 1000;
 	}
 
-	public int[][] scanChunk(World world, int offsetX, int offsetZ, int radius, int blocksPerPixel, @Nonnull ItemStack block, int zoomLevel) {
+	public int[][] scanChunk(World world, int offsetX, int offsetZ, int radius, int blocksPerPixel, @NotNull ItemStack block, int zoomLevel) {
 		blocksPerPixel = Math.max(blocksPerPixel, 1);
 		int[][] ret = new int[(radius*2)/blocksPerPixel][(radius*2)/blocksPerPixel];
 

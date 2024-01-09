@@ -20,8 +20,8 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class ItemOreScanner extends Item implements IModularInventory {
 
 
 	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag arg5) {
+	public void addInformation(@NotNull ItemStack stack, World player, List<String> list, ITooltipFlag arg5) {
 		
 		SatelliteBase sat = DimensionManager.getInstance().getSatellite(this.getSatelliteID(stack));
 		
@@ -52,7 +52,7 @@ public class ItemOreScanner extends Item implements IModularInventory {
 		super.addInformation(stack, player, list, arg5);
 	}
 	
-	public void setSatelliteID(@Nonnull ItemStack stack, long id) {
+	public void setSatelliteID(@NotNull ItemStack stack, long id) {
 		NBTTagCompound nbt;
 		if(!stack.hasTagCompound())
 			nbt = new NBTTagCompound();
@@ -63,7 +63,7 @@ public class ItemOreScanner extends Item implements IModularInventory {
 		stack.setTagCompound(nbt);
 	}
 
-	public long getSatelliteID(@Nonnull ItemStack stack) {
+	public long getSatelliteID(@NotNull ItemStack stack) {
 		NBTTagCompound nbt;
 		if(!stack.hasTagCompound())
 			return -1;
@@ -74,8 +74,8 @@ public class ItemOreScanner extends Item implements IModularInventory {
 	}
 	
 	@Override
-	@ParametersAreNonnullByDefault
-	@Nonnull
+
+	@NotNull
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
 		ItemStack stack = playerIn.getHeldItem(hand);
 		if(!playerIn.world.isRemote && !stack.isEmpty())
@@ -93,7 +93,7 @@ public class ItemOreScanner extends Item implements IModularInventory {
 	}
 	
 	@Override
-	@Nonnull
+	@NotNull
 	public EnumActionResult onItemUse(EntityPlayer playerIn,
 			World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
 			float hitX, float hitY, float hitZ) {
