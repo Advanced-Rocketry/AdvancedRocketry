@@ -178,7 +178,7 @@ public class TileOxygenVent extends TileInventoriedRFConsumerTank implements IBl
 		if(state == RedstoneState.OFF)
 			return true;
 
-		boolean state2 = world.isBlockIndirectlyGettingPowered(pos) > 0;
+		boolean state2 = world.getRedstonePowerFromNeighbors(pos) > 0;
 
 		if(state == RedstoneState.INVERTED)
 			state2 = !state2;

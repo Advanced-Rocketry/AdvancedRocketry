@@ -2,6 +2,7 @@ package zmaster587.advancedRocketry.block;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -36,9 +37,9 @@ public class BlockWarpCore extends BlockMultiblockMachine {
 	}
 	
 	@Override
-	public void onBlockDestroyedByPlayer(World world, BlockPos pos,
-			IBlockState state) {
-		super.onBlockDestroyedByPlayer(world, pos, state);
+	public void onBlockHarvested(World world, BlockPos pos,
+								 IBlockState state, EntityPlayer player) {
+		super.onBlockHarvested(world, pos, state, player);
 		
 		if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
 			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);

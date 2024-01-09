@@ -3,7 +3,7 @@ package zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NotNullList;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -46,7 +46,7 @@ class MiningDrill extends AbstractDrill {
 				continue;
 			}
 
-			NotNullList<ItemStack> items = NotNullList.create();
+			NonNullList<ItemStack> items = NonNullList.create();
 			state.getBlock().getDrops(items, laser.world, laserPos, state, 0);
 
 			//TODO: may need to fix in later builds
@@ -109,7 +109,7 @@ class MiningDrill extends AbstractDrill {
 
 			int y = 64;
 
-			if (world.getChunkFromChunkCoords(x >> 4, z >> 4).isLoaded()) {
+			if (world.getChunk(x >> 4, z >> 4).isLoaded()) {
 				int current;
 				for (int i = 0; i < 9; i++) {
 					current = world.getTopSolidOrLiquidBlock(new BlockPos(x + (i % 3) - 1, 0xFF, z + (i / 3) - 1)).getY();

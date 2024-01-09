@@ -302,7 +302,7 @@ public class TileRailgun extends TileMultiPowerConsumer implements IInventory, I
 		if(state == RedstoneState.OFF)
 			return true;
 
-		boolean powered = world.isBlockIndirectlyGettingPowered(pos) > 0;
+		boolean powered = world.getRedstonePowerFromNeighbors(pos) > 0;
 
 		return (state == RedstoneState.ON && powered) || (!powered && state == RedstoneState.INVERTED);
 	}

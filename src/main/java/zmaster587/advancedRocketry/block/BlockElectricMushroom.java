@@ -5,6 +5,7 @@ import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -57,11 +58,11 @@ public class BlockElectricMushroom extends BlockMushroom implements IGrowable {
 			world.addWeatherEffect(new EntityLightningBolt(world, lightning.getX(), lightning.getY(), lightning.getZ(), true));
 		}
 	}
-	
+
 	@Override
-	public void onBlockDestroyedByPlayer(World world, BlockPos pos,
-			IBlockState state) {
-		super.onBlockDestroyedByPlayer(world, pos, state);
+	public void onBlockHarvested(World world, BlockPos pos,
+			IBlockState state, EntityPlayer player) {
+		super.onBlockHarvested(world, pos, state, player);
 		
 		if(world.isRemote) {
 			FxSystemElectricArc.spawnArc(world, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, .3, 7);

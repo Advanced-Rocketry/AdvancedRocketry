@@ -26,4 +26,5 @@ dependencies {
 //    compileOnly rfg.deobf("dev.galacticraft:galacticraft-legacy:$gcVersion")
 //
     implementation rfg.deobf("curse.maven:libvulpes-236541:3801015")
+    implementation rfg.deobf("curse.maven:galacticraft-legacy-564236:4671122")
 }

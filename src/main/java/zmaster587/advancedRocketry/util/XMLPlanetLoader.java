@@ -551,7 +551,7 @@ public class XMLPlanetLoader {
 								} catch (NumberFormatException ignored) {}
 							}
 						}
-						properties.laserDrillOres.add(new ItemStack(Objects.requireNotNull(Item.getByNameOrId(parts[0].trim())),quantity,damage));
+						properties.laserDrillOres.add(new ItemStack(Objects.requireNonNull(Item.getByNameOrId(parts[0].trim())),quantity,damage));
 					}
 					else {
 						AdvancedRocketry.logger.warn(parts[0] + " is not a valid OreDictionary name or item ID");

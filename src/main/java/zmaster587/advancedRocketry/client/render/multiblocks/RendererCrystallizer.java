@@ -96,7 +96,7 @@ public class RendererCrystallizer extends TileEntitySpecialRenderer {
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
 
-				int color = Minecraft.getMinecraft().getItemColors().getColorFromItemstack(stack, 0);
+				int color = Minecraft.getMinecraft().getItemColors().colorMultiplier(stack, 0);
 
 				float divisor = 1/255f;
 

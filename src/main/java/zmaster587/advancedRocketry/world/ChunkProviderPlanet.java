@@ -555,7 +555,7 @@ public class ChunkProviderPlanet implements IChunkGenerator {
 		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableTerraforming && worldObj.provider.getClass() == WorldProviderPlanet.class) {
 
 			if(DimensionManager.getInstance().getDimensionProperties(worldObj.provider.getDimension()).isTerraformed()) {
-				Chunk chunk = worldObj.getChunkFromChunkCoords(x, z);
+				Chunk chunk = worldObj.getChunk(x, z);
 				PlanetEventHandler.modifyChunk(worldObj, (WorldProviderPlanet)worldObj.provider, chunk);
 			}
 		}

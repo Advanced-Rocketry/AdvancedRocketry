@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.NotNullList;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,7 +22,6 @@ import zmaster587.libVulpes.block.INamedMetaBlock;
 import org.jetbrains.annotations.NotNull;
 
 public class BlockCrystal extends Block implements INamedMetaBlock {
-	
 	public final static PropertyEnum<EnumCrystal> CRYSTALPROPERTY = PropertyEnum.create("type", EnumCrystal.class);
 	
     public BlockCrystal()
@@ -70,7 +69,7 @@ public class BlockCrystal extends Block implements INamedMetaBlock {
     
 	@Override
 	public void getSubBlocks(CreativeTabs tab,
-			NotNullList<ItemStack> list) {
+			NonNullList<ItemStack> list) {
 		for(int i = 0; i < numMetas; i++) {
 			list.add(new ItemStack(this, 1, i));
 		}

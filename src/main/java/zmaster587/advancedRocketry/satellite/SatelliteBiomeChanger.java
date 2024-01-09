@@ -138,8 +138,8 @@ public class SatelliteBiomeChanger extends SatelliteBase  {
 		//Causing execution order to vary from source
 		/*for(int xx = -radius + x; xx < radius + x; xx++) {
 			for(int zz = -radius + z; zz < radius + z; zz++) {
-				set.add(world.getChunkFromBlockCoords(xx, zz));
-				byte[] biomeArr = world.getChunkFromBlockCoords(xx, zz).getBiomeArray();
+				set.add(world.getChunk(xx, zz));
+				byte[] biomeArr = world.getChunk(xx, zz).getBiomeArray();
 				biomeArr[(xx % 16)+ (zz % 16)*16] = (byte)biomeId;
 			}
 		}*/

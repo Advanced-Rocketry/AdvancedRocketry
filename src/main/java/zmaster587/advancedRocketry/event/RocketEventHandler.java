@@ -169,7 +169,7 @@ public class RocketEventHandler extends Gui {
 						int xPosition = (int)entity.posX - (getImgSize/2) + xOffset;
 						int zPosition = (int)entity.posZ - (getImgSize/2) + yOffset;
 						BlockPos thisPos = new BlockPos(xPosition, 0, zPosition);
-						Chunk chunk = worldObj.getChunkFromBlockCoords(thisPos);
+						Chunk chunk = worldObj.getChunk(thisPos);
 
 						if(chunk.isLoaded() && !chunk.isEmpty()) {
 							//Get Xcoord and ZCoords in the chunk

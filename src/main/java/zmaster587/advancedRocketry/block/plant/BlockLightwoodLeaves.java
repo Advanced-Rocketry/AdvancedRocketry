@@ -10,7 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.NotNullList;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -76,8 +76,8 @@ public class BlockLightwoodLeaves extends BlockLeaves {
 
 	@Override
     @NotNull
-	public NotNullList<ItemStack> onSheared(@NotNull ItemStack item, IBlockAccess world, BlockPos pos, int fortune) {
-		return NotNullList.withSize(1, new ItemStack(this, 1, 0));
+	public NonNullList<ItemStack> onSheared(@NotNull ItemStack item, IBlockAccess world, BlockPos pos, int fortune) {
+		return NonNullList.withSize(1, new ItemStack(this, 1, 0));
 	}
 
 	@Override

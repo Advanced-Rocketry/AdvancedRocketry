@@ -144,7 +144,7 @@ public class WorldGenLargeCrystal extends WorldGenerator {
 	
 	//Screw thy lighting checks!
 	public void setBlockState(World world, BlockPos pos, IBlockState state) {
-		Chunk chunk = world.getChunkFromBlockCoords(pos);
+		Chunk chunk = world.getChunk(pos);
 		chunk.setBlockState(pos, state);
 	}
 }

@@ -14,7 +14,7 @@ public class ItemBlockCrystal extends ItemBlockMeta {
 	}
 
 	@Override
-	public String getUnlocalizedName(@NotNull ItemStack stack) {
+	public String getTranslationKey(@NotNull ItemStack stack) {
 		return((INamedMetaBlock)Block.getBlockFromItem(stack.getItem())).getUnlocalizedName(stack.getItemDamage());
 	}
 }

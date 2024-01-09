@@ -137,7 +137,7 @@ public class AtmosphereHandler {
 
 	//Called from World.setBlockMetaDataWithNotify
 	/*public static void onBlockMetaChange(World world, int x , int y, int z) {
-		if(Configuration.enableOxygen && !world.isRemote && world.getChunkFromBlockCoords(new BlockPos(x, y, z)).isLoaded()) {
+		if(Configuration.enableOxygen && !world.isRemote && world.getChunk(new BlockPos(x, y, z)).isLoaded()) {
 			AtmosphereHandler handler = getOxygenHandler(world.provider.getDimension());
 			HashedBlockPosition pos = new HashedBlockPosition(x, y, z);
 
@@ -161,7 +161,7 @@ public class AtmosphereHandler {
 	//Called from setBlock in World.class
 	public static void onBlockChange(@NotNull World world, @NotNull BlockPos bpos) {
 
-		if(ARConfiguration.getCurrentConfig().enableOxygen && !world.isRemote && world.getChunkFromBlockCoords(new BlockPos(bpos)).isLoaded()) {
+		if(ARConfiguration.getCurrentConfig().enableOxygen && !world.isRemote && world.getChunk(new BlockPos(bpos)).isLoaded()) {
 			HashedBlockPosition pos = new HashedBlockPosition(bpos);
 
 			AtmosphereHandler handler = getOxygenHandler(world.provider.getDimension());

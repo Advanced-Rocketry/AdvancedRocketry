@@ -242,7 +242,7 @@ public class StellarBody {
 			list.appendTag(tag);
 		}
 		
-		if(!list.hasNoTags())
+		if(!list.isEmpty())
 			nbt.setTag("subStars", list);
 	}
 

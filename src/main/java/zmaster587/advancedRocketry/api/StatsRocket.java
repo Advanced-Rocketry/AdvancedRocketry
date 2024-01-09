@@ -580,7 +580,7 @@ public class StatsRocket {
 			else if(obj instanceof Integer)
 				dynStats.setInteger(key, (int)obj);
 		}
-		if(!dynStats.hasNoTags())
+		if(!dynStats.isEmpty())
 			stats.setTag("dynStats", dynStats);
 
 		stats.setInteger("playerXPos", pilotSeatPos.x);

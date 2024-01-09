@@ -146,7 +146,7 @@ public class TilePipe extends TileEntity {
 		//if(!(tile instanceof IFluidHandler))
 		//return;
 
-		if(canExtract(dir, tile) && (world.isBlockIndirectlyGettingPowered(pos) > 0 || world.getStrongPower(pos) > 0)) {
+		if(canExtract(dir, tile) && (world.getRedstonePowerFromNeighbors(pos) > 0 || world.getStrongPower(pos) > 0)) {
 			if(!world.isRemote)  {
 				getNetworkHandler().removeFromAllTypes(this, tile);
 				getNetworkHandler().addSource(this,tile,dir);
@@ -154,7 +154,7 @@ public class TilePipe extends TileEntity {
 			connectedSides[dir.ordinal()]=true;
 		}
 
-		if(canInject(dir, tile) && world.isBlockIndirectlyGettingPowered(pos) == 0 && world.getStrongPower(pos) == 0) {
+		if(canInject(dir, tile) && world.getRedstonePowerFromNeighbors(pos) == 0 && world.getStrongPower(pos) == 0) {
 			if(!world.isRemote)  {
 				getNetworkHandler().removeFromAllTypes(this, tile);
 				getNetworkHandler().addSink(this, tile,dir);

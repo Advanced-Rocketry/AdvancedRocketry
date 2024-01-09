@@ -12,9 +12,8 @@ import org.jetbrains.annotations.NotNull;
 public class CrystalColorizer implements IBlockColor, IItemColor {
 
 	@Override
-	public int getColorFromItemstack(@NotNull ItemStack stack, int tintIndex) {
+	public int colorMultiplier(@NotNull ItemStack stack, int tintIndex) {
 		return BlockCrystal.EnumCrystal.values()[stack.getItemDamage()].getColor();
-		
 	}
 
 	@Override
@@ -22,5 +21,4 @@ public class CrystalColorizer implements IBlockColor, IItemColor {
 			BlockPos pos, int tintIndex) {
 		return state.getValue(BlockCrystal.CRYSTALPROPERTY).getColor();
 	}
-
 }

@@ -71,7 +71,7 @@ public class TileRocketMonitoringStation extends TileEntity  implements IModular
 		if(state == RedstoneState.OFF)
 			return false;
 
-		boolean state2 = world.isBlockIndirectlyGettingPowered(pos) > 0;
+		boolean state2 = world.getRedstonePowerFromNeighbors(pos) > 0;
 
 		if(state == RedstoneState.INVERTED)
 			state2 = !state2;

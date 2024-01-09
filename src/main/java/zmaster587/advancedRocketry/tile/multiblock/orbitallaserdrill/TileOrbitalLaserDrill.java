@@ -472,11 +472,11 @@ public class TileOrbitalLaserDrill extends TileMultiPowerConsumer implements ISi
 	 */
 	public void checkCanRun() {
 		//Laser requires lense, redstone power, not be jammed, and be in orbit and energy to function
-		if(world.isBlockIndirectlyGettingPowered(getPos()) == 0 || unableToRun()) {
+		if(world.getRedstonePowerFromNeighbors(getPos()) == 0 || unableToRun()) {
 			drill.deactivate();
 
 			setRunning(false);
-		} else if(!this.finished && !this.isJammed && world.isBlockIndirectlyGettingPowered(getPos()) > 0) {
+		} else if(!this.finished && !this.isJammed && world.getRedstonePowerFromNeighbors(getPos()) > 0) {
 
 			//Laser will be on at this point
 			int orbitDimId = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getOrbitingPlanetId();

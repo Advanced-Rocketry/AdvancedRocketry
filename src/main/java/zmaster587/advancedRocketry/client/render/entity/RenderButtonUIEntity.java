@@ -36,7 +36,7 @@ public class RenderButtonUIEntity extends Render<EntityUIButton> implements IRen
 		GL11.glTranslated(0, -.25, 0);
 		
 
-		RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSqToEntity(entity), "Up a level", x,y,z, 8);
+		RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(entity), "Up a level", x,y,z, 8);
 		GL11.glPopMatrix();
 
 		//Clean up and make player not transparent

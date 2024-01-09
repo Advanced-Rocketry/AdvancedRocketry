@@ -61,7 +61,7 @@ public class PacketBiomeIDChange extends BasePacket {
 	@Override
 	public void executeClient(EntityPlayer thePlayer) {
 		if(thePlayer.world.provider.getDimension() == worldId) {
-			chunk = thePlayer.world.getChunkFromChunkCoords(xPos, zPos);
+			chunk = thePlayer.world.getChunk(xPos, zPos);
 			if(chunk.isLoaded()) {
 				chunk.setBiomeArray(array);
 				BlockPos pos2 = pos.getBlockPos();// new BlockPos(chunk.xPosition << 4, 48, chunk.zPosition << 4);

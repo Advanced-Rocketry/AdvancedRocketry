@@ -12,7 +12,7 @@ public class BiomeHandler {
 	
 	
 	public static void changeBiome(World world, Biome biomeId, BlockPos pos) {
-		Chunk chunk = world.getChunkFromBlockCoords(pos);
+		Chunk chunk = world.getChunk(pos);
 
 		Biome biome = world.getBiome(pos);
 		

@@ -133,7 +133,7 @@ public class TileAreaGravityController extends TileMultiPowerConsumer implements
 	
 	@Override
 	public boolean isRunning() {
-		return getMachineEnabled() && isStateActive(state, world.isBlockIndirectlyGettingPowered(getPos()) > 0);
+		return getMachineEnabled() && isStateActive(state, world.getRedstonePowerFromNeighbors(getPos()) > 0);
 	}
 
 	@Override

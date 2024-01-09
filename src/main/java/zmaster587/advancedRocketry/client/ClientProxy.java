@@ -129,7 +129,7 @@ public class ClientProxy extends CommonProxy {
 
 		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor()
         {
-            public int getColorFromItemstack(@NotNull ItemStack stack, int tintIndex)
+            public int colorMultiplier(@NotNull ItemStack stack, int tintIndex)
             {
                 return tintIndex > 0 ? -1 : ((ItemArmor)stack.getItem()).getColor(stack);
             }
@@ -322,7 +322,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public Profiler getProfiler() {
-		return Minecraft.getMinecraft().mcProfiler;
+		return Minecraft.getMinecraft().profiler;
 	}
 
 	@Override
@@ -374,7 +374,7 @@ public class ClientProxy extends CommonProxy {
 				break;
 			}
 			default:
-				world.spawnParticle(Objects.requireNotNull(EnumParticleTypes.getByName(particle)), x, y, z, motionX, motionY, motionZ);
+				world.spawnParticle(Objects.requireNonNull(EnumParticleTypes.getByName(particle)), x, y, z, motionX, motionY, motionZ);
 				break;
 		}
 	}

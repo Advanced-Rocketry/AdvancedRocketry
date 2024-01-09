@@ -97,7 +97,7 @@ public class TileHolographicPlanetSelector extends TileEntity implements ITickab
 	}
 
 	public boolean isEnabled() {
-		boolean powered = world.isBlockIndirectlyGettingPowered(getPos()) > 0;
+		boolean powered = world.getRedstonePowerFromNeighbors(getPos()) > 0;
 		return (!powered && state == RedstoneState.INVERTED) || (powered && state == RedstoneState.ON) || state == RedstoneState.OFF;
 	}
 

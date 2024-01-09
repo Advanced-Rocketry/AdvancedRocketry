@@ -499,7 +499,7 @@ public class PlanetEventHandler {
 		if(zmaster587.advancedRocketry.api.ARConfiguration.getCurrentConfig().enableTerraforming && event.getWorld().provider.getClass() == WorldProviderPlanet.class) {
 
 			if(DimensionManager.getInstance().getDimensionProperties(event.getWorld().provider.getDimension()).isTerraformed()) {
-				Chunk chunk = event.getWorld().getChunkFromChunkCoords(event.getChunkX(), event.getChunkZ());
+				Chunk chunk = event.getWorld().getChunk(event.getChunkX(), event.getChunkZ());
 				modifyChunk(event.getWorld(), (WorldProviderPlanet) event.getWorld().provider, chunk);
 			}
 		}
