@@ -52,6 +52,10 @@ java {
     }
 }
 
+configurations.configureEach {
+    exclude(group = "net.minecraftforge", module = "mergetool")
+}
+
 //sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 tasks.compileJava {
     sourceCompatibility = "1.8"
@@ -129,11 +133,11 @@ repositories {
         name = "Galacticraft"
         url = uri("https://maven.galacticraft.dev/repository/legacy-releases/")
     }
-    maven {
-        name = "LibVulpes"
-        url = uri("http://maven.dmodoomsirius.me/")
-        isAllowInsecureProtocol = true
-    }
+//    maven {
+//        name = "LibVulpes"
+//        url = uri("http://maven.dmodoomsirius.me/")
+//        isAllowInsecureProtocol = true
+//    }
     flatDir {
         dirs("libs")
     }
@@ -149,7 +153,11 @@ dependencies {
 
     compileOnly(fg.deobf("mezz.jei:jei_${mcVersion}:${jeiVersion}:api"))
     runtimeOnly(fg.deobf("mezz.jei:jei_${mcVersion}:${jeiVersion}"))
-    implementation ("zmaster587.libVulpes:libVulpes:1.12.2-0.4.2+:deobf")
+
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+
+    implementation ("net.minecraftforge:mergetool:0.2.3.3")
+    // implementation ("zmaster587.libVulpes:libVulpes:1.12.2-0.4.2+:deobf")
 }
 
 tasks.processResources {

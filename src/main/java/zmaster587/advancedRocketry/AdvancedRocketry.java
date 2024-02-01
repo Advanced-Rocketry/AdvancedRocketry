@@ -322,7 +322,8 @@ public class AdvancedRocketry {
 		PacketHandler.INSTANCE.addDiscriminator(PacketInvalidLocationNotify.class);
 		PacketHandler.INSTANCE.addDiscriminator(PacketConfigSync.class);
 		PacketHandler.INSTANCE.addDiscriminator(PacketFluidParticle.class);
-		
+		PacketHandler.INSTANCE.addDiscriminator(PacketSatellitesUpdate.class);
+
 		
 		//if(zmaster587.advancedRocketry.api.Configuration.allowMakingItemsForOtherMods)
 		MinecraftForge.EVENT_BUS.register(this);

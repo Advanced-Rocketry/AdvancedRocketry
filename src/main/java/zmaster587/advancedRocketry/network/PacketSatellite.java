@@ -43,7 +43,6 @@ public class PacketSatellite extends BasePacket {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void readClient(ByteBuf in) {
-		
 		PacketBuffer packetBuffer = new PacketBuffer(in);
 		NBTTagCompound nbt;
 		
