@@ -6,31 +6,31 @@ import zmaster587.libVulpes.client.util.ProgressBarImage;
 
 public class DrawableProgressBarWrapper implements IDrawableAnimated {
 
-	
-	ProgressBarImage bar;
-	
-	public DrawableProgressBarWrapper( ProgressBarImage bar) {
-		this.bar = bar;
-	}
-	
-	@Override
-	public int getWidth() {
-		return bar.getBackWidth();
-	}
 
-	@Override
-	public int getHeight() {
-		return bar.getBackHeight();
-	}
+    ProgressBarImage bar;
 
-	@Override
-	public void draw(Minecraft minecraft) {
-		bar.renderProgressBar(0,0,0, 100);
-	}
+    public DrawableProgressBarWrapper(ProgressBarImage bar) {
+        this.bar = bar;
+    }
 
-	@Override
-	public void draw(Minecraft minecraft, int xOffset, int yOffset) {
-		bar.renderProgressBar(xOffset,0,yOffset, 100);
-	}
+    @Override
+    public int getWidth() {
+        return bar.getBackWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return bar.getBackHeight();
+    }
+
+    @Override
+    public void draw(Minecraft minecraft) {
+        bar.renderProgressBar(0, 0, 0, 100);
+    }
+
+    @Override
+    public void draw(Minecraft minecraft, int xOffset, int yOffset) {
+        bar.renderProgressBar(xOffset, 0, yOffset, 100);
+    }
 
 }

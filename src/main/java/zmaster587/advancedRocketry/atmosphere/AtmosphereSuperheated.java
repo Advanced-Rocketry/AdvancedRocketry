@@ -7,29 +7,28 @@ import zmaster587.libVulpes.LibVulpes;
 
 public class AtmosphereSuperheated extends AtmosphereNeedsSuit {
 
-	public AtmosphereSuperheated(boolean canTick, boolean isBreathable, boolean allowsCombustion,
+    public AtmosphereSuperheated(boolean canTick, boolean isBreathable, boolean allowsCombustion,
                                  String name) {
-		super(canTick, isBreathable, allowsCombustion, name);
-	}
-	
+        super(canTick, isBreathable, allowsCombustion, name);
+    }
 
-	@Override
-	public String getDisplayMessage() {
-		return LibVulpes.proxy.getLocalizedString("msg.tooHot");
-	}
-	
-	// Needs full pressure suit
-	protected boolean onlyNeedsMask()
-	{
-		return false;
-	}
-	
-	@Override
-	public void onTick(EntityLivingBase player) {
-		if(player.world.getTotalWorldTime() % 20  == 0 && !isImmune(player)) {
-			player.setFire(1);
-			player.attackEntityFrom(AtmosphereHandler.heatDamage, 4);
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 40, 3));
-		}
-	}
+
+    @Override
+    public String getDisplayMessage() {
+        return LibVulpes.proxy.getLocalizedString("msg.tooHot");
+    }
+
+    // Needs full pressure suit
+    protected boolean onlyNeedsMask() {
+        return false;
+    }
+
+    @Override
+    public void onTick(EntityLivingBase player) {
+        if (player.world.getTotalWorldTime() % 20 == 0 && !isImmune(player)) {
+            player.setFire(1);
+            player.attackEntityFrom(AtmosphereHandler.heatDamage, 4);
+            player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 40, 3));
+        }
+    }
 }

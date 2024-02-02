@@ -9,13 +9,13 @@ import java.util.List;
 
 public class PrecisionAssemblerRecipeMaker {
 
-	public static List<PrecisionAssemblerWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
-		
-		List<PrecisionAssemblerWrapper> list = new LinkedList<>();
-		for(IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
-			list.add(new PrecisionAssemblerWrapper(rec));
-		}
-		return list;
-	}
-	
+    public static List<PrecisionAssemblerWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
+
+        List<PrecisionAssemblerWrapper> list = new LinkedList<>();
+        for (IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
+            list.add(new PrecisionAssemblerWrapper(rec));
+        }
+        return list;
+    }
+
 }

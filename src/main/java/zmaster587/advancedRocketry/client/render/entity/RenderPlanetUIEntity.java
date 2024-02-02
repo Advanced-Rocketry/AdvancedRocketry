@@ -20,228 +20,228 @@ import zmaster587.libVulpes.render.RenderHelper;
 
 public class RenderPlanetUIEntity extends Render<EntityUIPlanet> implements IRenderFactory<EntityUIPlanet> {
 
-	private static WavefrontObject sphere;
-	public static ResourceLocation planetUIBG = new ResourceLocation("advancedrocketry:textures/gui/planetUIOverlay.png");
-	public static ResourceLocation planetUIFG = new ResourceLocation("advancedrocketry:textures/gui/planetUIOverlayFG.png");
+    public static ResourceLocation planetUIBG = new ResourceLocation("advancedrocketry:textures/gui/planetUIOverlay.png");
+    public static ResourceLocation planetUIFG = new ResourceLocation("advancedrocketry:textures/gui/planetUIOverlayFG.png");
+    private static WavefrontObject sphere;
 
-	static {
-		try {
-			sphere = new WavefrontObject(new ResourceLocation("advancedrocketry:models/atmosphere.obj"));
-		} catch(ModelFormatException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    static {
+        try {
+            sphere = new WavefrontObject(new ResourceLocation("advancedrocketry:models/atmosphere.obj"));
+        } catch (ModelFormatException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	public RenderPlanetUIEntity(RenderManager renderManager) {
-		super(renderManager);
-	}
+    public RenderPlanetUIEntity(RenderManager renderManager) {
+        super(renderManager);
+    }
 
-	@Override
-	public Render<? super EntityUIPlanet> createRenderFor(
-			RenderManager manager) {
-		return new RenderPlanetUIEntity(manager);
-	}
+    @Override
+    public Render<? super EntityUIPlanet> createRenderFor(
+            RenderManager manager) {
+        return new RenderPlanetUIEntity(manager);
+    }
 
-	@Override
-	protected ResourceLocation getEntityTexture(EntityUIPlanet entity) {
-		return DimensionProperties.PlanetIcons.EARTHLIKE.getResource();
-	}
+    @Override
+    protected ResourceLocation getEntityTexture(EntityUIPlanet entity) {
+        return DimensionProperties.PlanetIcons.EARTHLIKE.getResource();
+    }
 
-	@Override
-	public void doRender(EntityUIPlanet entity, double x, double y, double z,
-			float entityYaw, float partialTicks) {
+    @Override
+    public void doRender(EntityUIPlanet entity, double x, double y, double z,
+                         float entityYaw, float partialTicks) {
 
-		DimensionProperties properties = entity.getProperties();
-		if(properties == null)
-			return;
+        DimensionProperties properties = entity.getProperties();
+        if (properties == null)
+            return;
 
-		float sizeScale = Math.max(properties.gravitationalMultiplier*properties.gravitationalMultiplier*entity.getScale(), .5f);
+        float sizeScale = Math.max(properties.gravitationalMultiplier * properties.gravitationalMultiplier * entity.getScale(), .5f);
 
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float)x, (float)y + sizeScale*0.03f, (float)z);
-		//Max because moon was too small to be visible
+        GL11.glPushMatrix();
+        GL11.glTranslatef((float) x, (float) y + sizeScale * 0.03f, (float) z);
+        //Max because moon was too small to be visible
 
-		GL11.glScalef(.1f*sizeScale, .1f*sizeScale, .1f*sizeScale);
-		GlStateManager.disableLighting();
-		Minecraft.getMinecraft().renderEngine.bindTexture(properties.getPlanetIconLEO());
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GL11.GL_ONE, GL11.GL_SRC_ALPHA);
-		GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
+        GL11.glScalef(.1f * sizeScale, .1f * sizeScale, .1f * sizeScale);
+        GlStateManager.disableLighting();
+        Minecraft.getMinecraft().renderEngine.bindTexture(properties.getPlanetIconLEO());
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL11.GL_ONE, GL11.GL_SRC_ALPHA);
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
 
-		GlStateManager.color(1f, 1, 1f, .5f);
+        GlStateManager.color(1f, 1, 1f, .5f);
 
-		GL11.glPushMatrix();
-		GL11.glRotatef(entity.world.getTotalWorldTime() & 0xFF, 0, 1, 0);
-		sphere.renderAll();
-		GL11.glPopMatrix();
-
-
-		//Render shadow
-		GL11.glPushMatrix();
-		GL11.glScalef(1.1f, 1.1f, 1.1f);
-		GL11.glRotatef(90, 0, 0, 1);
-		GL11.glRotated( -(properties.orbitTheta * 180/Math.PI), 1, 0, 0);
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.shadow3);
-		GlStateManager.color(.1f, .1f, .1f,0.75f);
-		sphere.renderAll();
-
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-
-		if(properties.hasRings) {
-			//Rotate for rings
-			GL11.glRotatef(90, 1, 0, 0);
-			GL11.glRotatef(-90, 0, 0, 1);
-			
-			//Draw ring
-			GlStateManager.color(properties.ringColor[0], properties.ringColor[1], properties.ringColor[2],0.5f);
-			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.planetRings);
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderTopFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
-			RenderHelper.renderBottomFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
-			Tessellator.getInstance().draw();
-
-			//Draw ring shadow
-			Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.planetRingShadow);
-			GlStateManager.color(1,1,1,0.5f);
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderTopFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
-			RenderHelper.renderBottomFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
-			Tessellator.getInstance().draw();
-		}
-
-		GL11.glPopMatrix();
-
-		//Render ATM
-		if(properties.hasAtmosphere()) {
-			GL11.glPushMatrix();
-			GlStateManager.disableTexture2D();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GlStateManager.color(properties.skyColor[0], properties.skyColor[1], properties.skyColor[2], .1f);
-
-			for(int i = 0; i < 5; i++) {
-				GL11.glScalef(1.02f, 1.02f, 1.02f);
-				sphere.renderAll();
-			}
-			
-			GlStateManager.enableTexture2D();
-			GL11.glPopMatrix();
-		}
-
-		//Render hololines
-		GL11.glPushMatrix();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-		BufferBuilder buf = Tessellator.getInstance().getBuffer();
-		GlStateManager.disableTexture2D();
-
-		float myTime;
-
-		for(int i = 0; i < 4; i++ ) {
-			myTime = ((i*4 + entity.world.getTotalWorldTime() & 0xF)/16f);
-
-			GlStateManager.color(0, 1f, 1f, .2f*(1-myTime));
-			buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
-			RenderHelper.renderTopFace(buf, myTime - 0.5, -.5f, -.5f, .5f, .5f);
-			RenderHelper.renderBottomFace(buf, myTime - 0.5, -.5f, -.5f, .5f, .5f);
-			Tessellator.getInstance().draw();
-		}
-		GlStateManager.alphaFunc(GL11.GL_GREATER, .1f);
-		GlStateManager.enableTexture2D();
-		GL11.glPopMatrix();
-
-		//RenderSelection
-		if(entity.isSelected()) {
-			GlStateManager.disableTexture2D();
-			double speedRotate = 0.025d;
-			GlStateManager.color(0.4f, 0.4f, 1f, 0.6f);
-			GL11.glTranslated(0, -1.25, 0);
-			GL11.glPushMatrix();
-			GL11.glRotated(speedRotate*System.currentTimeMillis() % 360, 0f, 1f, 0f);
-			RendererWarpCore.model.renderOnly("Rotate1");
-			GL11.glPopMatrix();
-
-			GL11.glPushMatrix();
-			GL11.glRotated(180 + speedRotate*System.currentTimeMillis() % 360, 0f, 1f, 0f);
-			RendererWarpCore.model.renderOnly("Rotate1");
-			GL11.glPopMatrix();
-			GlStateManager.enableTexture2D();
-		}
-
-		GL11.glPopMatrix();
-
-		RayTraceResult hitObj = Minecraft.getMinecraft().objectMouseOver;
-		if(hitObj != null && hitObj.entityHit == entity) {
-
-			GL11.glPushMatrix();
-			GlStateManager.color(1, 1, 1);
-			GL11.glTranslated(x, y + sizeScale*0.03f, z);
-			sizeScale = .1f*sizeScale;
-			GL11.glScaled(sizeScale,sizeScale,sizeScale);
-
-			//Render atmosphere UI/planet info
-
-			RenderHelper.setupPlayerFacingMatrix(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.z, hitObj.hitVec.y, hitObj.hitVec.x), 0, 0, 0);
-			buffer = Tessellator.getInstance().getBuffer();
-
-			//Draw Mass indicator
-			Minecraft.getMinecraft().renderEngine.bindTexture(planetUIFG);
-			GlStateManager.color(1, 1, 1,0.8f);
-			renderMassIndicator(buffer, Math.min(properties.gravitationalMultiplier/2f, 1f));
-
-			//Draw background
-			GlStateManager.color(1, 1, 1,1);
-			Minecraft.getMinecraft().renderEngine.bindTexture(planetUIBG);
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.renderNorthFaceWithUV(buffer, 1, -40, -25, 40, 55, 1, 0, 1, 0);
-			Tessellator.getInstance().draw();
+        GL11.glPushMatrix();
+        GL11.glRotatef(entity.world.getTotalWorldTime() & 0xFF, 0, 1, 0);
+        sphere.renderAll();
+        GL11.glPopMatrix();
 
 
-			//Render ATM
-			Minecraft.getMinecraft().renderEngine.bindTexture(planetUIFG);
-			renderATMIndicator(buffer, Math.min(properties.getAtmosphereDensity()/200f, 1f));
-			//Render Temp
-			renderTemperatureIndicator(buffer, Math.min(properties.getAverageTemp()/400f,1f));
+        //Render shadow
+        GL11.glPushMatrix();
+        GL11.glScalef(1.1f, 1.1f, 1.1f);
+        GL11.glRotatef(90, 0, 0, 1);
+        GL11.glRotated(-(properties.orbitTheta * 180 / Math.PI), 1, 0, 0);
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.shadow3);
+        GlStateManager.color(.1f, .1f, .1f, 0.75f);
+        sphere.renderAll();
 
-			//Render planet name
-			RenderHelper.cleanupPlayerFacingMatrix();
-			RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.z, hitObj.hitVec.y, hitObj.hitVec.x), properties.getName(), 0, .9, 0, 5);
-			RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.z, hitObj.hitVec.y, hitObj.hitVec.x), "NumMoons: " + properties.getChildPlanets().size(), 0, .6, 0, 5);
+        BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
-			GL11.glPopMatrix();
-		}
+        if (properties.hasRings) {
+            //Rotate for rings
+            GL11.glRotatef(90, 1, 0, 0);
+            GL11.glRotatef(-90, 0, 0, 1);
 
-		//Clean up and make player not transparent
-		GlStateManager.color(1, 1, 1);
-		GlStateManager.disableBlend();
-		GlStateManager.enableLighting();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-	}
+            //Draw ring
+            GlStateManager.color(properties.ringColor[0], properties.ringColor[1], properties.ringColor[2], 0.5f);
+            Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.planetRings);
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+            RenderHelper.renderTopFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
+            RenderHelper.renderBottomFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
+            Tessellator.getInstance().draw();
 
-	protected void renderMassIndicator(BufferBuilder buffer, float percent) {
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+            //Draw ring shadow
+            Minecraft.getMinecraft().renderEngine.bindTexture(DimensionProperties.planetRingShadow);
+            GlStateManager.color(1, 1, 1, 0.5f);
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+            RenderHelper.renderTopFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
+            RenderHelper.renderBottomFaceWithUV(buffer, 0, -1, -1, 1, 1, 0, 1, 0, 1);
+            Tessellator.getInstance().draw();
+        }
 
-		float maxUV = (1-percent)*0.5f;
+        GL11.glPopMatrix();
 
-		RenderHelper.renderNorthFaceWithUV(buffer, 0, -20, -5 + 41*(1-percent), 20, 36, .5f, 0f, .5, maxUV);
-		Tessellator.getInstance().draw();
-	}
+        //Render ATM
+        if (properties.hasAtmosphere()) {
+            GL11.glPushMatrix();
+            GlStateManager.disableTexture2D();
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GlStateManager.color(properties.skyColor[0], properties.skyColor[1], properties.skyColor[2], .1f);
 
-	protected void renderATMIndicator(BufferBuilder buffer, float percent) {
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+            for (int i = 0; i < 5; i++) {
+                GL11.glScalef(1.02f, 1.02f, 1.02f);
+                sphere.renderAll();
+            }
 
-		float maxUV = (1-percent)*0.406f + .578f;
-		//Offset by 15 for Y
-		RenderHelper.renderNorthFaceWithUV(buffer, 0, 6, 20 + (1-percent)*33, 39, 53, .5624f, .984f, .984f, maxUV);
-		Tessellator.getInstance().draw();
-	}
+            GlStateManager.enableTexture2D();
+            GL11.glPopMatrix();
+        }
 
-	protected void renderTemperatureIndicator(BufferBuilder buffer, float percent) {
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        //Render hololines
+        GL11.glPushMatrix();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-		float maxUV = (1-percent)*0.406f + .578f;
-		//Offset by 15 for Y
-		RenderHelper.renderNorthFaceWithUV(buffer, 0, -38, 21.4f + (1-percent)*33, -4, 53, .016f, .4376f, .984f, maxUV);
-		Tessellator.getInstance().draw();
-	}
+        BufferBuilder buf = Tessellator.getInstance().getBuffer();
+        GlStateManager.disableTexture2D();
+
+        float myTime;
+
+        for (int i = 0; i < 4; i++) {
+            myTime = ((i * 4 + entity.world.getTotalWorldTime() & 0xF) / 16f);
+
+            GlStateManager.color(0, 1f, 1f, .2f * (1 - myTime));
+            buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
+            RenderHelper.renderTopFace(buf, myTime - 0.5, -.5f, -.5f, .5f, .5f);
+            RenderHelper.renderBottomFace(buf, myTime - 0.5, -.5f, -.5f, .5f, .5f);
+            Tessellator.getInstance().draw();
+        }
+        GlStateManager.alphaFunc(GL11.GL_GREATER, .1f);
+        GlStateManager.enableTexture2D();
+        GL11.glPopMatrix();
+
+        //RenderSelection
+        if (entity.isSelected()) {
+            GlStateManager.disableTexture2D();
+            double speedRotate = 0.025d;
+            GlStateManager.color(0.4f, 0.4f, 1f, 0.6f);
+            GL11.glTranslated(0, -1.25, 0);
+            GL11.glPushMatrix();
+            GL11.glRotated(speedRotate * System.currentTimeMillis() % 360, 0f, 1f, 0f);
+            RendererWarpCore.model.renderOnly("Rotate1");
+            GL11.glPopMatrix();
+
+            GL11.glPushMatrix();
+            GL11.glRotated(180 + speedRotate * System.currentTimeMillis() % 360, 0f, 1f, 0f);
+            RendererWarpCore.model.renderOnly("Rotate1");
+            GL11.glPopMatrix();
+            GlStateManager.enableTexture2D();
+        }
+
+        GL11.glPopMatrix();
+
+        RayTraceResult hitObj = Minecraft.getMinecraft().objectMouseOver;
+        if (hitObj != null && hitObj.entityHit == entity) {
+
+            GL11.glPushMatrix();
+            GlStateManager.color(1, 1, 1);
+            GL11.glTranslated(x, y + sizeScale * 0.03f, z);
+            sizeScale = .1f * sizeScale;
+            GL11.glScaled(sizeScale, sizeScale, sizeScale);
+
+            //Render atmosphere UI/planet info
+
+            RenderHelper.setupPlayerFacingMatrix(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.z, hitObj.hitVec.y, hitObj.hitVec.x), 0, 0, 0);
+            buffer = Tessellator.getInstance().getBuffer();
+
+            //Draw Mass indicator
+            Minecraft.getMinecraft().renderEngine.bindTexture(planetUIFG);
+            GlStateManager.color(1, 1, 1, 0.8f);
+            renderMassIndicator(buffer, Math.min(properties.gravitationalMultiplier / 2f, 1f));
+
+            //Draw background
+            GlStateManager.color(1, 1, 1, 1);
+            Minecraft.getMinecraft().renderEngine.bindTexture(planetUIBG);
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+            RenderHelper.renderNorthFaceWithUV(buffer, 1, -40, -25, 40, 55, 1, 0, 1, 0);
+            Tessellator.getInstance().draw();
+
+
+            //Render ATM
+            Minecraft.getMinecraft().renderEngine.bindTexture(planetUIFG);
+            renderATMIndicator(buffer, Math.min(properties.getAtmosphereDensity() / 200f, 1f));
+            //Render Temp
+            renderTemperatureIndicator(buffer, Math.min(properties.getAverageTemp() / 400f, 1f));
+
+            //Render planet name
+            RenderHelper.cleanupPlayerFacingMatrix();
+            RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.z, hitObj.hitVec.y, hitObj.hitVec.x), properties.getName(), 0, .9, 0, 5);
+            RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSq(hitObj.hitVec.z, hitObj.hitVec.y, hitObj.hitVec.x), "NumMoons: " + properties.getChildPlanets().size(), 0, .6, 0, 5);
+
+            GL11.glPopMatrix();
+        }
+
+        //Clean up and make player not transparent
+        GlStateManager.color(1, 1, 1);
+        GlStateManager.disableBlend();
+        GlStateManager.enableLighting();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    protected void renderMassIndicator(BufferBuilder buffer, float percent) {
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
+        float maxUV = (1 - percent) * 0.5f;
+
+        RenderHelper.renderNorthFaceWithUV(buffer, 0, -20, -5 + 41 * (1 - percent), 20, 36, .5f, 0f, .5, maxUV);
+        Tessellator.getInstance().draw();
+    }
+
+    protected void renderATMIndicator(BufferBuilder buffer, float percent) {
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
+        float maxUV = (1 - percent) * 0.406f + .578f;
+        //Offset by 15 for Y
+        RenderHelper.renderNorthFaceWithUV(buffer, 0, 6, 20 + (1 - percent) * 33, 39, 53, .5624f, .984f, .984f, maxUV);
+        Tessellator.getInstance().draw();
+    }
+
+    protected void renderTemperatureIndicator(BufferBuilder buffer, float percent) {
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
+        float maxUV = (1 - percent) * 0.406f + .578f;
+        //Offset by 15 for Y
+        RenderHelper.renderNorthFaceWithUV(buffer, 0, -38, 21.4f + (1 - percent) * 33, -4, 53, .016f, .4376f, .984f, maxUV);
+        Tessellator.getInstance().draw();
+    }
 }

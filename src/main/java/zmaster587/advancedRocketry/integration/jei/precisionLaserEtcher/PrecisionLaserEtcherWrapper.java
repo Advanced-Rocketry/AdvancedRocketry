@@ -5,8 +5,8 @@ import zmaster587.libVulpes.interfaces.IRecipe;
 
 public class PrecisionLaserEtcherWrapper extends MachineRecipe {
 
-	PrecisionLaserEtcherWrapper(IRecipe rec) {
-		super(rec);
-	}
+    PrecisionLaserEtcherWrapper(IRecipe rec) {
+        super(rec);
+    }
 
 }

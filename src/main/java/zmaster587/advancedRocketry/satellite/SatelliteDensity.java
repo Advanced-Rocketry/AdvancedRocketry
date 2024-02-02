@@ -4,20 +4,20 @@ import zmaster587.advancedRocketry.api.DataStorage;
 
 public class SatelliteDensity extends SatelliteData {
 
-	public SatelliteDensity() {
-		super();
-		data = new DataStorage(DataStorage.DataType.ATMOSPHEREDENSITY);
-		data.lockDataType(DataStorage.DataType.ATMOSPHEREDENSITY);
-	}
-	
-	@Override
-	public String getName() {
-		return "Density Scanner";
-	}
+    public SatelliteDensity() {
+        super();
+        data = new DataStorage(DataStorage.DataType.ATMOSPHEREDENSITY);
+        data.lockDataType(DataStorage.DataType.ATMOSPHEREDENSITY);
+    }
 
-	@Override
-	public double failureChance() {
-		return 0;
-	}
+    @Override
+    public String getName() {
+        return "Density Scanner";
+    }
+
+    @Override
+    public double failureChance() {
+        return 0;
+    }
 
 }

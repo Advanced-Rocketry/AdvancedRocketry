@@ -14,70 +14,71 @@ import zmaster587.libVulpes.util.HashedBlockPosition;
 
 public class TileBeacon extends TileMultiPowerConsumer {
 
-	private static final Object[][][] structure = new Object[][][] 
-			{
-		{
-			{Blocks.AIR,Blocks.AIR, Blocks.AIR},
-			{Blocks.AIR, Blocks.REDSTONE_BLOCK, Blocks.AIR},
-			{Blocks.AIR,Blocks.AIR, Blocks.AIR}
-		},
-		{
-			{Blocks.AIR,Blocks.AIR, Blocks.AIR},
-			{Blocks.AIR, LibVulpesBlocks.blockStructureBlock, Blocks.AIR},
-			{Blocks.AIR,Blocks.AIR, Blocks.AIR}
-		},
-		{
-			{Blocks.AIR,Blocks.AIR, Blocks.AIR},
-			{Blocks.AIR, LibVulpesBlocks.blockStructureBlock, Blocks.AIR},
-			{Blocks.AIR,Blocks.AIR, Blocks.AIR}
-		},
-		{
-			{Blocks.AIR,Blocks.AIR, Blocks.AIR},
-			{Blocks.AIR, LibVulpesBlocks.blockStructureBlock, Blocks.AIR},
-			{Blocks.AIR,Blocks.AIR, Blocks.AIR}
-		},
-		{
-			{null,'c', null},
-			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock},
-			{null, LibVulpesBlocks.blockStructureBlock, null}
-		}
-			};
+    private static final Object[][][] structure = new Object[][][]
+            {
+                    {
+                            {Blocks.AIR, Blocks.AIR, Blocks.AIR},
+                            {Blocks.AIR, Blocks.REDSTONE_BLOCK, Blocks.AIR},
+                            {Blocks.AIR, Blocks.AIR, Blocks.AIR}
+                    },
+                    {
+                            {Blocks.AIR, Blocks.AIR, Blocks.AIR},
+                            {Blocks.AIR, LibVulpesBlocks.blockStructureBlock, Blocks.AIR},
+                            {Blocks.AIR, Blocks.AIR, Blocks.AIR}
+                    },
+                    {
+                            {Blocks.AIR, Blocks.AIR, Blocks.AIR},
+                            {Blocks.AIR, LibVulpesBlocks.blockStructureBlock, Blocks.AIR},
+                            {Blocks.AIR, Blocks.AIR, Blocks.AIR}
+                    },
+                    {
+                            {Blocks.AIR, Blocks.AIR, Blocks.AIR},
+                            {Blocks.AIR, LibVulpesBlocks.blockStructureBlock, Blocks.AIR},
+                            {Blocks.AIR, Blocks.AIR, Blocks.AIR}
+                    },
+                    {
+                            {null, 'c', null},
+                            {LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock},
+                            {null, LibVulpesBlocks.blockStructureBlock, null}
+                    }
+            };
 
-	@Override
-	public Object[][][] getStructure() {
-		return structure;
-	}
+    @Override
+    public Object[][][] getStructure() {
+        return structure;
+    }
 
-	@Override
-	public String getModularInventoryName() {
-		return AdvancedRocketryBlocks.blockBeacon.getLocalizedName();
-	}
+    @Override
+    public String getModularInventoryName() {
+        return AdvancedRocketryBlocks.blockBeacon.getLocalizedName();
+    }
 
-	@Override
-	public String getMachineName() {
-		return getModularInventoryName();
-	}
-	
-	@Override
-	public void setMachineEnabled(boolean enabled) {
-		super.setMachineEnabled(enabled);
+    @Override
+    public String getMachineName() {
+        return getModularInventoryName();
+    }
 
-		if(DimensionManager.getInstance().isDimensionCreated(world.provider.getDimension())) {
-			DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
-			if(enabled) {
-				props.addBeaconLocation(world,new HashedBlockPosition(this.getPos()));
-			}
-			else
-				props.removeBeaconLocation(world,new HashedBlockPosition(getPos()));
-		}
-	}
+    @Override
+    public void setMachineEnabled(boolean enabled) {
+        super.setMachineEnabled(enabled);
 
-	@Override
-	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) { return true; }
+        if (DimensionManager.getInstance().isDimensionCreated(world.provider.getDimension())) {
+            DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
+            if (enabled) {
+                props.addBeaconLocation(world, new HashedBlockPosition(this.getPos()));
+            } else
+                props.removeBeaconLocation(world, new HashedBlockPosition(getPos()));
+        }
+    }
 
-	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
+    @Override
+    public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
+        return true;
+    }
 
-		return new AxisAlignedBB(pos.add(-5,-0,-5), pos.add(5,5,5));
-	}
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+
+        return new AxisAlignedBB(pos.add(-5, -0, -5), pos.add(5, 5, 5));
+    }
 }

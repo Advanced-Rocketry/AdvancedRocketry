@@ -24,85 +24,82 @@ import java.util.List;
 
 public class ItemBlockFluidTank extends ItemBlock {
 
-	public ItemBlockFluidTank(Block block) {
-		super(block);
-	}
+    public ItemBlockFluidTank(Block block) {
+        super(block);
+    }
 
-	@Override
-	@ParametersAreNonnullByDefault
-	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag bool) {
-		super.addInformation(stack, world, list, bool);
+    @Override
+    @ParametersAreNonnullByDefault
+    public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<String> list, ITooltipFlag bool) {
+        super.addInformation(stack, world, list, bool);
 
-		FluidStack fluidStack = getFluid(stack);
+        FluidStack fluidStack = getFluid(stack);
 
-		if(fluidStack == null) {
-			list.add("Empty");
-		}
-		else {
-			list.add(fluidStack.getLocalizedName() + ": " + fluidStack.amount + "/64000mb");
-		}
-	}
+        if (fluidStack == null) {
+            list.add("Empty");
+        } else {
+            list.add(fluidStack.getLocalizedName() + ": " + fluidStack.amount + "/64000mb");
+        }
+    }
 
-	@Override
-	@ParametersAreNonnullByDefault
-	public boolean placeBlockAt(@Nonnull ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
-		super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState);
-		
-		TileEntity tile = world.getTileEntity(pos);
-		
-		if(tile instanceof TileFluidTank) {
-			IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN);
-			ItemStack stack2 = stack.copy();
-			stack2.setCount(1);
-			handler.fill(drain(stack2, Integer.MAX_VALUE), true);
-		}
-		
-		return true;
-	}
-	
-	public void fill(@Nonnull ItemStack stack, FluidStack fluid) {
-		
-		NBTTagCompound nbt;
-		FluidTank tank = new FluidTank(640000);
-		if(stack.hasTagCompound()) {
-			nbt = stack.getTagCompound();
-			tank.readFromNBT(nbt);
-		}
-		else
-			nbt = new NBTTagCompound();
-		
-		tank.fill(fluid, true);
-		
-		tank.writeToNBT(nbt);
-		stack.setTagCompound(nbt);
-	}
-	
-	public FluidStack drain(@Nonnull ItemStack stack, int amt) {
-		NBTTagCompound nbt;
-		FluidTank tank = new FluidTank(640000);
-		if(stack.hasTagCompound()) {
-			nbt = stack.getTagCompound();
-			tank.readFromNBT(nbt);
-		}
-		else
-			nbt = new NBTTagCompound();
-		
-		FluidStack stack2 = tank.drain(amt, true);
-		
-		tank.writeToNBT(nbt);
-		stack.setTagCompound(nbt);
-		
-		return stack2;
-	}
-	
-	public FluidStack getFluid(@Nonnull ItemStack stack) {
-		NBTTagCompound nbt;
-		FluidTank tank = new FluidTank(640000);
-		if(stack.hasTagCompound()) {
-			nbt = stack.getTagCompound();
-			tank.readFromNBT(nbt);
-		}
-		
-		return tank.getFluid();
-	}
+    @Override
+    @ParametersAreNonnullByDefault
+    public boolean placeBlockAt(@Nonnull ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
+        super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState);
+
+        TileEntity tile = world.getTileEntity(pos);
+
+        if (tile instanceof TileFluidTank) {
+            IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.DOWN);
+            ItemStack stack2 = stack.copy();
+            stack2.setCount(1);
+            handler.fill(drain(stack2, Integer.MAX_VALUE), true);
+        }
+
+        return true;
+    }
+
+    public void fill(@Nonnull ItemStack stack, FluidStack fluid) {
+
+        NBTTagCompound nbt;
+        FluidTank tank = new FluidTank(640000);
+        if (stack.hasTagCompound()) {
+            nbt = stack.getTagCompound();
+            tank.readFromNBT(nbt);
+        } else
+            nbt = new NBTTagCompound();
+
+        tank.fill(fluid, true);
+
+        tank.writeToNBT(nbt);
+        stack.setTagCompound(nbt);
+    }
+
+    public FluidStack drain(@Nonnull ItemStack stack, int amt) {
+        NBTTagCompound nbt;
+        FluidTank tank = new FluidTank(640000);
+        if (stack.hasTagCompound()) {
+            nbt = stack.getTagCompound();
+            tank.readFromNBT(nbt);
+        } else
+            nbt = new NBTTagCompound();
+
+        FluidStack stack2 = tank.drain(amt, true);
+
+        tank.writeToNBT(nbt);
+        stack.setTagCompound(nbt);
+
+        return stack2;
+    }
+
+    public FluidStack getFluid(@Nonnull ItemStack stack) {
+        NBTTagCompound nbt;
+        FluidTank tank = new FluidTank(640000);
+        if (stack.hasTagCompound()) {
+            nbt = stack.getTagCompound();
+            tank.readFromNBT(nbt);
+        }
+
+        return tank.getFluid();
+    }
 }

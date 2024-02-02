@@ -5,8 +5,8 @@ import zmaster587.libVulpes.interfaces.IRecipe;
 
 public class ElectrolyzerWrapper extends MachineRecipe {
 
-	ElectrolyzerWrapper(IRecipe rec) {
-		super(rec);
-	}
+    ElectrolyzerWrapper(IRecipe rec) {
+        super(rec);
+    }
 
 }

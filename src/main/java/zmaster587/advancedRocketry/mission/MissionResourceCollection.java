@@ -24,166 +24,165 @@ import java.util.LinkedList;
 public abstract class MissionResourceCollection extends SatelliteBase implements IMission {
 
 
-	long startWorldTime;
-	double x,y,z;
-	long duration;
-	int launchDimension;
-	StorageChunk rocketStorage;
-	StatsRocket rocketStats;
-	int worldId;
-	NBTTagCompound missionPersistantNBT;
+    //stores the coordinates of infrastructures, used for when the world loads/saves
+    protected LinkedList<HashedBlockPosition> infrastructureCoords;
+    long startWorldTime;
+    double x, y, z;
+    long duration;
+    int launchDimension;
+    StorageChunk rocketStorage;
+    StatsRocket rocketStats;
+    int worldId;
+    NBTTagCompound missionPersistantNBT;
 
-	//stores the coordinates of infrastructures, used for when the world loads/saves
-	protected LinkedList<HashedBlockPosition> infrastructureCoords;
+    public MissionResourceCollection() {
+        infrastructureCoords = new LinkedList<>();
+    }
 
-	public MissionResourceCollection(){
-		infrastructureCoords = new LinkedList<>();
-	}
+    public MissionResourceCollection(long duration, EntityRocket entity, LinkedList<IInfrastructure> infrastructureCoords) {
+        super();
+        missionPersistantNBT = new NBTTagCompound();
+        entity.writeMissionPersistentNBT(missionPersistantNBT);
 
-	public MissionResourceCollection(long duration, EntityRocket entity, LinkedList<IInfrastructure> infrastructureCoords) {
-		super();
-		missionPersistantNBT = new NBTTagCompound();
-		entity.writeMissionPersistentNBT(missionPersistantNBT);
-		
-		satelliteProperties.setId(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getNextSatelliteId());
+        satelliteProperties.setId(zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getNextSatelliteId());
 
-		startWorldTime = DimensionManager.getWorld(0).getTotalWorldTime();
-		this.duration = duration;
-		this.launchDimension = entity.world.provider.getDimension();
-		rocketStorage = entity.storage;
-		rocketStats = entity.stats;
-		x = entity.posX;
-		y = entity.posY;
-		z = entity.posZ;
-		worldId = entity.world.provider.getDimension();
+        startWorldTime = DimensionManager.getWorld(0).getTotalWorldTime();
+        this.duration = duration;
+        this.launchDimension = entity.world.provider.getDimension();
+        rocketStorage = entity.storage;
+        rocketStats = entity.stats;
+        x = entity.posX;
+        y = entity.posY;
+        z = entity.posZ;
+        worldId = entity.world.provider.getDimension();
 
-		this.infrastructureCoords = new LinkedList<>();
+        this.infrastructureCoords = new LinkedList<>();
 
-		for(IInfrastructure tile : infrastructureCoords)
-			this.infrastructureCoords.add(new HashedBlockPosition(((TileEntity)tile).getPos()));
-	}
+        for (IInfrastructure tile : infrastructureCoords)
+            this.infrastructureCoords.add(new HashedBlockPosition(((TileEntity) tile).getPos()));
+    }
 
-	@Override
-	public double getProgress(World world) {
-		return Math.max((AdvancedRocketry.proxy.getWorldTimeUniversal(0) - startWorldTime) / (double)duration, 0);
-	}
-	
-	@Override
-	public int getTimeRemainingInSeconds() {
-		return (int)Math.max((( duration -AdvancedRocketry.proxy.getWorldTimeUniversal(0) + startWorldTime)/20), 0);
-	}
+    @Override
+    public double getProgress(World world) {
+        return Math.max((AdvancedRocketry.proxy.getWorldTimeUniversal(0) - startWorldTime) / (double) duration, 0);
+    }
 
-	@Override
-	public String getInfo(World world) {
-		return null;
-	}
+    @Override
+    public int getTimeRemainingInSeconds() {
+        return (int) Math.max(((duration - AdvancedRocketry.proxy.getWorldTimeUniversal(0) + startWorldTime) / 20), 0);
+    }
 
-	@Override
-	public String getName() {
-		return LibVulpes.proxy.getLocalizedString("mission.asteroidmining.name");
-	}
+    @Override
+    public String getInfo(World world) {
+        return null;
+    }
 
-	@Override
-	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
-		return false;
-	}
+    @Override
+    public String getName() {
+        return LibVulpes.proxy.getLocalizedString("mission.asteroidmining.name");
+    }
 
-	@Override
-	public double failureChance() {
-		return 0;
-	}
+    @Override
+    public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
+        return false;
+    }
 
-	@Override
-	public boolean canTick() {
-		return true;
-	}
+    @Override
+    public double failureChance() {
+        return 0;
+    }
 
-	@Override
-	public abstract void onMissionComplete();
+    @Override
+    public boolean canTick() {
+        return true;
+    }
 
-	@Override
-	public void tickEntity() {
-		if(getProgress(DimensionManager.getWorld(getDimensionId())) >= 1 && !DimensionManager.getWorld(0).isRemote) {
-			setDead();
-			onMissionComplete();
-		}
-	}
+    @Override
+    public abstract void onMissionComplete();
 
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		
-		nbt.setTag("persist", missionPersistantNBT);
-		
-		NBTTagCompound nbt2 = new NBTTagCompound();
-		rocketStats.writeToNBT(nbt2);
-		nbt.setTag("rocketStats", nbt2);
+    @Override
+    public void tickEntity() {
+        if (getProgress(DimensionManager.getWorld(getDimensionId())) >= 1 && !DimensionManager.getWorld(0).isRemote) {
+            setDead();
+            onMissionComplete();
+        }
+    }
 
-		nbt2 = new NBTTagCompound();
-		rocketStorage.writeToNBT(nbt2);
-		nbt.setTag("rocketStorage", nbt2);
+    public void writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
 
-		nbt.setDouble("launchPosX", x);
-		nbt.setDouble("launchPosY", y);
-		nbt.setDouble("launchPosZ", z);
+        nbt.setTag("persist", missionPersistantNBT);
 
-		nbt.setLong("startWorldTime", startWorldTime);
-		nbt.setLong("duration", duration);
-		nbt.setInteger("startDimid", worldId);
-		nbt.setInteger("launchDim", launchDimension);
+        NBTTagCompound nbt2 = new NBTTagCompound();
+        rocketStats.writeToNBT(nbt2);
+        nbt.setTag("rocketStats", nbt2);
 
-		NBTTagList itemList = new NBTTagList();
-		for (HashedBlockPosition inf : infrastructureCoords) {
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setIntArray("loc", new int[]{inf.x, inf.y, inf.z});
-			itemList.appendTag(tag);
+        nbt2 = new NBTTagCompound();
+        rocketStorage.writeToNBT(nbt2);
+        nbt.setTag("rocketStorage", nbt2);
 
-		}
-		nbt.setTag("infrastructure", itemList);
-	}
+        nbt.setDouble("launchPosX", x);
+        nbt.setDouble("launchPosY", y);
+        nbt.setDouble("launchPosZ", z);
 
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		
-		missionPersistantNBT = nbt.getCompoundTag("persist" );
+        nbt.setLong("startWorldTime", startWorldTime);
+        nbt.setLong("duration", duration);
+        nbt.setInteger("startDimid", worldId);
+        nbt.setInteger("launchDim", launchDimension);
 
-		rocketStats = new StatsRocket();
-		rocketStats.readFromNBT(nbt.getCompoundTag("rocketStats"));
+        NBTTagList itemList = new NBTTagList();
+        for (HashedBlockPosition inf : infrastructureCoords) {
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setIntArray("loc", new int[]{inf.x, inf.y, inf.z});
+            itemList.appendTag(tag);
 
-		rocketStorage = new StorageChunk();
-		rocketStorage.readFromNBT(nbt.getCompoundTag("rocketStorage"));
+        }
+        nbt.setTag("infrastructure", itemList);
+    }
 
-		x = nbt.getDouble("launchPosX");
-		y = nbt.getDouble("launchPosY");
-		z = nbt.getDouble("launchPosZ");
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
 
-		startWorldTime = nbt.getLong("startWorldTime");
-		duration = nbt.getLong("duration");
-		worldId = nbt.getInteger("startDimid");
-		launchDimension = nbt.getInteger("launchDim");
+        missionPersistantNBT = nbt.getCompoundTag("persist");
 
-		NBTTagList tagList = nbt.getTagList("infrastructure", 10);
-		infrastructureCoords.clear();
+        rocketStats = new StatsRocket();
+        rocketStats.readFromNBT(nbt.getCompoundTag("rocketStats"));
 
-		for (int i = 0; i < tagList.tagCount(); i++) {
-			int[] coords = tagList.getCompoundTagAt(i).getIntArray("loc");
-			infrastructureCoords.add(new HashedBlockPosition(coords[0], coords[1], coords[2]));
-		}
-	}
+        rocketStorage = new StorageChunk();
+        rocketStorage.readFromNBT(nbt.getCompoundTag("rocketStorage"));
 
-	@Override
-	public long getMissionId() {
-		return getId();
-	}
+        x = nbt.getDouble("launchPosX");
+        y = nbt.getDouble("launchPosY");
+        z = nbt.getDouble("launchPosZ");
 
-	@Override
-	public int getOriginatingDimension() {
-		return worldId;
-	}
+        startWorldTime = nbt.getLong("startWorldTime");
+        duration = nbt.getLong("duration");
+        worldId = nbt.getInteger("startDimid");
+        launchDimension = nbt.getInteger("launchDim");
 
-	@Override
-	public void unlinkInfrastructure(IInfrastructure tile) {
-		HashedBlockPosition pos = new HashedBlockPosition(((TileEntity)tile).getPos());
-		infrastructureCoords.remove(pos);
-	}
+        NBTTagList tagList = nbt.getTagList("infrastructure", 10);
+        infrastructureCoords.clear();
+
+        for (int i = 0; i < tagList.tagCount(); i++) {
+            int[] coords = tagList.getCompoundTagAt(i).getIntArray("loc");
+            infrastructureCoords.add(new HashedBlockPosition(coords[0], coords[1], coords[2]));
+        }
+    }
+
+    @Override
+    public long getMissionId() {
+        return getId();
+    }
+
+    @Override
+    public int getOriginatingDimension() {
+        return worldId;
+    }
+
+    @Override
+    public void unlinkInfrastructure(IInfrastructure tile) {
+        HashedBlockPosition pos = new HashedBlockPosition(((TileEntity) tile).getPos());
+        infrastructureCoords.remove(pos);
+    }
 
 }

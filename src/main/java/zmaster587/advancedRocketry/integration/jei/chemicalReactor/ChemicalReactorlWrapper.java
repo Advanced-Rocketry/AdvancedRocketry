@@ -5,8 +5,8 @@ import zmaster587.libVulpes.interfaces.IRecipe;
 
 public class ChemicalReactorlWrapper extends MachineRecipe {
 
-	ChemicalReactorlWrapper(IRecipe rec) {
-		super(rec);
-	}
+    ChemicalReactorlWrapper(IRecipe rec) {
+        super(rec);
+    }
 
 }

@@ -1,6 +1,6 @@
 /* Temporarily stores tile/blocks to move a block of them
- * 
- * 
+ *
+ *
  */
 
 package zmaster587.advancedRocketry.util;
@@ -29,7 +29,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import zmaster587.advancedRocketry.AdvancedRocketry;
 import zmaster587.advancedRocketry.api.Constants;
@@ -52,154 +51,275 @@ import java.util.List;
 
 public class StorageChunk implements IBlockAccess, IStorageChunk {
 
-	Block[][][] blocks;
-	private short[][][] metas;
-	int sizeX, sizeY, sizeZ;
-	public Chunk chunk;
+    public Chunk chunk;
+    public WorldDummy world;
+    public boolean finalized = false; // Make sure we are ready to render
+    Block[][][] blocks;
+    int sizeX, sizeY, sizeZ;
+    private short[][][] metas;
+    private ArrayList<TileEntity> tileEntities;
+    //To store inventories (All inventories)
+    private ArrayList<TileEntity> inventoryTiles;
+    private ArrayList<TileEntity> liquidTiles;
+    private Entity entity;
+
+    public StorageChunk() {
+        sizeX = 0;
+        sizeY = 0;
+        sizeZ = 0;
+        tileEntities = new ArrayList<>();
+        inventoryTiles = new ArrayList<>();
+        liquidTiles = new ArrayList<>();
+
+        world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
+        world.init();
+        this.chunk = new Chunk(world, 0, 0);
+    }
+
+    protected StorageChunk(int xSize, int ySize, int zSize) {
+        blocks = new Block[xSize][ySize][zSize];
+        metas = new short[xSize][ySize][zSize];
+
+        sizeX = xSize;
+        sizeY = ySize;
+        sizeZ = zSize;
+
+        tileEntities = new ArrayList<>();
+        inventoryTiles = new ArrayList<>();
+        liquidTiles = new ArrayList<>();
+
+        world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
+        world.init();
+        this.chunk = new Chunk(world, 0, 0);
+    }
+
+    private static boolean isInventoryBlock(TileEntity tile) {
+        return tile instanceof IInventory || tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP) && !(tile instanceof TileGuidanceComputer);
+    }
+
+    private static boolean isLiquidContainerBlock(TileEntity tile) {
+        return tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+    }
+
+    public static StorageChunk copyWorldBB(World world, AxisAlignedBB bb) {
+        int actualMinX = (int) bb.maxX,
+                actualMinY = (int) bb.maxY,
+                actualMinZ = (int) bb.maxZ,
+                actualMaxX = (int) bb.minX,
+                actualMaxY = (int) bb.minY,
+                actualMaxZ = (int) bb.minZ;
 
 
-	private ArrayList<TileEntity> tileEntities;
+        //Try to fit to smallest bounds
+        for (int x = (int) bb.minX; x <= bb.maxX; x++) {
+            for (int z = (int) bb.minZ; z <= bb.maxZ; z++) {
+                for (int y = (int) bb.minY; y <= bb.maxY; y++) {
+                    BlockPos pos = new BlockPos(x, y, z);
 
-	//To store inventories (All inventories)
-	private ArrayList<TileEntity> inventoryTiles;
-	private ArrayList<TileEntity> liquidTiles;
+                    Block block = world.getBlockState(pos).getBlock();
 
-	public WorldDummy world;
-	private Entity entity;
-	public boolean finalized = false; // Make sure we are ready to render
+                    if (!block.isAir(world.getBlockState(pos), world, pos)) {
+                        if (x < actualMinX)
+                            actualMinX = x;
+                        if (y < actualMinY)
+                            actualMinY = y;
+                        if (z < actualMinZ)
+                            actualMinZ = z;
+                        if (x > actualMaxX)
+                            actualMaxX = x;
+                        if (y > actualMaxY)
+                            actualMaxY = y;
+                        if (z > actualMaxZ)
+                            actualMaxZ = z;
+                    }
+                }
+            }
+        }
 
-	public StorageChunk() {
-		sizeX = 0;
-		sizeY = 0;
-		sizeZ = 0;
-		tileEntities = new ArrayList<>();
-		inventoryTiles = new ArrayList<>();
-		liquidTiles = new ArrayList<>();
+        StorageChunk ret = new StorageChunk((actualMaxX - actualMinX + 1), (actualMaxY - actualMinY + 1), (actualMaxZ - actualMinZ + 1));
 
-		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
-		world.init();
-		this.chunk = new Chunk(world, 0, 0);
-	}
 
-	protected StorageChunk(int xSize, int ySize, int zSize) {
-		blocks = new Block[xSize][ySize][zSize];
-		metas = new short[xSize][ySize][zSize];
+        //Iterate though the bounds given storing blocks/meta/tiles
+        for (int x = actualMinX; x <= actualMaxX; x++) {
+            for (int z = actualMinZ; z <= actualMaxZ; z++) {
+                for (int y = actualMinY; y <= actualMaxY; y++) {
+                    BlockPos pos = new BlockPos(x, y, z);
+                    IBlockState state = world.getBlockState(pos);
+                    ret.blocks[x - actualMinX][y - actualMinY][z - actualMinZ] = state.getBlock();
+                    ret.metas[x - actualMinX][y - actualMinY][z - actualMinZ] = (short) state.getBlock().getMetaFromState(state);
 
-		sizeX = xSize;
-		sizeY = ySize;
-		sizeZ = zSize;
+                    TileEntity entity = world.getTileEntity(pos);
+                    if (entity != null) {
+                        NBTTagCompound nbt = new NBTTagCompound();
+                        entity.writeToNBT(nbt);
 
-		tileEntities = new ArrayList<>();
-		inventoryTiles = new ArrayList<>();
-		liquidTiles = new ArrayList<>();
+                        //Transform tileEntity coords
+                        nbt.setInteger("x", nbt.getInteger("x") - actualMinX);
+                        nbt.setInteger("y", nbt.getInteger("y") - actualMinY);
+                        nbt.setInteger("z", nbt.getInteger("z") - actualMinZ);
 
-		world = new WorldDummy(AdvancedRocketry.proxy.getProfiler(), this);
-		world.init();
-		this.chunk = new Chunk(world, 0, 0);
-	}
+                        //XXX: Hack to make chisels & bits renderable
+                        if (nbt.getString("id").equals("minecraft:mod.chiselsandbits.tileentitychiseled"))
+                            nbt.setString("id", "minecraft:mod.chiselsandbits.tileentitychiseled.tesr");
 
-	public void setEntity(EntityRocketBase entity) {
-		this.entity = entity;
-	}
+                        TileEntity newTile = ZUtils.createTile(nbt);
+                        if (newTile != null) {
+                            newTile.setWorld(ret.world);
 
-	public EntityRocketBase getEntity() {
-		return (EntityRocketBase)entity;
-	}
+                            if (isInventoryBlock(newTile)) {
+                                ret.inventoryTiles.add(newTile);
+                            }
 
-	@Override
-	public int getSizeX() { return sizeX; }
+                            if (isLiquidContainerBlock(newTile)) {
+                                ret.liquidTiles.add(newTile);
+                            }
 
-	@Override
-	public int getSizeY() { return sizeY; }
+                            ret.tileEntities.add(newTile);
+                        }
+                    }
+                }
+            }
+        }
 
-	@Override
-	public int getSizeZ() { return sizeZ; }
+        return ret;
+    }
 
-	@Override
-	public List<TileEntity> getTileEntityList() {
-		return tileEntities;
-	}
+    public static StorageChunk cutWorldBB(World worldObj, AxisAlignedBB bb) {
+        StorageChunk chunk = StorageChunk.copyWorldBB(worldObj, bb);
+        for (int x = (int) bb.minX; x <= bb.maxX; x++) {
+            for (int z = (int) bb.minZ; z <= bb.maxZ; z++) {
+                for (int y = (int) bb.minY; y <= bb.maxY; y++) {
 
-	/**
-	 * @return list of fluid handing tiles on the rocket all also implement IFluidHandler
-	 */
-	public List<TileEntity> getFluidTiles() {
-		return liquidTiles;
-	}
+                    BlockPos pos = new BlockPos(x, y, z);
+                    //Workaround for dupe
+                    TileEntity tile = worldObj.getTileEntity(pos);
+                    if (tile instanceof IInventory) {
+                        IInventory inv = (IInventory) tile;
+                        for (int i = 0; i < inv.getSizeInventory(); i++) {
+                            inv.setInventorySlotContents(i, ItemStack.EMPTY);
+                        }
+                    }
 
-	public List<TileEntity> getInventoryTiles() {
-		return inventoryTiles;
-	}
+                    worldObj.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
+                }
+            }
+        }
 
-	public List<TileEntity> getGUITiles() {
+        //Carpenter's block's dupe
+        for (Entity entity : worldObj.getEntitiesWithinAABB(EntityItem.class, bb.grow(5, 5, 5))) {
+            entity.setDead();
+        }
+
+        return chunk;
+    }
+
+    public EntityRocketBase getEntity() {
+        return (EntityRocketBase) entity;
+    }
+
+    public void setEntity(EntityRocketBase entity) {
+        this.entity = entity;
+    }
+
+    @Override
+    public int getSizeX() {
+        return sizeX;
+    }
+
+    @Override
+    public int getSizeY() {
+        return sizeY;
+    }
+
+    @Override
+    public int getSizeZ() {
+        return sizeZ;
+    }
+
+    @Override
+    public List<TileEntity> getTileEntityList() {
+        return tileEntities;
+    }
+
+    /**
+     * @return list of fluid handing tiles on the rocket all also implement IFluidHandler
+     */
+    public List<TileEntity> getFluidTiles() {
+        return liquidTiles;
+    }
+
+    public List<TileEntity> getInventoryTiles() {
+        return inventoryTiles;
+    }
+
+    public List<TileEntity> getGUITiles() {
 
 		/*TileEntity guidanceComputer = getGuidanceComputer();
 		if(guidanceComputer != null)
 			list.add(getGuidanceComputer());*/
-		return new LinkedList<>(inventoryTiles);
-	}
+        return new LinkedList<>(inventoryTiles);
+    }
 
-	@Override
-	@Nonnull
-	public IBlockState getBlockState(BlockPos pos) {
-		int x = pos.getX();
-		int y = pos.getY();
-		int z = pos.getZ();
-		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ || blocks[x][y][z] == null)
-			return Blocks.AIR.getDefaultState();
-		return blocks[x][y][z].getStateFromMeta(metas[x][y][z]);
-	}
+    @Override
+    @Nonnull
+    public IBlockState getBlockState(BlockPos pos) {
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+        if (x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ || blocks[x][y][z] == null)
+            return Blocks.AIR.getDefaultState();
+        return blocks[x][y][z].getStateFromMeta(metas[x][y][z]);
+    }
 
-	public void setBlockState(BlockPos pos, IBlockState state) {
-		int x = pos.getX();
-		int y = pos.getY();
-		int z = pos.getZ();
+    public void setBlockState(BlockPos pos, IBlockState state) {
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
 
-		blocks[x][y][z] = state.getBlock();
-		metas[x][y][z] = (short) state.getBlock().getMetaFromState(state);
-	}
+        blocks[x][y][z] = state.getBlock();
+        metas[x][y][z] = (short) state.getBlock().getMetaFromState(state);
+    }
+
+    //TODO: optimize the F*** out of this
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setInteger("xSize", sizeX);
+        nbt.setInteger("ySize", sizeY);
+        nbt.setInteger("zSize", sizeZ);
 
 
-	//TODO: optimize the F*** out of this
-	public void writeToNBT(NBTTagCompound nbt) {
-		nbt.setInteger("xSize", sizeX);
-		nbt.setInteger("ySize", sizeY);
-		nbt.setInteger("zSize", sizeZ);
+        Iterator<TileEntity> tileEntityIterator = tileEntities.iterator();
+        NBTTagList tileList = new NBTTagList();
+        while (tileEntityIterator.hasNext()) {
+            TileEntity tile = tileEntityIterator.next();
+            try {
+                NBTTagCompound tileNbt = new NBTTagCompound();
+                tile.writeToNBT(tileNbt);
+                tileList.appendTag(tileNbt);
+            } catch (RuntimeException e) {
+                AdvancedRocketry.logger.warn("A tile entity has thrown an error: " + tile.getClass().getCanonicalName());
+                blocks[tile.getPos().getX()][tile.getPos().getY()][tile.getPos().getZ()] = Blocks.AIR;
+                metas[tile.getPos().getX()][tile.getPos().getY()][tile.getPos().getZ()] = 0;
+                tileEntityIterator.remove();
+            }
+        }
 
+        int[] blockId = new int[sizeX * sizeY * sizeZ];
+        int[] metasId = new int[sizeX * sizeY * sizeZ];
+        for (int x = 0; x < sizeX; x++) {
+            for (int y = 0; y < sizeY; y++) {
+                for (int z = 0; z < sizeZ; z++) {
+                    blockId[z + (sizeZ * y) + (sizeZ * sizeY * x)] = Block.getIdFromBlock(blocks[x][y][z]);
+                    metasId[z + (sizeZ * y) + (sizeZ * sizeY * x)] = metas[x][y][z];
+                }
+            }
+        }
 
-		Iterator<TileEntity> tileEntityIterator = tileEntities.iterator();
-		NBTTagList tileList = new NBTTagList();
-		while(tileEntityIterator.hasNext()) {
-			TileEntity tile = tileEntityIterator.next();
-			try {
-				NBTTagCompound tileNbt = new NBTTagCompound();
-				tile.writeToNBT(tileNbt);
-				tileList.appendTag(tileNbt);
-			} catch(RuntimeException e) {
-				AdvancedRocketry.logger.warn("A tile entity has thrown an error: " + tile.getClass().getCanonicalName());
-				blocks[tile.getPos().getX()][tile.getPos().getY()][tile.getPos().getZ()] = Blocks.AIR;
-				metas[tile.getPos().getX()][tile.getPos().getY()][tile.getPos().getZ()] = 0;
-				tileEntityIterator.remove();
-			}
-		}
+        NBTTagIntArray idList = new NBTTagIntArray(blockId);
+        NBTTagIntArray metaList = new NBTTagIntArray(metasId);
 
-		int[] blockId = new int[sizeX*sizeY*sizeZ];
-		int[] metasId = new int[sizeX*sizeY*sizeZ];
-		for(int x = 0; x < sizeX; x++) {
-			for(int y = 0; y < sizeY; y++) {
-				for(int z = 0; z < sizeZ; z++) {
-					blockId[z + (sizeZ*y) + (sizeZ*sizeY*x)] = Block.getIdFromBlock(blocks[x][y][z]);
-					metasId[z + (sizeZ*y) + (sizeZ*sizeY*x)] = metas[x][y][z];
-				}
-			}
-		}
-
-		NBTTagIntArray idList = new NBTTagIntArray(blockId);
-		NBTTagIntArray metaList = new NBTTagIntArray(metasId);
-
-		nbt.setTag("idList", idList);
-		nbt.setTag("metaList", metaList);
-		nbt.setTag("tiles", tileList);
+        nbt.setTag("idList", idList);
+        nbt.setTag("metaList", metaList);
+        nbt.setTag("tiles", tileList);
 
 
 		/*for(int x = 0; x < sizeX; x++) {
@@ -234,171 +354,162 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 			}
 		}*/
-	}
+    }
 
-	public void rotateBy(EnumFacing dir) {
+    public void rotateBy(EnumFacing dir) {
 
-		HashedBlockPosition newSizes = new HashedBlockPosition(getSizeX(), getSizeY(), getSizeZ());
+        HashedBlockPosition newSizes = new HashedBlockPosition(getSizeX(), getSizeY(), getSizeZ());
 
-		HashedBlockPosition newerSize = remapCoord(newSizes, dir);
-		newSizes = remapCoord(newSizes, dir);
+        HashedBlockPosition newerSize = remapCoord(newSizes, dir);
+        newSizes = remapCoord(newSizes, dir);
 
-		Block[][][] blocks = new Block[newSizes.x][newSizes.y][newSizes.z];
-		short[][][] metas = new short[newSizes.x][newSizes.y][newSizes.z];
+        Block[][][] blocks = new Block[newSizes.x][newSizes.y][newSizes.z];
+        short[][][] metas = new short[newSizes.x][newSizes.y][newSizes.z];
 
-		for(int y = 0; y < getSizeY(); y++) {
-			for(int z = 0; z < getSizeZ(); z++) {
-				for(int x = 0; x < getSizeX(); x++) {
-					newSizes = getNewCoord(new HashedBlockPosition(x, y, z), dir);
-					blocks[newSizes.x][newSizes.y][newSizes.z] = this.blocks[x][y][z];
-					metas[newSizes.x][newSizes.y][newSizes.z] = this.metas[x][y][z];
-				}
-			}
-		}
-		this.blocks = blocks;
-		this.metas = metas;
-
-
-		for(TileEntity e : tileEntities) {
-			newSizes = getNewCoord(new HashedBlockPosition(e.getPos()), dir);
-			e.setPos(newSizes.getBlockPos());
-		}
-
-		this.sizeX = newerSize.x;
-		this.sizeY = newerSize.y;
-		this.sizeZ = newerSize.z;
-	}
-
-	private HashedBlockPosition remapCoord(HashedBlockPosition in, EnumFacing dir) {
-
-		HashedBlockPosition out = new HashedBlockPosition(0, 0, 0);
-
-		switch(dir) {
-			case DOWN:
-			case UP:
-				out.x = in.z;
-				out.y = in.y;
-				out.z = in.x;
-				break;
-			case NORTH:
-			case SOUTH:
-				out.x = in.y;
-				out.y = (short)(in.x);
-				out.z = in.z;
-				break;
-			case EAST:
-			case WEST:
-				out.x = in.x;
-				out.y = (short)(in.z);
-				out.z = in.y;
-				break;
-		}
-
-		return out;
-	}
-
-	public HashedBlockPosition getNewCoord(HashedBlockPosition in, EnumFacing dir) {
-
-		HashedBlockPosition out = new HashedBlockPosition(0, 0, 0);
-
-		switch(dir) {
-		case DOWN:
-			out.x = in.z;
-			out.y = in.y;
-			out.z = getSizeX()-in.x-1;
-			break;
-		case UP:
-			out.x = getSizeZ()-in.z -1;
-			out.y = in.y;
-			out.z = in.x;
-			break;
-		case NORTH:
-			out.x = in.y;
-			out.y = (short)(getSizeX()-in.x-1);
-			out.z = in.z;
-			break;
-		case SOUTH:
-			out.x = getSizeY()-in.y-1;
-			out.y = (short)in.x;
-			out.z = in.z;
-			break;
-		case EAST:
-			out.x = in.x;
-			out.y = (short)(getSizeZ()-in.z-1);
-			out.z = in.y;
-			break;
-		case WEST:
-			out.x = in.x;
-			out.y = (short)in.z;
-			out.z = getSizeY()-in.y-1;
-			break;
-		}
-
-		return out;
-	}
+        for (int y = 0; y < getSizeY(); y++) {
+            for (int z = 0; z < getSizeZ(); z++) {
+                for (int x = 0; x < getSizeX(); x++) {
+                    newSizes = getNewCoord(new HashedBlockPosition(x, y, z), dir);
+                    blocks[newSizes.x][newSizes.y][newSizes.z] = this.blocks[x][y][z];
+                    metas[newSizes.x][newSizes.y][newSizes.z] = this.metas[x][y][z];
+                }
+            }
+        }
+        this.blocks = blocks;
+        this.metas = metas;
 
 
-	private static boolean isInventoryBlock(TileEntity tile) {
-		return tile instanceof IInventory || tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP) && !(tile instanceof TileGuidanceComputer);
-	}
+        for (TileEntity e : tileEntities) {
+            newSizes = getNewCoord(new HashedBlockPosition(e.getPos()), dir);
+            e.setPos(newSizes.getBlockPos());
+        }
 
-	private static boolean isLiquidContainerBlock(TileEntity tile) {
-		return tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-	}
+        this.sizeX = newerSize.x;
+        this.sizeY = newerSize.y;
+        this.sizeZ = newerSize.z;
+    }
 
-	public void readFromNBT(NBTTagCompound nbt) {
-		sizeX = nbt.getInteger("xSize");
-		sizeY = nbt.getInteger("ySize");
-		sizeZ = nbt.getInteger("zSize");
+    private HashedBlockPosition remapCoord(HashedBlockPosition in, EnumFacing dir) {
 
-		blocks = new Block[sizeX][sizeY][sizeZ];
-		metas = new short[sizeX][sizeY][sizeZ];
+        HashedBlockPosition out = new HashedBlockPosition(0, 0, 0);
 
-		tileEntities.clear();
-		inventoryTiles.clear();
-		liquidTiles.clear();
-		chunk = new Chunk(world, 0, 0);
+        switch (dir) {
+            case DOWN:
+            case UP:
+                out.x = in.z;
+                out.y = in.y;
+                out.z = in.x;
+                break;
+            case NORTH:
+            case SOUTH:
+                out.x = in.y;
+                out.y = (short) (in.x);
+                out.z = in.z;
+                break;
+            case EAST:
+            case WEST:
+                out.x = in.x;
+                out.y = (short) (in.z);
+                out.z = in.y;
+                break;
+        }
 
-		int[] blockId = nbt.getIntArray("idList");
-		int[] metasId = nbt.getIntArray("metaList");
+        return out;
+    }
 
-		for(int x = 0; x < sizeX; x++) {
-			for(int y = 0; y < sizeY; y++) {
-				for(int z = 0; z < sizeZ; z++) {
-					blocks[x][y][z] = Block.getBlockById(blockId[z + (sizeZ*y) + (sizeZ*sizeY*x)]);
-					metas[x][y][z] = (short)metasId[z + (sizeZ*y) + (sizeZ*sizeY*x)];
+    public HashedBlockPosition getNewCoord(HashedBlockPosition in, EnumFacing dir) {
 
-					chunk.setBlockState(new BlockPos(x, y, z), this.blocks[x][y][z].getStateFromMeta(this.metas[x][y][z]));
-				}
-			}
-		}
+        HashedBlockPosition out = new HashedBlockPosition(0, 0, 0);
 
-		NBTTagList tileList = nbt.getTagList("tiles", NBT.TAG_COMPOUND);
+        switch (dir) {
+            case DOWN:
+                out.x = in.z;
+                out.y = in.y;
+                out.z = getSizeX() - in.x - 1;
+                break;
+            case UP:
+                out.x = getSizeZ() - in.z - 1;
+                out.y = in.y;
+                out.z = in.x;
+                break;
+            case NORTH:
+                out.x = in.y;
+                out.y = (short) (getSizeX() - in.x - 1);
+                out.z = in.z;
+                break;
+            case SOUTH:
+                out.x = getSizeY() - in.y - 1;
+                out.y = (short) in.x;
+                out.z = in.z;
+                break;
+            case EAST:
+                out.x = in.x;
+                out.y = (short) (getSizeZ() - in.z - 1);
+                out.z = in.y;
+                break;
+            case WEST:
+                out.x = in.x;
+                out.y = (short) in.z;
+                out.z = getSizeY() - in.y - 1;
+                break;
+        }
 
-		for(int i = 0; i < tileList.tagCount(); i++) {
+        return out;
+    }
 
-			try {
-				TileEntity tile = ZUtils.createTile(tileList.getCompoundTagAt(i));
-				tile.setWorld(world);
+    public void readFromNBT(NBTTagCompound nbt) {
+        sizeX = nbt.getInteger("xSize");
+        sizeY = nbt.getInteger("ySize");
+        sizeZ = nbt.getInteger("zSize");
 
-				if(isInventoryBlock(tile)) {
-					inventoryTiles.add(tile);
-				}
+        blocks = new Block[sizeX][sizeY][sizeZ];
+        metas = new short[sizeX][sizeY][sizeZ];
 
-				if(isLiquidContainerBlock(tile)) {
-					liquidTiles.add(tile);
-				}
+        tileEntities.clear();
+        inventoryTiles.clear();
+        liquidTiles.clear();
+        chunk = new Chunk(world, 0, 0);
 
-				tileEntities.add(tile);
-				tile.setWorld(world);
+        int[] blockId = nbt.getIntArray("idList");
+        int[] metasId = nbt.getIntArray("metaList");
 
-				chunk.addTileEntity(tile);
+        for (int x = 0; x < sizeX; x++) {
+            for (int y = 0; y < sizeY; y++) {
+                for (int z = 0; z < sizeZ; z++) {
+                    blocks[x][y][z] = Block.getBlockById(blockId[z + (sizeZ * y) + (sizeZ * sizeY * x)]);
+                    metas[x][y][z] = (short) metasId[z + (sizeZ * y) + (sizeZ * sizeY * x)];
 
-			} catch (Exception e) {
-				AdvancedRocketry.logger.warn("Rocket missing Tile (was a mod removed?)");
-			}
+                    chunk.setBlockState(new BlockPos(x, y, z), this.blocks[x][y][z].getStateFromMeta(this.metas[x][y][z]));
+                }
+            }
+        }
 
-		}
+        NBTTagList tileList = nbt.getTagList("tiles", NBT.TAG_COMPOUND);
+
+        for (int i = 0; i < tileList.tagCount(); i++) {
+
+            try {
+                TileEntity tile = ZUtils.createTile(tileList.getCompoundTagAt(i));
+                tile.setWorld(world);
+
+                if (isInventoryBlock(tile)) {
+                    inventoryTiles.add(tile);
+                }
+
+                if (isLiquidContainerBlock(tile)) {
+                    liquidTiles.add(tile);
+                }
+
+                tileEntities.add(tile);
+                tile.setWorld(world);
+
+                chunk.addTileEntity(tile);
+
+            } catch (Exception e) {
+                AdvancedRocketry.logger.warn("Rocket missing Tile (was a mod removed?)");
+            }
+
+        }
 
 		/*for(int x = 0; x < sizeX; x++) {
 			for(int y = 0; y < sizeY; y++) {
@@ -410,7 +521,7 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 
 					if(!tag.hasKey("block"))
 						continue;
-					int blockId = tag.getInteger("block"); 
+					int blockId = tag.getInteger("block");
 					blocks[x][y][z] = Block.getBlockById(blockId);
 					metas[x][y][z] = tag.getShort("meta");
 
@@ -436,388 +547,272 @@ public class StorageChunk implements IBlockAccess, IStorageChunk {
 				}
 			}
 		}*/
-		this.chunk.generateSkylightMap();
-	}
-
-	public static StorageChunk copyWorldBB(World world, AxisAlignedBB bb) {
-		int actualMinX = (int)bb.maxX,
-				actualMinY = (int)bb.maxY,
-				actualMinZ = (int)bb.maxZ,
-				actualMaxX = (int)bb.minX,
-				actualMaxY = (int)bb.minY,
-				actualMaxZ = (int)bb.minZ;
-
-
-		//Try to fit to smallest bounds
-		for(int x = (int)bb.minX; x <= bb.maxX; x++) {
-			for(int z = (int)bb.minZ; z <= bb.maxZ; z++) {
-				for(int y = (int)bb.minY; y<= bb.maxY; y++) {
-					BlockPos pos = new BlockPos(x,y,z);
-
-					Block block = world.getBlockState(pos).getBlock();
-
-					if(!block.isAir(world.getBlockState(pos) ,world, pos)) {
-						if(x < actualMinX)
-							actualMinX = x;
-						if(y < actualMinY)
-							actualMinY = y;
-						if(z < actualMinZ)
-							actualMinZ = z;
-						if(x > actualMaxX)
-							actualMaxX = x;
-						if(y > actualMaxY)
-							actualMaxY = y;
-						if(z > actualMaxZ)
-							actualMaxZ = z;
-					}
-				}
-			}
-		}
-
-		StorageChunk ret = new StorageChunk((actualMaxX - actualMinX + 1), (actualMaxY - actualMinY + 1), (actualMaxZ - actualMinZ + 1));
-
-
-		//Iterate though the bounds given storing blocks/meta/tiles
-		for(int x = actualMinX; x <= actualMaxX; x++) {
-			for(int z = actualMinZ; z <= actualMaxZ; z++) {
-				for(int y = actualMinY; y<= actualMaxY; y++) {
-					BlockPos pos = new BlockPos(x,y,z);
-					IBlockState state = world.getBlockState(pos);
-					ret.blocks[x - actualMinX][y - actualMinY][z - actualMinZ] = state.getBlock();
-					ret.metas[x - actualMinX][y - actualMinY][z - actualMinZ] = (short)state.getBlock().getMetaFromState(state);
-
-					TileEntity entity = world.getTileEntity(pos);
-					if(entity != null) {
-						NBTTagCompound nbt = new NBTTagCompound();
-						entity.writeToNBT(nbt);
-
-						//Transform tileEntity coords
-						nbt.setInteger("x",nbt.getInteger("x") - actualMinX);
-						nbt.setInteger("y",nbt.getInteger("y") - actualMinY);
-						nbt.setInteger("z",nbt.getInteger("z") - actualMinZ);
-
-						//XXX: Hack to make chisels & bits renderable
-						if (nbt.getString("id").equals("minecraft:mod.chiselsandbits.tileentitychiseled"))
-							nbt.setString("id", "minecraft:mod.chiselsandbits.tileentitychiseled.tesr");
-
-						TileEntity newTile = ZUtils.createTile(nbt);
-						if(newTile != null) {
-							newTile.setWorld(ret.world);
-
-							if(isInventoryBlock(newTile)) {
-								ret.inventoryTiles.add(newTile);
-							}
-
-							if(isLiquidContainerBlock(newTile)) {
-								ret.liquidTiles.add(newTile);
-							}
-
-							ret.tileEntities.add(newTile);
-						}
-					}
-				}
-			}
-		}
-
-		return ret;
-	}
-
-	//pass the coords of the xmin, ymin, zmin as well as the world to move the rocket
-	@Override
-	public void pasteInWorld(World world, int xCoord, int yCoord ,int zCoord) {
-
-		//Set all the blocks
-		for(int x = 0; x < sizeX; x++) {
-			for(int z = 0; z < sizeZ; z++) {
-				for(int y = 0; y< sizeY; y++) {
-
-					if(blocks[x][y][z] != Blocks.AIR) {
-						world.setBlockState(new BlockPos(xCoord + x, yCoord + y, zCoord + z), blocks[x][y][z].getStateFromMeta(metas[x][y][z]), 2);
-					}
-				}
-			}
-		}
-
-		//Set tiles for each block
-		for(TileEntity tile : tileEntities) {
-			NBTTagCompound nbt = new NBTTagCompound();
-			tile.writeToNBT(nbt);
-			int x = nbt.getInteger("x");
-			int y = nbt.getInteger("y");
-			int z = nbt.getInteger("z");
-
-			int tmpX = x + xCoord;
-			int tmpY = y + yCoord;
-			int tmpZ = z + zCoord;
-
-			//Set blocks of tiles again to avoid weirdness caused by updates
-			//world.setBlock(xCoord + x, yCoord + y, zCoord + z, blocks[x][y][z], metas[x][y][z], 2);
-
-
-			nbt.setInteger("x",tmpX);
-			nbt.setInteger("y",tmpY);
-			nbt.setInteger("z",tmpZ);
-
-			TileEntity entity = world.getTileEntity(new BlockPos(tmpX, tmpY, tmpZ));
-
-			if(entity != null)
-				entity.readFromNBT(nbt);
-		}
-	}
-
-
-	@Override
-	public TileEntity getTileEntity(@Nonnull BlockPos pos) {
-		for(TileEntity tileE : tileEntities) {
-			if( tileE.getPos().compareTo(pos) == 0)
-				return tileE;
-		}
-		return null;
-	}
-
-
-	@Override
-	public boolean isAirBlock(BlockPos pos) {
-		if(pos.getX() >= blocks.length || pos.getY() >= blocks[0].length || pos.getZ() >= blocks[0][0].length)
-			return true;
-		return blocks[pos.getX()][pos.getY()][pos.getZ()] == Blocks.AIR;
-	}
-
-	@Override
-	@Nonnull
-	public Biome getBiome(@Nullable BlockPos pos) {
-		//Don't care, gen ocean
-		return Biomes.OCEAN;
-	}
-
-	@Override
-	public boolean isSideSolid(BlockPos pos, @Nonnull EnumFacing side, boolean _default) {
-		int x = pos.getX();
-		int y = pos.getY();
-		int z = pos.getZ();
-		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ  || x + side.getFrontOffsetX() < 0 
-				|| x + side.getFrontOffsetX() >= sizeX || y + side.getFrontOffsetY() < 0 || y + side.getFrontOffsetY() >= sizeY 
-				|| z + side.getFrontOffsetZ() < 0 || z + side.getFrontOffsetZ() >= sizeZ)
-			return false;
-
-		return blocks[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()].isSideSolid(blocks[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()].getStateFromMeta(metas[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()]), this, pos.offset(side), side.getOpposite());
-
-	}
-
-	public static StorageChunk cutWorldBB(World worldObj, AxisAlignedBB bb) {
-		StorageChunk chunk = StorageChunk.copyWorldBB(worldObj, bb);
-		for(int x = (int)bb.minX; x <= bb.maxX; x++) {
-			for(int z = (int)bb.minZ; z <= bb.maxZ; z++) {
-				for(int y = (int)bb.minY; y<= bb.maxY; y++) {
-
-					BlockPos pos = new BlockPos(x, y, z);
-					//Workaround for dupe
-					TileEntity tile = worldObj.getTileEntity(pos);
-					if(tile instanceof IInventory) {
-						IInventory inv = (IInventory) tile;
-						for(int i = 0; i < inv.getSizeInventory(); i++) {
-							inv.setInventorySlotContents(i, ItemStack.EMPTY);
-						}
-					}
-
-					worldObj.setBlockState(pos, Blocks.AIR.getDefaultState(),2);
-				}
-			}
-		}
-
-		//Carpenter's block's dupe
-		for(Entity entity : worldObj.getEntitiesWithinAABB(EntityItem.class, bb.grow(5, 5, 5)) ) {
-			entity.setDead();
-		}
-
-		return chunk;
-	}
-
-
-
-	public List<TileSatelliteHatch> getSatelliteHatches() {
-		LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<>();
-		for (TileEntity tile : getTileEntityList()) {
-			if (tile instanceof TileSatelliteHatch) {
-				satelliteHatches.add((TileSatelliteHatch) tile);
-			}
-		}
-
-		return satelliteHatches;
-	}
-
-	@Deprecated
-	public List<SatelliteBase> getSatellites() {
-		LinkedList<SatelliteBase> satellites = new LinkedList<>();
-		LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<>();
-		for (TileEntity tile : getTileEntityList()) {
-			if (tile instanceof TileSatelliteHatch) {
-				satelliteHatches.add((TileSatelliteHatch) tile);
-			}
-		}
-
-
-		for(TileSatelliteHatch tile : satelliteHatches) {
-			SatelliteBase satellite = tile.getSatellite();
-			if(satellite != null)
-				satellites.add(satellite);
-		}
-		return satellites;
-	}
-
-	public TileGuidanceComputer getGuidanceComputer() {
-		for (TileEntity tile : getTileEntityList()) {
-			if (tile instanceof TileGuidanceComputer) {
-				return (TileGuidanceComputer) tile;
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * @return destination ID or Constants.INVALID_PLANET if none
-	 */
-	public int getDestinationDimId(int currentDimId, int x, int z) {
-		for (TileEntity tile : getTileEntityList()) {
-			if (tile instanceof TileGuidanceComputer) {
-				return ((TileGuidanceComputer) tile).getDestinationDimId(currentDimId, new BlockPos(x, 0, z));
-			}
-		}
-
-		return Constants.INVALID_PLANET;
-	}
-
-	public Vector3F<Float> getDestinationCoordinates(int destDimID, boolean commit) {
-		for (TileEntity tile : getTileEntityList()) {
-			if (tile instanceof TileGuidanceComputer) {
-				return ((TileGuidanceComputer) tile).getLandingLocation(destDimID, commit);
-			}
-		}
-		return null;
-	}
-	
-	public String getDestinationName(int destDimID) {
-		for (TileEntity tile : getTileEntityList()) {
-			if (tile instanceof TileGuidanceComputer) {
-				return ((TileGuidanceComputer) tile).getDestinationName(destDimID);
-			}
-		}
-		return "";
-	}
-
-	public void setDestinationCoordinates(Vector3F<Float> vec, int dimid) {
-		for (TileEntity tile : getTileEntityList()) {
-			if (tile instanceof TileGuidanceComputer) {
-				((TileGuidanceComputer) tile).setReturnPosition(vec, dimid);
-			}
-		}
-	}
-
-	public void writeToNetwork(ByteBuf out) {
-		PacketBuffer buffer = new PacketBuffer(out);
-
-		buffer.writeByte(this.sizeX);
-		buffer.writeByte(this.sizeY);
-		buffer.writeByte(this.sizeZ);
-		buffer.writeShort(tileEntities.size());
-
-		for(int x = 0; x < sizeX; x++) {
-			for(int y = 0; y < sizeY; y++) {
-				for(int z = 0; z < sizeZ; z++) {
-					buffer.writeInt(Block.getIdFromBlock(this.blocks[x][y][z]));
-					buffer.writeShort(this.metas[x][y][z]);
-				}
-			}
-		}
-
-		Iterator<TileEntity> tileIterator = tileEntities.iterator();
-
-		while(tileIterator.hasNext()) {
-			TileEntity tile = tileIterator.next();
-
-			NBTTagCompound nbt = new NBTTagCompound();
-
-			try {
-				tile.writeToNBT(nbt);
-
-				try {
-					buffer.writeCompoundTag(nbt);
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-
-			} catch(RuntimeException e) {
-				AdvancedRocketry.logger.warn("A tile entity has thrown an error while writing to network: " + tile.getClass().getCanonicalName());
-				tileIterator.remove();
-			}
-		}
-	}
-
-	public void readFromNetwork(ByteBuf in) {
-		PacketBuffer buffer = new PacketBuffer(in);
-
-		this.sizeX = buffer.readByte();
-		this.sizeY = buffer.readByte();
-		this.sizeZ = buffer.readByte();
-		short numTiles = buffer.readShort();
-
-		this.blocks = new Block[sizeX][sizeY][sizeZ];
-		this.metas = new short[sizeX][sizeY][sizeZ];
-		chunk = new Chunk(world, 0, 0);
-
-		for(int x = 0; x < sizeX; x++) {
-			for(int y = 0; y < sizeY; y++) {
-				for(int z = 0; z < sizeZ; z++) {
-
-					this.blocks[x][y][z] = Block.getBlockById(buffer.readInt());
-					this.metas[x][y][z] = buffer.readShort();
-
-					chunk.setBlockState(new BlockPos(x, y, z), this.blocks[x][y][z].getStateFromMeta(this.metas[x][y][z]));
-				}
-			}
-		}
-
-		for(short i = 0; i < numTiles; i++) {
-			try {
-				NBTTagCompound nbt = buffer.readCompoundTag();
-
-				TileEntity tile = ZUtils.createTile(nbt);
-				tile.setWorld(world);
-				tileEntities.add(tile);
-
-				if(isInventoryBlock(tile)) {
-					inventoryTiles.add(tile);
-				}
-
-				if(isLiquidContainerBlock(tile))
-					liquidTiles.add(tile);
-				tile.setWorld(world);
-
-				chunk.addTileEntity(tile);
-
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-		//We are now ready to render
-		this.chunk.generateSkylightMap();
-		finalized = true;
-	}
-
-	@Override
-	public int getCombinedLight(@Nullable BlockPos pos, int lightValue) {
-		return lightValue;
-	}
-
-	@Override
-	public int getStrongPower(@Nullable BlockPos pos, @Nullable EnumFacing direction) {
-		return 0;
-	}
-
-	@Override
-	@Nonnull
-	public WorldType getWorldType() {
-		return WorldType.CUSTOMIZED;
-	}
+        this.chunk.generateSkylightMap();
+    }
+
+    //pass the coords of the xmin, ymin, zmin as well as the world to move the rocket
+    @Override
+    public void pasteInWorld(World world, int xCoord, int yCoord, int zCoord) {
+
+        //Set all the blocks
+        for (int x = 0; x < sizeX; x++) {
+            for (int z = 0; z < sizeZ; z++) {
+                for (int y = 0; y < sizeY; y++) {
+
+                    if (blocks[x][y][z] != Blocks.AIR) {
+                        world.setBlockState(new BlockPos(xCoord + x, yCoord + y, zCoord + z), blocks[x][y][z].getStateFromMeta(metas[x][y][z]), 2);
+                    }
+                }
+            }
+        }
+
+        //Set tiles for each block
+        for (TileEntity tile : tileEntities) {
+            NBTTagCompound nbt = new NBTTagCompound();
+            tile.writeToNBT(nbt);
+            int x = nbt.getInteger("x");
+            int y = nbt.getInteger("y");
+            int z = nbt.getInteger("z");
+
+            int tmpX = x + xCoord;
+            int tmpY = y + yCoord;
+            int tmpZ = z + zCoord;
+
+            //Set blocks of tiles again to avoid weirdness caused by updates
+            //world.setBlock(xCoord + x, yCoord + y, zCoord + z, blocks[x][y][z], metas[x][y][z], 2);
+
+
+            nbt.setInteger("x", tmpX);
+            nbt.setInteger("y", tmpY);
+            nbt.setInteger("z", tmpZ);
+
+            TileEntity entity = world.getTileEntity(new BlockPos(tmpX, tmpY, tmpZ));
+
+            if (entity != null)
+                entity.readFromNBT(nbt);
+        }
+    }
+
+    @Override
+    public TileEntity getTileEntity(@Nonnull BlockPos pos) {
+        for (TileEntity tileE : tileEntities) {
+            if (tileE.getPos().compareTo(pos) == 0)
+                return tileE;
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isAirBlock(BlockPos pos) {
+        if (pos.getX() >= blocks.length || pos.getY() >= blocks[0].length || pos.getZ() >= blocks[0][0].length)
+            return true;
+        return blocks[pos.getX()][pos.getY()][pos.getZ()] == Blocks.AIR;
+    }
+
+    @Override
+    @Nonnull
+    public Biome getBiome(@Nullable BlockPos pos) {
+        //Don't care, gen ocean
+        return Biomes.OCEAN;
+    }
+
+    @Override
+    public boolean isSideSolid(BlockPos pos, @Nonnull EnumFacing side, boolean _default) {
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+        if (x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ || x + side.getFrontOffsetX() < 0
+                || x + side.getFrontOffsetX() >= sizeX || y + side.getFrontOffsetY() < 0 || y + side.getFrontOffsetY() >= sizeY
+                || z + side.getFrontOffsetZ() < 0 || z + side.getFrontOffsetZ() >= sizeZ)
+            return false;
+
+        return blocks[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()].isSideSolid(blocks[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()].getStateFromMeta(metas[x + side.getFrontOffsetX()][y + side.getFrontOffsetY()][z + side.getFrontOffsetZ()]), this, pos.offset(side), side.getOpposite());
+
+    }
+
+    public List<TileSatelliteHatch> getSatelliteHatches() {
+        LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<>();
+        for (TileEntity tile : getTileEntityList()) {
+            if (tile instanceof TileSatelliteHatch) {
+                satelliteHatches.add((TileSatelliteHatch) tile);
+            }
+        }
+
+        return satelliteHatches;
+    }
+
+    @Deprecated
+    public List<SatelliteBase> getSatellites() {
+        LinkedList<SatelliteBase> satellites = new LinkedList<>();
+        LinkedList<TileSatelliteHatch> satelliteHatches = new LinkedList<>();
+        for (TileEntity tile : getTileEntityList()) {
+            if (tile instanceof TileSatelliteHatch) {
+                satelliteHatches.add((TileSatelliteHatch) tile);
+            }
+        }
+
+
+        for (TileSatelliteHatch tile : satelliteHatches) {
+            SatelliteBase satellite = tile.getSatellite();
+            if (satellite != null)
+                satellites.add(satellite);
+        }
+        return satellites;
+    }
+
+    public TileGuidanceComputer getGuidanceComputer() {
+        for (TileEntity tile : getTileEntityList()) {
+            if (tile instanceof TileGuidanceComputer) {
+                return (TileGuidanceComputer) tile;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return destination ID or Constants.INVALID_PLANET if none
+     */
+    public int getDestinationDimId(int currentDimId, int x, int z) {
+        for (TileEntity tile : getTileEntityList()) {
+            if (tile instanceof TileGuidanceComputer) {
+                return ((TileGuidanceComputer) tile).getDestinationDimId(currentDimId, new BlockPos(x, 0, z));
+            }
+        }
+
+        return Constants.INVALID_PLANET;
+    }
+
+    public Vector3F<Float> getDestinationCoordinates(int destDimID, boolean commit) {
+        for (TileEntity tile : getTileEntityList()) {
+            if (tile instanceof TileGuidanceComputer) {
+                return ((TileGuidanceComputer) tile).getLandingLocation(destDimID, commit);
+            }
+        }
+        return null;
+    }
+
+    public String getDestinationName(int destDimID) {
+        for (TileEntity tile : getTileEntityList()) {
+            if (tile instanceof TileGuidanceComputer) {
+                return ((TileGuidanceComputer) tile).getDestinationName(destDimID);
+            }
+        }
+        return "";
+    }
+
+    public void setDestinationCoordinates(Vector3F<Float> vec, int dimid) {
+        for (TileEntity tile : getTileEntityList()) {
+            if (tile instanceof TileGuidanceComputer) {
+                ((TileGuidanceComputer) tile).setReturnPosition(vec, dimid);
+            }
+        }
+    }
+
+    public void writeToNetwork(ByteBuf out) {
+        PacketBuffer buffer = new PacketBuffer(out);
+
+        buffer.writeByte(this.sizeX);
+        buffer.writeByte(this.sizeY);
+        buffer.writeByte(this.sizeZ);
+        buffer.writeShort(tileEntities.size());
+
+        for (int x = 0; x < sizeX; x++) {
+            for (int y = 0; y < sizeY; y++) {
+                for (int z = 0; z < sizeZ; z++) {
+                    buffer.writeInt(Block.getIdFromBlock(this.blocks[x][y][z]));
+                    buffer.writeShort(this.metas[x][y][z]);
+                }
+            }
+        }
+
+        Iterator<TileEntity> tileIterator = tileEntities.iterator();
+
+        while (tileIterator.hasNext()) {
+            TileEntity tile = tileIterator.next();
+
+            NBTTagCompound nbt = new NBTTagCompound();
+
+            try {
+                tile.writeToNBT(nbt);
+
+                try {
+                    buffer.writeCompoundTag(nbt);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            } catch (RuntimeException e) {
+                AdvancedRocketry.logger.warn("A tile entity has thrown an error while writing to network: " + tile.getClass().getCanonicalName());
+                tileIterator.remove();
+            }
+        }
+    }
+
+    public void readFromNetwork(ByteBuf in) {
+        PacketBuffer buffer = new PacketBuffer(in);
+
+        this.sizeX = buffer.readByte();
+        this.sizeY = buffer.readByte();
+        this.sizeZ = buffer.readByte();
+        short numTiles = buffer.readShort();
+
+        this.blocks = new Block[sizeX][sizeY][sizeZ];
+        this.metas = new short[sizeX][sizeY][sizeZ];
+        chunk = new Chunk(world, 0, 0);
+
+        for (int x = 0; x < sizeX; x++) {
+            for (int y = 0; y < sizeY; y++) {
+                for (int z = 0; z < sizeZ; z++) {
+
+                    this.blocks[x][y][z] = Block.getBlockById(buffer.readInt());
+                    this.metas[x][y][z] = buffer.readShort();
+
+                    chunk.setBlockState(new BlockPos(x, y, z), this.blocks[x][y][z].getStateFromMeta(this.metas[x][y][z]));
+                }
+            }
+        }
+
+        for (short i = 0; i < numTiles; i++) {
+            try {
+                NBTTagCompound nbt = buffer.readCompoundTag();
+
+                TileEntity tile = ZUtils.createTile(nbt);
+                tile.setWorld(world);
+                tileEntities.add(tile);
+
+                if (isInventoryBlock(tile)) {
+                    inventoryTiles.add(tile);
+                }
+
+                if (isLiquidContainerBlock(tile))
+                    liquidTiles.add(tile);
+                tile.setWorld(world);
+
+                chunk.addTileEntity(tile);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        //We are now ready to render
+        this.chunk.generateSkylightMap();
+        finalized = true;
+    }
+
+    @Override
+    public int getCombinedLight(@Nullable BlockPos pos, int lightValue) {
+        return lightValue;
+    }
+
+    @Override
+    public int getStrongPower(@Nullable BlockPos pos, @Nullable EnumFacing direction) {
+        return 0;
+    }
+
+    @Override
+    @Nonnull
+    public WorldType getWorldType() {
+        return WorldType.CUSTOMIZED;
+    }
 }

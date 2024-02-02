@@ -7,15 +7,14 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.tile.cables.TileLiquidPipe;
 
 public class BlockLiquidPipe extends BlockPipe {
-	
-	public BlockLiquidPipe(Material material) {
-		super(material);
-	}
 
-	
-	
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileLiquidPipe();
-	}
+    public BlockLiquidPipe(Material material) {
+        super(material);
+    }
+
+
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileLiquidPipe();
+    }
 }

@@ -9,14 +9,14 @@ import java.util.List;
 
 public class ChemicalReactorRecipeMaker {
 
-	public static List<ChemicalReactorlWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
-		
-		List<ChemicalReactorlWrapper> list = new LinkedList<>();
-		for(IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
-			list.add(new ChemicalReactorlWrapper(rec));
-		}
-		
-		return list;
-	}
-	
+    public static List<ChemicalReactorlWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
+
+        List<ChemicalReactorlWrapper> list = new LinkedList<>();
+        for (IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
+            list.add(new ChemicalReactorlWrapper(rec));
+        }
+
+        return list;
+    }
+
 }

@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import zmaster587.advancedRocketry.api.SatelliteRegistry;
 import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.dimension.DimensionProperties;
@@ -16,7 +15,8 @@ public class PacketSatellitesUpdate extends BasePacket {
     private int dimNumber;
     private DimensionProperties dimProperties;
 
-    public PacketSatellitesUpdate() {}
+    public PacketSatellitesUpdate() {
+    }
 
     public PacketSatellitesUpdate(int dimNumber, DimensionProperties dimProperties) {
         this.dimProperties = dimProperties;
@@ -44,7 +44,7 @@ public class PacketSatellitesUpdate extends BasePacket {
 
         DimensionProperties prop = DimensionManager.getInstance().getDimensionProperties(dimNumber);
 
-        for (String key: compound.getKeySet()) {
+        for (String key : compound.getKeySet()) {
             prop.getSatellite(Long.parseLong(key)).readFromNBT(compound.getCompoundTag(key));
         }
     }

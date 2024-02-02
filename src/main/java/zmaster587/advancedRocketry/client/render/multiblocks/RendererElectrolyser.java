@@ -19,91 +19,91 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 
 public class RendererElectrolyser extends TileEntitySpecialRenderer {
 
-	WavefrontObject model;
+    WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/electrolyser.png");
+    ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/electrolyser.png");
 
-	public RendererElectrolyser() {
-		try {
-			model = new  WavefrontObject(new ResourceLocation("advancedrocketry:models/electrolyser.obj"));
-		} catch (ModelFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	@Override
-	public void render(TileEntity tile, double x,
-			double y, double z, float f, int destroyState, float a) {
-		TileMultiblockMachine multiBlockTile = (TileMultiblockMachine)tile;
+    public RendererElectrolyser() {
+        try {
+            model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/electrolyser.obj"));
+        } catch (ModelFormatException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-		if(!multiBlockTile.canRender())
-			return;
+    @Override
+    public void render(TileEntity tile, double x,
+                       double y, double z, float f, int destroyState, float a) {
+        TileMultiblockMachine multiBlockTile = (TileMultiblockMachine) tile;
 
-		GL11.glPushMatrix();
+        if (!multiBlockTile.canRender())
+            return;
 
-		//Rotate and move the model into position
-		GL11.glTranslated(x + 0.5, y, z + 0.5);
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) - front.getFrontOffsetX()*90f, 0, 1, 0);
-		GL11.glTranslated(1.5f, 0f, -0.5f);
+        GL11.glPushMatrix();
 
-		bindTexture(texture);
-		model.renderAll();
+        //Rotate and move the model into position
+        GL11.glTranslated(x + 0.5, y, z + 0.5);
+        EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
+        GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) - front.getFrontOffsetX() * 90f, 0, 1, 0);
+        GL11.glTranslated(1.5f, 0f, -0.5f);
 
-		//Lightning effect
+        bindTexture(texture);
+        model.renderAll();
 
-		if(multiBlockTile.isRunning()) {
-			BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+        //Lightning effect
 
-			double width = 0.01;
+        if (multiBlockTile.isRunning()) {
+            BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
-			//Isn't precision fun?
-			double ySkew = 0.1*MathHelper.sin((tile.getWorld().getTotalWorldTime() & 0xffff)*2f);
-			double xSkew = 0.1*MathHelper.sin((200 + tile.getWorld().getTotalWorldTime() & 0xffff)*3f);
-			double yPos = 1.4;
+            double width = 0.01;
 
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_SRC_ALPHA);
+            //Isn't precision fun?
+            double ySkew = 0.1 * MathHelper.sin((tile.getWorld().getTotalWorldTime() & 0xffff) * 2f);
+            double xSkew = 0.1 * MathHelper.sin((200 + tile.getWorld().getTotalWorldTime() & 0xffff) * 3f);
+            double yPos = 1.4;
 
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
-			GlStateManager.color(.64f, 0.64f, 1f, 0.4f);
-			double xMin = -1.8f;
-			double xMax = -1.65f;
-			double zMin = 1f;
-			double zMax = 1;
-			RenderHelper.renderCrossXZ(buffer, width, xMin, yPos, zMin, xMax, yPos + ySkew, zMax  + xSkew);
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_SRC_ALPHA);
 
-			//tess.addVertex(xMin, yMax, zMin);
-			//tess.addVertex(xMax, yMax + ySkew, zMin);
-			//tess.addVertex(xMax, yMin + ySkew, zMin);
-			//tess.addVertex(xMin, yMin, zMin);
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
+            GlStateManager.color(.64f, 0.64f, 1f, 0.4f);
+            double xMin = -1.8f;
+            double xMax = -1.65f;
+            double zMin = 1f;
+            double zMax = 1;
+            RenderHelper.renderCrossXZ(buffer, width, xMin, yPos, zMin, xMax, yPos + ySkew, zMax + xSkew);
 
-			xMax += 0.15;
-			xMin += 0.15;
+            //tess.addVertex(xMin, yMax, zMin);
+            //tess.addVertex(xMax, yMax + ySkew, zMin);
+            //tess.addVertex(xMax, yMin + ySkew, zMin);
+            //tess.addVertex(xMin, yMin, zMin);
 
-			RenderHelper.renderCrossXZ(buffer, width, xMin, yPos + ySkew, zMin + xSkew, xMax, yPos - ySkew, zMax - xSkew);
+            xMax += 0.15;
+            xMin += 0.15;
 
-			xMax += 0.15;
-			xMin += 0.15;
+            RenderHelper.renderCrossXZ(buffer, width, xMin, yPos + ySkew, zMin + xSkew, xMax, yPos - ySkew, zMax - xSkew);
 
-			RenderHelper.renderCrossXZ(buffer, width, xMin, yPos - ySkew, zMin - xSkew, xMax, yPos + ySkew, zMax + xSkew);
+            xMax += 0.15;
+            xMin += 0.15;
 
-			xMax += 0.15;
-			xMin += 0.15;
+            RenderHelper.renderCrossXZ(buffer, width, xMin, yPos - ySkew, zMin - xSkew, xMax, yPos + ySkew, zMax + xSkew);
 
-			RenderHelper.renderCrossXZ(buffer, width, xMin, yPos + ySkew, zMin + xSkew, xMax, yPos, zMax);
+            xMax += 0.15;
+            xMin += 0.15;
 
-			Tessellator.getInstance().draw();
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			
-		}
-		GL11.glPopMatrix();
-	}
+            RenderHelper.renderCrossXZ(buffer, width, xMin, yPos + ySkew, zMin + xSkew, xMax, yPos, zMax);
+
+            Tessellator.getInstance().draw();
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glDisable(GL11.GL_BLEND);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+        }
+        GL11.glPopMatrix();
+    }
 
 }

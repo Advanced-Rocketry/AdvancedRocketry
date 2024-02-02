@@ -14,30 +14,30 @@ import zmaster587.libVulpes.network.BasePacket;
  */
 public class PacketOxygenState extends BasePacket {
 
-	@Override
-	public void write(ByteBuf out) {
-		
-	}
+    @Override
+    public void write(ByteBuf out) {
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void readClient(ByteBuf in) {
-		AtmosphereHandler.lastSuffocationTime = Minecraft.getMinecraft().world.getTotalWorldTime();
-	}
+    }
 
-	@Override
-	public void read(ByteBuf in) {
-		
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void readClient(ByteBuf in) {
+        AtmosphereHandler.lastSuffocationTime = Minecraft.getMinecraft().world.getTotalWorldTime();
+    }
 
-	@Override
-	public void executeClient(EntityPlayer thePlayer) {
-		
-	}
+    @Override
+    public void read(ByteBuf in) {
 
-	@Override
-	public void executeServer(EntityPlayerMP player) {
-		
-	}
+    }
+
+    @Override
+    public void executeClient(EntityPlayer thePlayer) {
+
+    }
+
+    @Override
+    public void executeServer(EntityPlayerMP player) {
+
+    }
 
 }

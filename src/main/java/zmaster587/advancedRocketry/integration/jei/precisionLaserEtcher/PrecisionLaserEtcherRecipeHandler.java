@@ -6,22 +6,24 @@ import zmaster587.advancedRocketry.integration.jei.ARPlugin;
 
 public class PrecisionLaserEtcherRecipeHandler implements IRecipeHandler<PrecisionLaserEtcherWrapper> {
 
-	@Override
-	public Class<PrecisionLaserEtcherWrapper> getRecipeClass() {
-		return PrecisionLaserEtcherWrapper.class;
-	}
+    @Override
+    public Class<PrecisionLaserEtcherWrapper> getRecipeClass() {
+        return PrecisionLaserEtcherWrapper.class;
+    }
 
-	@Override
-	public String getRecipeCategoryUid(PrecisionLaserEtcherWrapper recipe) { return ARPlugin.precisionLaserEngraverUUID; }
+    @Override
+    public String getRecipeCategoryUid(PrecisionLaserEtcherWrapper recipe) {
+        return ARPlugin.precisionLaserEngraverUUID;
+    }
 
-	@Override
-	public IRecipeWrapper getRecipeWrapper(PrecisionLaserEtcherWrapper recipe) {
-		return recipe;
-	}
+    @Override
+    public IRecipeWrapper getRecipeWrapper(PrecisionLaserEtcherWrapper recipe) {
+        return recipe;
+    }
 
-	@Override
-	public boolean isRecipeValid(PrecisionLaserEtcherWrapper recipe) {
-		return true;
-	}
+    @Override
+    public boolean isRecipeValid(PrecisionLaserEtcherWrapper recipe) {
+        return true;
+    }
 
 }

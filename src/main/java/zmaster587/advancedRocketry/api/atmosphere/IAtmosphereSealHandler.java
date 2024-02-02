@@ -6,17 +6,17 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-/** Interface used to talk to the internal seal handler for advanced rocketry.
- *
+/**
+ * Interface used to talk to the internal seal handler for advanced rocketry.
+ * <p>
  * Keep in mind most blocks are already check for seal vs not seal. So you
  * only need to register blocks that do not fit the logic correctly. For
  * example 3D machines that are a full block. However, are not sealed
  * for any number of reasons including their shape.
- *
+ * <p>
  * Created by Dark(DarkGuardsman, Robert) on 1/6/2016.
  */
-public interface IAtmosphereSealHandler
-{
+public interface IAtmosphereSealHandler {
     /**
      * Checks if a block can be used to seal a room for the blob
      *
@@ -38,7 +38,7 @@ public interface IAtmosphereSealHandler
      * @param block - block to allow, will remove off of disable list if present.
      */
     void addSealableBlock(Block block);
-    
+
     /**
      * Returns a list of blocks that can have been forced to be sealable
      */

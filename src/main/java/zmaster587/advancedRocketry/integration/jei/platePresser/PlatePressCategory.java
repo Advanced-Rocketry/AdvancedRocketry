@@ -8,23 +8,22 @@ import zmaster587.libVulpes.LibVulpes;
 
 public class PlatePressCategory extends MachineCategoryTemplate<PlatePressWrapper> {
 
-	public PlatePressCategory(IGuiHelper helper) {
-		super(helper, TextureResources.smallPlatePresser);
-	}
-	
-	@Override
-	public String getUid() {
-		return ARPlugin.platePresser;
-	}
-
-	@Override
-	public String getTitle() {
-		return LibVulpes.proxy.getLocalizedString("tile.blockHandPress.name");
-	}
+    public PlatePressCategory(IGuiHelper helper) {
+        super(helper, TextureResources.smallPlatePresser);
+    }
 
     @Override
-    public String getModName()
-    {
+    public String getUid() {
+        return ARPlugin.platePresser;
+    }
+
+    @Override
+    public String getTitle() {
+        return LibVulpes.proxy.getLocalizedString("tile.blockHandPress.name");
+    }
+
+    @Override
+    public String getModName() {
         return "Advanced Rocketry";
     }
 

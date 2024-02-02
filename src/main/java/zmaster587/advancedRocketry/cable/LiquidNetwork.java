@@ -16,126 +16,129 @@ import java.util.Random;
 
 public class LiquidNetwork extends CableNetwork {
 
-	private final int MAX_TRANSFER = 100;
+    private final int MAX_TRANSFER = 100;
 
     /**
-	 * Create a new network and get an ID
-	 * @return ID of this new network
-	 */
-	public static LiquidNetwork initNetwork() {
-		Random random = new Random(System.currentTimeMillis());
+     * Create a new network and get an ID
+     *
+     * @return ID of this new network
+     */
+    public static LiquidNetwork initNetwork() {
+        Random random = new Random(System.currentTimeMillis());
 
-		int id = random.nextInt();
+        int id = random.nextInt();
 
-		while(usedIds.contains(id)){ id = random.nextInt(); }
+        while (usedIds.contains(id)) {
+            id = random.nextInt();
+        }
 
-		LiquidNetwork net = new LiquidNetwork();
+        LiquidNetwork net = new LiquidNetwork();
 
-		usedIds.add(id);
-		net.networkID = id;
+        usedIds.add(id);
+        net.networkID = id;
 
-		return net;
-	}
+        return net;
+    }
 
-	//TODO: balance tanks
-	@Override
-	public void tick() {
+    //TODO: balance tanks
+    @Override
+    public void tick() {
 
         int amount = MAX_TRANSFER;
 
-		//Return if there is nothing to do
-		if(sinks.isEmpty() || sources.isEmpty())
-			return;
+        //Return if there is nothing to do
+        if (sinks.isEmpty() || sources.isEmpty())
+            return;
 
-		Iterator<Entry<TileEntity,EnumFacing>> sinkItr = sinks.iterator();
+        Iterator<Entry<TileEntity, EnumFacing>> sinkItr = sinks.iterator();
 
-		//Go through all sinks, if one is not full attempt to fill it
-		
-		while(sinkItr.hasNext()) {
+        //Go through all sinks, if one is not full attempt to fill it
 
-			//Get tile and key
-			Entry<TileEntity,EnumFacing> obj = sinkItr.next();
-			IFluidHandler fluidHandleSink = obj.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
-			EnumFacing dir = obj.getValue();
+        while (sinkItr.hasNext()) {
 
-			Iterator<Entry<TileEntity,EnumFacing>> sourceItr = sources.iterator();
+            //Get tile and key
+            Entry<TileEntity, EnumFacing> obj = sinkItr.next();
+            IFluidHandler fluidHandleSink = obj.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
+            EnumFacing dir = obj.getValue();
 
-			Fluid fluid = null;
+            Iterator<Entry<TileEntity, EnumFacing>> sourceItr = sources.iterator();
 
-			if(fluidHandleSink == null) {
-				sinkItr.remove();
-				AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos() + " is added as a sink but has no fluid capabilities on the side connected");
-				continue;
-			}
-			
-			//If the sink already has fluid in it then lets only try to fill it with that particular fluid
-			for(IFluidTankProperties info : fluidHandleSink.getTankProperties()) {
-				if(info != null && info.getContents() != null) {
-					fluid = info.getContents().getFluid();
-					break;
-				}
-			}
+            Fluid fluid = null;
 
-			//If no fluid can be found then find the first source with a fluid in it
-			if(fluid == null) {
-				out:
-					while(sourceItr.hasNext()) {
-						Entry<TileEntity,EnumFacing> objSource = sourceItr.next();
-						IFluidHandler fluidHandleSource = objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
+            if (fluidHandleSink == null) {
+                sinkItr.remove();
+                AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos() + " is added as a sink but has no fluid capabilities on the side connected");
+                continue;
+            }
 
-						if(fluidHandleSource == null) {
-							sourceItr.remove();
-							AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos() + " is added as a source but has no fluid capabilities on the side connected");
-							continue;
-						}
-						
-						for(IFluidTankProperties srcInfo : fluidHandleSource.getTankProperties()) {
-							if(srcInfo != null && srcInfo.getContents() != null) {
-								fluid = srcInfo.getContents().getFluid();
-								break out;
-							}
-						}
-					}
+            //If the sink already has fluid in it then lets only try to fill it with that particular fluid
+            for (IFluidTankProperties info : fluidHandleSink.getTankProperties()) {
+                if (info != null && info.getContents() != null) {
+                    fluid = info.getContents().getFluid();
+                    break;
+                }
+            }
 
-			}
+            //If no fluid can be found then find the first source with a fluid in it
+            if (fluid == null) {
+                out:
+                while (sourceItr.hasNext()) {
+                    Entry<TileEntity, EnumFacing> objSource = sourceItr.next();
+                    IFluidHandler fluidHandleSource = objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
 
-			//No fluids can be moved
-			if(fluid == null)
-				break;
+                    if (fluidHandleSource == null) {
+                        sourceItr.remove();
+                        AdvancedRocketry.logger.info("Tile at " + obj.getKey().getPos() + " is added as a source but has no fluid capabilities on the side connected");
+                        continue;
+                    }
 
-			if(fluidHandleSink.fill(new FluidStack(fluid, 1), false) > 0) {
-				//Distribute? and drain tanks
-				//Get the max the tank can take this tick then iterate through all sources until it's been filled
-				sourceItr = sources.iterator();
+                    for (IFluidTankProperties srcInfo : fluidHandleSource.getTankProperties()) {
+                        if (srcInfo != null && srcInfo.getContents() != null) {
+                            fluid = srcInfo.getContents().getFluid();
+                            break out;
+                        }
+                    }
+                }
 
-				int maxFill = Math.min(fluidHandleSink.fill(new FluidStack(fluid, amount), false), amount);
-				int actualFill = 0;
-				while(sourceItr.hasNext()) {
-					Entry<TileEntity,EnumFacing> objSource = sourceItr.next();
-					IFluidHandler fluidHandleSource = objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
-					
-					FluidStack fluid2;
-					if((fluid2 = fluidHandleSource.drain(maxFill, false)) != null) {
-						int buffer;
-						
-						//drain sometimes returns a null value even when canDrain returns true
-						if(!FluidUtils.areFluidsSameType(fluid, fluid2.getFluid()))
-							buffer = 0;
-						else {
-							fluidHandleSource.drain(maxFill, true);
-							buffer=fluid2.amount;
-						}
+            }
 
-						maxFill -= buffer;
-						actualFill += buffer;
-					}
+            //No fluids can be moved
+            if (fluid == null)
+                break;
 
-					if(maxFill == 0)
-						break;
-				}
+            if (fluidHandleSink.fill(new FluidStack(fluid, 1), false) > 0) {
+                //Distribute? and drain tanks
+                //Get the max the tank can take this tick then iterate through all sources until it's been filled
+                sourceItr = sources.iterator();
 
-				fluidHandleSink.fill(new FluidStack(fluid, actualFill), true);
-			}
-		}
-	}
+                int maxFill = Math.min(fluidHandleSink.fill(new FluidStack(fluid, amount), false), amount);
+                int actualFill = 0;
+                while (sourceItr.hasNext()) {
+                    Entry<TileEntity, EnumFacing> objSource = sourceItr.next();
+                    IFluidHandler fluidHandleSource = objSource.getKey().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, obj.getValue());
+
+                    FluidStack fluid2;
+                    if ((fluid2 = fluidHandleSource.drain(maxFill, false)) != null) {
+                        int buffer;
+
+                        //drain sometimes returns a null value even when canDrain returns true
+                        if (!FluidUtils.areFluidsSameType(fluid, fluid2.getFluid()))
+                            buffer = 0;
+                        else {
+                            fluidHandleSource.drain(maxFill, true);
+                            buffer = fluid2.amount;
+                        }
+
+                        maxFill -= buffer;
+                        actualFill += buffer;
+                    }
+
+                    if (maxFill == 0)
+                        break;
+                }
+
+                fluidHandleSink.fill(new FluidStack(fluid, actualFill), true);
+            }
+        }
+    }
 }

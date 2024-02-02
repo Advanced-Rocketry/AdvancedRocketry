@@ -22,48 +22,48 @@ import javax.annotation.ParametersAreNullableByDefault;
 
 public class BlockStationModuleDockingPort extends BlockFullyRotatable {
 
-	public BlockStationModuleDockingPort(Material par2Material) {
-		super(par2Material);
-	}
-	
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
-		return true;
-	}
-	
-	@Override
-	@ParametersAreNullableByDefault
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileDockingPort();
-	}
-	
-	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos,
-			IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		if(!worldIn.isRemote)
-			playerIn.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
-		return true;
-	}
+    public BlockStationModuleDockingPort(Material par2Material) {
+        super(par2Material);
+    }
 
-	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
-			EntityLivingBase placer, @Nonnull ItemStack stack) {
-		super.onBlockPlacedBy(world, pos, state, placer, stack);
-		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TileDockingPort) {
-			((TileDockingPort) tile).registerTileWithStation(world, pos);
-		}
-	}
-	
-	@Override
-	@ParametersAreNonnullByDefault
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TileLandingPad) {
-			((TileLandingPad) tile).unregisterTileWithStation(world, pos);
-		}
-		super.breakBlock(world, pos, state);
-	}
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
+
+    @Override
+    @ParametersAreNullableByDefault
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileDockingPort();
+    }
+
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos,
+                                    IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY,
+                                    float hitZ) {
+        if (!worldIn.isRemote)
+            playerIn.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+        return true;
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
+                                EntityLivingBase placer, @Nonnull ItemStack stack) {
+        super.onBlockPlacedBy(world, pos, state, placer, stack);
+        TileEntity tile = world.getTileEntity(pos);
+        if (tile instanceof TileDockingPort) {
+            ((TileDockingPort) tile).registerTileWithStation(world, pos);
+        }
+    }
+
+    @Override
+    @ParametersAreNonnullByDefault
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        TileEntity tile = world.getTileEntity(pos);
+        if (tile instanceof TileLandingPad) {
+            ((TileLandingPad) tile).unregisterTileWithStation(world, pos);
+        }
+        super.breakBlock(world, pos, state);
+    }
 
 }

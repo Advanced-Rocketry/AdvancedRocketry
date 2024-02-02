@@ -19,22 +19,25 @@ import java.util.Random;
  * Yeah, i know, this is literally a copy of the item renderer, other option was asm the class responsible for render distance
  */
 @SideOnly(Side.CLIENT)
-public class RendererItem extends Render<EntityItemAbducted> implements IRenderFactory<EntityItemAbducted>
-{
+public class RendererItem extends Render<EntityItemAbducted> implements IRenderFactory<EntityItemAbducted> {
     private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
-    /** The RNG used in RenderItem (for bobbing itemstacks on the ground) */
-    private Random random = new Random();
-    public boolean renderWithColor = true;
-    /** Defines the zLevel of rendering of item on GUI. */
-    public float zLevel;
-    public static boolean renderInFrame;
     private static final String __OBFID = "CL_00001003";
+    public static boolean renderInFrame;
+    public boolean renderWithColor = true;
+    /**
+     * Defines the zLevel of rendering of item on GUI.
+     */
+    public float zLevel;
     RenderEntityItem itemRenderer;
+    /**
+     * The RNG used in RenderItem (for bobbing itemstacks on the ground)
+     */
+    private Random random = new Random();
 
     public RendererItem(RenderManager renderManagerIn, RenderItem p_i46167_2_) {
-    	super(renderManagerIn);
-    	
-    	itemRenderer = new RenderEntityItem(renderManagerIn, p_i46167_2_);
+        super(renderManagerIn);
+
+        itemRenderer = new RenderEntityItem(renderManagerIn, p_i46167_2_);
     }
 
     /**
@@ -44,19 +47,18 @@ public class RendererItem extends Render<EntityItemAbducted> implements IRenderF
      * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
      */
     @Override
-    public void doRender(EntityItemAbducted p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
-    {
-    	itemRenderer.doRender(p_76986_1_.getItemEntity(), p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+    public void doRender(EntityItemAbducted p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
+        itemRenderer.doRender(p_76986_1_.getItemEntity(), p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
     }
 
-	@Override
-	protected ResourceLocation getEntityTexture(@Nullable EntityItemAbducted entity) {
-		return TextureMap.LOCATION_BLOCKS_TEXTURE;
-	}
+    @Override
+    protected ResourceLocation getEntityTexture(@Nullable EntityItemAbducted entity) {
+        return TextureMap.LOCATION_BLOCKS_TEXTURE;
+    }
 
-	@Override
-	public Render<? super EntityItemAbducted> createRenderFor(
-			RenderManager manager) {
-		return new RendererItem(manager, Minecraft.getMinecraft().getRenderItem());
-	}
+    @Override
+    public Render<? super EntityItemAbducted> createRenderFor(
+            RenderManager manager) {
+        return new RendererItem(manager, Minecraft.getMinecraft().getRenderItem());
+    }
 }

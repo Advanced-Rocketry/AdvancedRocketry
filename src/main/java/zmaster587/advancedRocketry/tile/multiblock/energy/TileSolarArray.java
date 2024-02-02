@@ -30,206 +30,206 @@ import java.util.List;
 
 public class TileSolarArray extends TileMultiPowerProducer implements ITickable {
 
-	static final Object[][][] structure = new Object[][][] {
-		{
-			{'p', 'c', 'p'},
-		    {'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'},
-			{'*', '*', '*'}
-		}};
+    static final Object[][][] structure = new Object[][][]{
+            {
+                    {'p', 'c', 'p'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'},
+                    {'*', '*', '*'}
+            }};
 
-	boolean initialCheck;
-	int powerMadeLastTick, prevPowerMadeLastTick;
-	int numPanels;
-	ModuleText textModule;
-	public TileSolarArray() {
-		textModule = new ModuleText(40, 20, LibVulpes.proxy.getLocalizedString("msg.microwaverec.notgenerating"), 0x2b2b2b);
-	}
+    boolean initialCheck;
+    int powerMadeLastTick, prevPowerMadeLastTick;
+    int numPanels;
+    ModuleText textModule;
 
-	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> modules = super.getModules(ID, player);
+    public TileSolarArray() {
+        textModule = new ModuleText(40, 20, LibVulpes.proxy.getLocalizedString("msg.microwaverec.notgenerating"), 0x2b2b2b);
+    }
 
-		modules.add(textModule);
+    @Override
+    public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+        List<ModuleBase> modules = super.getModules(ID, player);
 
-		return modules;
-	}
+        modules.add(textModule);
 
-	@Override
-	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
-		return true;
-	}
+        return modules;
+    }
 
-	@Override
-	public Object[][][] getStructure() {
-		return structure;
-	}
+    @Override
+    public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
+        return true;
+    }
 
-	@Override
-	public List<BlockMeta> getAllowableWildCardBlocks() {
-		List<BlockMeta> blocks = super.getAllowableWildCardBlocks();
+    @Override
+    public Object[][][] getStructure() {
+        return structure;
+    }
 
-		blocks.add(new BlockMeta(AdvancedRocketryBlocks.blockSolarArrayPanel, -1));
-		blocks.add(new BlockMeta(Blocks.AIR));
+    @Override
+    public List<BlockMeta> getAllowableWildCardBlocks() {
+        List<BlockMeta> blocks = super.getAllowableWildCardBlocks();
 
-		return blocks;
-	}
+        blocks.add(new BlockMeta(AdvancedRocketryBlocks.blockSolarArrayPanel, -1));
+        blocks.add(new BlockMeta(Blocks.AIR));
 
-	@Override
-	protected boolean completeStructure(IBlockState state) {
-		//Needed definitions
-		EnumFacing front = this.getFrontDirection(state);
-		Vector3F<Integer> offset = this.getControllerOffset(structure);
+        return blocks;
+    }
 
-		//Panel-checker iterator
-		numPanels = 0;
-		for(int y = 0; y < structure.length; ++y) {
-			for(int z = 0; z < structure[0].length; ++z) {
-				for(int x = 0; x < structure[0][0].length; ++x) {
-					int globalX = this.pos.getX() + (x - offset.x) * front.getFrontOffsetZ() - (z - offset.z) * front.getFrontOffsetX();
-					int globalY = this.pos.getY() - y + offset.y;
-					int globalZ = this.pos.getZ() - (x - offset.x) * front.getFrontOffsetX() - (z - offset.z) * front.getFrontOffsetZ();
-					if (world.getBlockState(new BlockPos(globalX, globalY, globalZ)).getBlock() == AdvancedRocketryBlocks.blockSolarArrayPanel) {
-						numPanels++;
-					}
-				}
-			}
-		}
-		return super.completeStructure(state);
-	}
+    @Override
+    protected boolean completeStructure(IBlockState state) {
+        //Needed definitions
+        EnumFacing front = this.getFrontDirection(state);
+        Vector3F<Integer> offset = this.getControllerOffset(structure);
 
-	@Override
-	public String getMachineName() {
-		return AdvancedRocketryBlocks.blockSolarArray.getLocalizedName();
-	}
+        //Panel-checker iterator
+        numPanels = 0;
+        for (int y = 0; y < structure.length; ++y) {
+            for (int z = 0; z < structure[0].length; ++z) {
+                for (int x = 0; x < structure[0][0].length; ++x) {
+                    int globalX = this.pos.getX() + (x - offset.x) * front.getFrontOffsetZ() - (z - offset.z) * front.getFrontOffsetX();
+                    int globalY = this.pos.getY() - y + offset.y;
+                    int globalZ = this.pos.getZ() - (x - offset.x) * front.getFrontOffsetX() - (z - offset.z) * front.getFrontOffsetZ();
+                    if (world.getBlockState(new BlockPos(globalX, globalY, globalZ)).getBlock() == AdvancedRocketryBlocks.blockSolarArrayPanel) {
+                        numPanels++;
+                    }
+                }
+            }
+        }
+        return super.completeStructure(state);
+    }
 
-	@Override
-	public void update() {
+    @Override
+    public String getMachineName() {
+        return AdvancedRocketryBlocks.blockSolarArray.getLocalizedName();
+    }
 
-		if(!initialCheck && !world.isRemote) {
-			completeStructure = attemptCompleteStructure(world.getBlockState(pos));
-			initialCheck = true;
-		}
+    @Override
+    public void update() {
 
-		if(!isComplete())
-			return;
+        if (!initialCheck && !world.isRemote) {
+            completeStructure = attemptCompleteStructure(world.getBlockState(pos));
+            initialCheck = true;
+        }
 
-		if(!world.isRemote) {
-			DimensionProperties properties =DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
-			double insolationPowerMultiplier = (world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) ? SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getInsolationMultiplier() : properties.getPeakInsolationMultiplier();
-			int energyRecieved = 0;
-			if(enabled && ((world.isDaytime()  && world.canBlockSeeSky(this.pos.up())) || (world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId && world.canBlockSeeSky(this.pos.down())))) {
-				//Multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency, and by insolation mult for solar stuff
-				//Slight adjustment to make Earth 0.9995 into a 1.0
-				energyRecieved = (int) (numPanels * 1.0005d * 2 * insolationPowerMultiplier);
-			}
-			powerMadeLastTick = energyRecieved*ARConfiguration.getCurrentConfig().solarGeneratorMult;
+        if (!isComplete())
+            return;
 
-			if(powerMadeLastTick != prevPowerMadeLastTick) {
-				prevPowerMadeLastTick = powerMadeLastTick;
-				PacketHandler.sendToNearby(new PacketMachine(this, (byte)1), world.provider.getDimension(),pos, 128);
+        if (!world.isRemote) {
+            DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
+            double insolationPowerMultiplier = (world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) ? SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(this.pos).getInsolationMultiplier() : properties.getPeakInsolationMultiplier();
+            int energyRecieved = 0;
+            if (enabled && ((world.isDaytime() && world.canBlockSeeSky(this.pos.up())) || (world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId && world.canBlockSeeSky(this.pos.down())))) {
+                //Multiplied by two for 520W = 1 RF/t becoming 2 RF/t @ 100% efficiency, and by insolation mult for solar stuff
+                //Slight adjustment to make Earth 0.9995 into a 1.0
+                energyRecieved = (int) (numPanels * 1.0005d * 2 * insolationPowerMultiplier);
+            }
+            powerMadeLastTick = energyRecieved * ARConfiguration.getCurrentConfig().solarGeneratorMult;
 
-			}
-			producePower(powerMadeLastTick);
-		}
-		if(world.isRemote)
-			textModule.setText(LibVulpes.proxy.getLocalizedString("msg.microwaverec.generating") + " " + powerMadeLastTick + " " + LibVulpes.proxy.getLocalizedString("msg.powerunit.rfpertick"));
-	}
+            if (powerMadeLastTick != prevPowerMadeLastTick) {
+                prevPowerMadeLastTick = powerMadeLastTick;
+                PacketHandler.sendToNearby(new PacketMachine(this, (byte) 1), world.provider.getDimension(), pos, 128);
 
-	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setInteger("amtPwr", powerMadeLastTick);
-		nbt.setBoolean("canRender", this.canRender);
-		writeNetworkData(nbt);
-		return new SPacketUpdateTileEntity(pos, 0, nbt);
-	}
+            }
+            producePower(powerMadeLastTick);
+        }
+        if (world.isRemote)
+            textModule.setText(LibVulpes.proxy.getLocalizedString("msg.microwaverec.generating") + " " + powerMadeLastTick + " " + LibVulpes.proxy.getLocalizedString("msg.powerunit.rfpertick"));
+    }
 
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		NBTTagCompound nbt = pkt.getNbtCompound();
-		powerMadeLastTick = nbt.getInteger("amtPwr");
-		this.canRender = nbt.getBoolean("canRender");
-		readNetworkData(nbt);
-	}
-	
-	@Override
-	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setInteger("powerMadeLastTick", powerMadeLastTick);
-		nbt.setInteger("numPanels", numPanels);
-		nbt.setBoolean("canRender", this.canRender);
-		writeToNBT(nbt);
-		return nbt;
-	}
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setInteger("amtPwr", powerMadeLastTick);
+        nbt.setBoolean("canRender", this.canRender);
+        writeNetworkData(nbt);
+        return new SPacketUpdateTileEntity(pos, 0, nbt);
+    }
 
-	@Override
-	public void handleUpdateTag(NBTTagCompound nbt) {
-		powerMadeLastTick = nbt.getInteger("powerMadeLastTick");
-		numPanels = nbt.getInteger("numPanels");
-		canRender = nbt.getBoolean("canRender");
-		readNetworkData(nbt);
-	}
-	
-	
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        NBTTagCompound nbt = pkt.getNbtCompound();
+        powerMadeLastTick = nbt.getInteger("amtPwr");
+        this.canRender = nbt.getBoolean("canRender");
+        readNetworkData(nbt);
+    }
 
-	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
-		super.writeDataToNetwork(out, id);
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setInteger("powerMadeLastTick", powerMadeLastTick);
+        nbt.setInteger("numPanels", numPanels);
+        nbt.setBoolean("canRender", this.canRender);
+        writeToNBT(nbt);
+        return nbt;
+    }
 
-		if(id == 1) {
-			out.writeInt(powerMadeLastTick);
-		}
-	}
+    @Override
+    public void handleUpdateTag(NBTTagCompound nbt) {
+        powerMadeLastTick = nbt.getInteger("powerMadeLastTick");
+        numPanels = nbt.getInteger("numPanels");
+        canRender = nbt.getBoolean("canRender");
+        readNetworkData(nbt);
+    }
 
-	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
-		super.readDataFromNetwork(in, packetId, nbt);	
 
-		if(packetId == 1) {
-			nbt.setInteger("amtPwr", in.readInt());
-		}
-	}
+    @Override
+    public void writeDataToNetwork(ByteBuf out, byte id) {
+        super.writeDataToNetwork(out, id);
 
-	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
-		super.useNetworkData(player, side, id, nbt);
+        if (id == 1) {
+            out.writeInt(powerMadeLastTick);
+        }
+    }
 
-		if(id == 1) {
-			powerMadeLastTick = nbt.getInteger("amtPwr");
-		}
-	}
+    @Override
+    public void readDataFromNetwork(ByteBuf in, byte packetId,
+                                    NBTTagCompound nbt) {
+        super.readDataFromNetwork(in, packetId, nbt);
 
-	@Override
-	protected void writeNetworkData(NBTTagCompound nbt) {
-		super.writeNetworkData(nbt);
-		nbt.setInteger("numPanels", this.numPanels);
-	}
+        if (packetId == 1) {
+            nbt.setInteger("amtPwr", in.readInt());
+        }
+    }
 
-	@Override
-	protected void readNetworkData(NBTTagCompound nbt) {
-		super.readNetworkData(nbt);
-		this.numPanels = nbt.getInteger("numPanels");
-	}
+    @Override
+    public void useNetworkData(EntityPlayer player, Side side, byte id,
+                               NBTTagCompound nbt) {
+        super.useNetworkData(player, side, id, nbt);
+
+        if (id == 1) {
+            powerMadeLastTick = nbt.getInteger("amtPwr");
+        }
+    }
+
+    @Override
+    protected void writeNetworkData(NBTTagCompound nbt) {
+        super.writeNetworkData(nbt);
+        nbt.setInteger("numPanels", this.numPanels);
+    }
+
+    @Override
+    protected void readNetworkData(NBTTagCompound nbt) {
+        super.readNetworkData(nbt);
+        this.numPanels = nbt.getInteger("numPanels");
+    }
 
 }

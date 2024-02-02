@@ -8,23 +8,22 @@ import zmaster587.libVulpes.LibVulpes;
 
 public class CrystallizerCategory extends MachineCategoryTemplate<CrystallizerWrapper> {
 
-	public CrystallizerCategory(IGuiHelper helper) {
-		super(helper, TextureResources.crystallizerProgressBar);
-	}
-	
-	@Override
-	public String getUid() {
-		return ARPlugin.crystallizerUUID;
-	}
-
-	@Override
-	public String getTitle() {
-		return LibVulpes.proxy.getLocalizedString("tile.Crystallizer.name");
-	}
+    public CrystallizerCategory(IGuiHelper helper) {
+        super(helper, TextureResources.crystallizerProgressBar);
+    }
 
     @Override
-    public String getModName()
-    {
+    public String getUid() {
+        return ARPlugin.crystallizerUUID;
+    }
+
+    @Override
+    public String getTitle() {
+        return LibVulpes.proxy.getLocalizedString("tile.Crystallizer.name");
+    }
+
+    @Override
+    public String getModName() {
         return "Advanced Rocketry";
     }
 

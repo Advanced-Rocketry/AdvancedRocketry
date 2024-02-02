@@ -6,17 +6,17 @@ import net.minecraft.world.World;
 
 public class BlockNuclearRocketMotor extends BlockRocketMotor {
 
-	public BlockNuclearRocketMotor(Material mat) {
-		super(mat);
-	}
+    public BlockNuclearRocketMotor(Material mat) {
+        super(mat);
+    }
 
-	@Override
-	public int getThrust(World world, BlockPos pos) {
-		return 35;
-	}
-	
-	@Override
-	public int getFuelConsumptionRate(World world, int x, int y, int z) {
-		return 1;
-	}
+    @Override
+    public int getThrust(World world, BlockPos pos) {
+        return 35;
+    }
+
+    @Override
+    public int getFuelConsumptionRate(World world, int x, int y, int z) {
+        return 1;
+    }
 }

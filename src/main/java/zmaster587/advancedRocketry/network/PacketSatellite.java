@@ -15,61 +15,61 @@ import java.io.IOException;
 
 public class PacketSatellite extends BasePacket {
 
-	SatelliteBase machine;
+    SatelliteBase machine;
 
-	NBTTagCompound nbt;
+    NBTTagCompound nbt;
 
-	byte packetId;
+    byte packetId;
 
-	public PacketSatellite() {
-		nbt = new NBTTagCompound();
-	}
+    public PacketSatellite() {
+        nbt = new NBTTagCompound();
+    }
 
-	public PacketSatellite(SatelliteBase machine) {
-		this();
-		this.machine = machine;
-	}
+    public PacketSatellite(SatelliteBase machine) {
+        this();
+        this.machine = machine;
+    }
 
 
-	@Override
-	public void write(ByteBuf outline) {
-		PacketBuffer packetBuffer = new PacketBuffer(outline);
-		NBTTagCompound nbt = new NBTTagCompound();
-		machine.writeToNBT(nbt);
-		
-		packetBuffer.writeCompoundTag(nbt);
-	}
+    @Override
+    public void write(ByteBuf outline) {
+        PacketBuffer packetBuffer = new PacketBuffer(outline);
+        NBTTagCompound nbt = new NBTTagCompound();
+        machine.writeToNBT(nbt);
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void readClient(ByteBuf in) {
-		PacketBuffer packetBuffer = new PacketBuffer(in);
-		NBTTagCompound nbt;
-		
-		//TODO: error handling
-		try {
-			nbt = packetBuffer.readCompoundTag();
-			SatelliteBase satellite = SatelliteRegistry.createFromNBT(nbt);
-			
-			zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()).addSatellite(satellite);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        packetBuffer.writeCompoundTag(nbt);
+    }
 
-	@Override
-	public void read(ByteBuf in) {
-		//Should never happen
-		
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void readClient(ByteBuf in) {
+        PacketBuffer packetBuffer = new PacketBuffer(in);
+        NBTTagCompound nbt;
 
-	public void executeClient(EntityPlayer player) {
-	}
+        //TODO: error handling
+        try {
+            nbt = packetBuffer.readCompoundTag();
+            SatelliteBase satellite = SatelliteRegistry.createFromNBT(nbt);
 
-	public void executeServer(EntityPlayerMP player) {
-	}
+            zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()).addSatellite(satellite);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public void execute(EntityPlayer player, Side side) {
-	}
+    @Override
+    public void read(ByteBuf in) {
+        //Should never happen
+
+    }
+
+    public void executeClient(EntityPlayer player) {
+    }
+
+    public void executeServer(EntityPlayerMP player) {
+    }
+
+    public void execute(EntityPlayer player, Side side) {
+    }
 
 }

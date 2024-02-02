@@ -14,28 +14,29 @@ import javax.annotation.Nonnull;
 
 public class BlockBipropellantRocketMotor extends BlockFullyRotatable implements IRocketEngine {
 
-	public BlockBipropellantRocketMotor(Material mat) {
-		super(mat);	
-		this.setDefaultState(this.getDefaultState().withProperty(FACING, EnumFacing.DOWN));
-	}
-	
-	 @Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
+    public BlockBipropellantRocketMotor(Material mat) {
+        super(mat);
+        this.setDefaultState(this.getDefaultState().withProperty(FACING, EnumFacing.DOWN));
+    }
 
-	@Override
-	public int getThrust(World world, BlockPos pos) {
-		return 10;
-	}
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
 
-	@Override
-	public int getFuelConsumptionRate(World world, int x, int y, int z) {
-		return 1;
-	}
-	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, @Nonnull ItemStack stack) {
-		
-		world.setBlockState(pos, state.withProperty(FACING, EnumFacing.DOWN));
-	}
+    @Override
+    public int getThrust(World world, BlockPos pos) {
+        return 10;
+    }
+
+    @Override
+    public int getFuelConsumptionRate(World world, int x, int y, int z) {
+        return 1;
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, @Nonnull ItemStack stack) {
+
+        world.setBlockState(pos, state.withProperty(FACING, EnumFacing.DOWN));
+    }
 }

@@ -31,73 +31,73 @@ import java.util.List;
 
 public class ItemBeaconFinder extends Item implements IArmorComponent {
 
-	@Override
-	public void onTick(World world, EntityPlayer player, @Nonnull ItemStack armorStack, IInventory modules, @Nonnull ItemStack componentStack) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void onTick(World world, EntityPlayer player, @Nonnull ItemStack armorStack, IInventory modules, @Nonnull ItemStack componentStack) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public boolean onComponentAdded(World world, @Nonnull ItemStack armorStack) {
-		return true;
-	}
+    }
 
-	@Override
-	public void onComponentRemoved(World world, @Nonnull ItemStack armorStack) {
-	}
+    @Override
+    public boolean onComponentAdded(World world, @Nonnull ItemStack armorStack) {
+        return true;
+    }
 
-	@Override
-	public void onArmorDamaged(EntityLivingBase entity, @Nonnull ItemStack armorStack, @Nonnull ItemStack componentStack, DamageSource source, int damage) {
-	}
+    @Override
+    public void onComponentRemoved(World world, @Nonnull ItemStack armorStack) {
+    }
 
-	@Override
-	public boolean isAllowedInSlot(@Nonnull ItemStack componentStack, EntityEquipmentSlot armorType) {
-		return armorType == EntityEquipmentSlot.HEAD;
-	}
+    @Override
+    public void onArmorDamaged(EntityLivingBase entity, @Nonnull ItemStack armorStack, @Nonnull ItemStack componentStack, DamageSource source, int damage) {
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderScreen(@Nonnull ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Gui gui) {
-		
-		int dimid = Minecraft.getMinecraft().world.provider.getDimension();
-		
-		if(DimensionManager.getInstance().isDimensionCreated(dimid)) {
-			for(HashedBlockPosition pos : DimensionManager.getInstance().getDimensionProperties(dimid).getBeacons()) {
-				
-				GL11.glPushMatrix();
-				
-				double deltaX = Minecraft.getMinecraft().player.posX - pos.x;
-				double deltaZ = Minecraft.getMinecraft().player.posZ - pos.z;
-				
-				double angle = MathHelper.wrapDegrees(MathHelper.atan2(deltaZ, deltaX)*180/Math.PI + 90 - Minecraft.getMinecraft().player.rotationYawHead);
-				
-				//GL11.glTranslatef(pos.x, pos.y, pos.z);
-				GL11.glTranslated((event.getResolution().getScaledWidth_double()*angle/180f) + event.getResolution().getScaledWidth()/2f,0,5);
-				//GL11.glDepthMask(false);
-				//GL11.glDisable(GL11.GL_TEXTURE_2D);
-				Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.buttonDown[0]);
-				
-				GlStateManager.color(0.5f, 0.5f, 1, 1);
-				
-		        Tessellator tessellator = Tessellator.getInstance();
-		        BufferBuilder vertexbuffer = tessellator.getBuffer();
-		        
-		        vertexbuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		        RenderHelper.renderNorthFaceWithUV(vertexbuffer, -1000, -10, 0, 10, 20, 0, 1, 0, 1);
-				tessellator.draw();
-				
-				//GL11.glDepthMask(true);
-				//GL11.glEnable(GL11.GL_TEXTURE_2D);
-				GlStateManager.color(1, 1, 1, 1);
-				GL11.glPopMatrix();
-				
-			}
-		}
-	}
+    @Override
+    public boolean isAllowedInSlot(@Nonnull ItemStack componentStack, EntityEquipmentSlot armorType) {
+        return armorType == EntityEquipmentSlot.HEAD;
+    }
 
-	@Override
-	public ResourceIcon getComponentIcon(@Nonnull ItemStack armorStack) {
-		return null;
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void renderScreen(@Nonnull ItemStack componentStack, List<ItemStack> modules, RenderGameOverlayEvent event, Gui gui) {
+
+        int dimid = Minecraft.getMinecraft().world.provider.getDimension();
+
+        if (DimensionManager.getInstance().isDimensionCreated(dimid)) {
+            for (HashedBlockPosition pos : DimensionManager.getInstance().getDimensionProperties(dimid).getBeacons()) {
+
+                GL11.glPushMatrix();
+
+                double deltaX = Minecraft.getMinecraft().player.posX - pos.x;
+                double deltaZ = Minecraft.getMinecraft().player.posZ - pos.z;
+
+                double angle = MathHelper.wrapDegrees(MathHelper.atan2(deltaZ, deltaX) * 180 / Math.PI + 90 - Minecraft.getMinecraft().player.rotationYawHead);
+
+                //GL11.glTranslatef(pos.x, pos.y, pos.z);
+                GL11.glTranslated((event.getResolution().getScaledWidth_double() * angle / 180f) + event.getResolution().getScaledWidth() / 2f, 0, 5);
+                //GL11.glDepthMask(false);
+                //GL11.glDisable(GL11.GL_TEXTURE_2D);
+                Minecraft.getMinecraft().renderEngine.bindTexture(TextureResources.buttonDown[0]);
+
+                GlStateManager.color(0.5f, 0.5f, 1, 1);
+
+                Tessellator tessellator = Tessellator.getInstance();
+                BufferBuilder vertexbuffer = tessellator.getBuffer();
+
+                vertexbuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+                RenderHelper.renderNorthFaceWithUV(vertexbuffer, -1000, -10, 0, 10, 20, 0, 1, 0, 1);
+                tessellator.draw();
+
+                //GL11.glDepthMask(true);
+                //GL11.glEnable(GL11.GL_TEXTURE_2D);
+                GlStateManager.color(1, 1, 1, 1);
+                GL11.glPopMatrix();
+
+            }
+        }
+    }
+
+    @Override
+    public ResourceIcon getComponentIcon(@Nonnull ItemStack armorStack) {
+        return null;
+    }
 
 }

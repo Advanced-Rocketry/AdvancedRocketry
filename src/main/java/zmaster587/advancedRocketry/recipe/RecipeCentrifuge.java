@@ -5,8 +5,8 @@ import zmaster587.libVulpes.recipe.RecipeMachineFactory;
 
 public class RecipeCentrifuge extends RecipeMachineFactory {
 
-	@Override
-	public Class getMachine() {
-		return TileCentrifuge.class;
-	}
+    @Override
+    public Class getMachine() {
+        return TileCentrifuge.class;
+    }
 }

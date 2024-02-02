@@ -11,53 +11,47 @@ import zmaster587.libVulpes.block.BlockTile;
 
 public class BlockSuitWorkstation extends BlockTile {
 
-	public BlockSuitWorkstation(Class<? extends TileEntity> tileClass, int guiId) {
-		super(tileClass, guiId);
-	}
+    public BlockSuitWorkstation(Class<? extends TileEntity> tileClass, int guiId) {
+        super(tileClass, guiId);
+    }
 
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state)
-	{
-		TileEntity tile = world.getTileEntity(pos);
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        TileEntity tile = world.getTileEntity(pos);
 
-		//This code could use some optimization -Dark
-		if (tile instanceof IInventory)
-		{
-			IInventory inventory = (IInventory)tile;
-			int i1 = 0;
-			ItemStack itemstack = inventory.getStackInSlot(i1);
+        //This code could use some optimization -Dark
+        if (tile instanceof IInventory) {
+            IInventory inventory = (IInventory) tile;
+            int i1 = 0;
+            ItemStack itemstack = inventory.getStackInSlot(i1);
 
-			if (!itemstack.isEmpty())
-			{
-				float f = world.rand.nextFloat() * 0.8F + 0.1F;
-				float f1 = world.rand.nextFloat() * 0.8F + 0.1F;
-				EntityItem entityitem;
+            if (!itemstack.isEmpty()) {
+                float f = world.rand.nextFloat() * 0.8F + 0.1F;
+                float f1 = world.rand.nextFloat() * 0.8F + 0.1F;
+                EntityItem entityitem;
 
-				for (float f2 = world.rand.nextFloat() * 0.8F + 0.1F; itemstack.getCount() > 0; world.spawnEntity(entityitem))
-				{
-					int j1 = world.rand.nextInt(21) + 10;
+                for (float f2 = world.rand.nextFloat() * 0.8F + 0.1F; itemstack.getCount() > 0; world.spawnEntity(entityitem)) {
+                    int j1 = world.rand.nextInt(21) + 10;
 
-					if (j1 > itemstack.getCount())
-					{
-						j1 = itemstack.getCount();
-					}
+                    if (j1 > itemstack.getCount()) {
+                        j1 = itemstack.getCount();
+                    }
 
-					itemstack.setCount(itemstack.getCount() - j1 );
-					entityitem = new EntityItem(world, (float)pos.getX() + f, (float)pos.getY() + f1, (float)pos.getZ() + f2, new ItemStack(itemstack.getItem(), j1, itemstack.getItemDamage()));
-					float f3 = 0.05F;
-					entityitem.motionX = (float)world.rand.nextGaussian() * f3;
-					entityitem.motionY = (float)world.rand.nextGaussian() * f3 + 0.2F;
-					entityitem.motionZ = (float)world.rand.nextGaussian() * f3;
+                    itemstack.setCount(itemstack.getCount() - j1);
+                    entityitem = new EntityItem(world, (float) pos.getX() + f, (float) pos.getY() + f1, (float) pos.getZ() + f2, new ItemStack(itemstack.getItem(), j1, itemstack.getItemDamage()));
+                    float f3 = 0.05F;
+                    entityitem.motionX = (float) world.rand.nextGaussian() * f3;
+                    entityitem.motionY = (float) world.rand.nextGaussian() * f3 + 0.2F;
+                    entityitem.motionZ = (float) world.rand.nextGaussian() * f3;
 
-					if (itemstack.hasTagCompound())
-					{
-						entityitem.getItem().setTagCompound(itemstack.getTagCompound().copy());
-					}
-				}
-			}
-		}
+                    if (itemstack.hasTagCompound()) {
+                        entityitem.getItem().setTagCompound(itemstack.getTagCompound().copy());
+                    }
+                }
+            }
+        }
 
-		world.removeTileEntity(pos);
+        world.removeTileEntity(pos);
 
-	}
+    }
 }

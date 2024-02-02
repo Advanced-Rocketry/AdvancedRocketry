@@ -5,8 +5,8 @@ import zmaster587.libVulpes.recipe.RecipeMachineFactory;
 
 public class RecipePrecisionLaserEtcher extends RecipeMachineFactory {
 
-	@Override
-	public Class getMachine() {
-		return TilePrecisionLaserEtcher.class;
-	}
+    @Override
+    public Class getMachine() {
+        return TilePrecisionLaserEtcher.class;
+    }
 }

@@ -18,46 +18,45 @@ import javax.annotation.ParametersAreNullableByDefault;
 import java.util.Random;
 
 public class BlockQuartzCrucible extends BlockCauldron {
-	
-	public BlockQuartzCrucible() {
-		super();
-	}
 
-	
-	@Override
-	@ParametersAreNullableByDefault
-	public boolean onBlockActivated(World worldIn, BlockPos pos,
-			IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		return false;
-	}
-    
-	@Override
-	public void fillWithRain(World worldIn, BlockPos pos) {
-	}
-    
-	@Override
-	@Nonnull
-	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-		return AdvancedRocketryItems.itemQuartzCrucible;
-	}
-	
-	@Override
-	@Nonnull
-	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
-		
-		return new ItemStack(AdvancedRocketryItems.itemQuartzCrucible);//getItemPicked(worldIn, pos, ar3, par4)
-	}
-    
+    public BlockQuartzCrucible() {
+        super();
+    }
+
+
+    @Override
+    @ParametersAreNullableByDefault
+    public boolean onBlockActivated(World worldIn, BlockPos pos,
+                                    IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY,
+                                    float hitZ) {
+        return false;
+    }
+
+    @Override
+    public void fillWithRain(World worldIn, BlockPos pos) {
+    }
+
+    @Override
+    @Nonnull
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+        return AdvancedRocketryItems.itemQuartzCrucible;
+    }
+
+    @Override
+    @Nonnull
+    public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+
+        return new ItemStack(AdvancedRocketryItems.itemQuartzCrucible);//getItemPicked(worldIn, pos, ar3, par4)
+    }
+
     @SideOnly(Side.CLIENT)
     public Item getItem(World p_149694_1_, int p_149694_2_, int p_149694_3_,
-    		int p_149694_4_) {
-    	return getItemPicked(p_149694_1_, p_149694_2_, p_149694_3_, p_149694_4_);
+                        int p_149694_4_) {
+        return getItemPicked(p_149694_1_, p_149694_2_, p_149694_3_, p_149694_4_);
     }
-    
+
     @SideOnly(Side.CLIENT)
-    public Item getItemPicked(World par1World, int par2, int par3, int par4)
-    {
+    public Item getItemPicked(World par1World, int par2, int par3, int par4) {
         return AdvancedRocketryItems.itemQuartzCrucible;
     }
 }

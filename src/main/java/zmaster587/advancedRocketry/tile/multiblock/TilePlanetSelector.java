@@ -28,85 +28,85 @@ import java.util.List;
 
 public class TilePlanetSelector extends TilePointer implements ISelectionNotify, IModularInventory, IProgressBar, INetworkMachine {
 
-	protected ModulePlanetSelector container;
-	public static final int certaintyDataValue = 5000;
-	DimensionProperties dimCache;
+    public static final int certaintyDataValue = 5000;
+    protected ModulePlanetSelector container;
+    DimensionProperties dimCache;
 
-	int[] cachedProgressValues;
+    int[] cachedProgressValues;
 
-	public TilePlanetSelector() {
-		cachedProgressValues = new int[] { -1, -1, -1};
-	}
+    public TilePlanetSelector() {
+        cachedProgressValues = new int[]{-1, -1, -1};
+    }
 
-	@Override
-	public void onSelectionConfirmed(Object sender) {
+    @Override
+    public void onSelectionConfirmed(Object sender) {
 
-		//Container Cannot be null at this time
-		TileEntity tile = getMasterBlock();
-		if(tile instanceof ITilePlanetSystemSelectable) {
-			((ITilePlanetSystemSelectable)tile).setSelectedPlanetId(container.getSelectedSystem());
-		}
-		onSelected(sender);
-	}
+        //Container Cannot be null at this time
+        TileEntity tile = getMasterBlock();
+        if (tile instanceof ITilePlanetSystemSelectable) {
+            ((ITilePlanetSystemSelectable) tile).setSelectedPlanetId(container.getSelectedSystem());
+        }
+        onSelected(sender);
+    }
 
-	@Override
-	public void onSelected(Object sender) {
+    @Override
+    public void onSelected(Object sender) {
 
-		selectSystem(container.getSelectedSystem());
+        selectSystem(container.getSelectedSystem());
 
-		PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
-	}
+        PacketHandler.sendToServer(new PacketMachine(this, (byte) 0));
+    }
 
-	private void selectSystem(int id) {
-		if(id == Constants.INVALID_PLANET)
-			dimCache = null;
-		else
-			dimCache = DimensionManager.getInstance().getDimensionProperties(container.getSelectedSystem());
-	}
+    private void selectSystem(int id) {
+        if (id == Constants.INVALID_PLANET)
+            dimCache = null;
+        else
+            dimCache = DimensionManager.getInstance().getDimensionProperties(container.getSelectedSystem());
+    }
 
-	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+    @Override
+    public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 
-		List<ModuleBase> modules = new LinkedList<>();
+        List<ModuleBase> modules = new LinkedList<>();
 
-                DimensionProperties props = DimensionManager.getEffectiveDimId(player.world, player.getPosition());
-		container = new ModulePlanetSelector((props != null ? props.getStarId() : 0), TextureResources.starryBG, this, true);
-		container.setOffset(1000, 1000);
-		modules.add(container);
+        DimensionProperties props = DimensionManager.getEffectiveDimId(player.world, player.getPosition());
+        container = new ModulePlanetSelector((props != null ? props.getStarId() : 0), TextureResources.starryBG, this, true);
+        container.setOffset(1000, 1000);
+        modules.add(container);
 
-		//Transfer discovery values
-		if(!world.isRemote) {
-			markDirty();
-		}
+        //Transfer discovery values
+        if (!world.isRemote) {
+            markDirty();
+        }
 
-		return modules;
-	}
+        return modules;
+    }
 
-	@Override
-	public String getModularInventoryName() {
-		return "";
-	}
+    @Override
+    public String getModularInventoryName() {
+        return "";
+    }
 
-	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
-		return true;
-	}
+    @Override
+    public boolean canInteractWithContainer(EntityPlayer entity) {
+        return true;
+    }
 
-	@Override
-	public float getNormallizedProgress(int id) {
-		return 0;
-	}
+    @Override
+    public float getNormallizedProgress(int id) {
+        return 0;
+    }
 
-	@Override
-	public void setProgress(int id, int progress) {
-		cachedProgressValues[id] = progress;
-	}
+    @Override
+    public void setProgress(int id, int progress) {
+        cachedProgressValues[id] = progress;
+    }
 
-	@Override
-	public int getProgress(int id) {
+    @Override
+    public int getProgress(int id) {
 
-		if(!world.isRemote) {
-			return 25; /*
+        if (!world.isRemote) {
+            return 25; /*
 			if(getMasterBlock() != null) {
 
 				ItemStack stack = ((ITilePlanetSystemSelectable)getMasterBlock()).getChipWithId(container.getSelectedSystem());
@@ -128,94 +128,93 @@ public class TilePlanetSelector extends TilePointer implements ISelectionNotify,
 						return (int)(certaintyDataValue/(float)dataAmt);
 				}
 			}*/
-		}
-		else {
-			return cachedProgressValues[id];
-		}
+        } else {
+            return cachedProgressValues[id];
+        }
 
-		//return 400;
-	}
+        //return 400;
+    }
 
-	@Override
-	public int getTotalProgress(int id) {
-		if(dimCache == null)
-			return 50;
-		if(id == 0)
-			return dimCache.getAtmosphereDensity()/16;
-		else if(id == 1)
-			return dimCache.orbitalDist/16;
-		else //if(id == 2)
-			return (int) (dimCache.gravitationalMultiplier*50);
-	}
+    @Override
+    public int getTotalProgress(int id) {
+        if (dimCache == null)
+            return 50;
+        if (id == 0)
+            return dimCache.getAtmosphereDensity() / 16;
+        else if (id == 1)
+            return dimCache.orbitalDist / 16;
+        else //if(id == 2)
+            return (int) (dimCache.gravitationalMultiplier * 50);
+    }
 
-	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound comp = new NBTTagCompound();
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        NBTTagCompound comp = new NBTTagCompound();
 
-		writeToNBTHelper(comp);
-		writeAdditionalNBT(comp);
-		return new SPacketUpdateTileEntity(pos, 0, comp);
-	}
+        writeToNBTHelper(comp);
+        writeAdditionalNBT(comp);
+        return new SPacketUpdateTileEntity(pos, 0, comp);
+    }
 
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 
-		super.onDataPacket(net, pkt);
-		readAdditionalNBT(pkt.getNbtCompound());
-	}
+        super.onDataPacket(net, pkt);
+        readAdditionalNBT(pkt.getNbtCompound());
+    }
 
-	public void writeAdditionalNBT(NBTTagCompound nbt) {
-		if(getMasterBlock() != null) {
-			List<Integer> list = ((ITilePlanetSystemSelectable)getMasterBlock()).getVisiblePlanets();
+    public void writeAdditionalNBT(NBTTagCompound nbt) {
+        if (getMasterBlock() != null) {
+            List<Integer> list = ((ITilePlanetSystemSelectable) getMasterBlock()).getVisiblePlanets();
 
-			Integer[] intList = new Integer[list.size()];
+            Integer[] intList = new Integer[list.size()];
 
-			nbt.setIntArray("visiblePlanets",ArrayUtils.toPrimitive(list.toArray(intList)));
-		}
+            nbt.setIntArray("visiblePlanets", ArrayUtils.toPrimitive(list.toArray(intList)));
+        }
 
-	}
+    }
 
-	public void readAdditionalNBT(NBTTagCompound nbt) {
-		if(container != null) {
-			int[] intArray = nbt.getIntArray("visiblePlanets");
-			for(int id : intArray)
-				container.setPlanetAsKnown(id);
-		}
-	}
+    public void readAdditionalNBT(NBTTagCompound nbt) {
+        if (container != null) {
+            int[] intArray = nbt.getIntArray("visiblePlanets");
+            for (int id : intArray)
+                container.setPlanetAsKnown(id);
+        }
+    }
 
-	@Override
-	public void setTotalProgress(int id, int progress) {
+    @Override
+    public void setTotalProgress(int id, int progress) {
 
-	}
+    }
 
-	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
-		if(id == 0)
-			out.writeInt(container.getSelectedSystem());
-	}
+    @Override
+    public void writeDataToNetwork(ByteBuf out, byte id) {
+        if (id == 0)
+            out.writeInt(container.getSelectedSystem());
+    }
 
-	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
-		if(packetId == 0)
-			nbt.setInteger("id", in.readInt());
-	}
+    @Override
+    public void readDataFromNetwork(ByteBuf in, byte packetId,
+                                    NBTTagCompound nbt) {
+        if (packetId == 0)
+            nbt.setInteger("id", in.readInt());
+    }
 
-	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
-		if(id == 0) {
-			int dimId = nbt.getInteger("id");
-			container.setSelectedSystem(dimId);
-			selectSystem(dimId);
+    @Override
+    public void useNetworkData(EntityPlayer player, Side side, byte id,
+                               NBTTagCompound nbt) {
+        if (id == 0) {
+            int dimId = nbt.getInteger("id");
+            container.setSelectedSystem(dimId);
+            selectSystem(dimId);
 
-			//Update known planets
-			markDirty();
-		}
-	}
+            //Update known planets
+            markDirty();
+        }
+    }
 
-	@Override
-	public void onSystemFocusChanged(Object sender) {
-		PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
-	}
+    @Override
+    public void onSystemFocusChanged(Object sender) {
+        PacketHandler.sendToServer(new PacketMachine(this, (byte) 0));
+    }
 }

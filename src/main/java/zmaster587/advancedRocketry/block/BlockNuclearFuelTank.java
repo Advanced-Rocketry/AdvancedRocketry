@@ -13,70 +13,70 @@ import zmaster587.advancedRocketry.api.IFuelTank;
 
 import java.util.Locale;
 
-public class BlockNuclearFuelTank extends Block implements IFuelTank{
+public class BlockNuclearFuelTank extends Block implements IFuelTank {
 
-	public final static PropertyEnum<TankStates> TANKSTATES = PropertyEnum.create("tankstates", TankStates.class);
+    public final static PropertyEnum<TankStates> TANKSTATES = PropertyEnum.create("tankstates", TankStates.class);
 
-	public BlockNuclearFuelTank(Material mat) {
-		super(mat);
-		this.setDefaultState(this.getDefaultState().withProperty(TANKSTATES, TankStates.MIDDLE));
-	}
+    public BlockNuclearFuelTank(Material mat) {
+        super(mat);
+        this.setDefaultState(this.getDefaultState().withProperty(TANKSTATES, TankStates.MIDDLE));
+    }
 
-	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return this.getDefaultState().withProperty(TANKSTATES, TankStates.values()[meta]);
-	}
-	
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(TANKSTATES).ordinal();
-	}
-	
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, TANKSTATES);
-	}
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return this.getDefaultState().withProperty(TANKSTATES, TankStates.values()[meta]);
+    }
 
-	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world,
-			BlockPos pos) {
-		int i = world.getBlockState(pos.add(0,1,0)).getBlock() == this ? 1 : 0;
-		i += world.getBlockState(pos.add(0,-1,0)).getBlock() == this ? 2 : 0;
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(TANKSTATES).ordinal();
+    }
 
-		//If there is no tank below this one
-		if( i == 1 ) {
-			return state.withProperty(TANKSTATES, TankStates.BOTTOM);
-		}
-		//If there is no tank above this one
-		else if( i == 2 ) {
-			return state.withProperty(TANKSTATES, TankStates.TOP);
-		}
-		//If there is a tank above and below this one
-		else {
-			return state.withProperty(TANKSTATES, TankStates.MIDDLE);
-		}
-	}
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, TANKSTATES);
+    }
 
-	
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess world,
+                                      BlockPos pos) {
+        int i = world.getBlockState(pos.add(0, 1, 0)).getBlock() == this ? 1 : 0;
+        i += world.getBlockState(pos.add(0, -1, 0)).getBlock() == this ? 2 : 0;
 
-	@Override
-	public int getMaxFill(World world, BlockPos pos , IBlockState state) {
-		return 1000;
-	}
+        //If there is no tank below this one
+        if (i == 1) {
+            return state.withProperty(TANKSTATES, TankStates.BOTTOM);
+        }
+        //If there is no tank above this one
+        else if (i == 2) {
+            return state.withProperty(TANKSTATES, TankStates.TOP);
+        }
+        //If there is a tank above and below this one
+        else {
+            return state.withProperty(TANKSTATES, TankStates.MIDDLE);
+        }
+    }
 
-	public enum TankStates implements IStringSerializable {
-		TOP,
-		BOTTOM,
-		MIDDLE;
 
-		@Override
-		public String getName() {
-			return name().toLowerCase(Locale.ENGLISH);
-		}
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
 
-	}
+    @Override
+    public int getMaxFill(World world, BlockPos pos, IBlockState state) {
+        return 1000;
+    }
+
+    public enum TankStates implements IStringSerializable {
+        TOP,
+        BOTTOM,
+        MIDDLE;
+
+        @Override
+        public String getName() {
+            return name().toLowerCase(Locale.ENGLISH);
+        }
+
+    }
 }

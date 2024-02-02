@@ -12,80 +12,79 @@ import zmaster587.advancedRocketry.dimension.DimensionManager;
 import zmaster587.advancedRocketry.tile.station.TileHolographicPlanetSelector;
 
 public class EntityUIStar extends EntityUIPlanet {
-	
-	private StellarBody star;
-	private int subStar;
-	public final static int starIDoffset = 10000;
 
-	protected static final DataParameter<Integer> subStarData =  EntityDataManager.createKey(EntityUIStar.class, DataSerializers.VARINT);
-	
-	public EntityUIStar(World worldIn, StellarBody properties, TileHolographicPlanetSelector tile, double x, double y, double z) {
-		this(worldIn);
-		setPosition(x, y, z);
-		setProperties(properties);
-		this.tile = tile;
-		subStar = -1;
-	}
-	
-	public EntityUIStar(World worldIn, StellarBody properties, int subStar, TileHolographicPlanetSelector tile, double x, double y, double z) {
-		this(worldIn, properties, tile, x,y,z);
-		this.dataManager.set(subStarData, (this.subStar = subStar));
-	}
-	
-	@Override
-	protected void entityInit() {
-		super.entityInit();
-		this.dataManager.register(subStarData, -1);
-	}
-	
-	public EntityUIStar(World worldIn) {
-		super(worldIn);
-		setSize(0.2f, 0.2f);
-		subStar = -1;
-	}
-	
-	public void setProperties(StellarBody properties) {
-		this.star = properties;
-		if(properties != null)
-			this.dataManager.set(planetID, star.getId());
-		else
-			this.dataManager.set(planetID, Constants.INVALID_PLANET);
-	}
-	
-	public int getPlanetID() {
-		//this.dataManager.set(planetID, 256);
+    public final static int starIDoffset = 10000;
+    protected static final DataParameter<Integer> subStarData = EntityDataManager.createKey(EntityUIStar.class, DataSerializers.VARINT);
+    private StellarBody star;
+    private int subStar;
 
-		if(!world.isRemote)
-			return star == null ? -1 : star.getId();
+    public EntityUIStar(World worldIn, StellarBody properties, TileHolographicPlanetSelector tile, double x, double y, double z) {
+        this(worldIn);
+        setPosition(x, y, z);
+        setProperties(properties);
+        this.tile = tile;
+        subStar = -1;
+    }
 
-		int planetId = this.dataManager.get(planetID);
+    public EntityUIStar(World worldIn, StellarBody properties, int subStar, TileHolographicPlanetSelector tile, double x, double y, double z) {
+        this(worldIn, properties, tile, x, y, z);
+        this.dataManager.set(subStarData, (this.subStar = subStar));
+    }
 
-		if(star != null && star.getId() != planetId) {
-			if(planetId == Constants.INVALID_PLANET )
-				star = null;
-			else
-				star = DimensionManager.getInstance().getStar(planetId);
-		}
+    public EntityUIStar(World worldIn) {
+        super(worldIn);
+        setSize(0.2f, 0.2f);
+        subStar = -1;
+    }
 
-		return this.dataManager.get(planetID);
-	}
-	
-	public StellarBody getStarProperties() {
-		if((star == null && getPlanetID() != Constants.INVALID_PLANET) || (star != null && getPlanetID() != star.getId())) {
-			star = DimensionManager.getInstance().getStar(getPlanetID());
-			if((subStar = this.dataManager.get(subStarData)) != -1)
-				if(!star.getSubStars().isEmpty())
-					star = star.getSubStars().get(subStar);
-		}
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        this.dataManager.register(subStarData, -1);
+    }
 
-		return star;
-	}
-	
-	@Override
-	public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
-		if(!world.isRemote && tile != null) {
-			tile.selectSystem(star.getId() + starIDoffset);
-		}
-		return true;
-	}
+    public void setProperties(StellarBody properties) {
+        this.star = properties;
+        if (properties != null)
+            this.dataManager.set(planetID, star.getId());
+        else
+            this.dataManager.set(planetID, Constants.INVALID_PLANET);
+    }
+
+    public int getPlanetID() {
+        //this.dataManager.set(planetID, 256);
+
+        if (!world.isRemote)
+            return star == null ? -1 : star.getId();
+
+        int planetId = this.dataManager.get(planetID);
+
+        if (star != null && star.getId() != planetId) {
+            if (planetId == Constants.INVALID_PLANET)
+                star = null;
+            else
+                star = DimensionManager.getInstance().getStar(planetId);
+        }
+
+        return this.dataManager.get(planetID);
+    }
+
+    public StellarBody getStarProperties() {
+        if ((star == null && getPlanetID() != Constants.INVALID_PLANET) || (star != null && getPlanetID() != star.getId())) {
+            star = DimensionManager.getInstance().getStar(getPlanetID());
+            if ((subStar = this.dataManager.get(subStarData)) != -1)
+                if (!star.getSubStars().isEmpty())
+                    star = star.getSubStars().get(subStar);
+        }
+
+        return star;
+    }
+
+    @Override
+    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+        if (!world.isRemote && tile != null) {
+            tile.selectSystem(star.getId() + starIDoffset);
+        }
+        return true;
+    }
 }

@@ -17,138 +17,136 @@ import java.util.List;
 
 public class ItemSatelliteIdentificationChip extends Item implements ISatelliteIdItem {
 
-	private static String name = "name";
+    private static String name = "name";
 
-	@Override
-	public boolean isDamageable() {
-		return false;
-	}
+    public static SatelliteBase getSatellite(@Nonnull ItemStack stack) {
+        if (stack.hasTagCompound()) {
+            NBTTagCompound nbt = stack.getTagCompound();
 
-	public static SatelliteBase getSatellite(@Nonnull ItemStack stack) {
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
-
-            if(nbt == null)
+            if (nbt == null)
                 return null;
 
             long satId = nbt.getLong("satelliteId");
 
-			SatelliteBase satellite = zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getSatellite(satId);
+            SatelliteBase satellite = zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getSatellite(satId);
 
-			if(satellite != null) {
+            if (satellite != null) {
 
-				if(!nbt.hasKey("dimId") || nbt.getInteger("dimId") == Constants.INVALID_PLANET) {
-					nbt.setInteger("dimId", satellite.getDimensionId());
-				}
+                if (!nbt.hasKey("dimId") || nbt.getInteger("dimId") == Constants.INVALID_PLANET) {
+                    nbt.setInteger("dimId", satellite.getDimensionId());
+                }
 
-				if( zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()) != null)
-					nbt.setString(name, zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()).getName());
-			}
-
-
-			return satellite;
-		}
-		return null;
-	}
-
-	public void setSatellite(@Nonnull ItemStack stack, SatelliteBase satellite) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound())
-			nbt = stack.getTagCompound();
-		else 
-			nbt = new NBTTagCompound();
-
-		nbt.setString("satelliteName", satellite.getName());
-		nbt.setInteger("dimId", satellite.getDimensionId());
-		nbt.setLong("satelliteId", satellite.getId());
-	}
-
-	/**
-	 * Note: this method does not modify dimension info
-	 * @param stack itemStack
-	 * @param satellite properties of satellite to set info with
-	 */
-	public void setSatellite(@Nonnull ItemStack stack, SatelliteProperties satellite) {
-		erase(stack);
-		SatelliteBase satellite2 = SatelliteRegistry.getNewSatellite(satellite.getSatelliteType());
-		if(satellite2 != null) {
-			NBTTagCompound nbt;
-			if(stack.hasTagCompound())
-				nbt = stack.getTagCompound();
-			else 
-				nbt = new NBTTagCompound();
+                if (zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()) != null)
+                    nbt.setString(name, zmaster587.advancedRocketry.dimension.DimensionManager.getInstance().getDimensionProperties(satellite.getDimensionId()).getName());
+            }
 
 
-			nbt.setString("satelliteName", satellite2.getName());
-			nbt.setLong("satelliteId", satellite.getId());
+            return satellite;
+        }
+        return null;
+    }
 
-			stack.setTagCompound(nbt);
-		}
-	}
+    @Override
+    public boolean isDamageable() {
+        return false;
+    }
 
-	public void erase(@Nonnull ItemStack stack) {
-		stack.setTagCompound(null);
-	}
+    public void setSatellite(@Nonnull ItemStack stack, SatelliteBase satellite) {
+        NBTTagCompound nbt;
+        if (stack.hasTagCompound())
+            nbt = stack.getTagCompound();
+        else
+            nbt = new NBTTagCompound();
 
-	public void setDim(@Nonnull ItemStack stack, int dimId) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound())
-			nbt = stack.getTagCompound();
-		else 
-			return;
+        nbt.setString("satelliteName", satellite.getName());
+        nbt.setInteger("dimId", satellite.getDimensionId());
+        nbt.setLong("satelliteId", satellite.getId());
+    }
 
-		nbt.setInteger("dimId", dimId);
-	}
-
-	public String getSatelliteName(@Nonnull ItemStack stack) {
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
-
-			return nbt.getString("satelliteName");
-		}
-		return "";
-	}
-
-	public int getWorldId(@Nonnull ItemStack stack) {
-		NBTTagCompound nbt;
-
-		if(stack.hasTagCompound() && (nbt = stack.getTagCompound()).hasKey("dimId") ) {
+    /**
+     * Note: this method does not modify dimension info
+     *
+     * @param stack     itemStack
+     * @param satellite properties of satellite to set info with
+     */
+    public void setSatellite(@Nonnull ItemStack stack, SatelliteProperties satellite) {
+        erase(stack);
+        SatelliteBase satellite2 = SatelliteRegistry.getNewSatellite(satellite.getSatelliteType());
+        if (satellite2 != null) {
+            NBTTagCompound nbt;
+            if (stack.hasTagCompound())
+                nbt = stack.getTagCompound();
+            else
+                nbt = new NBTTagCompound();
 
 
-			return nbt.getInteger("dimId");
-		}
-		return Constants.INVALID_PLANET; // Cant have a [strike]nether[/strike] satellite anyway...ofc you can
-	}
+            nbt.setString("satelliteName", satellite2.getName());
+            nbt.setLong("satelliteId", satellite.getId());
 
-	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
-		int worldId = getWorldId(stack);
-		long satId = SatelliteRegistry.getSatelliteId(stack);
+            stack.setTagCompound(nbt);
+        }
+    }
 
-		String satelliteName = getSatelliteName(stack);
+    public void erase(@Nonnull ItemStack stack) {
+        stack.setTagCompound(null);
+    }
 
-		if(satId != -1) {
+    public void setDim(@Nonnull ItemStack stack, int dimId) {
+        NBTTagCompound nbt;
+        if (stack.hasTagCompound())
+            nbt = stack.getTagCompound();
+        else
+            return;
 
-			if(worldId != Constants.INVALID_PLANET) {
+        nbt.setInteger("dimId", dimId);
+    }
 
-				if(stack.getTagCompound().hasKey(name)) {
+    public String getSatelliteName(@Nonnull ItemStack stack) {
+        if (stack.hasTagCompound()) {
+            NBTTagCompound nbt = stack.getTagCompound();
 
-					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.id") + satId);
-					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.planet") + stack.getTagCompound().getString(name));
-					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.sat") + satelliteName);
-				}
-				else {
-					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.planetunk"));
-					list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.satlost")); //TODO: make satellite respond with name until
-				}
-			}
-			else {
-				list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.id") + satId);
-				list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.planetunk"));
-				list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.sat") + satelliteName);
-			}
-		}
-		else
-			list.add(LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
-	}
+            return nbt.getString("satelliteName");
+        }
+        return "";
+    }
+
+    public int getWorldId(@Nonnull ItemStack stack) {
+        NBTTagCompound nbt;
+
+        if (stack.hasTagCompound() && (nbt = stack.getTagCompound()).hasKey("dimId")) {
+
+
+            return nbt.getInteger("dimId");
+        }
+        return Constants.INVALID_PLANET; // Cant have a [strike]nether[/strike] satellite anyway...ofc you can
+    }
+
+    @Override
+    public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
+        int worldId = getWorldId(stack);
+        long satId = SatelliteRegistry.getSatelliteId(stack);
+
+        String satelliteName = getSatelliteName(stack);
+
+        if (satId != -1) {
+
+            if (worldId != Constants.INVALID_PLANET) {
+
+                if (stack.getTagCompound().hasKey(name)) {
+
+                    list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.id") + satId);
+                    list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.planet") + stack.getTagCompound().getString(name));
+                    list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.sat") + satelliteName);
+                } else {
+                    list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.planetunk"));
+                    list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.satlost")); //TODO: make satellite respond with name until
+                }
+            } else {
+                list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.id") + satId);
+                list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.planetunk"));
+                list.add(LibVulpes.proxy.getLocalizedString("msg.itemsatchip.sat") + satelliteName);
+            }
+        } else
+            list.add(LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
+    }
 }

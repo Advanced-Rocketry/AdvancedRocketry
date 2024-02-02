@@ -19,80 +19,80 @@ import java.util.List;
 public class TileElectricArcFurnace extends TileMultiblockMachine implements IModularInventory {
 
 
-	public static final Object[][][] structure = { 
-		{	{null,null,null,null,null},
-			{null,'P',AdvancedRocketryBlocks.blockBlastBrick,'P',null},
-			{null,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,null},
-			{null,AdvancedRocketryBlocks.blockBlastBrick,'P',AdvancedRocketryBlocks.blockBlastBrick,null},
-			{null,null,null,null,null},
-		},
+    public static final Object[][][] structure = {
+            {{null, null, null, null, null},
+                    {null, 'P', AdvancedRocketryBlocks.blockBlastBrick, 'P', null},
+                    {null, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, null},
+                    {null, AdvancedRocketryBlocks.blockBlastBrick, 'P', AdvancedRocketryBlocks.blockBlastBrick, null},
+                    {null, null, null, null, null},
+            },
 
-		{	{null,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,null},
-			{AdvancedRocketryBlocks.blockBlastBrick, "blockCoil",Blocks.AIR, "blockCoil",AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR,Blocks.AIR,Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR, "blockCoil",Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
-			{null,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,null},
-		},
+            {{null, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, null},
+                    {AdvancedRocketryBlocks.blockBlastBrick, "blockCoil", Blocks.AIR, "blockCoil", AdvancedRocketryBlocks.blockBlastBrick},
+                    {AdvancedRocketryBlocks.blockBlastBrick, Blocks.AIR, Blocks.AIR, Blocks.AIR, AdvancedRocketryBlocks.blockBlastBrick},
+                    {AdvancedRocketryBlocks.blockBlastBrick, Blocks.AIR, "blockCoil", Blocks.AIR, AdvancedRocketryBlocks.blockBlastBrick},
+                    {null, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, null},
+            },
 
-		{	{AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR,Blocks.AIR,Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR,Blocks.AIR,Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,Blocks.AIR,Blocks.AIR,Blocks.AIR,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick},
-		},
+            {{AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick},
+                    {AdvancedRocketryBlocks.blockBlastBrick, Blocks.AIR, Blocks.AIR, Blocks.AIR, AdvancedRocketryBlocks.blockBlastBrick},
+                    {AdvancedRocketryBlocks.blockBlastBrick, Blocks.AIR, Blocks.AIR, Blocks.AIR, AdvancedRocketryBlocks.blockBlastBrick},
+                    {AdvancedRocketryBlocks.blockBlastBrick, Blocks.AIR, Blocks.AIR, Blocks.AIR, AdvancedRocketryBlocks.blockBlastBrick},
+                    {AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick},
+            },
 
-		{	{AdvancedRocketryBlocks.blockBlastBrick,'*','c','*',AdvancedRocketryBlocks.blockBlastBrick},
-			{'*',AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,'*'},
-			{'*',AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick, '*'},
-			{'*',AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick, '*'},
-			{AdvancedRocketryBlocks.blockBlastBrick,'*','*','*',AdvancedRocketryBlocks.blockBlastBrick},
-		},
+            {{AdvancedRocketryBlocks.blockBlastBrick, '*', 'c', '*', AdvancedRocketryBlocks.blockBlastBrick},
+                    {'*', AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, '*'},
+                    {'*', AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, '*'},
+                    {'*', AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, '*'},
+                    {AdvancedRocketryBlocks.blockBlastBrick, '*', '*', '*', AdvancedRocketryBlocks.blockBlastBrick},
+            },
 
-		{	{AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick},
-			{AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick,AdvancedRocketryBlocks.blockBlastBrick},
-		}
+            {{AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick},
+                    {AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick},
+                    {AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick},
+                    {AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick},
+                    {AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick, AdvancedRocketryBlocks.blockBlastBrick},
+            }
 
-	};
+    };
 
-	@Override
-	public List<BlockMeta> getAllowableWildCardBlocks() {
-		List<BlockMeta> list = super.getAllowableWildCardBlocks();
-		list.addAll(TileMultiBlock.getMapping('O'));
-		list.addAll(TileMultiBlock.getMapping('I'));
-		list.addAll(TileMultiBlock.getMapping('l'));
-		list.addAll(TileMultiBlock.getMapping('L'));
-		list.add(new BlockMeta(AdvancedRocketryBlocks.blockBlastBrick, -1));
-		return list;
-	}
+    @Override
+    public List<BlockMeta> getAllowableWildCardBlocks() {
+        List<BlockMeta> list = super.getAllowableWildCardBlocks();
+        list.addAll(TileMultiBlock.getMapping('O'));
+        list.addAll(TileMultiBlock.getMapping('I'));
+        list.addAll(TileMultiBlock.getMapping('l'));
+        list.addAll(TileMultiBlock.getMapping('L'));
+        list.add(new BlockMeta(AdvancedRocketryBlocks.blockBlastBrick, -1));
+        return list;
+    }
 
-	@Override
-	protected void integrateTile(TileEntity tile) {
-		super.integrateTile(tile);
-	}
+    @Override
+    protected void integrateTile(TileEntity tile) {
+        super.integrateTile(tile);
+    }
 
-	@Override
-	public Object[][][] getStructure() {
-		return structure;
-	}
+    @Override
+    public Object[][][] getStructure() {
+        return structure;
+    }
 
-	@Override
-	public SoundEvent getSound() {
-		return AudioRegistry.electricArcFurnace;
-	}
+    @Override
+    public SoundEvent getSound() {
+        return AudioRegistry.electricArcFurnace;
+    }
 
-	@Override
-	public String getMachineName() {
-		return AdvancedRocketryBlocks.blockArcFurnace.getLocalizedName();
-	}
+    @Override
+    public String getMachineName() {
+        return AdvancedRocketryBlocks.blockArcFurnace.getLocalizedName();
+    }
 
-	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> modules = super.getModules(ID, player);
+    @Override
+    public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+        List<ModuleBase> modules = super.getModules(ID, player);
 
-		modules.add(new ModuleProgress(80, 20, 0, TextureResources.arcFurnaceProgressBar, this));
-		return modules;
-	}
+        modules.add(new ModuleProgress(80, 20, 0, TextureResources.arcFurnaceProgressBar, this));
+        return modules;
+    }
 }

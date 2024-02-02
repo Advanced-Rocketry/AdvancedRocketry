@@ -5,13 +5,13 @@ import net.minecraft.world.World;
 
 abstract class AbstractDrill {
 
-	abstract ItemStack[] performOperation();
+    abstract ItemStack[] performOperation();
 
-	abstract boolean activate(World world, int x, int z);
+    abstract boolean activate(World world, int x, int z);
 
-	abstract void deactivate();
+    abstract void deactivate();
 
-	abstract boolean isFinished();
+    abstract boolean isFinished();
 
-	abstract boolean needsRestart();
+    abstract boolean needsRestart();
 }

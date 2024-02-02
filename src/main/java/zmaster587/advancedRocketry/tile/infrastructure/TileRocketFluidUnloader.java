@@ -12,58 +12,58 @@ import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import java.util.List;
 
-public class TileRocketFluidUnloader extends TileRocketFluidLoader implements IInfrastructure, ITickable,  IButtonInventory, INetworkMachine  {
+public class TileRocketFluidUnloader extends TileRocketFluidLoader implements IInfrastructure, ITickable, IButtonInventory, INetworkMachine {
 
-	public TileRocketFluidUnloader() {
-		super();
-		this.setOutputOnly(true);
-	}
+    public TileRocketFluidUnloader() {
+        super();
+        this.setOutputOnly(true);
+    }
 
-	public TileRocketFluidUnloader(int size) {
-		super(size);
-	}
+    public TileRocketFluidUnloader(int size) {
+        super(size);
+    }
 
-	@Override
-	public String getModularInventoryName() {
-		return "tile.loader.4.name";
-	}
+    @Override
+    public String getModularInventoryName() {
+        return "tile.loader.4.name";
+    }
 
 
-	@Override
-	public void update() {
-		//Move fluids
-		if(!world.isRemote && rocket != null) {
+    @Override
+    public void update() {
+        //Move fluids
+        if (!world.isRemote && rocket != null) {
 
-			boolean isAllowToOperate = (inputstate == RedstoneState.OFF || isStateActive(inputstate, getStrongPowerForSides(world, getPos())));
+            boolean isAllowToOperate = (inputstate == RedstoneState.OFF || isStateActive(inputstate, getStrongPowerForSides(world, getPos())));
 
-			List<TileEntity> tiles = rocket.storage.getFluidTiles();
-			boolean rocketFluidFull = false;
+            List<TileEntity> tiles = rocket.storage.getFluidTiles();
+            boolean rocketFluidFull = false;
 
-			//Function returns if something can be moved
-			for(TileEntity tile : tiles) {
-				IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+            //Function returns if something can be moved
+            for (TileEntity tile : tiles) {
+                IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 
-				//See if we have anything to fill because redstone output
-				FluidStack rocketFluid = handler.drain(1, false);
-				if(handler.fill(rocketFluid, false) > 0)
-					rocketFluidFull = true;
+                //See if we have anything to fill because redstone output
+                FluidStack rocketFluid = handler.drain(1, false);
+                if (handler.fill(rocketFluid, false) > 0)
+                    rocketFluidFull = true;
 
-				if(isAllowToOperate) {
-					boolean shouldOperate;
-					if (getFluidTank().getFluid() != null)
-						shouldOperate = getFluidTank().fill(handler.drain(new FluidStack(getFluidTank().getFluid(), getFluidTank().getCapacity() - getFluidTank().getFluidAmount()), false), false) > 0;
-					else
-						shouldOperate = getFluidTank().fill(handler.drain(getFluidTank().getCapacity(), false), false) > 0;
+                if (isAllowToOperate) {
+                    boolean shouldOperate;
+                    if (getFluidTank().getFluid() != null)
+                        shouldOperate = getFluidTank().fill(handler.drain(new FluidStack(getFluidTank().getFluid(), getFluidTank().getCapacity() - getFluidTank().getFluidAmount()), false), false) > 0;
+                    else
+                        shouldOperate = getFluidTank().fill(handler.drain(getFluidTank().getCapacity(), false), false) > 0;
 
-					if (shouldOperate)
-						getFluidTank().fill(handler.drain(getFluidTank().getCapacity() - getFluidTank().getFluidAmount(), true), true);
-				}
-			}
+                    if (shouldOperate)
+                        getFluidTank().fill(handler.drain(getFluidTank().getCapacity() - getFluidTank().getFluidAmount(), true), true);
+                }
+            }
 
-			//Update redstone state
-			setRedstoneState(!rocketFluidFull);
+            //Update redstone state
+            setRedstoneState(!rocketFluidFull);
 
-		}
-	}
+        }
+    }
 
 }

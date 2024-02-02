@@ -21,114 +21,118 @@ import java.util.stream.Collectors;
  */
 class VoidDrill extends AbstractDrill {
 
-	private final Random random;
-	private List<ItemStack> ores;
-	private boolean planetOresInitialized;
+    private final Random random;
+    private List<ItemStack> ores;
+    private boolean planetOresInitialized;
 
-	VoidDrill() {
-		this.random = new Random();
-		this.planetOresInitialized = false;
-		loadGlobalOres();
-	}
+    VoidDrill() {
+        this.random = new Random();
+        this.planetOresInitialized = false;
+        loadGlobalOres();
+    }
 
-	private void loadGlobalOres() {
-		//isEmpty check because <init> is called in post init to register for holo projector
-		if (ores == null && !ARConfiguration.getCurrentConfig().standardLaserDrillOres.isEmpty()) {
-			ores = new ArrayList<>();
+    private void loadGlobalOres() {
+        //isEmpty check because <init> is called in post init to register for holo projector
+        if (ores == null && !ARConfiguration.getCurrentConfig().standardLaserDrillOres.isEmpty()) {
+            ores = new ArrayList<>();
 
-			for (int i = 0; i < ARConfiguration.getCurrentConfig().standardLaserDrillOres.size(); i++) {
-				String oreDictName = ARConfiguration.getCurrentConfig().standardLaserDrillOres.get(i);
+            for (int i = 0; i < ARConfiguration.getCurrentConfig().standardLaserDrillOres.size(); i++) {
+                String oreDictName = ARConfiguration.getCurrentConfig().standardLaserDrillOres.get(i);
 
-				String[] args = oreDictName.split(":");
+                String[] args = oreDictName.split(":");
 
-				List<ItemStack> globalOres = OreDictionary.getOres(args[0]);
+                List<ItemStack> globalOres = OreDictionary.getOres(args[0]);
 
-				if (globalOres != null && !globalOres.isEmpty()) {
-					int amt = 5;
-					if (args.length > 1) {
-						try {
-							amt = Integer.parseInt(args[1]);
-						} catch (NumberFormatException ignored) {}
-					}
-					ores.add(new ItemStack(globalOres.get(0).getItem(), amt, globalOres.get(0).getItemDamage()));
-				} else {
-					String[] splitStr = oreDictName.split(":");
-					String name;
-					try {
-						name = splitStr[0] + ":" + splitStr[1];
-					} catch (IndexOutOfBoundsException e) {
-						AdvancedRocketry.logger.warn("Unexpected ore name: \"" + oreDictName + "\" during laser drill harvesting");
-						continue;
-					}
+                if (globalOres != null && !globalOres.isEmpty()) {
+                    int amt = 5;
+                    if (args.length > 1) {
+                        try {
+                            amt = Integer.parseInt(args[1]);
+                        } catch (NumberFormatException ignored) {
+                        }
+                    }
+                    ores.add(new ItemStack(globalOres.get(0).getItem(), amt, globalOres.get(0).getItemDamage()));
+                } else {
+                    String[] splitStr = oreDictName.split(":");
+                    String name;
+                    try {
+                        name = splitStr[0] + ":" + splitStr[1];
+                    } catch (IndexOutOfBoundsException e) {
+                        AdvancedRocketry.logger.warn("Unexpected ore name: \"" + oreDictName + "\" during laser drill harvesting");
+                        continue;
+                    }
 
-					int meta = 0;
-					int size = 1;
-					//format: "name meta size"
-					if (splitStr.length > 2) {
-						try {
-							meta = Integer.parseInt(splitStr[2]);
-						} catch (NumberFormatException ignored) {}
-					}
-					if (splitStr.length > 3) {
-						try {
-							size = Integer.parseInt(splitStr[3]);
-						} catch (NumberFormatException ignored) {}
-					}
+                    int meta = 0;
+                    int size = 1;
+                    //format: "name meta size"
+                    if (splitStr.length > 2) {
+                        try {
+                            meta = Integer.parseInt(splitStr[2]);
+                        } catch (NumberFormatException ignored) {
+                        }
+                    }
+                    if (splitStr.length > 3) {
+                        try {
+                            size = Integer.parseInt(splitStr[3]);
+                        } catch (NumberFormatException ignored) {
+                        }
+                    }
 
-					ItemStack stack = ItemStack.EMPTY;
-					Block block = Block.getBlockFromName(name);
-					if (block == null) {
-						Item item = Item.getByNameOrId(name);
-						if (item != null)
-							stack = new ItemStack(item, size, meta);
-					} else
-						stack = new ItemStack(block, size, meta);
+                    ItemStack stack = ItemStack.EMPTY;
+                    Block block = Block.getBlockFromName(name);
+                    if (block == null) {
+                        Item item = Item.getByNameOrId(name);
+                        if (item != null)
+                            stack = new ItemStack(item, size, meta);
+                    } else
+                        stack = new ItemStack(block, size, meta);
 
-					if (!stack.isEmpty())
-						ores.add(stack);
-				}
-			}
-		}
-	}
+                    if (!stack.isEmpty())
+                        ores.add(stack);
+                }
+            }
+        }
+    }
 
-	/**
-	 * Performs a single drilling operation
-	 *
-	 * @return The ItemStacks produced by this tick of drilling
-	 */
-	ItemStack[] performOperation() {
-		ArrayList<ItemStack> items = new ArrayList<>();
-		if (random.nextInt(10) == 0) {
-			ItemStack item = ores.get(random.nextInt(ores.size()));
-			ItemStack newStack = item.copy();
-			items.add(newStack);
-		} else
-			items.add(new ItemStack(Blocks.COBBLESTONE, 5));
+    /**
+     * Performs a single drilling operation
+     *
+     * @return The ItemStacks produced by this tick of drilling
+     */
+    ItemStack[] performOperation() {
+        ArrayList<ItemStack> items = new ArrayList<>();
+        if (random.nextInt(10) == 0) {
+            ItemStack item = ores.get(random.nextInt(ores.size()));
+            ItemStack newStack = item.copy();
+            items.add(newStack);
+        } else
+            items.add(new ItemStack(Blocks.COBBLESTONE, 5));
 
-		ItemStack[] stacks = new ItemStack[items.size()];
+        ItemStack[] stacks = new ItemStack[items.size()];
 
-		stacks = items.toArray(stacks);
+        stacks = items.toArray(stacks);
 
-		return stacks;
-	}
+        return stacks;
+    }
 
-	boolean activate(World world, int x, int z) {
-		// Ideally, this should be done in the constructor, but the world provider is null there for reasons unknown, so this gets delayed until first activation
-		if(!this.planetOresInitialized) {
-			DimensionProperties dimProperties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
-			ores.addAll(dimProperties.laserDrillOres.stream().filter(s->!ores.contains(s)).collect(Collectors.toSet()));
-			this.planetOresInitialized = true;
-		}
-		return true;
-	}
+    boolean activate(World world, int x, int z) {
+        // Ideally, this should be done in the constructor, but the world provider is null there for reasons unknown, so this gets delayed until first activation
+        if (!this.planetOresInitialized) {
+            DimensionProperties dimProperties = DimensionManager.getInstance().getDimensionProperties(world.provider.getDimension());
+            ores.addAll(dimProperties.laserDrillOres.stream().filter(s -> !ores.contains(s)).collect(Collectors.toSet()));
+            this.planetOresInitialized = true;
+        }
+        return true;
+    }
 
-	void deactivate() {}
+    void deactivate() {
+    }
 
-	boolean isFinished() {
-		return false;
-	}
+    boolean isFinished() {
+        return false;
+    }
 
-	boolean needsRestart() {
-		return false;
-	}
+    boolean needsRestart() {
+        return false;
+    }
 }

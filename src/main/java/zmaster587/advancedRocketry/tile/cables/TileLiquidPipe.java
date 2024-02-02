@@ -9,18 +9,18 @@ import zmaster587.advancedRocketry.cable.NetworkRegistry;
 
 public class TileLiquidPipe extends TilePipe {
 
-	@Override
-	public boolean canExtract(EnumFacing dir, TileEntity e) {
-		return e.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir);
-	}
+    @Override
+    public boolean canExtract(EnumFacing dir, TileEntity e) {
+        return e.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir);
+    }
 
-	@Override
-	public boolean canInject(EnumFacing dir, TileEntity e) {
-		return e.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir);
-	}
-	
-	public HandlerCableNetwork getNetworkHandler() {
-		return NetworkRegistry.liquidNetwork;
-	}
-	
+    @Override
+    public boolean canInject(EnumFacing dir, TileEntity e) {
+        return e.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir);
+    }
+
+    public HandlerCableNetwork getNetworkHandler() {
+        return NetworkRegistry.liquidNetwork;
+    }
+
 }

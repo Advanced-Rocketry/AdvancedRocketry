@@ -5,8 +5,8 @@ import zmaster587.libVulpes.recipe.RecipeMachineFactory;
 
 public class RecipeCrystallizer extends RecipeMachineFactory {
 
-	@Override
-	public Class getMachine() {
-		return TileCrystallizer.class;
-	}
+    @Override
+    public Class getMachine() {
+        return TileCrystallizer.class;
+    }
 }

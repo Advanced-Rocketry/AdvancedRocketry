@@ -13,33 +13,33 @@ import zmaster587.libVulpes.render.RenderHelper;
 
 public class RenderButtonUIEntity extends Render<EntityUIButton> implements IRenderFactory<EntityUIButton> {
 
-	public RenderButtonUIEntity(RenderManager renderManager) {
-		super(renderManager);
-	}
+    public RenderButtonUIEntity(RenderManager renderManager) {
+        super(renderManager);
+    }
 
-	@Override
-	public Render<? super EntityUIButton> createRenderFor(
-			RenderManager manager) {
-		return new RenderButtonUIEntity(manager);
-	}
+    @Override
+    public Render<? super EntityUIButton> createRenderFor(
+            RenderManager manager) {
+        return new RenderButtonUIEntity(manager);
+    }
 
-	@Override
-	protected ResourceLocation getEntityTexture(EntityUIButton entity) {
-		return DimensionProperties.PlanetIcons.EARTHLIKE.getResource();
-	}
+    @Override
+    protected ResourceLocation getEntityTexture(EntityUIButton entity) {
+        return DimensionProperties.PlanetIcons.EARTHLIKE.getResource();
+    }
 
-	@Override
-	public void doRender(EntityUIButton entity, double x, double y, double z,
-			float entityYaw, float partialTicks) {
+    @Override
+    public void doRender(EntityUIButton entity, double x, double y, double z,
+                         float entityYaw, float partialTicks) {
 
-		GL11.glPushMatrix();
-		GL11.glTranslated(0, -.25, 0);
-		
+        GL11.glPushMatrix();
+        GL11.glTranslated(0, -.25, 0);
 
-		RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSqToEntity(entity), "Up a level", x,y,z, 8);
-		GL11.glPopMatrix();
 
-		//Clean up and make player not transparent
-		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
-	}
+        RenderHelper.renderTag(Minecraft.getMinecraft().player.getDistanceSqToEntity(entity), "Up a level", x, y, z, 8);
+        GL11.glPopMatrix();
+
+        //Clean up and make player not transparent
+        OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 0);
+    }
 }

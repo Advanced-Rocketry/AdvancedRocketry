@@ -18,39 +18,35 @@ import java.util.Random;
 public class BlockCharcoalLog extends BlockLog {
 
 
-	public BlockCharcoalLog() {
-		super();
-		this.setDefaultState(this.blockState.getBaseState().withProperty(LOG_AXIS, BlockLog.EnumAxis.Y));
-	}
+    public BlockCharcoalLog() {
+        super();
+        this.setDefaultState(this.blockState.getBaseState().withProperty(LOG_AXIS, BlockLog.EnumAxis.Y));
+    }
 
-	@Override
-	@Nonnull
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, LOG_AXIS);
-	}
+    @Override
+    @Nonnull
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, LOG_AXIS);
+    }
 
-	@Override
-	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face) {
-		return 0;
-	}
-	
-	@Override
-	@Nonnull
-	public ItemStack getItem(World worldIn, BlockPos pos, @Nullable IBlockState state) {
+    @Override
+    public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face) {
+        return 0;
+    }
+
+    @Override
+    @Nonnull
+    public ItemStack getItem(World worldIn, BlockPos pos, @Nullable IBlockState state) {
         Item item = Item.getItemFromBlock(this);
         return item.equals(Items.AIR) ? ItemStack.EMPTY : new ItemStack(item, 1, 0);
-	}
-	
-	
-	
+    }
+
+
     @Nonnull
-	public IBlockState getStateFromMeta(int meta)
-    {
+    public IBlockState getStateFromMeta(int meta) {
         IBlockState iblockstate = this.getDefaultState();
 
-        switch (meta & 12)
-        {
+        switch (meta & 12) {
             case 0:
                 iblockstate = iblockstate.withProperty(LOG_AXIS, BlockLog.EnumAxis.Y);
                 break;
@@ -68,37 +64,34 @@ public class BlockCharcoalLog extends BlockLog {
     }
 
 
-	public int getMetaFromState(IBlockState state)
-	{
-		int i = 0;
-		switch (state.getValue(LOG_AXIS))
-		{
-		case X:
-			i |= 4;
-			break;
-		case Z:
-			i |= 8;
-			break;
-		case NONE:
-			i |= 12;
-		}
+    public int getMetaFromState(IBlockState state) {
+        int i = 0;
+        switch (state.getValue(LOG_AXIS)) {
+            case X:
+                i |= 4;
+                break;
+            case Z:
+                i |= 8;
+                break;
+            case NONE:
+                i |= 12;
+        }
 
-		return i;
-	}
+        return i;
+    }
 
-	@Override
-	@Nonnull
-	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-		return Items.COAL;
-	}
+    @Override
+    @Nonnull
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+        return Items.COAL;
+    }
 
-	@Override
-	public int damageDropped(IBlockState state) {
-		return 1;
-	}
+    @Override
+    public int damageDropped(IBlockState state) {
+        return 1;
+    }
 
-	public int quantityDroppedWithBonus(int i, @Nonnull Random rand)
-	{
-		return this.quantityDropped(rand) + (i > 0 ? rand.nextInt(i) : 0);
-	}
+    public int quantityDroppedWithBonus(int i, @Nonnull Random rand) {
+        return this.quantityDropped(rand) + (i > 0 ? rand.nextInt(i) : 0);
+    }
 }

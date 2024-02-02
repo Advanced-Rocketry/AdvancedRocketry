@@ -6,24 +6,24 @@ import zmaster587.advancedRocketry.integration.jei.ARPlugin;
 
 public class ChemicalReactorRecipeHandler implements IRecipeHandler<ChemicalReactorlWrapper> {
 
-	@Override
-	public Class<ChemicalReactorlWrapper> getRecipeClass() {
-		return ChemicalReactorlWrapper.class;
-	}
+    @Override
+    public Class<ChemicalReactorlWrapper> getRecipeClass() {
+        return ChemicalReactorlWrapper.class;
+    }
 
-	@Override
-	public String getRecipeCategoryUid(ChemicalReactorlWrapper recipe) {
-		return ARPlugin.chemicalReactorUUID;
-	}
+    @Override
+    public String getRecipeCategoryUid(ChemicalReactorlWrapper recipe) {
+        return ARPlugin.chemicalReactorUUID;
+    }
 
-	@Override
-	public IRecipeWrapper getRecipeWrapper(ChemicalReactorlWrapper recipe) {
-		return recipe;
-	}
+    @Override
+    public IRecipeWrapper getRecipeWrapper(ChemicalReactorlWrapper recipe) {
+        return recipe;
+    }
 
-	@Override
-	public boolean isRecipeValid(ChemicalReactorlWrapper recipe) {
-		return true;
-	}
+    @Override
+    public boolean isRecipeValid(ChemicalReactorlWrapper recipe) {
+        return true;
+    }
 
 }

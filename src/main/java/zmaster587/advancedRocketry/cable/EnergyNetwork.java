@@ -12,139 +12,141 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 public class EnergyNetwork extends CableNetwork implements IUniversalEnergy {
-	/**
-	 * Create a new network and get an ID
-	 * @return ID of this new network
-	 */
-	
-	UniversalBattery battery;
-	
-	public EnergyNetwork() {
-		battery = new UniversalBattery(500);
-	}
-	
-	public static EnergyNetwork initNetwork() {
-		Random random = new Random(System.currentTimeMillis());
+    /**
+     * Create a new network and get an ID
+     *
+     * @return ID of this new network
+     */
 
-		int id = random.nextInt();
+    UniversalBattery battery;
 
-		while(usedIds.contains(id)){ id = random.nextInt(); }
+    public EnergyNetwork() {
+        battery = new UniversalBattery(500);
+    }
 
-		EnergyNetwork net = new EnergyNetwork();
-		usedIds.add(id);
-		net.networkID = id;
+    public static EnergyNetwork initNetwork() {
+        Random random = new Random(System.currentTimeMillis());
 
-		return net;
-	}
-	
-	@Override
-	public boolean merge(CableNetwork cableNetwork) {
-		//Try not to lose power
-		if(super.merge(cableNetwork)) {
-			battery.acceptEnergy(((EnergyNetwork)cableNetwork).battery.getUniversalEnergyStored(), false);
-			return true;
-		}
-		
-		return false;
-	}
+        int id = random.nextInt();
 
-	//TODO: balance tanks
-	@Override
-	public void tick() {
-		int amount = 1000;
-		//Return if there is nothing to do
-		if(sinks.isEmpty() || (sources.isEmpty() && battery.getUniversalEnergyStored() == 0))
-			return;
+        while (usedIds.contains(id)) {
+            id = random.nextInt();
+        }
 
+        EnergyNetwork net = new EnergyNetwork();
+        usedIds.add(id);
+        net.networkID = id;
 
+        return net;
+    }
 
-		//Go through all sinks, if one is not full attempt to fill it
+    @Override
+    public boolean merge(CableNetwork cableNetwork) {
+        //Try not to lose power
+        if (super.merge(cableNetwork)) {
+            battery.acceptEnergy(((EnergyNetwork) cableNetwork).battery.getUniversalEnergyStored(), false);
+            return true;
+        }
 
-		int demand = 0;
-		int supply = battery.getUniversalEnergyStored();
-		Iterator<Entry<TileEntity,EnumFacing>> sinkItr = sinks.iterator();
-		Iterator<Entry<TileEntity,EnumFacing>> sourceItr = sources.iterator();
+        return false;
+    }
 
-		while(sinkItr.hasNext()) {
-			//Get tile and key
-			Entry<TileEntity,EnumFacing> obj = sinkItr.next();
-			IEnergyStorage dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
-
-			demand += dataHandlerSink.receiveEnergy(amount, true);
-		}
-
-		while(sourceItr.hasNext()) {
-			//Get tile and key
-			Entry<TileEntity,EnumFacing> obj = sourceItr.next();
-			IEnergyStorage dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
-
-			supply += dataHandlerSink.extractEnergy(amount, true);
-		}
-		int amountMoved, amountToMove;
-		amountMoved = amountToMove = Math.min(supply, demand);
-
-		sinkItr = sinks.iterator();
-		while(sinkItr.hasNext()) {
+    //TODO: balance tanks
+    @Override
+    public void tick() {
+        int amount = 1000;
+        //Return if there is nothing to do
+        if (sinks.isEmpty() || (sources.isEmpty() && battery.getUniversalEnergyStored() == 0))
+            return;
 
 
-			//Get tile and key
-			Entry<TileEntity,EnumFacing> obj = sinkItr.next();
-			IEnergyStorage dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
+        //Go through all sinks, if one is not full attempt to fill it
+
+        int demand = 0;
+        int supply = battery.getUniversalEnergyStored();
+        Iterator<Entry<TileEntity, EnumFacing>> sinkItr = sinks.iterator();
+        Iterator<Entry<TileEntity, EnumFacing>> sourceItr = sources.iterator();
+
+        while (sinkItr.hasNext()) {
+            //Get tile and key
+            Entry<TileEntity, EnumFacing> obj = sinkItr.next();
+            IEnergyStorage dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
+
+            demand += dataHandlerSink.receiveEnergy(amount, true);
+        }
+
+        while (sourceItr.hasNext()) {
+            //Get tile and key
+            Entry<TileEntity, EnumFacing> obj = sourceItr.next();
+            IEnergyStorage dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
+
+            supply += dataHandlerSink.extractEnergy(amount, true);
+        }
+        int amountMoved, amountToMove;
+        amountMoved = amountToMove = Math.min(supply, demand);
+
+        sinkItr = sinks.iterator();
+        while (sinkItr.hasNext()) {
 
 
-			amountToMove -= dataHandlerSink.receiveEnergy(amountToMove, false);
-		}
-		
-		//Try to drain internal buffer first
-		amountMoved -= battery.extractEnergy(amountMoved, false);
+            //Get tile and key
+            Entry<TileEntity, EnumFacing> obj = sinkItr.next();
+            IEnergyStorage dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
 
-		sourceItr = sources.iterator();
-		while(sourceItr.hasNext()) {
-			//Get tile and key
-			Entry<TileEntity,EnumFacing> obj = sourceItr.next();
-			IEnergyStorage dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
 
-			amountMoved -= dataHandlerSink.extractEnergy(amountMoved, false);
-		}
-	}
+            amountToMove -= dataHandlerSink.receiveEnergy(amountToMove, false);
+        }
 
-	@Override
-	public void setEnergyStored(int amt) {
-		
-	}
+        //Try to drain internal buffer first
+        amountMoved -= battery.extractEnergy(amountMoved, false);
 
-	@Override
-	public int extractEnergy(int amt, boolean simulate) {
-		return 0;
-	}
+        sourceItr = sources.iterator();
+        while (sourceItr.hasNext()) {
+            //Get tile and key
+            Entry<TileEntity, EnumFacing> obj = sourceItr.next();
+            IEnergyStorage dataHandlerSink = obj.getKey().getCapability(CapabilityEnergy.ENERGY, obj.getValue());
 
-	@Override
-	public int getUniversalEnergyStored() {
-		return 0;
-	}
+            amountMoved -= dataHandlerSink.extractEnergy(amountMoved, false);
+        }
+    }
 
-	@Override
-	public int getMaxEnergyStored() {
-		return 0;
-	}
+    @Override
+    public void setEnergyStored(int amt) {
 
-	@Override
-	public int acceptEnergy(int amt, boolean simulate) {
-		return battery.acceptEnergy(amt, simulate);
-	}
+    }
 
-	@Override
-	public void setMaxEnergyStored(int max) {
-		
-	}
+    @Override
+    public int extractEnergy(int amt, boolean simulate) {
+        return 0;
+    }
 
-	@Override
-	public boolean canReceive() {
-		return false;
-	}
+    @Override
+    public int getUniversalEnergyStored() {
+        return 0;
+    }
 
-	@Override
-	public boolean canExtract() {
-		return false;
-	}
+    @Override
+    public int getMaxEnergyStored() {
+        return 0;
+    }
+
+    @Override
+    public void setMaxEnergyStored(int max) {
+
+    }
+
+    @Override
+    public int acceptEnergy(int amt, boolean simulate) {
+        return battery.acceptEnergy(amt, simulate);
+    }
+
+    @Override
+    public boolean canReceive() {
+        return false;
+    }
+
+    @Override
+    public boolean canExtract() {
+        return false;
+    }
 }

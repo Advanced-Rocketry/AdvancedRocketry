@@ -5,8 +5,8 @@ import zmaster587.libVulpes.recipe.RecipeMachineFactory;
 
 public class RecipeLathe extends RecipeMachineFactory {
 
-	@Override
-	public Class getMachine() {
-		return TileLathe.class;
-	}
+    @Override
+    public Class getMachine() {
+        return TileLathe.class;
+    }
 }

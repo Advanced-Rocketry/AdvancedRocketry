@@ -13,61 +13,60 @@ import zmaster587.libVulpes.util.IconResource;
 
 public class ModuleSatellite extends ModuleSlotArray {
 
-	SatelliteBase satellite;
-	IconResource satelliteSlot = TextureResources.idChip;
-	boolean needsUpdate = false;
+    SatelliteBase satellite;
+    IconResource satelliteSlot = TextureResources.idChip;
+    boolean needsUpdate = false;
 
-	public ModuleSatellite(int offsetX, int offsetY, IInventory container,
-			int slot) {
-		super(offsetX, offsetY, container, slot, slot + 1);
+    public ModuleSatellite(int offsetX, int offsetY, IInventory container, int slot) {
+        super(offsetX, offsetY, container, slot, slot + 1);
 
-	}
+    }
 
-	@Override
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY,
-			FontRenderer font) {
-		
-		for(Slot slot : slotList) {
-			gui.drawTexturedModalRect(x + slot.xPos - 1, y + slot.yPos - 1, satelliteSlot.getxLoc(), satelliteSlot.getyLoc(), satelliteSlot.getxSize(), satelliteSlot.getySize());
-		}
-	}
-	
-	@Override
-	public int numberOfChangesToSend() {		
-		if(satellite != null)
-			return satellite.numberChangesToSend();
+    @Override
+    public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY,
+                                 FontRenderer font) {
 
-		return 0;
-	}
+        for (Slot slot : slotList) {
+            gui.drawTexturedModalRect(x + slot.xPos - 1, y + slot.yPos - 1, satelliteSlot.getxLoc(), satelliteSlot.getyLoc(), satelliteSlot.getxSize(), satelliteSlot.getySize());
+        }
+    }
 
-	@Override
-	public void sendChanges(Container container, IContainerListener crafter,
-			int variableId, int localId) {
-		if(satellite != null)
-			satellite.sendChanges(container, crafter, variableId, localId);
-	}
+    @Override
+    public int numberOfChangesToSend() {
+        if (satellite != null)
+            return satellite.numberChangesToSend();
 
-	@Override
-	public void onChangeRecieved(int slot, int value) {
-		if(satellite != null) {
-			satellite.onChangeReceived(slot, value);
-		}
-	}
-	
-	@Override
-	public boolean needsUpdate(int localId) {
-		if(satellite != null)
-			return satellite.isUpdateRequired(localId);
-		
-		return super.isUpdateRequired(localId);
-	}
+        return 0;
+    }
 
-	public void setSatellite(SatelliteBase satellite) {
-		this.satellite = satellite;
-	}
-	
-	public SatelliteBase getSatellite() {
-		return this.satellite;
-	}
+    @Override
+    public void sendChanges(Container container, IContainerListener crafter,
+                            int variableId, int localId) {
+        if (satellite != null)
+            satellite.sendChanges(container, crafter, variableId, localId);
+    }
+
+    @Override
+    public void onChangeRecieved(int slot, int value) {
+        if (satellite != null) {
+            satellite.onChangeReceived(slot, value);
+        }
+    }
+
+    @Override
+    public boolean needsUpdate(int localId) {
+        if (satellite != null)
+            return satellite.isUpdateRequired(localId);
+
+        return super.isUpdateRequired(localId);
+    }
+
+    public SatelliteBase getSatellite() {
+        return this.satellite;
+    }
+
+    public void setSatellite(SatelliteBase satellite) {
+        this.satellite = satellite;
+    }
 
 }

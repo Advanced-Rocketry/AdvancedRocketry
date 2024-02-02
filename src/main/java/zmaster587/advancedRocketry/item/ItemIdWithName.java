@@ -13,34 +13,33 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemIdWithName extends Item {
-	
-	public void setName(@Nonnull ItemStack stack, String name) {
 
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
-			nbt.setString("name", name);
-			stack.setTagCompound(nbt);
-		}
-	}
+    public void setName(@Nonnull ItemStack stack, String name) {
 
-	public String getName(@Nonnull ItemStack stack) {
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
-			return nbt.getString("name");
-		}
+        if (stack.hasTagCompound()) {
+            NBTTagCompound nbt = stack.getTagCompound();
+            nbt.setString("name", name);
+            stack.setTagCompound(nbt);
+        }
+    }
 
-		return "";
-	}
-	
-	
-	@Override
+    public String getName(@Nonnull ItemStack stack) {
+        if (stack.hasTagCompound()) {
+            NBTTagCompound nbt = stack.getTagCompound();
+            return nbt.getString("name");
+        }
+
+        return "";
+    }
+
+
+    @Override
     @SideOnly(Side.CLIENT)
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
-		if(stack.getItemDamage() == -1) {
-			list.add(ChatFormatting.GRAY + "Unprogrammed");
-		}
-		else {
-			list.add(getName(stack));
-		}
-	}
+    public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag bool) {
+        if (stack.getItemDamage() == -1) {
+            list.add(ChatFormatting.GRAY + "Unprogrammed");
+        } else {
+            list.add(getName(stack));
+        }
+    }
 }

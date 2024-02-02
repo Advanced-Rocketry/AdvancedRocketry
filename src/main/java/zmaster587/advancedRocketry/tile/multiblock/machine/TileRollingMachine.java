@@ -19,52 +19,54 @@ import java.util.List;
 
 public class TileRollingMachine extends TileMultiblockMachine {
 
-	public static final Object[][][] structure = new Object[][][] {
-		{   {Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},
-			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock},
-			{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, "blockSteel", LibVulpesBlocks.blockStructureBlock}},
+    public static final Object[][][] structure = new Object[][][]{
+            {{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},
+                    {LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock},
+                    {LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.blockStructureBlock, "blockSteel", LibVulpesBlocks.blockStructureBlock}},
 
-			{{'P', 'c', 'I', Blocks.AIR, Blocks.AIR},
-				{LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.motors, LibVulpesBlocks.motors, "blockSteel", LibVulpesBlocks.blockStructureBlock},
-				{LibVulpesBlocks.blockStructureBlock, 'L', 'O', "blockSteel", LibVulpesBlocks.blockStructureBlock}}
-	};
-	
-	@Override
-	public Object[][][] getStructure() {
-		return structure;
-	}
+            {{'P', 'c', 'I', Blocks.AIR, Blocks.AIR},
+                    {LibVulpesBlocks.blockStructureBlock, LibVulpesBlocks.motors, LibVulpesBlocks.motors, "blockSteel", LibVulpesBlocks.blockStructureBlock},
+                    {LibVulpesBlocks.blockStructureBlock, 'L', 'O', "blockSteel", LibVulpesBlocks.blockStructureBlock}}
+    };
 
-	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> modules = super.getModules(ID, player);
+    @Override
+    public Object[][][] getStructure() {
+        return structure;
+    }
 
-		modules.add(new ModuleProgress(70, 20, 0, TextureResources.rollingMachineProgressBar, this));
-		return modules;
-	}
+    @Override
+    public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+        List<ModuleBase> modules = super.getModules(ID, player);
+
+        modules.add(new ModuleProgress(70, 20, 0, TextureResources.rollingMachineProgressBar, this));
+        return modules;
+    }
 
 
-	@Override
-	public SoundEvent getSound() {
-		return AudioRegistry.rollingMachine;
-	}
+    @Override
+    public SoundEvent getSound() {
+        return AudioRegistry.rollingMachine;
+    }
 
-	@Override
-	public int getSoundDuration() {
-		return 30;
-	}
-	
-	@Override
-	public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) { return true; }
+    @Override
+    public int getSoundDuration() {
+        return 30;
+    }
 
-	@Override
-	public String getMachineName() {
-		return AdvancedRocketryBlocks.blockRollingMachine.getLocalizedName();
-	}
+    @Override
+    public boolean shouldHideBlock(World world, BlockPos pos, IBlockState tile) {
+        return true;
+    }
 
-	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		
-		return new AxisAlignedBB(pos.add(-4,-4,-4), pos.add(4,4,4));
-	}
+    @Override
+    public String getMachineName() {
+        return AdvancedRocketryBlocks.blockRollingMachine.getLocalizedName();
+    }
+
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+
+        return new AxisAlignedBB(pos.add(-4, -4, -4), pos.add(4, 4, 4));
+    }
 
 }

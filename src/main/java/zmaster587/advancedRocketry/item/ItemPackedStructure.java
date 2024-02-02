@@ -9,33 +9,33 @@ import javax.annotation.Nonnull;
 
 public class ItemPackedStructure extends Item {
 
-	public ItemPackedStructure() {
-		setHasSubtypes(true);
-	}
-	
-	public void setStructure(@Nonnull ItemStack stack, StorageChunk chunk) {
-		NBTTagCompound nbt;
-		if(stack.hasTagCompound())
-			nbt = stack.getTagCompound();
-		else
-			nbt = new NBTTagCompound();
+    public ItemPackedStructure() {
+        setHasSubtypes(true);
+    }
 
-		NBTTagCompound chunkNbt = new NBTTagCompound();
+    public void setStructure(@Nonnull ItemStack stack, StorageChunk chunk) {
+        NBTTagCompound nbt;
+        if (stack.hasTagCompound())
+            nbt = stack.getTagCompound();
+        else
+            nbt = new NBTTagCompound();
 
-		chunk.writeToNBT(chunkNbt);
+        NBTTagCompound chunkNbt = new NBTTagCompound();
 
-		nbt.setTag("chunk", chunkNbt);
-		stack.setTagCompound(nbt);
-	}
+        chunk.writeToNBT(chunkNbt);
 
-	public StorageChunk getStructure(@Nonnull ItemStack stack) {
-		if(stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
-			StorageChunk chunk = new StorageChunk();
-			
-			chunk.readFromNBT(nbt.getCompoundTag("chunk"));
-			return chunk;
-		}
-		return null;
-	}
+        nbt.setTag("chunk", chunkNbt);
+        stack.setTagCompound(nbt);
+    }
+
+    public StorageChunk getStructure(@Nonnull ItemStack stack) {
+        if (stack.hasTagCompound()) {
+            NBTTagCompound nbt = stack.getTagCompound();
+            StorageChunk chunk = new StorageChunk();
+
+            chunk.readFromNBT(nbt.getCompoundTag("chunk"));
+            return chunk;
+        }
+        return null;
+    }
 }

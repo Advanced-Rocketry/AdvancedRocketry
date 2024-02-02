@@ -14,137 +14,138 @@ import java.util.Random;
 
 public class WorldGenLargeCrystal extends WorldGenerator {
 
-	private IBlockState block;
-	public WorldGenLargeCrystal() {
-		this.block = AdvancedRocketryBlocks.blockCrystal.getDefaultState();
-	}
+    private IBlockState block;
 
-	@Override
-	public boolean generate(World world, Random rand, @Nonnull BlockPos pos) {
+    public WorldGenLargeCrystal() {
+        this.block = AdvancedRocketryBlocks.blockCrystal.getDefaultState();
+    }
 
-		IBlockState state = world.getBiome(pos).fillerBlock;
-		Block fillerBlock = state.getBlock();
+    @Override
+    public boolean generate(World world, Random rand, @Nonnull BlockPos pos) {
 
-		int height = rand.nextInt(40) + 10;
-		int edgeRadius = rand.nextInt(4) + 2;
-		int numDiag = edgeRadius + 1;
-		int xShear = 1 - (rand.nextInt(6) + 3) / 4; //1/6 lean right, 1/6 lean left, 4/6 no lean
-		int zShear = 1 - (rand.nextInt(6) + 3) / 4; //1/6 lean right, 1/6 lean left, 4/6 no lean
-		
-		IBlockState usedState = block.withProperty(BlockCrystal.CRYSTALPROPERTY, BlockCrystal.EnumCrystal.values()[rand.nextInt(BlockCrystal.EnumCrystal.values().length)]);
-		
-		int currentEdgeRadius;
+        IBlockState state = world.getBiome(pos).fillerBlock;
+        Block fillerBlock = state.getBlock();
 
-		final float SHAPE = 0.01f + rand.nextFloat()*0.2f;
+        int height = rand.nextInt(40) + 10;
+        int edgeRadius = rand.nextInt(4) + 2;
+        int numDiag = edgeRadius + 1;
+        int xShear = 1 - (rand.nextInt(6) + 3) / 4; //1/6 lean right, 1/6 lean left, 4/6 no lean
+        int zShear = 1 - (rand.nextInt(6) + 3) / 4; //1/6 lean right, 1/6 lean left, 4/6 no lean
 
-		int y = pos.getY() - 2;
-		int x = pos.getX();
-		int z = pos.getZ();
+        IBlockState usedState = block.withProperty(BlockCrystal.CRYSTALPROPERTY, BlockCrystal.EnumCrystal.values()[rand.nextInt(BlockCrystal.EnumCrystal.values().length)]);
 
-		final int startingCurrentEdgeRadius = (int)((SHAPE*(edgeRadius * height )) + ((1f-SHAPE)*edgeRadius));
-		currentEdgeRadius = startingCurrentEdgeRadius;
+        int currentEdgeRadius;
 
-		//Make the base of the crystal
-		//Generate the top trapezoid
-		for(int zOff = -numDiag - currentEdgeRadius/2; zOff <= -currentEdgeRadius/2; zOff++) {
+        final float SHAPE = 0.01f + rand.nextFloat() * 0.2f;
 
-			for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
+        int y = pos.getY() - 2;
+        int x = pos.getX();
+        int z = pos.getZ();
 
-				for(BlockPos yOff = world.getHeight(new BlockPos(x + xOff, y, z + zOff)); yOff.getY() < y; yOff = yOff.up()) //Fills the gaps under the crystal
-					setBlockState(world,yOff, fillerBlock.getDefaultState());
-				setBlockState(world,new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
-			}
-			currentEdgeRadius++;
-		}
+        final int startingCurrentEdgeRadius = (int) ((SHAPE * (edgeRadius * height)) + ((1f - SHAPE) * edgeRadius));
+        currentEdgeRadius = startingCurrentEdgeRadius;
 
-		//Generate square segment
-		for(int zOff = -currentEdgeRadius/2; zOff <= currentEdgeRadius/2; zOff++) {
-			for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
-				
-				for(BlockPos yOff = world.getHeight(new BlockPos(x + xOff, y,z + zOff)); yOff.getY() < y; yOff.up()) //Fills the gaps under the crystal
-					setBlockState(world, yOff, fillerBlock.getDefaultState());
-				setBlockState(world, new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
-			}
-		}
+        //Make the base of the crystal
+        //Generate the top trapezoid
+        for (int zOff = -numDiag - currentEdgeRadius / 2; zOff <= -currentEdgeRadius / 2; zOff++) {
 
-		//Generate the bottom trapezoid
-		for(int zOff = currentEdgeRadius/2; zOff <= numDiag + currentEdgeRadius/2; zOff++) {
-			currentEdgeRadius--;
-			for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
-				for(BlockPos yOff = world.getHeight(new BlockPos(x + xOff, y, z + zOff)); yOff.getY() < y; yOff.getY()) //Fills the gaps under the crystal
-					setBlockState(world,yOff, fillerBlock.getDefaultState());
-				setBlockState(world,new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
-			}
-		}
+            for (int xOff = -numDiag - currentEdgeRadius / 2; xOff <= numDiag + currentEdgeRadius / 2; xOff++) {
 
-		y++;
+                for (BlockPos yOff = world.getHeight(new BlockPos(x + xOff, y, z + zOff)); yOff.getY() < y; yOff = yOff.up()) //Fills the gaps under the crystal
+                    setBlockState(world, yOff, fillerBlock.getDefaultState());
+                setBlockState(world, new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
+            }
+            currentEdgeRadius++;
+        }
+
+        //Generate square segment
+        for (int zOff = -currentEdgeRadius / 2; zOff <= currentEdgeRadius / 2; zOff++) {
+            for (int xOff = -numDiag - currentEdgeRadius / 2; xOff <= numDiag + currentEdgeRadius / 2; xOff++) {
+
+                for (BlockPos yOff = world.getHeight(new BlockPos(x + xOff, y, z + zOff)); yOff.getY() < y; yOff.up()) //Fills the gaps under the crystal
+                    setBlockState(world, yOff, fillerBlock.getDefaultState());
+                setBlockState(world, new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
+            }
+        }
+
+        //Generate the bottom trapezoid
+        for (int zOff = currentEdgeRadius / 2; zOff <= numDiag + currentEdgeRadius / 2; zOff++) {
+            currentEdgeRadius--;
+            for (int xOff = -numDiag - currentEdgeRadius / 2; xOff <= numDiag + currentEdgeRadius / 2; xOff++) {
+                for (BlockPos yOff = world.getHeight(new BlockPos(x + xOff, y, z + zOff)); yOff.getY() < y; yOff.getY()) //Fills the gaps under the crystal
+                    setBlockState(world, yOff, fillerBlock.getDefaultState());
+                setBlockState(world, new BlockPos(x + xOff, y, z + zOff), fillerBlock.getDefaultState());
+            }
+        }
+
+        y++;
 
 
-		for(int yOff = 0; yOff < height; yOff++) {
+        for (int yOff = 0; yOff < height; yOff++) {
 
-			currentEdgeRadius = (int)((SHAPE*(edgeRadius * (height - yOff))) + ((1f-SHAPE)*edgeRadius));
+            currentEdgeRadius = (int) ((SHAPE * (edgeRadius * (height - yOff))) + ((1f - SHAPE) * edgeRadius));
 
-			//Generate the top trapezoid
-			for(int zOff = -numDiag - currentEdgeRadius/2; zOff <= -currentEdgeRadius/2; zOff++) {
+            //Generate the top trapezoid
+            for (int zOff = -numDiag - currentEdgeRadius / 2; zOff <= -currentEdgeRadius / 2; zOff++) {
 
-				for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
-					setBlockState(world, new BlockPos(x + xOff + xShear*yOff, y + yOff, z + zOff + zShear*yOff), usedState);
-				}
-				currentEdgeRadius++;
-			}
+                for (int xOff = -numDiag - currentEdgeRadius / 2; xOff <= numDiag + currentEdgeRadius / 2; xOff++) {
+                    setBlockState(world, new BlockPos(x + xOff + xShear * yOff, y + yOff, z + zOff + zShear * yOff), usedState);
+                }
+                currentEdgeRadius++;
+            }
 
-			//Generate square segment
-			for(int zOff = -currentEdgeRadius/2; zOff <= currentEdgeRadius/2; zOff++) {
-				for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
-					setBlockState(world,new BlockPos(x + xOff + xShear*yOff, y + yOff, z + zOff + zShear*yOff), usedState);
-				}
-			}
+            //Generate square segment
+            for (int zOff = -currentEdgeRadius / 2; zOff <= currentEdgeRadius / 2; zOff++) {
+                for (int xOff = -numDiag - currentEdgeRadius / 2; xOff <= numDiag + currentEdgeRadius / 2; xOff++) {
+                    setBlockState(world, new BlockPos(x + xOff + xShear * yOff, y + yOff, z + zOff + zShear * yOff), usedState);
+                }
+            }
 
-			//Generate the bottom trapezoid
-			for(int zOff = currentEdgeRadius/2; zOff <= numDiag + currentEdgeRadius/2; zOff++) {
-				currentEdgeRadius--;
-				for(int xOff = -numDiag -currentEdgeRadius/2; xOff <=  numDiag + currentEdgeRadius/2; xOff++) {
-					setBlockState(world, new BlockPos(x + xOff + xShear*yOff, y + yOff, z + zOff + zShear*yOff), usedState);
-				}
-			}
-		}
+            //Generate the bottom trapezoid
+            for (int zOff = currentEdgeRadius / 2; zOff <= numDiag + currentEdgeRadius / 2; zOff++) {
+                currentEdgeRadius--;
+                for (int xOff = -numDiag - currentEdgeRadius / 2; xOff <= numDiag + currentEdgeRadius / 2; xOff++) {
+                    setBlockState(world, new BlockPos(x + xOff + xShear * yOff, y + yOff, z + zOff + zShear * yOff), usedState);
+                }
+            }
+        }
 
-		
-		currentEdgeRadius = startingCurrentEdgeRadius;
-		//Make some rand noise in the base
-		//Generate the top trapezoid
-		for(int zOff = -numDiag - currentEdgeRadius/2; zOff <= -currentEdgeRadius/2; zOff++) {
 
-			for(int xOff = -currentEdgeRadius/2; xOff <= currentEdgeRadius/2; xOff++) {
-				if(rand.nextInt(3)  < 1)
-					setBlockState(world, new BlockPos(x + xOff, y, z + zOff), state);
-			}
-			currentEdgeRadius++;
-		}
+        currentEdgeRadius = startingCurrentEdgeRadius;
+        //Make some rand noise in the base
+        //Generate the top trapezoid
+        for (int zOff = -numDiag - currentEdgeRadius / 2; zOff <= -currentEdgeRadius / 2; zOff++) {
 
-		//Generate square segment
-		for(int zOff = -currentEdgeRadius/2; zOff <= currentEdgeRadius/2; zOff++) {
-			for(int xOff = -currentEdgeRadius/2; xOff <= currentEdgeRadius/2; xOff++) {
-				if(rand.nextInt(3)  < 1)
-					setBlockState(world, new BlockPos(x + xOff, y, z + zOff), state);
-			}
-		}
+            for (int xOff = -currentEdgeRadius / 2; xOff <= currentEdgeRadius / 2; xOff++) {
+                if (rand.nextInt(3) < 1)
+                    setBlockState(world, new BlockPos(x + xOff, y, z + zOff), state);
+            }
+            currentEdgeRadius++;
+        }
 
-		//Generate the bottom trapezoid
-		for(int zOff = currentEdgeRadius/2; zOff <= numDiag + currentEdgeRadius/2; zOff++) {
-			currentEdgeRadius--;
-			for(int xOff = -currentEdgeRadius/2; xOff <= currentEdgeRadius/2; xOff++) {
-				if(rand.nextInt(3)  < 1)
-					setBlockState(world, new BlockPos(x + xOff, y, z + zOff), state);
-			}
-		}
+        //Generate square segment
+        for (int zOff = -currentEdgeRadius / 2; zOff <= currentEdgeRadius / 2; zOff++) {
+            for (int xOff = -currentEdgeRadius / 2; xOff <= currentEdgeRadius / 2; xOff++) {
+                if (rand.nextInt(3) < 1)
+                    setBlockState(world, new BlockPos(x + xOff, y, z + zOff), state);
+            }
+        }
 
-		return true;
-	}
-	
-	//Screw thy lighting checks!
-	public void setBlockState(World world, BlockPos pos, IBlockState state) {
-		Chunk chunk = world.getChunkFromBlockCoords(pos);
-		chunk.setBlockState(pos, state);
-	}
+        //Generate the bottom trapezoid
+        for (int zOff = currentEdgeRadius / 2; zOff <= numDiag + currentEdgeRadius / 2; zOff++) {
+            currentEdgeRadius--;
+            for (int xOff = -currentEdgeRadius / 2; xOff <= currentEdgeRadius / 2; xOff++) {
+                if (rand.nextInt(3) < 1)
+                    setBlockState(world, new BlockPos(x + xOff, y, z + zOff), state);
+            }
+        }
+
+        return true;
+    }
+
+    //Screw thy lighting checks!
+    public void setBlockState(World world, BlockPos pos, IBlockState state) {
+        Chunk chunk = world.getChunkFromBlockCoords(pos);
+        chunk.setBlockState(pos, state);
+    }
 }

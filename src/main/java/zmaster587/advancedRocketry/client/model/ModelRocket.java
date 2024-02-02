@@ -22,55 +22,55 @@ import java.util.function.Function;
 
 public class ModelRocket implements IModel {
 
-	public static ModelResourceLocation resource = new ModelResourceLocation("advancedrocketry:rocket.obj");
-	
-	@Override
-	@Nonnull
-	public Collection<ResourceLocation> getDependencies() {
-		return new LinkedList<>();
-	}
+    public static ModelResourceLocation resource = new ModelResourceLocation("advancedrocketry:rocket.obj");
 
-	@Override
-	@Nonnull
-	public Collection<ResourceLocation> getTextures() {
-		List<ResourceLocation> textures = new LinkedList<>();
-		textures.add(new ResourceLocation("advancedrocketry:models/combustion.png"));
-		return textures;
-	}
+    @Override
+    @Nonnull
+    public Collection<ResourceLocation> getDependencies() {
+        return new LinkedList<>();
+    }
 
-	@Override
-	@Nullable
-	@ParametersAreNonnullByDefault
-	public IBakedModel bake(IModelState state, VertexFormat format,
-			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-		
-		IModel subComponent;
-		try {
-			subComponent = ModelLoaderRegistry.getModel(resource);
-			return subComponent.bake(state, format, bakedTextureGetter);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
+    @Override
+    @Nonnull
+    public Collection<ResourceLocation> getTextures() {
+        List<ResourceLocation> textures = new LinkedList<>();
+        textures.add(new ResourceLocation("advancedrocketry:models/combustion.png"));
+        return textures;
+    }
 
-	@Override
-	@Nonnull
-	public IModelState getDefaultState() {
-		return State.myState;
-	}
+    @Override
+    @Nullable
+    @ParametersAreNonnullByDefault
+    public IBakedModel bake(IModelState state, VertexFormat format,
+                            Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
 
-	
-	private final static class State implements IModelState {
+        IModel subComponent;
+        try {
+            subComponent = ModelLoaderRegistry.getModel(resource);
+            return subComponent.bake(state, format, bakedTextureGetter);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-		static State myState = new State();
-		
-		@Override
-		public Optional<TRSRTransformation> apply(
-				Optional<? extends IModelPart> part) {
-			return Optional.empty();
-		}
-		
-	}
+    @Override
+    @Nonnull
+    public IModelState getDefaultState() {
+        return State.myState;
+    }
+
+
+    private final static class State implements IModelState {
+
+        static State myState = new State();
+
+        @Override
+        public Optional<TRSRTransformation> apply(
+                Optional<? extends IModelPart> part) {
+            return Optional.empty();
+        }
+
+    }
 }

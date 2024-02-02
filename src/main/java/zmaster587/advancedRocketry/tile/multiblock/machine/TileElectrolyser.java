@@ -18,45 +18,47 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 import java.util.List;
 
 public class TileElectrolyser extends TileMultiblockMachine {
-	public static final Object[][][] structure = { 
-		{{null,null,null},
-		{'P', "blockCoil",'P'}},
-		
-		{{'l', 'c', 'l'}, 
-			{new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'L', new BlockMeta(LibVulpesBlocks.blockStructureBlock)}},
+    public static final Object[][][] structure = {
+            {{null, null, null},
+                    {'P', "blockCoil", 'P'}},
 
-	};
-	
-	@Override
-	public Object[][][] getStructure() {
-		return structure;
-	}
+            {{'l', 'c', 'l'},
+                    {new BlockMeta(LibVulpesBlocks.blockStructureBlock), 'L', new BlockMeta(LibVulpesBlocks.blockStructureBlock)}},
 
-	@Override
-	public boolean shouldHideBlock(World world, BlockPos pos2, IBlockState tile) { return true; }
-	
-	
-	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		return new AxisAlignedBB(pos.add(-2,-2,-2), pos.add(2,2,2));
-	}
-	
-	@Override
-	public SoundEvent getSound() {
-		return AudioRegistry.electrolyser;
-	}
+    };
+
+    @Override
+    public Object[][][] getStructure() {
+        return structure;
+    }
+
+    @Override
+    public boolean shouldHideBlock(World world, BlockPos pos2, IBlockState tile) {
+        return true;
+    }
 
 
-	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> modules = super.getModules(ID, player);
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+        return new AxisAlignedBB(pos.add(-2, -2, -2), pos.add(2, 2, 2));
+    }
 
-		modules.add(new ModuleProgress(100, 4, 0, TextureResources.crystallizerProgressBar, this));
-		return modules;
-	}
+    @Override
+    public SoundEvent getSound() {
+        return AudioRegistry.electrolyser;
+    }
 
-	@Override
-	public String getMachineName() {
-		return AdvancedRocketryBlocks.blockElectrolyser.getLocalizedName();
-	}
+
+    @Override
+    public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+        List<ModuleBase> modules = super.getModules(ID, player);
+
+        modules.add(new ModuleProgress(100, 4, 0, TextureResources.crystallizerProgressBar, this));
+        return modules;
+    }
+
+    @Override
+    public String getMachineName() {
+        return AdvancedRocketryBlocks.blockElectrolyser.getLocalizedName();
+    }
 }

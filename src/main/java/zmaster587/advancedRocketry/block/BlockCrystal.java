@@ -22,81 +22,74 @@ import zmaster587.libVulpes.block.INamedMetaBlock;
 import javax.annotation.Nonnull;
 
 public class BlockCrystal extends Block implements INamedMetaBlock {
-	
-	public final static PropertyEnum<EnumCrystal> CRYSTALPROPERTY = PropertyEnum.create("type", EnumCrystal.class);
-	
-    public BlockCrystal()
-    {
+
+    public final static PropertyEnum<EnumCrystal> CRYSTALPROPERTY = PropertyEnum.create("type", EnumCrystal.class);
+    public static final int numMetas = EnumCrystal.values().length;
+
+    public BlockCrystal() {
         super(Material.GLASS);
         this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
         this.setSoundType(SoundType.GLASS);
         this.setDefaultState(this.getDefaultState().withProperty(CRYSTALPROPERTY, EnumCrystal.AMETHYST));
     }
-	
+
     @Override
     @Nonnull
     public IBlockState getStateFromMeta(int meta) {
-    	return this.getDefaultState().withProperty(CRYSTALPROPERTY, EnumCrystal.values()[meta]);
+        return this.getDefaultState().withProperty(CRYSTALPROPERTY, EnumCrystal.values()[meta]);
     }
 
     @Nonnull
-    protected BlockStateContainer createBlockState()
-    {
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, CRYSTALPROPERTY);
     }
-    
+
     @Override
     public int getMetaFromState(IBlockState state) {
-    	return state.getValue(CRYSTALPROPERTY).ordinal();
+        return state.getValue(CRYSTALPROPERTY).ordinal();
     }
-    
+
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
+
     @Override
-	public String getUnlocalizedName(int itemDamage) {
-		return  "tile." + EnumCrystal.values()[itemDamage];
-	}
-    
-    
+    public String getUnlocalizedName(int itemDamage) {
+        return "tile." + EnumCrystal.values()[itemDamage];
+    }
+
     @SideOnly(Side.CLIENT)
     @Nonnull
-    public BlockRenderLayer getBlockLayer()
-    {
+    public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.TRANSLUCENT;
     }
-    
-	@Override
-	public void getSubBlocks(CreativeTabs tab,
-			NonNullList<ItemStack> list) {
-		for(int i = 0; i < numMetas; i++) {
-			list.add(new ItemStack(this, 1, i));
-		}
-	}
-	
-	@Override
-	public int damageDropped(IBlockState state) {
-		return getMetaFromState(state);
-	}
-	
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState blockState,
-			IBlockAccess world, BlockPos pos, EnumFacing side) {
+
+    @Override
+    public void getSubBlocks(CreativeTabs tab,
+                             NonNullList<ItemStack> list) {
+        for (int i = 0; i < numMetas; i++) {
+            list.add(new ItemStack(this, 1, i));
+        }
+    }
+
+    @Override
+    public int damageDropped(IBlockState state) {
+        return getMetaFromState(state);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(IBlockState blockState,
+                                        IBlockAccess world, BlockPos pos, EnumFacing side) {
 
         IBlockState blockState2 = world.getBlockState(pos.offset(side/*.getOpposite()*/));
-       
+
         return !blockState.equals(blockState2) && super.shouldSideBeRendered(blockState, world, pos, side);
-   
-	}
-	
-	public static final int numMetas = EnumCrystal.values().length;
-	
-    public enum EnumCrystal implements IStringSerializable
-    {
+
+    }
+
+    public enum EnumCrystal implements IStringSerializable {
         AMETHYST(0, 0xb23fff, "amethyst", MapColor.PURPLE),
         SAPPHIRE(1, 0x3333ff, "sapphire", MapColor.BLUE),
         EMERALD(2, 0x00ff00, "emerald", MapColor.GREEN),
@@ -109,41 +102,35 @@ public class BlockCrystal extends Block implements INamedMetaBlock {
         private final MapColor mapColor;
         private final int color;
 
-        EnumCrystal(int meta, int color, String name, MapColor mapColorIn)
-        {
-        	this.color = color;
+        EnumCrystal(int meta, int color, String name, MapColor mapColorIn) {
+            this.color = color;
             this.meta = meta;
             this.name = name;
             this.mapColor = mapColorIn;
         }
 
-        public int getMetadata()
-        {
+        public int getMetadata() {
             return this.meta;
         }
 
-        public String getUnlocalizedName()
-        {
+        public String getUnlocalizedName() {
             return this.name;
         }
 
         public int getColor() {
-        	return color;
+            return color;
         }
-        
-        public MapColor getMapColor()
-        {
+
+        public MapColor getMapColor() {
             return this.mapColor;
         }
 
-        public String toString()
-        {
+        public String toString() {
             return this.name;
         }
 
         @Nonnull
-        public String getName()
-        {
+        public String getName() {
             return this.name;
         }
     }

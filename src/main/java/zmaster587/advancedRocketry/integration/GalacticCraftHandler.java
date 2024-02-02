@@ -13,27 +13,27 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GalacticCraftHandler {
 
 
-	@SubscribeEvent
-	public void GCSuffocationEvent(GCCoreOxygenSuffocationEvent.Pre event) {
-		
-		if(event.getEntity() instanceof EntityPlayer) {
-			GCPlayerStats stats = GCPlayerStats.get(event.getEntity());
-			if(stats != null)
-				stats.setLastOxygenSetupValid(true);
-		}
+    @SubscribeEvent
+    public void GCSuffocationEvent(GCCoreOxygenSuffocationEvent.Pre event) {
 
-		event.setCanceled(true);
-	}
+        if (event.getEntity() instanceof EntityPlayer) {
+            GCPlayerStats stats = GCPlayerStats.get(event.getEntity());
+            if (stats != null)
+                stats.setLastOxygenSetupValid(true);
+        }
 
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void tickFixAnnoyingOverlay(TickEvent.RenderTickEvent event) {
+        event.setCanceled(true);
+    }
 
-		if(Minecraft.getMinecraft().player != null) {
-			GCPlayerStatsClient stats = GCPlayerStatsClient.get(Minecraft.getMinecraft().player);
-			if(stats != null)
-				stats.setOxygenSetupValid(true);
-		}
-	}
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void tickFixAnnoyingOverlay(TickEvent.RenderTickEvent event) {
+
+        if (Minecraft.getMinecraft().player != null) {
+            GCPlayerStatsClient stats = GCPlayerStatsClient.get(Minecraft.getMinecraft().player);
+            if (stats != null)
+                stats.setOxygenSetupValid(true);
+        }
+    }
 
 }

@@ -8,23 +8,22 @@ import zmaster587.libVulpes.LibVulpes;
 
 public class SawMillCategory extends MachineCategoryTemplate<SawMillWrapper> {
 
-	public SawMillCategory(IGuiHelper helper) {
-		super(helper, TextureResources.cuttingMachineProgressBar);
-	}
-	
-	@Override
-	public String getUid() {
-		return ARPlugin.sawMillUUID;
-	}
-
-	@Override
-	public String getTitle() {
-		return LibVulpes.proxy.getLocalizedString("tile.cuttingMachine.name");
-	}
+    public SawMillCategory(IGuiHelper helper) {
+        super(helper, TextureResources.cuttingMachineProgressBar);
+    }
 
     @Override
-    public String getModName()
-    {
+    public String getUid() {
+        return ARPlugin.sawMillUUID;
+    }
+
+    @Override
+    public String getTitle() {
+        return LibVulpes.proxy.getLocalizedString("tile.cuttingMachine.name");
+    }
+
+    @Override
+    public String getModName() {
         return "Advanced Rocketry";
     }
 

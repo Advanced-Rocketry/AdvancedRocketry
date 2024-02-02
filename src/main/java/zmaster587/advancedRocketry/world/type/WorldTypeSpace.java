@@ -4,13 +4,13 @@ import net.minecraft.world.WorldType;
 
 public class WorldTypeSpace extends WorldType {
 
-	public WorldTypeSpace(String string) {
-		super(string);
-	}
+    public WorldTypeSpace(String string) {
+        super(string);
+    }
 
-	
-	@Override
-	public boolean canBeCreated() {
-		return false;
-	}
+
+    @Override
+    public boolean canBeCreated() {
+        return false;
+    }
 }

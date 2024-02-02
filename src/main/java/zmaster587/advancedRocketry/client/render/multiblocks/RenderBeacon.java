@@ -13,54 +13,53 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 
 public class RenderBeacon extends TileEntitySpecialRenderer {
 
-	WavefrontObject model;
+    public ResourceLocation baseTexture = new ResourceLocation("advancedRocketry:textures/models/beacon.png");
+    WavefrontObject model;
+    RenderLaser laser;
 
-	public ResourceLocation baseTexture =  new ResourceLocation("advancedRocketry:textures/models/beacon.png");
-	RenderLaser laser;
+    public RenderBeacon() {
 
-	public RenderBeacon() {
+        try {
+            model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/beacon.obj"));
+        } catch (ModelFormatException e) {
+            e.printStackTrace();
+        }
+    }
 
-		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/beacon.obj"));
-		} catch (ModelFormatException e) {
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public void render(TileEntity tile, double x,
+                       double y, double z, float f, int damage, float a) {
+        TileMultiPowerConsumer multiBlockTile = (TileMultiPowerConsumer) tile;
 
-	@Override
-	public void render(TileEntity tile, double x,
-			double y, double z, float f, int damage, float a) {
-		TileMultiPowerConsumer multiBlockTile = (TileMultiPowerConsumer)tile;
+        if (!multiBlockTile.canRender())
+            return;
 
-		if(!multiBlockTile.canRender())
-			return;
+        GL11.glPushMatrix();
 
-		GL11.glPushMatrix();
+        //Initial setup
 
-		//Initial setup
+        GL11.glTranslated(x + 0.5, y, z + .5);
+        //Rotate and move the model into position
+        EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
+        GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ() * 90f, 0, 1, 0);
+        //GL11.glTranslated(2f, 0, 0f);
+        bindTexture(baseTexture);
+        model.renderOnly("Base");
 
-		GL11.glTranslated(x + 0.5, y, z + .5);
-		//Rotate and move the model into position
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
-		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 180 : 0) + front.getFrontOffsetZ()*90f, 0, 1, 0);
-		//GL11.glTranslated(2f, 0, 0f);
-		bindTexture(baseTexture);
-		model.renderOnly("Base");
+        GL11.glTranslatef(1, 0, 0);
+        GL11.glPushMatrix();
+        if (multiBlockTile.getMachineEnabled())
+            GL11.glRotated((System.currentTimeMillis() & 0xFFFF) / 20d, 0, 1, 0);
+        model.renderOnly("OuterSpin");
+        GL11.glPopMatrix();
 
-		GL11.glTranslatef(1, 0, 0);
-		GL11.glPushMatrix();
-		if(multiBlockTile.getMachineEnabled())
-			GL11.glRotated((System.currentTimeMillis() & 0xFFFF)/20d, 0, 1, 0);
-		model.renderOnly("OuterSpin");
-		GL11.glPopMatrix();
-
-		GL11.glPushMatrix();
-		if(multiBlockTile.getMachineEnabled())
-			GL11.glRotated(-(System.currentTimeMillis() & 0xFFFF)/6d, 0, 1, 0);
-		model.renderOnly("InnerSpin");
-		GL11.glPopMatrix();
+        GL11.glPushMatrix();
+        if (multiBlockTile.getMachineEnabled())
+            GL11.glRotated(-(System.currentTimeMillis() & 0xFFFF) / 6d, 0, 1, 0);
+        model.renderOnly("InnerSpin");
+        GL11.glPopMatrix();
 
 
-		GL11.glPopMatrix();
-	}
+        GL11.glPopMatrix();
+    }
 }

@@ -20,77 +20,77 @@ import java.util.Random;
 
 public class BlockPipe extends Block {
 
-	private static AxisAlignedBB bb = new AxisAlignedBB(0.15, 0.15, 0.15, 0.85, 0.85, 0.85);
-	
-	protected BlockPipe(Material material) {
-		super(material);
+    private static AxisAlignedBB bb = new AxisAlignedBB(0.15, 0.15, 0.15, 0.85, 0.85, 0.85);
 
-	}
+    protected BlockPipe(Material material) {
+        super(material);
 
-	@Override
-	@Nonnull
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source,
-			BlockPos pos) {
-		return bb;
-	}
-	
-	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world,
-			BlockPos pos) {
-		return false;
-	}
+    }
 
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
+    @Override
+    @Nonnull
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source,
+                                        BlockPos pos) {
+        return bb;
+    }
 
-	@Override
-	public boolean isFullCube(IBlockState state) {
-		return false;
-	}
+    @Override
+    public boolean isNormalCube(IBlockState state, IBlockAccess world,
+                                BlockPos pos) {
+        return false;
+    }
 
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
-		return true;
-	}
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
 
-	@Override
-	@ParametersAreNullableByDefault
-	public boolean shouldSideBeRendered(IBlockState blockState,
-			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
-		return true;
-	}
+    @Override
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
 
-	@Override
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state,
-			Random rand) {
-		super.updateTick(worldIn, pos, state, rand);
-		TilePipe pipe = ((TilePipe)worldIn.getTileEntity(pos));
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
 
-		if (pipe != null && !pipe.isInitialized()) {
-			pipe.onPlaced();
-			pipe.markDirty();
-		}
-	}
-	
-	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state,
-			EntityLivingBase placer, @Nonnull ItemStack stack) {
-		((TilePipe)worldIn.getTileEntity(pos)).onPlaced();
-	}
+    @Override
+    @ParametersAreNullableByDefault
+    public boolean shouldSideBeRendered(IBlockState blockState,
+                                        IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+        return true;
+    }
+
+    @Override
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state,
+                           Random rand) {
+        super.updateTick(worldIn, pos, state, rand);
+        TilePipe pipe = ((TilePipe) worldIn.getTileEntity(pos));
+
+        if (pipe != null && !pipe.isInitialized()) {
+            pipe.onPlaced();
+            pipe.markDirty();
+        }
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state,
+                                EntityLivingBase placer, @Nonnull ItemStack stack) {
+        ((TilePipe) worldIn.getTileEntity(pos)).onPlaced();
+    }
 
 
-	@Override
-	@ParametersAreNullableByDefault
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileDataPipe();
-	}
+    @Override
+    @ParametersAreNullableByDefault
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileDataPipe();
+    }
 
-	@Override
-	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
-		((TilePipe)world.getTileEntity(pos)).onNeighborTileChange(neighbor);
-	}
+    @Override
+    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
+        ((TilePipe) world.getTileEntity(pos)).onNeighborTileChange(neighbor);
+    }
 
 
 }

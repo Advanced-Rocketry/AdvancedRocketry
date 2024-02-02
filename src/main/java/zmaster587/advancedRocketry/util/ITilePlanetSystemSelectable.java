@@ -6,10 +6,10 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public interface ITilePlanetSystemSelectable {
-	@Nonnull
-	ItemStack getChipWithId(int id);
-	
-	void setSelectedPlanetId(int id);
-	
-	List<Integer> getVisiblePlanets();
+    @Nonnull
+    ItemStack getChipWithId(int id);
+
+    void setSelectedPlanetId(int id);
+
+    List<Integer> getVisiblePlanets();
 }

@@ -17,33 +17,33 @@ import javax.annotation.Nonnull;
 
 public class BlockWarpCore extends BlockMultiblockMachine {
 
-	public BlockWarpCore(Class<? extends TileMultiBlock> tileClass,
-			int guiId) {
-		super(tileClass, guiId);
-	}
+    public BlockWarpCore(Class<? extends TileMultiBlock> tileClass,
+                         int guiId) {
+        super(tileClass, guiId);
+    }
 
-	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
-			EntityLivingBase placer, @Nonnull ItemStack stack) {
-		super.onBlockPlacedBy(world, pos, state, placer, stack);
-		
-		if(!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
-			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-		
-			if(spaceObj instanceof SpaceStationObject)
-				((SpaceStationObject)spaceObj).addWarpCore(new HashedBlockPosition(pos));
-		}
-	}
-	
-	@Override
-	public void onBlockDestroyedByPlayer(World world, BlockPos pos,
-			IBlockState state) {
-		super.onBlockDestroyedByPlayer(world, pos, state);
-		
-		if(world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
-			ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(spaceObj instanceof SpaceStationObject)
-				((SpaceStationObject)spaceObj).removeWarpCore(new HashedBlockPosition(pos));
-		}
-	}
+    @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
+                                EntityLivingBase placer, @Nonnull ItemStack stack) {
+        super.onBlockPlacedBy(world, pos, state, placer, stack);
+
+        if (!world.isRemote && world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+            ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+
+            if (spaceObj instanceof SpaceStationObject)
+                ((SpaceStationObject) spaceObj).addWarpCore(new HashedBlockPosition(pos));
+        }
+    }
+
+    @Override
+    public void onBlockDestroyedByPlayer(World world, BlockPos pos,
+                                         IBlockState state) {
+        super.onBlockDestroyedByPlayer(world, pos, state);
+
+        if (world.provider.getDimension() == ARConfiguration.getCurrentConfig().spaceDimId) {
+            ISpaceObject spaceObj = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+            if (spaceObj instanceof SpaceStationObject)
+                ((SpaceStationObject) spaceObj).removeWarpCore(new HashedBlockPosition(pos));
+        }
+    }
 }

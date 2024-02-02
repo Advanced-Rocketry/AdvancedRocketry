@@ -28,112 +28,108 @@ import java.util.List;
 public class ItemOreScanner extends Item implements IModularInventory {
 
 
-	@Override
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag arg5) {
-		
-		SatelliteBase sat = DimensionManager.getInstance().getSatellite(this.getSatelliteID(stack));
-		
-		SatelliteOreMapping mapping = null;
-		if(sat instanceof SatelliteOreMapping)
-			mapping = (SatelliteOreMapping)sat;
-		
-		if(!stack.hasTagCompound())
-			list.add(LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
-		else if(mapping == null)
-			list.add(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.nosat"));
-		else if(mapping.getDimensionId() == player.provider.getDimension()) {
-			list.add(LibVulpes.proxy.getLocalizedString("msg.connected"));
-			list.add(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.maxzoom") + mapping.getZoomRadius());
-			list.add(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.filter") + mapping.canFilterOre());
-		}
-		else
-			list.add(LibVulpes.proxy.getLocalizedString("msg.notconnected"));
+    @Override
+    public void addInformation(@Nonnull ItemStack stack, World player, List<String> list, ITooltipFlag arg5) {
 
-		super.addInformation(stack, player, list, arg5);
-	}
-	
-	public void setSatelliteID(@Nonnull ItemStack stack, long id) {
-		NBTTagCompound nbt;
-		if(!stack.hasTagCompound())
-			nbt = new NBTTagCompound();
-		else
-			nbt = stack.getTagCompound();
-		
-		nbt.setLong("id", id);
-		stack.setTagCompound(nbt);
-	}
+        SatelliteBase sat = DimensionManager.getInstance().getSatellite(this.getSatelliteID(stack));
 
-	public long getSatelliteID(@Nonnull ItemStack stack) {
-		NBTTagCompound nbt;
-		if(!stack.hasTagCompound())
-			return -1;
-		
-		nbt = stack.getTagCompound();
-		
-		return nbt.getLong("id");
-	}
-	
-	@Override
-	@ParametersAreNonnullByDefault
-	@Nonnull
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
-		ItemStack stack = playerIn.getHeldItem(hand);
-		if(!playerIn.world.isRemote && !stack.isEmpty())
-		{
-			int satelliteId = (int)getSatelliteID(stack);
-			
-			SatelliteBase satellite = DimensionManager.getInstance().getSatellite(satelliteId);
-			
-			if(satellite instanceof SatelliteOreMapping && satellite.getDimensionId() == worldIn.provider.getDimension())
-				playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, playerIn.getPosition().getX(), (int)getSatelliteID(stack), playerIn.getPosition().getZ());
+        SatelliteOreMapping mapping = null;
+        if (sat instanceof SatelliteOreMapping)
+            mapping = (SatelliteOreMapping) sat;
 
-		}
-			
-		return super.onItemRightClick(worldIn, playerIn, hand);
-	}
-	
-	@Override
-	@Nonnull
-	public EnumActionResult onItemUse(EntityPlayer playerIn,
-			World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
-			float hitX, float hitY, float hitZ) {
-		if(!playerIn.world.isRemote && hand == EnumHand.MAIN_HAND)
-		{
-			ItemStack stack = playerIn.getHeldItem(hand);
-			if(!playerIn.world.isRemote && !stack.isEmpty())
-			{
-				int satelliteId = (int)getSatelliteID(stack);
-				
-				SatelliteBase satellite = DimensionManager.getInstance().getSatellite(satelliteId);
-				
-				if(satellite instanceof SatelliteOreMapping && satellite.getDimensionId() == worldIn.provider.getDimension())
-					playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, playerIn.getPosition().getX(), (int)getSatelliteID(stack), playerIn.getPosition().getZ());
+        if (!stack.hasTagCompound())
+            list.add(LibVulpes.proxy.getLocalizedString("msg.unprogrammed"));
+        else if (mapping == null)
+            list.add(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.nosat"));
+        else if (mapping.getDimensionId() == player.provider.getDimension()) {
+            list.add(LibVulpes.proxy.getLocalizedString("msg.connected"));
+            list.add(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.maxzoom") + mapping.getZoomRadius());
+            list.add(LibVulpes.proxy.getLocalizedString("msg.itemorescanner.filter") + mapping.canFilterOre());
+        } else
+            list.add(LibVulpes.proxy.getLocalizedString("msg.notconnected"));
 
-			}
-		}
-		return super.onItemUse(playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
-	}
+        super.addInformation(stack, player, list, arg5);
+    }
+
+    public void setSatelliteID(@Nonnull ItemStack stack, long id) {
+        NBTTagCompound nbt;
+        if (!stack.hasTagCompound())
+            nbt = new NBTTagCompound();
+        else
+            nbt = stack.getTagCompound();
+
+        nbt.setLong("id", id);
+        stack.setTagCompound(nbt);
+    }
+
+    public long getSatelliteID(@Nonnull ItemStack stack) {
+        NBTTagCompound nbt;
+        if (!stack.hasTagCompound())
+            return -1;
+
+        nbt = stack.getTagCompound();
+
+        return nbt.getLong("id");
+    }
+
+    @Override
+    @ParametersAreNonnullByDefault
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
+        ItemStack stack = playerIn.getHeldItem(hand);
+        if (!playerIn.world.isRemote && !stack.isEmpty()) {
+            int satelliteId = (int) getSatelliteID(stack);
+
+            SatelliteBase satellite = DimensionManager.getInstance().getSatellite(satelliteId);
+
+            if (satellite instanceof SatelliteOreMapping && satellite.getDimensionId() == worldIn.provider.getDimension())
+                playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, playerIn.getPosition().getX(), (int) getSatelliteID(stack), playerIn.getPosition().getZ());
+
+        }
+
+        return super.onItemRightClick(worldIn, playerIn, hand);
+    }
+
+    @Override
+    @Nonnull
+    public EnumActionResult onItemUse(EntityPlayer playerIn,
+                                      World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
+                                      float hitX, float hitY, float hitZ) {
+        if (!playerIn.world.isRemote && hand == EnumHand.MAIN_HAND) {
+            ItemStack stack = playerIn.getHeldItem(hand);
+            if (!playerIn.world.isRemote && !stack.isEmpty()) {
+                int satelliteId = (int) getSatelliteID(stack);
+
+                SatelliteBase satellite = DimensionManager.getInstance().getSatellite(satelliteId);
+
+                if (satellite instanceof SatelliteOreMapping && satellite.getDimensionId() == worldIn.provider.getDimension())
+                    playerIn.openGui(AdvancedRocketry.instance, GuiHandler.guiId.OreMappingSatellite.ordinal(), worldIn, playerIn.getPosition().getX(), (int) getSatelliteID(stack), playerIn.getPosition().getZ());
+
+            }
+        }
+        return super.onItemUse(playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+    }
 
 
-	public void interactSatellite(SatelliteBase satellite,EntityPlayer player, World world, BlockPos pos) {
-		satellite.performAction(player, world, pos);
-	}
+    public void interactSatellite(SatelliteBase satellite, EntityPlayer player, World world, BlockPos pos) {
+        satellite.performAction(player, world, pos);
+    }
 
-	@Override
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<>();
-		//modules.add(new ModuleOreMapper(0, 0));
-		return modules;
-	}
+    @Override
+    public List<ModuleBase> getModules(int id, EntityPlayer player) {
+        List<ModuleBase> modules = new LinkedList<>();
+        //modules.add(new ModuleOreMapper(0, 0));
+        return modules;
+    }
 
-	@Override
-	public String getModularInventoryName() {
-		return null;
-	}
+    @Override
+    public String getModularInventoryName() {
+        return null;
+    }
 
-	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
-		return true;
-	}
+    @Override
+    public boolean canInteractWithContainer(EntityPlayer entity) {
+        return true;
+    }
 
 }

@@ -11,16 +11,16 @@ import javax.annotation.Nonnull;
 
 public class CrystalColorizer implements IBlockColor, IItemColor {
 
-	@Override
-	public int getColorFromItemstack(@Nonnull ItemStack stack, int tintIndex) {
-		return BlockCrystal.EnumCrystal.values()[stack.getItemDamage()].getColor();
-		
-	}
+    @Override
+    public int getColorFromItemstack(@Nonnull ItemStack stack, int tintIndex) {
+        return BlockCrystal.EnumCrystal.values()[stack.getItemDamage()].getColor();
 
-	@Override
-	public int colorMultiplier(IBlockState state, IBlockAccess worldIn,
-			BlockPos pos, int tintIndex) {
-		return state.getValue(BlockCrystal.CRYSTALPROPERTY).getColor();
-	}
+    }
+
+    @Override
+    public int colorMultiplier(IBlockState state, IBlockAccess worldIn,
+                               BlockPos pos, int tintIndex) {
+        return state.getValue(BlockCrystal.CRYSTALPROPERTY).getColor();
+    }
 
 }

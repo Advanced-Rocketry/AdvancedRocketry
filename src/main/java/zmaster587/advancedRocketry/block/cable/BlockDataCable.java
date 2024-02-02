@@ -7,15 +7,15 @@ import net.minecraft.world.World;
 import zmaster587.advancedRocketry.tile.cables.TileDataPipe;
 
 public class BlockDataCable extends BlockPipe {
-	
-	public BlockDataCable(Material material) {
-		super(material);
-	}
 
-	
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileDataPipe();
-	}
+    public BlockDataCable(Material material) {
+        super(material);
+    }
+
+
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileDataPipe();
+    }
 
 }

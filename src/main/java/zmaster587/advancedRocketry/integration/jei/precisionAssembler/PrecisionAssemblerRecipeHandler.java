@@ -6,24 +6,24 @@ import zmaster587.advancedRocketry.integration.jei.ARPlugin;
 
 public class PrecisionAssemblerRecipeHandler implements IRecipeHandler<PrecisionAssemblerWrapper> {
 
-	@Override
-	public Class<PrecisionAssemblerWrapper> getRecipeClass() {
-		return PrecisionAssemblerWrapper.class;
-	}
+    @Override
+    public Class<PrecisionAssemblerWrapper> getRecipeClass() {
+        return PrecisionAssemblerWrapper.class;
+    }
 
-	@Override
-	public String getRecipeCategoryUid(PrecisionAssemblerWrapper recipe) {
-		return ARPlugin.precisionAssemblerUUID;
-	}
+    @Override
+    public String getRecipeCategoryUid(PrecisionAssemblerWrapper recipe) {
+        return ARPlugin.precisionAssemblerUUID;
+    }
 
-	@Override
-	public IRecipeWrapper getRecipeWrapper(PrecisionAssemblerWrapper recipe) {
-		return recipe;
-	}
+    @Override
+    public IRecipeWrapper getRecipeWrapper(PrecisionAssemblerWrapper recipe) {
+        return recipe;
+    }
 
-	@Override
-	public boolean isRecipeValid(PrecisionAssemblerWrapper recipe) {
-		return true;
-	}
+    @Override
+    public boolean isRecipeValid(PrecisionAssemblerWrapper recipe) {
+        return true;
+    }
 
 }

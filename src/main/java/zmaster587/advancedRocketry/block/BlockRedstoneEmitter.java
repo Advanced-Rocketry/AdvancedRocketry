@@ -20,75 +20,75 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNullableByDefault;
 
 public class BlockRedstoneEmitter extends Block {
-	
-	public static final PropertyBool POWERED = PropertyBool.create("powered");
-	
-	public BlockRedstoneEmitter(Material material,String activeIconName) {
-		super(material);
-		this.setDefaultState(this.getDefaultState().withProperty(POWERED, false));
-	}
-	
-	@Override
-	@Nonnull
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, POWERED);
-	}
-	
-	@Override
-	@Nonnull
-	public IBlockState getStateFromMeta(int meta) {
-		return this.getDefaultState().withProperty(POWERED, (meta & 8) == 8);
-	}
 
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(POWERED) ? 8 : 0;
-	}
-	
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
-		return true;
-	}
-	
-	public void setState(World world, IBlockState bstate, BlockPos pos, boolean state) {
-		world.setBlockState(pos, bstate.withProperty(POWERED, state));
-	}
-	
-	public boolean getState(World world, IBlockState bstate, BlockPos pos) {
-		return bstate.getValue(POWERED);
-	}
-	
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		if(!world.isRemote) {
-			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
-		}
-		return true;
-	}
-	
-	@Override
-	@ParametersAreNullableByDefault
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileAtmosphereDetector();
-	}
-	
-	@Override
-	public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess,
-			BlockPos pos, EnumFacing side) {
-		return blockState.getValue(POWERED) ? 15 : 0;
-	}
-	
-	@Override
-	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess,
-			BlockPos pos, EnumFacing side) {
-		return blockState.getValue(POWERED) ? 15 : 0;
-	}
-	
-	@Override
-	public boolean canProvidePower(IBlockState state) {
-		return true;
-	}
+    public static final PropertyBool POWERED = PropertyBool.create("powered");
+
+    public BlockRedstoneEmitter(Material material, String activeIconName) {
+        super(material);
+        this.setDefaultState(this.getDefaultState().withProperty(POWERED, false));
+    }
+
+    @Override
+    @Nonnull
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, POWERED);
+    }
+
+    @Override
+    @Nonnull
+    public IBlockState getStateFromMeta(int meta) {
+        return this.getDefaultState().withProperty(POWERED, (meta & 8) == 8);
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(POWERED) ? 8 : 0;
+    }
+
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
+
+    public void setState(World world, IBlockState bstate, BlockPos pos, boolean state) {
+        world.setBlockState(pos, bstate.withProperty(POWERED, state));
+    }
+
+    public boolean getState(World world, IBlockState bstate, BlockPos pos) {
+        return bstate.getValue(POWERED);
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, BlockPos pos,
+                                    IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
+                                    float hitZ) {
+        if (!world.isRemote) {
+            player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
+        }
+        return true;
+    }
+
+    @Override
+    @ParametersAreNullableByDefault
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileAtmosphereDetector();
+    }
+
+    @Override
+    public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess,
+                              BlockPos pos, EnumFacing side) {
+        return blockState.getValue(POWERED) ? 15 : 0;
+    }
+
+    @Override
+    public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess,
+                            BlockPos pos, EnumFacing side) {
+        return blockState.getValue(POWERED) ? 15 : 0;
+    }
+
+    @Override
+    public boolean canProvidePower(IBlockState state) {
+        return true;
+    }
 
 }

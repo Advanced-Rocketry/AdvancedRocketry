@@ -1,39 +1,35 @@
 package zmaster587.advancedRocketry.world.decoration;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
 import net.minecraft.init.Biomes;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.structure.MapGenVillage;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
 public class MapGenSpaceVillage extends MapGenVillage {
 
+    public static List<Biome> BLACKLIST_VILLAGE_SPAWN_BIOMES = Arrays.asList(Biomes.OCEAN, Biomes.DEEP_OCEAN);
+    private final int minTownSeparation;
     private int size;
     private int distance;
-    private final int minTownSeparation;
-    public static List<Biome> BLACKLIST_VILLAGE_SPAWN_BIOMES = Arrays.asList(Biomes.OCEAN, Biomes.DEEP_OCEAN);
 
-    public MapGenSpaceVillage()
-    {
-    	super();
+    public MapGenSpaceVillage() {
+        super();
         this.distance = 32;
         minTownSeparation = 8;
     }
-	
-    protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ)
-    {
+
+    protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ) {
         int i = chunkX;
         int j = chunkZ;
 
-        if (chunkX < 0)
-        {
+        if (chunkX < 0) {
             chunkX -= this.distance - 1;
         }
 
-        if (chunkZ < 0)
-        {
+        if (chunkZ < 0) {
             chunkZ -= this.distance - 1;
         }
 
@@ -45,8 +41,7 @@ public class MapGenSpaceVillage extends MapGenVillage {
         k = k + random.nextInt(this.distance - 8);
         l = l + random.nextInt(this.distance - 8);
 
-        if (i == k && j == l)
-        {
+        if (i == k && j == l) {
 
             return !this.world.getBiomeProvider().areBiomesViable(i * 16 + 8, j * 16 + 8, 0, BLACKLIST_VILLAGE_SPAWN_BIOMES);
         }

@@ -8,8 +8,8 @@ import java.util.List;
 
 public class WorldEvents implements LoadingCallback {
 
-	@Override
-	public void ticketsLoaded(List<Ticket> tickets, World world) {
-		
-	}
+    @Override
+    public void ticketsLoaded(List<Ticket> tickets, World world) {
+
+    }
 }

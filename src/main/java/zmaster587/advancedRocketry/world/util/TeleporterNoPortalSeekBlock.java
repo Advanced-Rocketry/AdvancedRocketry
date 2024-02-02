@@ -8,57 +8,53 @@ import net.minecraft.world.WorldServer;
 
 public class TeleporterNoPortalSeekBlock extends Teleporter {
 
-	public TeleporterNoPortalSeekBlock(WorldServer p_i1963_1_) {
-		super(p_i1963_1_);
-	}
+    public TeleporterNoPortalSeekBlock(WorldServer p_i1963_1_) {
+        super(p_i1963_1_);
+    }
 
-	public void teleport(Entity entity, WorldServer world) {
+    public void teleport(Entity entity, WorldServer world) {
 
-		if (entity.isEntityAlive()) {
-			entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
-			world.spawnEntity(entity);
-			world.updateEntityWithOptionalForce(entity, false);
-		}
-		entity.setWorld(world);
-	}
+        if (entity.isEntityAlive()) {
+            entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+            world.spawnEntity(entity);
+            world.updateEntityWithOptionalForce(entity, false);
+        }
+        entity.setWorld(world);
+    }
 
-	@Override
-	public boolean placeInExistingPortal(Entity entityIn, float rotationYaw) {
-		
-		double x, y, z;
-		x = entityIn.posX;
-		y = entityIn.posY;
-		z = entityIn.posZ;
-		MutableBlockPos pos = new MutableBlockPos();
-		
-		for(int yy = (int) y; yy < world.getHeight(); yy++) {
-			pos.setPos(x, yy, z);
-			if(world.isAirBlock(pos) && world.isAirBlock(pos.add(0,1,0))){
-				y = yy;
-				break;
-			}
-		}
-        
-	    if (entityIn instanceof EntityPlayerMP)
-	    {
-	        ((EntityPlayerMP)entityIn).connection.setPlayerLocation(x,y,z, entityIn.rotationYaw, entityIn.rotationPitch);
-	    }
-	    else
-	    {
-	        entityIn.setLocationAndAngles(x,y,z, entityIn.rotationYaw, entityIn.rotationPitch);
-	    }
-	    
-	    return true;
-	}
+    @Override
+    public boolean placeInExistingPortal(Entity entityIn, float rotationYaw) {
 
-	@Override
-	public void removeStalePortalLocations(long par1)
-	{
-	}
+        double x, y, z;
+        x = entityIn.posX;
+        y = entityIn.posY;
+        z = entityIn.posZ;
+        MutableBlockPos pos = new MutableBlockPos();
 
-	
-	@Override
-	public boolean makePortal(Entity p_85188_1_) {
-		return true;
-	}
+        for (int yy = (int) y; yy < world.getHeight(); yy++) {
+            pos.setPos(x, yy, z);
+            if (world.isAirBlock(pos) && world.isAirBlock(pos.add(0, 1, 0))) {
+                y = yy;
+                break;
+            }
+        }
+
+        if (entityIn instanceof EntityPlayerMP) {
+            ((EntityPlayerMP) entityIn).connection.setPlayerLocation(x, y, z, entityIn.rotationYaw, entityIn.rotationPitch);
+        } else {
+            entityIn.setLocationAndAngles(x, y, z, entityIn.rotationYaw, entityIn.rotationPitch);
+        }
+
+        return true;
+    }
+
+    @Override
+    public void removeStalePortalLocations(long par1) {
+    }
+
+
+    @Override
+    public boolean makePortal(Entity p_85188_1_) {
+        return true;
+    }
 }

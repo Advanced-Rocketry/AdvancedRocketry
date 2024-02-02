@@ -11,53 +11,53 @@ import zmaster587.advancedRocketry.tile.multiblock.orbitallaserdrill.TileOrbital
 
 public class RenderOrbitalLaserDrillTile extends TileEntitySpecialRenderer {
 
-	@Override
-	public void render(TileEntity tileentity, double x, double y,
-			double z, float f, int damage, float a) {
+    @Override
+    public void render(TileEntity tileentity, double x, double y,
+                       double z, float f, int damage, float a) {
 
-		if(!((TileOrbitalLaserDrill)tileentity).isRunning())
-			return;
-		
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
-		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-		GlStateManager.disableLighting();
-		GlStateManager.disableFog();
-		GlStateManager.enableBlend();
-		GlStateManager.disableDepth();
-		GlStateManager.disableTexture2D();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-		//GL11.glB
-		//GL11.gl
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		
-		buffer.color(0.9F, 0.2F, 0.3F, 1F);
+        if (!((TileOrbitalLaserDrill) tileentity).isRunning())
+            return;
 
-		for(float radius = 0.1F; radius < .5; radius += .1F) {
-			for(double i = 0; i < 2*Math.PI; i += Math.PI) {
-				
-				buffer.pos(- x , -y - 100,  - z).endVertex();
-				buffer.pos(- x, -y - 100, - z).endVertex();
-				buffer.pos(- (radius* Math.cos(i)) + 0.5F, 0,- (radius* Math.sin(i)) + 0.5F).endVertex();
-				buffer.pos((radius* Math.sin(i)) + 0.5F, 0, (radius* Math.cos(i)) + 0.5F).endVertex();
-			}
+        GL11.glPushMatrix();
+        GL11.glTranslated(x, y, z);
+        BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+        GlStateManager.disableLighting();
+        GlStateManager.disableFog();
+        GlStateManager.enableBlend();
+        GlStateManager.disableDepth();
+        GlStateManager.disableTexture2D();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+        //GL11.glB
+        //GL11.gl
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
-			for(double i = 0; i < 2*Math.PI; i += Math.PI) {
-				buffer.pos(- x, -y - 100,- z).endVertex();
-				buffer.pos(- x, -y - 100, - z).endVertex();
-				buffer.pos((radius* Math.sin(i)) + 0.5F, 0, -(radius* Math.cos(i)) + 0.5F).endVertex();
-				buffer.pos(- (radius* Math.cos(i)) + 0.5F, 0,(radius* Math.sin(i)) + 0.5F).endVertex();
-			}
-		}
+        buffer.color(0.9F, 0.2F, 0.3F, 1F);
 
-		buffer.endVertex();
+        for (float radius = 0.1F; radius < .5; radius += .1F) {
+            for (double i = 0; i < 2 * Math.PI; i += Math.PI) {
 
-		GlStateManager.disableBlend();
-		GlStateManager.enableLighting();
-		GlStateManager.enableTexture2D();
-		GlStateManager.enableFog();
-		GlStateManager.enableDepth();
-		GL11.glPopMatrix();
-	}
+                buffer.pos(-x, -y - 100, -z).endVertex();
+                buffer.pos(-x, -y - 100, -z).endVertex();
+                buffer.pos(-(radius * Math.cos(i)) + 0.5F, 0, -(radius * Math.sin(i)) + 0.5F).endVertex();
+                buffer.pos((radius * Math.sin(i)) + 0.5F, 0, (radius * Math.cos(i)) + 0.5F).endVertex();
+            }
+
+            for (double i = 0; i < 2 * Math.PI; i += Math.PI) {
+                buffer.pos(-x, -y - 100, -z).endVertex();
+                buffer.pos(-x, -y - 100, -z).endVertex();
+                buffer.pos((radius * Math.sin(i)) + 0.5F, 0, -(radius * Math.cos(i)) + 0.5F).endVertex();
+                buffer.pos(-(radius * Math.cos(i)) + 0.5F, 0, (radius * Math.sin(i)) + 0.5F).endVertex();
+            }
+        }
+
+        buffer.endVertex();
+
+        GlStateManager.disableBlend();
+        GlStateManager.enableLighting();
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableFog();
+        GlStateManager.enableDepth();
+        GL11.glPopMatrix();
+    }
 
 }

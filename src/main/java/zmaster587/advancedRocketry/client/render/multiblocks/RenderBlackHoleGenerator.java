@@ -17,74 +17,73 @@ import zmaster587.libVulpes.render.RenderHelper;
 
 public class RenderBlackHoleGenerator extends TileEntitySpecialRenderer {
 
-	WavefrontObject model;
+    WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/blackholegenerator.png");
+    ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/blackholegenerator.png");
 
-	public RenderBlackHoleGenerator(){
-		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/blackholegenerator.obj"));
-		} catch (ModelFormatException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@Override
-	public void render(TileEntity tile, double x, double y, double z,
-			float partialTicks, int destroyStage, float a) {
-		TileBlackHoleGenerator multiBlockTile = (TileBlackHoleGenerator)tile;
+    public RenderBlackHoleGenerator() {
+        try {
+            model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/blackholegenerator.obj"));
+        } catch (ModelFormatException e) {
+            e.printStackTrace();
+        }
+    }
 
-		if(!multiBlockTile.canRender())
-			return;
+    @Override
+    public void render(TileEntity tile, double x, double y, double z,
+                       float partialTicks, int destroyStage, float a) {
+        TileBlackHoleGenerator multiBlockTile = (TileBlackHoleGenerator) tile;
 
-		GL11.glPushMatrix();
+        if (!multiBlockTile.canRender())
+            return;
 
-		//Initial setup
+        GL11.glPushMatrix();
 
-		//Rotate and move the model into position
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glTranslated(x + .5, y + .5, z + .5);
+        //Initial setup
 
-		GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) - front.getFrontOffsetX()*90f, 0, 1, 0);
-		
-		bindTexture(texture);
-		
-		model.renderAll();
-		
-		if(multiBlockTile.isProducingPower())
-		{
-			GlStateManager.disableTexture2D();
-			GlStateManager.disableLighting();
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE);
-			GlStateManager.color(1f, 1f, 0.5f, 0.5f);
-			BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-			
-			GL11.glPushMatrix();
-			GL11.glTranslatef(0, (float)Math.sin(System.currentTimeMillis() / 128.0)*.3f, 0);
-			
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
-			RenderHelper.renderCube(buffer, -0.45, 0.95, 0.55, 0.45, 1.05, 1.45);
-			Tessellator.getInstance().draw();
-			
-			GL11.glPopMatrix();
-			
-			GL11.glPushMatrix();
-			GL11.glTranslatef(0, -(float)Math.sin(System.currentTimeMillis() / 128.0)*.3f, 0);
-			
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
-			RenderHelper.renderCube(buffer, -0.45, 0.95, 0.55, 0.45, 1.05, 1.45);
-			Tessellator.getInstance().draw();
-			GL11.glPopMatrix();
-			
-			GlStateManager.disableBlend();
-			GlStateManager.enableTexture2D();
-			GlStateManager.enableLighting();
-			GlStateManager.resetColor();
-		}
-		
-		
-		GL11.glPopMatrix();
-	}
+        //Rotate and move the model into position
+        EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
+        GL11.glTranslated(x + .5, y + .5, z + .5);
+
+        GL11.glRotatef((front.getFrontOffsetZ() == 1 ? 180 : 0) - front.getFrontOffsetX() * 90f, 0, 1, 0);
+
+        bindTexture(texture);
+
+        model.renderAll();
+
+        if (multiBlockTile.isProducingPower()) {
+            GlStateManager.disableTexture2D();
+            GlStateManager.disableLighting();
+            GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE);
+            GlStateManager.color(1f, 1f, 0.5f, 0.5f);
+            BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0, (float) Math.sin(System.currentTimeMillis() / 128.0) * .3f, 0);
+
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
+            RenderHelper.renderCube(buffer, -0.45, 0.95, 0.55, 0.45, 1.05, 1.45);
+            Tessellator.getInstance().draw();
+
+            GL11.glPopMatrix();
+
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0, -(float) Math.sin(System.currentTimeMillis() / 128.0) * .3f, 0);
+
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_NORMAL);
+            RenderHelper.renderCube(buffer, -0.45, 0.95, 0.55, 0.45, 1.05, 1.45);
+            Tessellator.getInstance().draw();
+            GL11.glPopMatrix();
+
+            GlStateManager.disableBlend();
+            GlStateManager.enableTexture2D();
+            GlStateManager.enableLighting();
+            GlStateManager.resetColor();
+        }
+
+
+        GL11.glPopMatrix();
+    }
 
 }

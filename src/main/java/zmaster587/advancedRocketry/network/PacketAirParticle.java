@@ -13,52 +13,52 @@ import zmaster587.libVulpes.util.HashedBlockPosition;
 
 public class PacketAirParticle extends BasePacket {
 
-	HashedBlockPosition toPos;
+    HashedBlockPosition toPos;
 
-	public PacketAirParticle(HashedBlockPosition toPos) {
-		this.toPos = toPos;
-	}
+    public PacketAirParticle(HashedBlockPosition toPos) {
+        this.toPos = toPos;
+    }
 
-	public PacketAirParticle() {
-	}
+    public PacketAirParticle() {
+    }
 
-	@Override
-	public void write(ByteBuf out) {
-		out.writeInt(toPos.x);
-		out.writeInt(toPos.y);
-		out.writeInt(toPos.z);
-	}
+    @Override
+    public void write(ByteBuf out) {
+        out.writeInt(toPos.x);
+        out.writeInt(toPos.y);
+        out.writeInt(toPos.z);
+    }
 
-	@Override
-	public void readClient(ByteBuf in) {
-		toPos = new HashedBlockPosition(in.readInt(), in.readInt(), in.readInt());
-	}
+    @Override
+    public void readClient(ByteBuf in) {
+        toPos = new HashedBlockPosition(in.readInt(), in.readInt(), in.readInt());
+    }
 
-	@Override
-	public void read(ByteBuf in) {
+    @Override
+    public void read(ByteBuf in) {
 
-	}
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void executeClient(EntityPlayer thePlayer) {
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void executeClient(EntityPlayer thePlayer) {
 
-		if(Minecraft.getMinecraft().gameSettings.particleSetting < 1) {
-			OxygenCloudFX fx3 = new OxygenCloudFX(thePlayer.world,  toPos.x + 0.5, toPos.y + 0.5, toPos.z + 0.5, 0, 0, 0);
-			Minecraft.getMinecraft().effectRenderer.addEffect(fx3);
-		}
+        if (Minecraft.getMinecraft().gameSettings.particleSetting < 1) {
+            OxygenCloudFX fx3 = new OxygenCloudFX(thePlayer.world, toPos.x + 0.5, toPos.y + 0.5, toPos.z + 0.5, 0, 0, 0);
+            Minecraft.getMinecraft().effectRenderer.addEffect(fx3);
+        }
 
-		int numIterations = Minecraft.getMinecraft().gameSettings.particleSetting < 1 ? 5 : (Minecraft.getMinecraft().gameSettings.particleSetting < 2 ? 3 : 1);
-		
-		for(int i = 0; i < numIterations;i++) {
-			OxygenTraceFX fx2 = new OxygenTraceFX(thePlayer.world,  toPos.x + 0.5, toPos.y + 0.5, toPos.z + 0.5, 0.01*(0.5 - Math.random()), 0.01*(0.5 - Math.random()), 0.01*(0.5 - Math.random()));
-			Minecraft.getMinecraft().effectRenderer.addEffect(fx2);
-		}
-	}
+        int numIterations = Minecraft.getMinecraft().gameSettings.particleSetting < 1 ? 5 : (Minecraft.getMinecraft().gameSettings.particleSetting < 2 ? 3 : 1);
 
-	@Override
-	public void executeServer(EntityPlayerMP player) {
+        for (int i = 0; i < numIterations; i++) {
+            OxygenTraceFX fx2 = new OxygenTraceFX(thePlayer.world, toPos.x + 0.5, toPos.y + 0.5, toPos.z + 0.5, 0.01 * (0.5 - Math.random()), 0.01 * (0.5 - Math.random()), 0.01 * (0.5 - Math.random()));
+            Minecraft.getMinecraft().effectRenderer.addEffect(fx2);
+        }
+    }
 
-	}
+    @Override
+    public void executeServer(EntityPlayerMP player) {
+
+    }
 
 }

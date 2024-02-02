@@ -15,14 +15,14 @@ import java.util.List;
 
 public class BlockTileWithMultitooltip extends BlockTile {
 
-	public BlockTileWithMultitooltip(Class<? extends TileEntity> tileClass, int guiId) {
-		super(tileClass, guiId);
-	}
+    public BlockTileWithMultitooltip(Class<? extends TileEntity> tileClass, int guiId) {
+        super(tileClass, guiId);
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(@Nonnull ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
-		super.addInformation(stack, player, tooltip, advanced);
-		tooltip.add(ChatFormatting.DARK_GRAY + "" + ChatFormatting.ITALIC + LibVulpes.proxy.getLocalizedString("machine.tooltip.multiblock"));
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(@Nonnull ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+        super.addInformation(stack, player, tooltip, advanced);
+        tooltip.add(ChatFormatting.DARK_GRAY + "" + ChatFormatting.ITALIC + LibVulpes.proxy.getLocalizedString("machine.tooltip.multiblock"));
+    }
 }

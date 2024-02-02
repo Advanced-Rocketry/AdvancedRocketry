@@ -7,13 +7,13 @@ import zmaster587.advancedRocketry.api.IIntake;
 
 public class BlockIntake extends Block implements IIntake {
 
-	public BlockIntake(Material material) {
-		super(material);
-	}
+    public BlockIntake(Material material) {
+        super(material);
+    }
 
-	@Override
-	public int getIntakeAmt(IBlockState state) {
-		return 10;
-	}
+    @Override
+    public int getIntakeAmt(IBlockState state) {
+        return 10;
+    }
 
 }

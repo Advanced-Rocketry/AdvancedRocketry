@@ -5,8 +5,8 @@ import zmaster587.libVulpes.interfaces.IRecipe;
 
 public class CrystallizerWrapper extends MachineRecipe {
 
-	CrystallizerWrapper(IRecipe rec) {
-		super(rec);
-	}
+    CrystallizerWrapper(IRecipe rec) {
+        super(rec);
+    }
 
 }

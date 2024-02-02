@@ -8,9 +8,9 @@ import java.util.Hashtable;
 import java.util.Map.Entry;
 
 public class HandlerCableNetwork {
-	protected Hashtable<Integer,CableNetwork> networks = new Hashtable<>();
+    protected Hashtable<Integer, CableNetwork> networks = new Hashtable<>();
 
-	//private static final String FILENAME = "/data/insanityCraft.dat";
+    //private static final String FILENAME = "/data/insanityCraft.dat";
 	
 	/*public static void loadNetworksFromFile() throws IOException {
 		String saveDir = MinecraftServer.getServer().getActiveAnvilConverter().getSaveLoader(MinecraftServer.getServer().getFolderName(), false).getWorldDirectoryName();
@@ -53,84 +53,90 @@ public class HandlerCableNetwork {
 		stream.close();
 	}*/
 
-	public int getNewNetworkID() {
-		CableNetwork net = CableNetwork.initNetwork();
+    public int getNewNetworkID() {
+        CableNetwork net = CableNetwork.initNetwork();
 
-		networks.put(net.networkID, net);
+        networks.put(net.networkID, net);
 
-		return net.networkID;
-	}
-	
+        return net.networkID;
+    }
 
-	public int mergeNetworks(int a, int b) {
-		
-		assert(networks.get(Math.max(a, b)) == null || networks.get(Math.min(a, b)) == null);
-		
-		networks.get(Math.min(a, b)).merge(networks.get(Math.max(a, b)));
-		networks.get(Math.min(a, b)).numCables += networks.get(Math.max(a, b)).numCables;
-		
-		networks.remove(Math.max(a, b));
-		
-		
-		return Math.min(a, b);
-	}
 
-	public void tickAllNetworks() {
-		for (Entry<Integer, CableNetwork> integerCableNetworkEntry : networks.entrySet()) {
-			integerCableNetworkEntry.getValue().tick();
-		}
-	}
+    public int mergeNetworks(int a, int b) {
 
-	public boolean doesNetworkExist(int id) {
-		return networks.containsKey(id);
-	}
+        assert (networks.get(Math.max(a, b)) == null || networks.get(Math.min(a, b)) == null);
 
-	/**
-	 * Adds a source to the network on the side specified
-	 * @param tilePipe The pipe adding the source
-	 * @param tile The source to be added
-	 * @param dir Direction of the source from the pipe
-	 */
-	public void addSource(TilePipe tilePipe, TileEntity tile, EnumFacing dir) {
-		networks.get(tilePipe.getNetworkID()).addSource(tile, dir.getOpposite());
-	}
+        networks.get(Math.min(a, b)).merge(networks.get(Math.max(a, b)));
+        networks.get(Math.min(a, b)).numCables += networks.get(Math.max(a, b)).numCables;
 
-	/**
-	 * Adds a sink to the network on the side specified
-	 * @param tilePipe The pipe adding the sink
-	 * @param tile The sink to be added
-	 * @param dir Direction of the sink from the pipe
-	 */
-	public void addSink(TilePipe tilePipe, TileEntity tile, EnumFacing dir) {
-		networks.get(tilePipe.getNetworkID()).addSink(tile, dir.getOpposite());
-	}
-	
-	/**
-	 * Removed the specified network ID from the handler
-	 * @param id id of the network to remove
-	 */
-	public void removeNetworkByID(int id) {
-		networks.remove(id);
-	}
+        networks.remove(Math.max(a, b));
 
-	/**
-	 * Removes the specified tile from both the sources and sink list
-	 * @param pipe pipe that belongs to a network
-	 * @param tile tile to be removed from the sinks and sources list
-	 */
-	public void removeFromAllTypes(TilePipe pipe, TileEntity tile) {
-		if(pipe.isInitialized())
-			networks.get(pipe.getNetworkID()).removeFromAll(tile);
-	}
 
-	/**What did you think this does?*/
-	public String toString(int networkID) {
-		if(networks.get(networkID) != null)
-			return networks.get(networkID).toString();
-		return "";
-	}
+        return Math.min(a, b);
+    }
 
-	public CableNetwork getNetwork(int id) {
-		return networks.get(id);
-	}
+    public void tickAllNetworks() {
+        for (Entry<Integer, CableNetwork> integerCableNetworkEntry : networks.entrySet()) {
+            integerCableNetworkEntry.getValue().tick();
+        }
+    }
+
+    public boolean doesNetworkExist(int id) {
+        return networks.containsKey(id);
+    }
+
+    /**
+     * Adds a source to the network on the side specified
+     *
+     * @param tilePipe The pipe adding the source
+     * @param tile     The source to be added
+     * @param dir      Direction of the source from the pipe
+     */
+    public void addSource(TilePipe tilePipe, TileEntity tile, EnumFacing dir) {
+        networks.get(tilePipe.getNetworkID()).addSource(tile, dir.getOpposite());
+    }
+
+    /**
+     * Adds a sink to the network on the side specified
+     *
+     * @param tilePipe The pipe adding the sink
+     * @param tile     The sink to be added
+     * @param dir      Direction of the sink from the pipe
+     */
+    public void addSink(TilePipe tilePipe, TileEntity tile, EnumFacing dir) {
+        networks.get(tilePipe.getNetworkID()).addSink(tile, dir.getOpposite());
+    }
+
+    /**
+     * Removed the specified network ID from the handler
+     *
+     * @param id id of the network to remove
+     */
+    public void removeNetworkByID(int id) {
+        networks.remove(id);
+    }
+
+    /**
+     * Removes the specified tile from both the sources and sink list
+     *
+     * @param pipe pipe that belongs to a network
+     * @param tile tile to be removed from the sinks and sources list
+     */
+    public void removeFromAllTypes(TilePipe pipe, TileEntity tile) {
+        if (pipe.isInitialized())
+            networks.get(pipe.getNetworkID()).removeFromAll(tile);
+    }
+
+    /**
+     * What did you think this does?
+     */
+    public String toString(int networkID) {
+        if (networks.get(networkID) != null)
+            return networks.get(networkID).toString();
+        return "";
+    }
+
+    public CableNetwork getNetwork(int id) {
+        return networks.get(id);
+    }
 }

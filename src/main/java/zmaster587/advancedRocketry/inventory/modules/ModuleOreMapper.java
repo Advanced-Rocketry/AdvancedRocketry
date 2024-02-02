@@ -24,14 +24,15 @@ import java.nio.IntBuffer;
 @SideOnly(Side.CLIENT)
 public class ModuleOreMapper extends ModuleBase {
 
-    private ClientDynamicTexture texture;
-    private Thread currentMapping;
-    TileEntity masterConsole;
-    private boolean merged = false;
     private static final int SCREEN_SIZE = 146;
     private static final int MAXZOOM = 128;
     private static final int MAXRADIUS = 16;
     private static final int FANCYSCANMAXSIZE = 57;
+    private static final ResourceLocation backdrop = new ResourceLocation("advancedrocketry", "textures/gui/VideoSatallite.png");
+    TileEntity masterConsole;
+    private ClientDynamicTexture texture;
+    private Thread currentMapping;
+    private boolean merged = false;
     private int fancyScanOffset;
     private long prevWorldTickTime;
     private int prevSlot;
@@ -41,10 +42,17 @@ public class ModuleOreMapper extends ModuleBase {
     private int radius = 1;
     private int zoomScale;
     private int xSelected, zSelected, xCenter, zCenter;
-    private static final ResourceLocation backdrop = new ResourceLocation("advancedrocketry", "textures/gui/VideoSatallite.png");
     private int[][] oreMap;
     private World world;
     private SatelliteOreMapping satellite;
+    //Create separate thread to do this because it takes a while!
+    Runnable mapper = new Runnable() {
+        @Override
+        public void run() {
+            oreMap = satellite.scanChunk(world, xCenter, zCenter, scanSize / 2, radius, zoomScale);
+            merged = oreMap != null;
+        }
+    };
     private ItemStack selectedStack;
 
     public ModuleOreMapper(int offsetX, int offsetY) {
@@ -52,7 +60,7 @@ public class ModuleOreMapper extends ModuleBase {
         world = Minecraft.getMinecraft().world;
 
         prevSlot = -1;
-        if(satellite != null) {
+        if (satellite != null) {
             maxZoom = (int) Math.pow(2, satellite.getZoomRadius());
             zoomScale = satellite.getZoomRadius();
         }
@@ -62,35 +70,10 @@ public class ModuleOreMapper extends ModuleBase {
         fancyScanOffset = 0;
     }
 
-    //Create separate thread to do this because it takes a while!
-    Runnable mapper = new Runnable() {
-        @Override
-        public void run() {
-            oreMap = satellite.scanChunk(world, xCenter, zCenter, scanSize/2, radius, zoomScale);
-            merged = oreMap != null;
-        }
-    };
-
-    //Create separate thread to do this because it takes a while!
-    class ItemMapper implements Runnable {
-        private ItemStack myBlock;
-
-        ItemMapper(@Nonnull ItemStack block) {
-            //Copy so we don't have any possible CME or oddness due to that
-            myBlock = block.copy();
-        }
-
-        @Override
-        public void run() {
-            oreMap = satellite.scanChunk(world, xCenter, zCenter, scanSize/2, radius, myBlock, zoomScale);
-            merged = oreMap != null;
-        }
-    }
-
     private void runMapperWithSelection() {
         currentMapping.interrupt();
         resetTexture();
-        if(prevSlot == -1) {
+        if (prevSlot == -1) {
             currentMapping = new Thread(mapper);
         } else {
             //currentMapping = new Thread(new ItemMapper(inventorySlots.getSlot(prevSlot).getStack()));//TODO
@@ -102,9 +85,8 @@ public class ModuleOreMapper extends ModuleBase {
     //Reset the texture and prevent memory leaks
     private void resetTexture() {
         GL11.glDeleteTextures(texture.getTextureId());
-        texture = new ClientDynamicTexture(Math.max(scanSize/radius,1),Math.max(scanSize/radius,1));
+        texture = new ClientDynamicTexture(Math.max(scanSize / radius, 1), Math.max(scanSize / radius, 1));
     }
-
 
     @Override
     public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX,
@@ -135,7 +117,7 @@ public class ModuleOreMapper extends ModuleBase {
         GlStateManager.enableBlend();
 
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
-        buffer.color(0.5f, 0.5f, 0.0f,0.3f + ((float)Math.sin(Math.PI*(fancyScanOffset/(float)FANCYSCANMAXSIZE))/3f));
+        buffer.color(0.5f, 0.5f, 0.0f, 0.3f + ((float) Math.sin(Math.PI * (fancyScanOffset / (float) FANCYSCANMAXSIZE)) / 3f));
         buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
         RenderHelper.renderNorthFace(buffer, zLevel, 173, 82, 194, 141);
         buffer.finishDrawing();
@@ -144,9 +126,9 @@ public class ModuleOreMapper extends ModuleBase {
         GlStateManager.disableBlend();
 
 
-        if(world.getTotalWorldTime() - prevWorldTickTime >= 1 ) {
+        if (world.getTotalWorldTime() - prevWorldTickTime >= 1) {
             prevWorldTickTime = world.getTotalWorldTime();
-            if(fancyScanOffset >= FANCYSCANMAXSIZE)
+            if (fancyScanOffset >= FANCYSCANMAXSIZE)
                 fancyScanOffset = 0;
             else
                 fancyScanOffset++;
@@ -155,13 +137,13 @@ public class ModuleOreMapper extends ModuleBase {
 
         //If a slot is selected draw an indicator
         int slot;
-        if((slot = satellite.getSelectedSlot()) != -1) {
+        if ((slot = satellite.getSelectedSlot()) != -1) {
 
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glColor3f(0f, 0.8f, 0f);
 
             buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
-            RenderHelper.renderNorthFaceWithUV(buffer, zLevel, 13 + (18*slot), 155, 13 + 16 + (18*slot), 155 + 16, 0, 1, 0, 1);
+            RenderHelper.renderNorthFaceWithUV(buffer, zLevel, 13 + (18 * slot), 155, 13 + 16 + (18 * slot), 155 + 16, 0, 1, 0, 1);
             buffer.finishDrawing();
             GL11.glEnable(GL11.GL_TEXTURE_2D);
         }
@@ -174,11 +156,11 @@ public class ModuleOreMapper extends ModuleBase {
 
 
         //If the scan is done then
-        if(merged) {
+        if (merged) {
             IntBuffer buffer = texture.getByteBuffer();
-            int scanWidth = Math.max(scanSize/radius,1);
+            int scanWidth = Math.max(scanSize / radius, 1);
 
-            for(int yt = 0; yt < (texture.getImage().getHeight() * texture.getImage().getWidth()); yt++) {
+            for (int yt = 0; yt < (texture.getImage().getHeight() * texture.getImage().getWidth()); yt++) {
                 buffer.put(yt, oreMap[yt % scanWidth][yt / scanWidth] | 0xFF000000);
             }
             buffer.flip();
@@ -199,7 +181,7 @@ public class ModuleOreMapper extends ModuleBase {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureId());
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
         buffer.begin(GL11.GL_QUADS, buffer.getVertexFormat());
-        RenderHelper.renderNorthFaceWithUV(buffer, zLevel, 47 + x,  20 + y, 47 + x + SCREEN_SIZE,  20 + y + SCREEN_SIZE, 0, 1, 0, 1);
+        RenderHelper.renderNorthFaceWithUV(buffer, zLevel, 47 + x, 20 + y, 47 + x + SCREEN_SIZE, 20 + y + SCREEN_SIZE, 0, 1, 0, 1);
         buffer.finishDrawing();
 
 
@@ -216,6 +198,22 @@ public class ModuleOreMapper extends ModuleBase {
         gui.drawString(font, "Z: " + zSelected, 6 + x, 49 + y, 0xF0F0F0);
         gui.drawString(font, "Value: ", 6 + x, 65 + y, 0xF0F0F0);
         gui.drawString(font, String.valueOf(mouseValue), 6 + x, 79 + y, 0xF0F0F0);
+    }
+
+    //Create separate thread to do this because it takes a while!
+    class ItemMapper implements Runnable {
+        private ItemStack myBlock;
+
+        ItemMapper(@Nonnull ItemStack block) {
+            //Copy so we don't have any possible CME or oddness due to that
+            myBlock = block.copy();
+        }
+
+        @Override
+        public void run() {
+            oreMap = satellite.scanChunk(world, xCenter, zCenter, scanSize / 2, radius, myBlock, zoomScale);
+            merged = oreMap != null;
+        }
     }
 
 }

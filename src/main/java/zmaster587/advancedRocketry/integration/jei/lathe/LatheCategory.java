@@ -8,23 +8,22 @@ import zmaster587.libVulpes.LibVulpes;
 
 public class LatheCategory extends MachineCategoryTemplate<LatheWrapper> {
 
-	public LatheCategory(IGuiHelper helper) {
-		super(helper, TextureResources.latheProgressBar);
-	}
-	
-	@Override
-	public String getUid() {
-		return ARPlugin.latheUUID;
-	}
-
-	@Override
-	public String getTitle() {
-		return LibVulpes.proxy.getLocalizedString("tile.lathe.name");
-	}
+    public LatheCategory(IGuiHelper helper) {
+        super(helper, TextureResources.latheProgressBar);
+    }
 
     @Override
-    public String getModName()
-    {
+    public String getUid() {
+        return ARPlugin.latheUUID;
+    }
+
+    @Override
+    public String getTitle() {
+        return LibVulpes.proxy.getLocalizedString("tile.lathe.name");
+    }
+
+    @Override
+    public String getModName() {
         return "Advanced Rocketry";
     }
 

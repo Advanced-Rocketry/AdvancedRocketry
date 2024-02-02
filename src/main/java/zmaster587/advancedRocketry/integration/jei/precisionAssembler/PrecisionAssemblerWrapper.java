@@ -5,8 +5,8 @@ import zmaster587.libVulpes.interfaces.IRecipe;
 
 public class PrecisionAssemblerWrapper extends MachineRecipe {
 
-	PrecisionAssemblerWrapper(IRecipe rec) {
-		super(rec);
-	}
+    PrecisionAssemblerWrapper(IRecipe rec) {
+        super(rec);
+    }
 
 }

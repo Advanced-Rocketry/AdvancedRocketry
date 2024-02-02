@@ -5,8 +5,8 @@ import zmaster587.libVulpes.recipe.RecipeMachineFactory;
 
 public class RecipeElectricArcFurnace extends RecipeMachineFactory {
 
-	@Override
-	public Class getMachine() {
-		return TileElectricArcFurnace.class;
-	}
+    @Override
+    public Class getMachine() {
+        return TileElectricArcFurnace.class;
+    }
 }

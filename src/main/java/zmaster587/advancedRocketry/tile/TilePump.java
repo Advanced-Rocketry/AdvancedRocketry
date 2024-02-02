@@ -26,192 +26,190 @@ import java.util.*;
 
 public class TilePump extends TileEntityRFConsumer implements IFluidHandler, IModularInventory {
 
-	private FluidTank tank;
-	private List<BlockPos> cache;
-	private final int RANGE = 64;
+    private final int RANGE = 64;
+    private FluidTank tank;
+    private List<BlockPos> cache;
 
-	public TilePump() {
-		super(1000);
-		tank = new FluidTank(16000);
-		cache = new LinkedList<>();
-	}
-	
-	public int getPowerPerOperation() {
-		return 100;
-	}
+    public TilePump() {
+        super(1000);
+        tank = new FluidTank(16000);
+        cache = new LinkedList<>();
+    }
 
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-			return true;
-		return super.hasCapability(capability, facing);
-	}
+    public int getPowerPerOperation() {
+        return 100;
+    }
 
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return (T) new FluidCapability(this);
-		}
-		return super.getCapability(capability, facing);
-	}
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+            return true;
+        return super.hasCapability(capability, facing);
+    }
 
-	@Override
-	public void update() {
-		super.update();
-		
-		//Attempt fluid Eject
-		if(!world.isRemote && tank.getFluid() != null) {
-			for(EnumFacing direction : EnumFacing.values()) {
-				BlockPos newBlock = getPos().offset(direction);
-				TileEntity tile  = world.getTileEntity(newBlock);
-				if(tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite()))
-				{
-					IFluidHandler cap = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite());
-					FluidStack stack = tank.getFluid().copy();
-					stack.amount = Math.min(tank.getFluid().amount, 1000);
-					//Perform the drain
-					cap.fill(tank.drain(cap.fill(stack, false), true), true);
-					
-					//Abort if we run out of fluid
-					if(tank.getFluid() == null)
-						break;
-				}
-			}
-		}
-	}
-	
-	private int getFrequencyFromPower()
-	{
-		float ratio = energy.getUniversalEnergyStored()/(float)energy.getMaxEnergyStored();
-		if(ratio > 0.5)
-			return 1;
-		return 10;
-	}
-	
-	@Override
-	public void performFunction() {
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            return (T) new FluidCapability(this);
+        }
+        return super.getCapability(capability, facing);
+    }
 
-		if(!world.isRemote) {
-			//Do we have room?
-			if(tank.getCapacity() - 1000 < tank.getFluidAmount())
-				return;
-			
-			BlockPos nextPos = getNextBlockLocation();
-			if(nextPos != null) {
-				if(canFitFluid(nextPos)) {
-					Block worldBlock = world.getBlockState(nextPos).getBlock();
-					Material mat = world.getBlockState(nextPos).getMaterial();
-					if(worldBlock instanceof IFluidBlock) {
-						FluidStack fStack = ((IFluidBlock)worldBlock).drain(world, nextPos, true);
+    @Override
+    public void update() {
+        super.update();
 
-						if(fStack != null)
-							tank.fill(fStack, true);
-						int colour = ((IFluidBlock)worldBlock).getFluid().getColor();
-						if(mat == Material.LAVA)
-							colour = 0xFFbd3718;
-						
-						PacketHandler.sendToNearby(new PacketFluidParticle(nextPos, this.pos, 200, colour), world.provider.getDimension(), this.pos, 128);
-					}
-				}
-			}
-		}
-	}
+        //Attempt fluid Eject
+        if (!world.isRemote && tank.getFluid() != null) {
+            for (EnumFacing direction : EnumFacing.values()) {
+                BlockPos newBlock = getPos().offset(direction);
+                TileEntity tile = world.getTileEntity(newBlock);
+                if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite())) {
+                    IFluidHandler cap = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite());
+                    FluidStack stack = tank.getFluid().copy();
+                    stack.amount = Math.min(tank.getFluid().amount, 1000);
+                    //Perform the drain
+                    cap.fill(tank.drain(cap.fill(stack, false), true), true);
 
-	private boolean canFitFluid(BlockPos pos) {
-		Block worldBlock = world.getBlockState(pos).getBlock();
-		if(worldBlock instanceof IFluidBlock) {
-			// Can we put it into the tank?
-			return tank.getFluid() == null || tank.getFluid().getFluid() == ((IFluidBlock) worldBlock).getFluid();
-		}
-		return false;
-	}
+                    //Abort if we run out of fluid
+                    if (tank.getFluid() == null)
+                        break;
+                }
+            }
+        }
+    }
 
-	private BlockPos getNextBlockLocation() {
+    private int getFrequencyFromPower() {
+        float ratio = energy.getUniversalEnergyStored() / (float) energy.getMaxEnergyStored();
+        if (ratio > 0.5)
+            return 1;
+        return 10;
+    }
 
-		if(!cache.isEmpty())
-			return cache.remove(0);
+    @Override
+    public void performFunction() {
 
-		BlockPos currentPos = new MutableBlockPos(getPos().down());
+        if (!world.isRemote) {
+            //Do we have room?
+            if (tank.getCapacity() - 1000 < tank.getFluidAmount())
+                return;
 
-		while(world.isAirBlock(currentPos))
-			currentPos = currentPos.down();
+            BlockPos nextPos = getNextBlockLocation();
+            if (nextPos != null) {
+                if (canFitFluid(nextPos)) {
+                    Block worldBlock = world.getBlockState(nextPos).getBlock();
+                    Material mat = world.getBlockState(nextPos).getMaterial();
+                    if (worldBlock instanceof IFluidBlock) {
+                        FluidStack fStack = ((IFluidBlock) worldBlock).drain(world, nextPos, true);
 
-		// We found a fluid
-		Block worldBlock = world.getBlockState(currentPos).getBlock();
+                        if (fStack != null)
+                            tank.fill(fStack, true);
+                        int colour = ((IFluidBlock) worldBlock).getFluid().getColor();
+                        if (mat == Material.LAVA)
+                            colour = 0xFFbd3718;
 
-		if(canFitFluid(currentPos))
-			findFluidAtOrAbove(currentPos, ((IFluidBlock)worldBlock).getFluid());
-		if(!cache.isEmpty())
-			return cache.remove(0);
-		return null;
-	}
+                        PacketHandler.sendToNearby(new PacketFluidParticle(nextPos, this.pos, 200, colour), world.provider.getDimension(), this.pos, 128);
+                    }
+                }
+            }
+        }
+    }
 
-	private void findFluidAtOrAbove(BlockPos pos, Fluid fluid) {
-		Queue<BlockPos> queue = new LinkedList<>();
-		Set<BlockPos> visited = new HashSet<>();
-		queue.add(pos);
+    private boolean canFitFluid(BlockPos pos) {
+        Block worldBlock = world.getBlockState(pos).getBlock();
+        if (worldBlock instanceof IFluidBlock) {
+            // Can we put it into the tank?
+            return tank.getFluid() == null || tank.getFluid().getFluid() == ((IFluidBlock) worldBlock).getFluid();
+        }
+        return false;
+    }
 
-		while(!queue.isEmpty()) {
-			BlockPos nextElement = queue.poll();
-			if(visited.contains(nextElement) || nextElement.getDistance(pos.getX(), nextElement.getY(), pos.getZ()) > RANGE)
-				continue;
+    private BlockPos getNextBlockLocation() {
 
-			Block worldBlock = world.getBlockState(nextElement).getBlock();
-			if(worldBlock instanceof IFluidBlock) {
-				if(fluid == null || ((IFluidBlock)worldBlock).getFluid() == fluid) {
-					//only add drainable fluids, allow chaining along flowing fluid tho
-					if(((IFluidBlock)worldBlock).canDrain(world, nextElement))
-						cache.add(0, nextElement);
-					visited.add(nextElement);
-					queue.add(nextElement.west());
-					queue.add(nextElement.east());
-					queue.add(nextElement.north());
-					queue.add(nextElement.south());
-					queue.add(nextElement.up());
-				}
-			}
-		}
-	}
+        if (!cache.isEmpty())
+            return cache.remove(0);
 
-	@Override
-	public boolean canPerformFunction() {
-		return tank.getFluidAmount() <= tank.getCapacity() && world.getWorldTime() % getFrequencyFromPower() == 0;
-	}
+        BlockPos currentPos = new MutableBlockPos(getPos().down());
 
-	@Override
-	public IFluidTankProperties[] getTankProperties() {
-		return tank.getTankProperties();
-	}
+        while (world.isAirBlock(currentPos))
+            currentPos = currentPos.down();
 
-	@Override
-	public int fill(FluidStack resource, boolean doFill) {
-		// Don't fill
-		return 0;
-	}
+        // We found a fluid
+        Block worldBlock = world.getBlockState(currentPos).getBlock();
 
-	@Override
-	public FluidStack drain(FluidStack resource, boolean doDrain) {
-		return tank.drain(resource, doDrain);
-	}
+        if (canFitFluid(currentPos))
+            findFluidAtOrAbove(currentPos, ((IFluidBlock) worldBlock).getFluid());
+        if (!cache.isEmpty())
+            return cache.remove(0);
+        return null;
+    }
 
-	@Override
-	public FluidStack drain(int maxDrain, boolean doDrain) {
-		return tank.drain(maxDrain, doDrain);
-	}
+    private void findFluidAtOrAbove(BlockPos pos, Fluid fluid) {
+        Queue<BlockPos> queue = new LinkedList<>();
+        Set<BlockPos> visited = new HashSet<>();
+        queue.add(pos);
 
-	@Override
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		return new LinkedList<>();
-	}
+        while (!queue.isEmpty()) {
+            BlockPos nextElement = queue.poll();
+            if (visited.contains(nextElement) || nextElement.getDistance(pos.getX(), nextElement.getY(), pos.getZ()) > RANGE)
+                continue;
 
-	@Override
-	public String getModularInventoryName() {
-		return "tile.pump.name";
-	}
+            Block worldBlock = world.getBlockState(nextElement).getBlock();
+            if (worldBlock instanceof IFluidBlock) {
+                if (fluid == null || ((IFluidBlock) worldBlock).getFluid() == fluid) {
+                    //only add drainable fluids, allow chaining along flowing fluid tho
+                    if (((IFluidBlock) worldBlock).canDrain(world, nextElement))
+                        cache.add(0, nextElement);
+                    visited.add(nextElement);
+                    queue.add(nextElement.west());
+                    queue.add(nextElement.east());
+                    queue.add(nextElement.north());
+                    queue.add(nextElement.south());
+                    queue.add(nextElement.up());
+                }
+            }
+        }
+    }
 
-	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
-		return false;
-	}
+    @Override
+    public boolean canPerformFunction() {
+        return tank.getFluidAmount() <= tank.getCapacity() && world.getWorldTime() % getFrequencyFromPower() == 0;
+    }
+
+    @Override
+    public IFluidTankProperties[] getTankProperties() {
+        return tank.getTankProperties();
+    }
+
+    @Override
+    public int fill(FluidStack resource, boolean doFill) {
+        // Don't fill
+        return 0;
+    }
+
+    @Override
+    public FluidStack drain(FluidStack resource, boolean doDrain) {
+        return tank.drain(resource, doDrain);
+    }
+
+    @Override
+    public FluidStack drain(int maxDrain, boolean doDrain) {
+        return tank.drain(maxDrain, doDrain);
+    }
+
+    @Override
+    public List<ModuleBase> getModules(int id, EntityPlayer player) {
+        return new LinkedList<>();
+    }
+
+    @Override
+    public String getModularInventoryName() {
+        return "tile.pump.name";
+    }
+
+    @Override
+    public boolean canInteractWithContainer(EntityPlayer entity) {
+        return false;
+    }
 
 }

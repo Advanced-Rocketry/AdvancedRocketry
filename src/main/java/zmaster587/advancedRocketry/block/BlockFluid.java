@@ -5,10 +5,10 @@ import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 
 public class BlockFluid extends BlockFluidClassic {// implements IBlockColor {
-	
-	public BlockFluid(Fluid fluid, Material material) {
-		super(fluid, material);
-	}
+
+    public BlockFluid(Fluid fluid, Material material) {
+        super(fluid, material);
+    }
 	
 
 	/*@Override
@@ -17,7 +17,6 @@ public class BlockFluid extends BlockFluidClassic {// implements IBlockColor {
 		
 		return ((BlockFluid)state.getBlock()).getFluid().getColor();
 	}*/
-	
-	
-   
+
+
 }

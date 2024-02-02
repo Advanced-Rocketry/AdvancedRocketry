@@ -27,100 +27,97 @@ import java.util.List;
 
 public class TileBiomeScanner extends TileMultiPowerConsumer {
 
-	private static final Object[][][] structure = new Object[][][]{
+    private static final Object[][][] structure = new Object[][][]{
 
-		{	{null, null, null, null, null}, 
-			{null, null, null, null, null},
-			{null, null, 'c', null, null},
-			{null, null, null, null, null},
-			{null, null, null, null, null}},
+            {{null, null, null, null, null},
+                    {null, null, null, null, null},
+                    {null, null, 'c', null, null},
+                    {null, null, null, null, null},
+                    {null, null, null, null, null}},
 
-			{	{null, null, null, null, null}, 
-				{null, null, null, null, null},
-				{null, null, LibVulpesBlocks.motors, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null}},
+            {{null, null, null, null, null},
+                    {null, null, null, null, null},
+                    {null, null, LibVulpesBlocks.motors, null, null},
+                    {null, null, null, null, null},
+                    {null, null, null, null, null}},
 
-				{	{null,"blockAluminum","blockAluminum","blockAluminum",null},
-					{"blockAluminum", "blockAluminum", AdvancedRocketryBlocks.blockStructureTower, "blockAluminum", "blockAluminum"},
-					{"blockAluminum", AdvancedRocketryBlocks.blockStructureTower, LibVulpesBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureTower, "blockAluminum"},
-					{"blockAluminum", "blockAluminum", AdvancedRocketryBlocks.blockStructureTower, "blockAluminum", "blockAluminum"},
-					{null,"blockAluminum","blockAluminum","blockAluminum",null}},
+            {{null, "blockAluminum", "blockAluminum", "blockAluminum", null},
+                    {"blockAluminum", "blockAluminum", AdvancedRocketryBlocks.blockStructureTower, "blockAluminum", "blockAluminum"},
+                    {"blockAluminum", AdvancedRocketryBlocks.blockStructureTower, LibVulpesBlocks.blockStructureBlock, AdvancedRocketryBlocks.blockStructureTower, "blockAluminum"},
+                    {"blockAluminum", "blockAluminum", AdvancedRocketryBlocks.blockStructureTower, "blockAluminum", "blockAluminum"},
+                    {null, "blockAluminum", "blockAluminum", "blockAluminum", null}},
 
-					{	{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR}, 
-						{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},
-						{Blocks.AIR, Blocks.AIR, Blocks.REDSTONE_BLOCK, Blocks.AIR, Blocks.AIR},
-						{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},
-						{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR}}};
-
-
-	@Override
-	public Object[][][] getStructure() {
-		return structure;
-	}
-
-	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> list = new LinkedList<>();//super.getModules(ID, player);
-
-		boolean suitable = true;
-		for(int y = this.getPos().getY() - 4; y > 0; y--) {
-			if(!world.isAirBlock(new BlockPos( this.getPos().getX(), y, this.getPos().getZ()))) {
-				suitable = false;
-				break;
-			}
-		}
-
-		if(world.isRemote) {
-			list.add(new ModuleImage(24, 14, zmaster587.advancedRocketry.inventory.TextureResources.earthCandyIcon));
+            {{Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},
+                    {Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},
+                    {Blocks.AIR, Blocks.AIR, Blocks.REDSTONE_BLOCK, Blocks.AIR, Blocks.AIR},
+                    {Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR},
+                    {Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR, Blocks.AIR}}};
 
 
-			ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-			if(suitable && SpaceObjectManager.WARPDIMID != spaceObject.getOrbitingPlanetId()) {
+    @Override
+    public Object[][][] getStructure() {
+        return structure;
+    }
 
-				DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(spaceObject.getOrbitingPlanetId());
-				List<ModuleBase> list2 = new LinkedList<>();
-				if(properties.isGasGiant()) {
-					list2.add(new ModuleText(32, 16, LibVulpes.proxy.getLocalizedString("msg.biomescanner.gas"), 0x202020));
-				} 
-				else if (properties.isStar()) {
-					list2.add(new ModuleText(32, 16, LibVulpes.proxy.getLocalizedString("msg.biomescanner.star"), 0x202020));
-				} else {
+    @Override
+    public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+        List<ModuleBase> list = new LinkedList<>();//super.getModules(ID, player);
+
+        boolean suitable = true;
+        for (int y = this.getPos().getY() - 4; y > 0; y--) {
+            if (!world.isAirBlock(new BlockPos(this.getPos().getX(), y, this.getPos().getZ()))) {
+                suitable = false;
+                break;
+            }
+        }
+
+        if (world.isRemote) {
+            list.add(new ModuleImage(24, 14, zmaster587.advancedRocketry.inventory.TextureResources.earthCandyIcon));
 
 
-					int i = 0;
-					if(properties.getId() == 0) {
-						for (Biome biome : Biome.REGISTRY) {
-							if (biome != null)
-								list2.add(new ModuleText(32, 16 + 12 * (i++), AdvancedRocketry.proxy.getNameFromBiome(biome), 0x202020));
-						}
-					}
-					else {
-						for (BiomeEntry biome : properties.getBiomes()) {
-							list2.add(new ModuleText(32, 16 + 12 * (i++), AdvancedRocketry.proxy.getNameFromBiome(biome.biome), 0x202020));
-						}
-					}
-				}
-				//Relying on a bug, is this safe?
-				ModuleContainerPan pan = new ModuleContainerPan(0, 16, list2, new LinkedList<>(), null, 148, 110, 0, -64, 0, 1000);
-				list.add(pan);
-			}
-			else
-				list.add(new ModuleText(32, 16, ChatFormatting.OBFUSCATED + "Foxes, that is all", 0x202020));
-		}
+            ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+            if (suitable && SpaceObjectManager.WARPDIMID != spaceObject.getOrbitingPlanetId()) {
 
-		return list;
-	}
+                DimensionProperties properties = DimensionManager.getInstance().getDimensionProperties(spaceObject.getOrbitingPlanetId());
+                List<ModuleBase> list2 = new LinkedList<>();
+                if (properties.isGasGiant()) {
+                    list2.add(new ModuleText(32, 16, LibVulpes.proxy.getLocalizedString("msg.biomescanner.gas"), 0x202020));
+                } else if (properties.isStar()) {
+                    list2.add(new ModuleText(32, 16, LibVulpes.proxy.getLocalizedString("msg.biomescanner.star"), 0x202020));
+                } else {
 
-	@Override
-	@Nonnull
-	public AxisAlignedBB getRenderBoundingBox() {
 
-		return new AxisAlignedBB(pos.add(-5,-3,-5),pos.add(5,3,5));
-	}
+                    int i = 0;
+                    if (properties.getId() == 0) {
+                        for (Biome biome : Biome.REGISTRY) {
+                            if (biome != null)
+                                list2.add(new ModuleText(32, 16 + 12 * (i++), AdvancedRocketry.proxy.getNameFromBiome(biome), 0x202020));
+                        }
+                    } else {
+                        for (BiomeEntry biome : properties.getBiomes()) {
+                            list2.add(new ModuleText(32, 16 + 12 * (i++), AdvancedRocketry.proxy.getNameFromBiome(biome.biome), 0x202020));
+                        }
+                    }
+                }
+                //Relying on a bug, is this safe?
+                ModuleContainerPan pan = new ModuleContainerPan(0, 16, list2, new LinkedList<>(), null, 148, 110, 0, -64, 0, 1000);
+                list.add(pan);
+            } else
+                list.add(new ModuleText(32, 16, ChatFormatting.OBFUSCATED + "Foxes, that is all", 0x202020));
+        }
 
-	@Override
-	public String getMachineName() {
-		return AdvancedRocketryBlocks.blockBiomeScanner.getLocalizedName();
-	}
+        return list;
+    }
+
+    @Override
+    @Nonnull
+    public AxisAlignedBB getRenderBoundingBox() {
+
+        return new AxisAlignedBB(pos.add(-5, -3, -5), pos.add(5, 3, 5));
+    }
+
+    @Override
+    public String getMachineName() {
+        return AdvancedRocketryBlocks.blockBiomeScanner.getLocalizedName();
+    }
 }

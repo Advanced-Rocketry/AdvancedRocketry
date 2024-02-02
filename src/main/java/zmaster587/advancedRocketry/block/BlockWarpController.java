@@ -15,19 +15,19 @@ import javax.annotation.Nonnull;
 
 public class BlockWarpController extends BlockTile {
 
-	public BlockWarpController(Class<? extends TileEntity> tileClass, int guiId) {
-		super(tileClass, guiId);
-	}
+    public BlockWarpController(Class<? extends TileEntity> tileClass, int guiId) {
+        super(tileClass, guiId);
+    }
 
-	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
-			EntityLivingBase placer, @Nonnull ItemStack stack) {
-		super.onBlockPlacedBy(world, pos, state, placer, stack);
-		
-		ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
-		
-		if(spaceObject instanceof SpaceStationObject) {
-			((SpaceStationObject)spaceObject).setForwardDirection(getFront(state).getOpposite());
-		}
-	}
+    @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
+                                EntityLivingBase placer, @Nonnull ItemStack stack) {
+        super.onBlockPlacedBy(world, pos, state, placer, stack);
+
+        ISpaceObject spaceObject = SpaceObjectManager.getSpaceManager().getSpaceStationFromBlockCoords(pos);
+
+        if (spaceObject instanceof SpaceStationObject) {
+            ((SpaceStationObject) spaceObject).setForwardDirection(getFront(state).getOpposite());
+        }
+    }
 }

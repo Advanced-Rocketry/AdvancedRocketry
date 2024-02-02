@@ -5,8 +5,8 @@ import zmaster587.libVulpes.interfaces.IRecipe;
 
 public class CentrifugeWrapper extends MachineRecipe {
 
-	CentrifugeWrapper(IRecipe rec) {
-		super(rec);
-	}
+    CentrifugeWrapper(IRecipe rec) {
+        super(rec);
+    }
 
 }

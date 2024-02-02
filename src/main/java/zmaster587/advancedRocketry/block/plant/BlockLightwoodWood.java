@@ -7,28 +7,25 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
-public class BlockLightwoodWood extends BlockLog  {
-	
-    public static final String[] names = new String[] {"blue"};
+public class BlockLightwoodWood extends BlockLog {
+
+    public static final String[] names = new String[]{"blue"};
 
     public BlockLightwoodWood() {
-		super();
-		this.setDefaultState(this.blockState.getBaseState().withProperty(LOG_AXIS, BlockLog.EnumAxis.Y));
-	}
-    
-	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, LOG_AXIS);
-	}
+        super();
+        this.setDefaultState(this.blockState.getBaseState().withProperty(LOG_AXIS, BlockLog.EnumAxis.Y));
+    }
 
-	@Override
-    public IBlockState getStateFromMeta(int meta)
-    {
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, LOG_AXIS);
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
         IBlockState iblockstate = this.getDefaultState();
 
-        switch (meta & 12)
-        {
+        switch (meta & 12) {
             case 0:
                 iblockstate = iblockstate.withProperty(LOG_AXIS, BlockLog.EnumAxis.Y);
                 break;
@@ -45,33 +42,31 @@ public class BlockLightwoodWood extends BlockLog  {
         return iblockstate;
     }
 
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		int i = 0;
-		switch (state.getValue(LOG_AXIS))
-		{
-		case X:
-			i |= 4;
-			break;
-		case Z:
-			i |= 8;
-			break;
-		case NONE:
-			i |= 12;
-		}
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        int i = 0;
+        switch (state.getValue(LOG_AXIS)) {
+            case X:
+                i |= 4;
+                break;
+            case Z:
+                i |= 8;
+                break;
+            case NONE:
+                i |= 12;
+        }
 
-		return i;
-	}
-    
+        return i;
+    }
+
     @Override
     public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos,
-    		EnumFacing face) {
-    	return 50;
+                                  EnumFacing face) {
+        return 50;
     }
-    
+
     @Override
     public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face) {
-    	return 50;
+        return 50;
     }
 }

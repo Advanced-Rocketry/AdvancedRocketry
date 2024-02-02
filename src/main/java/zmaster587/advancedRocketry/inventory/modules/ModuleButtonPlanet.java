@@ -13,35 +13,35 @@ import java.util.List;
 
 public class ModuleButtonPlanet extends ModuleButton {
 
-	DimensionProperties properties;
-	
-	public ModuleButtonPlanet(int offsetX, int offsetY, int buttonId,
-			String text, IButtonInventory tile,
-			DimensionProperties properties, String tooltipText, int sizeX,
-			int sizeY) {
-		super(offsetX, offsetY, buttonId, text, tile, null, tooltipText, sizeX,
-				sizeY);
-		this.properties = properties;
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public List<GuiButton> addButtons(int x, int y) {
+    DimensionProperties properties;
 
-		List<GuiButton> list = new LinkedList<>();
+    public ModuleButtonPlanet(int offsetX, int offsetY, int buttonId,
+                              String text, IButtonInventory tile,
+                              DimensionProperties properties, String tooltipText, int sizeX,
+                              int sizeY) {
+        super(offsetX, offsetY, buttonId, text, tile, null, tooltipText, sizeX,
+                sizeY);
+        this.properties = properties;
+    }
 
-		button = new GuiPlanetButton(buttonId, x + offsetX, y + offsetY, sizeX, sizeY, properties);
+    @SideOnly(Side.CLIENT)
+    public List<GuiButton> addButtons(int x, int y) {
 
-		button.visible = visible;
+        List<GuiButton> list = new LinkedList<>();
 
-		if(!sound.isEmpty()) {
-			button.setSound(sound);
-			sound = "";
-		}
+        button = new GuiPlanetButton(buttonId, x + offsetX, y + offsetY, sizeX, sizeY, properties);
 
-		button.setBackgroundColor(bgColor);
-		list.add(button);
+        button.visible = visible;
 
-		return list;
-	}
+        if (!sound.isEmpty()) {
+            button.setSound(sound);
+            sound = "";
+        }
+
+        button.setBackgroundColor(bgColor);
+        list.add(button);
+
+        return list;
+    }
 
 }

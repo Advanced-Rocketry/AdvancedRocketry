@@ -8,13 +8,13 @@ import java.util.Random;
 
 public class WorldGenNoTree extends WorldGenAbstractTree {
 
-	public WorldGenNoTree(boolean p_i45448_1_) {
-		super(p_i45448_1_);
-	}
+    public WorldGenNoTree(boolean p_i45448_1_) {
+        super(p_i45448_1_);
+    }
 
-	@Override
-	public boolean generate(World worldIn, Random rand, BlockPos position) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean generate(World worldIn, Random rand, BlockPos position) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

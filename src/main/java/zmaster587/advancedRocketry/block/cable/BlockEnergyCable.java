@@ -8,13 +8,13 @@ import zmaster587.advancedRocketry.tile.cables.TileEnergyPipe;
 
 public class BlockEnergyCable extends BlockPipe {
 
-	public BlockEnergyCable(Material material) {
-		super(material);
-	}
-	
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileEnergyPipe();
-	}
+    public BlockEnergyCable(Material material) {
+        super(material);
+    }
+
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileEnergyPipe();
+    }
 
 }

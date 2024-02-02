@@ -15,45 +15,45 @@ import zmaster587.libVulpes.inventory.GuiHandler;
 
 public class BlockLandingPad extends Block {
 
-	public BlockLandingPad(Material mat) {
-		super(mat);
-	}
-	
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
-		return true;
-	}
-	
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileLandingPad();
-	}
-	
-	
-	@Override
-	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-		super.onBlockAdded(worldIn, pos, state);
-		TileEntity tile = worldIn.getTileEntity(pos);
-		if(tile instanceof TileLandingPad) {
-			((TileLandingPad) tile).registerTileWithStation(worldIn, pos);
-		}
-	}
-	
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		if(!world.isRemote)
-			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), world, pos.getX(), pos.getY() , pos.getZ());
-		return true;
-	}
+    public BlockLandingPad(Material mat) {
+        super(mat);
+    }
 
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TileLandingPad) {
-			((TileLandingPad) tile).unregisterTileWithStation(world, pos);
-		}
-		super.breakBlock(world, pos, state);
-	}
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
+
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileLandingPad();
+    }
+
+
+    @Override
+    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+        super.onBlockAdded(worldIn, pos, state);
+        TileEntity tile = worldIn.getTileEntity(pos);
+        if (tile instanceof TileLandingPad) {
+            ((TileLandingPad) tile).registerTileWithStation(worldIn, pos);
+        }
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, BlockPos pos,
+                                    IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY,
+                                    float hitZ) {
+        if (!world.isRemote)
+            player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
+        return true;
+    }
+
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        TileEntity tile = world.getTileEntity(pos);
+        if (tile instanceof TileLandingPad) {
+            ((TileLandingPad) tile).unregisterTileWithStation(world, pos);
+        }
+        super.breakBlock(world, pos, state);
+    }
 }

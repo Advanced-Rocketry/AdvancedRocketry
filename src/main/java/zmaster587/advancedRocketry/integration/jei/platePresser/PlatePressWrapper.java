@@ -5,8 +5,8 @@ import zmaster587.libVulpes.interfaces.IRecipe;
 
 public class PlatePressWrapper extends MachineRecipe {
 
-	PlatePressWrapper(IRecipe rec) {
-		super(rec);
-	}
+    PlatePressWrapper(IRecipe rec) {
+        super(rec);
+    }
 
 }

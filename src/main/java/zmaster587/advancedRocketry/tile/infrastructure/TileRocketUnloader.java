@@ -13,81 +13,80 @@ import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
 import java.util.List;
 
-public class TileRocketUnloader extends TileRocketLoader implements IInfrastructure, ITickable, IButtonInventory, INetworkMachine   {
-	ModuleRedstoneOutputButton redstoneControl;
-	RedstoneState state;
+public class TileRocketUnloader extends TileRocketLoader implements IInfrastructure, ITickable, IButtonInventory, INetworkMachine {
+    ModuleRedstoneOutputButton redstoneControl;
+    RedstoneState state;
 
-	public TileRocketUnloader() {
-		super();
-	}
+    public TileRocketUnloader() {
+        super();
+    }
 
-	public TileRocketUnloader(int size) {
-		super(size);
-		inventory.setCanInsertSlot(0, false);
-		inventory.setCanInsertSlot(1, false);
-		inventory.setCanInsertSlot(2, false);
-		inventory.setCanInsertSlot(3, false);
-		inventory.setCanExtractSlot(0, true);
-		inventory.setCanExtractSlot(1, true);
-		inventory.setCanExtractSlot(2, true);
-		inventory.setCanExtractSlot(3, true);
-	}
+    public TileRocketUnloader(int size) {
+        super(size);
+        inventory.setCanInsertSlot(0, false);
+        inventory.setCanInsertSlot(1, false);
+        inventory.setCanInsertSlot(2, false);
+        inventory.setCanInsertSlot(3, false);
+        inventory.setCanExtractSlot(0, true);
+        inventory.setCanExtractSlot(1, true);
+        inventory.setCanExtractSlot(2, true);
+        inventory.setCanExtractSlot(3, true);
+    }
 
-	@Override
-	public String getModularInventoryName() {
-		return "tile.loader.2.name";
-	}
+    @Override
+    public String getModularInventoryName() {
+        return "tile.loader.2.name";
+    }
 
 
-	@Override
-	public void update() {
+    @Override
+    public void update() {
 
-		//Move a stack of items
-		if(!world.isRemote && rocket != null ) {
-			boolean isAllowedToOperate = (inputstate == RedstoneState.OFF || isStateActive(inputstate, getStrongPowerForSides(world, getPos())));
+        //Move a stack of items
+        if (!world.isRemote && rocket != null) {
+            boolean isAllowedToOperate = (inputstate == RedstoneState.OFF || isStateActive(inputstate, getStrongPowerForSides(world, getPos())));
 
-			List<TileEntity> tiles = rocket.storage.getInventoryTiles();
-			boolean foundStack = false;
-			boolean rocketContainsNoItems = true;
-			out:
-				//Function returns if something can be moved
-				for(TileEntity tile : tiles) {
-					if(tile instanceof IInventory && !(tile instanceof TileGuidanceComputer)) {
-						IInventory inv = ((IInventory)tile);
-						for(int i = 0; i < inv.getSizeInventory(); i++) {
-							if(!inv.getStackInSlot(i).isEmpty()) {
-								rocketContainsNoItems = false;
-								//Loop though this inventory's slots and find a suitible one
-								for(int j = 0; j < getSizeInventory(); j++) {
-									if(getStackInSlot(j).isEmpty()) {
-										if(isAllowedToOperate) {
-											inventory.setInventorySlotContents(j, inv.getStackInSlot(i));
-											inv.setInventorySlotContents(i,ItemStack.EMPTY);
-										}
-										break out;
-									}
-									else if(!inv.getStackInSlot(i).isEmpty() && isItemValidForSlot(j, inv.getStackInSlot(i))) {
-										if(isAllowedToOperate) {
-											ItemStack stack2 = inv.decrStackSize(i, getStackInSlot(j).getMaxStackSize() - getStackInSlot(j).getCount());
-											getStackInSlot(j).setCount(getStackInSlot(j).getCount() + stack2.getCount());
-										}
-										if(inv.getStackInSlot(i).isEmpty())
-											break out;
-										foundStack = true;
-									}
-								}
-							}
+            List<TileEntity> tiles = rocket.storage.getInventoryTiles();
+            boolean foundStack = false;
+            boolean rocketContainsNoItems = true;
+            out:
+            //Function returns if something can be moved
+            for (TileEntity tile : tiles) {
+                if (tile instanceof IInventory && !(tile instanceof TileGuidanceComputer)) {
+                    IInventory inv = ((IInventory) tile);
+                    for (int i = 0; i < inv.getSizeInventory(); i++) {
+                        if (!inv.getStackInSlot(i).isEmpty()) {
+                            rocketContainsNoItems = false;
+                            //Loop though this inventory's slots and find a suitible one
+                            for (int j = 0; j < getSizeInventory(); j++) {
+                                if (getStackInSlot(j).isEmpty()) {
+                                    if (isAllowedToOperate) {
+                                        inventory.setInventorySlotContents(j, inv.getStackInSlot(i));
+                                        inv.setInventorySlotContents(i, ItemStack.EMPTY);
+                                    }
+                                    break out;
+                                } else if (!inv.getStackInSlot(i).isEmpty() && isItemValidForSlot(j, inv.getStackInSlot(i))) {
+                                    if (isAllowedToOperate) {
+                                        ItemStack stack2 = inv.decrStackSize(i, getStackInSlot(j).getMaxStackSize() - getStackInSlot(j).getCount());
+                                        getStackInSlot(j).setCount(getStackInSlot(j).getCount() + stack2.getCount());
+                                    }
+                                    if (inv.getStackInSlot(i).isEmpty())
+                                        break out;
+                                    foundStack = true;
+                                }
+                            }
+                        }
 
-							if(foundStack)
-								break out;
-						}
-					}
-				}
+                        if (foundStack)
+                            break out;
+                    }
+                }
+            }
 
-			//Update redstone state
-			setRedstoneState(rocketContainsNoItems);
+            //Update redstone state
+            setRedstoneState(rocketContainsNoItems);
 
-		}
-	}
+        }
+    }
 }
 

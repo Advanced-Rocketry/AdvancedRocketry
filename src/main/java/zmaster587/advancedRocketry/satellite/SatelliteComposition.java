@@ -2,21 +2,21 @@ package zmaster587.advancedRocketry.satellite;
 
 import zmaster587.advancedRocketry.api.DataStorage;
 
-public class SatelliteComposition extends SatelliteData{
-	
-	public SatelliteComposition() {
-		super();
-		data = new DataStorage(DataStorage.DataType.COMPOSITION);
-		data.lockDataType(DataStorage.DataType.COMPOSITION);
-	}
-	
-	@Override
-	public String getName() {
-		return "Composition Scanner";
-	}
+public class SatelliteComposition extends SatelliteData {
 
-	@Override
-	public double failureChance() {
-		return 0;
-	}
+    public SatelliteComposition() {
+        super();
+        data = new DataStorage(DataStorage.DataType.COMPOSITION);
+        data.lockDataType(DataStorage.DataType.COMPOSITION);
+    }
+
+    @Override
+    public String getName() {
+        return "Composition Scanner";
+    }
+
+    @Override
+    public double failureChance() {
+        return 0;
+    }
 }

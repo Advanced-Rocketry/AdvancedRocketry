@@ -13,38 +13,34 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockForceField extends Block {
 
-	public BlockForceField(Material materialIn) {
-		super(materialIn);
-	}
-	
+    public BlockForceField(Material materialIn) {
+        super(materialIn);
+    }
+
     /**
      * Used to determine ambient occlusion and culling when rebuilding chunks for render
      */
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
-    
+
     @Override
     public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
-    	// Don't let wither or enderdragon destroy it
-    	return false;
-    }
-    
-    public boolean isFullCube(IBlockState state)
-    {
+        // Don't let wither or enderdragon destroy it
         return false;
     }
-    
+
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
+
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
+    public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.TRANSLUCENT;
     }
-    
+
     @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-    {
+    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
         IBlockState iblockstate = blockAccess.getBlockState(pos.offset(side));
         Block block = iblockstate.getBlock();
 

@@ -7,19 +7,19 @@ import zmaster587.advancedRocketry.cable.HandlerCableNetwork;
 import zmaster587.advancedRocketry.cable.NetworkRegistry;
 
 public class TileDataPipe extends TilePipe {
-	
-	@Override
-	public boolean canExtract(EnumFacing dir, TileEntity e) {
-		
-		return e instanceof IDataHandler;
-	}
 
-	@Override
-	public boolean canInject(EnumFacing dir, TileEntity e) {
-		return e instanceof IDataHandler;
-	}
-	
-	public HandlerCableNetwork getNetworkHandler() {
-		return NetworkRegistry.dataNetwork;
-	}
+    @Override
+    public boolean canExtract(EnumFacing dir, TileEntity e) {
+
+        return e instanceof IDataHandler;
+    }
+
+    @Override
+    public boolean canInject(EnumFacing dir, TileEntity e) {
+        return e instanceof IDataHandler;
+    }
+
+    public HandlerCableNetwork getNetworkHandler() {
+        return NetworkRegistry.dataNetwork;
+    }
 }

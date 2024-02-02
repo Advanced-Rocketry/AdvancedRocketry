@@ -5,10 +5,10 @@ import net.minecraftforge.fluids.Fluid;
 
 public class BlockEnrichedLava extends BlockFluid {
 
-	public BlockEnrichedLava(Fluid fluid, Material material) {
-		super(fluid, material);
-	}
-	
-	//TODO: add eyecandy
+    public BlockEnrichedLava(Fluid fluid, Material material) {
+        super(fluid, material);
+    }
+
+    //TODO: add eyecandy
 
 }

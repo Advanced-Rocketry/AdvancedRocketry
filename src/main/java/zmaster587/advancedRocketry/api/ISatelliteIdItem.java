@@ -6,5 +6,5 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteProperties;
 import javax.annotation.Nonnull;
 
 public interface ISatelliteIdItem {
-	void setSatellite(@Nonnull ItemStack stack, SatelliteProperties properties);
+    void setSatellite(@Nonnull ItemStack stack, SatelliteProperties properties);
 }

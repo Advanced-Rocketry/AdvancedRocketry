@@ -18,83 +18,82 @@ import zmaster587.libVulpes.tile.TilePointer;
 
 public class BlockARHatch extends BlockHatch {
 
-	public BlockARHatch(Material material) {
-		super(material);
-	}
-	
-	@Override
-	public void getSubBlocks(CreativeTabs tab,
-			NonNullList<ItemStack> list) {
-		list.add(new ItemStack(this, 1, 0));
-		list.add(new ItemStack(this, 1, 1));
-		list.add(new ItemStack(this, 1, 2));
-		list.add(new ItemStack(this, 1, 3));
-		list.add(new ItemStack(this, 1, 4));
-		list.add(new ItemStack(this, 1, 5));
-		list.add(new ItemStack(this, 1, 6));
-	}
-	
-	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState,
-			IBlockAccess blockAccess, BlockPos pos, EnumFacing direction) {
+    public BlockARHatch(Material material) {
+        super(material);
+    }
+
+    @Override
+    public void getSubBlocks(CreativeTabs tab,
+                             NonNullList<ItemStack> list) {
+        list.add(new ItemStack(this, 1, 0));
+        list.add(new ItemStack(this, 1, 1));
+        list.add(new ItemStack(this, 1, 2));
+        list.add(new ItemStack(this, 1, 3));
+        list.add(new ItemStack(this, 1, 4));
+        list.add(new ItemStack(this, 1, 5));
+        list.add(new ItemStack(this, 1, 6));
+    }
+
+    @Override
+    public boolean shouldSideBeRendered(IBlockState blockState,
+                                        IBlockAccess blockAccess, BlockPos pos, EnumFacing direction) {
 
 
-		boolean isPointer = blockAccess.getTileEntity(pos.offset(direction.getOpposite())) instanceof TilePointer;
-		if (blockState.getValue(VARIANT) == 8)
-			return false;
-		if(isPointer || blockState.getValue(VARIANT) < 2)
-			return super.shouldSideBeRendered(blockState, blockAccess, pos, direction);
-		return true;
+        boolean isPointer = blockAccess.getTileEntity(pos.offset(direction.getOpposite())) instanceof TilePointer;
+        if (blockState.getValue(VARIANT) == 8)
+            return false;
+        if (isPointer || blockState.getValue(VARIANT) < 2)
+            return super.shouldSideBeRendered(blockState, blockAccess, pos, direction);
+        return true;
 
-	}
-	
-	@Override
-	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess,
-			BlockPos pos, EnumFacing side) {
-		if(blockAccess.getTileEntity(pos) instanceof TilePointer && !((TilePointer)blockAccess.getTileEntity(pos)).allowRedstoneOutputOnSide(side))
-			return 0;
-		
-		return blockState.getValue(VARIANT) >= 2 ? 15 : 0;
-	}
-	
-	public void setRedstoneState(World world, IBlockState bstate , BlockPos pos, boolean state) {
-		if(bstate.getBlock() == this) {
-			if(state && (bstate.getValue(VARIANT) & 8) == 0) {
-				world.setBlockState(pos, bstate.withProperty(VARIANT, bstate.getValue(VARIANT) | 8));
-				world.notifyBlockUpdate(pos, bstate,  bstate, 3);
-			}
-			else if(!state && (bstate.getValue(VARIANT) & 8) != 0) {
-				world.setBlockState(pos, bstate.withProperty(VARIANT, bstate.getValue(VARIANT) & 7));
-				world.notifyBlockUpdate(pos, bstate,  bstate, 3);
-			}
-		}
-	}
-	
-	@Override
-	public boolean canProvidePower(IBlockState state) {
-		return state.getValue(VARIANT) >= 10;
-	}
-	
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		int metadata = state.getValue(VARIANT);
-		
-		//TODO: multiple sized Hatches
-		if((metadata & 7) == 0)
-			return new TileDataBus(2);
-		else if((metadata & 7) == 1)
-			return new TileSatelliteHatch(1);	
-		else if((metadata & 7) == 2)
-			return new TileRocketUnloader(4);
-		else if((metadata & 7) == 3)
-			return new TileRocketLoader(4);
-		else if((metadata & 7) == 4)
-			return new TileRocketFluidUnloader();
-		else if((metadata & 7) == 5)
-			return new TileRocketFluidLoader();
-		else if((metadata & 7) == 6)
-			return new TileGuidanceComputerAccessHatch();
-		
-		return null;
-	}
+    }
+
+    @Override
+    public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess,
+                            BlockPos pos, EnumFacing side) {
+        if (blockAccess.getTileEntity(pos) instanceof TilePointer && !((TilePointer) blockAccess.getTileEntity(pos)).allowRedstoneOutputOnSide(side))
+            return 0;
+
+        return blockState.getValue(VARIANT) >= 2 ? 15 : 0;
+    }
+
+    public void setRedstoneState(World world, IBlockState bstate, BlockPos pos, boolean state) {
+        if (bstate.getBlock() == this) {
+            if (state && (bstate.getValue(VARIANT) & 8) == 0) {
+                world.setBlockState(pos, bstate.withProperty(VARIANT, bstate.getValue(VARIANT) | 8));
+                world.notifyBlockUpdate(pos, bstate, bstate, 3);
+            } else if (!state && (bstate.getValue(VARIANT) & 8) != 0) {
+                world.setBlockState(pos, bstate.withProperty(VARIANT, bstate.getValue(VARIANT) & 7));
+                world.notifyBlockUpdate(pos, bstate, bstate, 3);
+            }
+        }
+    }
+
+    @Override
+    public boolean canProvidePower(IBlockState state) {
+        return state.getValue(VARIANT) >= 10;
+    }
+
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        int metadata = state.getValue(VARIANT);
+
+        //TODO: multiple sized Hatches
+        if ((metadata & 7) == 0)
+            return new TileDataBus(2);
+        else if ((metadata & 7) == 1)
+            return new TileSatelliteHatch(1);
+        else if ((metadata & 7) == 2)
+            return new TileRocketUnloader(4);
+        else if ((metadata & 7) == 3)
+            return new TileRocketLoader(4);
+        else if ((metadata & 7) == 4)
+            return new TileRocketFluidUnloader();
+        else if ((metadata & 7) == 5)
+            return new TileRocketFluidLoader();
+        else if ((metadata & 7) == 6)
+            return new TileGuidanceComputerAccessHatch();
+
+        return null;
+    }
 }

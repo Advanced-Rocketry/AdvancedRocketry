@@ -9,13 +9,13 @@ import java.util.List;
 
 public class PrecisionLaserEtcherRecipeMaker {
 
-	public static List<PrecisionLaserEtcherWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
+    public static List<PrecisionLaserEtcherWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
 
-		List<PrecisionLaserEtcherWrapper> list = new LinkedList<>();
-		for(IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
-			list.add(new PrecisionLaserEtcherWrapper(rec));
-		}
-		return list;
-	}
-	
+        List<PrecisionLaserEtcherWrapper> list = new LinkedList<>();
+        for (IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
+            list.add(new PrecisionLaserEtcherWrapper(rec));
+        }
+        return list;
+    }
+
 }

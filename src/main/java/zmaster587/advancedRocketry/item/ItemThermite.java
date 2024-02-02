@@ -7,9 +7,9 @@ import javax.annotation.Nonnull;
 
 public class ItemThermite extends Item {
 
-	@Override
-	public int getItemBurnTime(@Nonnull ItemStack itemStack) {
-		return 6000;
-	}
-	
+    @Override
+    public int getItemBurnTime(@Nonnull ItemStack itemStack) {
+        return 6000;
+    }
+
 }

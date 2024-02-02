@@ -2,13 +2,13 @@ package zmaster587.advancedRocketry.client;
 
 public class ClientHelper {
 
-	/* gravRotation
-	 * 1: north
-	 * 2: east
-	 * 3: south
-	 * 4: west
-	 * 5: up
-	 */
+    /* gravRotation
+     * 1: north
+     * 2: east
+     * 3: south
+     * 4: west
+     * 5: up
+     */
 
 	/*public static boolean rotate = true;
 

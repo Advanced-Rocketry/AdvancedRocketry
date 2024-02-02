@@ -24,84 +24,73 @@ import java.util.Random;
 
 public class BlockLightwoodSapling extends BlockBush implements IGrowable {
 
-	public String[] names = new String[] { "blueTree" };
-	public static final PropertyInteger STAGE = PropertyInteger.create("stage", 0, 1);
-	
-	public BlockLightwoodSapling() {
+    public static final PropertyInteger STAGE = PropertyInteger.create("stage", 0, 1);
+    public String[] names = new String[]{"blueTree"};
+
+    public BlockLightwoodSapling() {
         this.setDefaultState(this.blockState.getBaseState().withProperty(STAGE, 0));
-	}
-	
+    }
+
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item item, CreativeTabs creativeTab, List<ItemStack> list)
-    {
+    public void getSubBlocks(Item item, CreativeTabs creativeTab, List<ItemStack> list) {
         list.add(new ItemStack(item, 1, 0));
     }
-    
-    
+
+
     public void generateTree(World world, BlockPos pos, IBlockState state,
-    		Random random) {
-        if (!net.minecraftforge.event.terraingen.TerrainGen.saplingGrowTree(world, random, pos)) 
-        	return;
-        
+                             Random random) {
+        if (!net.minecraftforge.event.terraingen.TerrainGen.saplingGrowTree(world, random, pos))
+            return;
+
         IBlockState l = this.getDefaultState();//world.getBlockState(pos);//world.getBlockMetadata(x, y, z) & 7;
         WorldGenerator object = new WorldGenAlienTree(true);
         int i1 = 0;
         int j1 = 0;
 
-        if (!object.generate(world, random, pos.add(i1, 0, j1)))
-        {
-            
+        if (!object.generate(world, random, pos.add(i1, 0, j1))) {
+
             world.setBlockState(pos, l, 4);
-            
+
         }
     }
 
     @ParametersAreNullableByDefault
-    public boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient)
-    {
+    public boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient) {
         return true;
     }
 
-    public boolean canUseBonemeal(World worldIn, @Nonnull Random rand, @Nullable BlockPos pos, @Nullable IBlockState state)
-    {
-        return (double)worldIn.rand.nextFloat() < 0.45D;
+    public boolean canUseBonemeal(World worldIn, @Nonnull Random rand, @Nullable BlockPos pos, @Nullable IBlockState state) {
+        return (double) worldIn.rand.nextFloat() < 0.45D;
     }
 
     @ParametersAreNonnullByDefault
-    public void grow(World worldIn, Random rand, BlockPos pos, IBlockState state)
-    {
-        if (state.getValue(STAGE) == 0)
-        {
+    public void grow(World worldIn, Random rand, BlockPos pos, IBlockState state) {
+        if (state.getValue(STAGE) == 0) {
             worldIn.setBlockState(pos, state.cycleProperty(STAGE), 4);
-        }
-        else
-        {
+        } else {
             this.generateTree(worldIn, pos, state, rand);
         }
     }
-    
+
     /**
      * Convert the given metadata into a BlockState for this Block
      */
     @Nonnull
-    public IBlockState getStateFromMeta(int meta)
-    {
+    public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(STAGE, (meta & 8) >> 3);
     }
 
     /**
      * Convert the BlockState into the correct metadata value
      */
-    public int getMetaFromState(IBlockState state)
-    {
+    public int getMetaFromState(IBlockState state) {
         int i = 0;
         i = i | state.getValue(STAGE) << 3;
         return i;
     }
 
     @Nonnull
-    protected BlockStateContainer createBlockState()
-    {
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, STAGE);
     }
 }

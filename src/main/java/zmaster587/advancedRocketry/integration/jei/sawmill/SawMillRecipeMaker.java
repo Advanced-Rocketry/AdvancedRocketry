@@ -9,13 +9,13 @@ import java.util.List;
 
 public class SawMillRecipeMaker {
 
-	public static List<SawMillWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
-		
-		List<SawMillWrapper> list = new LinkedList<>();
-		for(IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
-			list.add(new SawMillWrapper(rec));
-		}
-		return list;
-	}
-	
+    public static List<SawMillWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
+
+        List<SawMillWrapper> list = new LinkedList<>();
+        for (IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
+            list.add(new SawMillWrapper(rec));
+        }
+        return list;
+    }
+
 }

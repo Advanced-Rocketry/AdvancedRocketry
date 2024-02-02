@@ -12,39 +12,39 @@ import zmaster587.libVulpes.block.RotatableBlock;
 
 public class RendererSolarArray extends TileEntitySpecialRenderer {
 
-	WavefrontObject model;
+    WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/solararray.png");
+    ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/solararray.png");
 
-	public RendererSolarArray(){
-		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/solar_array.obj"));
-		} catch (ModelFormatException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@Override
-	public void render(TileEntity tile, double x,
-			double y, double z, float f, int distance, float a) {
-		TileSolarArray multiBlockTile = (TileSolarArray)tile;
+    public RendererSolarArray() {
+        try {
+            model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/solar_array.obj"));
+        } catch (ModelFormatException e) {
+            e.printStackTrace();
+        }
+    }
 
-		if(!multiBlockTile.canRender())
-			return;
+    @Override
+    public void render(TileEntity tile, double x,
+                       double y, double z, float f, int distance, float a) {
+        TileSolarArray multiBlockTile = (TileSolarArray) tile;
 
-		GL11.glPushMatrix();
+        if (!multiBlockTile.canRender())
+            return;
 
-		//Rotate and move the model into position
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
-		GL11.glTranslated(x + .5, y, z + .5);
-		GL11.glRotatef((front.getFrontOffsetX() == 1 ? 0 : 180) + front.getFrontOffsetZ()*90f, 0, 1, 0);
-		
-		GL11.glTranslated(-0.5f, 0f, 0.5f);
+        GL11.glPushMatrix();
 
-		bindTexture(texture);
-		
-		model.renderAll();
-		
-		GL11.glPopMatrix();
-	}
+        //Rotate and move the model into position
+        EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos()));
+        GL11.glTranslated(x + .5, y, z + .5);
+        GL11.glRotatef((front.getFrontOffsetX() == 1 ? 0 : 180) + front.getFrontOffsetZ() * 90f, 0, 1, 0);
+
+        GL11.glTranslated(-0.5f, 0f, 0.5f);
+
+        bindTexture(texture);
+
+        model.renderAll();
+
+        GL11.glPopMatrix();
+    }
 }

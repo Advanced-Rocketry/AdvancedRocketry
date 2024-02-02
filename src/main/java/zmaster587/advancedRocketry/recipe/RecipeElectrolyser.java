@@ -5,8 +5,8 @@ import zmaster587.libVulpes.recipe.RecipeMachineFactory;
 
 public class RecipeElectrolyser extends RecipeMachineFactory {
 
-	@Override
-	public Class getMachine() {
-		return TileElectrolyser.class;
-	}
+    @Override
+    public Class getMachine() {
+        return TileElectrolyser.class;
+    }
 }

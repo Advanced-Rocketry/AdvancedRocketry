@@ -9,14 +9,14 @@ import java.util.List;
 
 public class ElectrolyzerRecipeMaker {
 
-	public static List<ElectrolyzerWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
-		
-		List<ElectrolyzerWrapper> list = new LinkedList<>();
-		for(IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
-			list.add(new ElectrolyzerWrapper(rec));
-		}
-		
-		return list;
-	}
-	
+    public static List<ElectrolyzerWrapper> getMachineRecipes(IJeiHelpers helpers, Class clazz) {
+
+        List<ElectrolyzerWrapper> list = new LinkedList<>();
+        for (IRecipe rec : RecipesMachine.getInstance().getRecipes(clazz)) {
+            list.add(new ElectrolyzerWrapper(rec));
+        }
+
+        return list;
+    }
+
 }

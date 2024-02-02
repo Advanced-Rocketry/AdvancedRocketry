@@ -18,12 +18,12 @@ import java.util.Random;
 
 public class BiomeGenDeepSwamp extends Biome {
 
-	private final static WorldGenNoTree noTree = new WorldGenNoTree(false);
-	
-	public BiomeGenDeepSwamp(BiomeProperties properties) {
-		super(properties);
-		
-		this.decorator.treesPerChunk = 10;
+    private final static WorldGenNoTree noTree = new WorldGenNoTree(false);
+
+    public BiomeGenDeepSwamp(BiomeProperties properties) {
+        super(properties);
+
+        this.decorator.treesPerChunk = 10;
         this.decorator.flowersPerChunk = 1;
         this.decorator.deadBushPerChunk = 1;
         this.decorator.mushroomsPerChunk = 8;
@@ -35,31 +35,31 @@ public class BiomeGenDeepSwamp extends Biome {
         this.spawnableMonsterList.add(new Biome.SpawnListEntry(EntitySlime.class, 1, 1, 1));
         this.flowers.clear();
         this.addFlower(Blocks.RED_FLOWER.getDefaultState(), 10);
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getSkyColorByTemp(float p_76731_1_) {
-		return 0x203020;
-	}
-	
-	@Override
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public int getSkyColorByTemp(float p_76731_1_) {
+        return 0x203020;
+    }
+
+    @Override
     @Nonnull
-	public WorldGenAbstractTree getRandomTreeFeature(Random rand) {
-		return SWAMP_FEATURE;
-	}
-	
-	@Override
+    public WorldGenAbstractTree getRandomTreeFeature(Random rand) {
+        return SWAMP_FEATURE;
+    }
+
+    @Override
     @Nonnull
-	public EnumFlowerType pickRandomFlower(Random rand, BlockPos pos) {
-		return EnumFlowerType.BLUE_ORCHID;
-	}
-	
-	@Override
-	public void genTerrainBlocks(World worldIn, Random rand,
-			@Nonnull ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal) {
-		
-		double d0 = GRASS_COLOR_NOISE.getValue((double)x * 0.25D, (double)z * 0.25D);
+    public EnumFlowerType pickRandomFlower(Random rand, BlockPos pos) {
+        return EnumFlowerType.BLUE_ORCHID;
+    }
+
+    @Override
+    public void genTerrainBlocks(World worldIn, Random rand,
+                                 @Nonnull ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal) {
+
+        double d0 = GRASS_COLOR_NOISE.getValue((double) x * 0.25D, (double) z * 0.25D);
 
         if (d0 > 0.0D) {
             int i = x & 15;
@@ -81,15 +81,15 @@ public class BiomeGenDeepSwamp extends Biome {
         }
 
         this.generateBiomeTerrain(worldIn, rand, chunkPrimerIn, x, z, noiseVal);
-	}
-	
+    }
+
     /**
      * Provides the basic grass color based on the biome temperature and rainfall
      */
     @SideOnly(Side.CLIENT)
     public int getBiomeGrassColor(int x, int y, int z) {
-    	
-    	double d0 = GRASS_COLOR_NOISE.getValue((double)x * 0.25D, (double)z * 0.25D);
+
+        double d0 = GRASS_COLOR_NOISE.getValue((double) x * 0.25D, (double) z * 0.25D);
         return d0 < -0.1D ? 5011004 : 6975545;
     }
 

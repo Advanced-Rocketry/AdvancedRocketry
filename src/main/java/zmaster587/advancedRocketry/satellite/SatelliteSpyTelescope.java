@@ -8,21 +8,21 @@ import zmaster587.advancedRocketry.api.satellite.SatelliteBase;
 
 public class SatelliteSpyTelescope extends SatelliteBase {
 
-	//TODO: write position to player file and teleport player then subscribe to onlogin
-	@Override
-	public String getInfo(World world) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    //TODO: write position to player file and teleport player then subscribe to onlogin
+    @Override
+    public String getInfo(World world) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return "Spy in the sky";
-	}
+    @Override
+    public String getName() {
+        // TODO Auto-generated method stub
+        return "Spy in the sky";
+    }
 
-	@Override
-	public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
+    @Override
+    public boolean performAction(EntityPlayer player, World world, BlockPos pos) {
 
 		/*
 		//cam.setPosition(player.posX, player.posY + 30, player.posZ);
@@ -66,35 +66,35 @@ public class SatelliteSpyTelescope extends SatelliteBase {
 
 
 		}*/
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public double failureChance() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public double failureChance() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		// TODO Auto-generated method stub
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		// TODO Auto-generated method stub
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public boolean canTick() {
-		return false;
-	}
+    @Override
+    public boolean canTick() {
+        return false;
+    }
 
-	@Override
-	public void tickEntity() {
+    @Override
+    public void tickEntity() {
 
-	}
+    }
 
 }

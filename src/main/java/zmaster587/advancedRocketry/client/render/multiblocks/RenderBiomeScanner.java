@@ -12,39 +12,39 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiPowerConsumer;
 
 public class RenderBiomeScanner extends TileEntitySpecialRenderer {
 
-	WavefrontObject model;
+    WavefrontObject model;
 
-	ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/biomescanner.png");
+    ResourceLocation texture = new ResourceLocation("advancedrocketry:textures/models/biomescanner.png");
 
-	public RenderBiomeScanner(){
-		try {
-			model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/biomescanner.obj"));
-		} catch (ModelFormatException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@Override
-	public void render(TileEntity tile, double x, double y, double z,
-			float partialTicks, int destroyStage, float a) {
-		TileMultiPowerConsumer multiBlockTile = (TileMultiPowerConsumer)tile;
+    public RenderBiomeScanner() {
+        try {
+            model = new WavefrontObject(new ResourceLocation("advancedrocketry:models/biomescanner.obj"));
+        } catch (ModelFormatException e) {
+            e.printStackTrace();
+        }
+    }
 
-		if(!multiBlockTile.canRender())
-			return;
+    @Override
+    public void render(TileEntity tile, double x, double y, double z,
+                       float partialTicks, int destroyStage, float a) {
+        TileMultiPowerConsumer multiBlockTile = (TileMultiPowerConsumer) tile;
 
-		GL11.glPushMatrix();
+        if (!multiBlockTile.canRender())
+            return;
 
-		//Initial setup
+        GL11.glPushMatrix();
 
-		//Rotate and move the model into position
-		EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
-		GL11.glTranslated(x, y, z + 1);
+        //Initial setup
 
-		bindTexture(texture);
-		
-		model.renderAll();
-		
-		GL11.glPopMatrix();
-	}
+        //Rotate and move the model into position
+        EnumFacing front = RotatableBlock.getFront(tile.getWorld().getBlockState(tile.getPos())); //tile.getWorldObj().getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord));
+        GL11.glTranslated(x, y, z + 1);
+
+        bindTexture(texture);
+
+        model.renderAll();
+
+        GL11.glPopMatrix();
+    }
 
 }

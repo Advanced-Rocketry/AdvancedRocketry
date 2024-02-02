@@ -30,118 +30,117 @@ import java.util.List;
 
 public class TileAtmosphereDetector extends TileEntity implements ITickable, IModularInventory, IButtonInventory, INetworkMachine {
 
-	private IAtmosphere atmosphereToDetect;
+    private IAtmosphere atmosphereToDetect;
 
-	public TileAtmosphereDetector() {
-		atmosphereToDetect = AtmosphereType.AIR;
-	}
+    public TileAtmosphereDetector() {
+        atmosphereToDetect = AtmosphereType.AIR;
+    }
 
 
-	@Override
-	public void update() {
-		if(!world.isRemote && world.getWorldTime() % 10 == 0) {
-			IBlockState state = world.getBlockState(pos);
-			boolean detectedAtm = false;
+    @Override
+    public void update() {
+        if (!world.isRemote && world.getWorldTime() % 10 == 0) {
+            IBlockState state = world.getBlockState(pos);
+            boolean detectedAtm = false;
 
-			//TODO: Galacticcraft support
-			AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(world.provider.getDimension());
-			if(atmhandler == null) {
-				detectedAtm = atmosphereToDetect == AtmosphereType.AIR;
-			}
-			else {
-				for(EnumFacing  direction : EnumFacing.values()) {
-					detectedAtm = (!world.getBlockState(pos.offset(direction)).isOpaqueCube() && atmosphereToDetect == atmhandler.getAtmosphereType(pos.offset(direction)));
-					if(detectedAtm) break;
-				}
-			}
+            //TODO: Galacticcraft support
+            AtmosphereHandler atmhandler = AtmosphereHandler.getOxygenHandler(world.provider.getDimension());
+            if (atmhandler == null) {
+                detectedAtm = atmosphereToDetect == AtmosphereType.AIR;
+            } else {
+                for (EnumFacing direction : EnumFacing.values()) {
+                    detectedAtm = (!world.getBlockState(pos.offset(direction)).isOpaqueCube() && atmosphereToDetect == atmhandler.getAtmosphereType(pos.offset(direction)));
+                    if (detectedAtm) break;
+                }
+            }
 
-			if(((BlockRedstoneEmitter)state.getBlock()).getState(world, state, pos) != detectedAtm) {
-				((BlockRedstoneEmitter)state.getBlock()).setState(world, state, pos, detectedAtm);
-			}
-		}
-	}
-	
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos,
-			IBlockState oldState, IBlockState newSate) {
-		return (oldState.getBlock() != newSate.getBlock());
-	}
+            if (((BlockRedstoneEmitter) state.getBlock()).getState(world, state, pos) != detectedAtm) {
+                ((BlockRedstoneEmitter) state.getBlock()).setState(world, state, pos, detectedAtm);
+            }
+        }
+    }
 
-	@Override
-	public List<ModuleBase> getModules(int id, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<>();
-		List<ModuleBase> btns = new LinkedList<>();
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos,
+                                 IBlockState oldState, IBlockState newSate) {
+        return (oldState.getBlock() != newSate.getBlock());
+    }
 
-		Iterator<IAtmosphere> atmIter = AtmosphereRegister.getInstance().getAtmosphereList().iterator();
+    @Override
+    public List<ModuleBase> getModules(int id, EntityPlayer player) {
+        List<ModuleBase> modules = new LinkedList<>();
+        List<ModuleBase> btns = new LinkedList<>();
 
-		int i = 0;
-		while(atmIter.hasNext()) {
-			IAtmosphere atm = atmIter.next();
-			btns.add(new ModuleButton(60, 4 + i*24, i, LibVulpes.proxy.getLocalizedString(atm.getUnlocalizedName()), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
-			i++;
-		}
+        Iterator<IAtmosphere> atmIter = AtmosphereRegister.getInstance().getAtmosphereList().iterator();
 
-		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<>(), zmaster587.libVulpes.inventory.TextureResources.starryBG, 165, 120, 0, 500);
-		modules.add(panningContainer);
-		return modules;
-	}
+        int i = 0;
+        while (atmIter.hasNext()) {
+            IAtmosphere atm = atmIter.next();
+            btns.add(new ModuleButton(60, 4 + i * 24, i, LibVulpes.proxy.getLocalizedString(atm.getUnlocalizedName()), this, zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
+            i++;
+        }
 
-	@Override
-	public String getModularInventoryName() {
-		return AdvancedRocketryBlocks.blockOxygenDetection.getLocalizedName();
-	}
+        ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<>(), zmaster587.libVulpes.inventory.TextureResources.starryBG, 165, 120, 0, 500);
+        modules.add(panningContainer);
+        return modules;
+    }
 
-	@Override
-	public boolean canInteractWithContainer(@Nullable EntityPlayer entity) {
-		return true;
-	}
+    @Override
+    public String getModularInventoryName() {
+        return AdvancedRocketryBlocks.blockOxygenDetection.getLocalizedName();
+    }
 
-	@Override
-	public void onInventoryButtonPressed(int buttonId) {
-		atmosphereToDetect = AtmosphereRegister.getInstance().getAtmosphereList().get(buttonId);
-		PacketHandler.sendToServer(new PacketMachine(this, (byte)0));
-	}
+    @Override
+    public boolean canInteractWithContainer(@Nullable EntityPlayer entity) {
+        return true;
+    }
 
-	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
-		//Send the unlocalized name over the net to reduce chances of foulup due to client/server inconsistencies
-		if(id == 0) {
-			PacketBuffer buf = new PacketBuffer(out);
-			buf.writeShort(atmosphereToDetect.getUnlocalizedName().length());
-			buf.writeString(atmosphereToDetect.getUnlocalizedName());
-		}
-	}
+    @Override
+    public void onInventoryButtonPressed(int buttonId) {
+        atmosphereToDetect = AtmosphereRegister.getInstance().getAtmosphereList().get(buttonId);
+        PacketHandler.sendToServer(new PacketMachine(this, (byte) 0));
+    }
 
-	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
-		if(packetId == 0) {
-			PacketBuffer buf = new PacketBuffer(in);
-			nbt.setString("uName", buf.readString(buf.readShort()));
-		}
-	}
+    @Override
+    public void writeDataToNetwork(ByteBuf out, byte id) {
+        //Send the unlocalized name over the net to reduce chances of foulup due to client/server inconsistencies
+        if (id == 0) {
+            PacketBuffer buf = new PacketBuffer(out);
+            buf.writeShort(atmosphereToDetect.getUnlocalizedName().length());
+            buf.writeString(atmosphereToDetect.getUnlocalizedName());
+        }
+    }
 
-	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
-		if(id == 0) {
-			String name = nbt.getString("uName");
-			atmosphereToDetect = AtmosphereRegister.getInstance().getAtmosphere(name);
-		}
-	}
+    @Override
+    public void readDataFromNetwork(ByteBuf in, byte packetId,
+                                    NBTTagCompound nbt) {
+        if (packetId == 0) {
+            PacketBuffer buf = new PacketBuffer(in);
+            nbt.setString("uName", buf.readString(buf.readShort()));
+        }
+    }
 
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+    @Override
+    public void useNetworkData(EntityPlayer player, Side side, byte id,
+                               NBTTagCompound nbt) {
+        if (id == 0) {
+            String name = nbt.getString("uName");
+            atmosphereToDetect = AtmosphereRegister.getInstance().getAtmosphere(name);
+        }
+    }
 
-		nbt.setString("atmName", atmosphereToDetect.getUnlocalizedName());
-		return nbt;
-	}
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+        nbt.setString("atmName", atmosphereToDetect.getUnlocalizedName());
+        return nbt;
+    }
 
-		atmosphereToDetect = AtmosphereRegister.getInstance().getAtmosphere(nbt.getString("atmName"));
-	}
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
+
+        atmosphereToDetect = AtmosphereRegister.getInstance().getAtmosphere(nbt.getString("atmName"));
+    }
 }

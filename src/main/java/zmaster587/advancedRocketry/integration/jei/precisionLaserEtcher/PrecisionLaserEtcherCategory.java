@@ -8,23 +8,22 @@ import zmaster587.libVulpes.LibVulpes;
 
 public class PrecisionLaserEtcherCategory extends MachineCategoryTemplate<PrecisionLaserEtcherWrapper> {
 
-	public PrecisionLaserEtcherCategory(IGuiHelper helper) {
-		super(helper, TextureResources.latheProgressBar);
-	}
-	
-	@Override
-	public String getUid() {
-		return ARPlugin.precisionLaserEngraverUUID;
-	}
-
-	@Override
-	public String getTitle() {
-		return LibVulpes.proxy.getLocalizedString("tile.precisionlaseretcher.name");
-	}
+    public PrecisionLaserEtcherCategory(IGuiHelper helper) {
+        super(helper, TextureResources.latheProgressBar);
+    }
 
     @Override
-    public String getModName()
-    {
+    public String getUid() {
+        return ARPlugin.precisionLaserEngraverUUID;
+    }
+
+    @Override
+    public String getTitle() {
+        return LibVulpes.proxy.getLocalizedString("tile.precisionlaseretcher.name");
+    }
+
+    @Override
+    public String getModName() {
         return "Advanced Rocketry";
     }
 

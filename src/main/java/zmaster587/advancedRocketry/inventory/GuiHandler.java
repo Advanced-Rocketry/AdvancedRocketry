@@ -12,13 +12,6 @@ import zmaster587.libVulpes.inventory.modules.IModularInventory;
 
 public class GuiHandler implements IGuiHandler {
 
-    public enum guiId {
-        RocketBuilder,
-        BlastFurnace,
-        OreMappingSatellite,
-        StationChip
-    }
-
     //X coord is entity ID num if entity
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world,
@@ -69,5 +62,12 @@ public class GuiHandler implements IGuiHandler {
             return new GuiOreMappingSatellite((SatelliteOreMapping) satellite, player);
         }
         return null;
+    }
+
+    public enum guiId {
+        RocketBuilder,
+        BlastFurnace,
+        OreMappingSatellite,
+        StationChip
     }
 }

@@ -5,8 +5,8 @@ import zmaster587.libVulpes.interfaces.IRecipe;
 
 public class SawMillWrapper extends MachineRecipe {
 
-	SawMillWrapper(IRecipe rec) {
-		super(rec);
-	}
+    SawMillWrapper(IRecipe rec) {
+        super(rec);
+    }
 
 }

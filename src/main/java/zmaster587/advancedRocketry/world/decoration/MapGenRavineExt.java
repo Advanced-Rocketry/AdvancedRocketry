@@ -8,51 +8,42 @@ import net.minecraft.world.gen.MapGenRavine;
 
 public class MapGenRavineExt extends MapGenRavine {
 
-	IBlockState fillerBlock;
-	IBlockState oceanBlock;
-	
-	
-	public void setFillerBlock(IBlockState state)
-	{
-		fillerBlock = state;
-	}
-	
-	public void setOceanBlock(IBlockState state)
-	{
-		oceanBlock = state;
-	}
-	
-    private boolean isExceptionBiome(net.minecraft.world.biome.Biome biome)
-    {
-        return biome == net.minecraft.init.Biomes.BEACH ||
-        biome == net.minecraft.init.Biomes.DESERT ||
-        biome == net.minecraft.init.Biomes.MUSHROOM_ISLAND ||
-        biome == net.minecraft.init.Biomes.MUSHROOM_ISLAND_SHORE;
+    IBlockState fillerBlock;
+    IBlockState oceanBlock;
+
+
+    public void setFillerBlock(IBlockState state) {
+        fillerBlock = state;
     }
-    
-    protected void digBlock(ChunkPrimer data, int x, int y, int z, int chunkX, int chunkZ, boolean foundTop)
-    {
+
+    public void setOceanBlock(IBlockState state) {
+        oceanBlock = state;
+    }
+
+    private boolean isExceptionBiome(net.minecraft.world.biome.Biome biome) {
+        return biome == net.minecraft.init.Biomes.BEACH ||
+                biome == net.minecraft.init.Biomes.DESERT ||
+                biome == net.minecraft.init.Biomes.MUSHROOM_ISLAND ||
+                biome == net.minecraft.init.Biomes.MUSHROOM_ISLAND_SHORE;
+    }
+
+    protected void digBlock(ChunkPrimer data, int x, int y, int z, int chunkX, int chunkZ, boolean foundTop) {
         net.minecraft.world.biome.Biome biome = world.getBiome(new BlockPos(x + chunkX * 16, 0, z + chunkZ * 16));
         IBlockState state = data.getBlockState(x, y, z);
         IBlockState top = isExceptionBiome(biome) ? Blocks.GRASS.getDefaultState() : biome.topBlock;
         IBlockState filler = isExceptionBiome(biome) ? Blocks.DIRT.getDefaultState() : biome.fillerBlock;
 
-        if (state.getBlock() == Blocks.STONE || state.getBlock() == top.getBlock() || state.getBlock() == filler.getBlock() || (fillerBlock != null && state.getBlock() == fillerBlock.getBlock()))
-        {
-            if (y - 1 < 10)
-            {
+        if (state.getBlock() == Blocks.STONE || state.getBlock() == top.getBlock() || state.getBlock() == filler.getBlock() || (fillerBlock != null && state.getBlock() == fillerBlock.getBlock())) {
+            if (y - 1 < 10) {
                 data.setBlockState(x, y, z, FLOWING_LAVA);
-            }
-            else
-            {
+            } else {
                 data.setBlockState(x, y, z, AIR);
 
-                if (foundTop && data.getBlockState(x, y - 1, z).getBlock() == filler.getBlock())
-                {
+                if (foundTop && data.getBlockState(x, y - 1, z).getBlock() == filler.getBlock()) {
                     data.setBlockState(x, y - 1, z, top.getBlock().getDefaultState());
                 }
             }
         }
     }
-	
+
 }

@@ -8,13 +8,14 @@ import net.minecraft.world.World;
  * Implemented by a block that can contain fuel
  */
 public interface IFuelTank {
-	
-	//Returns 
-	/**
-	 * @param world
-	 * @param pos
-	 * @param state
-	 * @return the capacity for the container
-	 */
-	int getMaxFill(World world, BlockPos pos, IBlockState state);
+
+    //Returns
+
+    /**
+     * @param world
+     * @param pos
+     * @param state
+     * @return the capacity for the container
+     */
+    int getMaxFill(World world, BlockPos pos, IBlockState state);
 }

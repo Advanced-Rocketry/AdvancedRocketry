@@ -19,52 +19,38 @@ import zmaster587.advancedRocketry.util.SealableBlockHandler;
  * Detects if a block can be used to seal a room.
  * Created by Dark(DarkGuardsman, Robert) on 1/6/2016.
  */
-public class ItemSealDetector extends Item
-{
+public class ItemSealDetector extends Item {
     //TODO make consume power?
 
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
-		return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
-	}
-	
-	@Override
-	public EnumActionResult onItemUse(EntityPlayer player,
-			World world, BlockPos pos, EnumHand hand, EnumFacing facing,
-			float hitX, float hitY, float hitZ) {
-        if (!world.isRemote)
-        {
-            if (SealableBlockHandler.INSTANCE.isBlockSealed(world, pos))
-            {
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
+        return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
+    }
+
+    @Override
+    public EnumActionResult onItemUse(EntityPlayer player,
+                                      World world, BlockPos pos, EnumHand hand, EnumFacing facing,
+                                      float hitX, float hitY, float hitZ) {
+        if (!world.isRemote) {
+            if (SealableBlockHandler.INSTANCE.isBlockSealed(world, pos)) {
                 player.sendMessage(new TextComponentTranslation("msg.sealdetector.sealed"));
-            }
-            else
-            {
-            	IBlockState state = world.getBlockState(pos);
+            } else {
+                IBlockState state = world.getBlockState(pos);
                 Material mat = state.getMaterial();
-                if (SealableBlockHandler.INSTANCE.isMaterialBanned(mat))
-                {
+                if (SealableBlockHandler.INSTANCE.isMaterialBanned(mat)) {
                     player.sendMessage(new TextComponentTranslation("msg.sealdetector.notsealmat"));
-                }
-                else if (SealableBlockHandler.INSTANCE.isBlockBanned(state.getBlock()))
-                {
+                } else if (SealableBlockHandler.INSTANCE.isBlockBanned(state.getBlock())) {
                     player.sendMessage(new TextComponentTranslation("msg.sealdetector.notsealblock"));
-                }
-                else if (SealableBlockHandler.isFullBlock(world, pos))
-                {
+                } else if (SealableBlockHandler.isFullBlock(world, pos)) {
                     player.sendMessage(new TextComponentTranslation("msg.sealdetector.notfullblock"));
-                }
-                else if (state.getBlock() instanceof IFluidBlock)
-                {
+                } else if (state.getBlock() instanceof IFluidBlock) {
                     player.sendMessage(new TextComponentTranslation("msg.sealdetector.fluid"));
-                }
-                else
-                {
+                } else {
                     player.sendMessage(new TextComponentTranslation("msg.sealdetector.other"));
                 }
             }
         }
         return EnumActionResult.SUCCESS;
-	}
-	
+    }
+
 }
