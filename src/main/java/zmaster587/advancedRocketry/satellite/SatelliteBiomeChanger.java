@@ -21,7 +21,7 @@ import java.util.*;
 
 public class SatelliteBiomeChanger extends SatelliteBase  {
 
-	private Biome biomeId;
+	private Biome biomeId; // this is not initialized and causes a nullpointer exception. needs to be initialized to a default biome
 	private int radius;
 
 	//Stores blocks to be updated
