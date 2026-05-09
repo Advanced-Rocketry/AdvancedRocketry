@@ -118,23 +118,37 @@ repositories {
     }
     ivy {
         name = "industrialcraft-2"
-        artifactPattern("http://jenkins.ic2.player.to/job/IC2_111/39/artifact/build/libs/[module]-[revision].[ext]")
+        artifactPattern("http://jenkins.ic2.player.to/job/IC2_112/170/artifact/build/libs/[module]-[revision].[ext]")
     }
     maven {
         // location of a maven mirror for JEI files, as a fallback
         name = "ModMaven"
         url = uri("https://modmaven.k-4u.nl")
     }
+    /*
     maven {
+        // connection refused
         name = "Galacticraft"
         url = uri("https://maven.galacticraft.dev/repository/legacy-releases/")
     }
     maven {
-        name = "LibVulpes"
+        // connection refused on http, wrong certificate domain on https (jenkins.dmodoomsirius.me)
+        name = "LibVulpes Maven"
         url = uri("http://maven.dmodoomsirius.me/")
         isAllowInsecureProtocol = true
     }
+    maven {
+        // 403 unauthorized error
+        name = "LibVulpes Jenkins"
+        url = uri("https://jenkins.dmodoomsirius.me/")
+    }
+    */
+    maven {
+        name = "Curse Maven"
+        url = uri("https://cursemaven.com")
+    }
     flatDir {
+        name = "libs folder"
         dirs("libs")
     }
 }
@@ -142,14 +156,48 @@ repositories {
 dependencies {
     minecraft(group = "net.minecraftforge", name = "forge", version = "$mcVersion-$forgeVersion")
 
-    compileOnly("net.industrial-craft:industrialcraft-2:$icVersion:dev")
-    //implementation("zmaster587.libVulpes:LibVulpes:$mcVersion-$libVulpesVersion-$libVulpesBuildNum-deobf")
+    // === IC2 ===
+    // direct from repo
+    //compileOnly("net.industrial-craft:industrialcraft-2:${icVersion}:dev")
 
-    compileOnly(fg.deobf("dev.galacticraft:galacticraft-legacy:$gcVersion"))
+    // === LibVulpes ===
+    // direct from repo, with build number and fg.deobf
+    //implementation(fg.deobf("zmaster587.LibVulpes:LibVulpes:${mcVersion}-${libVulpesVersion}-${libVulpesBuildNum}"))
+    // direct from repo, with build number, universal suffix, and fg.deobf
+    // \/ this is the one you want when downloading from https://www.curseforge.com/minecraft/mc-mods/libvulpes and placing in the libs folder \/
+    //implementation(fg.deobf("zmaster587.LibVulpes:LibVulpes:${mcVersion}-${libVulpesVersion}-${libVulpesBuildNum}:universal"))
+    // direct from repo, with build number
+    //implementation("zmaster587.LibVulpes:LibVulpes:${mcVersion}-${libVulpesVersion}-${libVulpesBuildNum}:deobf")
+    // direct from repo, any build number
+    //implementation("zmaster587.libVulpes:libVulpes:${mcVersion}-${libVulpesVersion}+:deobf")
+    // specific file
+    //implementation files("libs/LibVulpes-${mcVersion}-${libVulpesVersion}-${libVulpesBuildNum}-deobf.jar")
+    // direct from curse maven, version 0.4.2-25
+    implementation(fg.deobf("curse.maven:libvulpes-236541:3801015"))
 
+    // === Galacticraft ===
+    // direct from repo, with fg.deobf
+    //compileOnly(fg.deobf("dev.galacticraft:galacticraft-legacy:${gcVersion}"))
+    // direct from repo with old naming scheme and fg.deobf
+    // \/ this is the one you want when downloading from https://www.curseforge.com/minecraft/mc-mods/galacticraft-legacy and placing in the libs folder \/
+    //compileOnly(fg.deobf("dev.galacticraft:galacticraft:${mcVersion}-${gcVersion}"))
+    // direct from repo with old naming scheme
+    //compileOnly("dev.galacticraft:galacticraft:${mcVersion}-${gcVersion}:deobf")
+    // specific file
+    //compileOnly files("libs/Galacticraft-${mcVersion}-${gcVersion}-deobf.jar")
+    // direct from curse maven, version 4.0.6
+    implementation(fg.deobf("curse.maven:galacticraft-564236:4671122"))
+
+    // === JEI ===
+    // direct from repo, with fg.deobf
     compileOnly(fg.deobf("mezz.jei:jei_${mcVersion}:${jeiVersion}:api"))
     runtimeOnly(fg.deobf("mezz.jei:jei_${mcVersion}:${jeiVersion}"))
-    implementation ("zmaster587.libVulpes:libVulpes:1.12.2-0.4.2+:deobf")
+    // direct from repo
+    //compileOnly("mezz.jei:jei_${mcVersion}:${jeiVersion}:api")
+    //runtimeOnly("mezz.jei:jei_${mcVersion}:${jeiVersion}")
+    // specific files
+    //compileOnly files("libs/jei_${mcVersion}-${jeiVersion}-api.jar")
+    //runtimeOnly files("libs/jei_${mcVersion}-${jeiVersion}.jar")
 }
 
 tasks.processResources {
